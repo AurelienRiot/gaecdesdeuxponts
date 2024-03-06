@@ -108,9 +108,11 @@ const FAQPage = () => {
               {faq.question}
             </AccordionTrigger>
             <AccordionContent>
-              <ul className=" list-inside list-disc">
+              <ul className=" my-10 list-inside list-disc">
                 {faq.answer.map((point, pointIndex) => (
-                  <li key={pointIndex}>{point}</li>
+                  <li className="p-2" key={pointIndex}>
+                    {point}
+                  </li>
                 ))}
               </ul>
             </AccordionContent>

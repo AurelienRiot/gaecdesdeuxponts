@@ -27,19 +27,20 @@ const NavBar = () => {
   return (
     <div
       data-nav-state={navState}
-      className={`fixed top-0 z-30 w-full h-16 data-[nav-state=close]:h-0 bg-background data-[nav-state=close]:border-0 border-b-2 border-border overflow-hidden transition-all duration-300 flex items-center `}
+      className={`fixed top-0 z-30 flex h-16 w-full items-center overflow-hidden rounded-b-md border-b-2 border-border bg-primary transition-all duration-300 data-[nav-state=close]:h-0 data-[nav-state=close]:border-0`}
     >
       <Container className="relative flex h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-4">
         <div className="flex items-center">
           <Link
             href="/"
-            className="ml-4 hidden items-center transition-all hover:scale-105 sm:flex lg:ml-0 w-12 h-12 relative"
+            className="relative ml-4 hidden items-center transition-all hover:scale-105 sm:flex lg:ml-0"
           >
             <Image
               src="/icone.jpeg"
               alt="logo"
-              fill
-              sizes="(max-width: 768px) 50px, (max-width: 1200px) 50px, 50px"
+              width={48}
+              height={48}
+              className="rounded-md"
             />
             {/* <p className="text-lg font-bold text-primary sm:text-xl">
                       {" "}

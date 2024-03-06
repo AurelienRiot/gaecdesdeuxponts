@@ -7,6 +7,7 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
 import { HelpCircle, PhoneCall } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { BiPhotoAlbum } from "react-icons/bi";
@@ -22,14 +23,17 @@ const MainNav = () => {
         <NavigationMenuList>
           {routes.map(({ href, label, active, Icone }) => (
             <NavigationMenuItem
-              className="rounded-lg border-2 border-border"
+              className="rounded-lg border border-border "
               key={href}
             >
               <NavigationMenuLink
                 href={href}
-                className={navigationMenuTriggerStyle()}
+                className={cn(
+                  navigationMenuTriggerStyle(),
+                  "bg-secondary text-secondary-foreground",
+                )}
               >
-                <Icone className="mr-2 hidden h-4 w-4 xl:flex" />
+                <Icone className="mr-2 hidden h-4 w-4 xl:flex " />
                 {label}
               </NavigationMenuLink>
             </NavigationMenuItem>
