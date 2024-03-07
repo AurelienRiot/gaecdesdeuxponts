@@ -24,3 +24,20 @@ export const formatter = (() => {
 export const dateFormatter = (date: Date) => {
   return format(date, "d MMMM yyyy", { locale: fr });
 };
+
+export function addDelay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export const checkIfUrlAccessible = async (url: string): Promise<boolean> => {
+  const response = await fetch(url, {
+    method: "HEAD",
+  })
+    .then((response) => {
+      return response.ok;
+    })
+    .catch((error) => {
+      return false;
+    });
+  return response;
+};

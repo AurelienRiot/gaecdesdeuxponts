@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { AuthProviders } from "@/providers/auth-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export const metadata: Metadata = {
   title: "GAEC des Deux Ponts",
@@ -31,7 +32,9 @@ export default function RootLayout({
       >
         <AuthProviders>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            {children}
+            <TooltipProvider delayDuration={100} skipDelayDuration={0}>
+              {children}
+            </TooltipProvider>
             <Toaster />
           </ThemeProvider>
         </AuthProviders>
