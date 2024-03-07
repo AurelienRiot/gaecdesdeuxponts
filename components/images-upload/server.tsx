@@ -13,31 +13,18 @@ cloudinary.v2.config({
 
 export type Ressources = {
   access_mode: string;
-
   asset_id: string;
-
   bytes: Number;
-
-  created_at: "2024-03-07T15:02:12Z";
-
+  created_at: Date;
   folder: string;
-
   format: string;
-
   height: Number;
-
   public_id: string;
-
   resource_type: string;
-
   secure_url: string;
-
   type: string;
-
   url: string;
-
   version: Number;
-
   width: Number;
 };
 
@@ -68,7 +55,7 @@ async function listFiles(): Promise<listFilesReturnType> {
     });
 
     const images = files.resources?.sort(
-      (a: any, b: any) =>
+      (a: Ressources, b: Ressources) =>
         new Date(b.created_at ?? 0).getTime() -
         new Date(a.created_at ?? 0).getTime(),
     ) as Ressources[];
@@ -112,7 +99,8 @@ async function uploadFile({
     const uploadPromises = Array.from(formData.entries()).map(
       async ([key, value]) => {
         if (value instanceof File) {
-          const array = Buffer.from(await value.arrayBuffer());
+          const arrayBuffer = await value.arrayBuffer();
+          const uint8Array = new Uint8Array(arrayBuffer);
           const uploadResult: any = await new Promise((resolve) => {
             cloudinary.v2.uploader
               .upload_stream({ folder: "farm" }, (error, result) => {
@@ -123,7 +111,7 @@ async function uploadFile({
                   resolve(result);
                 }
               })
-              .end(array);
+              .end(uint8Array);
           });
           if (uploadResult) {
             return {
@@ -142,7 +130,7 @@ async function uploadFile({
         result !== null,
     );
 
-    const check = await checkUrls(validUrls);
+    // const check = await checkUrls(validUrls);
 
     return { success: true, data: validUrls };
   } catch (error) {
