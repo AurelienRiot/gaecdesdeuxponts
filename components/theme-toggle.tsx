@@ -18,7 +18,6 @@ export function ThemeToggle() {
       variant={"rounded"}
       onClick={() => {
         setTheme(theme === "light" ? "dark" : "light");
-        console.log(theme);
       }}
       size="icon"
       className="rounded-full bg-primary-foreground px-0  py-0 text-secondary "
