@@ -5,7 +5,7 @@ import WhyChooseUs from "./components/why-choose-us";
 
 export default function Home() {
   return (
-    <main>
+    <div>
       <ImageAccueil />
       <Container>
         {" "}
@@ -23,6 +23,6 @@ export default function Home() {
         <FarmIntroduction />
         <WhyChooseUs />
       </Container>
-    </main>
+    </div>
   );
 }

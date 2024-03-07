@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, LoadingButton } from "@/components/ui/button";
+import { LoadingButton } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,7 +17,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { motion } from "framer-motion";
-import Spinner from "@/components/animations/spinner";
+import { useOrigin } from "@/hooks/use-origin";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z
@@ -31,8 +32,8 @@ type EmailFormValues = z.infer<typeof formSchema>;
 
 export default function LoginPage() {
   const callbackUrl = useSearchParams().get("callbackUrl") || "/dashboard-user";
-  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const origin = useOrigin();
 
   const form = useForm<EmailFormValues>({
     resolver: zodResolver(formSchema),
@@ -42,19 +43,17 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: EmailFormValues) => {
-    setLoading(true);
     const authentifier = await signIn("email", {
-      email: data.email,
+      email: data.email.trim().toLowerCase(),
       redirect: false,
-      callbackUrl: "/",
+      callbackUrl: origin + callbackUrl,
     });
     if (authentifier?.error) {
-      // toast.error("Erreur veuillez réessayer");
+      toast.error("Erreur veuillez réessayer");
     } else {
-      // toast.success("Vérifiez votre boite mail");
+      toast.success("Vérifiez votre boite mail");
       setSuccess(true);
     }
-    setLoading(false);
   };
 
   return (
@@ -64,7 +63,7 @@ export default function LoginPage() {
           {" "}
           Page de Connection{" "}
         </h1>
-        <button
+        {/* <button
           onClick={() => {
             signIn("google", {
               callbackUrl,
@@ -97,7 +96,7 @@ export default function LoginPage() {
           <span className="mr-4 font-medium text-white sm:text-lg">
             Se connecter avec Google
           </span>
-        </button>
+        </button> */}
         <div
           className={`my-4 flex h-4 flex-row  items-center gap-4 self-stretch whitespace-nowrap
         before:h-0.5 before:w-full 
@@ -123,7 +122,8 @@ export default function LoginPage() {
                           <Input
                             type="email"
                             autoCapitalize="off"
-                            disabled={loading}
+                            disabled={form.formState.isSubmitting}
+                            autoComplete="email"
                             placeholder="exemple@email.com"
                             {...field}
                           />
@@ -137,7 +137,7 @@ export default function LoginPage() {
 
               <LoadingButton
                 type="submit"
-                disabled={loading}
+                disabled={form.formState.isSubmitting}
                 className="mt-4 w-full transition-transform duration-200 ease-linear active:scale-95"
                 size="lg"
               >

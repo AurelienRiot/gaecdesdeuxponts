@@ -9,7 +9,7 @@ export default async function PublicLayout({
   return (
     <>
       <NavBar />
-      <div className="pt-16 ">{children}</div>
+      <main className="pt-16 ">{children}</main>
       <Footer />
     </>
   );

@@ -20,9 +20,9 @@ export const authOptions: NextAuthOptions = {
     EmailProvider({
       sendVerificationRequest: async ({ identifier: email, url }) => {
         await transporter.sendMail({
-          from: "aurelien.r35@gmail.com",
+          from: "nicolasriot@riottech.fr",
           to: email,
-          subject: "Connexion à votre compte Limpa Car",
+          subject: "Connexion à votre compte ",
           html: render(WelcomeEmailProvider({ url, baseUrl })),
         });
       },
