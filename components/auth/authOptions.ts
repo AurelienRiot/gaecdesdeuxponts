@@ -20,7 +20,7 @@ export const authOptions: NextAuthOptions = {
     EmailProvider({
       sendVerificationRequest: async ({ identifier: email, url }) => {
         await transporter.sendMail({
-          from: "nicolasriot@riottech.fr",
+          from: "contact@riottech.fr",
           to: email,
           subject: "Connexion à votre compte ",
           html: render(WelcomeEmailProvider({ url, baseUrl })),

@@ -17,7 +17,7 @@ const checkUser = async () => {
     return false;
   }
 
-  return true;
+  return session.user;
 };
 
 export { checkAdmin, checkUser };

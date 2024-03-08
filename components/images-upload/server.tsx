@@ -1,7 +1,6 @@
 "use server";
 
 import prismadb from "@/lib/prismadb";
-import { addDelay, checkIfUrlAccessible } from "@/lib/utils";
 import cloudinary from "cloudinary";
 import { checkAdmin } from "../auth/checkAuth";
 
@@ -107,75 +106,6 @@ async function listFiles(): Promise<listFilesReturnType> {
   }
 }
 
-type UploadFilesReturnType =
-  | {
-      success: true;
-      data: { secureUrl: string; publicId: string }[];
-    }
-  | {
-      success: false;
-      message: string;
-    };
-
-async function uploadFile({
-  formData,
-}: {
-  formData: FormData;
-}): Promise<UploadFilesReturnType> {
-  const isAuth = await checkAdmin();
-  if (!isAuth) {
-    return {
-      success: false,
-      message: "Vous devez être authentifier",
-    };
-  }
-  try {
-    const uploadPromises = Array.from(formData.entries()).map(
-      async ([key, value]) => {
-        if (value instanceof File) {
-          const arrayBuffer = await value.arrayBuffer();
-          const uint8Array = new Uint8Array(arrayBuffer);
-          const uploadResult: any = await new Promise((resolve) => {
-            cloudinary.v2.uploader
-              .upload_stream({ folder: "farm" }, (error, result) => {
-                if (error) {
-                  console.error("Upload error:", error);
-                  resolve(null); // Handle error appropriately
-                } else {
-                  resolve(result);
-                }
-              })
-              .end(uint8Array);
-          });
-          if (uploadResult) {
-            return {
-              secureUrl: uploadResult.secure_url as string,
-              publicId: uploadResult.public_id as string,
-            };
-          }
-        }
-        return null;
-      },
-    );
-
-    const results = await Promise.all(uploadPromises);
-    const validUrls = results.filter(
-      (result): result is { secureUrl: string; publicId: string } =>
-        result !== null,
-    );
-
-    // const check = await checkUrls(validUrls);
-
-    return { success: true, data: validUrls };
-  } catch (error) {
-    console.error(`An error occurred: ${error}`);
-    return {
-      success: false,
-      message: "Une erreur est survenue dans l'envoi des fichiers",
-    };
-  }
-}
-
 type ReturnTypeDeleteObject =
   | {
       success: true;
@@ -240,4 +170,4 @@ async function deleteObject({
   }
 }
 
-export { deleteObject, listFiles, getSignature };
+export { deleteObject, getSignature, listFiles };

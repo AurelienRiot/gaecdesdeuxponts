@@ -158,6 +158,7 @@ model Contact {
 
 model Address {
   id         String  @unique @id @default(uuid())
+  label      String?
   line1      String?
   line2      String?
   city       String?

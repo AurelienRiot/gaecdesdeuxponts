@@ -27,7 +27,7 @@
     --border: 35 16% 90%; /* light grey, for borders and dividers */
     --input: 240 13% 95%; /* very light grey, for input fields */
     --ring: 34 80% 50%; /* softer orange, for focus rings */
-    --radius: 0.75rem; /* keeping the border radius the same for consistency */
+    --radius: 0.5rem; /* keeping the border radius the same for consistency */
   }
 
   .dark {

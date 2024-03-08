@@ -35,8 +35,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     const deletePro = await deleteProduct({ id: data.id });
     if (!deletePro.success) {
       toast.error(deletePro.message);
-      setLoading(false);
-      setOpen(false);
     } else {
       router.refresh();
       toast.success("Categorie supprimée");

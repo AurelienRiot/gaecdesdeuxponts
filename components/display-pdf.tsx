@@ -1,11 +1,17 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export const DisplayPdf = ({ pdfUrl }: { pdfUrl: string | undefined }) => {
+export const DisplayPdf = ({
+  avalaible,
+  pdfUrl,
+}: {
+  avalaible: boolean;
+  pdfUrl: string;
+}) => {
   return (
     <span className="flex flex-row gap-1">
       {" "}
-      {pdfUrl ? (
+      {avalaible ? (
         <>
           <Button asChild>
             <Link href={pdfUrl} target="_blank" className="hover:underline">

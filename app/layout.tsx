@@ -31,7 +31,7 @@ export default function RootLayout({
         )}
       >
         <AuthProviders>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
             <TooltipProvider delayDuration={100} skipDelayDuration={0}>
               {children}
             </TooltipProvider>

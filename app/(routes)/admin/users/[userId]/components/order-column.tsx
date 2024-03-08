@@ -1,12 +1,15 @@
 "use client";
 
-import { DisplayPdf } from "@/components/display-pdf";
-import { Button } from "@/components/ui/button";
-import { dateFormatter } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
+import { OrderCellAction } from "./order-cell-action";
+import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
+import { fr } from "date-fns/locale";
+import { format } from "date-fns";
+import { DisplayPdf } from "@/components/display-pdf";
+import { dateFormatter } from "@/lib/utils";
 
-export type OrderColumnType = {
+export type OrderColumn = {
   id: string;
   pdfUrl: string;
   datePickUp: Date;
@@ -14,7 +17,7 @@ export type OrderColumnType = {
   products: string;
   createdAt: Date;
 };
-export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
+export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "products",
     header: "Produits",
@@ -49,5 +52,30 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
         {dateFormatter(row.getValue("datePickUp"))}
       </div>
     ),
+  },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date de création
+          <ArrowUpDown className="ml-2 h-4 w-4 flex-shrink-0" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="flex md:pl-10">
+        {" "}
+        {format(row.getValue("createdAt"), "d MMMM yyyy", { locale: fr })}
+      </div>
+    ),
+  },
+
+  {
+    id: "actions",
+    cell: ({ row }) => <OrderCellAction data={row.original} />,
   },
 ];

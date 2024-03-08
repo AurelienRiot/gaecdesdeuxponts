@@ -1,5 +1,5 @@
 import { formatter } from "@/lib/utils";
-import GetUser from "@/server/get-user";
+import GetUser from "@/actions/get-user";
 import { redirect } from "next/navigation";
 import { OrderColumnType } from "./components/order-column";
 import { OrderTable } from "./components/order-table";
@@ -12,6 +12,7 @@ const DashboardUser = async () => {
   const formattedOrders: OrderColumnType[] = (user.orders || []).map(
     (order) => ({
       id: order.id,
+
       products: order.orderItems
         .map((item) => {
           let name = item.product.name;
@@ -23,6 +24,7 @@ const DashboardUser = async () => {
         .join(", "),
       totalPrice: formatter.format(Number(order.totalPrice)),
       pdfUrl: order.pdfUrl,
+      datePickUp: order.datePickUp,
       createdAt: order.createdAt,
     }),
   );

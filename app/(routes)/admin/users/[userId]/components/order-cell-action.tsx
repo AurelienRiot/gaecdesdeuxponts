@@ -7,42 +7,41 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CategoryColumn } from "./columns";
+import { OrderColumn } from "./order-column";
 import { Button } from "@/components/ui/button";
-import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
+import { Copy, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AlertModal } from "@/components/ui/alert-modal-form";
-import { deleteCategorie } from "./server-action";
+import { deleteOrders } from "../../../orders/components/server-action";
 
-interface CellActionProps {
-  data: CategoryColumn;
+interface OrderCellActionProps {
+  data: OrderColumn;
 }
 
-export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+export const OrderCellAction: React.FC<OrderCellActionProps> = ({ data }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
-    toast.success("Id de la categorie copié dans le presse papier");
+    toast.success("Order Id copied to the clipboard");
   };
 
   const onDelete = async () => {
     setLoading(true);
-    const deleteCat = await deleteCategorie({ id: data.id });
+    const deleteCat = await deleteOrders({ id: data.id });
     if (!deleteCat.success) {
       toast.error(deleteCat.message);
     } else {
       router.refresh();
-      toast.success("Categorie supprimée");
+      toast.success("Commande supprimée");
     }
     setLoading(false);
     setOpen(false);
   };
-
   return (
     <>
       <AlertModal
@@ -54,7 +53,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only w-0">Ouvrir le menu</span>
+            <span className="sr-only w-0">Open Menu</span>
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
@@ -66,12 +65,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           >
             <Copy className="mr-2 h-4 w-4" />
             Copier Id
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => router.push(`/admin/categories/${data.id}`)}
-          >
-            <Edit className="mr-2 h-4 w-4" />
-            Modifier
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="mr-2 h-4 w-4" />
