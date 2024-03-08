@@ -5,11 +5,12 @@ import IconButton from "@/components/ui/icon-button";
 import useCart from "@/hooks/use-cart";
 import { ProductWithCategoryAndImages } from "@/types";
 import { motion } from "framer-motion";
-import { ShoppingCart } from "lucide-react";
+import { Info, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { MouseEventHandler } from "react";
 import { VisibleElement } from "./animations/visible-element";
+import { FaInfo } from "react-icons/fa";
 
 interface ProductCartProps {
   data: ProductWithCategoryAndImages;
@@ -47,10 +48,15 @@ const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
           alt="Image"
           className="aspect-square rounded-md object-cover "
         />
-        <div className="absolute bottom-5 w-full px-6 sm:opacity-0 sm:transition sm:group-hover:opacity-100">
+        <div className="absolute bottom-5 w-full px-6  ">
           <div className="flex justify-center gap-x-6">
             <IconButton
-              className="z-20"
+              className="z-20 sm:opacity-0 sm:group-hover:opacity-100"
+              title="Aperçue"
+              icon={<FaInfo size={20} className="text-foreground" />}
+            />
+            <IconButton
+              className="z-20 sm:opacity-0 sm:group-hover:opacity-100"
               title="Ajouté au panier"
               onClick={onAddToCart}
               icon={<ShoppingCart size={20} className="text-foreground" />}

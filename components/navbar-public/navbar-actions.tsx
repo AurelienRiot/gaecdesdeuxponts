@@ -25,6 +25,23 @@ const NavbarAction = () => {
 
   return (
     <div className="ml-4 flex items-center gap-x-2 sm:gap-x-4 ">
+      {session.status !== "loading" ? (
+        <AuthNavButton session={session} />
+      ) : null}
+
+      <ThemeToggle />
+      <CartButton />
+    </div>
+  );
+};
+
+const AuthNavButton = ({
+  session,
+}: {
+  session: ReturnType<typeof useSession>;
+}) => {
+  return (
+    <>
       {session.data ? (
         <Link
           href={
@@ -37,9 +54,7 @@ const NavbarAction = () => {
       ) : (
         <LoginButton />
       )}
-      <ThemeToggle />
-      <CartButton />
-    </div>
+    </>
   );
 };
 

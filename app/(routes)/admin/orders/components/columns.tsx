@@ -28,7 +28,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
     accessorKey: "name",
     header: "Nom",
     cell: ({ row }) => (
-      <div className="flex capitalize md:pl-10 ">
+      <div className="flex md:pl-10 ">
         <Button asChild variant={"link"}>
           <Link href={`/admin/users/${row.original.userId}`}>
             {row.getValue("name")}

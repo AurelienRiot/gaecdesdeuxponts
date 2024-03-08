@@ -38,7 +38,7 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Date de livraison
+          Date de retrait
           <ArrowUpDown className="ml-2 h-4 w-4 flex-shrink-0" />
         </Button>
       );

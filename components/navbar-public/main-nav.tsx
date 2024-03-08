@@ -15,10 +15,12 @@ import { usePathname } from "next/navigation";
 import { BiPhotoAlbum } from "react-icons/bi";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { useState } from "react";
 
 const MainNav = () => {
   const pathname = usePathname();
   const categories = useCategories((s) => s.categories);
+  const [open, setOpen] = useState(false);
 
   const routes = publicRoutes(pathname);
 
@@ -33,7 +35,7 @@ const MainNav = () => {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem className="rounded-lg border border-border ">
-            <Popover>
+            <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <NavigationMenuLink
                   className={cn(
@@ -50,6 +52,7 @@ const MainNav = () => {
                 {CategoriesRoutes.map(({ href, label, active }) => (
                   <Button asChild key={href} variant={"link"}>
                     <Link
+                      onClick={() => setOpen(false)}
                       href={href}
                       className={cn(
                         active && "bg-primary text-primary-foreground",

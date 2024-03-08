@@ -22,7 +22,7 @@ export async function generateMetadata({
   });
 
   return {
-    title: `RIOT TECH - ${product?.name}`,
+    title: `GAEC des deux ponts - ${product?.name}`,
   };
 }
 
