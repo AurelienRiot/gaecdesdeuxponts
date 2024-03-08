@@ -11,7 +11,7 @@ export type ContactColumn = {
   id: string;
   name: string;
   phone?: string;
-  mail: string;
+  email: string;
   subject: string;
   message: string;
   createdAt: Date;
@@ -47,7 +47,7 @@ export const columns: ColumnDef<ContactColumn>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Date de création
-          <ArrowUpDown className="flex-shrink-0 w-4 h-4 ml-2" />
+          <ArrowUpDown className="ml-2 h-4 w-4 flex-shrink-0" />
         </Button>
       );
     },

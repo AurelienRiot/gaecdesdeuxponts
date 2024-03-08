@@ -141,7 +141,7 @@ model OrderItem {
 model Contact {
   id        String   @unique @id @default(uuid())
   name      String
-  mail      String
+  email      String
   phone     String? 
   subject   String
   message   String   @db.VarChar(1000) 

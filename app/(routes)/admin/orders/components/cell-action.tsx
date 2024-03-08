@@ -14,12 +14,10 @@ interface CellActionProps {
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
   const onDelete = async () => {
-    setLoading(true);
     const deleteCat = await deleteOrders({ id: data.id });
     if (!deleteCat.success) {
       toast.error(deleteCat.message);
@@ -27,7 +25,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       router.refresh();
       toast.success("Commande supprimée");
     }
-    setLoading(false);
     setOpen(false);
   };
 
@@ -37,15 +34,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
-        loading={loading}
       />
 
-      <Button
-        disabled={loading}
-        variant="destructive"
-        size="sm"
-        onClick={() => setOpen(true)}
-      >
+      <Button variant="destructive" size="sm" onClick={() => setOpen(true)}>
         <Trash className="h-4 w-4" />
       </Button>
     </>

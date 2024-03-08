@@ -22,7 +22,6 @@ interface CellActionProps {
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
   const onCopy = (id: string) => {
@@ -31,7 +30,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   };
 
   const onDelete = async () => {
-    setLoading(true);
     const deletePro = await deleteProduct({ id: data.id });
     if (!deletePro.success) {
       toast.error(deletePro.message);
@@ -39,7 +37,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       router.refresh();
       toast.success("Categorie supprimée");
     }
-    setLoading(false);
     setOpen(false);
   };
 
@@ -49,7 +46,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
-        loading={loading}
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

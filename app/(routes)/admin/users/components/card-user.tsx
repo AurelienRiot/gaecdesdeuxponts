@@ -29,11 +29,9 @@ const CardUser: React.FC<CardUserProps> = ({
   className,
 }) => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
   const onDelete = async () => {
-    setLoading(true);
     const deleteU = await deleteUser({ id: user.id });
     if (!deleteU.success) {
       toast.error(deleteU.message);
@@ -41,7 +39,6 @@ const CardUser: React.FC<CardUserProps> = ({
       router.refresh();
       toast.success("Utilisateur supprimée");
     }
-    setLoading(false);
     setOpen(false);
   };
 
@@ -51,7 +48,6 @@ const CardUser: React.FC<CardUserProps> = ({
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
-        loading={loading}
       />
 
       <Card

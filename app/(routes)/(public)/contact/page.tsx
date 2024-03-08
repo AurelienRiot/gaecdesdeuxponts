@@ -1,12 +1,24 @@
 import Container from "@/components/ui/container";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ContactForm } from "./components/contact-form";
+import GetUser from "@/actions/get-user";
 
-const ContactPage = () => {
+export const metadata = {
+  title: "GAEC des deux ponts - Contact",
+  description: "Contact GAEC des deux ponts",
+};
+
+const ContactPage = async () => {
+  const user = await GetUser();
+
+  const name = user?.name;
+  const email = user?.email;
+
   return (
     <Container className="px-4 py-5">
       <div className="mx-auto max-w-3xl">
         <div className="mb-8 text-center">
-          <h1 className="mb-4 text-3xl font-bold text-primary">
+          <h1 className="mb-4 text-5xl font-bold text-primary">
             Contactez-nous
           </h1>
           <p>
@@ -36,6 +48,7 @@ const ContactPage = () => {
           </div>
         </div>
       </div>
+      <ContactForm name={name} email={email} />
     </Container>
   );
 };

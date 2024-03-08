@@ -143,7 +143,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
-        loading={form.formState.isSubmitting}
       />
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />

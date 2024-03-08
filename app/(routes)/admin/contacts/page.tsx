@@ -13,7 +13,7 @@ const ContactsPage = async () => {
     id: item.id,
     name: item.name,
     phone: item.phone === null ? undefined : item.phone,
-    mail: item.mail,
+    email: item.email,
     subject: item.subject,
     message: item.message,
     createdAt: item.createdAt,
@@ -21,7 +21,7 @@ const ContactsPage = async () => {
 
   return (
     <div className="flex-col">
-      <div className="flex-1 p-8 pt-6 space-y-4">
+      <div className="flex-1 space-y-4 p-8 pt-6">
         <ContactClient data={formattedContacts} />
       </div>
     </div>

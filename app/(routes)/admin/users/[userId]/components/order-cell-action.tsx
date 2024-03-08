@@ -22,7 +22,6 @@ interface OrderCellActionProps {
 
 export const OrderCellAction: React.FC<OrderCellActionProps> = ({ data }) => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
   const onCopy = (id: string) => {
@@ -31,7 +30,6 @@ export const OrderCellAction: React.FC<OrderCellActionProps> = ({ data }) => {
   };
 
   const onDelete = async () => {
-    setLoading(true);
     const deleteCat = await deleteOrders({ id: data.id });
     if (!deleteCat.success) {
       toast.error(deleteCat.message);
@@ -39,7 +37,6 @@ export const OrderCellAction: React.FC<OrderCellActionProps> = ({ data }) => {
       router.refresh();
       toast.success("Commande supprimée");
     }
-    setLoading(false);
     setOpen(false);
   };
   return (
@@ -48,7 +45,6 @@ export const OrderCellAction: React.FC<OrderCellActionProps> = ({ data }) => {
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
-        loading={loading}
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

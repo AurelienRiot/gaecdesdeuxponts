@@ -16,14 +16,13 @@ import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Address, User } from "@prisma/client";
 import { Trash } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { isValidPhoneNumber } from "react-phone-number-input";
+import { toast } from "sonner";
 import * as z from "zod";
 import { deleteUser, updateUser } from "./server-action";
 
@@ -129,7 +128,6 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
-        loading={form.formState.isSubmitting}
       />
       <div className="mb-4 flex flex-col items-center justify-between gap-4 md:flex-row">
         <h2 className="text-3xl font-bold tracking-tight"> {title} </h2>

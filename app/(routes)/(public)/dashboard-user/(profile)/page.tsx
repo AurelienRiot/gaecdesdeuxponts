@@ -36,7 +36,9 @@ const DashboardUser = async () => {
       <div className="mx-auto mb-4 flex h-fit w-fit flex-col items-center justify-center gap-2 rounded-md border-2 p-6 text-gray-800 shadow-xl dark:text-white">
         <>
           <h1 className="text-center text-3xl font-bold">
-            <span className="capitalize">{user.name}</span>
+            <span className="capitalize">
+              {user.name ? user.name : "Compléter votre profil"}
+            </span>
           </h1>
         </>
         <UserButtons />

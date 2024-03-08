@@ -119,7 +119,6 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
-        loading={form.formState.isSubmitting}
       />
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
