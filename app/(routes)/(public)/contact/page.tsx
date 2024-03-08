@@ -2,6 +2,7 @@ import Container from "@/components/ui/container";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ContactForm } from "./components/contact-form";
 import GetUser from "@/actions/get-user";
+import Link from "next/link";
 
 export const metadata = {
   title: "GAEC des deux ponts - Contact",
@@ -38,7 +39,9 @@ const ContactPage = async () => {
           </div>
           <div className="mb-4 flex items-center gap-6">
             <h2 className="text-xl font-semibold text-secondary">Email</h2>
-            <Skeleton className="h-2 w-10" />
+            <Link href="mailto:contact@riottech.fr">
+              <Skeleton className="h-2 w-10" />
+            </Link>
           </div>
           <div className="mb-4 flex items-center gap-6">
             <h2 className="text-xl font-semibold text-secondary">

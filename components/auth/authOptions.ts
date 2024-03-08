@@ -6,6 +6,7 @@ import { render } from "@react-email/render";
 import WelcomeEmailProvider from "@/components/email/welcome-email-provider";
 import { transporter } from "@/lib/nodemailer";
 import { User } from "next-auth";
+import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 
@@ -20,25 +21,25 @@ export const authOptions: NextAuthOptions = {
     EmailProvider({
       sendVerificationRequest: async ({ identifier: email, url }) => {
         await transporter.sendMail({
-          from: "contact@riottech.fr",
+          from: "aurelien.r35@gmail.com",
           to: email,
           subject: "Connexion à votre compte ",
           html: render(WelcomeEmailProvider({ url, baseUrl })),
         });
       },
     }),
-    // GoogleProvider({
-    //   profile(profile: GoogleProfile) {
-    //     return {
-    //       id: profile.sub.toString(),
-    //       name: profile.name,
-    //       email: profile.email,
-    //       image: profile.picture,
-    //     };
-    //   },
-    //   clientId: process.env.GOOGLE_CLIENT_ID!,
-    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    // }),
+    GoogleProvider({
+      profile(profile: GoogleProfile) {
+        return {
+          id: profile.sub.toString(),
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+        };
+      },
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
   ],
   callbacks: {
     jwt: async ({ token, user }) => {

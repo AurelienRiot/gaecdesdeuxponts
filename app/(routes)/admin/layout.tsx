@@ -9,6 +9,7 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const callbackUrl = "/admin";
+
   const isAuth = await checkAdmin();
 
   if (!isAuth) {

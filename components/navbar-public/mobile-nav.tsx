@@ -22,6 +22,7 @@ import { BsSim } from "react-icons/bs";
 
 import { ImConnection } from "react-icons/im";
 import { publicRoutes } from "./main-nav";
+import { useCategories } from "@/hooks/use-categories";
 
 type MobileNavProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
@@ -30,7 +31,16 @@ export default function MobileNav({ className, ...props }: MobileNavProps) {
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
+  const [openProduct, setOpenProduct] = useState(false);
+  const categories = useCategories((s) => s.categories);
+
   const routes = publicRoutes(pathname);
+
+  const CategoriesRoutes = categories.map((route) => ({
+    href: `/category/${route.id}`,
+    label: route.name,
+    active: pathname.startsWith(`/category/${route.id}`),
+  }));
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -92,6 +102,49 @@ export default function MobileNav({ className, ...props }: MobileNavProps) {
         <Command>
           <CommandList>
             <CommandGroup>
+              <CommandItem>
+                <Popover open={openProduct} onOpenChange={setOpenProduct}>
+                  <PopoverTrigger asChild>
+                    <CommandItem
+                      onSelect={() => {
+                        setOpenProduct((open) => !open);
+                      }}
+                      className="test-sm cursor-pointer"
+                    >
+                      <StoreIcon className="mr-2 h-4 w-4" />
+                      Nos Produis
+                      <ChevronDown
+                        className={cn(
+                          "ml-4 h-4 w-4",
+                          openProduct ? "rotate-180" : "rotate-0",
+                        )}
+                      />
+                    </CommandItem>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    side="bottom"
+                    align="start"
+                    className="z-50 w-[200px]"
+                  >
+                    {CategoriesRoutes.map(({ href, label, active }) => (
+                      <Button asChild key={href} variant={"link"}>
+                        <Link
+                          href={href}
+                          className={cn(
+                            active && "bg-primary text-primary-foreground",
+                          )}
+                          onClick={() => {
+                            setOpenProduct(false);
+                            setOpen(false);
+                          }}
+                        >
+                          {label}
+                        </Link>
+                      </Button>
+                    ))}
+                  </PopoverContent>
+                </Popover>
+              </CommandItem>
               {routes.map(({ href, label, active, Icone }) => (
                 <CommandItem
                   key={href}

@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { fr } from "date-fns/locale";
 import { format } from "date-fns";
+import Link from "next/link";
 
 export type ContactColumn = {
   id: string;
   name: string;
+  userId: string | null;
   phone?: string;
   email: string;
   subject: string;
@@ -21,13 +23,26 @@ export const columns: ColumnDef<ContactColumn>[] = [
   {
     accessorKey: "name",
     header: "Nom",
+    cell: ({ row }) => (
+      <div className="flex capitalize md:pl-10 ">
+        <Button asChild variant={"link"}>
+          {row.original.userId ? (
+            <Link href={`/admin/users/${row.original.userId}`}>
+              {row.getValue("name")}
+            </Link>
+          ) : (
+            <span>{row.getValue("name")}</span>
+          )}
+        </Button>
+      </div>
+    ),
   },
   {
     accessorKey: "phone",
     header: "Téléphone",
   },
   {
-    accessorKey: "mail",
+    accessorKey: "email",
     header: "Email",
   },
   {

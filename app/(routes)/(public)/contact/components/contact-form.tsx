@@ -5,6 +5,7 @@ import { LoadingButton } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -119,7 +120,7 @@ export const ContactForm = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{"Nom/Prénom ou nom d'entreprise :"}</FormLabel>
+                  <FormLabel>{"Nom/Prénom ou nom d'entreprise"}</FormLabel>
                   <FormControl>
                     <Input
                       disabled={form.formState.isSubmitting}
@@ -157,7 +158,7 @@ export const ContactForm = ({
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Numéro de téléphone</FormLabel>
+                  <FormLabel>{"Numéro de téléphone (facultatif)"}</FormLabel>
                   <FormControl>
                     <PhoneInput
                       placeholder="Entrer un numéro de téléphone"
@@ -168,6 +169,7 @@ export const ContactForm = ({
                       {...field}
                     />
                   </FormControl>
+
                   <FormMessage />
                 </FormItem>
               )}

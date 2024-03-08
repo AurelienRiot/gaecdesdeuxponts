@@ -11,6 +11,7 @@ const ContactsPage = async () => {
 
   const formattedContacts: ContactColumn[] = contacts.map((item) => ({
     id: item.id,
+    userId: item.userId,
     name: item.name,
     phone: item.phone === null ? undefined : item.phone,
     email: item.email,

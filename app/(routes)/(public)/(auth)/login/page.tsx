@@ -63,7 +63,7 @@ export default function LoginPage() {
           {" "}
           Page de Connection{" "}
         </h1>
-        {/* <button
+        <button
           onClick={() => {
             signIn("google", {
               callbackUrl,
@@ -96,15 +96,15 @@ export default function LoginPage() {
           <span className="mr-4 font-medium text-white sm:text-lg">
             Se connecter avec Google
           </span>
-        </button> */}
-        {/* <div
+        </button>
+        <div
           className={`my-4 flex h-4 flex-row  items-center gap-4 self-stretch whitespace-nowrap
         before:h-0.5 before:w-full 
         before:flex-grow before:bg-primary/30  after:h-0.5  after:w-full 
         after:flex-grow  after:bg-primary/30  `}
         >
           ou
-        </div> */}
+        </div>
         {success ? null : (
           <Form {...form}>
             <form

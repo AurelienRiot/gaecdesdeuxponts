@@ -1,14 +1,15 @@
 import { ProductWithCategoryAndImages } from "@/types";
+import { toast } from "sonner";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 interface CartStore {
   items: ProductWithCategoryAndImages[];
   quantities: { [productId: string]: number };
-  dates: { [productId: string]: Date[] };
-  addItem: (data: ProductWithCategoryAndImages, date?: Date) => void;
-  removeOneItem: (id: string, date?: Date) => void;
-  removeItem: (id: string, date?: Date) => void;
+  addItem: (data: ProductWithCategoryAndImages) => void;
+  addOneItem: (id: string) => void;
+  removeOneItem: (id: string) => void;
+  removeItem: (id: string) => void;
   removeAll: () => void;
 }
 
@@ -17,43 +18,34 @@ const useCart = create(
     (set, get) => ({
       items: [],
       quantities: {},
-      dates: {},
 
-      addItem: (data: ProductWithCategoryAndImages, date?: Date) => {
+      addItem: (data: ProductWithCategoryAndImages) => {
         const quantities = get().quantities;
-        const dates = get().dates;
         const currentItems = get().items;
         const existingItem = currentItems.find((item) => item.id === data.id);
 
         if (existingItem) {
           quantities[data.id]++;
-          if (date) {
-            dates[data.id].push(date);
-          }
         } else {
           quantities[data.id] = 1;
           set({ items: [...get().items, data] });
-          if (date) {
-            dates[data.id] = [date];
-          }
         }
-
-        set({ quantities, dates });
+        set({ quantities });
+        toast.success("Produit ajouté au panier.");
       },
 
-      removeOneItem: (id: string, date?: Date) => {
+      addOneItem: (id: string) => {
         const quantities = get().quantities;
-        const dates = get().dates;
-        if (date) {
-          const index = dates[id].indexOf(date);
-          if (index > -1) {
-            dates[id].splice(index, 1);
-          }
-          set({ dates });
-        }
+        quantities[id]++;
+        set({ quantities });
+      },
+
+      removeOneItem: (id: string) => {
+        const quantities = get().quantities;
         quantities[id]--;
         if (quantities[id] === 0) {
           set({ items: [...get().items.filter((item) => item.id !== id)] });
+          toast.success("Produit retiré du panier");
         } else {
           set({ quantities });
         }
@@ -61,25 +53,27 @@ const useCart = create(
 
       removeItem: (id: string) => {
         const quantities = get().quantities;
-        const dates = get().dates;
         quantities[id] = 0;
-        dates[id] = [];
         set({
           items: [...get().items.filter((item) => item.id !== id)],
           quantities,
-          dates,
         });
+        toast.success("Produit retiré du panier");
       },
 
       removeAll: () => {
-        set({ items: [], quantities: {}, dates: {} });
+        const quantities = get().quantities;
+        for (const productId of Object.keys(get().quantities)) {
+          quantities[productId] = 0;
+        }
+        set({ items: [], quantities });
       },
     }),
     {
       name: "cart-storage",
       storage: createJSONStorage(() => localStorage),
-    }
-  )
+    },
+  ),
 );
 
 export default useCart;
