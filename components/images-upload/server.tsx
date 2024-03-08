@@ -6,9 +6,10 @@ import cloudinary from "cloudinary";
 import { checkAdmin } from "../auth/checkAuth";
 
 cloudinary.v2.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true,
 });
 
 export type Ressources = {
@@ -27,6 +28,39 @@ export type Ressources = {
   version: Number;
   width: Number;
 };
+
+type SignatureReturnType =
+  | {
+      success: true;
+      data: {
+        timestamp: number;
+        signature: string;
+      };
+    }
+  | {
+      success: false;
+      message: string;
+    };
+async function getSignature(): Promise<SignatureReturnType> {
+  const isAuth = await checkAdmin();
+  if (!isAuth) {
+    return {
+      success: false,
+      message: "Vous devez être authentifier",
+    };
+  }
+  const timestamp = Math.round(new Date().getTime() / 1000);
+
+  const signature = cloudinary.v2.utils.api_sign_request(
+    { timestamp, folder: "farm" },
+    process.env.CLOUDINARY_API_SECRET as string,
+  );
+
+  return {
+    success: true,
+    data: { timestamp, signature },
+  };
+}
 
 type listFilesReturnType =
   | {
@@ -206,27 +240,4 @@ async function deleteObject({
   }
 }
 
-const checkUrls = async (
-  urls: { secureUrl: string | null; publicId: string }[],
-): Promise<void> => {
-  const invalidUrls = await Promise.all(
-    urls.map(async (url) => {
-      if (!url.secureUrl) {
-        return { secureUrl: null, publicId: url.publicId };
-      }
-      const isAccessible = await checkIfUrlAccessible(url.secureUrl);
-      return isAccessible ? { secureUrl: null, publicId: url.publicId } : url;
-    }),
-  );
-
-  if (invalidUrls.some((url) => url?.secureUrl !== null)) {
-    // If there are still invalid URLs, wait for 250ms and check again
-    await addDelay(250);
-    return checkUrls(invalidUrls.filter((url) => url.secureUrl !== null));
-  } else {
-    // All URLs are valid
-    return;
-  }
-};
-
-export { deleteObject, listFiles, uploadFile };
+export { deleteObject, listFiles, getSignature };

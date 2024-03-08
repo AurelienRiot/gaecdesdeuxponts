@@ -7,10 +7,19 @@ import { AnimateHeight } from "../animations/animate-size";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
-import { Ressources, deleteObject, listFiles, uploadFile } from "./server";
+import { Ressources, deleteObject, getSignature, listFiles } from "./server";
 import { AnimatePresence, Reorder } from "framer-motion";
+import { addDelay, checkIfUrlAccessible } from "@/lib/utils";
 
-const bucketName = process.env.NEXT_PUBLIC_SCALEWAY_BUCKET_NAME as string;
+const generateRandomString = (length: number) => {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+};
 
 type UploadImageProps = {
   selectedFiles: string[];
@@ -33,45 +42,83 @@ const UploadImage = ({
       return;
     }
 
-    const formData = new FormData();
+    const files: File[] = [];
     Array.from(event.target.files).forEach((file) => {
-      formData.append(file.name, file);
+      files.push(file);
     });
 
-    await fileChange(formData);
+    await fileChange(files);
   };
 
   const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     setLoading(true);
-    const formData = new FormData();
+    const files: File[] = [];
     Array.from(event.dataTransfer.files).forEach((file) => {
       if (
-        file.type === "image/png" ||
-        file.type === "image/jpeg" ||
-        file.type === "image/jpg" ||
-        file.type === "image/webp"
+        file.type !== "image/png" &&
+        file.type !== "image/jpeg" &&
+        file.type !== "image/jpg" &&
+        file.type !== "image/webp"
       ) {
-        formData.append(file.name, file);
-      } else {
         toast.error(
           `Le format du fichier n'est pas supporté : ${file.name}\nFormats supportés : png, jpeg, jpg, webp`,
           { duration: 5000 },
         );
+      } else {
+        files.push(file);
       }
     });
-    await fileChange(formData);
+
+    await fileChange(files);
   };
 
-  const fileChange = async (formData: FormData) => {
-    const result = await uploadFile({
-      formData,
+  const fileChange = async (files: File[]) => {
+    const uploadPromises = files.map(async (file) => {
+      const result = await getSignature();
+      if (!result.success) {
+        toast.error(result.message);
+        setLoading(false);
+        return;
+      }
+
+      const { signature, timestamp } = result.data;
+
+      const originalFileName = file.name;
+      const fileNameWithoutExtension =
+        originalFileName.substring(0, originalFileName.lastIndexOf(".")) ||
+        originalFileName;
+      const randomString = generateRandomString(10); // Generate a random string of 5 characters
+
+      // Combine the file name with the random string and the extension to form a new unique file name
+      const uniqueFileName = `${randomString}-${fileNameWithoutExtension}`;
+
+      const formdata = new FormData();
+      formdata.append("timestamp", timestamp.toString());
+      formdata.append("signature", signature);
+      formdata.append(
+        "api_key",
+        process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY as string,
+      );
+      formdata.append("file", file);
+      formdata.append("folder", "farm");
+
+      const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`;
+      const response = await fetch(url, {
+        method: "POST",
+        body: formdata,
+      });
+      const data = await response.json();
+      return { publicId: data.public_id, secureUrl: data.secure_url }; // Return the successful upload's data
     });
-    if (!result.success) {
-      toast.error(result.message);
-      setLoading(false);
-      return;
-    }
+
+    const results = await Promise.all(uploadPromises);
+    const validUrls = results.filter(
+      (result): result is { secureUrl: string; publicId: string } =>
+        result !== null,
+    );
+
+    await checkUrls(validUrls);
 
     const updatedFiles = await listFiles();
     if (!updatedFiles.success) {
@@ -85,10 +132,10 @@ const UploadImage = ({
     if (multipleImages) {
       setSelectedFiles((prev) => [
         ...prev,
-        ...result.data.map((item) => item.publicId),
+        ...validUrls.map((item) => item.publicId),
       ]);
     } else {
-      setSelectedFiles([result.data[0].publicId]);
+      setSelectedFiles([validUrls[0].publicId]);
     }
     setLoading(false);
   };
@@ -403,4 +450,27 @@ const DisplayImages = ({
       </AnimateHeight>
     </div>
   );
+};
+
+const checkUrls = async (
+  urls: { secureUrl: string | null; publicId: string }[],
+): Promise<void> => {
+  const invalidUrls = await Promise.all(
+    urls.map(async (url) => {
+      if (!url.secureUrl) {
+        return { secureUrl: null, publicId: url.publicId };
+      }
+      const isAccessible = await checkIfUrlAccessible(url.secureUrl);
+      return isAccessible ? { secureUrl: null, publicId: url.publicId } : url;
+    }),
+  );
+
+  if (invalidUrls.some((url) => url?.secureUrl !== null)) {
+    // If there are still invalid URLs, wait for 250ms and check again
+    await addDelay(250);
+    return checkUrls(invalidUrls.filter((url) => url.secureUrl !== null));
+  } else {
+    // All URLs are valid
+    return;
+  }
 };
