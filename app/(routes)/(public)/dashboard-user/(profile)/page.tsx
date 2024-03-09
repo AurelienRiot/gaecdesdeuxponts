@@ -23,7 +23,7 @@ const DashboardUser = async () => {
         })
         .join(", "),
       totalPrice: formatter.format(Number(order.totalPrice)),
-      pdfUrl: order.pdfUrl,
+      isPaid: order.isPaid,
       datePickUp: order.datePickUp,
       createdAt: order.createdAt,
     }),

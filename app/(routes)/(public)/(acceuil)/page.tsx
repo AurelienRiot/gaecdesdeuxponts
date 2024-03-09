@@ -3,7 +3,7 @@ import ImageAccueil from "./components/image-accueil";
 import FarmIntroduction from "./components/introduction";
 import WhyChooseUs from "./components/why-choose-us";
 import dynamic from "next/dynamic";
-const PDF = dynamic(() => import("./components/displayPDF"), {
+const PDF = dynamic(() => import("../../../../components/pdf/displayPDF"), {
   ssr: false,
 });
 

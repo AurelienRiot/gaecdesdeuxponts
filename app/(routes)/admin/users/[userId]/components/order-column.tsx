@@ -7,10 +7,14 @@ import { ColumnDef, Row } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { ArrowUpDown } from "lucide-react";
-import { useState } from "react";
 import { toast } from "sonner";
 import { changeStatus } from "../../../orders/components/server-action";
 import { OrderCellAction } from "./order-cell-action";
+import { useOrderStatus } from "./order-table";
+import dynamic from "next/dynamic";
+const DisplayPDF = dynamic(() => import("@/components/pdf/displayPDF"), {
+  ssr: false,
+});
 
 export type OrderColumn = {
   id: string;
@@ -33,7 +37,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
     accessorKey: "isPaid",
     header: "Facture",
     id: "pdf",
-    cell: ({ row }) => (row.getValue("isPaid") ? "Payé" : "Non disponible"),
+    cell: ({ row }) => <FactureCell row={row} />,
   },
   {
     accessorKey: "isPaid",
@@ -88,24 +92,50 @@ export const columns: ColumnDef<OrderColumn>[] = [
 ];
 
 function StatusCell({ row }: { row: Row<OrderColumn> }) {
-  const [statut, setStatut] = useState<boolean | "indeterminate">(
-    row.getValue("isPaid"),
-  );
+  const { orderStatus, setOrderStatus } = useOrderStatus();
+
   return (
     <Checkbox
       className="self-center"
-      checked={statut}
+      checked={
+        orderStatus[row.original.id] === undefined
+          ? "indeterminate"
+          : orderStatus[row.original.id]
+      }
       onCheckedChange={async (e) => {
-        setStatut(() => "indeterminate");
+        setOrderStatus({
+          ...orderStatus,
+          [row.original.id]: "indeterminate",
+        });
         const result = await changeStatus({ id: row.original.id, isPaid: e });
         if (!result.success) {
           toast.error(result.message);
-          setStatut(() => !e);
+          setOrderStatus({
+            ...orderStatus,
+            [row.original.id]: !e,
+          });
         } else {
           toast.success("Statut mis à jour");
-          setStatut(() => e);
+          setOrderStatus({
+            ...orderStatus,
+            [row.original.id]: e,
+          });
         }
       }}
     />
+  );
+}
+
+function FactureCell({ row }: { row: Row<OrderColumn> }) {
+  const { orderStatus } = useOrderStatus();
+  return (
+    <>
+      {!orderStatus[row.original.id] ||
+      orderStatus[row.original.id] === "indeterminate" ? (
+        "Non disponible"
+      ) : (
+        <DisplayPDF />
+      )}
+    </>
   );
 }

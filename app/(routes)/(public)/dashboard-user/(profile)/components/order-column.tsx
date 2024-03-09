@@ -1,14 +1,18 @@
 "use client";
 
-import { DisplayPdf } from "@/components/display-pdf";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { dateFormatter } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
+import dynamic from "next/dynamic";
+const DisplayPDF = dynamic(() => import("@/components/pdf/displayPDF"), {
+  ssr: false,
+});
 
 export type OrderColumnType = {
   id: string;
-  pdfUrl: string;
+  isPaid: boolean;
   datePickUp: Date;
   totalPrice: string;
   products: string;
@@ -24,10 +28,18 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
     header: "Prix total",
   },
   {
-    accessorKey: "pdfUrl",
+    accessorKey: "isPaid",
     header: "Facture",
+    id: "pdf",
     cell: ({ row }) => (
-      <DisplayPdf avalaible={false} pdfUrl={row.original.pdfUrl} />
+      <>{!row.original.isPaid ? "Non disponible" : <DisplayPDF />}</>
+    ),
+  },
+  {
+    accessorKey: "isPaid",
+    header: "Payé",
+    cell: ({ row }) => (
+      <Checkbox className="self-center" checked={row.original.isPaid} />
     ),
   },
   {

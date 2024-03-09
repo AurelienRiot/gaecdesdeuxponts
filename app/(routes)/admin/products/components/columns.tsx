@@ -1,13 +1,17 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Row } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { ArrowUpDown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { CellAction } from "./cell-action";
+import { useState } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { changeArchived, changeFeatured } from "./server-action";
+import { toast } from "sonner";
 
 export type ProductColumn = {
   id: string;
@@ -15,8 +19,8 @@ export type ProductColumn = {
   image: string;
   price: string;
   category: string;
-  isFeatured: string;
-  isArchived: string;
+  isFeatured: boolean;
+  isArchived: boolean;
   createdAt: Date;
 };
 
@@ -49,10 +53,12 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "isArchived",
     header: "Archivé",
+    cell: ({ row }) => <ArchivedCell row={row} />,
   },
   {
     accessorKey: "isFeatured",
     header: "Mise en avant",
+    cell: ({ row }) => <FeaturedCell row={row} />,
   },
   {
     accessorKey: "price",
@@ -87,3 +93,55 @@ export const columns: ColumnDef<ProductColumn>[] = [
     cell: ({ row }) => <CellAction data={row.original} />,
   },
 ];
+
+function ArchivedCell({ row }: { row: Row<ProductColumn> }) {
+  const [status, setStatus] = useState<boolean | "indeterminate">(
+    row.original.isArchived,
+  );
+  return (
+    <Checkbox
+      className="self-center"
+      checked={status}
+      onCheckedChange={async (e) => {
+        setStatus("indeterminate");
+        const result = await changeArchived({
+          id: row.original.id,
+          isArchived: e,
+        });
+        if (!result.success) {
+          toast.error(result.message);
+          setStatus(!e);
+        } else {
+          toast.success("Statut mis à jour");
+          setStatus(e);
+        }
+      }}
+    />
+  );
+}
+
+function FeaturedCell({ row }: { row: Row<ProductColumn> }) {
+  const [status, setStatus] = useState<boolean | "indeterminate">(
+    row.original.isFeatured,
+  );
+  return (
+    <Checkbox
+      className="self-center"
+      checked={status}
+      onCheckedChange={async (e) => {
+        setStatus("indeterminate");
+        const result = await changeFeatured({
+          id: row.original.id,
+          isFeatured: e,
+        });
+        if (!result.success) {
+          toast.error(result.message);
+          setStatus(!e);
+        } else {
+          toast.success("Statut mis à jour");
+          setStatus(e);
+        }
+      }}
+    />
+  );
+}
