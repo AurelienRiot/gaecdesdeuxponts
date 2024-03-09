@@ -9,7 +9,13 @@ import {
 } from "@/components/ui/navigation-menu";
 import { useCategories } from "@/hooks/use-categories";
 import { cn } from "@/lib/utils";
-import { ChevronDown, HelpCircle, PhoneCall, StoreIcon } from "lucide-react";
+import {
+  ChevronDown,
+  HelpCircle,
+  Map,
+  PhoneCall,
+  StoreIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BiPhotoAlbum } from "react-icons/bi";
@@ -108,5 +114,12 @@ export const publicRoutes = (pathname: string) => [
     label: "Contact",
     active: pathname === `/contact`,
     Icone: PhoneCall,
+  },
+
+  {
+    href: `/find`,
+    label: "Où nous trouver",
+    active: pathname === `/find`,
+    Icone: Map,
   },
 ];

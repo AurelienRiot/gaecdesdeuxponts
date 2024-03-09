@@ -28,7 +28,6 @@ import { CountriesList, CountrySelect, isCountry } from "./ui/phone-input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Skeleton } from "./ui/skeleton";
 import { Switch } from "./ui/switch";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export type FullAdress = {
   label: string;
@@ -114,7 +113,12 @@ export const AdressForm = <T extends { adresse: string }>({
                 </div>
               </FormControl>
               <PopoverContent className="w-fit p-0" side="bottom" align="start">
-                <Command loop>
+                <Command
+                  loop
+                  filter={(value, search) => {
+                    return 1;
+                  }}
+                >
                   <CommandInput
                     placeholder="Entrer l'adresse..."
                     className="h-9 "
@@ -138,7 +142,7 @@ export const AdressForm = <T extends { adresse: string }>({
                       <CommandItem
                         className="cursor-pointer
                           bg-popover  text-popover-foreground"
-                        value={query + " " + index.toString()}
+                        value={index.toString()}
                         key={address.label}
                         onSelect={() => {
                           form.setValue(

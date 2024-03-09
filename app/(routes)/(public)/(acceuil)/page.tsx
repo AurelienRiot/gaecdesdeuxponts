@@ -1,11 +1,9 @@
+import BlopSVG from "@/components/animations/blop";
 import Container from "@/components/ui/container";
+import { CaracteristiqueCard } from "./components/cards";
 import ImageAccueil from "./components/image-accueil";
 import FarmIntroduction from "./components/introduction";
 import WhyChooseUs from "./components/why-choose-us";
-import dynamic from "next/dynamic";
-const PDF = dynamic(() => import("../../../../components/pdf/displayPDF"), {
-  ssr: false,
-});
 
 export default function Home() {
   return (
@@ -26,7 +24,7 @@ export default function Home() {
         </div>
         <FarmIntroduction />
         <WhyChooseUs />
-        <PDF />
+        <CaracteristiqueCard />
       </Container>
     </div>
   );

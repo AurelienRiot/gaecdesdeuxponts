@@ -29,6 +29,7 @@ export type Suggestion = {
   line1: string;
   postal_code: string;
   state: string;
+  coordinates: [number, number];
 };
 
 const AddressAutocomplete = async (value: string) => {
@@ -37,8 +38,8 @@ const AddressAutocomplete = async (value: string) => {
 
   const response = await fetch(
     `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(
-      value
-    )}&autocomplete=1`
+      value,
+    )}&autocomplete=1`,
   );
   const data = await response.json();
   const features = data.features;
@@ -49,6 +50,7 @@ const AddressAutocomplete = async (value: string) => {
     line1: feature.properties.name,
     postal_code: feature.properties.postcode,
     state: feature.properties.context.split(", ").at(-1),
+    coordinates: feature.geometry.coordinates,
   }));
   return suggestions as Suggestion[];
 };

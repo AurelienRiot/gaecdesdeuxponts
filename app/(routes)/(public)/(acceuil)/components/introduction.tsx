@@ -19,10 +19,14 @@ const farmInfo = [
 function FarmIntroduction() {
   return (
     <>
-      <div className="mt-[20vh] w-full rounded-t-md bg-background p-4 text-center">
-        <h2 className="mb-4 font-semibold sm:text-2xl  md:text-3xl lg:text-4xl">
-          Introduction à la Ferme
-        </h2>
+      <div className="mt-[20vh] w-full space-y-2 rounded-t-md bg-background p-4 text-center">
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <h2 className="mb-4 text-4xl font-semibold">
+            Introduction à la Ferme
+          </h2>
+          <Image src={"/Logo-AB.jpg"} alt="logo AB" width={209} height={100} />
+        </div>
+
         <div className="flex flex-wrap items-center justify-center gap-4">
           {farmInfo.map((info) => (
             <div
