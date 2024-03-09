@@ -10,7 +10,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useOrigin } from "@/hooks/use-origin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { signIn } from "next-auth/react";
@@ -30,9 +29,10 @@ const formSchema = z.object({
 
 type EmailFormValues = z.infer<typeof formSchema>;
 
+const baseUrl = process.env.NEXT_PUBLIC_URL;
+
 export default function LoginPage() {
   const callbackUrl = useSearchParams().get("callbackUrl") || "/dashboard-user";
-  const origin = useOrigin();
 
   return (
     <div className="flex w-full items-center justify-center bg-slate-100 dark:bg-slate-900">
@@ -41,7 +41,7 @@ export default function LoginPage() {
           {" "}
           Page de Connection{" "}
         </h1>
-        <GoogleButton callbackUrl={origin + callbackUrl} />
+        <GoogleButton callbackUrl={baseUrl + callbackUrl} />
         <div
           className={`my-4 flex h-4 flex-row  items-center gap-4 self-stretch whitespace-nowrap
         before:h-0.5 before:w-full 
@@ -50,7 +50,7 @@ export default function LoginPage() {
         >
           ou
         </div>
-        <EmailButton callbackUrl={origin + callbackUrl} />
+        <EmailButton callbackUrl={baseUrl + callbackUrl} />
       </div>
     </div>
   );
