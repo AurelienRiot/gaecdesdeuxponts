@@ -210,8 +210,11 @@ const DatePicker = ({ className, date, setDate }: DatePickerProps) => {
             // month={month}
             locale={fr}
             onSelect={onSelect}
-            // disabled={disabledDays}
-            // modifiers={{
+            // disabledDays={(date) => date.getDay() === 0 || date.getDay() === 6}
+            modifiers={{
+              disabled: (date) =>
+                date.getDay() === 0 || date.getDay() === 6 || date < new Date(),
+            }} // modifiers={{
             //   full: fullDays,
             //   partiallyFull: partiallyFullDays,
             //   free: freeDays,

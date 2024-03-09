@@ -1,17 +1,36 @@
 import { cn } from "@/lib/utils";
 
-function Skeleton({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+type SkeletonProps =
+  | (React.HTMLAttributes<HTMLDivElement> & {
+      className?: string;
+      as?: "div";
+    })
+  | (React.HTMLAttributes<HTMLSpanElement> & {
+      className?: string;
+      as?: "span";
+    });
+
+function Skeleton({ className, as = "div", ...props }: SkeletonProps) {
   return (
-    <div
-      className={cn(
-        "animate-pulse rounded-md bg-muted-foreground/50",
-        className,
+    <>
+      {as === "div" ? (
+        <div
+          className={cn(
+            "animate-pulse rounded-md bg-muted-foreground/50",
+            className,
+          )}
+          {...props}
+        />
+      ) : (
+        <span
+          className={cn(
+            "animate-pulse rounded-md bg-muted-foreground/50",
+            className,
+          )}
+          {...props}
+        />
       )}
-      {...props}
-    />
+    </>
   );
 }
 

@@ -48,14 +48,16 @@ const DashboardUser = async () => {
           <p className="font-bold ">Email :</p>
           <p>{user.email}</p>
           <p className="font-bold">Adresse :</p>
-          {address ? (
+          {address.line1 ? (
             <p>
               {address.line1} {address.postalCode} {address.city}{" "}
             </p>
-          ) : null}
+          ) : (
+            <p>Non renseigné</p>
+          )}
 
           <p className="font-bold">Télephone :</p>
-          <p>{user.phone}</p>
+          <p>{user.phone ? user.phone : "Non renseigné"}</p>
         </div>
       </div>
 

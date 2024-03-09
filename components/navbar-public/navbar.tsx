@@ -36,7 +36,7 @@ const NavBar = () => {
             className="relative ml-4 hidden items-center transition-all hover:scale-105 sm:flex lg:ml-0"
           >
             <Image
-              src="/icone.jpeg"
+              src="/icone.webp"
               alt="logo"
               width={48}
               height={48}

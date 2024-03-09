@@ -30,6 +30,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
   const product = await prismadb.product.findUnique({
     where: {
       id: params.productId,
+      isArchived: false,
     },
     include: {
       category: true,

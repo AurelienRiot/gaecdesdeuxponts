@@ -10,15 +10,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useOrigin } from "@/hooks/use-origin";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { motion } from "framer-motion";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { motion } from "framer-motion";
-import { useOrigin } from "@/hooks/use-origin";
 import { toast } from "sonner";
+import * as z from "zod";
 
 const formSchema = z.object({
   email: z
@@ -97,6 +97,7 @@ export const GoogleButton = ({ callbackUrl }: { callbackUrl: string }) => {
 
 export const EmailButton = ({ callbackUrl }: { callbackUrl: string }) => {
   const [success, setSuccess] = useState(false);
+  console.log(callbackUrl);
 
   const form = useForm<EmailFormValues>({
     resolver: zodResolver(formSchema),

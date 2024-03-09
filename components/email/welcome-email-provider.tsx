@@ -27,7 +27,7 @@ export const WelcomeEmailProvider = ({
       <Container style={container}>
         <a href={baseUrl} target="_blank">
           <Img
-            src={`${baseUrl}/icone.jpeg`}
+            src={`${baseUrl}/icone.webp`}
             width="50"
             height="50"
             alt="GAEC des deux ponts Logo"

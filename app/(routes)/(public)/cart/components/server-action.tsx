@@ -31,7 +31,22 @@ export const checkOut = async ({
   if (!isAuth) {
     return {
       success: false,
-      message: "Vous devez être connecté",
+      message:
+        "Erreur lors de la connexion, essaye de vous connecter à nouveau",
+    };
+  }
+
+  const user = await prismadb.user.findUnique({
+    where: {
+      id: isAuth.id,
+    },
+  });
+
+  if (!user) {
+    return {
+      success: false,
+      message:
+        "Erreur lors de la connexion, essaye de vous connecter à nouveau",
     };
   }
 
@@ -68,7 +83,7 @@ export const checkOut = async ({
         })),
       },
       userId: isAuth.id,
-      name: isAuth.name || isAuth.email || "",
+      name: user.name || user.email || "",
       datePickUp: date,
     },
   });

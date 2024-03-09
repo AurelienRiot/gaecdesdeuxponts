@@ -2,6 +2,10 @@ import Container from "@/components/ui/container";
 import ImageAccueil from "./components/image-accueil";
 import FarmIntroduction from "./components/introduction";
 import WhyChooseUs from "./components/why-choose-us";
+import dynamic from "next/dynamic";
+const PDF = dynamic(() => import("./components/displayPDF"), {
+  ssr: false,
+});
 
 export default function Home() {
   return (
@@ -22,6 +26,7 @@ export default function Home() {
         </div>
         <FarmIntroduction />
         <WhyChooseUs />
+        <PDF />
       </Container>
     </div>
   );
