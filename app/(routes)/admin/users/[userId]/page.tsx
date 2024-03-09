@@ -55,7 +55,7 @@ const UserPage = async ({ params }: { params: { userId: string } }) => {
       })
       .join(", "),
     datePickUp: order.datePickUp,
-    pdfUrl: order.pdfUrl,
+    isPaid: order.isPaid,
     totalPrice: formatter.format(Number(order.totalPrice)),
     createdAt: order.createdAt,
   }));

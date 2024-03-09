@@ -1,17 +1,20 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
-import { OrderCellAction } from "./order-cell-action";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown } from "lucide-react";
-import { fr } from "date-fns/locale";
-import { format } from "date-fns";
-import { DisplayPdf } from "@/components/display-pdf";
+import { Checkbox } from "@/components/ui/checkbox";
 import { dateFormatter } from "@/lib/utils";
+import { ColumnDef, Row } from "@tanstack/react-table";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
+import { ArrowUpDown } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { changeStatus } from "../../../orders/components/server-action";
+import { OrderCellAction } from "./order-cell-action";
 
 export type OrderColumn = {
   id: string;
-  pdfUrl: string;
+  isPaid: boolean;
   datePickUp: Date;
   totalPrice: string;
   products: string;
@@ -27,11 +30,15 @@ export const columns: ColumnDef<OrderColumn>[] = [
     header: "Prix total",
   },
   {
-    accessorKey: "pdfUrl",
+    accessorKey: "isPaid",
     header: "Facture",
-    cell: ({ row }) => (
-      <DisplayPdf avalaible={false} pdfUrl={row.original.pdfUrl} />
-    ),
+    id: "pdf",
+    cell: ({ row }) => (row.getValue("isPaid") ? "Payé" : "Non disponible"),
+  },
+  {
+    accessorKey: "isPaid",
+    header: "Statut",
+    cell: ({ row }) => <StatusCell row={row} />,
   },
   {
     accessorKey: "datePickUp",
@@ -79,3 +86,26 @@ export const columns: ColumnDef<OrderColumn>[] = [
     cell: ({ row }) => <OrderCellAction data={row.original} />,
   },
 ];
+
+function StatusCell({ row }: { row: Row<OrderColumn> }) {
+  const [statut, setStatut] = useState<boolean | "indeterminate">(
+    row.getValue("isPaid"),
+  );
+  return (
+    <Checkbox
+      className="self-center"
+      checked={statut}
+      onCheckedChange={async (e) => {
+        setStatut(() => "indeterminate");
+        const result = await changeStatus({ id: row.original.id, isPaid: e });
+        if (!result.success) {
+          toast.error(result.message);
+          setStatut(() => !e);
+        } else {
+          toast.success("Statut mis à jour");
+          setStatut(() => e);
+        }
+      }}
+    />
+  );
+}

@@ -48,7 +48,7 @@ const DashboardUser = async () => {
           <p className="font-bold ">Email :</p>
           <p>{user.email}</p>
           <p className="font-bold">Adresse :</p>
-          {address.line1 ? (
+          {address?.line1 ? (
             <p>
               {address.line1} {address.postalCode} {address.city}{" "}
             </p>

@@ -43,4 +43,46 @@ type ReturnTypeOrdersObject =
       message: string;
     };
 
-export { deleteOrders };
+const changeStatus = async ({
+  id,
+  isPaid,
+}: {
+  id: string;
+  isPaid: boolean | "indeterminate";
+}): Promise<ReturnTypeOrdersObject> => {
+  const isAuth = await checkAdmin();
+
+  if (!isAuth) {
+    return {
+      success: false,
+      message: "Vous devez être authentifier",
+    };
+  }
+
+  if (isPaid === "indeterminate") {
+    return {
+      success: false,
+      message: "Une erreur est survenue, veuillez reessayer",
+    };
+  }
+  try {
+    const order = await prismadb.order.update({
+      where: {
+        id,
+      },
+      data: {
+        isPaid,
+      },
+    });
+    return {
+      success: true,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Une erreur est survenue, veuillez reessayer",
+    };
+  }
+};
+
+export { deleteOrders, changeStatus };

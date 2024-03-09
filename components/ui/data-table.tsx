@@ -85,16 +85,14 @@ export function DataTable<TData, TValue>({
       (header) =>
         header.id !== "actions" &&
         header.id !== "createdAt" &&
-        header.id !== "recurrence"
+        header.id !== "recurrence" &&
+        header.id !== "datePickUp" &&
+        header.id !== "isPaid",
     )
     .map((header) => header.id);
 
   const displayKeys = flatHeaders.map((header) =>
-    header.id === "priceHT"
-      ? "Prix"
-      : header.id === "dataCap"
-      ? "Limite donnée"
-      : header.column.columnDef.header
+    header.id === "price" ? "Prix" : header.column.columnDef.header,
   );
 
   function removeDuplicates<TData>(array: any[], key: string) {
@@ -115,7 +113,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="">
-      <div className="flex flex-row gap-4 py-4 flex-wrap items-center ">
+      <div className="flex flex-row flex-wrap items-center gap-4 py-4 ">
         <Input
           placeholder="Recherche"
           value={
@@ -222,7 +220,7 @@ export function DataTable<TData, TValue>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -244,7 +242,7 @@ export function DataTable<TData, TValue>({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

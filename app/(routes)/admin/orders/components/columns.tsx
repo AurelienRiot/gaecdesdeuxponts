@@ -1,18 +1,21 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { dateFormatter } from "@/lib/utils";
-import { ColumnDef } from "@tanstack/react-table";
+import { addDelay, dateFormatter } from "@/lib/utils";
+import { ColumnDef, Row } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import Link from "next/link";
 import { CellAction } from "./cell-action";
-import { DisplayPdf } from "@/components/display-pdf";
+import { Checkbox } from "@/components/ui/checkbox";
+import { changeStatus } from "./server-action";
+import { toast } from "sonner";
+import { useState } from "react";
 
 export type OrderColumn = {
   id: string;
   userId: string;
   name: string;
-  pdfUrl: string;
+  isPaid: boolean;
   datePickUp: Date;
   totalPrice: string;
   products: string;
@@ -28,13 +31,11 @@ export const columns: ColumnDef<OrderColumn>[] = [
     accessorKey: "name",
     header: "Nom",
     cell: ({ row }) => (
-      <div className="flex md:pl-10 ">
-        <Button asChild variant={"link"}>
-          <Link href={`/admin/users/${row.original.userId}`}>
-            {row.getValue("name")}
-          </Link>
-        </Button>
-      </div>
+      <Button asChild variant={"link"} className="px-0">
+        <Link href={`/admin/users/${row.original.userId}`}>
+          {row.getValue("name")}
+        </Link>
+      </Button>
     ),
   },
   {
@@ -42,11 +43,15 @@ export const columns: ColumnDef<OrderColumn>[] = [
     header: "Prix Total",
   },
   {
-    accessorKey: "pdfUrl",
+    accessorKey: "isPaid",
     header: "Facture",
-    cell: ({ row }) => (
-      <DisplayPdf avalaible={false} pdfUrl={row.original.pdfUrl} />
-    ),
+    id: "pdf",
+    cell: ({ row }) => (row.getValue("isPaid") ? "Payé" : "Non disponible"),
+  },
+  {
+    accessorKey: "isPaid",
+    header: "Statut",
+    cell: ({ row }) => <StatusCell row={row} />,
   },
   {
     accessorKey: "datePickUp",
@@ -94,3 +99,26 @@ export const columns: ColumnDef<OrderColumn>[] = [
     cell: ({ row }) => <CellAction data={row.original} />,
   },
 ];
+
+function StatusCell({ row }: { row: Row<OrderColumn> }) {
+  const [statut, setStatut] = useState<boolean | "indeterminate">(
+    row.getValue("isPaid"),
+  );
+  return (
+    <Checkbox
+      className="self-center"
+      checked={statut}
+      onCheckedChange={async (e) => {
+        setStatut(() => "indeterminate");
+        const result = await changeStatus({ id: row.original.id, isPaid: e });
+        if (!result.success) {
+          toast.error(result.message);
+          setStatut(() => !e);
+        } else {
+          toast.success("Statut mis à jour");
+          setStatut(() => e);
+        }
+      }}
+    />
+  );
+}

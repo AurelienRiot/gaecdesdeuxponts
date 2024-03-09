@@ -115,6 +115,7 @@ model Order {
   totalPrice Float @default(1)
   name       String @default("")
   pdfUrl     String @default("")
+  isPaid     Boolean @default(false)
   userId     String  
   user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
   datePickUp DateTime
