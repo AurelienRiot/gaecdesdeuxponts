@@ -2,7 +2,6 @@
 import AddressAutocomplete, {
   Suggestion,
 } from "@/actions/adress-autocompleteFR";
-import { FullAdress } from "@/components/address-form";
 import UploadImage from "@/components/images-upload/image-upload";
 import { Button, LoadingButton } from "@/components/ui/button";
 import {
@@ -35,9 +34,9 @@ import { ChevronDown } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { UseFormReturn, useForm } from "react-hook-form";
 import { isValidPhoneNumber } from "react-phone-number-input";
+import { toast } from "sonner";
 import { z } from "zod";
 import { createShop } from "./server-actions";
-import { toast } from "sonner";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Le nom est requis" }),

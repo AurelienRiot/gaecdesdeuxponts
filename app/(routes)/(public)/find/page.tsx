@@ -2,7 +2,7 @@ import Container from "@/components/ui/container";
 import { PlacePicker } from "./components/place";
 import { Shop } from "@prisma/client";
 
-export const shops: Shop[] = [
+const shops: Shop[] = [
   {
     id: "1",
     name: "CHEVRERIE DES PERRIERES",

@@ -4,21 +4,20 @@ import { Button } from "@/components/ui/button";
 import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
 import { cn } from "@/lib/utils";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { EmailButton, GoogleButton } from "@/components/auth/auth-button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Shop } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { EmailButton, GoogleButton } from "../../(auth)/login/page";
-import { Shop } from "../../find/page";
 import DatePicker from "./date-picker";
-import PickLocation from "./pick-location";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
