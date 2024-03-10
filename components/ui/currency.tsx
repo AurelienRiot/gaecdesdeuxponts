@@ -1,6 +1,6 @@
 "use client";
 
-import { cn, formatter } from "@/lib/utils";
+import { cn, currencyFormatter } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
 interface CurrencyProps {
@@ -29,7 +29,7 @@ const Currency: React.FC<CurrencyProps> = ({ value, className }) => {
         className,
       )}
     >
-      {`${formatter.format(value)} `}
+      {`${currencyFormatter.format(value)} `}
     </span>
   );
 };

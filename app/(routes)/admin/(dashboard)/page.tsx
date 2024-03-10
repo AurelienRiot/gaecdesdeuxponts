@@ -13,10 +13,7 @@ const DashboardPage: React.FC = () => {
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <Heading
-          title="Dashboard"
-          description="Présentation de votre magasin"
-        />
+        <Heading title="Admin" description="Présentation " />
         <Separator />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
           <Card>

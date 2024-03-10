@@ -19,6 +19,8 @@ import {
 } from "../ui/sheet";
 import { HiOutlineExternalLink } from "react-icons/hi";
 import CartItem from "../cart-item";
+import IconButton from "../ui/icon-button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const NavbarAction = () => {
   const session = useSession();
@@ -49,7 +51,17 @@ const AuthNavButton = ({
           }
           className="group flex items-center justify-center rounded-full border bg-primary p-2 text-primary-foreground shadow-md transition hover:rounded-full hover:bg-accent hover:text-accent-foreground"
         >
-          <User2 className="h-6 w-6 duration-300 ease-linear group-hover:scale-150 " />
+          {!session.data.user.image ? (
+            <User2 className="h-6 w-6 duration-300 ease-linear group-hover:scale-150 " />
+          ) : (
+            <Avatar className="h-6 w-6  duration-300 ease-linear group-hover:scale-150">
+              {" "}
+              <AvatarImage src={session.data.user.image} alt="avatar" />{" "}
+              <AvatarFallback className="bg-primary">
+                <User2 className="h-6 w-6" />
+              </AvatarFallback>{" "}
+            </Avatar>
+          )}
         </Link>
       ) : (
         <LoginButton />

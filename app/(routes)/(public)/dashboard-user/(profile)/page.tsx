@@ -1,9 +1,10 @@
-import { formatter } from "@/lib/utils";
+import { currencyFormatter, dateFormatter } from "@/lib/utils";
 import GetUser from "@/actions/get-user";
 import { redirect } from "next/navigation";
 import { OrderColumnType } from "./components/order-column";
 import { OrderTable } from "./components/order-table";
 import { UserButtons } from "./components/user-buttons";
+import Container from "@/components/ui/container";
 
 const DashboardUser = async () => {
   const user = await GetUser();
@@ -22,17 +23,43 @@ const DashboardUser = async () => {
           return name;
         })
         .join(", "),
-      totalPrice: formatter.format(Number(order.totalPrice)),
+      totalPrice: currencyFormatter.format(Number(order.totalPrice)),
       isPaid: order.isPaid,
       datePickUp: order.datePickUp,
       createdAt: order.createdAt,
+      dataInvoice: {
+        customer: {
+          id: user.id || "",
+          name: user.name || "",
+          address: (() => {
+            const a =
+              user?.address[0] && user?.address[0].line1
+                ? `${user?.address[0].line1} ${user?.address[0].postalCode} ${user?.address[0].city}`
+                : "";
+            return a;
+          })(),
+          phone: user.phone || "",
+          email: user.email || "",
+        },
+        order: {
+          id: order.id,
+          dateOfPayment: dateFormatter(order.datePickUp),
+          dateOfEdition: dateFormatter(new Date()),
+          items: order.orderItems.map((item) => ({
+            desc: item.product.name,
+            qty: item.quantity,
+            priceTTC: item.price,
+          })),
+          total: order.totalPrice,
+        },
+      },
     }),
   );
 
   const address = user.address[0];
 
   return (
-    <div className="mb-4 mt-4 gap-4">
+    <Container>
       <div className="mx-auto mb-4 flex h-fit w-fit flex-col items-center justify-center gap-2 rounded-md border-2 p-6 text-gray-800 shadow-xl dark:text-white">
         <>
           <h1 className="text-center text-3xl font-bold">
@@ -68,7 +95,7 @@ const DashboardUser = async () => {
 
         {/* <ButtonSubscriptions stripeCustomerId={user.stripeCustomerId} /> */}
       </div>
-    </div>
+    </Container>
   );
 };
 

@@ -1,7 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import { UserForm } from "./components/user-form";
 import { OrderColumn } from "./components/order-column";
-import { formatter } from "@/lib/utils";
+import { currencyFormatter, dateFormatter } from "@/lib/utils";
 import { OrderTable } from "./components/order-table";
 import ButtonBackward from "@/components/ui/button-backward";
 
@@ -56,8 +56,33 @@ const UserPage = async ({ params }: { params: { userId: string } }) => {
       .join(", "),
     datePickUp: order.datePickUp,
     isPaid: order.isPaid,
-    totalPrice: formatter.format(Number(order.totalPrice)),
+    totalPrice: currencyFormatter.format(Number(order.totalPrice)),
     createdAt: order.createdAt,
+    dataInvoice: {
+      customer: {
+        id: user.id || "",
+        name: user.name || "",
+        address: (() => {
+          const a = user?.address[0]
+            ? `${user?.address[0].line1} ${user?.address[0].postalCode} ${user?.address[0].city}`
+            : "";
+          return a;
+        })(),
+        phone: user.phone || "",
+        email: user.email || "",
+      },
+      order: {
+        id: order.id,
+        dateOfPayment: dateFormatter(order.datePickUp),
+        dateOfEdition: dateFormatter(new Date()),
+        items: order.orderItems.map((item) => ({
+          desc: item.product.name,
+          qty: item.quantity,
+          priceTTC: item.price,
+        })),
+        total: order.totalPrice,
+      },
+    },
   }));
 
   return (

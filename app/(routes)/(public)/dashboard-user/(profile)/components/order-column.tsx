@@ -1,5 +1,6 @@
 "use client";
 
+import { DataInvoiceType } from "@/components/pdf/data-invoice";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { dateFormatter } from "@/lib/utils";
@@ -17,6 +18,7 @@ export type OrderColumnType = {
   totalPrice: string;
   products: string;
   createdAt: Date;
+  dataInvoice: DataInvoiceType;
 };
 export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
   {
@@ -32,14 +34,23 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
     header: "Facture",
     id: "pdf",
     cell: ({ row }) => (
-      <>{!row.original.isPaid ? "Non disponible" : <DisplayPDF />}</>
+      <>
+        {!row.original.isPaid ? (
+          "Non disponible"
+        ) : (
+          <DisplayPDF data={row.original.dataInvoice} />
+        )}
+      </>
     ),
   },
   {
     accessorKey: "isPaid",
     header: "Payé",
     cell: ({ row }) => (
-      <Checkbox className="self-center" checked={row.original.isPaid} />
+      <Checkbox
+        className="cursor-default self-center"
+        checked={row.original.isPaid}
+      />
     ),
   },
   {

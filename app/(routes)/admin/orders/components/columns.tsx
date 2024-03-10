@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { CellAction } from "./cell-action";
 import { useOrderStatus } from "./client";
 import { changeStatus } from "./server-action";
+import { DataInvoiceType } from "@/components/pdf/data-invoice";
 const DisplayPDF = dynamic(() => import("@/components/pdf/displayPDF"), {
   ssr: false,
 });
@@ -24,6 +25,7 @@ export type OrderColumn = {
   totalPrice: string;
   products: string;
   createdAt: Date;
+  dataInvoice: DataInvoiceType;
 };
 
 export const columns: ColumnDef<OrderColumn>[] = [
@@ -147,7 +149,7 @@ function FactureCell({ row }: { row: Row<OrderColumn> }) {
       orderStatus[row.original.id] === "indeterminate" ? (
         "Non disponible"
       ) : (
-        <DisplayPDF />
+        <DisplayPDF data={row.original.dataInvoice} />
       )}
     </>
   );

@@ -80,15 +80,15 @@ export function DataTable<TData, TValue>({
   });
 
   const flatHeaders = table.getFlatHeaders();
+  const excludedIds = new Set([
+    "actions",
+    "createdAt",
+    "pdf",
+    "datePickUp",
+    "isPaid",
+  ]);
   const searchKeys = flatHeaders
-    .filter(
-      (header) =>
-        header.id !== "actions" &&
-        header.id !== "createdAt" &&
-        header.id !== "recurrence" &&
-        header.id !== "datePickUp" &&
-        header.id !== "isPaid",
-    )
+    .filter((header) => !excludedIds.has(header.id))
     .map((header) => header.id);
 
   const displayKeys = flatHeaders.map((header) =>

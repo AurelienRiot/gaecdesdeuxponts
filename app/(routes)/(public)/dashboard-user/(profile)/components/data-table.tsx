@@ -78,18 +78,24 @@ export function DataTable<TData, TValue>({
   });
 
   const flatHeaders = table.getFlatHeaders();
-  const excludedIds = new Set(["actions", "createdAt", "pdfUrl"]);
+  const excludedIds = new Set([
+    "actions",
+    "createdAt",
+    "pdf",
+    "datePickUp",
+    "isPaid",
+  ]);
   const searchKeys = flatHeaders
     .filter((header) => !excludedIds.has(header.id))
     .map((header) => header.id);
 
   const displayKeys = flatHeaders.map(
-    (header) => header.column.columnDef.header
+    (header) => header.column.columnDef.header,
   );
 
   return (
     <div className="overflow-auto">
-      <div className="grid grid-cols-1 gap-4 p-4 justify-content-center md:grid-cols-5 text-primary">
+      <div className="justify-content-center grid grid-cols-1 gap-4 p-4 text-primary md:grid-cols-5">
         <Input
           placeholder="Recherche"
           value={
@@ -142,7 +148,7 @@ export function DataTable<TData, TValue>({
         </div>
       </div>
 
-      <div className="border rounded-md">
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -157,7 +163,7 @@ export function DataTable<TData, TValue>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -177,7 +183,7 @@ export function DataTable<TData, TValue>({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -196,7 +202,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end py-4 space-x-2">
+      <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"
           size="sm"

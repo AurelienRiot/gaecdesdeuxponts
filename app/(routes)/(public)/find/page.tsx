@@ -3,7 +3,7 @@
 import AddressAutocomplete, {
   Suggestion,
 } from "@/actions/adress-autocompleteFR";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -11,8 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Container from "@/components/ui/container";
-import { cn } from "@/lib/utils";
 import {
   Command,
   CommandEmpty,
@@ -20,16 +18,15 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import Container from "@/components/ui/container";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { FormControl } from "@/components/ui/form";
-import { Switch } from "@/components/ui/switch";
+import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
-import Link from "next/link";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 type Shop = {
   name: string;

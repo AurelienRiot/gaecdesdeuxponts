@@ -97,8 +97,6 @@ export const GoogleButton = ({ callbackUrl }: { callbackUrl: string }) => {
 
 export const EmailButton = ({ callbackUrl }: { callbackUrl: string }) => {
   const [success, setSuccess] = useState(false);
-  console.log(callbackUrl);
-
   const form = useForm<EmailFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {

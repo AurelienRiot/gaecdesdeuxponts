@@ -1,7 +1,7 @@
 import prismadb from "@/lib/prismadb";
+import { currencyFormatter, dateFormatter } from "@/lib/utils";
 import { OrderClient } from "./components/client";
 import { OrderColumn } from "./components/columns";
-import { formatter } from "@/lib/utils";
 
 const OrdersPage = async () => {
   const orders = await prismadb.order.findMany({
@@ -14,6 +14,23 @@ const OrdersPage = async () => {
     },
     orderBy: {
       createdAt: "desc",
+    },
+  });
+
+  // fetch all the user that have an order in the database
+
+  const users = await prismadb.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      address: true,
+      phone: true,
+      email: true,
+    },
+    where: {
+      id: {
+        in: orders.map((order) => order.userId),
+      },
     },
   });
 
@@ -32,8 +49,36 @@ const OrdersPage = async () => {
         return name;
       })
       .join(", "),
-    totalPrice: formatter.format(order.totalPrice),
+    totalPrice: currencyFormatter.format(order.totalPrice),
     createdAt: order.createdAt,
+    dataInvoice: {
+      customer: {
+        id: users.find((user) => user.id === order.userId)?.id || "",
+        name: users.find((user) => user.id === order.userId)?.name || "",
+        address: (() => {
+          const u = users.find((user) => user.id === order.userId);
+          const a =
+            u?.address[0] && u.address[0].line1
+              ? `${u.address[0].line1} ${u.address[0].postalCode} ${u.address[0].city}`
+              : "";
+
+          return a;
+        })(),
+        phone: users.find((user) => user.id === order.userId)?.phone || "",
+        email: users.find((user) => user.id === order.userId)?.email || "",
+      },
+      order: {
+        id: order.id,
+        dateOfPayment: dateFormatter(order.datePickUp),
+        dateOfEdition: dateFormatter(new Date()),
+        items: order.orderItems.map((item) => ({
+          desc: item.product.name,
+          qty: item.quantity,
+          priceTTC: item.price,
+        })),
+        total: order.totalPrice,
+      },
+    },
   }));
 
   return (

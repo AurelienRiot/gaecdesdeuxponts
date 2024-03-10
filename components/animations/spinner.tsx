@@ -1,12 +1,12 @@
 import { cn } from "@/lib/utils";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
-type SpinnerProps = React.ComponentProps<typeof Loader>;
+type SpinnerProps = React.ComponentProps<typeof Loader2>;
 
 const Spinner = ({ className, size = 50, ...props }: SpinnerProps) => {
   return (
-    <Loader
-      className={cn("animate-spin text-sky-500 ", className)}
+    <Loader2
+      className={cn("animate-spin text-primary ", className)}
       size={size}
       {...props}
     />

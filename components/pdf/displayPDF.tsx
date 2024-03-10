@@ -1,27 +1,34 @@
 "use client";
-import Invoice from "@/components/pdf/create-facture";
+import Invoice from "@/components/pdf/create-invoice";
 import { Button } from "@/components/ui/button";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import { ExternalLink } from "lucide-react";
+import { Download, ExternalLink } from "lucide-react";
+import { DataInvoiceType } from "./data-invoice";
 
-const DisplayPDF = () => {
+const DisplayPDF = ({ data }: { data: DataInvoiceType }) => {
   return (
-    <Button
-      asChild
-      variant={"expandIcon"}
-      Icon={ExternalLink}
-      iconPlacement="right"
-    >
-      <PDFDownloadLink
-        document={<Invoice />}
-        fileName={"facture.pdf"}
-        download={false}
-        target="_blank"
-        className="cursor-pointer"
-      >
-        Afficher la facture
-      </PDFDownloadLink>
-    </Button>
+    <div className="flex flex-row gap-1">
+      <Button variant={"expandIcon"} Icon={ExternalLink} iconPlacement="right">
+        <PDFDownloadLink
+          document={<Invoice dataInvoice={data} />}
+          fileName={`facture-${data.order.id}.pdf`}
+          download={false}
+          target="_blank"
+        >
+          {({ blob, url, loading, error }) => "Afficher"}
+        </PDFDownloadLink>
+      </Button>
+
+      <Button variant={"expandIcon"} Icon={Download} iconPlacement="right">
+        <PDFDownloadLink
+          document={<Invoice dataInvoice={data} />}
+          fileName={`facture-${data.order.id}.pdf`}
+          download
+        >
+          {({ blob, url, loading, error }) => "Télecharger"}
+        </PDFDownloadLink>
+      </Button>
+    </div>
   );
 };
 

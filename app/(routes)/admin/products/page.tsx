@@ -1,7 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import { ProductClient } from "./components/client";
 import { ProductColumn } from "./components/columns";
-import { formatter } from "@/lib/utils";
+import { currencyFormatter } from "@/lib/utils";
 
 const ProductPage = async () => {
   const products = await prismadb.product.findMany({
@@ -24,7 +24,7 @@ const ProductPage = async () => {
     image: item.images[0].url,
     isFeatured: item.isFeatured,
     isArchived: item.isArchived,
-    price: formatter.format(item.price),
+    price: currencyFormatter.format(item.price),
     category: item.category.name,
     createdAt: item.createdAt,
   }));
