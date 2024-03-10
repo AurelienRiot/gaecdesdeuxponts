@@ -1,5 +1,6 @@
 "use client";
 
+import Spinner from "@/components/animations/spinner";
 import { LoadingButton } from "@/components/ui/button";
 import {
   Form,
@@ -10,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { addDelay } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { signIn } from "next-auth/react";
@@ -57,14 +59,17 @@ export default function LoginPage() {
 }
 
 export const GoogleButton = ({ callbackUrl }: { callbackUrl: string }) => {
+  const [loading, setLoading] = useState(false);
   return (
     <button
-      onClick={() => {
-        signIn("google", {
+      onClick={async () => {
+        setLoading(true);
+        await signIn("google", {
           callbackUrl,
         });
+        setLoading(false);
       }}
-      className="flex items-center justify-center  gap-4 rounded-sm bg-[#4285F4] shadow-xl  duration-200 ease-linear  hover:bg-[#4285F4]/90 active:scale-95"
+      className="relative flex w-[306px] items-center justify-between  gap-4 rounded-sm bg-[#4285F4] shadow-xl  duration-200 ease-linear  hover:bg-[#4285F4]/90 active:scale-95"
     >
       <svg
         className="h-12 w-12 rounded-sm border-2 border-[#4285F4] bg-white  p-2 hover:border-[#4285F4]/90"
@@ -88,8 +93,15 @@ export const GoogleButton = ({ callbackUrl }: { callbackUrl: string }) => {
           fill="#ea4335"
         />
       </svg>
-      <span className="mr-4 font-medium text-white sm:text-lg">
-        Se connecter avec Google
+      <span className="mr-4 self-center font-medium text-white sm:text-lg">
+        {loading ? (
+          <Spinner
+            size={40}
+            className=" absolute left-[135px] top-1   text-white"
+          />
+        ) : (
+          "Se connecter avec Google"
+        )}
       </span>
     </button>
   );

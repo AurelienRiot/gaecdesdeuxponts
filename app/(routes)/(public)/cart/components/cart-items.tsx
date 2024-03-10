@@ -36,7 +36,7 @@ const CartItems = () => {
                 layout: { type: "tween" },
                 animate: { duration: 1 },
               }}
-              className="flex p-1 mb-4 border rounded-lg sm:border-2 sm:p-2 bg-card border-border"
+              className="mb-4 flex rounded-lg border border-border bg-card p-1 sm:border-2 sm:p-2"
             >
               <CartItem data={item} />
             </motion.li>

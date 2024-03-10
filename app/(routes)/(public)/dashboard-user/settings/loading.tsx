@@ -1,4 +1,4 @@
-import { SkeletonAdressForm } from "@/components/adress-form";
+import { SkeletonAdressForm } from "@/components/address-form";
 import Spinner from "@/components/animations/spinner";
 import { Button } from "@/components/ui/button";
 import ButtonBackward from "@/components/ui/button-backward";

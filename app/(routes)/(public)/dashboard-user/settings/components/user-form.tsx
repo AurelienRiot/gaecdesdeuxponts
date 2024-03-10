@@ -1,6 +1,6 @@
 "use client";
 
-import { AdressForm, FullAdress } from "@/components/adress-form";
+import { AddressForm, FullAdress } from "@/components/address-form";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import { Button, LoadingButton } from "@/components/ui/button";
 import ButtonBackward from "@/components/ui/button-backward";
@@ -190,7 +190,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
               )}
             />
 
-            <AdressForm
+            <AddressForm
               selectedAddress={selectedAddress}
               setSelectedAddress={setSelectedAddress}
             />

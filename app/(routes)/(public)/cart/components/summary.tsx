@@ -1,28 +1,32 @@
 "use client";
 
-import { Button, LoadingButton } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button";
 import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
-import { cn, dateFormatter } from "@/lib/utils";
-import { fr } from "date-fns/locale";
-import { useRouter } from "next/navigation";
-import { Dispatch, useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { toast } from "sonner";
-import { checkOut } from "./server-action";
-import Spinner from "@/components/animations/spinner";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { EmailButton, GoogleButton } from "../../(auth)/login/page";
+import { Shop } from "../../find/page";
+import DatePicker from "./date-picker";
+import PickLocation from "./pick-location";
+
+const baseUrl = process.env.NEXT_PUBLIC_URL;
+
+const getDateFromSearchParam = (param: string | null): Date | undefined => {
+  if (param === null) return undefined; // If param is null, return undefined
+  const date = new Date(param);
+  return isNaN(date.getTime()) ? undefined : date; // Check if date is valid
+};
 
 interface SummaryProps {
   userId: string | undefined;
@@ -32,7 +36,9 @@ const Summary: React.FC<SummaryProps> = ({ userId }) => {
   const [loading, setLoading] = useState(false);
   const cart = useCart();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [date, setDate] = useState<Date | undefined>();
+  const [shop, setshop] = useState<Shop | undefined>();
 
   const [isMounted, setIsMounted] = useState(false);
 
@@ -43,6 +49,10 @@ const Summary: React.FC<SummaryProps> = ({ userId }) => {
       : !date
         ? "Veuillez sélectionner une date"
         : null;
+
+  useEffect(() => {
+    setDate(getDateFromSearchParam(searchParams.get("date")));
+  }, [searchParams]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -72,24 +82,26 @@ const Summary: React.FC<SummaryProps> = ({ userId }) => {
         quantity: cart.quantities[item.id],
       };
     });
-    const result = await checkOut({
-      itemsWithQuantities,
-      date,
-      totalPrice,
-    });
-    if (result.success) {
-      toast.success("Commande effectuée avec succès");
-      cart.removeAll();
-      router.push("/dashboard-user");
-    } else {
-      toast.error(result.message);
-    }
+
+    console.log(itemsWithQuantities, date, totalPrice, shop);
+    // const result = await checkOut({
+    //   itemsWithQuantities,
+    //   date,
+    //   totalPrice,
+    // });
+    // if (result.success) {
+    //   toast.success("Commande effectuée avec succès");
+    //   cart.removeAll();
+    //   router.push("/dashboard-user");
+    // } else {
+    //   toast.error(result.message);
+    // }
 
     setLoading(false);
   };
 
   return (
-    <div className="mt-16 rounded-lg border-2 bg-gray-100 px-4 py-6 dark:bg-black sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
+    <div className="relative mb-[450px] mt-16 rounded-lg border-2 bg-gray-100 px-4 py-6 dark:bg-black sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
       <h2 className="text-xl font-medium text-gray-500">Votre Commmande</h2>
       <ul className="pt-4">
         {cart.items.map((item) => (
@@ -115,8 +127,8 @@ const Summary: React.FC<SummaryProps> = ({ userId }) => {
           <Currency value={totalPrice} displayLogo={false} />
         </div>
       </div>
-
-      <DatePicker date={date} setDate={setDate} className="mt-6" />
+      <DatePicker date={date} className="mt-6" />
+      {/* <PickLocation setShop={setshop} /> */}
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
@@ -136,100 +148,56 @@ const Summary: React.FC<SummaryProps> = ({ userId }) => {
           <p>{tooltipText}</p>
         </TooltipContent>
       </Tooltip>
+      {!userId && (
+        <LoginCard
+          date={date}
+          className="absolute left-1/2 top-full -translate-x-1/2  "
+        />
+      )}
     </div>
   );
 };
 export default Summary;
 
-type DatePickerProps = {
+const LoginCard = ({
+  className,
+  date,
+}: {
   className?: string;
   date: Date | undefined;
-  setDate: Dispatch<React.SetStateAction<Date | undefined>>;
-};
+}) => {
+  let callbackUrl = baseUrl + "/cart";
 
-const DatePicker = ({ className, date, setDate }: DatePickerProps) => {
-  const [open, setOpen] = useState(false);
-
-  const onSelect = (date: Date | undefined) => {
-    setDate(date);
-    setOpen(false);
-  };
-
+  if (date !== undefined) {
+    const dateString = encodeURIComponent(date.toISOString());
+    callbackUrl += `?date=${dateString}`;
+  }
   return (
-    <div className={cn("relative", className)}>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant={"outline"}
-            className={cn(
-              "w-[240px] pl-3 text-left font-normal",
-              !date && "text-muted-foreground",
-            )}
-          >
-            {date ? dateFormatter(date) : <span>Choisir une date</span>}
-            <svg
-              width="800px"
-              height="800px"
-              viewBox="0 0 1024 1024"
-              className="ml-auto h-4 w-4 opacity-50"
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M106.666667 810.666667V298.666667h810.666666v512c0 46.933333-38.4 85.333333-85.333333 85.333333H192c-46.933333 0-85.333333-38.4-85.333333-85.333333z"
-                fill="#CFD8DC"
-              />
-              <path
-                d="M917.333333 213.333333v128H106.666667v-128c0-46.933333 38.4-85.333333 85.333333-85.333333h640c46.933333 0 85.333333 38.4 85.333333 85.333333z"
-                fill="#F44336"
-              />
-              <path
-                d="M704 213.333333m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z"
-                fill="#B71C1C"
-              />
-              <path
-                d="M320 213.333333m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z"
-                fill="#B71C1C"
-              />
-              <path
-                d="M704 64c-23.466667 0-42.666667 19.2-42.666667 42.666667v106.666666c0 23.466667 19.2 42.666667 42.666667 42.666667s42.666667-19.2 42.666667-42.666667V106.666667c0-23.466667-19.2-42.666667-42.666667-42.666667zM320 64c-23.466667 0-42.666667 19.2-42.666667 42.666667v106.666666c0 23.466667 19.2 42.666667 42.666667 42.666667s42.666667-19.2 42.666667-42.666667V106.666667c0-23.466667-19.2-42.666667-42.666667-42.666667z"
-                fill="#B0BEC5"
-              />
-              <path
-                d="M277.333333 426.666667h85.333334v85.333333h-85.333334zM405.333333 426.666667h85.333334v85.333333h-85.333334zM533.333333 426.666667h85.333334v85.333333h-85.333334zM661.333333 426.666667h85.333334v85.333333h-85.333334zM277.333333 554.666667h85.333334v85.333333h-85.333334zM405.333333 554.666667h85.333334v85.333333h-85.333334zM533.333333 554.666667h85.333334v85.333333h-85.333334zM661.333333 554.666667h85.333334v85.333333h-85.333334zM277.333333 682.666667h85.333334v85.333333h-85.333334zM405.333333 682.666667h85.333334v85.333333h-85.333334zM533.333333 682.666667h85.333334v85.333333h-85.333334zM661.333333 682.666667h85.333334v85.333333h-85.333334z"
-                fill="#90A4AE"
-              />
-            </svg>
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent align="start" className="absolute w-auto p-0">
-          <Calendar
-            mode="single"
-            captionLayout="buttons"
-            selected={date}
-            // month={month}
-            locale={fr}
-            onSelect={onSelect}
-            // disabledDays={(date) => date.getDay() === 0 || date.getDay() === 6}
-            modifiers={{
-              disabled: (date) =>
-                date.getDay() === 0 || date.getDay() === 6 || date < new Date(),
-            }} // modifiers={{
-            //   full: fullDays,
-            //   partiallyFull: partiallyFullDays,
-            //   free: freeDays,
-            // }}
-            // modifiersStyles={{
-            //   full: fullDaysStyle,
-            //   partiallyFull: partiallyFullDaysStyle,
-            //   free: freeDaysStyle,
-            // }}
-            // onDayClick={handleDayClick}
-            // footer={GetFooterMessage(isDayAvailable)}
-            // onMonthChange={setMonth}
-          />
-        </PopoverContent>
-      </Popover>
-    </div>
+    <Card
+      className={cn(
+        "mt-6 flex h-[450px] max-w-[500px] flex-col justify-between",
+        className,
+      )}
+    >
+      <CardHeader className="text-center text-2xl font-semibold ">
+        Connecté vous pour valider votre commande
+      </CardHeader>
+      <CardContent className="flex  flex-col items-center justify-center">
+        <GoogleButton callbackUrl={callbackUrl} />
+      </CardContent>
+      <CardContent className="flex  flex-col items-center justify-center">
+        <div
+          className={`my-4 flex h-4 flex-row  items-center gap-4 self-stretch whitespace-nowrap
+before:h-0.5 before:w-full 
+before:flex-grow before:bg-primary/30  after:h-0.5  after:w-full 
+after:flex-grow  after:bg-primary/30  `}
+        >
+          ou
+        </div>
+      </CardContent>
+      <CardContent className="flex  flex-col items-center justify-center">
+        <EmailButton callbackUrl={callbackUrl} />
+      </CardContent>
+    </Card>
   );
 };

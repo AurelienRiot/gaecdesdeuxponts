@@ -2,12 +2,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import prismadb from "@/lib/prismadb";
 import {
   CalendarSearch,
   CreditCardIcon,
   EuroIcon,
   Package,
 } from "lucide-react";
+import DisplayShop from "./components/shops";
+import { Suspense } from "react";
 
 const DashboardPage: React.FC = () => {
   return (
@@ -68,6 +71,9 @@ const DashboardPage: React.FC = () => {
             </CardContent>
           </Card>
         </div>
+        <Suspense fallback={null}>
+          <Shop />
+        </Suspense>
       </div>
     </div>
   );
@@ -75,10 +81,15 @@ const DashboardPage: React.FC = () => {
 
 export default DashboardPage;
 
-// const TotalRevenue = async () => {
-//   const totalRevenue = await GetTotalRevenue();
-//   return formatter.format(totalRevenue);
-// };
+const Shop = async () => {
+  const shops = await prismadb.shop.findMany({
+    orderBy: {
+      updatedAt: "desc",
+    },
+  });
+
+  return <DisplayShop data={shops} />;
+};
 
 // const SalesCount = async () => {
 //   const salesCount = await GetSalesCount();

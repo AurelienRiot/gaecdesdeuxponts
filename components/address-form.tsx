@@ -45,7 +45,7 @@ interface AdressFormProps {
   className?: string;
 }
 
-export const AdressForm = <T extends { adresse: string }>({
+export const AddressForm = <T extends { address: string }>({
   selectedAddress,
   setSelectedAddress,
   className,
@@ -71,7 +71,7 @@ export const AdressForm = <T extends { adresse: string }>({
     <div className={cn("-mb-8 space-y-4", className)}>
       <FormField
         control={form.control}
-        name={"adresse" as Path<T>}
+        name={"address" as Path<T>}
         render={({ field }) => (
           <FormItem className="flex flex-col">
             <FormLabel>Adresse</FormLabel>
@@ -127,7 +127,7 @@ export const AdressForm = <T extends { adresse: string }>({
                       setSearchTerm(e);
                       if (query.length < 3) {
                         form.setValue(
-                          "adresse" as Path<T>,
+                          "address" as Path<T>,
                           "" as PathValue<T, Path<T>>,
                         );
                       }
@@ -146,7 +146,7 @@ export const AdressForm = <T extends { adresse: string }>({
                         key={address.label}
                         onSelect={() => {
                           form.setValue(
-                            "adresse" as Path<T>,
+                            "address" as Path<T>,
                             address.label as PathValue<T, Path<T>>,
                           );
                           setSelectedAddress((prev) => ({

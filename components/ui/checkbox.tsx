@@ -24,8 +24,8 @@ const Checkbox = React.forwardRef<
     <CheckboxPrimitive.Indicator className="absolute inset-0 -left-[1px] animate-checkbox-out    items-center    overflow-hidden text-transparent  data-[state=checked]:animate-checkbox-in ">
       <Check className="absolute h-4 w-4 shrink-0" />
     </CheckboxPrimitive.Indicator>
-    <CheckboxPrimitive.Indicator className=" absolute inset-0 left-[1px] top-[1px] hidden items-center data-[state=indeterminate]:block  ">
-      <Loader2 className="absolute h-3 w-3 shrink-0 animate-spin text-black " />
+    <CheckboxPrimitive.Indicator className=" absolute inset-0 left-[1px] top-[1px] hidden items-center data-[state=indeterminate]:flex  ">
+      <Loader2 className="absolute h-3 w-3 shrink-0 animate-spin text-primary " />
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
 ));

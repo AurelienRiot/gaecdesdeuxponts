@@ -126,7 +126,6 @@ const UploadImage = ({
       setLoading(false);
       return;
     }
-    console.log(updatedFiles.data);
 
     setFiles(updatedFiles.data);
     if (multipleImages) {
