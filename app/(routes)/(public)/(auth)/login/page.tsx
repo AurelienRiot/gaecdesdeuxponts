@@ -4,7 +4,9 @@ import { redirect } from "next/navigation";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
-export default async function LoginPage(searchParams: { callbackUrl: string }) {
+const LoginPage = async (context: {
+  searchParams: { callbackUrl: string };
+}) => {
   const isAuth = await checkUser();
   if (isAuth) {
     if (isAuth.role === "admin") {
@@ -14,7 +16,7 @@ export default async function LoginPage(searchParams: { callbackUrl: string }) {
     }
   }
 
-  const callbackUrl = searchParams.callbackUrl ?? "/dashboard-user";
+  const callbackUrl = context.searchParams.callbackUrl ?? "/dashboard-user";
 
   return (
     <div className="flex w-full items-center justify-center bg-slate-100 dark:bg-slate-900">
@@ -36,4 +38,6 @@ export default async function LoginPage(searchParams: { callbackUrl: string }) {
       </div>
     </div>
   );
-}
+};
+
+export default LoginPage;
