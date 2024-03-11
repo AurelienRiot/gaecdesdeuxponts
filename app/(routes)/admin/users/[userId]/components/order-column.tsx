@@ -13,6 +13,7 @@ import { OrderCellAction } from "./order-cell-action";
 import { useOrderStatus } from "./order-table";
 import dynamic from "next/dynamic";
 import { DataInvoiceType } from "@/components/pdf/data-invoice";
+import Link from "next/link";
 const DisplayPDF = dynamic(() => import("@/components/pdf/displayPDF"), {
   ssr: false,
 });
@@ -24,6 +25,8 @@ export type OrderColumn = {
   totalPrice: string;
   products: string;
   createdAt: Date;
+  shopName: string;
+  shopId: string;
   dataInvoice: DataInvoiceType;
 };
 export const columns: ColumnDef<OrderColumn>[] = [
@@ -64,6 +67,17 @@ export const columns: ColumnDef<OrderColumn>[] = [
         {" "}
         {dateFormatter(row.getValue("datePickUp"))}
       </div>
+    ),
+  },
+  {
+    accessorKey: "shopName",
+    header: "Lieu de retrait",
+    cell: ({ row }) => (
+      <Button asChild variant={"link"} className="px-0">
+        <Link href={`/admin/shops/${row.original.shopId}`}>
+          {row.getValue("shopName")}
+        </Link>
+      </Button>
     ),
   },
   {

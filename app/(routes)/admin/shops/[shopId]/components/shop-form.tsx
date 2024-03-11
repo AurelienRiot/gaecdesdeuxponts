@@ -14,6 +14,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -30,13 +31,24 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { addDelay, cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Trash } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { UseFormReturn, useForm } from "react-hook-form";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import { z } from "zod";
-import { createShop } from "./server-actions";
+import {
+  ReturnType,
+  createShop,
+  deleteShop,
+  updateShop,
+} from "./server-actions";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Shop } from "@prisma/client";
+import { getFileKey } from "../../../categories/[categoryId]/components/category-form";
+import { useRouter } from "next/navigation";
+import { AlertModal } from "@/components/ui/alert-modal-form";
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Le nom est requis" }),
@@ -55,51 +67,112 @@ const formSchema = z.object({
   email: z.string().email({ message: "L'email est invalide" }),
   website: z.string().optional(),
   description: z.string(),
+  isArchived: z.boolean().default(false).optional(),
 });
 
 export type ShopFormValues = z.infer<typeof formSchema>;
 
-const ShopForm = ({
-  setOpen,
-}: {
-  setOpen: Dispatch<SetStateAction<boolean>>;
-}) => {
-  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
+  const [selectedFiles, setSelectedFiles] = useState<string[]>(
+    initialData?.imageUrl ? [getFileKey(initialData?.imageUrl)] : [],
+  );
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   const form = useForm<ShopFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      imageUrl: "",
-      description: "",
-      lat: 0,
-      long: 0,
-      address: "",
-      phone: "",
-      website: "",
-      email: "",
-    },
+    defaultValues: initialData
+      ? {
+          name: initialData.name,
+          imageUrl: "",
+          description: initialData.description,
+          lat: initialData.lat,
+          long: initialData.long,
+          address: initialData.address,
+          phone: initialData.phone,
+          website: initialData.website || "",
+          email: initialData.email,
+          isArchived: initialData.isArchived,
+        }
+      : {
+          name: "",
+          imageUrl: "",
+          description: "",
+          lat: 0,
+          long: 0,
+          address: "",
+          phone: "",
+          website: "",
+          email: "",
+          isArchived: false,
+        },
   });
 
+  const title = initialData
+    ? "Modifier le magasin"
+    : "Créer un nouveau magasin";
+  const description = initialData
+    ? "Modifier le magasin"
+    : "Ajouter un nouveau magasin";
+  const toastMessage = initialData ? "Magasin mis à jour" : "Magasin créé";
+  const action = initialData
+    ? "Sauvegarder les changements"
+    : "Créer le magasin";
+
   const onSubmit = async (data: ShopFormValues) => {
-    await addDelay(1000);
     data.imageUrl = selectedFiles[0]
       ? `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${selectedFiles[0]}`
       : "";
-    const result = await createShop(data);
+    if (initialData) {
+    }
+    let result: ReturnType;
+    if (initialData) {
+      result = await updateShop({ data, id: initialData.id });
+    } else {
+      result = await createShop(data);
+    }
     if (!result.success) {
       toast.error(result.message);
       return;
     }
-    toast.success("Le magasin a été crée avec succès");
-    form.reset();
-    setSelectedFiles([]);
+    router.push(`/admin/shops`);
+    router.refresh();
+    toast.success(toastMessage);
+  };
+
+  const onDelete = async () => {
+    const deletesh = await deleteShop({ id: initialData?.id });
+    if (!deletesh.success) {
+      toast.error(deletesh.message);
+      setOpen(false);
+    } else {
+      router.push(`/admin/shops`);
+      router.refresh();
+      toast.success("Magasin supprimé");
+    }
     setOpen(false);
   };
 
   return (
     <>
-      <Heading title={"Ajouté un nouveau magasin"} description={""} />
+      <AlertModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onConfirm={onDelete}
+      />
+      <div className="flex items-center justify-between">
+        <Heading title={title} description={description} />
+        {initialData && (
+          <Button
+            disabled={form.formState.isSubmitting}
+            variant="destructive"
+            size="sm"
+            onClick={() => setOpen(true)}
+          >
+            <Trash className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
       <Separator />
 
       <Form {...form}>
@@ -123,7 +196,7 @@ const ShopForm = ({
               </FormItem>
             )}
           />
-          <div className="flex flex-wrap gap-8">
+          <div className="flex max-w-[1000px] flex-wrap gap-8">
             <FormField
               control={form.control}
               name="name"
@@ -178,24 +251,7 @@ const ShopForm = ({
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem className="w-[500px]">
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      disabled={form.formState.isSubmitting}
-                      placeholder="Description du magasin"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             <FormField
               control={form.control}
               name="phone"
@@ -209,6 +265,46 @@ const ShopForm = ({
                       className="w-full"
                       disabled={form.formState.isSubmitting}
                       {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="isArchived"
+              render={({ field }) => (
+                <FormItem className="flex cursor-pointer flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <label className="flex cursor-pointer flex-row items-start space-x-3 space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        disabled={form.formState.isSubmitting}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel>Archivé</FormLabel>
+                      <FormDescription>
+                        {"Ce magasin n'apparaitra pas sur le site."}
+                      </FormDescription>
+                    </div>
+                  </label>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem className="w-[500px]">
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <AutosizeTextarea
+                      {...field}
+                      placeholder="Description du magasin"
+                      disabled={form.formState.isSubmitting}
                     />
                   </FormControl>
                   <FormMessage />
@@ -260,7 +356,7 @@ const ShopForm = ({
             className="ml-auto"
             type="submit"
           >
-            Créer
+            {action}
           </LoadingButton>
         </form>
       </Form>

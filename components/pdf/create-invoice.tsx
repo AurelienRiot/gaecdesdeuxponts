@@ -11,6 +11,7 @@ import {
   G,
 } from "@react-pdf/renderer";
 import { DataInvoiceType } from "./data-invoice";
+import { formatPhoneNumber } from "react-phone-number-input";
 
 const tableRowsCount = 11;
 
@@ -162,7 +163,9 @@ const BillTo = ({ invoice }: { invoice: DataInvoiceType }) => (
     <Text style={billStyles.billTo}>À :</Text>
     {!!invoice.customer.name && <Text>{invoice.customer.name}</Text>}
     {!!invoice.customer.address && <Text>{invoice.customer.address}</Text>}
-    {!!invoice.customer.phone && <Text>{invoice.customer.phone}</Text>}
+    {!!invoice.customer.phone && (
+      <Text>{formatPhoneNumber(invoice.customer.phone)}</Text>
+    )}
     {!!invoice.customer.email && <Text>{invoice.customer.email}</Text>}
   </View>
 );

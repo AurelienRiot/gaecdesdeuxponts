@@ -4,10 +4,11 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { OrdersColumn } from "./components/order-column";
 import { UserButtons } from "./components/user-buttons";
+import Container from "@/components/ui/container";
 
 const Loading = () => {
   return (
-    <div className="mb-4 mt-4 gap-4">
+    <Container className="mb-4 mt-4 gap-4">
       <>
         <div className="mx-auto mb-4 flex h-fit w-fit flex-col items-center justify-center gap-2 rounded-md border-2 p-6 text-gray-800 shadow-xl dark:text-white">
           <>
@@ -39,7 +40,7 @@ const Loading = () => {
           </>
         </div>
       </>
-    </div>
+    </Container>
   );
 };
 

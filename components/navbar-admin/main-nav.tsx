@@ -27,10 +27,8 @@ export function MainNav({ className }: React.HTMLAttributes<HTMLElement>) {
           key={route.href}
           href={route.href}
           className={cn(
-            "text-xs font-medium transition-colors hover:text-primary xl:text-sm",
-            route.active
-              ? "text-black dark:text-white"
-              : "text-muted-foreground",
+            "text-xs font-medium transition-colors hover:text-secondary xl:text-sm",
+            route.active ? "text-primary" : "text-muted-foreground",
           )}
         >
           {<route.Icone className="mr-2 hidden h-4 w-4 xl:inline-block" />}
@@ -46,15 +44,20 @@ export const adminRoutes = (pathname: string) => [
     href: `/`,
     label: "Accueil",
     active: pathname === `/`,
-    Icone: Store,
+    Icone: PresentationIcon,
   },
   {
     href: `/admin`,
-    label: "Dashboard",
+    label: "Résumé",
     active: pathname === `/admin`,
     Icone: LayoutDashboardIcon,
   },
-
+  {
+    href: `/admin/shops`,
+    label: "Magasins",
+    active: pathname.startsWith(`/admin/shops`),
+    Icone: Store,
+  },
   {
     href: `/admin/categories`,
     label: "Categories",

@@ -118,11 +118,14 @@ model Order {
   isPaid     Boolean @default(false)
   userId     String  
   user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shopId    String 
+  shop       Shop @relation(fields: [shopId], references: [id])
   datePickUp DateTime
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   @@index([userId])
+   @@index([shopId])
 
 }
 
@@ -187,8 +190,11 @@ model Shop {
   description String
   imageUrl String?
   website String?
-    createdAt DateTime @default(now()) 
+  order      Order[] 
+  isArchived Boolean  @default(false)
+     createdAt DateTime @default(now()) 
   updatedAt DateTime @updatedAt 
+
    }
 
 

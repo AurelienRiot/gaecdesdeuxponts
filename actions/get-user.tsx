@@ -24,8 +24,10 @@ const GetUser = async () => {
               product: true,
             },
           },
+          shop: true,
         },
       },
+
       address: {
         orderBy: {
           createdAt: "desc",

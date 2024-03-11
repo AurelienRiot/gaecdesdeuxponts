@@ -11,6 +11,7 @@ type CheckOutProps = {
     quantity: number;
   }[];
   date: Date;
+  shopId: string;
 };
 
 type CheckOutReturnType =
@@ -25,6 +26,7 @@ export const checkOut = async ({
   itemsWithQuantities,
   date,
   totalPrice,
+  shopId,
 }: CheckOutProps): Promise<CheckOutReturnType> => {
   const isAuth = await checkUser();
 
@@ -83,6 +85,7 @@ export const checkOut = async ({
         })),
       },
       userId: isAuth.id,
+      shopId,
       name: user.name || user.email || "",
       datePickUp: date,
     },

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
-import { cn } from "@/lib/utils";
+import { cn, dateFormatter } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -15,9 +15,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Shop } from "@prisma/client";
-import { Loader2 } from "lucide-react";
+import { Loader2, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import DatePicker from "./date-picker";
+import PlaceModal from "./place-modal";
+import { Icons } from "@/components/icons";
+import { checkOut } from "./server-action";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
@@ -29,15 +32,17 @@ const getDateFromSearchParam = (param: string | null): Date | undefined => {
 
 interface SummaryProps {
   userId: string | undefined;
+  shops: Shop[];
 }
 
-const Summary: React.FC<SummaryProps> = ({ userId }) => {
+const Summary: React.FC<SummaryProps> = ({ userId, shops }) => {
   const [loading, setLoading] = useState(false);
   const cart = useCart();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [date, setDate] = useState<Date | undefined>();
-  const [shop, setshop] = useState<Shop | undefined>();
+  const [shopId, setShopId] = useState<string | undefined>();
+  const [open, setOpen] = useState(false);
 
   const [isMounted, setIsMounted] = useState(false);
 
@@ -47,10 +52,13 @@ const Summary: React.FC<SummaryProps> = ({ userId }) => {
       ? "Veuillez ajouter au moins un article"
       : !date
         ? "Veuillez sélectionner une date"
-        : null;
+        : !shopId
+          ? "Veuillez sélectionner un lieu de retrait"
+          : null;
 
   useEffect(() => {
     setDate(getDateFromSearchParam(searchParams.get("date")));
+    setShopId(searchParams.get("shopId") ?? undefined);
   }, [searchParams]);
 
   useEffect(() => {
@@ -75,6 +83,10 @@ const Summary: React.FC<SummaryProps> = ({ userId }) => {
       toast.error("Veuillez sélectionner une date");
       return;
     }
+    if (!shopId) {
+      toast.error("Veuillez sélectionner un lieu de retrait");
+      return;
+    }
     const itemsWithQuantities = cart.items.map((item) => {
       return {
         id: item.id,
@@ -82,78 +94,131 @@ const Summary: React.FC<SummaryProps> = ({ userId }) => {
       };
     });
 
-    console.log(itemsWithQuantities, date, totalPrice, shop);
-    // const result = await checkOut({
-    //   itemsWithQuantities,
-    //   date,
-    //   totalPrice,
-    // });
-    // if (result.success) {
-    //   toast.success("Commande effectuée avec succès");
-    //   cart.removeAll();
-    //   router.push("/dashboard-user");
-    // } else {
-    //   toast.error(result.message);
-    // }
+    console.log(itemsWithQuantities, date, totalPrice, shopId);
+    const result = await checkOut({
+      itemsWithQuantities,
+      date,
+      totalPrice,
+      shopId,
+    });
+    if (result.success) {
+      toast.success("Commande effectuée avec succès");
+      cart.removeAll();
+      router.push("/dashboard-user");
+    } else {
+      toast.error(result.message);
+    }
 
     setLoading(false);
   };
 
+  const onSelectPlace = (shopId: string | undefined) => {
+    if (!shopId) {
+      router.refresh();
+      toast.error("Erreur veuillez réssayer");
+      return;
+    }
+    if (date) {
+      router.push(
+        `/cart?date=${encodeURIComponent(date.toISOString())}&shopId=${encodeURIComponent(shopId)}`,
+        {
+          scroll: false,
+        },
+      );
+    } else {
+      router.push(`/cart?shopId=${encodeURIComponent(shopId)}`, {
+        scroll: false,
+      });
+    }
+  };
+
   return (
-    <div className="relative mb-[450px] mt-16 rounded-lg border-2 bg-gray-100 px-4 py-6 dark:bg-black sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
-      <h2 className="text-xl font-medium text-gray-500">Votre Commmande</h2>
-      <ul className="pt-4">
-        {cart.items.map((item) => (
-          <li key={item.id} className="flex justify-between tabular-nums	">
-            <div>
-              {cart.quantities[item.id] > 1 && (
-                <span> {cart.quantities[item.id]}x </span>
-              )}
-              <strong>{item.name} </strong>{" "}
-            </div>
-            <Currency
-              value={Number(item.price) * cart.quantities[item.id]}
-              displayText={false}
-              displayLogo={false}
-              className="justify-self-end"
-            />
-          </li>
-        ))}
-      </ul>
-      <div className="mt-6 space-y-4">
-        <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-          <div className="text-base font-medium text-gray-500">Total</div>
-          <Currency value={totalPrice} displayLogo={false} />
+    <>
+      <PlaceModal
+        isOpen={open}
+        setIsOpen={setOpen}
+        shops={shops}
+        onSelect={onSelectPlace}
+      />
+      <div className="relative mb-[450px] mt-16 rounded-lg border-2 bg-gray-100 px-4 py-6 dark:bg-black sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
+        <h2 className="text-xl font-medium text-gray-500">Votre Commmande</h2>
+        <ul className="pt-4">
+          {cart.items.map((item) => (
+            <li key={item.id} className="flex justify-between tabular-nums	">
+              <div>
+                {cart.quantities[item.id] > 1 && (
+                  <span> {cart.quantities[item.id]}x </span>
+                )}
+                <strong>{item.name} </strong>{" "}
+              </div>
+              <Currency
+                value={Number(item.price) * cart.quantities[item.id]}
+                displayText={false}
+                displayLogo={false}
+                className="justify-self-end"
+              />
+            </li>
+          ))}
+        </ul>
+        <div className="mt-6 space-y-4">
+          <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+            <div className="text-base font-medium text-gray-500">Total</div>
+            <Currency value={totalPrice} displayLogo={false} />
+          </div>
         </div>
-      </div>
-      <DatePicker date={date} className="mt-6" />
-      {/* <PickLocation setShop={setshop} /> */}
-      <Tooltip>
-        <TooltipTrigger asChild>
+        <DatePicker date={date} className="mt-6" shopId={shopId} />
+        <div className={"relative  mt-6 flex items-center justify-between "}>
+          <div className="text-base font-medium text-gray-500">
+            Lieu de retrait
+          </div>
           <Button
-            disabled={cart.items.length === 0 || loading || !date || !userId}
-            onClick={onCheckout}
-            variant="rounded"
-            className="mt-6 w-full "
+            variant={"outline"}
+            className={cn(
+              "w-[240px] pl-3 text-left font-normal",
+              !date && "text-muted-foreground",
+            )}
+            onClick={() => setOpen((open) => !open)}
           >
-            {loading && <Loader2 className={"mr-2 h-4 w-4 animate-spin"} />}
-            Passer la commande
+            {shopId ? (
+              shops.find((shop) => shop.id === shopId)?.name
+            ) : (
+              <span>Choisir un lieu</span>
+            )}
+            <Icons.pinMap
+              data-state={!!shopId}
+              className="ml-auto h-4 w-4 opacity-100 data-[state=false]:opacity-50"
+            />
           </Button>
-        </TooltipTrigger>
-        <TooltipContent
-          data-state={!!tooltipText}
-          className="data-[state=false]:hidden"
-        >
-          <p>{tooltipText}</p>
-        </TooltipContent>
-      </Tooltip>
-      {!userId && (
-        <LoginCard
-          date={date}
-          className="absolute left-1/2 top-full -translate-x-1/2  "
-        />
-      )}
-    </div>
+        </div>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              disabled={loading || !!tooltipText}
+              onClick={onCheckout}
+              variant="rounded"
+              className="mt-6 w-full "
+            >
+              {loading && <Loader2 className={"mr-2 h-4 w-4 animate-spin"} />}
+              Passer la commande
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent
+            data-state={!!tooltipText}
+            className="data-[state=false]:hidden"
+          >
+            <p>{tooltipText}</p>
+          </TooltipContent>
+        </Tooltip>
+        {!userId && (
+          <LoginCard
+            date={date}
+            shopId={shopId}
+            className="absolute left-1/2 top-full -translate-x-1/2  "
+          />
+        )}
+      </div>
+    </>
   );
 };
 export default Summary;
@@ -161,16 +226,27 @@ export default Summary;
 const LoginCard = ({
   className,
   date,
+  shopId,
 }: {
   className?: string;
   date: Date | undefined;
+  shopId: string | undefined;
 }) => {
   let callbackUrl = baseUrl + "/cart";
 
-  if (date !== undefined) {
-    const dateString = encodeURIComponent(date.toISOString());
-    callbackUrl += `?date=${dateString}`;
+  if (shopId) {
+    callbackUrl += `?shopId=${encodeURIComponent(shopId)}`;
+    if (date) {
+      const dateString = encodeURIComponent(date.toISOString());
+      callbackUrl += `&date=${dateString}`;
+    }
+  } else {
+    if (date) {
+      const dateString = encodeURIComponent(date.toISOString());
+      callbackUrl += `?date=${dateString}`;
+    }
   }
+
   return (
     <Card
       className={cn(

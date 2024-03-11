@@ -24,6 +24,8 @@ export type OrderColumn = {
   datePickUp: Date;
   totalPrice: string;
   products: string;
+  shopName: string;
+  shopId: string;
   createdAt: Date;
   dataInvoice: DataInvoiceType;
 };
@@ -77,6 +79,17 @@ export const columns: ColumnDef<OrderColumn>[] = [
         {" "}
         {dateFormatter(row.getValue("datePickUp"))}
       </div>
+    ),
+  },
+  {
+    accessorKey: "shopName",
+    header: "Lieu de retrait",
+    cell: ({ row }) => (
+      <Button asChild variant={"link"} className="px-0">
+        <Link href={`/admin/shops/${row.original.shopId}`}>
+          {row.getValue("shopName")}
+        </Link>
+      </Button>
     ),
   },
   {

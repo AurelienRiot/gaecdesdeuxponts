@@ -5,6 +5,7 @@ import { OrderColumnType } from "./components/order-column";
 import { OrderTable } from "./components/order-table";
 import { UserButtons } from "./components/user-buttons";
 import Container from "@/components/ui/container";
+import UserPhone from "./components/user-phone";
 
 const DashboardUser = async () => {
   const user = await GetUser();
@@ -26,6 +27,8 @@ const DashboardUser = async () => {
       totalPrice: currencyFormatter.format(Number(order.totalPrice)),
       isPaid: order.isPaid,
       datePickUp: order.datePickUp,
+      shopName: order.shop.name,
+      shop: order.shop,
       createdAt: order.createdAt,
       dataInvoice: {
         customer: {
@@ -60,7 +63,7 @@ const DashboardUser = async () => {
 
   return (
     <Container>
-      <div className="mx-auto mb-4 flex h-fit w-fit flex-col items-center justify-center gap-2 rounded-md border-2 p-6 text-gray-800 shadow-xl dark:text-white">
+      <div className="mx-auto my-4 flex h-fit w-fit flex-col items-center justify-center gap-2 rounded-md border-2 p-6 text-gray-800 shadow-xl dark:text-white">
         <>
           <h1 className="text-center text-3xl font-bold">
             <span className="capitalize">
@@ -84,7 +87,7 @@ const DashboardUser = async () => {
           )}
 
           <p className="font-bold">Télephone :</p>
-          <p>{user.phone ? user.phone : "Non renseigné"}</p>
+          <UserPhone phone={user.phone} />
         </div>
       </div>
 
@@ -92,8 +95,6 @@ const DashboardUser = async () => {
         {formattedOrders.length > 0 ? (
           <OrderTable data={formattedOrders} />
         ) : null}
-
-        {/* <ButtonSubscriptions stripeCustomerId={user.stripeCustomerId} /> */}
       </div>
     </Container>
   );

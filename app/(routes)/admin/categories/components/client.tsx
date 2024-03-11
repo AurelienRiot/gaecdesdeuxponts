@@ -26,7 +26,7 @@ export const CategoryClient: React.FC<CategoryClientProps> = ({ data }) => {
           onClick={() => router.push(`/admin/categories/new`)}
           className="m-2 pb-6 pt-6 sm:ml-2 sm:pb-0 sm:pt-0"
         >
-          <Plus className="mr-2 h-8 w-8 sm:h-4 sm:w-4" />
+          <Plus className="mr-2  h-4 w-4" />
           Ajouter un nouveau
         </Button>
       </div>

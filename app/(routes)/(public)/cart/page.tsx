@@ -1,3 +1,4 @@
+import getShops from "@/actions/get-shops";
 import { authOptions } from "@/components/auth/authOptions";
 import Container from "@/components/ui/container";
 import { getServerSession } from "next-auth";
@@ -7,6 +8,7 @@ import Summary from "./components/summary";
 const CartPage = async () => {
   const session = await getServerSession(authOptions);
 
+  const shops = await getShops();
   const userId = session?.user?.id;
 
   return (
@@ -16,7 +18,7 @@ const CartPage = async () => {
         <div className="mt-12 gap-x-12 lg:grid lg:grid-cols-12 lg:items-start">
           <CartItems />
 
-          <Summary userId={userId} />
+          <Summary userId={userId} shops={shops} />
         </div>
       </div>
     </Container>

@@ -24,6 +24,7 @@ const UserPage = async ({ params }: { params: { userId: string } }) => {
               product: true,
             },
           },
+          shop: { select: { name: true, id: true } },
         },
       },
     },
@@ -58,6 +59,8 @@ const UserPage = async ({ params }: { params: { userId: string } }) => {
     isPaid: order.isPaid,
     totalPrice: currencyFormatter.format(Number(order.totalPrice)),
     createdAt: order.createdAt,
+    shopName: order.shop.name,
+    shopId: order.shop.id,
     dataInvoice: {
       customer: {
         id: user.id || "",

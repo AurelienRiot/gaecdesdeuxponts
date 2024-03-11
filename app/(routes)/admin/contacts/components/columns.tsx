@@ -7,6 +7,8 @@ import { ArrowUpDown } from "lucide-react";
 import { fr } from "date-fns/locale";
 import { format } from "date-fns";
 import Link from "next/link";
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
+import { formatPhoneNumber } from "react-phone-number-input";
 
 export type ContactColumn = {
   id: string;
@@ -40,6 +42,12 @@ export const columns: ColumnDef<ContactColumn>[] = [
   {
     accessorKey: "phone",
     header: "Téléphone",
+    cell: ({ row }) =>
+      row.getValue("phone") ? (
+        <span>{formatPhoneNumber(row.getValue("phone"))}</span>
+      ) : (
+        <span>Non renseigné</span>
+      ),
   },
   {
     accessorKey: "email",
@@ -52,6 +60,14 @@ export const columns: ColumnDef<ContactColumn>[] = [
   {
     accessorKey: "message",
     header: "Message",
+    cell: ({ row }) => (
+      <AutosizeTextarea
+        className="flex resize-none items-center justify-center border-none bg-transparent p-0 text-sm outline-none focus-visible:ring-0 disabled:cursor-default disabled:opacity-100"
+        placeholder="..."
+        value={row.original.message}
+        disabled
+      />
+    ),
   },
   {
     accessorKey: "createdAt",

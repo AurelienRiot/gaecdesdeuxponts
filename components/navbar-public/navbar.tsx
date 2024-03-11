@@ -19,7 +19,7 @@ const NavBar = () => {
 
     if (direction === "down" && latest - previous > scrollThreshold) {
       setNavState("close");
-    } else if (direction === "up" && previous - latest > scrollThreshold) {
+    } else if (direction === "up") {
       setNavState("open");
     }
   });

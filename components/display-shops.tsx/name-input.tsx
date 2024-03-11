@@ -35,15 +35,13 @@ const NameInput = ({ setSortedShops, shops, ...props }: NameInputProps) => {
       return a.name.localeCompare(b.name);
     });
 
-    console.log(sortedShops);
-
     setSortedShops(sortedShops);
   };
   return (
     <Input
       value={search}
       onChange={onChange}
-      placeholder="Nom du magasin"
+      placeholder="Rechercher le nom"
       {...props}
     />
   );

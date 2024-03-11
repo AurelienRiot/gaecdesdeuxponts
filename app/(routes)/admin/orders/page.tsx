@@ -11,6 +11,7 @@ const OrdersPage = async () => {
           product: true,
         },
       },
+      shop: { select: { name: true, id: true } },
     },
     orderBy: {
       createdAt: "desc",
@@ -51,6 +52,8 @@ const OrdersPage = async () => {
       .join(", "),
     totalPrice: currencyFormatter.format(order.totalPrice),
     createdAt: order.createdAt,
+    shopName: order.shop.name,
+    shopId: order.shop.id,
     dataInvoice: {
       customer: {
         id: users.find((user) => user.id === order.userId)?.id || "",
@@ -67,6 +70,7 @@ const OrdersPage = async () => {
         phone: users.find((user) => user.id === order.userId)?.phone || "",
         email: users.find((user) => user.id === order.userId)?.email || "",
       },
+
       order: {
         id: order.id,
         dateOfPayment: dateFormatter(order.datePickUp),

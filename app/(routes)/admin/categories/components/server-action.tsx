@@ -16,6 +16,21 @@ async function deleteCategorie({
       message: "Vous devez être authentifier",
     };
   }
+
+  const products = await prismadb.product.findMany({
+    where: {
+      categoryId: id,
+    },
+  });
+
+  if (products.length > 0) {
+    return {
+      success: false,
+      message:
+        "Des produits sont associés à  cette categorie, vous devez les supprimer",
+    };
+  }
+
   const category = await prismadb.category.deleteMany({
     where: {
       id,
