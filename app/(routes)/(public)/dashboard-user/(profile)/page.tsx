@@ -17,7 +17,7 @@ const DashboardUser = async () => {
 
       products: order.orderItems
         .map((item) => {
-          let name = item.product.name;
+          let name = item.name;
           if (Number(item.quantity) > 1) {
             name += ` x${item.quantity}`;
           }
@@ -49,7 +49,7 @@ const DashboardUser = async () => {
           dateOfPayment: dateFormatter(order.datePickUp),
           dateOfEdition: dateFormatter(new Date()),
           items: order.orderItems.map((item) => ({
-            desc: item.product.name,
+            desc: item.name,
             qty: item.quantity,
             priceTTC: item.price,
           })),

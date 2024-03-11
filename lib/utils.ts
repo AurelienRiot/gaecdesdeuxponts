@@ -74,3 +74,14 @@ export function haversine(
 
   return distance;
 }
+
+export const mergeWithoutDuplicates = <T extends { id: string }>(
+  linkedProducts: T[],
+  linkedBy: T[],
+): T[] => {
+  const combined = [...linkedProducts, ...linkedBy];
+  const unique = Array.from(
+    new Map(combined.map((product) => [product.id, product])).values(),
+  );
+  return unique;
+};

@@ -89,9 +89,11 @@ model Product {
   isFeatured   Boolean @default(false)
   isArchived   Boolean @default(false)
   images       Image[]
-  orderItems   OrderItem[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+   linkedProducts Product[] @relation("ProductLinks")
+  linkedBy       Product[] @relation("ProductLinks")
 
 
   @@index([categoryId])
@@ -133,13 +135,13 @@ model OrderItem {
   id        String @unique @id @default(uuid())
   price     Float
   quantity  Float @default(1)
+  name      String
+  categoryName String
+  description  String @db.VarChar(1000)
   orderId   String
   order     Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId String
-  product   Product @relation(fields: [productId], references: [id])
 
   @@index([orderId])
-  @@index([productId])
 }
 
 model Contact {

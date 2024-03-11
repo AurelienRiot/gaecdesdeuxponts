@@ -23,23 +23,26 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { TextArea } from "@/components/ui/text-area";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Category, Image, Product } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
+import { getFileKey } from "../../../categories/[categoryId]/components/category-form";
 import { deleteProduct } from "../../components/server-action";
+import LinkProducts from "./link-products";
 import { PlateEditor } from "./plate-editor";
 import {
   ProductReturnType,
   createProduct,
   updateProduct,
 } from "./server-action";
-import { getFileKey } from "../../../categories/[categoryId]/components/category-form";
+import { Option } from "@/components/ui/multiple-selector";
+import { mergeWithoutDuplicates } from "@/lib/utils";
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Le nom est requis" }),
@@ -56,6 +59,13 @@ const formSchema = z.object({
     .string()
     .min(1, { message: "Les spécifications sont requises" }),
   description: z.string().min(1, { message: "La description est requise" }),
+  linkProducts: z
+    .object({
+      value: z.string(),
+      label: z.string(),
+    })
+    .array()
+    .optional(),
   isFeatured: z.boolean().default(false).optional(),
   isArchived: z.boolean().default(false).optional(),
 });
@@ -63,20 +73,39 @@ const formSchema = z.object({
 export type ProductFormValues = z.infer<typeof formSchema>;
 
 type ProductFormProps = {
-  initialData: (Product & { images: Image[] }) | null;
+  initialData:
+    | (Product & {
+        images: Image[];
+        linkedProducts: { id: string; name: string }[];
+        linkedBy: { id: string; name: string }[];
+      })
+    | null;
   categories: Category[];
+  products: { id: string; name: string; categoryId: string }[];
 };
 
 export const ProductForm: React.FC<ProductFormProps> = ({
   initialData,
   categories,
+  products,
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<string[]>(
     initialData?.images.map((image) => getFileKey(image.url)) || [],
   );
-
+  const [options, setOptions] = useState<Option[]>(
+    products
+      .filter(
+        (product) =>
+          product.id !== initialData?.id &&
+          product.categoryId === initialData?.categoryId,
+      )
+      .map((product) => ({
+        value: product.id,
+        label: product.name,
+      })),
+  );
   const title = initialData ? "Modifier le produit" : "Crée un nouveau produit";
   const description = initialData
     ? "Modifier le produit"
@@ -90,11 +119,26 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     resolver: zodResolver(formSchema),
     defaultValues: initialData
       ? {
-          ...initialData,
+          name: initialData.name,
+          images: [],
+          price: initialData.price,
+          categoryId: initialData.categoryId,
+          description: initialData.description,
+          productSpecs: initialData.productSpecs,
+          isFeatured: initialData.isFeatured,
+          isArchived: initialData.isArchived,
+          linkProducts: mergeWithoutDuplicates(
+            initialData.linkedProducts,
+            initialData.linkedBy,
+          ).map((product) => ({
+            value: product.id,
+            label: product.name,
+          })),
         }
       : {
           name: "",
           images: [],
+          linkProducts: [],
           price: 0,
           categoryId: "",
           description: "",
@@ -105,6 +149,11 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   });
 
   const onSubmit = async (data: ProductFormValues) => {
+    console.log(data);
+    if (selectedFiles.length === 0) {
+      toast.error("Veuillez ajouter au moins une image");
+      return;
+    }
     data.images = selectedFiles.map((file) => ({
       url: `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${file}`,
     }));
@@ -124,6 +173,32 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     toast.success(toastMessage);
   };
 
+  const watchCat = form.watch("categoryId");
+  const initialCatIdRef = useRef(watchCat);
+  useEffect(() => {
+    // Compare the current category ID to the initial one stored in the ref
+    // Skip resetting linkProducts if the category hasn't actually changed
+    if (watchCat !== initialCatIdRef.current) {
+      // Reset linkProducts only if the category has changed
+      form.setValue("linkProducts", []);
+
+      // Update the options based on the new category
+      setOptions(
+        products
+          .filter(
+            (product) =>
+              product.id !== initialData?.id && product.categoryId === watchCat,
+          )
+          .map((product) => ({
+            value: product.id,
+            label: product.name,
+          })),
+      );
+    }
+
+    // Update the initialCatIdRef with the current category ID for the next render
+    initialCatIdRef.current = watchCat;
+  }, [watchCat, products, initialData, form]);
   const onDelete = async () => {
     const deletePro = await deleteProduct({ id: initialData?.id });
     if (!deletePro.success) {
@@ -255,7 +330,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 <FormItem className="w-96">
                   <FormLabel>Drescription</FormLabel>
                   <FormControl>
-                    <TextArea
+                    <AutosizeTextarea
                       disabled={form.formState.isSubmitting}
                       placeholder="Description du produit"
                       {...field}
@@ -312,6 +387,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               )}
             />
           </div>
+
+          <LinkProducts form={form} options={options} />
 
           <PlateEditor
             loading={form.formState.isSubmitting}

@@ -6,11 +6,7 @@ import { OrderColumn } from "./components/columns";
 const OrdersPage = async () => {
   const orders = await prismadb.order.findMany({
     include: {
-      orderItems: {
-        include: {
-          product: true,
-        },
-      },
+      orderItems: true,
       shop: { select: { name: true, id: true } },
     },
     orderBy: {
@@ -43,7 +39,7 @@ const OrdersPage = async () => {
     name: order.name,
     products: order.orderItems
       .map((item) => {
-        let name = item.product.name;
+        let name = item.name;
         if (Number(item.quantity) > 1) {
           name += ` x${item.quantity}`;
         }
@@ -76,7 +72,7 @@ const OrdersPage = async () => {
         dateOfPayment: dateFormatter(order.datePickUp),
         dateOfEdition: dateFormatter(new Date()),
         items: order.orderItems.map((item) => ({
-          desc: item.product.name,
+          desc: item.name,
           qty: item.quantity,
           priceTTC: item.price,
         })),

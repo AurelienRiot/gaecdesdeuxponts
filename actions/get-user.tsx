@@ -19,11 +19,7 @@ const GetUser = async () => {
           createdAt: "desc",
         },
         include: {
-          orderItems: {
-            include: {
-              product: true,
-            },
-          },
+          orderItems: true,
           shop: true,
         },
       },

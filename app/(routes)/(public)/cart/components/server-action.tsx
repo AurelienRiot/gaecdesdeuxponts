@@ -59,6 +59,9 @@ export const checkOut = async ({
         in: productIds,
       },
     },
+    include: {
+      category: true,
+    },
   });
 
   const productsWithQuantity = products.map((product) => {
@@ -75,11 +78,9 @@ export const checkOut = async ({
       pdfUrl: "",
       orderItems: {
         create: productsWithQuantity.map((product) => ({
-          product: {
-            connect: {
-              id: product.item.id,
-            },
-          },
+          name: product.item.name,
+          description: product.item.description,
+          categoryName: product.item.category.name,
           price: product.item.price,
           quantity: product.quantity,
         })),

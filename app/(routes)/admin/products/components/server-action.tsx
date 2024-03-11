@@ -16,13 +16,27 @@ async function deleteProduct({
       message: "Vous devez être authentifier",
     };
   }
-  const product = await prismadb.product.deleteMany({
-    where: {
-      id,
-    },
-  });
 
-  if (product.count === 0) {
+  try {
+    await prismadb.$transaction(async (prisma) => {
+      await prisma.product.update({
+        where: { id: id },
+        data: {
+          linkedProducts: {
+            set: [], // Disconnect all linked products
+          },
+          linkedBy: {
+            set: [], // Disconnect all linked by products
+          },
+        },
+      });
+
+      await prisma.product.delete({
+        where: { id: id },
+      });
+    });
+  } catch (e) {
+    console.log(e);
     return {
       success: false,
       message: "Une erreur est survenue",

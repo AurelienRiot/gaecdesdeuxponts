@@ -10,6 +10,7 @@ import { Switch } from "../ui/switch";
 import { Ressources, deleteObject, getSignature, listFiles } from "./server";
 import { AnimatePresence, Reorder } from "framer-motion";
 import { addDelay, checkIfUrlAccessible } from "@/lib/utils";
+import NoResults from "../ui/no-results";
 
 const generateRandomString = (length: number) => {
   const characters =
@@ -52,6 +53,9 @@ const UploadImage = ({
 
   const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
+    if (loading) {
+      return;
+    }
     setLoading(true);
     const files: File[] = [];
     Array.from(event.dataTransfer.files).forEach((file) => {
@@ -190,6 +194,7 @@ const UploadImage = ({
             type="file"
             className="hidden"
             onChange={handleFile}
+            disabled={loading}
             multiple={multipleImages}
           />
         </label>
@@ -246,12 +251,12 @@ const DisplaySelectedImages = ({
 }: DisplaySelectedImagesProps) => {
   return (
     <>
-      {selectedFiles.length !== 0 && (
-        <div>
-          <h1 className="text-primary">
-            {" "}
-            {multipleImages ? "Images selectionnées" : "Image selectionnée"}
-          </h1>
+      <div>
+        <h1 className="text-primary">
+          {" "}
+          {multipleImages ? "Images selectionnées" : "Image selectionnée"}
+        </h1>
+        {selectedFiles.length !== 0 ? (
           <Reorder.Group
             as="ul"
             values={selectedFiles}
@@ -293,8 +298,10 @@ const DisplaySelectedImages = ({
               ))}
             </AnimatePresence>
           </Reorder.Group>
-        </div>
-      )}
+        ) : (
+          "Aucune image selectionnée"
+        )}
+      </div>
     </>
   );
 };

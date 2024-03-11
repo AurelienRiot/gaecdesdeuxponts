@@ -1,7 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import { ProductClient } from "./components/client";
 import { ProductColumn } from "./components/columns";
-import { currencyFormatter } from "@/lib/utils";
+import { currencyFormatter, mergeWithoutDuplicates } from "@/lib/utils";
 
 const ProductPage = async () => {
   const products = await prismadb.product.findMany({
@@ -12,6 +12,8 @@ const ProductPage = async () => {
           createdAt: "asc",
         },
       },
+      linkedProducts: { select: { id: true, name: true } },
+      linkedBy: { select: { id: true, name: true } },
     },
     orderBy: {
       createdAt: "desc",
@@ -25,6 +27,13 @@ const ProductPage = async () => {
     isFeatured: item.isFeatured,
     isArchived: item.isArchived,
     price: currencyFormatter.format(item.price),
+    linkProducts: mergeWithoutDuplicates(
+      item.linkedProducts,
+      item.linkedBy,
+    ).map((product) => ({
+      id: product.id,
+      name: product.name,
+    })),
     category: item.category.name,
     createdAt: item.createdAt,
   }));

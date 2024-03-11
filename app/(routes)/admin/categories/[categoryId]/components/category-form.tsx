@@ -68,7 +68,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      ...initialData,
+      name: initialData?.name || "",
       imageUrl: getFileKey(initialData?.imageUrl || ""),
     } || {
       name: "",

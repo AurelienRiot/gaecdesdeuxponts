@@ -3,11 +3,12 @@
 import { Button } from "@/components/ui/button";
 import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
-import { cn, dateFormatter } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { EmailButton, GoogleButton } from "@/components/auth/auth-button";
+import { Icons } from "@/components/icons";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Tooltip,
@@ -15,11 +16,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Shop } from "@prisma/client";
-import { Loader2, MapPin } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import DatePicker from "./date-picker";
 import PlaceModal from "./place-modal";
-import { Icons } from "@/components/icons";
 import { checkOut } from "./server-action";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
@@ -94,7 +94,6 @@ const Summary: React.FC<SummaryProps> = ({ userId, shops }) => {
       };
     });
 
-    console.log(itemsWithQuantities, date, totalPrice, shopId);
     const result = await checkOut({
       itemsWithQuantities,
       date,

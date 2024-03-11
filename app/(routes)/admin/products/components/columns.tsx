@@ -12,6 +12,7 @@ import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { changeArchived, changeFeatured } from "./server-action";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 
 export type ProductColumn = {
   id: string;
@@ -19,6 +20,10 @@ export type ProductColumn = {
   image: string;
   price: string;
   category: string;
+  linkProducts: {
+    id: string;
+    name: string;
+  }[];
   isFeatured: boolean;
   isArchived: boolean;
   createdAt: Date;
@@ -67,6 +72,17 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "category",
     header: "Categorie",
+  },
+  {
+    accessorKey: "linkProducts",
+    header: "Produits lieés",
+    cell: ({ row }) => (
+      <div className="flex flex-wrap gap-1">
+        {row.original.linkProducts.map((product) => {
+          return <Badge key={product.id}>{product.name}</Badge>;
+        })}
+      </div>
+    ),
   },
   {
     accessorKey: "createdAt",
