@@ -8,13 +8,18 @@ import useCart from "@/hooks/use-cart";
 import Link from "next/link";
 import { ProductWithCategoryAndImages } from "@/types";
 import { PlateVis } from "./plate-vis";
+import { Badge } from "./ui/badge";
 
 interface InfoProps {
   data: ProductWithCategoryAndImages;
   scroll?: boolean;
+  linkProducts: {
+    id: string;
+    name: string;
+  }[];
 }
 
-const Info: React.FC<InfoProps> = ({ data, scroll }) => {
+const Info: React.FC<InfoProps> = ({ data, scroll, linkProducts }) => {
   const cart = useCart();
 
   const value = data.price;
@@ -43,6 +48,24 @@ const Info: React.FC<InfoProps> = ({ data, scroll }) => {
           <p>{data.description}</p>
         </div>
       </div>
+      <hr className="my-4" />
+      {linkProducts.length > 0 && (
+        <>
+          <h2 className="mb-4 mt-8 text-xl">Produits liées</h2>
+          <div className="flex flex-wrap gap-1">
+            {linkProducts.map((product) => {
+              return (
+                <Badge key={product.id}>
+                  <Link className="py-1" href={`/product/${product.id}`}>
+                    {product.name}
+                  </Link>
+                </Badge>
+              );
+            })}
+          </div>
+          <hr className="my-4" />
+        </>
+      )}
       <div className="mt-10 flex items-center gap-x-3">
         <Button
           variant="rounded"

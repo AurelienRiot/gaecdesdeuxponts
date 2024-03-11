@@ -1,12 +1,20 @@
-"use client";
-
 import { EmailButton, GoogleButton } from "@/components/auth/auth-button";
-import { useSearchParams } from "next/navigation";
+import { checkUser } from "@/components/auth/checkAuth";
+import { redirect } from "next/navigation";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
-export default function LoginPage() {
-  const callbackUrl = useSearchParams().get("callbackUrl") || "/dashboard-user";
+export default async function LoginPage(searchParams: { callbackUrl: string }) {
+  const isAuth = await checkUser();
+  if (isAuth) {
+    if (isAuth.role === "admin") {
+      redirect("/admin");
+    } else {
+      redirect("/dashboard-user");
+    }
+  }
+
+  const callbackUrl = searchParams.callbackUrl ?? "/dashboard-user";
 
   return (
     <div className="flex w-full items-center justify-center bg-slate-100 dark:bg-slate-900">

@@ -5,6 +5,7 @@ import ProductList from "@/components/products-list";
 import Container from "@/components/ui/container";
 import { Metadata } from "next";
 import prismadb from "@/lib/prismadb";
+import { mergeWithoutDuplicates } from "@/lib/utils";
 
 interface ProductPageProps {
   params: {
@@ -35,6 +36,8 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
     include: {
       category: true,
       images: { orderBy: { createdAt: "asc" } },
+      linkedBy: { select: { id: true, name: true, isArchived: true } },
+      linkedProducts: { select: { id: true, name: true, isArchived: true } },
     },
   });
 
@@ -42,12 +45,24 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
     return <NotFound />;
   }
 
+  const linkProducts = mergeWithoutDuplicates(
+    product.linkedBy.filter((product) => !product.isArchived),
+    product.linkedProducts.filter((product) => !product.isArchived),
+  );
+
+  const excludeIds = linkProducts.map((product) => product.id);
+  excludeIds.push(product.id);
+
   const suggestedProducts = await prismadb.product.findMany({
     where: {
-      categoryId: product.categoryId,
-      id: {
-        not: product.id,
-      },
+      AND: [
+        { categoryId: product.categoryId, isArchived: false },
+        {
+          id: {
+            notIn: excludeIds,
+          },
+        },
+      ],
     },
     include: {
       category: true,
@@ -62,7 +77,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
           <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
             <Gallery images={product.images} />
             <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-              <Info data={product} />
+              <Info data={product} linkProducts={linkProducts} />
             </div>
           </div>
           <hr className="my-10" />
