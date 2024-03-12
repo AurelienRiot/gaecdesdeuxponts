@@ -241,7 +241,7 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
                   <FormLabel>Website</FormLabel>
                   <FormControl>
                     <Input
-                      type="url"
+                      type="text"
                       disabled={form.formState.isSubmitting}
                       placeholder="Site internet du magasin"
                       {...field}

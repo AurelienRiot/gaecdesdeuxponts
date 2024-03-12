@@ -30,22 +30,24 @@ const ContactPage = async () => {
 
         <div className="mt-8">
           <div className="mb-4 flex items-center gap-6">
-            <h2 className="text-xl font-semibold text-secondary">Adresse</h2>
-            <Skeleton className="h-2 w-10" />
+            <h2 className="text-xl font-semibold text-secondary">Adresse :</h2>
+            <p>6 B le Pont Robert 44290 MASSERAC</p>
           </div>
           <div className="mb-4 flex items-center gap-6">
-            <h2 className="text-xl font-semibold text-secondary">Téléphone</h2>
-            <Skeleton className="h-2 w-10" />
+            <h2 className="text-xl font-semibold text-secondary">
+              Téléphone :
+            </h2>
+            <p>06 72 06 45 55</p>
           </div>
           <div className="mb-4 flex items-center gap-6">
-            <h2 className="text-xl font-semibold text-secondary">Email</h2>
+            <h2 className="text-xl font-semibold text-secondary">Email :</h2>
             <Link href="mailto:contact@riottech.fr">
-              <Skeleton className="h-2 w-10" />
+              gaecdesdeuxponts@gmail.com
             </Link>
           </div>
           <div className="mb-4 flex items-center gap-6">
             <h2 className="text-xl font-semibold text-secondary">
-              {"Heures d'ouverture"}
+              {"Heures d'ouverture :"}
             </h2>
             <p>Du lundi au vendredi: 9h00 - 17h00</p>
           </div>

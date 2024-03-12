@@ -1,7 +1,7 @@
 "use client";
-import { AddressInput } from "@/components/display-shops.tsx/address-input";
-import NameInput from "@/components/display-shops.tsx/name-input";
-import { ShopCard } from "@/components/display-shops.tsx/shop-card";
+import { AddressInput } from "@/components/display-shops/address-input";
+import NameInput from "@/components/display-shops/name-input";
+import { ShopCard } from "@/components/display-shops/shop-card";
 import { Modal } from "@/components/ui/modal";
 import { Shop } from "@prisma/client";
 import { Dispatch, SetStateAction, useState } from "react";

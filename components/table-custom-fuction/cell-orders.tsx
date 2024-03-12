@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { DataInvoiceType } from "../pdf/data-invoice";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
-import { changeStatus } from "./cell-orders-server-actions";
+import { changeStatus } from "./orders-server-actions";
 const DisplayPDF = dynamic(() => import("@/components/pdf/displayPDF"), {
   ssr: false,
 });

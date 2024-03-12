@@ -1,6 +1,6 @@
 "use client";
 
-import { ShopCard } from "@/components/display-shops.tsx/shop-card";
+import { ShopCard } from "@/components/display-shops/shop-card";
 import { DataInvoiceType } from "@/components/pdf/data-invoice";
 import { Button } from "@/components/ui/button";
 import { CardDescription } from "@/components/ui/card";

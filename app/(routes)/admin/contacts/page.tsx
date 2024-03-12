@@ -13,10 +13,10 @@ const ContactsPage = async () => {
     id: item.id,
     userId: item.userId,
     name: item.name,
-    phone: item.phone === null ? undefined : item.phone,
+    phone: item.phone === null ? "" : item.phone,
     email: item.email,
     subject: item.subject,
-    message: item.message,
+    text: item.message,
     createdAt: item.createdAt,
   }));
 

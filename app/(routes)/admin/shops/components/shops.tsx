@@ -1,13 +1,13 @@
 "use client";
-import { AddressInput } from "@/components/display-shops.tsx/address-input";
+import { AddressInput } from "@/components/display-shops/address-input";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Shop } from "@prisma/client";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import NameInput from "../../../../../components/display-shops.tsx/name-input";
-import { ShopCard } from "../../../../../components/display-shops.tsx/shop-card";
+import NameInput from "../../../../../components/display-shops/name-input";
+import { ShopCard } from "../../../../../components/display-shops/shop-card";
 
 const DisplayShop = ({ data }: { data: Shop[] }) => {
   const [coordinates, setCoordinates] = useState<{
@@ -25,7 +25,7 @@ const DisplayShop = ({ data }: { data: Shop[] }) => {
           description="Afficher et modifier les magasins"
         />
         <Button
-          onClick={() => router.push(`/admin/shop/new`)}
+          onClick={() => router.push(`/admin/shops/new`)}
           className="m-2 pb-6 pt-6 sm:ml-2 sm:pb-0 sm:pt-0"
         >
           <Plus className="mr-2  h-4 w-4" />

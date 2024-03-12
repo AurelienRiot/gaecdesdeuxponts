@@ -286,6 +286,7 @@ const DisplaySelectedImages = ({
                   <button
                     onClick={(e) => {
                       e.preventDefault();
+                      e.stopPropagation();
                       setSelectedFiles((prev) =>
                         prev.filter((item) => item !== key),
                       );
@@ -397,6 +398,8 @@ const DisplayImages = ({
                   <button
                     onClick={async (e) => {
                       e.preventDefault();
+                      e.stopPropagation();
+
                       setLoading(true);
                       await onDelete(file.public_id);
                       setLoading(false);
@@ -408,6 +411,7 @@ const DisplayImages = ({
                   <button
                     onClick={(e) => {
                       e.preventDefault();
+                      e.stopPropagation();
                       if (multipleImages) {
                         setSelectedFiles((prev) => [
                           ...prev,
@@ -433,6 +437,7 @@ const DisplayImages = ({
             size="sm"
             onClick={(e) => {
               e.preventDefault();
+              e.stopPropagation();
               setCurrentPage((prev) => prev - 1);
             }}
             disabled={currentPage === 1}
@@ -443,6 +448,7 @@ const DisplayImages = ({
             variant="outline"
             size="sm"
             onClick={(e) => {
+              e.stopPropagation();
               e.preventDefault();
               setCurrentPage((prev) => prev + 1);
             }}
