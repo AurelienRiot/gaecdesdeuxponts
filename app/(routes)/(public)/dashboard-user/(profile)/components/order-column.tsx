@@ -20,7 +20,7 @@ import { Shop } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Search } from "lucide-react";
 import dynamic from "next/dynamic";
-const DisplayPDF = dynamic(() => import("@/components/pdf/displayPDF"), {
+const DisplayPDF = dynamic(() => import("@/components/pdf/pdf-button"), {
   ssr: false,
 });
 

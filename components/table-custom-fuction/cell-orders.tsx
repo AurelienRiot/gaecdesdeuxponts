@@ -9,7 +9,7 @@ import { DataInvoiceType } from "../pdf/data-invoice";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { changeStatus } from "./orders-server-actions";
-const DisplayPDF = dynamic(() => import("@/components/pdf/displayPDF"), {
+const DisplayPDF = dynamic(() => import("@/components/pdf/pdf-button"), {
   ssr: false,
 });
 

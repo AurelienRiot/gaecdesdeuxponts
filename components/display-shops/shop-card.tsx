@@ -39,7 +39,6 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
     const distance = haversine(coordinates, { lat: shop.lat, long: shop.long });
     const router = useRouter();
     const [open, setOpen] = useState(false);
-    const descriptionRef = useRef(null);
 
     const onDelete = async () => {
       const deletesh = await deleteShop({ id: shop.id });
@@ -66,7 +65,7 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
         <Card
           data-state={display}
           className={cn(
-            "jutify-between flex h-full w-full min-w-[300px] max-w-[90vw] flex-col ",
+            "flex h-full w-full min-w-[300px] max-w-[90vw] flex-col justify-between ",
             className,
           )}
           ref={ref}
@@ -84,13 +83,13 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
                 </PopoverTrigger>
                 <PopoverContent
                   className={
-                    " hide-scrollbar max-h-[50vh] w-[400px] max-w-[90vw] overflow-auto overscroll-contain border-2  outline-none"
+                    " hide-scrollbar z-[101]  w-[400px] max-w-[90vw]   border-2 outline-none"
                   }
                   align="center"
                   side="bottom"
                 >
                   <AutosizeTextarea
-                    className=" hide-scrollbar  border-0 bg-transparent outline-0  ring-0 focus:border-0  focus:shadow-none focus:outline-0 focus:ring-0 focus-visible:ring-0"
+                    className="  border-0 bg-transparent outline-0  ring-0 focus:border-0  focus:shadow-none focus:outline-0 focus:ring-0 focus-visible:ring-0"
                     value={shop.description}
                     readOnly
                   />

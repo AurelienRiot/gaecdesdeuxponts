@@ -37,7 +37,7 @@ const MainStyles = StyleSheet.create({
 
 // Create Document Component
 const Invoice = ({ dataInvoice }: { dataInvoice: DataInvoiceType }) => (
-  <Document>
+  <Document title={`Facture-${dataInvoice.order.id}`}>
     <Page size="A4" style={MainStyles.page}>
       <View style={MainStyles.header}>
         <Company />
