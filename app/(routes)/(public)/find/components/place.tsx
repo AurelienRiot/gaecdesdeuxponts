@@ -26,7 +26,17 @@ export const PlacePicker = ({ shops }: { shops: Shop[] }) => {
           className="w-fit"
         />
       </div>
-      0
+
+      <div className=" grid grid-cols-1 items-center justify-items-center  gap-3 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+        {sortedShops.map((shop) => (
+          <ShopCard
+            display="find"
+            shop={shop}
+            key={shop.name}
+            coordinates={coordinates}
+          />
+        ))}
+      </div>
     </>
   );
 };
