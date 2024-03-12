@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import ButtonBackward from "@/components/ui/button-backward";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { Trash } from "lucide-react";
 
 const SettingsLoading = () => {

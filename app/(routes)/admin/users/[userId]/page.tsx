@@ -4,6 +4,7 @@ import { OrderColumn } from "./components/order-column";
 import { currencyFormatter, dateFormatter } from "@/lib/utils";
 import { OrderTable } from "./components/order-table";
 import ButtonBackward from "@/components/ui/button-backward";
+import { OrderStatusProvider } from "@/hooks/use-order-status";
 
 export const dynamic = "force-dynamic";
 
@@ -85,14 +86,16 @@ const UserPage = async ({ params }: { params: { userId: string } }) => {
   }));
 
   return (
-    <div className="flex-col p-8 pt-6">
-      <div className="mb-8 flex-1 space-y-4 ">
-        <UserForm initialData={formatedUser} />
+    <OrderStatusProvider initialData={formattedOrders}>
+      <div className="flex-col p-8 pt-6">
+        <div className="mb-8 flex-1 space-y-4 ">
+          <UserForm initialData={formatedUser} />
+        </div>
+        <div>
+          <OrderTable data={formattedOrders} />
+        </div>
       </div>
-      <div>
-        <OrderTable data={formattedOrders} />
-      </div>
-    </div>
+    </OrderStatusProvider>
   );
 };
 

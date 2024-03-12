@@ -59,16 +59,21 @@ const CardUser: React.FC<CardUserProps> = ({
         <CardHeader>
           <CardTitle
             onClick={() => {
-              router.push(`/admin/users/${user.id}`);
               router.refresh();
             }}
-            className="cursor-pointer hover:underline"
           >
-            <>
-              <span className="capitalize">{user.name}</span>{" "}
-            </>
+            <Link
+              href={`/admin/users/${user.id}`}
+              className="capitalize hover:underline"
+            >
+              {user.name}
+            </Link>
           </CardTitle>
-          <CardDescription>{user.email}</CardDescription>
+          <CardDescription>
+            <Link href={`/admin/users/${user.id}`} className="hover:underline">
+              {user.email}
+            </Link>
+          </CardDescription>
         </CardHeader>
         <CardContent className="text-center">
           <p className="p-2">{`Nombre de commandes : ${orderLength}`}</p>

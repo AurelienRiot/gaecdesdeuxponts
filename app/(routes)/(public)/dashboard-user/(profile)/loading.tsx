@@ -1,7 +1,7 @@
-import { DataTableSkeleton } from "@/components/ui/data-table-skeleton";
+import { DataTableSkeleton } from "@/components/skeleton-ui/data-table-skeleton";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { OrdersColumn } from "./components/order-column";
 import { UserButtons } from "./components/user-buttons";
 import Container from "@/components/ui/container";

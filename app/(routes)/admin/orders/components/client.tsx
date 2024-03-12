@@ -1,77 +1,62 @@
 "use client";
 
+import { LoadingButton } from "@/components/ui/button";
+import { DataTable } from "@/components/ui/data-table";
+import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
+import { DateRange } from "react-day-picker";
+import { toast } from "sonner";
 import { OrderColumn, columns } from "./columns";
-import { DataTable } from "@/components/ui/data-table";
-import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { getOrders } from "./server-action";
 
 interface OrderClientProps {
-  data: OrderColumn[];
-}
-
-export const OrderClient: React.FC<OrderClientProps> = ({ data }) => {
-  return (
-    <OrderStatusProvider initialData={data}>
-      <>
-        <Heading
-          title={`Commandes (${data.length})`}
-          description="Gérer les commandes"
-        />
-
-        <Separator />
-        <DataTable searchKey="products" columns={columns} initialData={data} />
-      </>
-    </OrderStatusProvider>
-  );
-};
-
-interface OrderStatusContextType {
-  orderStatus: { [key: string]: boolean | "indeterminate" };
-  setOrderStatus: React.Dispatch<
-    React.SetStateAction<{ [key: string]: boolean | "indeterminate" }>
-  >;
-}
-const OrderStatusContext = createContext<OrderStatusContextType>({
-  orderStatus: {},
-  setOrderStatus: () => {},
-});
-
-const OrderStatusProvider = ({
-  initialData,
-  children,
-}: {
   initialData: OrderColumn[];
-  children: ReactNode;
+  initialDateRange: DateRange;
+}
+
+export const OrderClient: React.FC<OrderClientProps> = ({
+  initialData,
+  initialDateRange,
 }) => {
-  const [orderStatus, setOrderStatus] = useState<{
-    [key: string]: boolean | "indeterminate";
-  }>({});
+  const [data, setData] = useState<OrderColumn[]>(initialData);
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(
+    initialDateRange,
+  );
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    // Initialize the order status state with the `id` and `isPaid` fields from initialData
-    const statusMap = initialData.reduce(
-      (acc, order) => {
-        acc[order.id] = order.isPaid;
-        return acc;
-      },
-      {} as { [key: string]: boolean | "indeterminate" },
-    );
-
-    setOrderStatus(statusMap);
-  }, [initialData]);
+  const handleChangeDate = async () => {
+    setLoading(true);
+    const result = await getOrders(dateRange);
+    if (!result.success) {
+      toast.error(result.message);
+      setLoading(false);
+      return;
+    }
+    setData(result.data);
+    setLoading(false);
+  };
 
   return (
-    <OrderStatusContext.Provider value={{ orderStatus, setOrderStatus }}>
-      {children}
-    </OrderStatusContext.Provider>
+    <>
+      <Heading
+        title={`Commandes (${data.length})`}
+        description="Gérer les commandes"
+      />
+
+      <Separator className="mb-4" />
+      <div className="flex flex-col gap-4 sm:flex-row">
+        <DatePickerWithRange date={dateRange} setDate={setDateRange} />
+        <LoadingButton
+          className="w-fit"
+          disabled={loading}
+          onClick={() => handleChangeDate()}
+        >
+          Valider
+        </LoadingButton>
+      </div>
+      <DataTable searchKey="products" columns={columns} initialData={data} />
+    </>
   );
 };
-
-export const useOrderStatus = () => useContext(OrderStatusContext);

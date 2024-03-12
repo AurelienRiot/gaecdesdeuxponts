@@ -13,20 +13,24 @@ const Checkbox = React.forwardRef<
   <CheckboxPrimitive.Root
     ref={ref}
     className={cn(
-      `peer relative h-4 w-4 shrink-0 rounded-md border border-primary ring-offset-background transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50
-      data-[state=checked]:bg-primary
-      data-[state=unchecked]:bg-transparent 
-      `,
+      `peer relative h-4 w-4 shrink-0 rounded-md border border-primary bg-background ring-offset-background transition-all delay-200 duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50
+    data-[state=checked]:bg-primary  data-[state=checked]:delay-0 
+    `,
       className,
     )}
     {...props}
   >
-    <CheckboxPrimitive.Indicator className="absolute inset-0 -left-[1px] animate-checkbox-out    items-center    overflow-hidden text-transparent  data-[state=checked]:animate-checkbox-in ">
-      <Check className="absolute h-4 w-4 shrink-0" />
+    <CheckboxPrimitive.Indicator
+      forceMount
+      className="peer absolute inset-0 -bottom-[1px] -left-[1px] grid grid-cols-[0fr] items-center  transition-all delay-0 duration-500  data-[state=checked]:grid-cols-[1fr]   data-[state=indeterminate]:grid-cols-[0fr] data-[state=checked]:delay-200 data-[state=indeterminate]:delay-0 "
+    >
+      <div className="overflow-hidden transition-all">
+        <Check className=" h-4 w-4 shrink-0 text-primary-foreground" />
+      </div>
     </CheckboxPrimitive.Indicator>
-    <CheckboxPrimitive.Indicator className=" absolute inset-0 left-[1px] top-[1px] hidden items-center data-[state=indeterminate]:flex  ">
+    <div className=" absolute inset-0 left-[1px] top-[1px] flex items-center opacity-0 transition-all delay-200 peer-data-[state=indeterminate]:opacity-100  ">
       <Loader2 className="absolute h-3 w-3 shrink-0 animate-spin text-primary " />
-    </CheckboxPrimitive.Indicator>
+    </div>
   </CheckboxPrimitive.Root>
 ));
 Checkbox.displayName = CheckboxPrimitive.Root.displayName;

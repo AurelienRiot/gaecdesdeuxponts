@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import prismadb from "@/lib/prismadb";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";

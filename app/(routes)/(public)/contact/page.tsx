@@ -1,5 +1,5 @@
 import Container from "@/components/ui/container";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { ContactForm } from "./components/contact-form";
 import GetUser from "@/actions/get-user";
 import Link from "next/link";

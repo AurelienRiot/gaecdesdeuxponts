@@ -1,4 +1,3 @@
-import BlopSVG from "@/components/animations/blop";
 import {
   Card,
   CardContent,

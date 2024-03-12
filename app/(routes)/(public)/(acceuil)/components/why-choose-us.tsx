@@ -1,9 +1,18 @@
+"use client";
 import { Button } from "@/components/ui/button";
-import { ArrowBigRight, ArrowRightIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DatePickerWithRange } from "@/components/ui/date-range-picker";
+
+import { ArrowRightIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { DateRange } from "react-day-picker";
 
 const WhyChooseUs = () => {
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [date, setDate] = useState<Date[] | undefined>();
   return (
     <div className="bg-background py-8">
       <div className="mx-auto max-w-6xl px-4 text-center sm:px-6 lg:px-8">

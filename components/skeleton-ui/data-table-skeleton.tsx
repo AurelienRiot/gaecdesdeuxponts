@@ -36,10 +36,10 @@ export function DataTableSkeleton<TData, TValue>({
 
   return (
     <div
-      className="overflow-auto
-    mt-4"
+      className="mt-4
+    overflow-auto"
     >
-      <div className="border rounded-md">
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -53,7 +53,7 @@ export function DataTableSkeleton<TData, TValue>({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -71,7 +71,7 @@ export function DataTableSkeleton<TData, TValue>({
                     key={cell.id}
                     className="h-12  items-center justify-center "
                   >
-                    <Skeleton className="w-24 h-4 rounded-full" />
+                    <Skeleton className="h-4 w-24 rounded-full" />
                   </TableCell>
                 ))}
               </TableRow>

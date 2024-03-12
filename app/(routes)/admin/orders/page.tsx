@@ -2,32 +2,40 @@ import prismadb from "@/lib/prismadb";
 import { currencyFormatter, dateFormatter } from "@/lib/utils";
 import { OrderClient } from "./components/client";
 import { OrderColumn } from "./components/columns";
+import { DateRange } from "react-day-picker";
+import { OrderStatusProvider } from "@/hooks/use-order-status";
 
 const OrdersPage = async () => {
+  const from = new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000);
+  const to = new Date();
+
+  const dateRange: DateRange = {
+    from: from,
+    to: to,
+  };
+
   const orders = await prismadb.order.findMany({
     include: {
       orderItems: true,
       shop: { select: { name: true, id: true } },
+      user: {
+        select: {
+          id: true,
+          name: true,
+          address: true,
+          phone: true,
+          email: true,
+        },
+      },
+    },
+    where: {
+      createdAt: {
+        gte: dateRange.from,
+        lte: dateRange.to,
+      },
     },
     orderBy: {
       createdAt: "desc",
-    },
-  });
-
-  // fetch all the user that have an order in the database
-
-  const users = await prismadb.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      address: true,
-      phone: true,
-      email: true,
-    },
-    where: {
-      id: {
-        in: orders.map((order) => order.userId),
-      },
     },
   });
 
@@ -52,19 +60,19 @@ const OrdersPage = async () => {
     shopId: order.shop.id,
     dataInvoice: {
       customer: {
-        id: users.find((user) => user.id === order.userId)?.id || "",
-        name: users.find((user) => user.id === order.userId)?.name || "",
+        id: order.user.id || "",
+        name: order.user.name || "",
         address: (() => {
-          const u = users.find((user) => user.id === order.userId);
+          const u = order.user;
           const a =
-            u?.address[0] && u.address[0].line1
+            order.user.address[0] && u.address[0].line1
               ? `${u.address[0].line1} ${u.address[0].postalCode} ${u.address[0].city}`
               : "";
 
           return a;
         })(),
-        phone: users.find((user) => user.id === order.userId)?.phone || "",
-        email: users.find((user) => user.id === order.userId)?.email || "",
+        phone: order.user.phone || "",
+        email: order.user.email || "",
       },
 
       order: {
@@ -82,11 +90,16 @@ const OrdersPage = async () => {
   }));
 
   return (
-    <div className="flex-col">
-      <div className="flex-1 space-y-4 p-8 pt-6">
-        <OrderClient data={formattedOrders} />
+    <OrderStatusProvider initialData={formattedOrders}>
+      <div className="flex-col">
+        <div className="flex-1 space-y-4 p-8 pt-6">
+          <OrderClient
+            initialData={formattedOrders}
+            initialDateRange={dateRange}
+          />
+        </div>
       </div>
-    </div>
+    </OrderStatusProvider>
   );
 };
 

@@ -1,4 +1,3 @@
-import BlopSVG from "@/components/animations/blop";
 import Container from "@/components/ui/container";
 import { CaracteristiqueCard } from "./components/cards";
 import ImageAccueil from "./components/image-accueil";
