@@ -2,16 +2,13 @@
 import { useOrderStatusContext } from "@/hooks/use-order-status";
 import { dateFormatter } from "@/lib/utils";
 import { Row } from "@tanstack/react-table";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { toast } from "sonner";
 import { DataInvoiceType } from "../pdf/data-invoice";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { changeStatus } from "./orders-server-actions";
-const DisplayPDF = dynamic(() => import("@/components/pdf/pdf-button"), {
-  ssr: false,
-});
+import DisplayPDF from "../pdf/pdf-button";
 
 type StatusCellProps<T = {}> = T & {
   id: string;

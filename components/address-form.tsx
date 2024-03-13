@@ -45,7 +45,7 @@ interface AdressFormProps {
   className?: string;
 }
 
-export const AddressForm = <T extends { address: string }>({
+export const AddressForm = <T extends { address: FullAdress }>({
   selectedAddress,
   setSelectedAddress,
   className,
@@ -126,9 +126,13 @@ export const AddressForm = <T extends { address: string }>({
                     onValueChange={(e) => {
                       setSearchTerm(e);
                       if (query.length < 3) {
+                        const prev = form.getValues();
                         form.setValue(
                           "address" as Path<T>,
-                          "" as PathValue<T, Path<T>>,
+                          { ...prev.address, label: "" } as PathValue<
+                            T,
+                            Path<T>
+                          >,
                         );
                       }
                       setOpen(true);
@@ -145,9 +149,13 @@ export const AddressForm = <T extends { address: string }>({
                         value={index.toString()}
                         key={address.label}
                         onSelect={() => {
+                          const prev = form.getValues();
                           form.setValue(
                             "address" as Path<T>,
-                            address.label as PathValue<T, Path<T>>,
+                            {
+                              ...prev.address,
+                              label: address.label,
+                            } as PathValue<T, Path<T>>,
                           );
                           setSelectedAddress((prev) => ({
                             ...prev,

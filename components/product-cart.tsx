@@ -5,12 +5,12 @@ import IconButton from "@/components/ui/icon-button";
 import useCart from "@/hooks/use-cart";
 import { ProductWithCategoryAndImages } from "@/types";
 import { motion } from "framer-motion";
-import { Info, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { MouseEventHandler } from "react";
-import { VisibleElement } from "./animations/visible-element";
 import { FaInfo } from "react-icons/fa";
+import { VisibleElement } from "./animations/visible-element";
 
 interface ProductCartProps {
   data: ProductWithCategoryAndImages;
@@ -46,7 +46,7 @@ const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
           fill
           sizes="80vw"
           alt="Image"
-          className="aspect-square rounded-md object-cover "
+          className="aspect-square rounded-xl object-cover "
         />
         <div className="absolute bottom-5 w-full px-6  ">
           <div className="flex justify-center gap-x-6">

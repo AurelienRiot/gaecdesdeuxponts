@@ -45,15 +45,17 @@ const formSchema = z.object({
       message: "Le numéro de téléphone n'est pas valide",
     },
   ),
-  address: z.object({
-    label: z.string(),
-    city: z.string(),
-    country: z.string(),
-    line1: z.string(),
-    line2: z.string(),
-    postalCode: z.string(),
-    state: z.string(),
-  }),
+  address: z
+    .object({
+      label: z.string().optional(),
+      city: z.string().optional(),
+      country: z.string().optional(),
+      line1: z.string().optional(),
+      line2: z.string().optional(),
+      postalCode: z.string().optional(),
+      state: z.string().optional(),
+    })
+    .optional(),
 });
 
 export type UserFormValues = z.infer<typeof formSchema>;

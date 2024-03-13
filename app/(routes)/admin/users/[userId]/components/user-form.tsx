@@ -19,11 +19,11 @@ import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Address, Order, User } from "@prisma/client";
 import { Trash } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { isValidPhoneNumber } from "react-phone-number-input";
+import { toast } from "sonner";
 import * as z from "zod";
 import { deleteUser } from "../../components/server-action";
 import { updateUser } from "./server-action";
@@ -42,15 +42,17 @@ const formSchema = z.object({
       message: "Le numéro de téléphone n'est pas valide",
     },
   ),
-  address: z.object({
-    label: z.string(),
-    city: z.string(),
-    country: z.string(),
-    line1: z.string(),
-    line2: z.string(),
-    postalCode: z.string(),
-    state: z.string(),
-  }),
+  address: z
+    .object({
+      label: z.string().optional(),
+      city: z.string().optional(),
+      country: z.string().optional(),
+      line1: z.string().optional(),
+      line2: z.string().optional(),
+      postalCode: z.string().optional(),
+      state: z.string().optional(),
+    })
+    .optional(),
 });
 
 export type UserFormValues = z.infer<typeof formSchema>;

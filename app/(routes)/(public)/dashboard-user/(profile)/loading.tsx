@@ -1,10 +1,9 @@
 import { DataTableSkeleton } from "@/components/skeleton-ui/data-table-skeleton";
+import { Skeleton } from "@/components/skeleton-ui/skeleton";
+import Container from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/skeleton-ui/skeleton";
-import { OrdersColumn } from "./components/order-column";
 import { UserButtons } from "./components/user-buttons";
-import Container from "@/components/ui/container";
 
 const Loading = () => {
   return (
@@ -36,7 +35,7 @@ const Loading = () => {
           <>
             <Heading title={`Commandes`} description="Résumé des commandes" />
             <Separator />
-            <DataTableSkeleton columns={OrdersColumn} />
+            <DataTableSkeleton columnCount={5} rowCount={5} />
           </>
         </div>
       </>

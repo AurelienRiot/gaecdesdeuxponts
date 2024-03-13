@@ -18,6 +18,7 @@ const tableRowsCount = 11;
 const mainColor = "#00008B";
 const foregroundColor = "#FFFFFF";
 const borderColor = mainColor;
+const logoColor = "#000000";
 
 const MainStyles = StyleSheet.create({
   page: {
@@ -420,7 +421,7 @@ const Logo = () => (
   <Svg viewBox="0 0 1024 1024" style={CompanyStyles.logo}>
     <G
       transform="translate(0.000000,1024.000000) scale(0.100000,-0.100000)"
-      fill="#000000"
+      fill={logoColor}
       stroke="none"
     >
       <Path

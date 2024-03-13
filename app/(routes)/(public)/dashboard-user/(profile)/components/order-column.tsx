@@ -2,27 +2,19 @@
 
 import { ShopCard } from "@/components/display-shops/shop-card";
 import { DataInvoiceType } from "@/components/pdf/data-invoice";
+import DisplayPDF from "@/components/pdf/pdf-button";
+import { DatePickUpCell } from "@/components/table-custom-fuction/cell-orders";
+import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
 import { Button } from "@/components/ui/button";
-import { CardDescription } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { dateFormatter } from "@/lib/utils";
 import { Shop } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Search } from "lucide-react";
-import dynamic from "next/dynamic";
-const DisplayPDF = dynamic(() => import("@/components/pdf/pdf-button"), {
-  ssr: false,
-});
+import { Search } from "lucide-react";
 
 export type OrderColumnType = {
   id: string;
@@ -70,23 +62,8 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
   },
   {
     accessorKey: "datePickUp",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Date de retrait
-          <ArrowUpDown className="ml-2 h-4 w-4 flex-shrink-0" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="flex md:pl-4">
-        {" "}
-        {dateFormatter(row.getValue("datePickUp"))}
-      </div>
-    ),
+    header: DatePickUpHeader,
+    cell: DatePickUpCell,
   },
   {
     accessorKey: "shopName",

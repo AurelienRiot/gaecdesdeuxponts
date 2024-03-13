@@ -1,8 +1,6 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Checkbox } from "@/components/ui/checkbox";
-import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 
 import { ArrowRightIcon } from "lucide-react";
 import Image from "next/image";

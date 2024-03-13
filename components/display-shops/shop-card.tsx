@@ -9,17 +9,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { cn, haversine } from "@/lib/utils";
 import { Shop } from "@prisma/client";
 import { ClipboardEdit } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { forwardRef, useRef, useState } from "react";
+import { forwardRef, useState } from "react";
 import { formatPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import { deleteShop } from "../../app/(routes)/admin/shops/[shopId]/components/server-actions";
@@ -73,41 +68,20 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
         >
           <CardHeader>
             <CardTitle>{shop.name}</CardTitle>
-            {!!shop.description && (
-              <Popover>
-                <PopoverTrigger>
-                  <CardDescription className="overflow-hidden text-ellipsis whitespace-nowrap underline-offset-2 hover:underline">
-                    <Icons.search className="mb-1 mr-1 inline h-4 w-4 self-center" />{" "}
-                    {shop.description}
-                  </CardDescription>
-                </PopoverTrigger>
-                <PopoverContent
-                  className={
-                    " hide-scrollbar z-[101]  w-[400px] max-w-[90vw]   border-2 outline-none"
-                  }
-                  align="center"
-                  side="bottom"
-                >
-                  <AutosizeTextarea
-                    className="  border-0 bg-transparent outline-0  ring-0 focus:border-0  focus:shadow-none focus:outline-0 focus:ring-0 focus-visible:ring-0"
-                    value={shop.description}
-                    readOnly
-                  />
-                </PopoverContent>
-              </Popover>
-            )}
+            <CardInfo description={shop.description} />
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
             {!!shop.address && (
               <CardDescription>
                 <span className="font-bold">Adresse :</span>{" "}
-                {/* <Link
-              href={`https://maps.google.com/?q=${shop.address}`}
-              className="inline p-1 underline-offset-2 hover:underline"
-              target="_blank"
-            > */}
-                {shop.address}
-                {/* </Link> */}
+                <Button asChild variant={"link"} className="px-0">
+                  <Link
+                    href={`https://maps.google.com/?q=${shop.address}`}
+                    target="_blank"
+                  >
+                    {shop.address}
+                  </Link>
+                </Button>
               </CardDescription>
             )}
             {!!shop.phone && (
@@ -182,3 +156,32 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
 );
 
 ShopCard.displayName = "ShopCard";
+
+const CardInfo = ({ description }: { description: string }) => {
+  if (!description) {
+    return null;
+  }
+  return (
+    <Popover>
+      <PopoverTrigger>
+        <CardDescription className="overflow-hidden text-ellipsis whitespace-nowrap underline-offset-2 hover:underline">
+          <Icons.search className="mb-1 mr-1 inline h-4 w-4 self-center" />{" "}
+          {description}
+        </CardDescription>
+      </PopoverTrigger>
+      <PopoverContent
+        className={
+          " hide-scrollbar z-[101]   w-[400px] max-w-[90vw]    overscroll-none border-4 border-border p-0 outline-none"
+        }
+        align="center"
+        side="bottom"
+      >
+        <AutosizeTextarea
+          className=" h-full w-full border-0 bg-transparent p-2 outline-0 ring-0 focus:border-0 focus:shadow-none focus:outline-0 focus:ring-0 focus-visible:outline-0 focus-visible:ring-0"
+          value={description}
+          readOnly
+        />
+      </PopoverContent>
+    </Popover>
+  );
+};
