@@ -177,9 +177,9 @@ const CardInfo = ({ description }: { description: string }) => {
         side="bottom"
       >
         <AutosizeTextarea
-          className=" h-full w-full border-0 bg-transparent p-2 outline-0 ring-0 focus:border-0 focus:shadow-none focus:outline-0 focus:ring-0 focus-visible:outline-0 focus-visible:ring-0"
+          className="flex resize-none items-center justify-center border-none bg-transparent pt-4 text-sm outline-none focus-visible:ring-0 disabled:cursor-default disabled:opacity-100"
           value={description}
-          readOnly
+          disabled
         />
       </PopoverContent>
     </Popover>

@@ -64,7 +64,7 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
               <IconButton
                 className="h-5 w-5 bg-primary-foreground p-0.5  "
                 onClick={handleDecrement}
-                icon={<Minus size={20} className="text-primary" />}
+                icon={<Minus size={20} className="stroke-2 font-bold" />}
               />
               {quantity}
               <IconButton

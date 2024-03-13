@@ -1,14 +1,20 @@
 "use client";
 
 import { LoadingButton } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table";
+import { DataTable } from "@/components/ui/data-table/data-table";
 import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { toast } from "sonner";
-import { OrderColumn, columns } from "./columns";
+import {
+  OrderColumn,
+  columns,
+  filterableColumns,
+  searchableColumns,
+  viewOptionsColumns,
+} from "./columns";
 import { getOrders } from "./server-action";
 
 interface OrderClientProps {
@@ -56,7 +62,13 @@ export const OrderClient: React.FC<OrderClientProps> = ({
           Valider
         </LoadingButton>
       </div>
-      <DataTable searchKey="products" columns={columns} initialData={data} />
+      <DataTable
+        filterableColumns={filterableColumns}
+        searchableColumns={searchableColumns}
+        viewOptionsColumns={viewOptionsColumns}
+        columns={columns}
+        data={data}
+      />
     </>
   );
 };

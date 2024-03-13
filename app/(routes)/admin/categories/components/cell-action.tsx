@@ -7,7 +7,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CategoryColumn } from "./columns";
+import { CategoryColumnType } from "./columns";
 import { Button } from "@/components/ui/button";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
@@ -17,7 +17,7 @@ import { AlertModal } from "@/components/ui/alert-modal-form";
 import { deleteCategorie } from "./server-action";
 
 interface CellActionProps {
-  data: CategoryColumn;
+  data: CategoryColumnType;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {

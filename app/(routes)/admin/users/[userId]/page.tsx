@@ -52,6 +52,14 @@ const UserPage = async ({ params }: { params: { userId: string } }) => {
         return name;
       })
       .join(", "),
+    productsList: order.orderItems.map((item) => {
+      let name = item.name;
+      if (Number(item.quantity) > 1) {
+        const quantity = ` x${item.quantity}`;
+        return { name, quantity: quantity };
+      }
+      return { name, quantity: "" };
+    }),
     datePickUp: order.datePickUp,
     isPaid: order.isPaid,
     totalPrice: currencyFormatter.format(Number(order.totalPrice)),

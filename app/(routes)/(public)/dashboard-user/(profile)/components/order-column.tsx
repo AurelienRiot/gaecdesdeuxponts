@@ -3,7 +3,11 @@
 import { ShopCard } from "@/components/display-shops/shop-card";
 import { DataInvoiceType } from "@/components/pdf/data-invoice";
 import DisplayPDF from "@/components/pdf/pdf-button";
-import { DatePickUpCell } from "@/components/table-custom-fuction/cell-orders";
+import {
+  DatePickUpCell,
+  ProductCell,
+} from "@/components/table-custom-fuction/cell-orders";
+import { FilterFn } from "@/components/table-custom-fuction/common-filter";
 import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -12,6 +16,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  DataTableFilterableColumn,
+  DataTableSearchableColumn,
+  DataTableViewOptionsColumn,
+} from "@/types";
 import { Shop } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { Search } from "lucide-react";
@@ -22,6 +31,7 @@ export type OrderColumnType = {
   datePickUp: Date;
   totalPrice: string;
   products: string;
+  productsList: { name: string; quantity?: string }[];
   createdAt: Date;
   shopName: string;
   shop: Shop;
@@ -31,6 +41,7 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
   {
     accessorKey: "products",
     header: "Produits",
+    cell: ProductCell,
   },
   {
     accessorKey: "totalPrice",
@@ -59,6 +70,7 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
         checked={row.original.isPaid}
       />
     ),
+    filterFn: FilterFn,
   },
   {
     accessorKey: "datePickUp",
@@ -92,3 +104,55 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
     ),
   },
 ];
+
+export const filterableColumns: DataTableFilterableColumn<OrderColumnType>[] = [
+  {
+    id: "isPaid",
+    title: "Status",
+    options: [
+      { label: "Payé", value: "true" },
+      { label: "Non Payé", value: "false" },
+    ],
+  },
+];
+
+export const searchableColumns: DataTableSearchableColumn<OrderColumnType>[] = [
+  {
+    id: "products",
+    title: "Produits",
+  },
+  {
+    id: "totalPrice",
+    title: "Prix",
+  },
+];
+
+export const viewOptionsColumns: DataTableViewOptionsColumn<OrderColumnType>[] =
+  [
+    {
+      id: "products",
+      title: "Produits",
+    },
+    {
+      id: "totalPrice",
+      title: "Prix",
+    },
+
+    {
+      id: "pdf" as keyof OrderColumnType,
+      title: "Facture",
+    },
+    {
+      id: "isPaid",
+      title: "Status",
+    },
+    {
+      id: "datePickUp",
+      title: "Date de livraison",
+    },
+
+    {
+      id: "shopName",
+      title: "Lieu de retrait",
+    },
+  ];

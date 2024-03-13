@@ -1,25 +1,20 @@
 "use client";
 
+import { NameWithImageCell } from "@/components/table-custom-fuction/cell-products";
+import { CreatedAtCell } from "@/components/table-custom-fuction/common-cell";
+import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
+import { DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
-import { Button } from "@/components/ui/button";
-import { ArrowUpDown } from "lucide-react";
-import { fr } from "date-fns/locale";
-import { format } from "date-fns";
-import Link from "next/link";
-import Image from "next/image";
-import { NameWithImageCell } from "@/components/table-custom-fuction/cell-products";
-import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
-import { CreatedAtCell } from "@/components/table-custom-fuction/common-cell";
 
-export type CategoryColumn = {
+export type CategoryColumnType = {
   id: string;
   name: string;
   imageUrl: string;
   createdAt: Date;
 };
 
-export const columns: ColumnDef<CategoryColumn>[] = [
+export const CategoryColumn: ColumnDef<CategoryColumnType>[] = [
   {
     accessorKey: "name",
     header: "Nom",
@@ -32,7 +27,32 @@ export const columns: ColumnDef<CategoryColumn>[] = [
     cell: CreatedAtCell,
   },
   {
+    accessorKey: "actions",
     id: "actions",
     cell: ({ row }) => <CellAction data={row.original} />,
   },
 ];
+
+export const searchableColumns: DataTableSearchableColumn<CategoryColumnType>[] =
+  [
+    {
+      id: "name",
+      title: "Nom",
+    },
+  ];
+
+export const viewOptionsColumns: DataTableViewOptionsColumn<CategoryColumnType>[] =
+  [
+    {
+      id: "name",
+      title: "Nom",
+    },
+    {
+      id: "createdAt",
+      title: "Date de création",
+    },
+    {
+      id: "actions" as keyof CategoryColumnType,
+      title: "Actions",
+    },
+  ];

@@ -28,6 +28,11 @@ export interface DataTableFilterableColumn<TData>
   options: Option[];
 }
 
+export interface DataTableViewOptionsColumn<TData> {
+  id: keyof TData;
+  title: string;
+}
+
 export type ProductWithCategoryAndImages = Product & {
   images: Image[];
   category: Category;

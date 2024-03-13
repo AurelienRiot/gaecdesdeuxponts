@@ -5,11 +5,16 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { CategoryColumn, columns } from "./columns";
-import { DataTable } from "@/components/ui/data-table";
+import {
+  CategoryColumnType,
+  CategoryColumn,
+  searchableColumns,
+  viewOptionsColumns,
+} from "./columns";
+import { DataTable } from "@/components/ui/data-table/data-table";
 
 interface CategoryClientProps {
-  data: CategoryColumn[];
+  data: CategoryColumnType[];
 }
 
 export const CategoryClient: React.FC<CategoryClientProps> = ({ data }) => {
@@ -31,7 +36,12 @@ export const CategoryClient: React.FC<CategoryClientProps> = ({ data }) => {
         </Button>
       </div>
       <Separator />
-      <DataTable searchKey="name" columns={columns} initialData={data} />
+      <DataTable
+        columns={CategoryColumn}
+        data={data}
+        searchableColumns={searchableColumns}
+        viewOptionsColumns={viewOptionsColumns}
+      />
     </>
   );
 };

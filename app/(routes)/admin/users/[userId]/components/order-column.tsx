@@ -4,6 +4,7 @@ import { DataInvoiceType } from "@/components/pdf/data-invoice";
 import {
   DatePickUpCell,
   FactureCell,
+  ProductCell,
   ShopNameCell,
   StatusCell,
 } from "@/components/table-custom-fuction/cell-orders";
@@ -12,6 +13,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import { CreatedAtCell } from "@/components/table-custom-fuction/common-cell";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
 import { OrderCellAction } from "./order-cell-action";
+import {
+  DataTableFilterableColumn,
+  DataTableSearchableColumn,
+  DataTableViewOptionsColumn,
+} from "@/types";
+import { FilterFn } from "@/components/table-custom-fuction/common-filter";
 
 export type OrderColumn = {
   id: string;
@@ -19,6 +26,7 @@ export type OrderColumn = {
   datePickUp: Date;
   totalPrice: string;
   products: string;
+  productsList: { name: string; quantity?: string }[];
   createdAt: Date;
   shopName: string;
   shopId: string;
@@ -28,6 +36,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "products",
     header: "Produits",
+    cell: ProductCell,
   },
   {
     accessorKey: "totalPrice",
@@ -43,6 +52,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
     accessorKey: "isPaid",
     header: "Statut",
     cell: StatusCell,
+    filterFn: FilterFn,
   },
   {
     accessorKey: "datePickUp",
@@ -57,12 +67,71 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "createdAt",
     header: CreatedAtHeader,
-
     cell: CreatedAtCell,
   },
 
   {
     id: "actions",
     cell: ({ row }) => <OrderCellAction data={row.original} />,
+  },
+];
+
+export const filterableColumns: DataTableFilterableColumn<OrderColumn>[] = [
+  {
+    id: "isPaid",
+    title: "Status",
+    options: [
+      { label: "Payé", value: "true" },
+      { label: "Non Payé", value: "false" },
+    ],
+  },
+];
+
+export const searchableColumns: DataTableSearchableColumn<OrderColumn>[] = [
+  {
+    id: "products",
+    title: "Produits",
+  },
+  {
+    id: "totalPrice",
+    title: "Prix",
+  },
+  {
+    id: "shopName",
+    title: "Lieu de retrait",
+  },
+];
+
+export const viewOptionsColumns: DataTableViewOptionsColumn<OrderColumn>[] = [
+  {
+    id: "products",
+    title: "Produits",
+  },
+
+  {
+    id: "totalPrice",
+    title: "Prix",
+  },
+
+  {
+    id: "pdf" as keyof OrderColumn,
+    title: "Facture",
+  },
+  {
+    id: "isPaid",
+    title: "Status",
+  },
+  {
+    id: "datePickUp",
+    title: "Date de livraison",
+  },
+
+  {
+    id: "shopName",
+    title: "Lieu de retrait",
+  },
+  {
+    id: "createdAt",
+    title: "Date de création",
   },
 ];

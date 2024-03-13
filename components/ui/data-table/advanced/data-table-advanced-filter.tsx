@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import type { DataTableFilterOption } from "@/types"
+import * as React from "react";
+import type { DataTableFilterOption } from "@/types";
 import {
   CaretSortIcon,
   ChevronDownIcon,
   PlusIcon,
   TextIcon,
-} from "@radix-ui/react-icons"
+} from "@radix-ui/react-icons";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -17,20 +17,20 @@ import {
   CommandInput,
   CommandItem,
   CommandSeparator,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
 interface DataTableAdvancedFilterProps<TData> {
-  options: DataTableFilterOption<TData>[]
-  selectedOptions: DataTableFilterOption<TData>[]
+  options: DataTableFilterOption<TData>[];
+  selectedOptions: DataTableFilterOption<TData>[];
   setSelectedOptions: React.Dispatch<
     React.SetStateAction<DataTableFilterOption<TData>[]>
-  >
-  children?: React.ReactNode
+  >;
+  children?: React.ReactNode;
 }
 
 export function DataTableAdvancedFilter<TData>({
@@ -39,11 +39,11 @@ export function DataTableAdvancedFilter<TData>({
   setSelectedOptions,
   children,
 }: DataTableAdvancedFilterProps<TData>) {
-  const [value, setValue] = React.useState("")
-  const [open, setOpen] = React.useState(false)
+  const [value, setValue] = React.useState("");
+  const [open, setOpen] = React.useState(false);
   const [selectedOption, setSelectedOption] = React.useState<
     DataTableFilterOption<TData> | undefined
-  >(options[0])
+  >(options[0]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -66,7 +66,7 @@ export function DataTableAdvancedFilter<TData>({
       <PopoverContent className="w-[200px] p-0" align="end">
         <Command>
           <CommandInput placeholder="Filter by..." />
-          <CommandEmpty>No item found.</CommandEmpty>
+          <CommandEmpty>Aucun résultat</CommandEmpty>
           <CommandGroup>
             {options.map((option) => (
               <CommandItem
@@ -74,16 +74,16 @@ export function DataTableAdvancedFilter<TData>({
                 className="capitalize"
                 value={String(option.value)}
                 onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue)
-                  setOpen(false)
-                  setSelectedOption(option)
+                  setValue(currentValue === value ? "" : currentValue);
+                  setOpen(false);
+                  setSelectedOption(option);
                   setSelectedOptions((prev) => {
                     if (currentValue === value) {
-                      return prev.filter((item) => item.value !== option.value)
+                      return prev.filter((item) => item.value !== option.value);
                     } else {
-                      return [...prev, option]
+                      return [...prev, option];
                     }
-                  })
+                  });
                 }}
               >
                 {option.items.length > 0 ? (
@@ -99,7 +99,7 @@ export function DataTableAdvancedFilter<TData>({
           <CommandGroup>
             <CommandItem
               onSelect={() => {
-                setOpen(false)
+                setOpen(false);
                 setSelectedOptions([
                   ...selectedOptions,
                   {
@@ -109,15 +109,15 @@ export function DataTableAdvancedFilter<TData>({
                     items: selectedOption?.items ?? [],
                     isMulti: true,
                   },
-                ])
+                ]);
               }}
             >
               <PlusIcon className="mr-2 size-4" aria-hidden="true" />
-              Advanced filter
+              Filtre avancé
             </CommandItem>
           </CommandGroup>
         </Command>
       </PopoverContent>
     </Popover>
-  )
+  );
 }

@@ -1,6 +1,6 @@
 import prismadb from "@/lib/prismadb";
 import { CategoryClient } from "./components/client";
-import { CategoryColumn } from "./components/columns";
+import { CategoryColumnType } from "./components/columns";
 
 const CategoriesPage = async () => {
   const categories = await prismadb.category.findMany({
@@ -9,7 +9,7 @@ const CategoriesPage = async () => {
     },
   });
 
-  const formattedCategories: CategoryColumn[] = categories.map((item) => ({
+  const formattedCategories: CategoryColumnType[] = categories.map((item) => ({
     id: item.id,
     name: item.name,
     imageUrl: item.imageUrl,

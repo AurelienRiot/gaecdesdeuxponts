@@ -97,4 +97,22 @@ function ShopNameCell<T>({ row }: { row: Row<ShopNameCellProps<T>> }) {
   );
 }
 
-export { DatePickUpCell, FactureCell, ShopNameCell, StatusCell };
+type ProductCellProps<T = {}> = T & {
+  products: string;
+  productsList: { name: string; quantity?: string }[];
+};
+
+function ProductCell<T>({ row }: { row: Row<ProductCellProps<T>> }) {
+  return (
+    <div className="flex flex-col gap-[1px]">
+      {row.original.productsList.map((product) => (
+        <span key={product.name}>
+          <strong>{product.name}</strong>
+          {product.quantity}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+export { DatePickUpCell, FactureCell, ShopNameCell, StatusCell, ProductCell };

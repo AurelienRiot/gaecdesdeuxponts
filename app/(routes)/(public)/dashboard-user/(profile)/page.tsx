@@ -15,6 +15,14 @@ const DashboardUser = async () => {
     (order) => ({
       id: order.id,
 
+      productsList: order.orderItems.map((item) => {
+        let name = item.name;
+        if (Number(item.quantity) > 1) {
+          const quantity = ` x${item.quantity}`;
+          return { name, quantity: quantity };
+        }
+        return { name, quantity: "" };
+      }),
       products: order.orderItems
         .map((item) => {
           let name = item.name;
