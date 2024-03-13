@@ -13,6 +13,7 @@ const CategoriesPage = async () => {
     id: item.id,
     name: item.name,
     imageUrl: item.imageUrl,
+    type: "categories",
     createdAt: item.createdAt,
   }));
 

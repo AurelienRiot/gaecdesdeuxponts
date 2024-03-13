@@ -63,6 +63,7 @@ type NameWithImageCellProps<T = {}> = T & {
   imageUrl: string;
   id: string;
   name: string;
+  type: "products" | "categories";
 };
 
 function NameWithImageCell<T>({
@@ -73,7 +74,7 @@ function NameWithImageCell<T>({
   return (
     <Button asChild variant={"link"}>
       <Link
-        href={`/admin/products/${row.original.id}`}
+        href={`/admin/${row.original.type}/${row.original.id}`}
         className="flex  cursor-pointer items-center justify-start gap-2"
       >
         {row.original.imageUrl ? (

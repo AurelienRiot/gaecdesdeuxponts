@@ -34,6 +34,7 @@ const ProductPage = async () => {
       id: product.id,
       name: product.name,
     })),
+    type: "products",
     category: item.category.name,
     createdAt: item.createdAt,
   }));

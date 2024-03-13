@@ -31,6 +31,7 @@ export type ProductColumn = {
   }[];
   isFeatured: boolean;
   isArchived: boolean;
+  type: "products";
   createdAt: Date;
 };
 

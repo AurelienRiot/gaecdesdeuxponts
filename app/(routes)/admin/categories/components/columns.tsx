@@ -9,6 +9,7 @@ import { CellAction } from "./cell-action";
 
 export type CategoryColumnType = {
   id: string;
+  type: "categories";
   name: string;
   imageUrl: string;
   createdAt: Date;
