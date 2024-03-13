@@ -1,9 +1,9 @@
-import Billboard from "@/components/billboard/billboard";
-import Container from "@/components/ui/container";
-import ProductCart from "@/components/product-cart";
 import NotFound from "@/app/not-found";
-import { Metadata } from "next";
+import Billboard from "@/components/billboard/billboard";
+import ProductCart from "@/components/product-cart";
+import Container from "@/components/ui/container";
 import prismadb from "@/lib/prismadb";
+import { Metadata } from "next";
 
 interface CategoryPageProps {
   params: {
@@ -42,22 +42,20 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
   }
 
   return (
-    <div>
-      <Container>
-        <Billboard categoryId={params.categoryId} />
-        <div className="px-4 pb-24 sm:px-6 lg:px-8">
-          <div className="lg-gap-x-8 lg:grid lg:grid-cols-5">
-            <div className="mt-6 lg:col-span-4 lg:mt-0">
-              <div className="md:grid-clos-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-                {products.map((item) => (
-                  <ProductCart key={item.id} data={item} />
-                ))}
-              </div>
+    <Container>
+      <Billboard categoryId={params.categoryId} />
+      <div className="px-4 pb-24 sm:px-6 lg:px-8">
+        <div className="lg-gap-x-8 lg:grid lg:grid-cols-5">
+          <div className="mt-6 lg:col-span-4 lg:mt-0">
+            <div className="md:grid-clos-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+              {products.map((item) => (
+                <ProductCart key={item.id} data={item} />
+              ))}
             </div>
           </div>
         </div>
-      </Container>
-    </div>
+      </div>
+    </Container>
   );
 };
 

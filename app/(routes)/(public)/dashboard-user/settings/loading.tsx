@@ -1,4 +1,3 @@
-import { SkeletonAdressForm } from "@/components/address-form";
 import Spinner from "@/components/animations/spinner";
 import { Button } from "@/components/ui/button";
 import ButtonBackward from "@/components/ui/button-backward";
@@ -6,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { Trash } from "lucide-react";
+import { SkeletonAdressForm } from "@/components/skeleton-ui/address-skeleton";
 
 const SettingsLoading = () => {
   return (

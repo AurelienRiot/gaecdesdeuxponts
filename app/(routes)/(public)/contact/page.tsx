@@ -1,20 +1,21 @@
-import Container from "@/components/ui/container";
-import { Skeleton } from "@/components/skeleton-ui/skeleton";
-import { ContactForm } from "./components/contact-form";
 import GetUser from "@/actions/get-user";
+import { Skeleton } from "@/components/skeleton-ui/skeleton";
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
+import { LoadingButton } from "@/components/ui/button";
+import Container from "@/components/ui/container";
+import { Heading } from "@/components/ui/heading";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import { Suspense } from "react";
+import { ContactForm } from "./components/contact-form";
 
 export const metadata = {
   title: "GAEC des deux ponts - Contact",
   description: "Contact GAEC des deux ponts",
 };
 
-const ContactPage = async () => {
-  const user = await GetUser();
-
-  const name = user?.name;
-  const email = user?.email;
-
+const ContactPage = () => {
   return (
     <Container className="px-4 py-5">
       <div className="mx-auto max-w-3xl">
@@ -53,9 +54,67 @@ const ContactPage = async () => {
           </div>
         </div>
       </div>
-      <ContactForm name={name} email={email} />
+      <Suspense fallback={<ContactFormLoading />}>
+        <Form />
+      </Suspense>
     </Container>
   );
 };
 
 export default ContactPage;
+
+const Form = async () => {
+  const user = await GetUser();
+  return (
+    <ContactForm name={user?.name} email={user?.email} phone={user?.phone} />
+  );
+};
+
+const ContactFormLoading = async () => (
+  <>
+    <div className="mt-8 flex items-center justify-between">
+      <Heading
+        title="Formulaire de Contact"
+        description="Demande d'information"
+      />
+    </div>
+    <Separator className="my-2" />
+    <div className="w-full space-y-8">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="space-y-2">
+          <div>{"Nom/Prénom ou nom d'entreprise"}</div>
+          <Input disabled={true} placeholder="Nom" />
+        </div>
+
+        <div className="space-y-2">
+          <div>Email</div>
+          <div className="flex items-start gap-x-4">
+            <Input disabled={true} placeholder="exemple@mail.com" />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <div>{"Numéro de téléphone (facultatif)"}</div>
+          <Skeleton className="h-8 w-32" />
+        </div>
+
+        <div className="space-y-2">
+          <div>Sujet</div>
+          <div className="flex items-start gap-x-4">
+            <Input disabled={true} placeholder="Renseignement" />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <div>Message</div>
+          <div className="flex items-start gap-x-4">
+            <AutosizeTextarea placeholder="..." disabled={true} />
+          </div>
+        </div>
+      </div>
+      <LoadingButton disabled={true} variant={"shadow"}>
+        Envoyer
+      </LoadingButton>
+    </div>
+  </>
+);

@@ -59,9 +59,11 @@ export type ContactFormValues = z.infer<typeof formSchema>;
 export const ContactForm = ({
   name,
   email,
+  phone,
 }: {
   name: string | undefined | null;
   email: string | null | undefined;
+  phone: string | null | undefined;
 }): React.ReactNode => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -72,7 +74,7 @@ export const ContactForm = ({
     defaultValues: {
       name: name || "",
       email: email || "",
-      phone: "",
+      phone: phone || "",
       subject: "",
       message: "",
     },

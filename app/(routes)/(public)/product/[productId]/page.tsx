@@ -3,9 +3,9 @@ import Gallery from "@/components/gallery/gallery";
 import Info from "@/components/info";
 import ProductList from "@/components/products-list";
 import Container from "@/components/ui/container";
-import { Metadata } from "next";
 import prismadb from "@/lib/prismadb";
 import { mergeWithoutDuplicates } from "@/lib/utils";
+import { Metadata } from "next";
 
 interface ProductPageProps {
   params: {
@@ -71,20 +71,18 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
   });
 
   return (
-    <div className="gb-white">
-      <Container>
-        <div className="px-4 py-10 sm:px-6 lg:px-8">
-          <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
-            <Gallery images={product.images} />
-            <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-              <Info data={product} linkProducts={linkProducts} />
-            </div>
+    <Container>
+      <div className="px-4 py-10 sm:px-6 lg:px-8">
+        <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
+          <Gallery images={product.images} />
+          <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
+            <Info data={product} linkProducts={linkProducts} />
           </div>
-          <hr className="my-10" />
-          <ProductList title="Produits Similaires" items={suggestedProducts} />
         </div>
-      </Container>
-    </div>
+        <hr className="my-10" />
+        <ProductList title="Produits Similaires" items={suggestedProducts} />
+      </div>
+    </Container>
   );
 };
 
