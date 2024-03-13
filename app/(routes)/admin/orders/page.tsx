@@ -1,9 +1,8 @@
-import prismadb from "@/lib/prismadb";
-import { currencyFormatter, dateFormatter } from "@/lib/utils";
-import { OrderClient } from "./components/client";
-import { OrderColumn } from "./components/columns";
-import { DateRange } from "react-day-picker";
 import { OrderStatusProvider } from "@/hooks/use-order-status";
+import prismadb from "@/lib/prismadb";
+import { DateRange } from "react-day-picker";
+import { OrderClient } from "./components/client";
+import { formatOrders } from "./components/format-orders";
 
 const OrdersPage = async () => {
   const from = new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -39,63 +38,7 @@ const OrdersPage = async () => {
     },
   });
 
-  const formattedOrders: OrderColumn[] = orders.map((order) => ({
-    id: order.id,
-    userId: order.userId,
-    isPaid: order.isPaid,
-    datePickUp: order.datePickUp,
-    name: order.name,
-    productsList: order.orderItems.map((item) => {
-      let name = item.name;
-      if (Number(item.quantity) > 1) {
-        const quantity = ` x${item.quantity}`;
-        return { name, quantity: quantity };
-      }
-      return { name, quantity: "" };
-    }),
-    products: order.orderItems
-      .map((item) => {
-        let name = item.name;
-        if (Number(item.quantity) > 1) {
-          name += ` x${item.quantity}`;
-        }
-        return name;
-      })
-      .join(", "),
-    totalPrice: currencyFormatter.format(order.totalPrice),
-    createdAt: order.createdAt,
-    shopName: order.shop.name,
-    shopId: order.shop.id,
-    dataInvoice: {
-      customer: {
-        id: order.user.id || "",
-        name: order.user.name || "",
-        address: (() => {
-          const u = order.user;
-          const a =
-            order.user.address[0] && u.address[0].line1
-              ? `${u.address[0].line1} ${u.address[0].postalCode} ${u.address[0].city}`
-              : "";
-
-          return a;
-        })(),
-        phone: order.user.phone || "",
-        email: order.user.email || "",
-      },
-
-      order: {
-        id: order.id,
-        dateOfPayment: dateFormatter(order.datePickUp),
-        dateOfEdition: dateFormatter(new Date()),
-        items: order.orderItems.map((item) => ({
-          desc: item.name,
-          qty: item.quantity,
-          priceTTC: item.price,
-        })),
-        total: order.totalPrice,
-      },
-    },
-  }));
+  const formattedOrders = formatOrders(orders);
 
   return (
     <OrderStatusProvider initialData={formattedOrders}>
