@@ -1,6 +1,7 @@
 import Footer from "@/components/footer";
 import NavBar from "@/components/navbar-public/navbar";
 import prismadb from "@/lib/prismadb";
+import { addDelay } from "@/lib/utils";
 import { CategoriesProvider } from "@/providers/categories-provider";
 import { Suspense } from "react";
 
@@ -29,6 +30,8 @@ async function ServerCategories() {
       },
     },
   });
+  console.log("categories");
+  await addDelay(5000);
 
   return <CategoriesProvider categories={categories} />;
 }

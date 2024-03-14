@@ -48,7 +48,7 @@ model User {
   emailVerified    DateTime?
   phone            String? 
   image            String?
-  role             String @default("user")
+  role             Role @default(user)
   orders           Order[]
   accounts         Account[]
   sessions         Session[]
@@ -56,6 +56,12 @@ model User {
   messages         Contact[]
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt 
+}
+
+enum Role {
+  user
+  admin
+  pro
 }
 
 model VerificationToken {
@@ -88,6 +94,7 @@ model Product {
   price      Float    
   isFeatured   Boolean @default(false)
   isArchived   Boolean @default(false)
+  isPro        Boolean @default(false)
   images       Image[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

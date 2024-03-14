@@ -2,6 +2,7 @@
 import ImageLoaderBillboard from "@/components/billboard/image-loader-billboard";
 import { useCategories } from "@/hooks/use-categories";
 import { useEffect, useState } from "react";
+import BillboardSkeleton from "../skeleton-ui/billboard-skeleton";
 
 interface BillboardProps {
   categoryId: string;
@@ -17,9 +18,14 @@ const Billboard: React.FC<BillboardProps> = ({ categoryId }) => {
     setIsMounted(true);
   }, []);
 
-  if (!category || !category.imageUrl || !isMounted) {
+  if (!category || !category.imageUrl) {
     return null;
   }
+
+  if (!isMounted) {
+    return <BillboardSkeleton />;
+  }
+
   return (
     <div className="overflow-hidden rounded-xl p-4 sm:p-6 lg:p-8">
       <ImageLoaderBillboard src={category.imageUrl}>

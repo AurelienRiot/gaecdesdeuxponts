@@ -13,16 +13,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { Check, ChevronDown, LucidePhoneCall, StoreIcon } from "lucide-react";
+import { Check, ChevronDown, StoreIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { BiCctv } from "react-icons/bi";
-import { BsSim } from "react-icons/bs";
 
-import { ImConnection } from "react-icons/im";
-import { publicRoutes } from "./main-nav";
 import { useCategories } from "@/hooks/use-categories";
+import { publicRoutes } from "./main-nav";
 
 type MobileNavProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 

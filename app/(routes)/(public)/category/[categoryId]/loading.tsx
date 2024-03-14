@@ -1,10 +1,10 @@
-import Billboard from "@/components/skeleton-ui/billboard-skeleton";
+import BillboardSkeleton from "@/components/skeleton-ui/billboard-skeleton";
 import ProductCart from "@/components/skeleton-ui/product-cart-skeleton";
 import Container from "@/components/ui/container";
 
 const Loading = () => (
   <Container>
-    <Billboard />
+    <BillboardSkeleton />
     <div className="px-4 pb-24 sm:px-6 lg:px-8">
       <div className="lg-gap-x-8 lg:grid lg:grid-cols-5">
         <div className="mt-6 lg:col-span-4 lg:mt-0">

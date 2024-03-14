@@ -1,8 +1,7 @@
-"use client";
 import ImageLoaderBillboard from "@/components/billboard/image-loader-billboard";
 import { Skeleton } from "./skeleton";
 
-const Billboard = () => {
+const BillboardSkeleton = () => {
   return (
     <div className="overflow-hidden rounded-xl p-4 sm:p-6 lg:p-8">
       <ImageLoaderBillboard src="/skeleton-image.webp">
@@ -16,4 +15,4 @@ const Billboard = () => {
   );
 };
 
-export default Billboard;
+export default BillboardSkeleton;
