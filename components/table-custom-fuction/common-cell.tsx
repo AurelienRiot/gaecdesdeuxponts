@@ -1,14 +1,16 @@
 "use client";
 import { dateFormatter } from "@/lib/utils";
-import { Row } from "@tanstack/react-table";
+import { CellContext, Row, Table } from "@tanstack/react-table";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { Checkbox } from "../ui/checkbox";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { changeArchived } from "./products-server-actions";
 import { toast } from "sonner";
 import { formatPhoneNumber } from "react-phone-number-input";
 import { AutosizeTextarea } from "../ui/autosize-textarea";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type CreatedAtCellProps<T = {}> = T & {
   createdAt: Date;
@@ -72,15 +74,16 @@ function TextCell<T>({ row }: { row: Row<TextCellProps<T>> }) {
   );
 }
 
-type ArchivedCellProps<T = {}> = T & {
+type ArchivedCellProps<T> = T & {
   isArchived: boolean;
   id: string;
 };
 
-function ArchivedCell<T>({ row }: { row: Row<ArchivedCellProps<T>> }) {
+function ArchivedCell<T>(cell: CellContext<ArchivedCellProps<T>, unknown>) {
   const [status, setStatus] = useState<boolean | "indeterminate">(
-    row.original.isArchived,
+    cell.row.original.isArchived,
   );
+  const router = useRouter();
   return (
     <Checkbox
       className="self-center"
@@ -88,19 +91,62 @@ function ArchivedCell<T>({ row }: { row: Row<ArchivedCellProps<T>> }) {
       onCheckedChange={async (e) => {
         setStatus("indeterminate");
         const result = await changeArchived({
-          id: row.original.id,
+          id: cell.row.original.id,
           isArchived: e,
         });
         if (!result.success) {
           toast.error(result.message);
           setStatus(!e);
         } else {
-          toast.success("Statut mis à jour");
           setStatus(e);
+          router.refresh();
+          toast.success("Statut mis à jouer");
         }
       }}
     />
   );
 }
 
-export { CreatedAtCell, NameCell, ArchivedCell, PhoneCell, TextCell };
+type NameWithImageCellProps<T = {}> = T & {
+  imageUrl: string;
+  id: string;
+  name: string;
+  type: "products" | "categories";
+};
+
+function NameWithImageCell<T>({
+  row,
+}: {
+  row: Row<NameWithImageCellProps<T>>;
+}) {
+  return (
+    <Button asChild variant={"link"}>
+      <Link
+        href={`/admin/${row.original.type}/${row.original.id}`}
+        className="flex  cursor-pointer items-center justify-start gap-2"
+      >
+        {row.original.imageUrl ? (
+          <span className=" relative aspect-square h-[30px] rounded-sm bg-transparent">
+            <Image
+              src={row.original.imageUrl}
+              alt=""
+              fill
+              sizes="(max-width: 768px) 30px, (max-width: 1200px) 30px, 30px"
+              className="rounded-sm object-cover"
+            />
+          </span>
+        ) : null}
+        <span>{row.getValue("name")}</span>
+      </Link>
+    </Button>
+  );
+}
+
+export {
+  CreatedAtCell,
+  NameCell,
+  ArchivedCell,
+  PhoneCell,
+  TextCell,
+  NameWithImageCell,
+};

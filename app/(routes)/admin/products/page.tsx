@@ -26,6 +26,7 @@ const ProductPage = async () => {
     imageUrl: item.images[0].url,
     isFeatured: item.isFeatured,
     isArchived: item.isArchived,
+    isPro: item.isPro,
     price: currencyFormatter.format(item.price),
     linkProducts: mergeWithoutDuplicates(
       item.linkedProducts,

@@ -44,6 +44,7 @@ export function useDataTable<TData, TValue>({
       columnFilters,
     },
     enableRowSelection: true,
+
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

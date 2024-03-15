@@ -1,11 +1,11 @@
 "use client";
 
 import { AlertModal } from "@/components/ui/alert-modal-form";
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { LoadingButton } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,7 +15,6 @@ import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
-import { TextArea } from "@/components/ui/text-area";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -24,7 +23,6 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import * as z from "zod";
 import { createContact } from "./server-action";
-import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 
 const formSchema = z.object({
   name: z

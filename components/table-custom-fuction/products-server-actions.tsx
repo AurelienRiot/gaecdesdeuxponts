@@ -96,4 +96,46 @@ const changeFeatured = async ({
   }
 };
 
-export { changeArchived, changeFeatured };
+const changePro = async ({
+  id,
+  isPro,
+}: {
+  id: string;
+  isPro: boolean | "indeterminate";
+}): Promise<ReturnType> => {
+  const isAuth = await checkAdmin();
+
+  if (!isAuth) {
+    return {
+      success: false,
+      message: "Vous devez être authentifier",
+    };
+  }
+
+  if (isPro === "indeterminate") {
+    return {
+      success: false,
+      message: "Une erreur est survenue, veuillez reessayer",
+    };
+  }
+  try {
+    const product = await prismadb.product.update({
+      where: {
+        id,
+      },
+      data: {
+        isPro,
+      },
+    });
+    return {
+      success: true,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Une erreur est survenue, veuillez reessayer",
+    };
+  }
+};
+
+export { changeArchived, changeFeatured, changePro };

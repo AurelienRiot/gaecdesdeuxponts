@@ -72,6 +72,21 @@ export const checkOut = async ({
     };
   });
 
+  const trueTotalPrice = productsWithQuantity.reduce(
+    (acc, { item, quantity }) => {
+      return acc + item.price * (quantity || 1);
+    },
+    0,
+  );
+
+  if (trueTotalPrice !== totalPrice) {
+    return {
+      success: false,
+      message:
+        "Des prix ont changé et votre panier n'est pas valide, vider le panier et recharger la page",
+    };
+  }
+
   const order = await prismadb.order.create({
     data: {
       totalPrice,

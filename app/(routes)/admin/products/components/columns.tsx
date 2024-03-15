@@ -3,11 +3,12 @@
 import {
   FeaturedCell,
   LinkProductsCell,
-  NameWithImageCell,
+  ProCell,
 } from "@/components/table-custom-fuction/cell-products";
 import {
   ArchivedCell,
   CreatedAtCell,
+  NameWithImageCell,
 } from "@/components/table-custom-fuction/common-cell";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
 import { ColumnDef } from "@tanstack/react-table";
@@ -31,6 +32,7 @@ export type ProductColumn = {
   }[];
   isFeatured: boolean;
   isArchived: boolean;
+  isPro: boolean;
   type: "products";
   createdAt: Date;
 };
@@ -51,6 +53,12 @@ export const columns: ColumnDef<ProductColumn>[] = [
     accessorKey: "isFeatured",
     header: "Mise en avant",
     cell: FeaturedCell,
+    filterFn: FilterFn,
+  },
+  {
+    accessorKey: "isPro",
+    header: "Professionnel",
+    cell: ProCell,
     filterFn: FilterFn,
   },
   {
@@ -94,6 +102,14 @@ export const filterableColumns: DataTableFilterableColumn<ProductColumn>[] = [
       { label: "Non mise en avant", value: "false" },
     ],
   },
+  {
+    id: "isPro",
+    title: "Professionnel",
+    options: [
+      { label: "Professionnel", value: "true" },
+      { label: "Particulier", value: "false" },
+    ],
+  },
 ];
 
 export const searchableColumns: DataTableSearchableColumn<ProductColumn>[] = [
@@ -125,6 +141,10 @@ export const viewOptionsColumns: DataTableViewOptionsColumn<ProductColumn>[] = [
   {
     id: "isFeatured",
     title: "Mise en avant",
+  },
+  {
+    id: "isPro",
+    title: "Professionnel",
   },
   {
     id: "price",

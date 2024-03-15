@@ -54,16 +54,22 @@ const MainNav = () => {
                   <ChevronDown className="ml-2 h-4 w-4" />
                 </NavigationMenuLink>
               </PopoverTrigger>
-              <PopoverContent side="bottom" align="start">
+              <PopoverContent
+                side="bottom"
+                align="start"
+                className="flex flex-col "
+              >
                 {CategoriesRoutes.map(({ href, label, active }) => (
-                  <Button asChild key={href} variant={"link"}>
-                    <Link
-                      onClick={() => setOpen(false)}
-                      href={href}
-                      className={cn(
-                        active && "bg-primary text-primary-foreground",
-                      )}
-                    >
+                  <Button
+                    asChild
+                    key={href}
+                    variant={"link"}
+                    className={cn(
+                      "w-full justify-start",
+                      active && " bg-primary text-primary-foreground",
+                    )}
+                  >
+                    <Link onClick={() => setOpen(false)} href={href}>
                       {label}
                     </Link>
                   </Button>

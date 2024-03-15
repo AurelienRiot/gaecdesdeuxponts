@@ -1,7 +1,9 @@
 "use client";
 
-import { NameWithImageCell } from "@/components/table-custom-fuction/cell-products";
-import { CreatedAtCell } from "@/components/table-custom-fuction/common-cell";
+import {
+  CreatedAtCell,
+  NameWithImageCell,
+} from "@/components/table-custom-fuction/common-cell";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
 import { DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
