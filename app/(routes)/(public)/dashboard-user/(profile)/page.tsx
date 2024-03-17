@@ -79,7 +79,7 @@ const DashboardUser = async () => {
             </span>
           </h1>
         </>
-        <UserButtons />
+        <UserButtons isPro={user.role === "user" ? false : true} />
       </div>
       <div className="text-md flex flex-col items-center justify-center text-gray-800 dark:text-white sm:text-xl">
         <div className="grid grid-cols-1 items-center justify-items-center gap-4 sm:grid-cols-2 sm:justify-items-start">

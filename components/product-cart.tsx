@@ -14,16 +14,20 @@ import { VisibleElement } from "./animations/visible-element";
 
 interface ProductCartProps {
   data: ProductWithCategoryAndImages;
+  url?: string;
 }
 
-const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
+const ProductCart: React.FC<ProductCartProps> = ({
+  data,
+  url = "/product/",
+}) => {
   const router = useRouter();
   const cart = useCart();
 
   const value = data.price;
 
   const handleClick = () => {
-    router.push(`/product/${data?.id}`);
+    router.push(url + data?.id);
   };
 
   const onAddToCart: MouseEventHandler<HTMLButtonElement> = (event) => {

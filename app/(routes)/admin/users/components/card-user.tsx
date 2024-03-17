@@ -14,8 +14,10 @@ import { User } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { deleteUser } from "./server-action";
+import { deleteUser, updateProUser } from "./server-action";
 import { toast } from "sonner";
+import { Checkbox } from "@/components/ui/checkbox";
+import { CheckedState } from "@radix-ui/react-checkbox";
 
 interface CardUserProps {
   user: User;
@@ -30,6 +32,7 @@ const CardUser: React.FC<CardUserProps> = ({
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [check, setCheck] = useState<CheckedState>(user.role === "pro");
 
   const onDelete = async () => {
     const deleteU = await deleteUser({ id: user.id });
@@ -40,6 +43,18 @@ const CardUser: React.FC<CardUserProps> = ({
       toast.success("Utilisateur supprimée");
     }
     setOpen(false);
+  };
+
+  const onChange = async (e: CheckedState) => {
+    setCheck("indeterminate");
+    const updateU = await updateProUser({ id: user.id, check: e });
+    if (!updateU.success) {
+      setCheck(!e);
+      toast.error(updateU.message);
+    } else {
+      setCheck(e);
+      toast.success("Utilisateur mis à jour");
+    }
   };
 
   return (
@@ -77,6 +92,10 @@ const CardUser: React.FC<CardUserProps> = ({
         </CardHeader>
         <CardContent className="text-center">
           <p className="p-2">{`Nombre de commandes : ${orderLength}`}</p>
+          <div className="flex flex-row items-center justify-center gap-2">
+            <p>{user.role === "pro" ? "Professionnel " : "Particulier"}</p>
+            <Checkbox checked={check} onCheckedChange={onChange} />
+          </div>
         </CardContent>
         <CardFooter className="flex flex-row items-end justify-between  gap-2">
           <Button

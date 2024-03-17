@@ -1,5 +1,6 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "./authOptions";
+import prismadb from "@/lib/prismadb";
 
 const checkAdmin = async () => {
   const session = await getServerSession(authOptions);
@@ -20,4 +21,24 @@ const checkUser = async () => {
   return session.user;
 };
 
-export { checkAdmin, checkUser };
+const checkPro = async () => {
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user || !session.user.email) {
+    return false;
+  }
+  const user = await prismadb.user.findUnique({
+    where: {
+      id: session.user.id,
+    },
+    select: {
+      role: true,
+    },
+  });
+  if (!user || user.role === "user") {
+    return false;
+  }
+
+  return user;
+};
+
+export { checkAdmin, checkUser, checkPro };

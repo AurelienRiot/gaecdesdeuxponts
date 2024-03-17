@@ -1,5 +1,7 @@
+import { Logout } from "@/components/auth/auth";
+import { checkPro } from "@/components/auth/checkAuth";
 import Footer from "@/components/footer";
-import NavBar from "@/components/navbar-public/navbar";
+import NavBar from "@/components/navbar-pro/navbar";
 import prismadb from "@/lib/prismadb";
 import { CategoriesProvider } from "@/providers/categories-provider";
 import { ProColorSchema } from "@/providers/color-schema-provider";
@@ -10,6 +12,15 @@ export default async function PublicLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const isAuth = await checkPro();
+
+  if (!isAuth) {
+    return (
+      <Logout
+        callbackUrl={`/login?callbackUrl=${encodeURIComponent("/pro")}`}
+      />
+    );
+  }
   return (
     <>
       <Suspense fallback={null}>
@@ -27,7 +38,7 @@ async function ServerCategories() {
   const categories = await prismadb.category.findMany({
     where: {
       products: {
-        some: {},
+        some: { isPro: true, isArchived: false },
       },
     },
   });

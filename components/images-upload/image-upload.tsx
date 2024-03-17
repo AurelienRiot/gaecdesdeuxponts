@@ -1,4 +1,6 @@
 "use client";
+import { addDelay, checkIfUrlAccessible } from "@/lib/utils";
+import { AnimatePresence, Reorder } from "framer-motion";
 import { Loader2, Plus, Trash, UploadCloud, X } from "lucide-react";
 import Image from "next/image";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -8,9 +10,6 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
 import { Ressources, deleteObject, getSignature, listFiles } from "./server";
-import { AnimatePresence, Reorder } from "framer-motion";
-import { addDelay, checkIfUrlAccessible } from "@/lib/utils";
-import NoResults from "../ui/no-results";
 
 const generateRandomString = (length: number) => {
   const characters =
@@ -284,9 +283,8 @@ const DisplaySelectedImages = ({
                     className="pointer-events-none rounded-xl object-cover"
                   />
                   <button
+                    type="button"
                     onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
                       setSelectedFiles((prev) =>
                         prev.filter((item) => item !== key),
                       );
@@ -396,10 +394,8 @@ const DisplayImages = ({
                     </div>
                   </div>
                   <button
+                    type="button"
                     onClick={async (e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-
                       setLoading(true);
                       await onDelete(file.public_id);
                       setLoading(false);
@@ -409,9 +405,8 @@ const DisplayImages = ({
                     <Trash size={15} />
                   </button>
                   <button
+                    type="button"
                     onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
                       if (multipleImages) {
                         setSelectedFiles((prev) => [
                           ...prev,
@@ -433,11 +428,10 @@ const DisplayImages = ({
         </div>
         <div className="flex items-center justify-start space-x-2 ">
           <Button
+            type="button"
             variant="outline"
             size="sm"
             onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
               setCurrentPage((prev) => prev - 1);
             }}
             disabled={currentPage === 1}
@@ -445,11 +439,10 @@ const DisplayImages = ({
             Précedent
           </Button>
           <Button
+            type="button"
             variant="outline"
             size="sm"
             onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
               setCurrentPage((prev) => prev + 1);
             }}
             disabled={

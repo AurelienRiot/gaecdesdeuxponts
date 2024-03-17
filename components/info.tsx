@@ -12,6 +12,7 @@ import { Badge } from "./ui/badge";
 
 interface InfoProps {
   data: ProductWithCategoryAndImages;
+  url?: string;
   scroll?: boolean;
   linkProducts: {
     id: string;
@@ -19,7 +20,12 @@ interface InfoProps {
   }[];
 }
 
-const Info: React.FC<InfoProps> = ({ data, scroll, linkProducts }) => {
+const Info: React.FC<InfoProps> = ({
+  data,
+  scroll,
+  linkProducts,
+  url = "/product/",
+}) => {
   const cart = useCart();
 
   const value = data.price;
@@ -32,7 +38,7 @@ const Info: React.FC<InfoProps> = ({ data, scroll, linkProducts }) => {
   return (
     <div>
       <Link
-        href={`/product/${data.id}`}
+        href={url + data.id}
         className="text-3xl font-bold text-gray-900 dark:text-white"
       >
         {data.name}
@@ -56,7 +62,7 @@ const Info: React.FC<InfoProps> = ({ data, scroll, linkProducts }) => {
             {linkProducts.map((product) => {
               return (
                 <Badge key={product.id}>
-                  <Link className="py-1" href={`/product/${product.id}`}>
+                  <Link className="py-1" href={url + product.id}>
                     {product.name}
                   </Link>
                 </Badge>

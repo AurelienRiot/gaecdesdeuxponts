@@ -18,6 +18,9 @@ export async function generateMetadata({
     where: {
       id: params.categoryId,
     },
+    select: {
+      name: true,
+    },
   });
 
   return {
@@ -30,7 +33,7 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
     where: {
       categoryId: params.categoryId,
       isArchived: false,
-      isPro: false,
+      isPro: true,
     },
     include: {
       category: true,
@@ -50,7 +53,7 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
           <div className="mt-6 lg:col-span-4 lg:mt-0">
             <div className="md:grid-clos-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
               {products.map((item) => (
-                <ProductCart key={item.id} data={item} />
+                <ProductCart key={item.id} data={item} url="/pro/product/" />
               ))}
             </div>
           </div>

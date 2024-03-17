@@ -32,17 +32,17 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
     where: {
       id: params.productId,
       isArchived: false,
-      isPro: false,
+      isPro: true,
     },
     include: {
       category: true,
       images: { orderBy: { createdAt: "asc" } },
       linkedBy: {
-        where: { isArchived: false, isPro: false },
+        where: { isArchived: false, isPro: true },
         select: { id: true, name: true },
       },
       linkedProducts: {
-        where: { isArchived: false, isPro: false },
+        where: { isArchived: false, isPro: true },
         select: { id: true, name: true },
       },
     },
@@ -56,7 +56,6 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
     product.linkedBy,
     product.linkedProducts,
   );
-  console.log(linkProducts);
 
   const excludeIds = linkProducts.map((product) => product.id);
   excludeIds.push(product.id);
@@ -64,7 +63,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
   const suggestedProducts = await prismadb.product.findMany({
     where: {
       AND: [
-        { categoryId: product.categoryId, isArchived: false, isPro: false },
+        { categoryId: product.categoryId, isArchived: false, isPro: true },
         {
           id: {
             notIn: excludeIds,
@@ -84,11 +83,19 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
         <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
           <Gallery images={product.images} />
           <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-            <Info data={product} linkProducts={linkProducts} />
+            <Info
+              data={product}
+              linkProducts={linkProducts}
+              url="/pro/product/"
+            />
           </div>
         </div>
         <hr className="my-10" />
-        <ProductList title="Produits Similaires" items={suggestedProducts} />
+        <ProductList
+          title="Produits Similaires"
+          items={suggestedProducts}
+          url="/pro/product/"
+        />
       </div>
     </Container>
   );

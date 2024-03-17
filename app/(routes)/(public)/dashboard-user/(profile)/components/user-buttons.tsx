@@ -1,9 +1,9 @@
 import { LogoutButtonText } from "@/components/auth/auth-button";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { BsGear } from "react-icons/bs";
-import { FaFileInvoice } from "react-icons/fa";
 
-export const UserButtons = () => {
+export const UserButtons = ({ isPro }: { isPro: boolean }) => {
   return (
     <>
       <Link href="/dashboard-user/settings" className=" text-3xl ">
@@ -12,6 +12,13 @@ export const UserButtons = () => {
         </span>
       </Link>
       <LogoutButtonText />
+      {isPro && (
+        <Button asChild>
+          <Link href="/pro" className="text-3xl">
+            Passer en professionnel
+          </Link>
+        </Button>
+      )}
     </>
   );
 };

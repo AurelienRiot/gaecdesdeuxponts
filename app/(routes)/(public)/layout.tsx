@@ -26,7 +26,7 @@ async function ServerCategories() {
   const categories = await prismadb.category.findMany({
     where: {
       products: {
-        some: {},
+        some: { isPro: false, isArchived: false },
       },
     },
   });

@@ -29,10 +29,12 @@ export default UserPage;
 const SeverUserClient = async () => {
   const allUsers = await prismadb.user.findMany({
     where: {
-      role: "user",
+      NOT: {
+        role: "admin",
+      },
     },
     orderBy: {
-      updatedAt: "desc",
+      createdAt: "desc",
     },
     include: {
       orders: true,
