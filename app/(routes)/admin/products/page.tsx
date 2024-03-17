@@ -12,8 +12,8 @@ const ProductPage = async () => {
           createdAt: "asc",
         },
       },
-      linkedProducts: { select: { id: true, name: true } },
-      linkedBy: { select: { id: true, name: true } },
+      linkedProducts: { select: { id: true, name: true, isPro: true } },
+      linkedBy: { select: { id: true, name: true, isPro: true } },
     },
     orderBy: {
       createdAt: "desc",
@@ -29,8 +29,8 @@ const ProductPage = async () => {
     isPro: item.isPro,
     price: currencyFormatter.format(item.price),
     linkProducts: mergeWithoutDuplicates(
-      item.linkedProducts,
-      item.linkedBy,
+      item.linkedProducts.filter((product) => product.isPro === item.isPro),
+      item.linkedBy.filter((product) => product.isPro === item.isPro),
     ).map((product) => ({
       id: product.id,
       name: product.name,

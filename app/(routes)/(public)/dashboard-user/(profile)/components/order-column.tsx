@@ -7,7 +7,7 @@ import {
   DatePickUpCell,
   ProductCell,
 } from "@/components/table-custom-fuction/cell-orders";
-import { FilterFn } from "@/components/table-custom-fuction/common-filter";
+import { FilterInclude } from "@/components/table-custom-fuction/common-filter";
 import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -70,7 +70,7 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
         checked={row.original.isPaid}
       />
     ),
-    filterFn: FilterFn,
+    filterFn: FilterInclude,
   },
   {
     accessorKey: "datePickUp",

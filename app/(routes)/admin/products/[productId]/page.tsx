@@ -23,6 +23,7 @@ const ProductPage = async ({ params }: { params: { productId: string } }) => {
     select: {
       id: true,
       name: true,
+      isPro: true,
       categoryId: true,
     },
   });

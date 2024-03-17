@@ -21,7 +21,10 @@ import {
   DataTableSearchableColumn,
   DataTableViewOptionsColumn,
 } from "@/types";
-import { FilterFn } from "@/components/table-custom-fuction/common-filter";
+import {
+  FilterExclude,
+  FilterInclude,
+} from "@/components/table-custom-fuction/common-filter";
 
 export type OrderColumn = {
   id: string;
@@ -43,6 +46,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
     accessorKey: "products",
     header: "Produits",
     cell: ProductCell,
+    filterFn: FilterExclude,
   },
   {
     accessorKey: "name",
@@ -63,7 +67,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
     accessorKey: "isPaid",
     header: "Statut",
     cell: StatusCell,
-    filterFn: FilterFn,
+    filterFn: FilterInclude,
   },
   {
     accessorKey: "datePickUp",
@@ -87,25 +91,35 @@ export const columns: ColumnDef<OrderColumn>[] = [
   },
 ];
 
-export const filterableColumns: DataTableFilterableColumn<OrderColumn>[] = [
-  {
-    id: "isPaid",
-    title: "Status",
-    options: [
-      { label: "Payé", value: "true" },
-      { label: "Non Payé", value: "false" },
-    ],
-  },
-];
+export const filterableColumns = (
+  products: string[],
+): DataTableFilterableColumn<OrderColumn>[] => {
+  const prodArray = products.map((item) => ({
+    label: item,
+    value: item,
+  }));
+
+  return [
+    {
+      id: "products",
+      title: "Produits",
+      options: prodArray,
+    },
+    {
+      id: "isPaid",
+      title: "Status",
+      options: [
+        { label: "Payé", value: "true" },
+        { label: "Non Payé", value: "false" },
+      ],
+    },
+  ];
+};
 
 export const searchableColumns: DataTableSearchableColumn<OrderColumn>[] = [
   {
     id: "name",
     title: "Nom",
-  },
-  {
-    id: "products",
-    title: "Produits",
   },
   {
     id: "totalPrice",

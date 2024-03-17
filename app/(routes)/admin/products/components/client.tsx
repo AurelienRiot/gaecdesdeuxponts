@@ -21,6 +21,11 @@ interface ProductClientProps {
 export const ProductClient: React.FC<ProductClientProps> = ({ data }) => {
   const router = useRouter();
 
+  const categories = data.map((product) => product.category);
+  const categoriesWithoutDuplicates = [
+    ...new Set(categories.map((category) => category)),
+  ];
+
   return (
     <>
       <div className="flex flex-col items-center justify-between sm:flex-row">
@@ -38,7 +43,7 @@ export const ProductClient: React.FC<ProductClientProps> = ({ data }) => {
       </div>
       <Separator />
       <DataTable
-        filterableColumns={filterableColumns}
+        filterableColumns={filterableColumns(categoriesWithoutDuplicates)}
         searchableColumns={searchableColumns}
         viewOptionsColumns={viewOptionsColumns}
         columns={columns}

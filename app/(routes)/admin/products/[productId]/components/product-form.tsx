@@ -28,7 +28,7 @@ import { Category, Image, Product } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { ControllerRenderProps, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { getFileKey } from "../../../categories/[categoryId]/components/category-form";
@@ -68,6 +68,7 @@ const formSchema = z.object({
     .optional(),
   isFeatured: z.boolean().default(false).optional(),
   isArchived: z.boolean().default(false).optional(),
+  isPro: z.boolean().default(false).optional(),
 });
 
 export type ProductFormValues = z.infer<typeof formSchema>;
@@ -81,7 +82,7 @@ type ProductFormProps = {
       })
     | null;
   categories: Category[];
-  products: { id: string; name: string; categoryId: string }[];
+  products: { id: string; name: string; categoryId: string; isPro: boolean }[];
 };
 
 export const ProductForm: React.FC<ProductFormProps> = ({
@@ -99,7 +100,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       .filter(
         (product) =>
           product.id !== initialData?.id &&
-          product.categoryId === initialData?.categoryId,
+          product.categoryId === initialData?.categoryId &&
+          product.isPro === initialData?.isPro,
       )
       .map((product) => ({
         value: product.id,
@@ -127,6 +129,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
           productSpecs: initialData.productSpecs,
           isFeatured: initialData.isFeatured,
           isArchived: initialData.isArchived,
+          isPro: initialData.isPro,
           linkProducts: mergeWithoutDuplicates(
             initialData.linkedProducts,
             initialData.linkedBy,
@@ -145,6 +148,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
           productSpecs: "",
           isFeatured: false,
           isArchived: false,
+          isPro: false,
         },
   });
 
@@ -173,32 +177,41 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     toast.success(toastMessage);
   };
 
-  const watchCat = form.watch("categoryId");
-  const initialCatIdRef = useRef(watchCat);
-  useEffect(() => {
-    // Compare the current category ID to the initial one stored in the ref
-    // Skip resetting linkProducts if the category hasn't actually changed
-    if (watchCat !== initialCatIdRef.current) {
-      // Reset linkProducts only if the category has changed
-      form.setValue("linkProducts", []);
+  const onChangeCategory = (value: string) => {
+    form.setValue("categoryId", value);
+    form.setValue("linkProducts", []);
+    setOptions(
+      products
+        .filter(
+          (product) =>
+            product.id !== initialData?.id &&
+            product.categoryId === value &&
+            product.isPro === form.getValues("isPro"),
+        )
+        .map((product) => ({
+          value: product.id,
+          label: product.name,
+        })),
+    );
+  };
+  const onChangeIsPro = (value: boolean) => {
+    form.setValue("isPro", value);
+    form.setValue("linkProducts", []);
+    setOptions(
+      products
+        .filter(
+          (product) =>
+            product.id !== initialData?.id &&
+            product.categoryId === form.getValues("categoryId") &&
+            product.isPro === value,
+        )
+        .map((product) => ({
+          value: product.id,
+          label: product.name,
+        })),
+    );
+  };
 
-      // Update the options based on the new category
-      setOptions(
-        products
-          .filter(
-            (product) =>
-              product.id !== initialData?.id && product.categoryId === watchCat,
-          )
-          .map((product) => ({
-            value: product.id,
-            label: product.name,
-          })),
-      );
-    }
-
-    // Update the initialCatIdRef with the current category ID for the next render
-    initialCatIdRef.current = watchCat;
-  }, [watchCat, products, initialData, form]);
   const onDelete = async () => {
     const deletePro = await deleteProduct({ id: initialData?.id });
     if (!deletePro.success) {
@@ -299,7 +312,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   <FormLabel>Categorie</FormLabel>
                   <Select
                     disabled={form.formState.isSubmitting}
-                    onValueChange={field.onChange}
+                    onValueChange={onChangeCategory}
                     value={field.value}
                     defaultValue={field.value}
                   >
@@ -380,6 +393,31 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormLabel>Archivé</FormLabel>
                       <FormDescription>
                         {"Ce produit n'apparaitra pas sur le site."}
+                      </FormDescription>
+                    </div>
+                  </label>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="isPro"
+              render={({ field }) => (
+                <FormItem className="flex cursor-pointer flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <label className="flex cursor-pointer flex-row items-start space-x-3 space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={onChangeIsPro}
+                        disabled={form.formState.isSubmitting}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel>Professionel</FormLabel>
+                      <FormDescription>
+                        {
+                          "Ce produit apparaitra sur la partie professionnel du site."
+                        }
                       </FormDescription>
                     </div>
                   </label>

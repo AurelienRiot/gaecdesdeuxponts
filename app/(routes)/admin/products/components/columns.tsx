@@ -1,24 +1,21 @@
 "use client";
 
+import { LinkProductsCell } from "@/components/table-custom-fuction/cell-products";
 import {
-  FeaturedCell,
-  LinkProductsCell,
-  ProCell,
-} from "@/components/table-custom-fuction/cell-products";
-import {
-  ArchivedCell,
+  CheckboxCell,
   CreatedAtCell,
   NameWithImageCell,
 } from "@/components/table-custom-fuction/common-cell";
+import { FilterInclude } from "@/components/table-custom-fuction/common-filter";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
-import { ColumnDef } from "@tanstack/react-table";
-import { CellAction } from "./cell-action";
 import {
   DataTableFilterableColumn,
   DataTableSearchableColumn,
   DataTableViewOptionsColumn,
 } from "@/types";
-import { FilterFn } from "@/components/table-custom-fuction/common-filter";
+import { ColumnDef } from "@tanstack/react-table";
+import { CellAction } from "./cell-action";
+import { changeArchived, changeFeatured, changePro } from "./server-action";
 
 export type ProductColumn = {
   id: string;
@@ -46,20 +43,41 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "isArchived",
     header: "Archivé",
-    cell: ArchivedCell,
-    filterFn: FilterFn,
+    cell: ({ row }) => (
+      <CheckboxCell
+        isCheckbox={row.original.isArchived}
+        onChange={(e: boolean | "indeterminate") =>
+          changeArchived({ id: row.original.id, isArchived: e })
+        }
+      />
+    ),
+    filterFn: FilterInclude,
   },
   {
     accessorKey: "isFeatured",
     header: "Mise en avant",
-    cell: FeaturedCell,
-    filterFn: FilterFn,
+    cell: ({ row }) => (
+      <CheckboxCell
+        isCheckbox={row.original.isFeatured}
+        onChange={(e: boolean | "indeterminate") =>
+          changeFeatured({ id: row.original.id, isFeatured: e })
+        }
+      />
+    ),
+    filterFn: FilterInclude,
   },
   {
     accessorKey: "isPro",
     header: "Professionnel",
-    cell: ProCell,
-    filterFn: FilterFn,
+    cell: ({ row }) => (
+      <CheckboxCell
+        isCheckbox={row.original.isPro}
+        onChange={(e: boolean | "indeterminate") =>
+          changePro({ id: row.original.id, isPro: e })
+        }
+      />
+    ),
+    filterFn: FilterInclude,
   },
   {
     accessorKey: "price",
@@ -68,6 +86,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "category",
     header: "Categorie",
+    filterFn: FilterInclude,
   },
   {
     accessorKey: "linkProducts",
@@ -85,32 +104,46 @@ export const columns: ColumnDef<ProductColumn>[] = [
   },
 ];
 
-export const filterableColumns: DataTableFilterableColumn<ProductColumn>[] = [
-  {
-    id: "isArchived",
-    title: "Archivé",
-    options: [
-      { label: "Archivé", value: "true" },
-      { label: "Non archivé", value: "false" },
-    ],
-  },
-  {
-    id: "isFeatured",
-    title: "Mise en avant",
-    options: [
-      { label: "Mise en avant", value: "true" },
-      { label: "Non mise en avant", value: "false" },
-    ],
-  },
-  {
-    id: "isPro",
-    title: "Professionnel",
-    options: [
-      { label: "Professionnel", value: "true" },
-      { label: "Particulier", value: "false" },
-    ],
-  },
-];
+export const filterableColumns = (
+  categories: string[],
+): DataTableFilterableColumn<ProductColumn>[] => {
+  const catArray = categories.map((item) => ({
+    label: item,
+    value: item,
+  }));
+
+  return [
+    {
+      id: "isArchived",
+      title: "Archivé",
+      options: [
+        { label: "Archivé", value: "true" },
+        { label: "Non archivé", value: "false" },
+      ],
+    },
+    {
+      id: "isFeatured",
+      title: "Mise en avant",
+      options: [
+        { label: "Mise en avant", value: "true" },
+        { label: "Non mise en avant", value: "false" },
+      ],
+    },
+    {
+      id: "isPro",
+      title: "Professionnel",
+      options: [
+        { label: "Professionnel", value: "true" },
+        { label: "Particulier", value: "false" },
+      ],
+    },
+    {
+      id: "category",
+      title: "Catégorie",
+      options: catArray,
+    },
+  ];
+};
 
 export const searchableColumns: DataTableSearchableColumn<ProductColumn>[] = [
   {
@@ -120,10 +153,6 @@ export const searchableColumns: DataTableSearchableColumn<ProductColumn>[] = [
   {
     id: "price",
     title: "Prix",
-  },
-  {
-    id: "category",
-    title: "Categorie",
   },
 ];
 

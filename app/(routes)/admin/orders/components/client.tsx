@@ -44,6 +44,13 @@ export const OrderClient: React.FC<OrderClientProps> = ({
     setLoading(false);
   };
 
+  const products = data.flatMap((product) =>
+    product.productsList.map((p) => p.name),
+  );
+  const categoriesWithoutDuplicates = [
+    ...new Set(products.map((product) => product)),
+  ];
+
   return (
     <>
       <Heading
@@ -63,7 +70,7 @@ export const OrderClient: React.FC<OrderClientProps> = ({
         </LoadingButton>
       </div>
       <DataTable
-        filterableColumns={filterableColumns}
+        filterableColumns={filterableColumns(categoriesWithoutDuplicates)}
         searchableColumns={searchableColumns}
         viewOptionsColumns={viewOptionsColumns}
         columns={columns}

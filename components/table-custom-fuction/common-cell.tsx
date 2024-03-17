@@ -5,7 +5,6 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { Checkbox } from "../ui/checkbox";
 import { useContext, useState } from "react";
-import { changeArchived } from "./products-server-actions";
 import { toast } from "sonner";
 import { formatPhoneNumber } from "react-phone-number-input";
 import { AutosizeTextarea } from "../ui/autosize-textarea";
@@ -74,15 +73,21 @@ function TextCell<T>({ row }: { row: Row<TextCellProps<T>> }) {
   );
 }
 
-type ArchivedCellProps<T> = T & {
-  isArchived: boolean;
-  id: string;
+type CheckboxCellProps = {
+  isCheckbox: boolean;
+  onChange: (e: boolean | "indeterminate") => Promise<
+    | {
+        success: true;
+      }
+    | {
+        success: false;
+        message: string;
+      }
+  >;
 };
 
-function ArchivedCell<T>(cell: CellContext<ArchivedCellProps<T>, unknown>) {
-  const [status, setStatus] = useState<boolean | "indeterminate">(
-    cell.row.original.isArchived,
-  );
+function CheckboxCell({ isCheckbox, onChange }: CheckboxCellProps) {
+  const [status, setStatus] = useState<boolean | "indeterminate">(isCheckbox);
   const router = useRouter();
   return (
     <Checkbox
@@ -90,10 +95,7 @@ function ArchivedCell<T>(cell: CellContext<ArchivedCellProps<T>, unknown>) {
       checked={status}
       onCheckedChange={async (e) => {
         setStatus("indeterminate");
-        const result = await changeArchived({
-          id: cell.row.original.id,
-          isArchived: e,
-        });
+        const result = await onChange(e);
         if (!result.success) {
           toast.error(result.message);
           setStatus(!e);
@@ -145,8 +147,8 @@ function NameWithImageCell<T>({
 export {
   CreatedAtCell,
   NameCell,
-  ArchivedCell,
   PhoneCell,
   TextCell,
   NameWithImageCell,
+  CheckboxCell,
 };

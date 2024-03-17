@@ -23,9 +23,13 @@ const checkUser = async () => {
 
 const checkPro = async () => {
   const session = await getServerSession(authOptions);
-  if (!session || !session.user || !session.user.email) {
+  if (!session || !session.user) {
     return false;
   }
+  if (session.user.role === "pro" || session.user.role === "admin") {
+    return true;
+  }
+
   const user = await prismadb.user.findUnique({
     where: {
       id: session.user.id,
@@ -38,7 +42,7 @@ const checkPro = async () => {
     return false;
   }
 
-  return user;
+  return true;
 };
 
 export { checkAdmin, checkUser, checkPro };

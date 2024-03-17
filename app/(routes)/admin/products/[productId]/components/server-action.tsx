@@ -87,6 +87,7 @@ async function updateProduct(
     productSpecs,
     isFeatured,
     isArchived,
+    isPro,
     linkProducts,
   }: ProductFormValues,
   id: string,
@@ -99,14 +100,6 @@ async function updateProduct(
       message: "Vous devez être authentifier",
     };
   }
-
-  const existingProduct = await prismadb.product.findUnique({
-    where: { id },
-    include: {
-      linkedProducts: true,
-      linkedBy: true,
-    },
-  });
 
   const product = await prismadb.product.update({
     where: {
@@ -124,11 +117,9 @@ async function updateProduct(
       linkedProducts: {
         set: [],
       },
-      linkedBy: {
-        set: [],
-      },
       isFeatured,
       isArchived,
+      isPro,
     },
   });
 
@@ -137,9 +128,6 @@ async function updateProduct(
       where: { id },
       data: {
         linkedProducts: {
-          connect: linkProducts.map((product) => ({ id: product.value })),
-        },
-        linkedBy: {
           connect: linkProducts.map((product) => ({ id: product.value })),
         },
       },

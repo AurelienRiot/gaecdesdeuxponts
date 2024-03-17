@@ -18,7 +18,7 @@ import {
   DataTableSearchableColumn,
   DataTableViewOptionsColumn,
 } from "@/types";
-import { FilterFn } from "@/components/table-custom-fuction/common-filter";
+import { FilterInclude } from "@/components/table-custom-fuction/common-filter";
 
 export type OrderColumn = {
   id: string;
@@ -52,7 +52,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
     accessorKey: "isPaid",
     header: "Statut",
     cell: StatusCell,
-    filterFn: FilterFn,
+    filterFn: FilterInclude,
   },
   {
     accessorKey: "datePickUp",

@@ -1,5 +1,15 @@
 import { Row } from "@tanstack/react-table";
 
-export const FilterFn = (row: Row<any>, id: string, value: any) => {
-  return value instanceof Array && value.includes(String(row.getValue(id)));
+export const FilterInclude = (row: Row<any>, id: string, value: any) => {
+  return (
+    value instanceof Array &&
+    value.some((value) => String(row.getValue(id)).includes(value))
+  );
+};
+
+export const FilterExclude = (row: Row<any>, id: string, value: any) => {
+  return (
+    value instanceof Array &&
+    value.every((value) => String(row.getValue(id)).includes(value))
+  );
 };
