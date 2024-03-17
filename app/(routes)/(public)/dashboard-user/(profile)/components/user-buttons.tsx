@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { BsGear } from "react-icons/bs";
 
-export const UserButtons = ({ isPro }: { isPro: boolean }) => {
+export const UserButtons = ({ isPro }: { isPro?: boolean }) => {
   return (
     <>
       <Link href="/dashboard-user/settings" className=" text-3xl ">
