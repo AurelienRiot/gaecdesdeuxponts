@@ -2,29 +2,28 @@
 
 import { DataInvoiceType } from "@/components/pdf/data-invoice";
 import {
-  DatePickUpCell,
   FactureCell,
   ProductCell,
-  ShopNameCell,
-  StatusCell,
 } from "@/components/table-custom-fuction/cell-orders";
 import {
-  CreatedAtCell,
+  CheckboxCell,
+  DateCell,
   NameCell,
 } from "@/components/table-custom-fuction/common-cell";
+import {
+  FilterExclude,
+  FilterInclude,
+} from "@/components/table-custom-fuction/common-filter";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
 import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
-import { ColumnDef } from "@tanstack/react-table";
-import { CellAction } from "./cell-action";
 import {
   DataTableFilterableColumn,
   DataTableSearchableColumn,
   DataTableViewOptionsColumn,
 } from "@/types";
-import {
-  FilterExclude,
-  FilterInclude,
-} from "@/components/table-custom-fuction/common-filter";
+import { ColumnDef } from "@tanstack/react-table";
+import { CellAction } from "./cell-action";
+import { changeStatus } from "./server-action";
 
 export type OrderColumn = {
   id: string;
@@ -51,7 +50,12 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "name",
     header: "Nom",
-    cell: NameCell,
+    cell: ({ row }) => (
+      <NameCell
+        name={row.original.name}
+        url={`/admin/users/${row.original.userId}`}
+      />
+    ),
   },
   {
     accessorKey: "totalPrice",
@@ -66,23 +70,38 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "isPaid",
     header: "Statut",
-    cell: StatusCell,
+    cell: ({ row }) => (
+      <div className="flex gap-2">
+        <CheckboxCell
+          isCheckbox={row.getValue("isPaid")}
+          onChange={(e: boolean | "indeterminate") =>
+            changeStatus({ id: row.original.id, isPaid: e })
+          }
+        />
+      </div>
+    ),
+
     filterFn: FilterInclude,
   },
   {
     accessorKey: "datePickUp",
     header: DatePickUpHeader,
-    cell: DatePickUpCell,
+    cell: ({ row }) => <DateCell date={row.original.datePickUp} />,
   },
   {
     accessorKey: "shopName",
     header: "Lieu de retrait",
-    cell: ShopNameCell,
+    cell: ({ row }) => (
+      <NameCell
+        name={row.original.shopName}
+        url={`/admin/shop/${row.original.shopId}`}
+      />
+    ),
   },
   {
     accessorKey: "createdAt",
     header: CreatedAtHeader,
-    cell: CreatedAtCell,
+    cell: ({ row }) => <DateCell date={row.original.createdAt} />,
   },
 
   {
@@ -91,10 +110,18 @@ export const columns: ColumnDef<OrderColumn>[] = [
   },
 ];
 
-export const filterableColumns = (
-  products: string[],
-): DataTableFilterableColumn<OrderColumn>[] => {
+export const filterableColumns = ({
+  products,
+  shopsName,
+}: {
+  products: string[];
+  shopsName: string[];
+}): DataTableFilterableColumn<OrderColumn>[] => {
   const prodArray = products.map((item) => ({
+    label: item,
+    value: item,
+  }));
+  const shopArray = shopsName.map((item) => ({
     label: item,
     value: item,
   }));
@@ -104,6 +131,11 @@ export const filterableColumns = (
       id: "products",
       title: "Produits",
       options: prodArray,
+    },
+    {
+      id: "shopName",
+      title: "Lieu de retrait",
+      options: shopArray,
     },
     {
       id: "isPaid",
@@ -124,10 +156,6 @@ export const searchableColumns: DataTableSearchableColumn<OrderColumn>[] = [
   {
     id: "totalPrice",
     title: "Prix",
-  },
-  {
-    id: "shopName",
-    title: "Lieu de retrait",
   },
 ];
 
@@ -165,5 +193,9 @@ export const viewOptionsColumns: DataTableViewOptionsColumn<OrderColumn>[] = [
   {
     id: "createdAt",
     title: "Date de création",
+  },
+  {
+    id: "actions" as keyof OrderColumn,
+    title: "Actions",
   },
 ];

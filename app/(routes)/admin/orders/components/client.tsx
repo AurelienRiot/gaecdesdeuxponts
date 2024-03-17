@@ -5,7 +5,7 @@ import { DataTable } from "@/components/ui/data-table/data-table";
 import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { toast } from "sonner";
 import {
@@ -44,12 +44,21 @@ export const OrderClient: React.FC<OrderClientProps> = ({
     setLoading(false);
   };
 
+  useEffect(() => {
+    setData(initialData);
+  }, [initialData]);
+
   const products = data.flatMap((product) =>
     product.productsList.map((p) => p.name),
   );
-  const categoriesWithoutDuplicates = [
+  const productsWithoutDuplicates = [
     ...new Set(products.map((product) => product)),
-  ];
+  ].sort((a, b) => a.localeCompare(b));
+
+  const shopsName = data.map((order) => order.shopName);
+  const shopsNameWithoutDuplicates = [
+    ...new Set(shopsName.map((product) => product)),
+  ].sort((a, b) => a.localeCompare(b));
 
   return (
     <>
@@ -70,7 +79,10 @@ export const OrderClient: React.FC<OrderClientProps> = ({
         </LoadingButton>
       </div>
       <DataTable
-        filterableColumns={filterableColumns(categoriesWithoutDuplicates)}
+        filterableColumns={filterableColumns({
+          products: productsWithoutDuplicates,
+          shopsName: shopsNameWithoutDuplicates,
+        })}
         searchableColumns={searchableColumns}
         viewOptionsColumns={viewOptionsColumns}
         columns={columns}

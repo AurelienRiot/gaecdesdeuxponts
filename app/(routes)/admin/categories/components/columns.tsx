@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  CreatedAtCell,
+  DateCell,
   NameWithImageCell,
 } from "@/components/table-custom-fuction/common-cell";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
@@ -27,7 +27,7 @@ export const CategoryColumn: ColumnDef<CategoryColumnType>[] = [
   {
     accessorKey: "createdAt",
     header: CreatedAtHeader,
-    cell: CreatedAtCell,
+    cell: ({ row }) => <DateCell date={row.original.createdAt} />,
   },
   {
     accessorKey: "actions",

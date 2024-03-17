@@ -42,7 +42,9 @@ export function DataTableToolbar<TData>({
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const [isDeletePending, startDeleteTransition] = React.useTransition();
-  const [searchValue, setSearchValue] = React.useState(searchableColumns[0].id);
+  const [searchValue, setSearchValue] = React.useState(
+    searchableColumns[0]?.id,
+  );
 
   return (
     <div className="flex w-full items-center justify-between space-x-2 overflow-auto p-1">

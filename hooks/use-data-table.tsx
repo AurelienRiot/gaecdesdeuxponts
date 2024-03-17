@@ -44,7 +44,9 @@ export function useDataTable<TData, TValue>({
       columnFilters,
     },
     enableRowSelection: true,
-
+    initialState: {
+      pagination: { pageSize: 5 },
+    },
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

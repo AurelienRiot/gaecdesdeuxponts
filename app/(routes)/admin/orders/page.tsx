@@ -1,8 +1,9 @@
-import { OrderStatusProvider } from "@/hooks/use-order-status";
 import prismadb from "@/lib/prismadb";
 import { DateRange } from "react-day-picker";
 import { OrderClient } from "./components/client";
 import { formatOrders } from "./components/format-orders";
+
+export const dynamic = "force-dynamic";
 
 const OrdersPage = async () => {
   const from = new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -41,16 +42,14 @@ const OrdersPage = async () => {
   const formattedOrders = formatOrders(orders);
 
   return (
-    <OrderStatusProvider initialData={formattedOrders}>
-      <div className="flex-col">
-        <div className="flex-1 space-y-4 p-8 pt-6">
-          <OrderClient
-            initialData={formattedOrders}
-            initialDateRange={dateRange}
-          />
-        </div>
+    <div className="flex-col">
+      <div className="flex-1 space-y-4 p-8 pt-6">
+        <OrderClient
+          initialData={formattedOrders}
+          initialDateRange={dateRange}
+        />
       </div>
-    </OrderStatusProvider>
+    </div>
   );
 };
 

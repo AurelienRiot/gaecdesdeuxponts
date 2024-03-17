@@ -3,7 +3,7 @@
 import { LinkProductsCell } from "@/components/table-custom-fuction/cell-products";
 import {
   CheckboxCell,
-  CreatedAtCell,
+  DateCell,
   NameWithImageCell,
 } from "@/components/table-custom-fuction/common-cell";
 import { FilterInclude } from "@/components/table-custom-fuction/common-filter";
@@ -96,7 +96,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "createdAt",
     header: CreatedAtHeader,
-    cell: CreatedAtCell,
+    cell: ({ row }) => <DateCell date={row.original.createdAt} />,
   },
   {
     id: "actions",

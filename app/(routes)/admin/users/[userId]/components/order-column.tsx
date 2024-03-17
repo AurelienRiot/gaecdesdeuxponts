@@ -2,23 +2,28 @@
 
 import { DataInvoiceType } from "@/components/pdf/data-invoice";
 import {
-  DatePickUpCell,
   FactureCell,
   ProductCell,
-  ShopNameCell,
-  StatusCell,
 } from "@/components/table-custom-fuction/cell-orders";
-import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
-import { ColumnDef } from "@tanstack/react-table";
-import { CreatedAtCell } from "@/components/table-custom-fuction/common-cell";
+import {
+  CheckboxCell,
+  DateCell,
+  NameCell,
+} from "@/components/table-custom-fuction/common-cell";
+import {
+  FilterExclude,
+  FilterInclude,
+} from "@/components/table-custom-fuction/common-filter";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
-import { OrderCellAction } from "./order-cell-action";
+import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
 import {
   DataTableFilterableColumn,
   DataTableSearchableColumn,
   DataTableViewOptionsColumn,
 } from "@/types";
-import { FilterInclude } from "@/components/table-custom-fuction/common-filter";
+import { ColumnDef } from "@tanstack/react-table";
+import { changeStatus } from "../../../orders/components/server-action";
+import { OrderCellAction } from "./order-cell-action";
 
 export type OrderColumn = {
   id: string;
@@ -37,6 +42,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
     accessorKey: "products",
     header: "Produits",
     cell: ProductCell,
+    filterFn: FilterExclude,
   },
   {
     accessorKey: "totalPrice",
@@ -51,23 +57,34 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "isPaid",
     header: "Statut",
-    cell: StatusCell,
+    cell: ({ row }) => (
+      <CheckboxCell
+        isCheckbox={row.original.isPaid}
+        onChange={(e) => changeStatus({ isPaid: e, id: row.original.id })}
+      />
+    ),
     filterFn: FilterInclude,
   },
   {
     accessorKey: "datePickUp",
     header: DatePickUpHeader,
-    cell: DatePickUpCell,
+    cell: ({ row }) => <DateCell date={row.original.datePickUp} />,
   },
   {
     accessorKey: "shopName",
     header: "Lieu de retrait",
-    cell: ShopNameCell,
+    cell: ({ row }) => (
+      <NameCell
+        name={row.original.shopName}
+        url={`/admin/shop/${row.original.shopId}`}
+      />
+    ),
+    filterFn: FilterInclude,
   },
   {
     accessorKey: "createdAt",
     header: CreatedAtHeader,
-    cell: CreatedAtCell,
+    cell: ({ row }) => <DateCell date={row.original.createdAt} />,
   },
 
   {
@@ -76,31 +93,43 @@ export const columns: ColumnDef<OrderColumn>[] = [
   },
 ];
 
-export const filterableColumns: DataTableFilterableColumn<OrderColumn>[] = [
-  {
-    id: "isPaid",
-    title: "Status",
-    options: [
-      { label: "Payé", value: "true" },
-      { label: "Non Payé", value: "false" },
-    ],
-  },
-];
+export const filterableColumns = ({
+  products,
+  shopsName,
+}: {
+  products: string[];
+  shopsName: string[];
+}): DataTableFilterableColumn<OrderColumn>[] => {
+  const prodArray = products.map((item) => ({
+    label: item,
+    value: item,
+  }));
+  const shopArray = shopsName.map((item) => ({
+    label: item,
+    value: item,
+  }));
 
-export const searchableColumns: DataTableSearchableColumn<OrderColumn>[] = [
-  {
-    id: "products",
-    title: "Produits",
-  },
-  {
-    id: "totalPrice",
-    title: "Prix",
-  },
-  {
-    id: "shopName",
-    title: "Lieu de retrait",
-  },
-];
+  return [
+    {
+      id: "products",
+      title: "Produits",
+      options: prodArray,
+    },
+    {
+      id: "shopName",
+      title: "Lieu de retrait",
+      options: shopArray,
+    },
+    {
+      id: "isPaid",
+      title: "Status",
+      options: [
+        { label: "Payé", value: "true" },
+        { label: "Non Payé", value: "false" },
+      ],
+    },
+  ];
+};
 
 export const viewOptionsColumns: DataTableViewOptionsColumn<OrderColumn>[] = [
   {
@@ -133,5 +162,9 @@ export const viewOptionsColumns: DataTableViewOptionsColumn<OrderColumn>[] = [
   {
     id: "createdAt",
     title: "Date de création",
+  },
+  {
+    id: "actions" as keyof OrderColumn,
+    title: "Actions",
   },
 ];

@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  CreatedAtCell,
+  DateCell,
   NameCell,
   PhoneCell,
   TextCell,
@@ -26,7 +26,16 @@ export const columns: ColumnDef<ContactColumn>[] = [
   {
     accessorKey: "name",
     header: "Nom",
-    cell: NameCell,
+    cell: ({ row }) => (
+      <NameCell
+        name={row.original.name}
+        url={
+          row.original.userId
+            ? `/admin/users/${row.original.userId}`
+            : undefined
+        }
+      />
+    ),
   },
   {
     accessorKey: "phone",
@@ -49,7 +58,7 @@ export const columns: ColumnDef<ContactColumn>[] = [
   {
     accessorKey: "createdAt",
     header: CreatedAtHeader,
-    cell: CreatedAtCell,
+    cell: ({ row }) => <DateCell date={row.original.createdAt} />,
   },
   {
     id: "actions",

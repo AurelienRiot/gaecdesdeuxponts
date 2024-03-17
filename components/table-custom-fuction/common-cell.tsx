@@ -1,43 +1,33 @@
 "use client";
 import { dateFormatter } from "@/lib/utils";
-import { CellContext, Row, Table } from "@tanstack/react-table";
-import { Button } from "../ui/button";
-import Link from "next/link";
-import { Checkbox } from "../ui/checkbox";
-import { useContext, useState } from "react";
-import { toast } from "sonner";
-import { formatPhoneNumber } from "react-phone-number-input";
-import { AutosizeTextarea } from "../ui/autosize-textarea";
+import { Row } from "@tanstack/react-table";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { formatPhoneNumber } from "react-phone-number-input";
+import { toast } from "sonner";
+import { AutosizeTextarea } from "../ui/autosize-textarea";
+import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
 
-type CreatedAtCellProps<T = {}> = T & {
-  createdAt: Date;
+type DateCellProps = {
+  date: Date;
 };
 
-function CreatedAtCell<T>({ row }: { row: Row<CreatedAtCellProps<T>> }) {
-  return (
-    <div className="flex md:pl-10">
-      {dateFormatter(row.getValue("createdAt"))}
-    </div>
-  );
+function DateCell({ date }: DateCellProps) {
+  return <div className="flex md:pl-10">{dateFormatter(date)}</div>;
 }
 
-type NameCellProps<T = {}> = T & {
+type NameCellProps = {
   name: string;
-  userId: string | null;
+  url?: string;
 };
 
-function NameCell<T>({ row }: { row: Row<NameCellProps<T>> }) {
+function NameCell({ name, url }: NameCellProps) {
   return (
-    <Button asChild variant={"link"} className="px-0">
-      {row.original.userId ? (
-        <Link href={`/admin/users/${row.original.userId}`}>
-          {row.getValue("name")}
-        </Link>
-      ) : (
-        <span>{row.getValue("name")}</span>
-      )}
+    <Button asChild variant={url ? "link" : "ghost"} className="px-0">
+      {url ? <Link href={url}>{name}</Link> : name}
     </Button>
   );
 }
@@ -145,10 +135,10 @@ function NameWithImageCell<T>({
 }
 
 export {
-  CreatedAtCell,
+  CheckboxCell,
+  DateCell,
   NameCell,
+  NameWithImageCell,
   PhoneCell,
   TextCell,
-  NameWithImageCell,
-  CheckboxCell,
 };

@@ -30,6 +30,7 @@ interface DataTableProps<TData, TValue> {
   filterableColumns?: DataTableFilterableColumn<TData>[];
   viewOptionsColumns?: DataTableViewOptionsColumn<TData>[];
   newRowLink?: string;
+  emptyRows?: boolean;
   deleteRowsAction?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
@@ -42,6 +43,7 @@ export function DataTable<TData, TValue>({
   filterableColumns,
   viewOptionsColumns,
   newRowLink,
+  emptyRows,
   deleteRowsAction,
 }: DataTableProps<TData, TValue>) {
   const { table } = useDataTable({
@@ -88,27 +90,47 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+            {table.getRowModel().rows.length > 0 ? (
+              <>
+                {table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+                {emptyRows
+                  ? [
+                      ...Array(
+                        Math.max(
+                          0,
+                          table.getState().pagination.pageSize -
+                            table.getRowModel().rows.length,
+                        ),
+                      ).keys(),
+                    ].map((emptyRowIndex) => (
+                      <TableRow
+                        key={`empty-row-${emptyRowIndex}`}
+                        className="h-16"
+                      >
+                        <TableCell colSpan={table.getAllFlatColumns().length} />
+                      </TableRow>
+                    ))
+                  : null}
+              </>
             ) : (
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-16 text-center"
                 >
                   Aucun resultat
                 </TableCell>
