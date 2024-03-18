@@ -1,29 +1,20 @@
 "use client";
 
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { MixerHorizontalIcon } from "@radix-ui/react-icons";
 import { type Table } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 import { DataTableViewOptionsColumn } from "@/types";
-import { Popover, PopoverContent, PopoverTrigger } from "../popover";
+import { CheckIcon } from "lucide-react";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
 } from "../command";
-import { cn } from "@/lib/utils";
-import { CheckIcon } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;

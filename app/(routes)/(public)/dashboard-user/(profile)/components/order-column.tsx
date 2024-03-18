@@ -5,7 +5,7 @@ import { DataInvoiceType } from "@/components/pdf/data-invoice";
 import DisplayPDF from "@/components/pdf/pdf-button";
 import { ProductCell } from "@/components/table-custom-fuction/cell-orders";
 import { DateCell } from "@/components/table-custom-fuction/common-cell";
-import { FilterInclude } from "@/components/table-custom-fuction/common-filter";
+import { FilterOneInclude } from "@/components/table-custom-fuction/common-filter";
 import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -68,7 +68,7 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
         checked={row.original.isPaid}
       />
     ),
-    filterFn: FilterInclude,
+    filterFn: FilterOneInclude,
   },
   {
     accessorKey: "datePickUp",

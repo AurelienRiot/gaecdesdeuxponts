@@ -11,8 +11,8 @@ import {
   NameCell,
 } from "@/components/table-custom-fuction/common-cell";
 import {
-  FilterExclude,
-  FilterInclude,
+  FilterAllInclude,
+  FilterOneInclude,
 } from "@/components/table-custom-fuction/common-filter";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
 import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
@@ -42,7 +42,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
     accessorKey: "products",
     header: "Produits",
     cell: ProductCell,
-    filterFn: FilterExclude,
+    filterFn: FilterAllInclude,
   },
   {
     accessorKey: "totalPrice",
@@ -63,7 +63,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
         onChange={(e) => changeStatus({ isPaid: e, id: row.original.id })}
       />
     ),
-    filterFn: FilterInclude,
+    filterFn: FilterOneInclude,
   },
   {
     accessorKey: "datePickUp",
@@ -79,7 +79,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
         url={`/admin/shop/${row.original.shopId}`}
       />
     ),
-    filterFn: FilterInclude,
+    filterFn: FilterOneInclude,
   },
   {
     accessorKey: "createdAt",

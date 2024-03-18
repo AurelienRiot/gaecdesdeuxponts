@@ -1,0 +1,44 @@
+:root {
+  --background: 0 0% 100%; /* white */
+  --foreground: 19 27% 17%; /* dark brown for text, similar to neutral-950 but warmer */
+  --card: 240 13% 98%; /* very light grey, for a subtle contrast against white */
+  --card-foreground: 19 27% 17%; /* dark brown */
+  --popover: 240 13% 98%; /* very light grey */
+  --popover-foreground: 19 27% 17%; /* dark brown */
+  --primary: 120 30% 49%; /* softer orange, for a less intense, more natural look */
+  --primary-foreground: 0 0% 100%; /* white, for contrast on primary elements */
+  --secondary: 34 80% 50%; /* soft green, for secondary buttons and accents */
+  --secondary-foreground: 0 0% 20%; /* very dark green, for text on secondary elements */
+  --muted: 35 16% 96%; /* off-white, for backgrounds of muted elements */
+  --muted-foreground: 24 44% 26%; /* muted brown, for text on muted backgrounds */
+  --accent: 28 76% 67%; /* warm yellow, as an accent color for highlights */
+  --accent-foreground: 19 27% 17%; /* dark brown, for text on accent elements */
+  --destructive: 0 85% 61%; /* red-500, kept for error states */
+  --destructive-foreground: 0 0% 99%; /* neutral-50, for contrast on destructive elements */
+  --border: 35 16% 90%; /* light grey, for borders and dividers */
+  --input: 240 13% 95%; /* very light grey, for input fields */
+  --ring: 34 80% 50%; /* softer orange, for focus rings */
+  --radius: 0.5rem; /* keeping the border radius the same for consistency */
+}
+
+.dark {
+  --background: 19 27% 15%; /* dark brown, for dark mode background */
+  --foreground: 240 13% 98%; /* very light grey, for text in dark mode */
+  --card: 19 27% 15%; /* dark brown, for cards in dark mode */
+  --card-foreground: 240 13% 98%; /* very light grey, for card text in dark mode */
+  --popover: 19 27% 15%; /* dark brown, for popovers in dark mode */
+  --popover-foreground: 240 13% 98%; /* very light grey, for popover text in dark mode */
+  --primary: 34 80% 50%; /* softer orange, consistent with light mode */
+  --primary-foreground: 0 0% 100%; /* white, for contrast */
+  --secondary: 120 30% 40%; /* darker green for dark mode, for secondary elements */
+  --secondary-foreground: 240 13% 98%; /* very light grey, for text on secondary elements */
+  --muted: 19 27% 20%; /* dark grey, for muted elements in dark mode */
+  --muted-foreground: 240 13% 80%; /* lighter grey, for text on muted elements */
+  --accent: 28 76% 60%; /* warm yellow, slightly darker for dark mode */
+  --accent-foreground: 19 27% 15%; /* dark brown, for text on accent elements */
+  --destructive: 0 63% 31%; /* red-900, for errors in dark mode */
+  --destructive-foreground: 0 0% 99%; /* neutral-50, for contrast */
+  --border: 19 27% 20%; /* dark grey, for borders in dark mode */
+  --input: 19 27% 20%; /* dark grey, for input fields in dark mode */
+  --ring: 34 80% 50%; /* softer orange, for focus rings in dark mode */
+}

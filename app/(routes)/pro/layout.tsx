@@ -4,7 +4,7 @@ import Footer from "@/components/footer";
 import NavBar from "@/components/navbar-pro/navbar";
 import prismadb from "@/lib/prismadb";
 import { CategoriesProvider } from "@/providers/categories-provider";
-import { ProColorSchema } from "@/providers/color-schema-provider";
+import "./color.css";
 import { Suspense } from "react";
 
 export default async function PublicLayout({
@@ -26,7 +26,6 @@ export default async function PublicLayout({
       <Suspense fallback={null}>
         <ServerCategories />
       </Suspense>
-      <ProColorSchema />
       <NavBar />
       <main className="pt-16 ">{children}</main>
       <Footer />

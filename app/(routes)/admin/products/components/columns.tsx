@@ -6,7 +6,7 @@ import {
   DateCell,
   NameWithImageCell,
 } from "@/components/table-custom-fuction/common-cell";
-import { FilterInclude } from "@/components/table-custom-fuction/common-filter";
+import { FilterOneInclude } from "@/components/table-custom-fuction/common-filter";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
 import {
   DataTableFilterableColumn,
@@ -51,7 +51,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
         }
       />
     ),
-    filterFn: FilterInclude,
+    filterFn: FilterOneInclude,
   },
   {
     accessorKey: "isFeatured",
@@ -64,7 +64,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
         }
       />
     ),
-    filterFn: FilterInclude,
+    filterFn: FilterOneInclude,
   },
   {
     accessorKey: "isPro",
@@ -77,7 +77,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
         }
       />
     ),
-    filterFn: FilterInclude,
+    filterFn: FilterOneInclude,
   },
   {
     accessorKey: "price",
@@ -86,7 +86,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "category",
     header: "Categorie",
-    filterFn: FilterInclude,
+    filterFn: FilterOneInclude,
   },
   {
     accessorKey: "linkProducts",
