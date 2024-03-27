@@ -18,6 +18,7 @@ export type CategoryReturnType =
 async function createCategory({
   imageUrl,
   name,
+  description,
 }: CategoryFormValues): Promise<CategoryReturnType> {
   const isAuth = await checkAdmin();
 
@@ -32,6 +33,7 @@ async function createCategory({
     data: {
       name,
       imageUrl,
+      description,
     },
   });
 
@@ -42,7 +44,7 @@ async function createCategory({
 }
 
 async function updateCategory(
-  { imageUrl, name }: CategoryFormValues,
+  { imageUrl, name, description }: CategoryFormValues,
   id: string,
 ): Promise<CategoryReturnType> {
   const isAuth = await checkAdmin();
@@ -61,6 +63,7 @@ async function updateCategory(
     data: {
       name,
       imageUrl,
+      description,
     },
   });
 

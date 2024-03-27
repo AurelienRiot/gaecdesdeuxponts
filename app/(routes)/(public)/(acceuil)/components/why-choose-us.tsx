@@ -24,10 +24,10 @@ const WhyChooseUs = () => {
               height={80}
               className=" rounded-full object-cover"
             />
-            <h3 className="mt-4 text-xl font-medium text-accent">
+            <h3 className="mt-4 text-xl font-medium ">
               Bienfaits pour la santé
             </h3>
-            <p className="mt-2 text-center text-lg text-secondary">
+            <p className="mt-2 text-center text-lg ">
               Notre lait cru préserve tous les nutriments essentiels et offre
               une expérience gustative naturelle et riche.
             </p>
@@ -40,10 +40,8 @@ const WhyChooseUs = () => {
               height={80}
               className=" rounded-full object-cover"
             />
-            <h3 className="mt-4 text-xl font-medium text-accent">
-              Goût naturel
-            </h3>
-            <p className="mt-2 text-center text-lg text-secondary">
+            <h3 className="mt-4 text-xl font-medium ">Goût naturel</h3>
+            <p className="mt-2 text-center text-lg ">
               {
                 "Profitez d'un goût authentique, avec un lait non homogénéisé qui conserve sa saveur et sa texture originales."
               }
@@ -57,10 +55,8 @@ const WhyChooseUs = () => {
               height={80}
               className=" rounded-full object-cover"
             />
-            <h3 className="mt-4 text-xl font-medium text-accent">
-              Pratiques éthiques
-            </h3>
-            <p className="mt-2 text-center text-lg text-secondary">
+            <h3 className="mt-4 text-xl font-medium ">Pratiques éthiques</h3>
+            <p className="mt-2 text-center text-lg ">
               {
                 "Nos vaches sont élevées avec soin, dans des conditions qui respectent leur bien-être et l'environnement."
               }

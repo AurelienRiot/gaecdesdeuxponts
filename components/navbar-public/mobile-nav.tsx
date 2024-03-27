@@ -20,6 +20,7 @@ import { use, useState } from "react";
 
 import { Category } from "@prisma/client";
 import { publicRoutes } from "./main-nav";
+import Image from "next/image";
 
 type MobileNavProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger> & {
   categories: Promise<Category[]>;
@@ -96,82 +97,99 @@ export default function MobileNav({
           </svg>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="h-auto w-[200px] p-0">
+      <PopoverContent className="h-auto w-[50vw] min-w-[400px] ">
         <Command>
-          <CommandList>
-            <CommandGroup>
-              <CommandItem>
-                <Popover open={openProduct} onOpenChange={setOpenProduct}>
-                  <PopoverTrigger asChild>
-                    <CommandItem
-                      onSelect={() => {
-                        setOpenProduct((open) => !open);
-                      }}
-                      className="test-sm cursor-pointer"
-                    >
-                      <StoreIcon className="mr-2 h-4 w-4" />
-                      Nos Produis
-                      <ChevronDown
-                        className={cn(
-                          "ml-4 h-4 w-4",
-                          openProduct ? "rotate-180" : "rotate-0",
-                        )}
-                      />
-                    </CommandItem>
-                  </PopoverTrigger>
-                  <PopoverContent
-                    side="bottom"
-                    align="start"
-                    className="z-50 w-[200px]"
+          <CommandList className="">
+            <CommandItem
+              className=" relative   flex cursor-pointer items-center justify-center text-primary aria-selected:bg-background aria-selected:text-primary sm:hidden"
+              onSelect={() => {
+                router.push("/");
+                setOpen(false);
+              }}
+            >
+              <Image
+                src="/icone.webp"
+                alt="logo"
+                width={48}
+                height={48}
+                className="mr-2 rounded-md"
+              />
+              <p className="font-mono text-lg font-bold text-primary sm:text-xl">
+                {" "}
+                Laiterie du Pont Robert
+              </p>
+            </CommandItem>
+            <CommandSeparator className="sm:hidden" />
+            <CommandItem>
+              <Popover open={openProduct} onOpenChange={setOpenProduct}>
+                <PopoverTrigger asChild>
+                  <CommandItem
+                    onSelect={() => {
+                      setOpenProduct((open) => !open);
+                    }}
+                    className="test-sm cursor-pointer pl-0"
                   >
-                    {CategoriesRoutes.map((category) => {
-                      const href = `/category/${category.id}`;
-                      const label = category.name;
-                      const active = pathname.startsWith(
-                        `/category/${category.id}`,
-                      );
-                      return (
-                        <Button asChild key={href} variant={"link"}>
-                          <Link
-                            href={href}
-                            className={cn(
-                              active && "bg-primary text-primary-foreground",
-                            )}
-                            onClick={() => {
-                              setOpenProduct(false);
-                              setOpen(false);
-                            }}
-                          >
-                            {label}
-                          </Link>
-                        </Button>
-                      );
-                    })}
-                  </PopoverContent>
-                </Popover>
-              </CommandItem>
-              {routes.map(({ href, label, active, Icone }) => (
-                <CommandItem
-                  key={href}
-                  onSelect={() => {
-                    router.push(href);
-                    setOpen(false);
-                  }}
-                  className="test-sm cursor-pointer"
+                    <StoreIcon className=" mr-2 h-4 w-4" />
+                    Nos Produis
+                    <ChevronDown
+                      className={cn(
+                        "ml-4 h-4 w-4 transition-transform",
+                        openProduct ? "rotate-0" : "-rotate-90",
+                      )}
+                    />
+                  </CommandItem>
+                </PopoverTrigger>
+                <PopoverContent
+                  side="bottom"
+                  align="start"
+                  className="z-50 w-[200px]"
                 >
-                  <Icone className="mr-2 h-4 w-4" />
-                  {label}
-                  <Check
-                    className={cn(
-                      "ml-auto h-4 w-4",
-                      active ? "opacity-100" : "opacity-0",
-                    )}
-                  />
-                </CommandItem>
-              ))}
-            </CommandGroup>
+                  {CategoriesRoutes.map((category) => {
+                    const href = `/category/${category.id}`;
+                    const label = category.name;
+                    const active = pathname.startsWith(
+                      `/category/${category.id}`,
+                    );
+                    return (
+                      <Button asChild key={href} variant={"link"}>
+                        <Link
+                          href={href}
+                          className={cn(
+                            active && "bg-primary text-primary-foreground",
+                          )}
+                          onClick={() => {
+                            setOpenProduct(false);
+                            setOpen(false);
+                          }}
+                        >
+                          {label}
+                        </Link>
+                      </Button>
+                    );
+                  })}
+                </PopoverContent>
+              </Popover>
+            </CommandItem>
+            {routes.map(({ href, label, active, Icone }) => (
+              <CommandItem
+                key={href}
+                onSelect={() => {
+                  router.push(href);
+                  setOpen(false);
+                }}
+                className="test-sm cursor-pointer"
+              >
+                <Icone className="mr-2 h-4 w-4" />
+                {label}
+                <Check
+                  className={cn(
+                    "ml-auto h-4 w-4",
+                    active ? "opacity-100" : "opacity-0",
+                  )}
+                />
+              </CommandItem>
+            ))}
           </CommandList>
-          <CommandSeparator />
         </Command>
       </PopoverContent>
     </Popover>

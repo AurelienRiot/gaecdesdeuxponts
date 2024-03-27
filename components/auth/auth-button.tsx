@@ -83,7 +83,7 @@ export const GoogleButton = ({ callbackUrl }: { callbackUrl: string }) => {
       className="relative flex w-[306px] items-center justify-between  gap-4 rounded-sm bg-[#4285F4] shadow-xl  duration-200 ease-linear  hover:bg-[#4285F4]/90 active:scale-95"
     >
       <Icons.google />
-      <span className="mr-4 self-center font-medium text-white sm:text-lg">
+      <span className="mx-auto  self-center font-medium text-white sm:text-lg">
         {loading ? (
           <Spinner
             size={40}

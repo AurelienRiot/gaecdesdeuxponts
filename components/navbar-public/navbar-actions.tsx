@@ -2,7 +2,7 @@
 
 import useCart from "@/hooks/use-cart";
 import { AnimatePresence, motion } from "framer-motion";
-import { ShoppingBag, User2, UserCheck } from "lucide-react";
+import { ShoppingBag, ShoppingCart, User2, UserCheck } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -43,28 +43,23 @@ const AuthNavButton = ({
 }) => {
   return (
     <>
-      {session.data ? (
+      <Button
+        variant={"rounded"}
+        asChild
+        className="relative bg-background px-3	 text-foreground  "
+      >
         <Link
           href={
-            session.data?.user.role === "admin" ? "/admin" : "/dashboard-user"
+            !session.data
+              ? "/login"
+              : session.data.user.role === "admin"
+                ? "/admin"
+                : "/dashboard-user"
           }
-          className="dark:border-1 group flex items-center justify-center  rounded-full bg-background p-2 text-primary-foreground shadow-md transition  hover:rounded-full dark:border dark:border-foreground"
         >
-          {!session.data.user.image ? (
-            <User2 className="h-6 w-6 duration-300 ease-linear group-hover:scale-150 " />
-          ) : (
-            <Avatar className="h-6 w-6  duration-300 ease-linear group-hover:scale-150">
-              {" "}
-              <AvatarImage src={session.data.user.image} alt="avatar" />{" "}
-              <AvatarFallback className="bg-primary">
-                <User2 className="h-6 w-6" />
-              </AvatarFallback>{" "}
-            </Avatar>
-          )}
+          <User2 size={20} className=" duration-300 ease-linear  " />
         </Link>
-      ) : (
-        <LoginButton />
-      )}
+      </Button>
     </>
   );
 };
@@ -89,10 +84,10 @@ export const CartButton = () => {
     return (
       <Button
         variant={"rounded"}
-        className="relative bg-primary-foreground px-3	 text-primary shadow-md"
+        className="relative bg-background px-3	 text-foreground "
       >
-        <ShoppingBag size={20} />
-        <span className="absolute -right-2 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs tabular-nums text-primary-foreground shadow-md">
+        <ShoppingCart size={20} />
+        <span className="absolute -right-2 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-xs tabular-nums text-background shadow-md">
           0
         </span>
       </Button>
@@ -103,10 +98,10 @@ export const CartButton = () => {
       <SheetTrigger asChild>
         <Button
           variant={"rounded"}
-          className="relative border-0 	bg-primary-foreground px-3  text-primary shadow-md   "
+          className="relative bg-background px-3	 text-foreground  "
         >
-          <ShoppingBag size={20} />
-          <span className="absolute -right-2 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs tabular-nums text-primary-foreground shadow-md">
+          <ShoppingCart size={20} />
+          <span className="absolute -right-2 -top-1 flex h-5 w-5 justify-center rounded-full bg-foreground text-xs tabular-nums text-background shadow-md">
             {totalQuantity}
           </span>
         </Button>

@@ -29,10 +29,12 @@ const NavBar = ({ categories }: { categories: Promise<Category[]> }) => {
       // data-nav-state={navState}
       className={`fixed top-0 z-30 flex h-16 w-full items-center justify-between overflow-hidden rounded-b-md border-b-2 border-border bg-background px-4 transition-all duration-300 data-[nav-state=close]:h-0 data-[nav-state=close]:border-0 sm:px-6 lg:px-4 `}
     >
-      <div className="flex items-center">
+      <MainNav className="hidden lg:flex " categories={categories} />
+      <MobileNav className="ml-2 lg:hidden" categories={categories} />
+      <div className="flex items-center justify-center  xl:absolute xl:left-1/2 xl:top-1/2 xl:-translate-x-1/2 xl:-translate-y-1/2 ">
         <Link
           href="/"
-          className="relative ml-4 hidden items-center transition-all hover:scale-105 sm:flex lg:ml-0"
+          className="relative ml-4 hidden items-center text-primary transition-all hover:scale-105 sm:flex lg:ml-0"
         >
           <Image
             src="/icone.webp"
@@ -41,14 +43,13 @@ const NavBar = ({ categories }: { categories: Promise<Category[]> }) => {
             height={48}
             className="rounded-md"
           />
-          {/* <p className="text-lg font-bold text-primary sm:text-xl">
-                      {" "}
-                      RIOT TECH
-                    </p> */}
+          <p className="font-mono text-lg font-bold text-primary sm:text-xl">
+            {" "}
+            Laiterie du Pont Robert
+          </p>
         </Link>
-        <MainNav className="hidden lg:flex " categories={categories} />
-        <MobileNav className="ml-2 lg:hidden" categories={categories} />
       </div>
+
       <NavbarAction />
     </div>
   );

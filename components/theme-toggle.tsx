@@ -20,7 +20,7 @@ export function ThemeToggle() {
         setTheme(theme === "light" ? "dark" : "light");
       }}
       size="icon"
-      className="rounded-full bg-background px-0  py-0 text-foreground shadow-md dark:border dark:border-foreground"
+      className=" bg-transparent  px-0 py-0 text-foreground "
     >
       <AnimatedIcon
         className="h-6 w-6 transition-all duration-300 "

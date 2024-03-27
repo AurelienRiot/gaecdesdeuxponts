@@ -78,6 +78,7 @@ model Category {
   id          String @unique @id @default(uuid())
   products    Product[] @relation("CategoryToProduct")
   name        String
+  description String?
    imageUrl   String
   createdAt   DateTime @default(now())
   updatedAd   DateTime @updatedAt

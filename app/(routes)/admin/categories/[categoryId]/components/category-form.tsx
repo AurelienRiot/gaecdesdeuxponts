@@ -28,6 +28,7 @@ import {
   createCategory,
   updateCategory,
 } from "./server-action";
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 
 interface CategoryFormProps {
   initialData: Category | null;
@@ -36,6 +37,7 @@ interface CategoryFormProps {
 const formSchema = z.object({
   name: z.string().min(1),
   imageUrl: z.string().min(0),
+  description: z.string().min(1),
 });
 
 export const getFileKey = (url: string): string => {
@@ -70,13 +72,13 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
     defaultValues: {
       name: initialData?.name || "",
       imageUrl: getFileKey(initialData?.imageUrl || ""),
-    } || {
-      name: "",
-      imageUrl: "",
+      description: initialData?.description || "",
     },
   });
 
   const onSubmit = async (data: CategoryFormValues) => {
+    console.log(data);
+
     if (!selectedFiles[0]) {
       toast.error("Veuillez ajouter une image");
       return;
@@ -166,6 +168,23 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
                     disabled={form.formState.isSubmitting}
                     placeholder="Nom de la categorie"
                     className="w-fit"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem className="w-96">
+                <FormLabel>Drescription</FormLabel>
+                <FormControl>
+                  <AutosizeTextarea
+                    disabled={form.formState.isSubmitting}
+                    placeholder="Description de la categorie"
                     {...field}
                   />
                 </FormControl>
