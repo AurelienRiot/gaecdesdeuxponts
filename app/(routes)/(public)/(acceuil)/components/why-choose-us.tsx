@@ -9,8 +9,6 @@ import { useState } from "react";
 import { DateRange } from "react-day-picker";
 
 const WhyChooseUs = () => {
-  const [dateRange, setDateRange] = useState<DateRange | undefined>();
-  const [date, setDate] = useState<Date[] | undefined>();
   return (
     <div className="bg-background py-8">
       <div className="mx-auto max-w-6xl px-4 text-center sm:px-6 lg:px-8">

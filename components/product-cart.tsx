@@ -71,7 +71,7 @@ const ProductCart: React.FC<ProductCartProps> = ({
       <div onClick={handleClick}>
         <p className="text-lg font-semibold text-primary">{data.name}</p>
         <p className="text-sm text-secondary-foreground">
-          {data.category?.name}
+          {data.category.name}
         </p>
       </div>
       <div className="flex items-center justify-between text-primary">

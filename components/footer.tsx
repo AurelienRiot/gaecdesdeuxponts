@@ -11,7 +11,7 @@ const Footer = () => {
           </p>
         </div>
         <nav>
-          <ul className="flex flex-col justify-center gap-6 pb-6 pt-2 text-center text-muted-foreground sm:flex-row ">
+          <ul className="flex flex-col justify-center gap-6 pb-6 pt-2 text-center sm:flex-row ">
             <li>
               <Link
                 href="/mention-legal"

@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-const { fontFamily } = require("tailwindcss/defaultTheme");
+import { fontFamily } from "tailwindcss/defaultTheme";
 
 module.exports = {
   darkMode: ["class"],
@@ -16,6 +16,9 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
+        mono: ["var(--font-mono)", ...fontFamily.mono],
+        serif: ["var(--font-serif)", ...fontFamily.serif],
+        display: ["var(--font-display)"],
       },
       boxShadow: {
         "2xl":

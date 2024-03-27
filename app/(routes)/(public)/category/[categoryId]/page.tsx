@@ -2,6 +2,7 @@ import NotFound from "@/app/not-found";
 import Billboard from "@/components/billboard/billboard";
 import ProductCart from "@/components/product-cart";
 import Container from "@/components/ui/container";
+import NoResults from "@/components/ui/no-results";
 import prismadb from "@/lib/prismadb";
 import { Metadata } from "next";
 
@@ -26,32 +27,39 @@ export async function generateMetadata({
 }
 
 const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
-  const products = await prismadb.product.findMany({
+  const category = await prismadb.category.findUnique({
     where: {
-      categoryId: params.categoryId,
-      isArchived: false,
-      isPro: false,
+      id: params.categoryId,
     },
     include: {
-      category: true,
-      images: { orderBy: { createdAt: "asc" } },
+      products: {
+        where: { isArchived: false, isPro: false },
+        include: { images: { orderBy: { createdAt: "asc" } } },
+      },
     },
   });
-
-  if (products.length === 0) {
+  if (!category) {
     return <NotFound />;
   }
+  const { products, ...categoryWithoutProducts } = category;
 
   return (
     <Container>
-      <Billboard categoryId={params.categoryId} />
+      <Billboard category={categoryWithoutProducts} />
       <div className="px-4 pb-24 sm:px-6 lg:px-8">
         <div className="lg-gap-x-8 lg:grid lg:grid-cols-5">
           <div className="mt-6 lg:col-span-4 lg:mt-0">
             <div className="md:grid-clos-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-              {products.map((item) => (
-                <ProductCart key={item.id} data={item} />
-              ))}
+              {products.length > 0 ? (
+                products.map((item) => (
+                  <ProductCart
+                    key={item.id}
+                    data={{ ...item, category: categoryWithoutProducts }}
+                  />
+                ))
+              ) : (
+                <NoResults />
+              )}
             </div>
           </div>
         </div>

@@ -1,18 +1,15 @@
 "use client";
 import ImageLoaderBillboard from "@/components/billboard/image-loader-billboard";
-import { useCategories } from "@/hooks/use-categories";
+import { Category } from "@prisma/client";
 import { useEffect, useState } from "react";
 import BillboardSkeleton from "../skeleton-ui/billboard-skeleton";
 
 interface BillboardProps {
-  categoryId: string;
+  category: Category;
 }
 
-const Billboard: React.FC<BillboardProps> = ({ categoryId }) => {
-  const categories = useCategories((s) => s.categories);
+const Billboard: React.FC<BillboardProps> = ({ category }) => {
   const [isMounted, setIsMounted] = useState(false);
-
-  const category = categories.find((category) => category.id === categoryId);
 
   useEffect(() => {
     setIsMounted(true);

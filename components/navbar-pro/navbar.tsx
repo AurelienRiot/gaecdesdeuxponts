@@ -1,14 +1,15 @@
 "use client";
 import MainNav from "./main-nav";
-import NavbarAction from "./navbar-actions";
+import NavbarAction from "../navbar-public/navbar-actions";
 import Container from "@/components/ui/container";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import MobileNav from "./mobile-nav";
+import { Category } from "@prisma/client";
 
-const NavBar = () => {
+const NavBar = ({ categories }: { categories: Promise<Category[]> }) => {
   const [navState, setNavState] = useState<"open" | "close">("open");
   const { scrollY } = useScroll();
 
@@ -48,9 +49,9 @@ const NavBar = () => {
                     </p> */}
           </Link>
           <div className="hidden lg:flex lg:items-center">
-            <MainNav />
+            <MainNav categories={categories} />
           </div>
-          <MobileNav className="ml-2 lg:hidden" />
+          <MobileNav className="ml-2 lg:hidden" categories={categories} />
         </div>
 
         <NavbarAction />

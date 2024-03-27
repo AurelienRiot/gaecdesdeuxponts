@@ -153,7 +153,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   });
 
   const onSubmit = async (data: ProductFormValues) => {
-    console.log(data);
     if (selectedFiles.length === 0) {
       toast.error("Veuillez ajouter au moins une image");
       return;

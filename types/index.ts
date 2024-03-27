@@ -33,6 +33,9 @@ export interface DataTableViewOptionsColumn<TData> {
   title: string;
 }
 
+export type ProductWithImages = Product & {
+  images: Image[];
+};
 export type ProductWithCategoryAndImages = Product & {
   images: Image[];
   category: Category;

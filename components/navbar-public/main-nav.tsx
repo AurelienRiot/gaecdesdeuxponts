@@ -7,8 +7,8 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { useCategories } from "@/hooks/use-categories";
 import { cn } from "@/lib/utils";
+import { Category } from "@prisma/client";
 import {
   ChevronDown,
   HelpCircle,
@@ -18,26 +18,28 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { use, useState } from "react";
 import { BiPhotoAlbum } from "react-icons/bi";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { useState } from "react";
 
-const MainNav = () => {
+const MainNav = ({
+  className,
+  categories,
+}: {
+  className?: string;
+  categories: Promise<Category[]>;
+}) => {
   const pathname = usePathname();
-  const categories = useCategories((s) => s.categories);
   const [open, setOpen] = useState(false);
 
   const routes = publicRoutes(pathname);
-
-  const CategoriesRoutes = categories.map((route) => ({
-    href: `/category/${route.id}`,
-    label: route.name,
-    active: pathname.startsWith(`/category/${route.id}`),
-  }));
+  const CategoriesRoutes = use(categories);
 
   return (
-    <nav className="mx-6 flex items-center space-x-4 lg:space-x-6 ">
+    <nav
+      className={cn("mx-6  items-center space-x-4 lg:space-x-6 ", className)}
+    >
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem className="rounded-lg border border-border ">
@@ -59,21 +61,28 @@ const MainNav = () => {
                 align="start"
                 className="flex flex-col "
               >
-                {CategoriesRoutes.map(({ href, label, active }) => (
-                  <Button
-                    asChild
-                    key={href}
-                    variant={"link"}
-                    className={cn(
-                      "w-full justify-start",
-                      active && " bg-primary text-primary-foreground",
-                    )}
-                  >
-                    <Link onClick={() => setOpen(false)} href={href}>
-                      {label}
-                    </Link>
-                  </Button>
-                ))}
+                {CategoriesRoutes.map((category) => {
+                  const href = `/category/${category.id}`;
+                  const label = category.name;
+                  const active = pathname.startsWith(
+                    `/category/${category.id}`,
+                  );
+                  return (
+                    <Button
+                      asChild
+                      key={href}
+                      variant={"link"}
+                      className={cn(
+                        "w-full justify-start",
+                        active && " bg-primary text-primary-foreground",
+                      )}
+                    >
+                      <Link onClick={() => setOpen(false)} href={href}>
+                        {label}{" "}
+                      </Link>
+                    </Button>
+                  );
+                })}
               </PopoverContent>
             </Popover>
           </NavigationMenuItem>

@@ -56,7 +56,6 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
     product.linkedBy,
     product.linkedProducts,
   );
-  console.log(linkProducts);
 
   const excludeIds = linkProducts.map((product) => product.id);
   excludeIds.push(product.id);

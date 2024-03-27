@@ -16,28 +16,29 @@ import { cn } from "@/lib/utils";
 import { Check, ChevronDown, StoreIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { use, useState } from "react";
 
-import { useCategories } from "@/hooks/use-categories";
+import { Category } from "@prisma/client";
 import { publicRoutes } from "./main-nav";
 
-type MobileNavProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
+type MobileNavProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger> & {
+  categories: Promise<Category[]>;
+};
 
-export default function MobileNav({ className, ...props }: MobileNavProps) {
+export default function MobileNav({
+  className,
+  categories,
+  ...props
+}: MobileNavProps) {
   const pathname = usePathname();
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const [openProduct, setOpenProduct] = useState(false);
-  const categories = useCategories((s) => s.categories);
 
   const routes = publicRoutes(pathname);
 
-  const CategoriesRoutes = categories.map((route) => ({
-    href: `/category/${route.id}`,
-    label: route.name,
-    active: pathname.startsWith(`/category/${route.id}`),
-  }));
+  const CategoriesRoutes = use(categories);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -123,22 +124,29 @@ export default function MobileNav({ className, ...props }: MobileNavProps) {
                     align="start"
                     className="z-50 w-[200px]"
                   >
-                    {CategoriesRoutes.map(({ href, label, active }) => (
-                      <Button asChild key={href} variant={"link"}>
-                        <Link
-                          href={href}
-                          className={cn(
-                            active && "bg-primary text-primary-foreground",
-                          )}
-                          onClick={() => {
-                            setOpenProduct(false);
-                            setOpen(false);
-                          }}
-                        >
-                          {label}
-                        </Link>
-                      </Button>
-                    ))}
+                    {CategoriesRoutes.map((category) => {
+                      const href = `/category/${category.id}`;
+                      const label = category.name;
+                      const active = pathname.startsWith(
+                        `/category/${category.id}`,
+                      );
+                      return (
+                        <Button asChild key={href} variant={"link"}>
+                          <Link
+                            href={href}
+                            className={cn(
+                              active && "bg-primary text-primary-foreground",
+                            )}
+                            onClick={() => {
+                              setOpenProduct(false);
+                              setOpen(false);
+                            }}
+                          >
+                            {label}
+                          </Link>
+                        </Button>
+                      );
+                    })}
                   </PopoverContent>
                 </Popover>
               </CommandItem>

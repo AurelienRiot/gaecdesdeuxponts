@@ -36,7 +36,7 @@ export const LoginButton = (
     >
       <Link href={"/login"} {...props}>
         {" "}
-        <LogIn className="h-6 w-6 transition-all duration-300 " />{" "}
+        <LogIn className="h-6 w-6 transition-all " />{" "}
       </Link>
     </Button>
   );

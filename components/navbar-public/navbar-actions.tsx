@@ -25,7 +25,7 @@ const NavbarAction = () => {
   const session = useSession();
 
   return (
-    <div className="ml-4 flex items-center gap-x-2 sm:gap-x-4 ">
+    <div className="ml-4 flex items-center gap-x-2 py-2 sm:gap-x-4">
       {session.status !== "loading" ? (
         <AuthNavButton session={session} />
       ) : null}
@@ -48,7 +48,7 @@ const AuthNavButton = ({
           href={
             session.data?.user.role === "admin" ? "/admin" : "/dashboard-user"
           }
-          className="group flex items-center justify-center rounded-full border bg-primary p-2 text-primary-foreground shadow-md transition hover:rounded-full hover:bg-accent hover:text-accent-foreground"
+          className="dark:border-1 group flex items-center justify-center  rounded-full bg-background p-2 text-primary-foreground shadow-md transition  hover:rounded-full dark:border dark:border-foreground"
         >
           {!session.data.user.image ? (
             <User2 className="h-6 w-6 duration-300 ease-linear group-hover:scale-150 " />
@@ -71,7 +71,7 @@ const AuthNavButton = ({
 
 export default NavbarAction;
 
-const CartButton = () => {
+export const CartButton = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -89,10 +89,12 @@ const CartButton = () => {
     return (
       <Button
         variant={"rounded"}
-        className="bg-primary-foreground text-primary"
+        className="relative bg-primary-foreground px-3	 text-primary shadow-md"
       >
         <ShoppingBag size={20} />
-        <span className="ml-1 w-3 text-sm font-medium ">0</span>
+        <span className="absolute -right-2 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs tabular-nums text-primary-foreground shadow-md">
+          0
+        </span>
       </Button>
     );
   }
@@ -101,10 +103,12 @@ const CartButton = () => {
       <SheetTrigger asChild>
         <Button
           variant={"rounded"}
-          className="bg-primary-foreground tabular-nums text-primary	"
+          className="relative border-0 	bg-primary-foreground px-3  text-primary shadow-md   "
         >
           <ShoppingBag size={20} />
-          <span className="ml-1 w-3 text-sm font-medium ">{totalQuantity}</span>
+          <span className="absolute -right-2 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs tabular-nums text-primary-foreground shadow-md">
+            {totalQuantity}
+          </span>
         </Button>
       </SheetTrigger>
       <SheetContent className="overflow-y-auto">

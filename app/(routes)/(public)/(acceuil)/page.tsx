@@ -10,8 +10,8 @@ export default function Home() {
       <ImageAccueil />
       <Container>
         {" "}
-        <div className=" mt-12 flex   flex-col items-center gap-4 rounded-xl bg-transparent p-6 font-bold text-primary backdrop-blur-md ">
-          <h1 className="text-5xl md:text-7xl">Bienvenue</h1>
+        <div className=" mt-12 flex   flex-col items-center gap-4 rounded-xl bg-transparent p-6 font-bold text-primary ">
+          <h1 className="text-5xl  md:text-7xl">Bienvenue</h1>
           <p className="text-2xl sm:text-3xl md:text-5xl">sur le</p>
           <p className="text-2xl sm:text-3xl md:text-5xl">
             GAEC des Deux Ponts
