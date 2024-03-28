@@ -25,7 +25,7 @@ const Currency: React.FC<CurrencyProps> = ({ value, className }) => {
   return (
     <span
       className={cn(
-        `inline   items-center font-semibold tabular-nums text-primary `,
+        `inline   items-center font-sans font-medium tabular-nums text-primary `,
         className,
       )}
     >

@@ -214,10 +214,7 @@ export const ContactForm = ({
               )}
             />
           </div>
-          <LoadingButton
-            disabled={form.formState.isSubmitting}
-            variant={"shadow"}
-          >
+          <LoadingButton disabled={form.formState.isSubmitting}>
             {action}
           </LoadingButton>
         </form>

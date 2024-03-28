@@ -54,10 +54,7 @@ export const TypewriterEffect = ({
                 <motion.span
                   initial={{}}
                   key={`char-${index}`}
-                  className={cn(
-                    `hidden text-black opacity-0 dark:text-white`,
-                    word.className,
-                  )}
+                  className={cn(`hidden opacity-0 `, word.className)}
                 >
                   {char}
                 </motion.span>
@@ -70,12 +67,7 @@ export const TypewriterEffect = ({
     );
   };
   return (
-    <div
-      className={cn(
-        "text-center text-base font-bold sm:text-xl md:text-3xl lg:text-5xl",
-        className,
-      )}
-    >
+    <div className={className}>
       {renderWords()}
       <motion.span
         initial={{
@@ -121,63 +113,61 @@ export const TypewriterEffectSmooth = ({
     return (
       <div>
         {wordsArray.map((word, idx) => {
+          const cumulativeLengthBeforeCurrentWord = wordsArray
+            .slice(0, idx)
+            .reduce((acc, currentWord) => acc + currentWord.text.length, 0);
           return (
-            <div key={`word-${idx}`} className="inline-block">
-              {word.text.map((char, index) => (
-                <span key={`char-${index}`} className={cn(``, word.className)}>
-                  {char}
-                </span>
-              ))}
+            <div key={`word-${idx}`} className="inline-block ">
+              {word.text.map((char, index) => {
+                const delay =
+                  0.05 * (cumulativeLengthBeforeCurrentWord + index);
+
+                return (
+                  <motion.span
+                    initial={{
+                      opacity: "0",
+                    }}
+                    whileInView={{ opacity: "100" }}
+                    transition={{
+                      duration: 0.25,
+                      ease: "linear",
+                      delay: delay,
+                    }}
+                    key={`char-${index}`}
+                    className={cn(` overflow-hidden `, word.className)}
+                  >
+                    {char}
+                  </motion.span>
+                );
+              })}
               &nbsp;
             </div>
           );
         })}
+        {/* <motion.span
+          initial={{
+            opacity: 0,
+          }}
+          animate={{
+            opacity: 1,
+          }}
+          transition={{
+            duration: 0.5,
+            repeat: Infinity,
+            repeatType: "reverse",
+          }}
+          className={cn(
+            "inline-block h-6 w-0.5 rounded-sm bg-blue-500 sm:h-12",
+            cursorClassName,
+          )}
+        ></motion.span> */}
       </div>
     );
   };
 
   return (
     <div className={cn("my-6 flex space-x-1", className)}>
-      <motion.div
-        className="overflow-hidden pb-2"
-        initial={{
-          width: "0%",
-        }}
-        whileInView={{
-          width: "fit-content",
-        }}
-        transition={{
-          duration: 2,
-          ease: "linear",
-          delay: 1,
-        }}
-      >
-        <div
-          style={{
-            whiteSpace: "nowrap",
-          }}
-        >
-          {renderWords()}{" "}
-        </div>{" "}
-      </motion.div>
-      <motion.span
-        initial={{
-          opacity: 0,
-        }}
-        animate={{
-          opacity: 1,
-        }}
-        transition={{
-          duration: 0.8,
-
-          repeat: Infinity,
-          repeatType: "reverse",
-        }}
-        className={cn(
-          "block h-4 w-[4px]  rounded-sm bg-blue-500 sm:h-6 xl:h-12",
-          cursorClassName,
-        )}
-      ></motion.span>
+      <div>{renderWords()} </div>{" "}
     </div>
   );
 };

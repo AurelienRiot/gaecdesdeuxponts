@@ -1,40 +1,20 @@
 "use client";
 
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+import { useCategoriesContext } from "@/context/categories-context";
 import { cn } from "@/lib/utils";
-import { Category } from "@prisma/client";
-import {
-  ChevronDown,
-  HelpCircle,
-  Map,
-  PhoneCall,
-  StoreIcon,
-} from "lucide-react";
+import { ChevronDown, Map, PhoneCall, StoreIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { use, useState } from "react";
-import { BiPhotoAlbum } from "react-icons/bi";
+import { useState } from "react";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
-const MainNav = ({
-  className,
-  categories,
-}: {
-  className?: string;
-  categories: Promise<Category[]>;
-}) => {
+const MainNav = ({ className }: { className?: string }) => {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   const routes = publicRoutes(pathname);
-  const CategoriesRoutes = use(categories);
+  const { categories } = useCategoriesContext();
 
   return (
     <nav
@@ -47,7 +27,7 @@ const MainNav = ({
           <ChevronDown className="ml-2 h-4 w-4" />
         </PopoverTrigger>
         <PopoverContent side="bottom" align="start" className="flex flex-col ">
-          {CategoriesRoutes.map((category) => {
+          {categories.map((category) => {
             const href = `/category/${category.id}`;
             const label = category.name;
             const active = pathname.startsWith(`/category/${category.id}`);

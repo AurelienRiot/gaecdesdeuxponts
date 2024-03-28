@@ -16,29 +16,22 @@ import { cn } from "@/lib/utils";
 import { Check, ChevronDown, StoreIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { use, useState } from "react";
+import { useState } from "react";
 
-import { Category } from "@prisma/client";
+import { useCategoriesContext } from "@/context/categories-context";
 import { proRoutes } from "./main-nav";
 
-type MobileNavProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger> & {
-  categories: Promise<Category[]>;
-};
+type MobileNavProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
-export default function MobileNav({
-  className,
-  categories,
-  ...props
-}: MobileNavProps) {
+export default function MobileNav({ className, ...props }: MobileNavProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const { categories } = useCategoriesContext();
 
   const [open, setOpen] = useState(false);
   const [openProduct, setOpenProduct] = useState(false);
 
   const routes = proRoutes(pathname);
-
-  const CategoriesRoutes = use(categories);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -124,7 +117,7 @@ export default function MobileNav({
                     align="start"
                     className="z-50 w-[200px]"
                   >
-                    {CategoriesRoutes.map((category) => {
+                    {categories.map((category) => {
                       const href = `/category/${category.id}`;
                       const label = category.name;
                       const active = pathname.startsWith(

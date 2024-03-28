@@ -2,18 +2,18 @@
 
 import Currency from "@/components/ui/currency";
 import IconButton from "@/components/ui/icon-button";
+import { useCategoriesContext } from "@/context/categories-context";
 import useCart from "@/hooks/use-cart";
-import { ProductWithCategoryAndImages } from "@/types";
+import { ProductWithImages } from "@/types";
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { MouseEventHandler } from "react";
 import { FaInfo } from "react-icons/fa";
-import { VisibleElement } from "./animations/visible-element";
 
 interface ProductCartProps {
-  data: ProductWithCategoryAndImages;
+  data: ProductWithImages;
   url?: string;
 }
 
@@ -23,6 +23,10 @@ const ProductCart: React.FC<ProductCartProps> = ({
 }) => {
   const router = useRouter();
   const cart = useCart();
+  const category = useCategoriesContext().categories.find(
+    (c) => c.id === data.categoryId,
+  );
+  if (!category) return null;
 
   const value = data.price;
 
@@ -33,7 +37,7 @@ const ProductCart: React.FC<ProductCartProps> = ({
   const onAddToCart: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.stopPropagation();
 
-    cart.addItem(data);
+    cart.addItem({ ...data, category: category });
   };
 
   return (
@@ -41,7 +45,7 @@ const ProductCart: React.FC<ProductCartProps> = ({
       whileHover={{ scale: 1.05 }}
       className="group m-2 cursor-pointer space-y-4 rounded-xl border bg-secondary p-3 "
     >
-      <VisibleElement
+      <div
         onClick={handleClick}
         className="relative aspect-square rounded-xl bg-white before:absolute before:inset-0 before:z-10 before:rounded-xl before:bg-black/20 before:opacity-0 before:duration-300 before:ease-linear before:animate-in group-hover:before:opacity-100 "
       >
@@ -67,12 +71,10 @@ const ProductCart: React.FC<ProductCartProps> = ({
             />
           </div>
         </div>
-      </VisibleElement>
+      </div>
       <div onClick={handleClick}>
         <p className="text-lg font-semibold text-primary">{data.name}</p>
-        <p className="text-sm text-secondary-foreground">
-          {data.category.name}
-        </p>
+        <p className="text-sm text-secondary-foreground">{category.name}</p>
       </div>
       <div className="flex items-center justify-between text-primary">
         <Currency value={value} />

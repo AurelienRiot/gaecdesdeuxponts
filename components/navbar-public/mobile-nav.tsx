@@ -2,7 +2,6 @@
 import { Button } from "@/components/ui/button";
 import {
   Command,
-  CommandGroup,
   CommandItem,
   CommandList,
   CommandSeparator,
@@ -16,21 +15,15 @@ import { cn } from "@/lib/utils";
 import { Check, ChevronDown, StoreIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { use, useState } from "react";
+import { useState } from "react";
 
-import { Category } from "@prisma/client";
-import { publicRoutes } from "./main-nav";
+import { useCategoriesContext } from "@/context/categories-context";
 import Image from "next/image";
+import { publicRoutes } from "./main-nav";
 
-type MobileNavProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger> & {
-  categories: Promise<Category[]>;
-};
+type MobileNavProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
-export default function MobileNav({
-  className,
-  categories,
-  ...props
-}: MobileNavProps) {
+export default function MobileNav({ className, ...props }: MobileNavProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -39,7 +32,7 @@ export default function MobileNav({
 
   const routes = publicRoutes(pathname);
 
-  const CategoriesRoutes = use(categories);
+  const { categories } = useCategoriesContext();
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -97,7 +90,7 @@ export default function MobileNav({
           </svg>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="h-auto w-[50vw] min-w-[400px] ">
+      <PopoverContent className="h-auto w-[400px]  max-w-[100vw] ">
         <Command>
           <CommandList className="">
             <CommandItem
@@ -119,7 +112,7 @@ export default function MobileNav({
                 Laiterie du Pont Robert
               </p>
             </CommandItem>
-            <CommandSeparator className="sm:hidden" />
+            <CommandSeparator className="mb-2 sm:hidden" />
             <CommandItem>
               <Popover open={openProduct} onOpenChange={setOpenProduct}>
                 <PopoverTrigger asChild>
@@ -144,7 +137,7 @@ export default function MobileNav({
                   align="start"
                   className="z-50 w-[200px]"
                 >
-                  {CategoriesRoutes.map((category) => {
+                  {categories.map((category) => {
                     const href = `/category/${category.id}`;
                     const label = category.name;
                     const active = pathname.startsWith(

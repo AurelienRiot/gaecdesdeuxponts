@@ -1,5 +1,6 @@
 import Footer from "@/components/footer";
 import NavBar from "@/components/navbar-public/navbar";
+import { CategoriesProvider } from "@/context/categories-context";
 import prismadb from "@/lib/prismadb";
 
 export default async function PublicLayout({
@@ -7,7 +8,7 @@ export default async function PublicLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const categories = prismadb.category.findMany({
+  const categories = await prismadb.category.findMany({
     where: {
       products: {
         some: { isPro: false, isArchived: false },
@@ -16,10 +17,10 @@ export default async function PublicLayout({
   });
 
   return (
-    <>
-      <NavBar categories={categories} />
+    <CategoriesProvider cat={categories}>
+      <NavBar />
       <main className="pt-16 ">{children}</main>
       <Footer />
-    </>
+    </CategoriesProvider>
   );
 }

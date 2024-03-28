@@ -18,45 +18,26 @@ export const metadata = {
 const ContactPage = () => {
   return (
     <Container className="px-4 py-5">
-      <div className="mx-auto max-w-3xl">
-        <div className="mb-8 text-center">
-          <h1 className="mb-4 text-5xl font-bold text-primary">
-            Contactez-nous
-          </h1>
-          <p>
-            Nous sommes là pour répondre à toutes vos questions sur notre lait
-            cru et nos pratiques à la ferme.
-          </p>
-        </div>
-
-        <div className="mt-8">
-          <div className="mb-4 flex items-center gap-6">
-            <h2 className="text-xl font-semibold text-secondary">Adresse :</h2>
-            <p>6 B le Pont Robert 44290 MASSERAC</p>
-          </div>
-          <div className="mb-4 flex items-center gap-6">
-            <h2 className="text-xl font-semibold text-secondary">
-              Téléphone :
-            </h2>
-            <p>06 72 06 45 55</p>
-          </div>
-          <div className="mb-4 flex items-center gap-6">
-            <h2 className="text-xl font-semibold text-secondary">Email :</h2>
-            <Link href="mailto:contact@riottech.fr">
-              gaecdesdeuxponts@gmail.com
-            </Link>
-          </div>
-          <div className="mb-4 flex items-center gap-6">
-            <h2 className="text-xl font-semibold text-secondary">
-              {"Heures d'ouverture :"}
-            </h2>
-            <p>Du lundi au vendredi: 9h00 - 17h00</p>
-          </div>
-        </div>
+      <div className="mb-8 text-center">
+        <h1 className="mb-4 text-5xl font-bold text-primary">Contactez-nous</h1>
+        <p>
+          Nous sommes là pour répondre à toutes vos questions sur notre lait cru
+          et nos pratiques à la ferme.
+        </p>
       </div>
+
       <Suspense fallback={<ContactFormLoading />}>
         <Form />
       </Suspense>
+
+      <div className="mt-8">
+        <p>6 B le Pont Robert 44290 MASSERAC</p>
+        <p>06 72 06 45 55</p>
+        <Link href="mailto:contact@riottech.fr">
+          gaecdesdeuxponts@gmail.com
+        </Link>
+        <p>Du lundi au vendredi: 9h00 - 17h00</p>
+      </div>
     </Container>
   );
 };

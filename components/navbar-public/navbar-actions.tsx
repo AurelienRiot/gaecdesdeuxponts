@@ -66,6 +66,18 @@ const AuthNavButton = ({
 
 export default NavbarAction;
 
+const CartIcon = ({ qty }: { qty: number }) => (
+  <Button
+    variant={"rounded"}
+    className="relative bg-background px-3	 text-foreground "
+  >
+    <ShoppingCart size={20} />
+    <span className="absolute -right-2 -top-1  flex h-5  w-5 items-center justify-center rounded-full bg-foreground font-sans text-xs tabular-nums text-background shadow-md">
+      {qty}
+    </span>
+  </Button>
+);
+
 export const CartButton = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -81,30 +93,12 @@ export const CartButton = () => {
   }, 0);
 
   if (!isMounted) {
-    return (
-      <Button
-        variant={"rounded"}
-        className="relative bg-background px-3	 text-foreground "
-      >
-        <ShoppingCart size={20} />
-        <span className="absolute -right-2 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-xs tabular-nums text-background shadow-md">
-          0
-        </span>
-      </Button>
-    );
+    return <CartIcon qty={0} />;
   }
   return (
     <Sheet onOpenChange={setIsOpen} open={isOpen}>
       <SheetTrigger asChild>
-        <Button
-          variant={"rounded"}
-          className="relative bg-background px-3	 text-foreground  "
-        >
-          <ShoppingCart size={20} />
-          <span className="absolute -right-2 -top-1 flex h-5 w-5 justify-center rounded-full bg-foreground text-xs tabular-nums text-background shadow-md">
-            {totalQuantity}
-          </span>
-        </Button>
+        <CartIcon qty={totalQuantity} />
       </SheetTrigger>
       <SheetContent className="overflow-y-auto">
         <SheetHeader>

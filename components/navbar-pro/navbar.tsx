@@ -9,7 +9,7 @@ import { useState } from "react";
 import MobileNav from "./mobile-nav";
 import { Category } from "@prisma/client";
 
-const NavBar = ({ categories }: { categories: Promise<Category[]> }) => {
+const NavBar = () => {
   const [navState, setNavState] = useState<"open" | "close">("open");
   const { scrollY } = useScroll();
 
@@ -49,9 +49,9 @@ const NavBar = ({ categories }: { categories: Promise<Category[]> }) => {
                     </p> */}
           </Link>
           <div className="hidden lg:flex lg:items-center">
-            <MainNav categories={categories} />
+            <MainNav />
           </div>
-          <MobileNav className="ml-2 lg:hidden" categories={categories} />
+          <MobileNav className="ml-2 lg:hidden" />
         </div>
 
         <NavbarAction />

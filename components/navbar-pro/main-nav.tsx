@@ -7,23 +7,23 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { useCategoriesContext } from "@/context/categories-context";
 import { cn } from "@/lib/utils";
-import { Category } from "@prisma/client";
 import { ChevronDown, Map, PhoneCall, StoreIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { use, useState } from "react";
+import { useState } from "react";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
-const MainNav = ({ categories }: { categories: Promise<Category[]> }) => {
+const MainNav = () => {
   const pathname = usePathname();
 
   const [open, setOpen] = useState(false);
 
   const routes = proRoutes(pathname);
 
-  const CategoriesRoutes = use(categories);
+  const { categories } = useCategoriesContext();
 
   return (
     <nav className="mx-6 flex items-center space-x-4 lg:space-x-6 ">
@@ -48,7 +48,7 @@ const MainNav = ({ categories }: { categories: Promise<Category[]> }) => {
                 align="start"
                 className="flex flex-col "
               >
-                {CategoriesRoutes.map((category) => {
+                {categories.map((category) => {
                   const href = `/category/${category.id}`;
                   const label = category.name;
                   const active = pathname.startsWith(

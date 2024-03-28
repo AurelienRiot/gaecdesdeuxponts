@@ -27,35 +27,29 @@ export async function generateMetadata({
 }
 
 const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
-  const category = await prismadb.category.findUnique({
+  const products = await prismadb.product.findMany({
     where: {
-      id: params.categoryId,
+      categoryId: params.categoryId,
+      isArchived: false,
+      isPro: false,
     },
-    include: {
-      products: {
-        where: { isArchived: false, isPro: false },
-        include: { images: { orderBy: { createdAt: "asc" } } },
-      },
-    },
+
+    include: { images: { orderBy: { createdAt: "asc" } } },
   });
-  if (!category) {
+  if (products.length === 0) {
     return <NotFound />;
   }
-  const { products, ...categoryWithoutProducts } = category;
 
   return (
     <Container>
-      <Billboard category={categoryWithoutProducts} />
+      <Billboard categoryId={params.categoryId} />
       <div className="px-4 pb-24 sm:px-6 lg:px-8">
         <div className="lg-gap-x-8 lg:grid lg:grid-cols-5">
           <div className="mt-6 lg:col-span-4 lg:mt-0">
             <div className="md:grid-clos-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
               {products.length > 0 ? (
                 products.map((item) => (
-                  <ProductCart
-                    key={item.id}
-                    data={{ ...item, category: categoryWithoutProducts }}
-                  />
+                  <ProductCart key={item.id} data={item} />
                 ))
               ) : (
                 <NoResults />
