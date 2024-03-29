@@ -128,7 +128,7 @@ function NameWithImageCell<T>({
             />
           </span>
         ) : null}
-        <span>{row.getValue("name")}</span>
+        <span className="whitespace-nowrap">{row.getValue("name")}</span>
       </Link>
     </Button>
   );

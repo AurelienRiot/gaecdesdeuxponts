@@ -30,7 +30,7 @@ function ProductCell<T>({ row }: { row: Row<ProductCellProps<T>> }) {
   return (
     <div className="flex flex-col gap-[1px]">
       {row.original.productsList.map((product) => (
-        <span key={product.name}>
+        <span className="whitespace-nowrap" key={product.name}>
           <strong>{product.name}</strong>
           {product.quantity}
         </span>

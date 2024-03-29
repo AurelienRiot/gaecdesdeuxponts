@@ -5,6 +5,7 @@ import { DataTable } from "@/components/ui/data-table/data-table";
 import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { toast } from "sonner";
@@ -15,7 +16,6 @@ import {
   searchableColumns,
   viewOptionsColumns,
 } from "./columns";
-import { getOrders } from "./server-action";
 
 interface OrderClientProps {
   initialData: OrderColumn[];
@@ -31,16 +31,22 @@ export const OrderClient: React.FC<OrderClientProps> = ({
     initialDateRange,
   );
   const [loading, setLoading] = useState(false);
+  const pathName = usePathname();
+  const router = useRouter();
 
   const handleChangeDate = async () => {
     setLoading(true);
-    const result = await getOrders(dateRange);
-    if (!result.success) {
-      toast.error(result.message);
+    if (!dateRange?.from || !dateRange?.to) {
       setLoading(false);
+      toast.error("Veuillez choisir une date");
       return;
     }
-    setData(result.data);
+    const queryParams = new URLSearchParams({
+      from: dateRange.from.toISOString(),
+      to: dateRange.to.toISOString(),
+    }).toString();
+    router.push(`${pathName}?${queryParams}`);
+
     setLoading(false);
   };
 

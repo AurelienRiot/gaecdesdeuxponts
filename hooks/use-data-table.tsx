@@ -45,7 +45,7 @@ export function useDataTable<TData, TValue>({
     },
     enableRowSelection: true,
     initialState: {
-      pagination: { pageSize: 5 },
+      pagination: { pageSize: 10 },
     },
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,

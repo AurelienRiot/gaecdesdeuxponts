@@ -5,9 +5,18 @@ import { formatOrders } from "./components/format-orders";
 
 export const dynamic = "force-dynamic";
 
-const OrdersPage = async () => {
-  const from = new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000);
-  const to = new Date();
+const OrdersPage = async (context: {
+  searchParams: { from: string | undefined; to: string | undefined };
+}) => {
+  let from: Date;
+  let to: Date;
+  if (context.searchParams.from && context.searchParams.to) {
+    from = new Date(context.searchParams.from);
+    to = new Date(context.searchParams.to);
+  } else {
+    from = new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000);
+    to = new Date();
+  }
 
   const dateRange: DateRange = {
     from: from,
