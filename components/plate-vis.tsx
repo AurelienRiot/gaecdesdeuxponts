@@ -13,7 +13,7 @@ export const PlateVis = ({
   return (
     <Plate initialValue={JSON.parse(value)} plugins={plugins}>
       <Editor
-        className={cn("p-4 cursor-default bg-white ", className)}
+        className={cn("cursor-default bg-background p-4 ", className)}
         autoFocus
         focusRing={false}
         variant="ghost"

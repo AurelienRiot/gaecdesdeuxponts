@@ -1,6 +1,7 @@
 "use client";
 import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
 import Image from "next/image";
+import { ConicGradientBorder } from "../page";
 
 const ImageV2 = () => {
   const words = [

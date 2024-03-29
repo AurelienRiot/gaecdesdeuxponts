@@ -7,6 +7,7 @@ import Link from "next/link";
 import { use, useState } from "react";
 import MobileNav from "./mobile-nav";
 import { Category } from "@prisma/client";
+import { usePathname } from "next/navigation";
 
 const NavBar = () => {
   // const [navState, setNavState] = useState<"open" | "close">("open");

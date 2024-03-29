@@ -195,6 +195,14 @@ module.exports = {
           from: { backgroundPosition: "200% 0" },
           to: { backgroundPosition: "-200% 0" },
         },
+        aurora: {
+          from: {
+            backgroundPosition: "50% 50%, 50% 50%",
+          },
+          to: {
+            backgroundPosition: "350% 50%, 350% 50%",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -213,6 +221,8 @@ module.exports = {
         blob: "blob 15s linear infinite",
 
         shine: "shine 10s ease-out infinite",
+
+        aurora: "aurora 60s linear infinite",
       },
     },
   },

@@ -8,12 +8,12 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
+    --background: 0 0% 98%;
+    --foreground: 0 0% 9%;
+    --card: 0 0% 98%;
+    --card-foreground: 0 0% 9%;
+    --popover: 0 0% 98%;
+    --popover-foreground: 0 0% 9%;
     --primary: 240 5.9% 10%;
     --primary-foreground: 0 0% 98%;
     --secondary: 240 4.8% 95.9%;
@@ -31,11 +31,11 @@
   }
 
   .dark {
-    --background: 240 10% 3.9%;
+    --background: 0 0% 9%;
     --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
+    --card: 0 0% 9%;
     --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
+    --popover: 0 0% 9%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
     --primary-foreground: 240 5.9% 10%;
@@ -69,6 +69,29 @@
   .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  .blue-check-list {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .blue-check-list li::before {
+    content: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxNCAxMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBmaWxsPSIjMzhiZGY4Ij48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMy42ODUuMTUzYS43NTIuNzUyIDAgMCAxIC4xNDMgMS4wNTJsLTggMTAuNWEuNzUuNzUgMCAwIDEtMS4xMjcuMDc1bC00LjUtNC41YS43NS43NSAwIDAgMSAxLjA2LTEuMDZsMy44OTQgMy44OTMgNy40OC05LjgxN2EuNzUuNzUgMCAwIDEgMS4wNS0uMTQzWiIgLz48L3N2Zz4=");
+    display: inline-block;
+    margin-right: 8px;
+  }
+
+  .mask-with-browser-support {
+    -webkit-mask: linear-gradient(#000, #000), linear-gradient(#000, #000);
+    mask: linear-gradient(#000, #000), linear-gradient(#000, #000);
+    mask-clip: content-box, border-box;
+    mask-composite: exclude;
+    -webkit-mask:
+      linear-gradient(#000, #000) content-box,
+      linear-gradient(#000, #000);
+    -webkit-mask-clip: content-box, border-box;
+    -webkit-mask-composite: xor;
   }
 }
 

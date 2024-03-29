@@ -14,6 +14,7 @@ const Footer = () => {
           <ul className="flex flex-col justify-center gap-6 pb-6 pt-2 text-center sm:flex-row ">
             <li>
               <Link
+                prefetch={false}
                 href="/mention-legal"
                 className="text-sm font-medium hover:text-primary hover:underline"
               >
@@ -22,6 +23,7 @@ const Footer = () => {
             </li>
             <li>
               <Link
+                prefetch={false}
                 href="/pdf/Politique-de-confidentialite.pdf"
                 className="text-sm font-medium hover:text-primary hover:underline"
                 target="_blank"
@@ -31,6 +33,7 @@ const Footer = () => {
             </li>
             <li>
               <Link
+                prefetch={false}
                 href="/conditions-generales-de-vente"
                 className="text-sm font-medium hover:text-primary hover:underline"
               >

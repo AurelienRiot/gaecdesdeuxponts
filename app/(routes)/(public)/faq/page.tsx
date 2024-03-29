@@ -1,3 +1,4 @@
+"use client";
 import {
   Accordion,
   AccordionContent,
@@ -102,6 +103,7 @@ const FAQPage = () => {
           </p>
         </div>
       </div>
+
       <Accordion type="single" collapsible className="mt-8 w-full">
         {faqData.map((faq, index) => (
           <AccordionItem key={index} value={`item-${index}`} className="group">

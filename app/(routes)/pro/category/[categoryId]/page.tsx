@@ -32,7 +32,7 @@ export async function generateMetadata({
 const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
   const products = await prismadb.product.findMany({
     where: {
-      id: params.categoryId,
+      categoryId: params.categoryId,
       isArchived: false,
       isPro: true,
     },

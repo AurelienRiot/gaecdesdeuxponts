@@ -1,17 +1,18 @@
 "use client";
 
+import { ConicGradientBorder } from "@/components/animations/conic-gradient-border";
+import BackgroundGrid from "@/components/grid";
 import { Button } from "@/components/ui/button";
 
 import { ArrowRightIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { DateRange } from "react-day-picker";
 
 const WhyChooseUs = () => {
   return (
-    <div className="bg-background py-8">
-      <div className="mx-auto max-w-6xl px-4 text-center sm:px-6 lg:px-8">
+    <div className="relative bg-gradient-to-b from-background to-transparent to-15% py-8">
+      <BackgroundGrid />
+      <div className="mx-auto max-w-6xl  px-4 text-center sm:px-6 lg:px-8">
         <h2 className="mb-4 text-center text-2xl font-semibold text-primary">
           Pourquoi choisir notre lait ?
         </h2>
@@ -68,9 +69,12 @@ const WhyChooseUs = () => {
           variant={"expandIcon"}
           Icon={ArrowRightIcon}
           iconPlacement="right"
-          className="mx-auto mt-8"
+          className="relative mx-auto mt-8 border border-transparent "
         >
-          <Link href="/faq">En savoir plus</Link>
+          <Link href="/faq">
+            En savoir plus
+            <ConicGradientBorder className="rounded-md border" color="white" />
+          </Link>
         </Button>
       </div>
     </div>

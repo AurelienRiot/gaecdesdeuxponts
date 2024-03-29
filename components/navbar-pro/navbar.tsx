@@ -8,8 +8,11 @@ import Link from "next/link";
 import { useState } from "react";
 import MobileNav from "./mobile-nav";
 import { Category } from "@prisma/client";
+import { usePathname } from "next/navigation";
 
 const NavBar = () => {
+  const origine = usePathname();
+  console.log(origine);
   const [navState, setNavState] = useState<"open" | "close">("open");
   const { scrollY } = useScroll();
 

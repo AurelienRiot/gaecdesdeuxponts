@@ -24,7 +24,7 @@ export default async function PublicLayout({
   const categories = await prismadb.category.findMany({
     where: {
       products: {
-        some: { isPro: false, isArchived: false },
+        some: { isPro: true, isArchived: false },
       },
     },
   });

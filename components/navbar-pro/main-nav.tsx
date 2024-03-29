@@ -49,10 +49,10 @@ const MainNav = () => {
                 className="flex flex-col "
               >
                 {categories.map((category) => {
-                  const href = `/category/${category.id}`;
+                  const href = `/pro/category/${category.id}`;
                   const label = category.name;
                   const active = pathname.startsWith(
-                    `/category/${category.id}`,
+                    `/pro/category/${category.id}`,
                   );
                   return (
                     <Button
