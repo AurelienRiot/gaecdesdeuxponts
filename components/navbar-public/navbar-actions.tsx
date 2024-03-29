@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ShoppingBag, ShoppingCart, User2, UserCheck } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { HiOutlineExternalLink } from "react-icons/hi";
 import { LoginButton } from "../auth/auth-button";
 import CartItem from "../cart-item";
@@ -42,41 +42,46 @@ const AuthNavButton = ({
   session: ReturnType<typeof useSession>;
 }) => {
   return (
-    <>
-      <Button
-        variant={"rounded"}
-        asChild
-        className="relative bg-background px-3	 text-foreground  "
+    <Button
+      variant={"rounded"}
+      asChild
+      className="relative bg-background px-3	 text-foreground  "
+    >
+      <Link
+        href={
+          !session.data
+            ? "/login"
+            : session.data.user.role === "admin"
+              ? "/admin"
+              : "/dashboard-user"
+        }
       >
-        <Link
-          href={
-            !session.data
-              ? "/login"
-              : session.data.user.role === "admin"
-                ? "/admin"
-                : "/dashboard-user"
-          }
-        >
-          <User2 size={20} className=" duration-300 ease-linear  " />
-        </Link>
-      </Button>
-    </>
+        <User2 size={20} />
+      </Link>
+    </Button>
   );
 };
 
 export default NavbarAction;
 
-const CartIcon = ({ qty }: { qty: number }) => (
-  <Button
-    variant={"rounded"}
-    className="relative bg-background px-3	 text-foreground "
-  >
-    <ShoppingCart size={20} />
-    <span className="absolute -right-2 -top-1  flex h-5  w-5 items-center justify-center rounded-full bg-foreground font-sans text-xs tabular-nums text-background shadow-md">
-      {qty}
-    </span>
-  </Button>
+const CartIcon = forwardRef<HTMLButtonElement, { qty: number }>(
+  ({ qty, ...props }, ref) => {
+    return (
+      <Button
+        variant={"rounded"}
+        className="relative bg-background px-3	 text-foreground "
+        ref={ref}
+        {...props}
+      >
+        <ShoppingCart size={20} />
+        <span className="absolute -right-2 -top-1  flex h-5  w-5 items-center justify-center rounded-full bg-foreground font-sans text-xs tabular-nums text-background shadow-md">
+          {qty}
+        </span>
+      </Button>
+    );
+  },
 );
+CartIcon.displayName = "CartIcon";
 
 export const CartButton = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -100,7 +105,7 @@ export const CartButton = () => {
       <SheetTrigger asChild>
         <CartIcon qty={totalQuantity} />
       </SheetTrigger>
-      <SheetContent className="overflow-y-auto">
+      <SheetContent className="min-w-[25vw] overflow-y-auto">
         <SheetHeader>
           <SheetTitle>
             <Link

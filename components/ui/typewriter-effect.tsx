@@ -125,9 +125,9 @@ export const TypewriterEffectSmooth = ({
                 return (
                   <motion.span
                     initial={{
-                      opacity: "0",
+                      opacity: 0,
                     }}
-                    whileInView={{ opacity: "100" }}
+                    whileInView={{ opacity: 1 }}
                     transition={{
                       duration: 0.25,
                       ease: "linear",

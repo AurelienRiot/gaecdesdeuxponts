@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import {
   Roboto_Mono as FontMono,
   Playfair_Display as FontDisplay,
-  Playfair as FontSerif,
+  EB_Garamond as FontSerif,
   Inter as FontSans,
 } from "next/font/google";
 import "./globals.css";

@@ -87,7 +87,7 @@ export const GoogleButton = ({ callbackUrl }: { callbackUrl: string }) => {
         {loading ? (
           <Spinner
             size={40}
-            className=" absolute left-[135px] top-1   text-white"
+            className=" absolute left-[135px] top-1 font-sans   text-white"
           />
         ) : (
           "Se connecter avec Google"

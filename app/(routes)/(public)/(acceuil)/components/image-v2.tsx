@@ -48,7 +48,7 @@ const ImageV2 = () => {
         className="h-full w-full object-cover   grayscale"
       />
 
-      <div className="absolute inset-0 z-10 h-full w-full bg-neutral-800/60 " />
+      <div className="absolute inset-0 z-10 h-full w-full bg-gradient-to-b from-neutral-800/80 from-25% to-neutral-800/0 " />
 
       {/* <h1 className="absolute  z-10 px-4 py-24 text-center font-display ">
         Du lait frais du pie de la vache à votre verre

@@ -27,23 +27,23 @@ const NavBar = () => {
   return (
     <div
       // data-nav-state={navState}
-      className={`fixed top-0 z-30 flex h-16 w-full items-center justify-between overflow-hidden rounded-b-md border-b-2 border-border bg-background px-4 transition-all duration-300 data-[nav-state=close]:h-0 data-[nav-state=close]:border-0 sm:px-6 lg:px-4 `}
+      className={`fixed top-0 z-30 flex h-16 w-full items-center justify-between   bg-background px-4 transition-all duration-300 data-[nav-state=close]:h-0 data-[nav-state=close]:border-0 sm:px-6 lg:px-4 `}
     >
       <MainNav className="hidden lg:flex " />
       <MobileNav className="ml-2 lg:hidden" />
       <div className="flex items-center justify-center  xl:absolute xl:left-1/2 xl:top-1/2 xl:-translate-x-1/2 xl:-translate-y-1/2 ">
         <Link
           href="/"
-          className="relative ml-4 hidden items-center text-primary transition-all hover:scale-105 sm:flex lg:ml-0"
+          className="relative ml-4 hidden items-center gap-2 text-primary transition-all hover:scale-105 sm:flex lg:ml-0"
         >
           <Image
-            src="/icone.webp"
+            src="/logo-rond.png"
             alt="logo"
-            width={48}
-            height={48}
+            width={50}
+            height={50}
             className="rounded-md"
           />
-          <p className="font-mono text-lg font-bold text-primary sm:text-xl">
+          <p className="font-mono  text-xl font-bold text-primary">
             {" "}
             Laiterie du Pont Robert
           </p>

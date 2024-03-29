@@ -1,6 +1,12 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useCategoriesContext } from "@/context/categories-context";
+import {
+  CornerRightUp,
+  CornerUpRight,
+  ExternalLink,
+  MoveUpRight,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -11,9 +17,7 @@ const NosProduits = () => {
   }
   return (
     <div className="flex w-full flex-col items-center justify-center gap-4 rounded-xl bg-transparent py-6 font-bold text-primary">
-      <h2 className="text-xl sm:text-3xl md:text-5xl">
-        Découvrez nos produits
-      </h2>
+      <h2 className="text-3xl md:text-5xl">Découvrez Nos Produits</h2>
       <div className="flex w-full flex-wrap justify-center gap-10">
         {categories.map((category, index) => (
           <CategoryCard
@@ -76,13 +80,16 @@ const CategoryCard = ({
           sizes="(max-width: 450px) 90vw,  400px"
         />
       </div>
-      <div className="absolute bottom-0 right-0 z-0  h-1/2 w-0  overflow-hidden transition-all duration-200 group-hover:w-1/2">
+      <div className=" absolute bottom-0 right-0 z-0  h-1/2 w-0  overflow-hidden transition-all duration-200 group-hover:w-1/2">
         <Button
           asChild
           variant={"shine"}
-          className="  absolute left-1/2 top-1/2 w-fit -translate-x-1/2 -translate-y-1/2 "
+          className=" group/button absolute left-1/2 top-1/2 w-fit -translate-x-1/2 -translate-y-1/2 "
         >
-          <Link href={href}>En savoir +</Link>
+          <Link href={href}>
+            En savoir +{" "}
+            <CornerRightUp className="ml-2 size-0 transition-all group-hover/button:size-4" />
+          </Link>
         </Button>
       </div>
     </div>

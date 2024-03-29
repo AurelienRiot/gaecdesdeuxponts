@@ -5,6 +5,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import Container from "@/components/ui/container";
+import { Accordion2 } from "./accordeons";
 
 const faqData = [
   {
@@ -119,6 +120,8 @@ const FAQPage = () => {
           </AccordionItem>
         ))}
       </Accordion>
+
+      <Accordion2 data={faqData} />
     </Container>
   );
 };

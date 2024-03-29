@@ -90,18 +90,18 @@ export default function MobileNav({ className, ...props }: MobileNavProps) {
           </svg>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="h-auto w-[400px]  max-w-[100vw] ">
+      <PopoverContent className="h-auto w-[400px]  max-w-[100vw] pt-0 ">
         <Command>
-          <CommandList className="">
+          <CommandList>
             <CommandItem
-              className=" relative   flex cursor-pointer items-center justify-center text-primary aria-selected:bg-background aria-selected:text-primary sm:hidden"
+              className=" relative flex  cursor-pointer items-center justify-center py-2 text-primary aria-selected:bg-background aria-selected:text-primary sm:hidden"
               onSelect={() => {
                 router.push("/");
                 setOpen(false);
               }}
             >
               <Image
-                src="/icone.webp"
+                src="/logo-rond.png"
                 alt="logo"
                 width={48}
                 height={48}

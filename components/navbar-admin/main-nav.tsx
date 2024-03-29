@@ -2,7 +2,6 @@
 
 import { cn } from "@/lib/utils";
 import {
-  CalendarSearchIcon,
   LayoutDashboardIcon,
   ListOrderedIcon,
   PackageIcon,
@@ -27,7 +26,7 @@ export function MainNav({ className }: React.HTMLAttributes<HTMLElement>) {
           key={route.href}
           href={route.href}
           className={cn(
-            "text-xs font-medium transition-colors hover:text-secondary xl:text-sm",
+            "text-xs font-medium underline-offset-4 transition-colors hover:underline xl:text-sm",
             route.active ? "text-primary" : "text-muted-foreground",
           )}
         >
