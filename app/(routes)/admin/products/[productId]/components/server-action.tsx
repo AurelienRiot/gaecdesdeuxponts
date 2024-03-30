@@ -33,6 +33,19 @@ async function createProduct({
       message: "Vous devez être authentifier",
     };
   }
+
+  const sameProduct = await prismadb.product.findUnique({
+    where: {
+      name,
+    },
+  });
+  if (sameProduct) {
+    return {
+      success: false,
+      message: "Un produit avec ce nom existe déja",
+    };
+  }
+
   let product: Product;
   if (linkProducts && linkProducts.length > 0) {
     product = await prismadb.product.create({
@@ -98,6 +111,19 @@ async function updateProduct(
     return {
       success: false,
       message: "Vous devez être authentifier",
+    };
+  }
+
+  const sameProduct = await prismadb.product.findUnique({
+    where: {
+      name,
+      NOT: { id },
+    },
+  });
+  if (sameProduct) {
+    return {
+      success: false,
+      message: "Un produit avec ce nom existe déja",
     };
   }
 

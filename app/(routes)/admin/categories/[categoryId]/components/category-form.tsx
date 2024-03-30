@@ -77,8 +77,6 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
   });
 
   const onSubmit = async (data: CategoryFormValues) => {
-    console.log(data);
-
     if (!selectedFiles[0]) {
       toast.error("Veuillez ajouter une image");
       return;

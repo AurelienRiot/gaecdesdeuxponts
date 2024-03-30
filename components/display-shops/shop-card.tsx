@@ -21,6 +21,7 @@ import { deleteShop } from "../../app/(routes)/admin/shops/[shopId]/components/s
 import { Icons } from "../icons";
 import { AutosizeTextarea } from "../ui/autosize-textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import Image from "next/image";
 
 type ShopCardProps = Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> & {
   shop: Shop;
@@ -67,7 +68,20 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
           {...props}
         >
           <CardHeader>
-            <CardTitle>{shop.name}</CardTitle>
+            <CardTitle className="flex  cursor-pointer items-center justify-start gap-2">
+              {shop.imageUrl ? (
+                <span className=" relative aspect-square h-[30px] rounded-sm bg-transparent transition-transform hover:scale-150">
+                  <Image
+                    src={shop.imageUrl}
+                    alt={shop.name}
+                    fill
+                    sizes="(max-width: 768px) 45px, (max-width: 1200px) 45px, 45px"
+                    className="rounded-sm object-cover"
+                  />
+                </span>
+              ) : null}
+              <span>{shop.name}</span>
+            </CardTitle>
             <CardInfo description={shop.description} />
           </CardHeader>
           <CardContent className="flex flex-col gap-2">

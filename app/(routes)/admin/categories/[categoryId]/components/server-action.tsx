@@ -29,6 +29,18 @@ async function createCategory({
     };
   }
 
+  const sameCategory = await prismadb.category.findUnique({
+    where: {
+      name,
+    },
+  });
+  if (sameCategory) {
+    return {
+      success: false,
+      message: "Une catégorie avec ce nom existe déja",
+    };
+  }
+
   const category = await prismadb.category.create({
     data: {
       name,
@@ -53,6 +65,18 @@ async function updateCategory(
     return {
       success: false,
       message: "Vous devez être authentifier",
+    };
+  }
+  const sameCategory = await prismadb.category.findUnique({
+    where: {
+      name,
+      NOT: { id },
+    },
+  });
+  if (sameCategory) {
+    return {
+      success: false,
+      message: "Une catégorie avec ce nom existe déja",
     };
   }
 
