@@ -21,7 +21,7 @@ const NosProduits = () => {
             key={category.id}
             name={category.name}
             description={category.description || ""}
-            href={`/category/${category.id}`}
+            href={`/category/${encodeURI(category.name)}`}
             imageUrl={category.imageUrl}
           />
         ))}

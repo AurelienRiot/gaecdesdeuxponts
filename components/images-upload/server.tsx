@@ -129,8 +129,9 @@ async function deleteObject({
     where: {
       url: `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${publicID}`,
     },
-    include: {
-      product: true,
+
+    select: {
+      product: { select: { name: true } },
     },
   });
 
@@ -148,15 +149,35 @@ async function deleteObject({
     where: {
       imageUrl: `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${publicID}`,
     },
+    select: {
+      name: true,
+    },
   });
 
   if (imagesCategories.length > 0) {
-    const productNames = imagesCategories
+    const categoryNames = imagesCategories
       .map((category) => category.name)
       .join(", ");
     return {
       success: false,
-      message: `L'image est utilisée par le(s) pannneau(s) : ${productNames}`,
+      message: `L'image est utilisée par la categorie : ${categoryNames}`,
+    };
+  }
+
+  const imagesShop = await prismadb.shop.findMany({
+    where: {
+      imageUrl: `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${publicID}`,
+    },
+    select: {
+      name: true,
+    },
+  });
+
+  if (imagesShop.length > 0) {
+    const shoptNames = imagesShop.map((category) => category.name).join(", ");
+    return {
+      success: false,
+      message: `L'image est utilisée par le magasin : ${shoptNames}`,
     };
   }
 

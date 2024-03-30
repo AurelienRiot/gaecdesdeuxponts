@@ -27,6 +27,7 @@ export async function generateMetadata({
 }
 
 const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
+  console.log(decodeURI(params.categoryId));
   return (
     <Container>
       <Billboard categoryId={params.categoryId} />
