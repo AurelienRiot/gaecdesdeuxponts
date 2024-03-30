@@ -2,6 +2,7 @@
 
 import UploadImage from "@/components/images-upload/image-upload";
 import { AlertModal } from "@/components/ui/alert-modal-form";
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button, LoadingButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -15,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
+import { Option } from "@/components/ui/multiple-selector";
 import {
   Select,
   SelectContent,
@@ -23,12 +25,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { mergeWithoutDuplicates } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Category, Image, Product } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { ControllerRenderProps, useForm } from "react-hook-form";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { getFileKey } from "../../../categories/[categoryId]/components/category-form";
@@ -40,9 +43,6 @@ import {
   createProduct,
   updateProduct,
 } from "./server-action";
-import { Option } from "@/components/ui/multiple-selector";
-import { mergeWithoutDuplicates } from "@/lib/utils";
-import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Le nom est requis" }),

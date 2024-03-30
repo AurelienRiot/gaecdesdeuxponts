@@ -138,10 +138,10 @@ export default function MobileNav({ className, ...props }: MobileNavProps) {
                   className="z-50 w-[200px]"
                 >
                   {categories.map((category) => {
-                    const href = `/category/${category.id}`;
+                    const href = `/category/${encodeURIComponent(category.name)}`;
                     const label = category.name;
                     const active = pathname.startsWith(
-                      `/category/${category.id}`,
+                      `/category/${encodeURIComponent(category.name)}`,
                     );
                     return (
                       <Button asChild key={href} variant={"link"}>

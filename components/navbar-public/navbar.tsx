@@ -1,13 +1,9 @@
 "use client";
 import MainNav from "@/components/navbar-public/main-nav";
 import NavbarAction from "@/components/navbar-public/navbar-actions";
-import { useMotionValueEvent, useScroll } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { use, useState } from "react";
 import MobileNav from "./mobile-nav";
-import { Category } from "@prisma/client";
-import { usePathname } from "next/navigation";
 
 const NavBar = () => {
   // const [navState, setNavState] = useState<"open" | "close">("open");
@@ -28,7 +24,7 @@ const NavBar = () => {
   return (
     <div
       // data-nav-state={navState}
-      className={`fixed top-0 z-30 flex h-16 w-full items-center justify-between   bg-background px-4 transition-all duration-300 data-[nav-state=close]:h-0 data-[nav-state=close]:border-0 sm:px-6 lg:px-4 `}
+      className={`fixed top-0 z-30 flex h-16 w-full items-center justify-between rounded-md   bg-background px-4 shadow-md transition-all duration-300 data-[nav-state=close]:h-0 data-[nav-state=close]:border-0 sm:px-6 lg:px-4`}
     >
       <MainNav className="hidden lg:flex " />
       <MobileNav className="ml-2 lg:hidden" />

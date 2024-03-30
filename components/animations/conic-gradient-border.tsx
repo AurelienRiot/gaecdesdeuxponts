@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { cn } from "@/lib/utils";
 import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
@@ -19,23 +19,30 @@ export const ConicGradientBorder = ({
 }) => {
   const rotation = useMotionValue(0);
   const backgroundImage = useMotionTemplate`conic-gradient(from ${rotation}turn, ${ConicColor[color]}`;
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
-    const duration = 3000;
+    setPrefersReducedMotion(
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    );
 
+    if (prefersReducedMotion) {
+      rotation.set(0);
+      return;
+    }
+
+    const duration = 3000;
     const animate = () => {
       const elapsedTime = performance.now() % duration;
       const progress = elapsedTime / duration;
-
       rotation.set(progress);
-
       requestAnimationFrame(animate);
     };
 
     const animationId = requestAnimationFrame(animate);
 
     return () => cancelAnimationFrame(animationId);
-  }, [rotation]);
+  }, [rotation, prefersReducedMotion]);
 
   return (
     <div className="pointer-events-none absolute inset-0 z-10 ">
@@ -46,7 +53,6 @@ export const ConicGradientBorder = ({
         )}
         style={{
           backgroundImage,
-          // backgroundImage: `conic-gradient(from 0.2turn, ${ConicColor[color]}`,
         }}
       ></motion.div>
     </div>

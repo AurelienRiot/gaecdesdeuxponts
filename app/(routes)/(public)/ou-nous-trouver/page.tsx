@@ -7,7 +7,7 @@ import { ChevronDown } from "lucide-react";
 import { Suspense } from "react";
 import { PlacePicker } from "./components/place";
 
-const Find = async () => {
+const OuNousTrouver = async () => {
   return (
     <Container className="my-8 space-y-8 p-2">
       <div className="">
@@ -23,7 +23,7 @@ const Find = async () => {
   );
 };
 
-export default Find;
+export default OuNousTrouver;
 
 const ServerPlace = async () => {
   const shops = await getShops();

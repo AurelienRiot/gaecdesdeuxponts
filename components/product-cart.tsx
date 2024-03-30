@@ -8,6 +8,7 @@ import { ProductWithImages } from "@/types";
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MouseEventHandler } from "react";
 import { FaInfo } from "react-icons/fa";
@@ -31,7 +32,7 @@ const ProductCart: React.FC<ProductCartProps> = ({
   const value = data.price;
 
   const handleClick = () => {
-    router.push(url + data?.id);
+    router.push(url + encodeURIComponent(data.name));
   };
 
   const onAddToCart: MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -43,7 +44,7 @@ const ProductCart: React.FC<ProductCartProps> = ({
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
-      className="group m-2 cursor-pointer space-y-4 rounded-xl border bg-secondary p-3 "
+      className="group m-2 flex cursor-pointer flex-col justify-between gap-4 rounded-xl border bg-secondary p-3 "
     >
       <div
         onClick={handleClick}
@@ -72,9 +73,19 @@ const ProductCart: React.FC<ProductCartProps> = ({
           </div>
         </div>
       </div>
-      <div onClick={handleClick}>
-        <p className="text-lg font-semibold text-primary">{data.name}</p>
-        <p className="text-sm text-secondary-foreground">{category.name}</p>
+      <div>
+        <Link
+          href={url + encodeURIComponent(data.name)}
+          className="block text-lg font-semibold text-primary"
+        >
+          {data.name}
+        </Link>
+        <Link
+          href={url + encodeURIComponent(category.name)}
+          className="block text-sm text-secondary-foreground"
+        >
+          {category.name}
+        </Link>
       </div>
       <div className="flex items-center justify-between text-primary">
         <Currency value={value} />

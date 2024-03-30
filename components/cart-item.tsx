@@ -51,7 +51,7 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
         <div className="relative content-center sm:gap-x-6">
           <div className="flex justify-between ">
             <Link
-              href={`/product/${data.id}`}
+              href={`/product/${encodeURIComponent(data.name)}`}
               className="pr-10 text-lg font-semibold text-primary"
             >
               {data.name}

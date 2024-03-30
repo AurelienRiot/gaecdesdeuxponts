@@ -8,29 +8,23 @@ import { Suspense } from "react";
 
 interface CategoryPageProps {
   params: {
-    categoryId: string;
+    categoryName: string;
   };
 }
 
 export async function generateMetadata({
   params,
 }: CategoryPageProps): Promise<Metadata> {
-  const category = await prismadb.category.findUnique({
-    where: {
-      id: params.categoryId,
-    },
-  });
-
   return {
-    title: `GAEC des deux ponts - ${category?.name}`,
+    title: `GAEC des deux ponts - ${decodeURIComponent(params.categoryName)}`,
   };
 }
 
 const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
-  console.log(decodeURI(params.categoryId));
+  const categoryName = decodeURIComponent(params.categoryName);
   return (
     <Container>
-      <Billboard categoryId={params.categoryId} />
+      <Billboard categoryName={categoryName} />
       <div className="px-4 pb-24 sm:px-6 lg:px-8">
         <div className="lg-gap-x-8 lg:grid lg:grid-cols-5">
           <div className="mt-6 lg:col-span-4 lg:mt-0">
@@ -45,7 +39,7 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
                 </div>
               }
             >
-              <FetchProducts categoryId={params.categoryId} />
+              <FetchProducts categoryName={categoryName} />
             </Suspense>
           </div>
         </div>
@@ -54,10 +48,12 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
   );
 };
 
-const FetchProducts = async ({ categoryId }: { categoryId: string }) => {
+const FetchProducts = async ({ categoryName }: { categoryName: string }) => {
   const products = await prismadb.product.findMany({
     where: {
-      categoryId: categoryId,
+      category: {
+        name: categoryName,
+      },
       isArchived: false,
       isPro: false,
     },

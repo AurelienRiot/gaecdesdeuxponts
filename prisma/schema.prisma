@@ -77,7 +77,7 @@ model VerificationToken {
 model Category {
   id          String @unique @id @default(uuid())
   products    Product[] @relation("CategoryToProduct")
-  name        String
+  name        String @unique
   description String?
    imageUrl   String
   createdAt   DateTime @default(now())
@@ -89,7 +89,7 @@ model Product {
   id           String @unique @id @default(uuid())
   categoryId   String
   category     Category @relation("CategoryToProduct", fields: [categoryId], references: [id])
-  name         String
+  name         String @unique
   description  String @db.VarChar(1000)
   productSpecs String @db.Text
   price      Float    

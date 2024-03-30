@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 import BillboardSkeleton from "../skeleton-ui/billboard-skeleton";
 
 interface BillboardProps {
-  categoryId: string;
+  categoryName: string;
 }
 
-const Billboard: React.FC<BillboardProps> = ({ categoryId }) => {
+const Billboard: React.FC<BillboardProps> = ({ categoryName }) => {
   const [isMounted, setIsMounted] = useState(false);
   const category = useCategoriesContext()?.categories.find(
-    (c) => c.id === categoryId,
+    (c) => c.name === categoryName,
   );
 
   useEffect(() => {

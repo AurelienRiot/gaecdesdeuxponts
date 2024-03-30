@@ -28,9 +28,11 @@ const MainNav = ({ className }: { className?: string }) => {
         </PopoverTrigger>
         <PopoverContent side="bottom" align="start" className="flex flex-col ">
           {categories.map((category) => {
-            const href = `/category/${category.id}`;
+            const href = `/category/${encodeURIComponent(category.name)}`;
             const label = category.name;
-            const active = pathname.startsWith(`/category/${category.id}`);
+            const active = pathname.startsWith(
+              `/category/${encodeURIComponent(category.name)}`,
+            );
             return (
               <Button
                 asChild
@@ -86,9 +88,9 @@ export const publicRoutes = (pathname: string) => [
   },
 
   {
-    href: `/find`,
+    href: `/ou-nous-trouver`,
     label: "Où nous trouver",
-    active: pathname === `/find`,
+    active: pathname === `/ou-nous-trouver`,
     Icone: Map,
   },
 ];

@@ -9,28 +9,23 @@ import { Metadata } from "next";
 
 interface ProductPageProps {
   params: {
-    productId: string;
+    productName: string;
   };
 }
 
 export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
-  const product = await prismadb.product.findUnique({
-    where: {
-      id: params.productId,
-    },
-  });
-
   return {
-    title: `GAEC des deux ponts - ${product?.name}`,
+    title: `GAEC des deux ponts - ${decodeURIComponent(params.productName)}`,
   };
 }
 
 const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
+  const productName = decodeURIComponent(params.productName);
   const product = await prismadb.product.findUnique({
     where: {
-      id: params.productId,
+      name: productName,
       isArchived: false,
       isPro: false,
     },

@@ -38,7 +38,7 @@ const Info: React.FC<InfoProps> = ({
   return (
     <div>
       <Link
-        href={url + data.id}
+        href={url + encodeURIComponent(data.name)}
         className="text-3xl font-bold text-gray-900 dark:text-white"
       >
         {data.name}
@@ -62,7 +62,10 @@ const Info: React.FC<InfoProps> = ({
             {linkProducts.map((product) => {
               return (
                 <Badge key={product.id}>
-                  <Link className="py-1" href={url + product.id}>
+                  <Link
+                    className="py-1"
+                    href={url + encodeURIComponent(product.name)}
+                  >
                     {product.name}
                   </Link>
                 </Badge>

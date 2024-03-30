@@ -8,31 +8,25 @@ import { Metadata } from "next";
 
 interface CategoryPageProps {
   params: {
-    categoryId: string;
+    categoryName: string;
   };
 }
 
 export async function generateMetadata({
   params,
 }: CategoryPageProps): Promise<Metadata> {
-  const category = await prismadb.category.findUnique({
-    where: {
-      id: params.categoryId,
-    },
-    select: {
-      name: true,
-    },
-  });
-
   return {
-    title: `GAEC des deux ponts - ${category?.name}`,
+    title: `GAEC des deux ponts - ${decodeURIComponent(params.categoryName)}`,
   };
 }
 
 const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
+  const categoryName = decodeURIComponent(params.categoryName);
   const products = await prismadb.product.findMany({
     where: {
-      categoryId: params.categoryId,
+      category: {
+        name: categoryName,
+      },
       isArchived: false,
       isPro: true,
     },
@@ -45,7 +39,7 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
 
   return (
     <Container>
-      <Billboard categoryId={params.categoryId} />
+      <Billboard categoryName={categoryName} />
       <div className="px-4 pb-24 sm:px-6 lg:px-8">
         <div className="lg-gap-x-8 lg:grid lg:grid-cols-5">
           <div className="mt-6 lg:col-span-4 lg:mt-0">
