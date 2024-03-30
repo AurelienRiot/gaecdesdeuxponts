@@ -3,6 +3,8 @@ import NavBar from "@/components/navbar-public/navbar";
 import { CategoriesProvider } from "@/context/categories-context";
 import prismadb from "@/lib/prismadb";
 
+export const revalidate = 0;
+
 export default async function PublicLayout({
   children,
 }: {

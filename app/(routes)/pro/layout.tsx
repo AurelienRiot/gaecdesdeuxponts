@@ -6,6 +6,8 @@ import { CategoriesProvider } from "@/context/categories-context";
 import prismadb from "@/lib/prismadb";
 import { ProColorSchema } from "@/providers/color-schema-provider";
 
+export const revalidate = 0;
+
 export default async function PublicLayout({
   children,
 }: {

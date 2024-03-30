@@ -8,20 +8,13 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Category } from "@prisma/client";
 
-const MainNav = ({
-  className,
-  categories,
-}: {
-  className?: string;
-  categories: Category[];
-}) => {
+const MainNav = ({ className }: { className?: string }) => {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   const routes = publicRoutes(pathname);
-  // const { categories } = useCategoriesContext();
+  const { categories } = useCategoriesContext();
 
   return (
     <nav
