@@ -31,14 +31,18 @@ const DatePicker = ({ className, date, shopId }: DatePickerProps) => {
     }
 
     if (shopId) {
-      router.push(
-        `/cart?date=${encodeURIComponent(date.toISOString())}&shopId=${encodeURIComponent(shopId)}`,
-        {
-          scroll: false,
-        },
-      );
+      const queryParams = new URLSearchParams({
+        date: date.toISOString(),
+        shopId,
+      }).toString();
+      router.push(`/panier?${queryParams}`, {
+        scroll: false,
+      });
     } else {
-      router.push(`/cart?date=${encodeURIComponent(date.toISOString())}`, {
+      const queryParams = new URLSearchParams({
+        date: date.toISOString(),
+      }).toString();
+      router.push(`/panier?${queryParams}`, {
         scroll: false,
       });
     }

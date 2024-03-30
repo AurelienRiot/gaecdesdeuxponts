@@ -12,7 +12,6 @@ import { Badge } from "./ui/badge";
 
 interface InfoProps {
   data: ProductWithCategoryAndImages;
-  url?: string;
   scroll?: boolean;
   linkProducts: {
     id: string;
@@ -20,15 +19,12 @@ interface InfoProps {
   }[];
 }
 
-const Info: React.FC<InfoProps> = ({
-  data,
-  scroll,
-  linkProducts,
-  url = "/product/",
-}) => {
+const Info: React.FC<InfoProps> = ({ data, scroll, linkProducts }) => {
   const cart = useCart();
 
   const value = data.price;
+
+  const url = data.isPro ? `/pro/` : `/`;
 
   const onAddToCart: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.stopPropagation();
@@ -38,7 +34,7 @@ const Info: React.FC<InfoProps> = ({
   return (
     <div>
       <Link
-        href={url + encodeURIComponent(data.name)}
+        href={url + "product/" + encodeURIComponent(data.name)}
         className="text-3xl font-bold text-gray-900 dark:text-white"
       >
         {data.name}
@@ -64,7 +60,7 @@ const Info: React.FC<InfoProps> = ({
                 <Badge key={product.id}>
                   <Link
                     className="py-1"
-                    href={url + encodeURIComponent(product.name)}
+                    href={url + "product/" + encodeURIComponent(product.name)}
                   >
                     {product.name}
                   </Link>

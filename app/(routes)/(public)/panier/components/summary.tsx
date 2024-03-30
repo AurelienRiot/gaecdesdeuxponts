@@ -26,7 +26,7 @@ const baseUrl = process.env.NEXT_PUBLIC_URL;
 
 const getDateFromSearchParam = (param: string | null): Date | undefined => {
   if (param === null) return undefined; // If param is null, return undefined
-  const date = new Date(param);
+  const date = new Date(decodeURIComponent(param));
   return isNaN(date.getTime()) ? undefined : date; // Check if date is valid
 };
 
@@ -58,7 +58,8 @@ const Summary: React.FC<SummaryProps> = ({ userId, shops }) => {
 
   useEffect(() => {
     setDate(getDateFromSearchParam(searchParams.get("date")));
-    setShopId(searchParams.get("shopId") ?? undefined);
+    const shopId = searchParams.get("shopId");
+    setShopId(shopId ? decodeURIComponent(shopId) : undefined);
   }, [searchParams]);
 
   useEffect(() => {
@@ -117,15 +118,20 @@ const Summary: React.FC<SummaryProps> = ({ userId, shops }) => {
       toast.error("Erreur veuillez réssayer");
       return;
     }
+
     if (date) {
-      router.push(
-        `/cart?date=${encodeURIComponent(date.toISOString())}&shopId=${encodeURIComponent(shopId)}`,
-        {
-          scroll: false,
-        },
-      );
+      const queryParams = new URLSearchParams({
+        date: date.toISOString(),
+        shopId,
+      }).toString();
+      router.push(`/panier?${queryParams}`, {
+        scroll: false,
+      });
     } else {
-      router.push(`/cart?shopId=${encodeURIComponent(shopId)}`, {
+      const queryParams = new URLSearchParams({
+        shopId,
+      }).toString();
+      router.push(`/panier?${queryParams}`, {
         scroll: false,
       });
     }
@@ -231,7 +237,7 @@ const LoginCard = ({
   date: Date | undefined;
   shopId: string | undefined;
 }) => {
-  let callbackUrl = baseUrl + "/cart";
+  let callbackUrl = baseUrl + "/panier";
 
   if (shopId) {
     callbackUrl += `?shopId=${encodeURIComponent(shopId)}`;

@@ -15,24 +15,21 @@ import { FaInfo } from "react-icons/fa";
 
 interface ProductCartProps {
   data: ProductWithImages;
-  url?: string;
 }
 
-const ProductCart: React.FC<ProductCartProps> = ({
-  data,
-  url = "/product/",
-}) => {
+const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
   const router = useRouter();
   const cart = useCart();
   const category = useCategoriesContext().categories.find(
     (c) => c.id === data.categoryId,
   );
   if (!category) return null;
+  const url = data.isPro ? `/pro/` : `/`;
 
   const value = data.price;
 
   const handleClick = () => {
-    router.push(url + encodeURIComponent(data.name));
+    router.push(url + "product/" + encodeURIComponent(data.name));
   };
 
   const onAddToCart: MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -75,13 +72,13 @@ const ProductCart: React.FC<ProductCartProps> = ({
       </div>
       <div>
         <Link
-          href={url + encodeURIComponent(data.name)}
+          href={url + "product/" + encodeURIComponent(data.name)}
           className="block text-lg font-semibold text-primary"
         >
           {data.name}
         </Link>
         <Link
-          href={url + encodeURIComponent(category.name)}
+          href={url + "category/" + encodeURIComponent(category.name)}
           className="block text-sm text-secondary-foreground"
         >
           {category.name}

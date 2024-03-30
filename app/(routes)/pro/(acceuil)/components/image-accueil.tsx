@@ -1,11 +1,14 @@
 "use client";
 import ImageFerme from "@/public/dairy_cows.webp";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 
 const ImageAccueil = () => {
   const { scrollYProgress } = useScroll();
   const scale = useTransform(scrollYProgress, [0, 1], [1, 2]);
+  const session = useSession();
+  console.log(session.data?.user);
   // const y = useTransform(scrollY, [0, 1], [0, 1], { clamp: false });
 
   // const Video = () => {
@@ -27,7 +30,7 @@ const ImageAccueil = () => {
   return (
     <motion.div
       style={{ scale: scale }}
-      className="fixed left-0 top-0 -z-10 h-full w-full"
+      className="fixed left-0 top-0 -z-10 h-full w-full  "
     >
       <Image
         priority

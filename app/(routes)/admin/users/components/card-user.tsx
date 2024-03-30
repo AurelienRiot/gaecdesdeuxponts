@@ -93,7 +93,7 @@ const CardUser: React.FC<CardUserProps> = ({
         <CardContent className="text-center">
           <p className="p-2">{`Nombre de commandes : ${orderLength}`}</p>
           <div className="flex flex-row items-center justify-center gap-2">
-            <p>{user.role === "pro" ? "Professionnel " : "Particulier"}</p>
+            <p>{check === true ? "Professionnel " : "Particulier"}</p>
             <Checkbox checked={check} onCheckedChange={onChange} />
           </div>
         </CardContent>

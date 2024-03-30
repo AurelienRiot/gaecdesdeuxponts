@@ -2,7 +2,7 @@
 
 import useCart from "@/hooks/use-cart";
 import { AnimatePresence, motion } from "framer-motion";
-import { ShoppingBag, User2, UserCheck } from "lucide-react";
+import { ShoppingBag, User2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -112,7 +112,7 @@ const CartButton = () => {
           <SheetTitle>
             <Link
               onClick={() => setIsOpen(false)}
-              href="/cart"
+              href="/panier"
               className="mt-6 flex h-10 items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {" "}

@@ -1,18 +1,14 @@
 "use client";
-import MainNav from "./main-nav";
-import NavbarAction from "../navbar-public/navbar-actions";
 import Container from "@/components/ui/container";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import NavbarAction from "../navbar-public/navbar-actions";
+import MainNav from "./main-nav";
 import MobileNav from "./mobile-nav";
-import { Category } from "@prisma/client";
-import { usePathname } from "next/navigation";
 
 const NavBar = () => {
-  const origine = usePathname();
-  console.log(origine);
   const [navState, setNavState] = useState<"open" | "close">("open");
   const { scrollY } = useScroll();
 

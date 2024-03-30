@@ -15,7 +15,11 @@ function LinkProductsCell<T>({ row }: { row: Row<LinkProductsCellProps<T>> }) {
   return (
     <div className="flex flex-wrap gap-1 ">
       {row.original.linkProducts.map((product) => {
-        return <Badge key={product.id}>{product.name}</Badge>;
+        return (
+          <Badge variant={"orange"} key={product.id}>
+            {product.name}
+          </Badge>
+        );
       })}
     </div>
   );

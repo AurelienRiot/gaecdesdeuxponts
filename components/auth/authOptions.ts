@@ -42,7 +42,12 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    jwt: async ({ token, user }) => {
+    jwt: async ({ token, user, trigger, session }) => {
+      if (trigger === "update") {
+        for (const key in session) {
+          token[key] = session[key];
+        }
+      }
       if (user) {
         const u = user as User;
         const dbUser = await prismadb.user.findUnique({

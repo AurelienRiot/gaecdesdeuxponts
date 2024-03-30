@@ -17,6 +17,7 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
 
   const value = Number(data.price);
   const quantity = cart.quantities[data.id];
+  const url = data.isPro ? `/pro/product/` : `/product/`;
 
   const onRemove = () => {
     cart.removeItem(data.id);
@@ -51,7 +52,7 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
         <div className="relative content-center sm:gap-x-6">
           <div className="flex justify-between ">
             <Link
-              href={`/product/${encodeURIComponent(data.name)}`}
+              href={url + encodeURIComponent(data.name)}
               className="pr-10 text-lg font-semibold text-primary"
             >
               {data.name}
