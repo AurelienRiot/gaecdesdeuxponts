@@ -20,10 +20,17 @@ import { useState } from "react";
 import { useCategoriesContext } from "@/context/categories-context";
 import Image from "next/image";
 import { publicRoutes } from "./main-nav";
+import { Category } from "@prisma/client";
 
-type MobileNavProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
+type MobileNavProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger> & {
+  categories: Category[];
+};
 
-export default function MobileNav({ className, ...props }: MobileNavProps) {
+export default function MobileNav({
+  className,
+  categories,
+  ...props
+}: MobileNavProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -32,7 +39,7 @@ export default function MobileNav({ className, ...props }: MobileNavProps) {
 
   const routes = publicRoutes(pathname);
 
-  const { categories } = useCategoriesContext();
+  // const { categories } = useCategoriesContext();
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

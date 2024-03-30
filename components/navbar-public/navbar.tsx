@@ -1,11 +1,11 @@
-"use client";
 import MainNav from "@/components/navbar-public/main-nav";
 import NavbarAction from "@/components/navbar-public/navbar-actions";
 import Image from "next/image";
 import Link from "next/link";
 import MobileNav from "./mobile-nav";
+import prismadb from "@/lib/prismadb";
 
-const NavBar = () => {
+const NavBar = async () => {
   // const [navState, setNavState] = useState<"open" | "close">("open");
   // const { scrollY } = useScroll();
 
@@ -21,13 +21,21 @@ const NavBar = () => {
   //   }
   // });
 
+  const categories = await prismadb.category.findMany({
+    where: {
+      products: {
+        some: { isPro: false, isArchived: false },
+      },
+    },
+  });
+
   return (
     <div
       // data-nav-state={navState}
       className={`fixed top-0 z-30 flex h-16 w-full items-center justify-between rounded-md   bg-background px-4 shadow-md transition-all duration-300 data-[nav-state=close]:h-0 data-[nav-state=close]:border-0 sm:px-6 lg:px-4`}
     >
-      <MainNav className="hidden lg:flex " />
-      <MobileNav className="ml-2 lg:hidden" />
+      <MainNav categories={categories} className="hidden lg:flex " />
+      <MobileNav categories={categories} className="ml-2 lg:hidden" />
       <div className="flex items-center justify-center  xl:absolute xl:left-1/2 xl:top-1/2 xl:-translate-x-1/2 xl:-translate-y-1/2 ">
         <Link
           href="/"
