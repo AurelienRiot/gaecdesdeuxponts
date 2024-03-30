@@ -15,9 +15,6 @@ export default async function PublicLayout({
       },
     },
   });
-  categories.map((category) => {
-    console.log(category.name);
-  });
 
   return (
     <CategoriesProvider cat={categories}>

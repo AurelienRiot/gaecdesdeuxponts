@@ -2,6 +2,8 @@ import { ConicGradientBorder } from "@/components/animations/conic-gradient-bord
 import ImageV2 from "./components/image-v2";
 import NosProduits from "./components/nos-produits";
 import WhyChooseUs from "./components/why-choose-us";
+import Image from "next/image";
+import NavBar from "@/components/navbar-public/navbar";
 
 export default function Home() {
   return (
@@ -46,6 +48,17 @@ export default function Home() {
           </div>
         </div>
       </div> */}
+      <div className="grid h-screen w-full grid-cols-[1fr_1.2fr_1.5fr] grid-rows-[1fr_4fr_3fr_2fr] p-4 ">
+        <div className="col-span-2 row-span-2 bg-orange-200 ">Main </div>
+        <header className=" bg-slate-200"></header>
+        <div className="  row-span-3  bg-cover bg-no-repeat [background-image:_url('/candy.jpg')]">
+          Candy
+        </div>
+        <section className="bg-green-500">Nom</section>
+
+        <section className="bg-yellow-500">Yum</section>
+        <section className="col-span-2 bg-orange-500">Footer</section>
+      </div>
     </>
   );
 }

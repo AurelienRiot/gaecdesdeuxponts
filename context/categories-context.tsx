@@ -16,6 +16,7 @@ export const CategoriesProvider: React.FC<{
   cat: Category[];
 }> = ({ children, cat }) => {
   const [categories, setCategories] = useState(cat);
+  console.log(cat);
   return (
     <CategoriesContext.Provider value={{ categories, setCategories }}>
       {children}
