@@ -3,12 +3,10 @@
 import { Button } from "@/components/ui/button";
 
 import { ArrowRightIcon } from "lucide-react";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 
 const WhyChooseUs = () => {
-  const session = useSession();
   return (
     <div className="bg-background py-8">
       <div className="mx-auto max-w-6xl px-4 text-center sm:px-6 lg:px-8">

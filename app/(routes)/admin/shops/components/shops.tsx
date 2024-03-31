@@ -8,14 +8,25 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import NameInput from "../../../../../components/display-shops/name-input";
 import { ShopCard } from "../../../../../components/display-shops/shop-card";
+import { Toggle } from "@/components/ui/toggle";
 
 const DisplayShop = ({ data }: { data: Shop[] }) => {
   const [coordinates, setCoordinates] = useState<{
     long: number | undefined;
     lat: number | undefined;
   }>({ lat: undefined, long: undefined });
-  const [sortedShops, setSortedShops] = useState<Shop[]>(data);
+  const [sortedShops, setSortedShops] = useState<Shop[]>(
+    data.filter((shop) => shop.isArchived === false),
+  );
   const router = useRouter();
+
+  const onPressedChange = (value: boolean) => {
+    if (value) {
+      setSortedShops(data.filter((shop) => shop.isArchived === true));
+    } else {
+      setSortedShops(data.filter((shop) => shop.isArchived === false));
+    }
+  };
 
   return (
     <>
@@ -44,6 +55,13 @@ const DisplayShop = ({ data }: { data: Shop[] }) => {
           shops={data}
           className="w-fit"
         />
+        <Toggle
+          aria-label="Toggle archivé"
+          variant={"outline"}
+          onPressedChange={onPressedChange}
+        >
+          Archivé
+        </Toggle>
       </div>
 
       <div className=" grid grid-cols-1 items-center justify-items-center  gap-3 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">

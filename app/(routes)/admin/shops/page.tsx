@@ -1,12 +1,11 @@
-import prismadb from "@/lib/prismadb";
-import DisplayShop from "./components/shops";
-import { Suspense } from "react";
-import { Heading } from "@/components/ui/heading";
-import { Button } from "@/components/ui/button";
-import { ChevronDown, Plus } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { ShopCard } from "@/components/skeleton-ui/shop-card";
-import { addDelay } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Heading } from "@/components/ui/heading";
+import { Input } from "@/components/ui/input";
+import prismadb from "@/lib/prismadb";
+import { ChevronDown, Plus } from "lucide-react";
+import { Suspense } from "react";
+import DisplayShop from "./components/shops";
 
 const ShopPage = async () => {
   return (

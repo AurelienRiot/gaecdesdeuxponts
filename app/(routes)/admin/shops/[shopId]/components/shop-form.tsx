@@ -3,7 +3,10 @@ import AddressAutocomplete, {
   Suggestion,
 } from "@/actions/adress-autocompleteFR";
 import UploadImage from "@/components/images-upload/image-upload";
+import { AlertModal } from "@/components/ui/alert-modal-form";
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button, LoadingButton } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Command,
   CommandEmpty,
@@ -29,26 +32,23 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
-import { addDelay, cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Shop } from "@prisma/client";
 import { ChevronDown, Trash } from "lucide-react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { UseFormReturn, useForm } from "react-hook-form";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import { z } from "zod";
+import { getFileKey } from "../../../categories/[categoryId]/components/category-form";
 import {
   ReturnType,
   createShop,
   deleteShop,
   updateShop,
 } from "./server-actions";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Shop } from "@prisma/client";
-import { getFileKey } from "../../../categories/[categoryId]/components/category-form";
-import { useRouter } from "next/navigation";
-import { AlertModal } from "@/components/ui/alert-modal-form";
-import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Le nom est requis" }),

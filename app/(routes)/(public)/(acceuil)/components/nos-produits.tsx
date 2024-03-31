@@ -2,9 +2,11 @@
 import BackgroundGrid from "@/components/grid";
 import { Button } from "@/components/ui/button";
 import { useCategoriesContext } from "@/context/categories-context";
+import { cn } from "@/lib/utils";
 import { CornerRightUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { HTMLAttributes } from "react";
 
 const NosProduits = () => {
   const categories = useCategoriesContext()?.categories;
@@ -12,8 +14,10 @@ const NosProduits = () => {
     return null;
   }
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-4 rounded-xl bg-transparent py-6 font-bold text-primary">
-      <h2 className="py-6 text-3xl md:text-5xl">Découvrez Nos Produits</h2>
+    <div className="flex w-full flex-col items-center justify-center gap-4 rounded-xl  py-6 font-bold text-primary">
+      <h2 className="  relative py-6   text-3xl  md:text-5xl ">
+        Découvrez Nos Produits
+      </h2>
       <div className="flex w-full flex-wrap justify-center gap-10">
         {categories.map((category, index) => (
           <CategoryCard
@@ -32,19 +36,23 @@ const NosProduits = () => {
 
 export default NosProduits;
 
-const CategoryCard = ({
+type CategoryCardProps = HTMLAttributes<HTMLDivElement> & {
+  index: number;
+  name: string;
+  description: string;
+  href: string;
+  imageUrl: string;
+};
+
+export const CategoryCard = ({
   imageUrl,
   name,
   description,
   href,
   index,
-}: {
-  imageUrl: string;
-  name: string;
-  description: string;
-  href: string;
-  index: number;
-}) => {
+  className,
+  ...props
+}: CategoryCardProps) => {
   const backgroundColors = [
     "var(--slate-900)",
     "var(--stone-900)",
@@ -52,14 +60,20 @@ const CategoryCard = ({
     "var(--gray-900)",
   ];
   return (
-    <div className="group relative aspect-square h-full w-[400px] max-w-[90vw] overflow-hidden rounded-md border-2 border-slate-50 shadow-lg">
+    <div
+      className={cn(
+        "group relative aspect-square h-full w-[400px] max-w-[90vw] overflow-hidden rounded-md border-2 border-slate-50 shadow-lg ",
+        className,
+      )}
+      {...props}
+    >
       <div
         className="absolute inset-0 bottom-1/2  right-0 flex h-1/2 flex-col items-center justify-center overflow-hidden p-6 "
         style={{
           backgroundColor: backgroundColors[index % backgroundColors.length],
         }}
       >
-        <h3 className="z-20 w-fit rounded-md bg-neutral-900/20 bg-gradient-to-r px-2 py-1 text-center text-xl   font-semibold text-neutral-50 backdrop-blur-sm transition-all  group-hover:bg-transparent  group-hover:backdrop-blur-none md:text-3xl ">
+        <h3 className="z-20 w-fit rounded-md  bg-neutral-900/20 px-2 py-1 text-center   text-xl font-semibold text-neutral-50 backdrop-blur-sm  transition-all  group-hover:bg-transparent group-hover:backdrop-blur-none md:text-3xl">
           {name}
         </h3>
         <p className="text-sm font-light tracking-wide text-neutral-300">
@@ -72,12 +86,12 @@ const CategoryCard = ({
         <Image
           src={imageUrl}
           fill
-          className="object-cover transition-all duration-200 group-hover:grayscale"
+          className="pointer-events-none object-cover grayscale transition-all duration-200 group-hover:grayscale-0"
           alt={name}
           sizes="(max-width: 450px) 90vw,  400px"
         />
       </div>
-      <div className=" absolute bottom-0 right-0 z-0  h-1/2 w-0  overflow-hidden transition-all duration-200 group-hover:w-1/2">
+      <div className=" absolute bottom-0 right-0 z-0 h-1/2  w-0 overflow-hidden  bg-background transition-all duration-200 group-hover:w-1/2">
         <BackgroundGrid />
         <Button
           asChild

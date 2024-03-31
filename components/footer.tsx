@@ -1,10 +1,11 @@
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-const Footer = () => {
+const Footer = ({ className }: { className?: string }) => {
   const currentYear = new Date().getFullYear();
   return (
     <>
-      <footer className="border-t bg-background/90">
+      <footer className={cn("border-t ", className)}>
         <div className="mx-auto pb-2 pt-10">
           <p className="text-center text-xs text-primary">
             &copy; {currentYear} GAEC des Deux Ponts, Inc All right reserved.

@@ -18,12 +18,18 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
+import { cn } from "@/lib/utils";
 
-const NavbarAction = () => {
+const NavbarAction = ({ className }: { className?: string }) => {
   const session = useSession();
 
   return (
-    <div className="ml-4 flex items-center gap-x-2 py-2 sm:gap-x-4">
+    <div
+      className={cn(
+        "ml-4 flex items-center gap-x-2 py-2 sm:gap-x-4",
+        className,
+      )}
+    >
       {session.status !== "loading" ? (
         <AuthNavButton session={session} />
       ) : null}
@@ -66,13 +72,13 @@ const CartIcon = forwardRef<HTMLButtonElement, { qty: number }>(
   ({ qty, ...props }, ref) => {
     return (
       <Button
-        variant={"rounded"}
-        className="relative bg-background px-3	 text-foreground "
+        variant={"outline"}
+        className="group relative border-0 px-3	hover:bg-background hover:text-foreground/80 focus-visible:ring-0   "
         ref={ref}
         {...props}
       >
-        <ShoppingCart size={20} />
-        <span className="absolute -right-2 -top-1  flex h-5  w-5 items-center justify-center rounded-full bg-foreground font-sans text-xs tabular-nums text-background shadow-md">
+        <ShoppingCart size={20} className="group-hover:text-foreground/80" />
+        <span className="absolute -right-2 -top-1  flex h-5  w-5 items-center justify-center rounded-full bg-foreground font-sans text-xs tabular-nums text-background shadow-md group-hover:bg-foreground/80 group-hover:text-background/80">
           {qty}
         </span>
       </Button>

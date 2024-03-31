@@ -14,7 +14,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn, haversine } from "@/lib/utils";
+import { haversine } from "@/lib/math";
+import { cn } from "@/lib/utils";
 import { Shop } from "@prisma/client";
 import { ChevronDown } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";

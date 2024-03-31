@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn, haversine } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Shop } from "@prisma/client";
 import { ClipboardEdit } from "lucide-react";
 import Link from "next/link";
@@ -22,6 +22,7 @@ import { Icons } from "../icons";
 import { AutosizeTextarea } from "../ui/autosize-textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import Image from "next/image";
+import { haversine } from "@/lib/math";
 
 type ShopCardProps = Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> & {
   shop: Shop;
@@ -80,58 +81,55 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
                   />
                 </span>
               ) : null}
-              <span>{shop.name}</span>
+              <span className="text-lg sm:text-xl lg:text-2xl">
+                {shop.name}
+              </span>
             </CardTitle>
             <CardInfo description={shop.description} />
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
             {!!shop.address && (
-              <CardDescription>
-                <span className="font-bold">Adresse :</span>{" "}
-                <Button asChild variant={"link"} className="px-0">
-                  <Link
-                    href={`https://maps.google.com/?q=${shop.address}`}
-                    target="_blank"
-                  >
-                    {shop.address}
-                  </Link>
-                </Button>
-              </CardDescription>
+              <Button asChild variant={"link"} className="justify-start px-0">
+                <Link
+                  href={`https://maps.google.com/?q=${shop.address}`}
+                  target="_blank"
+                >
+                  {shop.address}
+                </Link>
+              </Button>
             )}
             {!!shop.phone && (
-              <CardDescription>
-                <span className="font-bold">Téléphone :</span>{" "}
+              <Link href={`tel:${shop.phone}`} target="_blank">
                 {formatPhoneNumber(shop.phone)}
-              </CardDescription>
+              </Link>
             )}
             {!!shop.email && (
-              <CardDescription>
-                {" "}
-                <span className="font-bold">Mail :</span>{" "}
+              <Link
+                href={`mailto:${shop.email.toLocaleLowerCase()}`}
+                target="_blank"
+              >
                 {shop.email.toLocaleLowerCase()}
-              </CardDescription>
+              </Link>
             )}
             {!!shop.website && (
-              <CardDescription>
-                {" "}
-                <span className="font-bold">Site internet :</span>{" "}
+              <Link href={shop.website} target="_blank">
                 {shop.website}
-              </CardDescription>
+              </Link>
             )}
             {distance !== undefined && (
-              <CardDescription>
+              <div>
                 {" "}
                 <span className="font-bold">Distance :</span>{" "}
                 <span className="underline underline-offset-2">
                   {Math.round(distance)} kilometers
                 </span>
-              </CardDescription>
+              </div>
             )}
           </CardContent>
           {display === "admin" && (
             <CardFooter className="flex flex-row items-end justify-between  gap-2">
               <Button
-                variant="destructive"
+                variant="outline"
                 onClick={() => setOpen(true)}
                 className="hover:underline"
               >
