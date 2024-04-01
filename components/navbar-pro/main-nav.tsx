@@ -35,11 +35,11 @@ const MainNav = () => {
                 <NavigationMenuLink
                   className={cn(
                     navigationMenuTriggerStyle(),
-                    "bg-secondary text-secondary-foreground",
+                    "relative bg-secondary text-secondary-foreground",
                   )}
                 >
                   <StoreIcon className="mr-2 hidden h-4 w-4 xl:flex " />
-                  Nos Produit
+                  Nos Produits
                   <ChevronDown className="ml-2 h-4 w-4" />
                 </NavigationMenuLink>
               </PopoverTrigger>

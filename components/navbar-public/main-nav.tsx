@@ -12,7 +12,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 const MainNav = ({ className }: { className?: string }) => {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-
   const routes = publicRoutes(pathname);
   const { categories } = useCategoriesContext();
 
@@ -21,10 +20,11 @@ const MainNav = ({ className }: { className?: string }) => {
       className={cn("mx-6   items-center space-x-4 lg:space-x-6 ", className)}
     >
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger className="flex items-center justify-center">
+        <PopoverTrigger className="group relative flex items-center justify-center ">
           <StoreIcon className="mr-2 hidden h-4 w-4 xl:flex " />
-          Nos Produit
+          Nos Produits
           <ChevronDown className="ml-2 h-4 w-4" />
+          <span className="absolute -bottom-2 left-0 h-0.5 w-full rounded-full bg-blue-900 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </PopoverTrigger>
         <PopoverContent side="bottom" align="start" className="flex flex-col ">
           {categories.map((category) => {
@@ -39,7 +39,7 @@ const MainNav = ({ className }: { className?: string }) => {
                 key={href}
                 variant={"link"}
                 className={cn(
-                  "w-full justify-start",
+                  "w-full justify-start ",
                   active && " bg-primary text-primary-foreground",
                 )}
               >
@@ -55,10 +55,11 @@ const MainNav = ({ className }: { className?: string }) => {
         <Link
           key={href}
           href={href}
-          className={"flex items-center justify-center "}
+          className={"group relative flex items-center justify-center"}
         >
           <Icone className="mr-2 hidden h-4 w-4 xl:flex " />
           {label}
+          <span className="absolute -bottom-2 left-0 h-0.5 w-full rounded-full bg-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </Link>
       ))}
     </nav>

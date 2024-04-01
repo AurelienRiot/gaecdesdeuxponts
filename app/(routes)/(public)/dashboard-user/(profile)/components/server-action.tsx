@@ -7,7 +7,7 @@ import { UserFormValues } from "./user-form";
 async function updateUser({
   name,
   phone,
-  address,
+  adress,
 }: UserFormValues): Promise<ReturnTypeUserObject> {
   const isAuth = await checkUser();
 
@@ -39,7 +39,7 @@ async function updateUser({
     },
     data: {
       address: {
-        create: address,
+        create: adress,
       },
     },
   });

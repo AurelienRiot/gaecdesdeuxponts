@@ -17,7 +17,7 @@ interface OrderTableProps {
 
 export const OrderTable: React.FC<OrderTableProps> = ({ data }) => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 px-4">
       <Heading
         title={`Commandes (${data.length})`}
         description="Résumé des commandes"

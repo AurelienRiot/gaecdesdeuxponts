@@ -103,7 +103,7 @@ export default function MobileNav({ className, ...props }: MobileNavProps) {
                       className="test-sm cursor-pointer"
                     >
                       <StoreIcon className="mr-2 h-4 w-4" />
-                      Nos Produis
+                      Nos Produits
                       <ChevronDown
                         className={cn(
                           "ml-4 h-4 w-4",

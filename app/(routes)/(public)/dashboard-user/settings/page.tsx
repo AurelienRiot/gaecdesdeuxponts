@@ -1,5 +1,5 @@
 import GetUser from "@/actions/get-user";
-import { UserForm } from "./components/user-form";
+import { UserForm } from "../(profile)/components/user-form";
 import { redirect } from "next/navigation";
 
 const SettingsPage = async () => {

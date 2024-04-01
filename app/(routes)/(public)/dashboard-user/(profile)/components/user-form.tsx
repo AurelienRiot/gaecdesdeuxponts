@@ -18,20 +18,21 @@ import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash } from "lucide-react";
 import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import * as z from "zod";
 import { deleteUser, updateUser } from "./server-action";
+import { moveSelectedTabToTop, useTabsContext } from "./tabs-animate";
 
 interface UserFormProps {
   initialData: {
     name: string;
     email: string;
     phone: string;
-    address: FullAdress;
+    adress: FullAdress;
   };
 }
 
@@ -45,7 +46,7 @@ const formSchema = z.object({
       message: "Le numéro de téléphone n'est pas valide",
     },
   ),
-  address: z
+  adress: z
     .object({
       label: z.string().optional(),
       city: z.string().optional(),
@@ -63,17 +64,18 @@ export type UserFormValues = z.infer<typeof formSchema>;
 export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const searchParams = useSearchParams();
 
   const [selectedAddress, setSelectedAddress] = useState<FullAdress>(
-    initialData.address
+    initialData.adress
       ? {
-          label: initialData.address.label || "",
-          city: initialData.address.city || "",
-          country: initialData.address.country || "FR",
-          line1: initialData.address.line1 || "",
-          line2: initialData.address.line2 || "",
-          postalCode: initialData.address.postalCode || "",
-          state: initialData.address.state || "",
+          label: initialData.adress.label || "",
+          city: initialData.adress.city || "",
+          country: initialData.adress.country || "FR",
+          line1: initialData.adress.line1 || "",
+          line2: initialData.adress.line2 || "",
+          postalCode: initialData.adress.postalCode || "",
+          state: initialData.adress.state || "",
         }
       : {
           label: "",
@@ -95,21 +97,29 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
     defaultValues: {
       name: initialData.name,
       phone: initialData.phone,
-      address: selectedAddress,
+      adress: selectedAddress,
     },
   });
 
+  const { setTabs, tabs } = useTabsContext();
+
   const onSubmit = async (data: UserFormValues) => {
     data.name = data.name.trim();
-    data.address = selectedAddress;
+    data.adress = selectedAddress;
 
     const result = await updateUser(data);
     if (!result.success) {
       toast.error(result.message);
       return;
     }
-    router.push(`/dashboard-user`);
-    router.refresh();
+
+    if (searchParams.get("tab") === "user") {
+      setTabs(moveSelectedTabToTop("user", tabs));
+      router.refresh();
+    } else {
+      router.push("/dashboard-user?tab=user");
+    }
+
     toast.success(toastMessage);
   };
 
@@ -121,6 +131,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
       signOut({ callbackUrl: "/" });
       toast.success("Utilisateur supprimée");
     }
+
     setOpen(false);
   };
 
@@ -131,7 +142,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
       />
-      <div className="mb-4 flex flex-col items-center justify-between gap-4 md:flex-row">
+      <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
         <h2 className="text-3xl font-bold tracking-tight"> {title} </h2>
 
         <Button
@@ -144,7 +155,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
           Supprimer le compte <Trash className="ml-2 h-4 w-4" />
         </Button>
       </div>
-      <Separator />
+      <Separator className="mt-4" />
       <p className="p-6  font-bold">{initialData.email}</p>
 
       <Form {...form}>
@@ -206,7 +217,6 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
           </LoadingButton>
         </form>
       </Form>
-      <ButtonBackward url="/dashboard-user" className="mt-4" />
     </div>
   );
 };
