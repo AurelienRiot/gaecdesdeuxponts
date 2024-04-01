@@ -47,7 +47,7 @@ export const Tabs = ({
     <>
       <div
         className={cn(
-          " absolute bottom-0 left-0 top-0 z-20 flex min-w-[50px] flex-col items-center justify-start gap-4 overflow-hidden bg-background  p-4 shadow-lg transition-transform duration-500 [perspective:1000px]",
+          " absolute bottom-0 left-0 top-0 z-20 flex  flex-col items-center justify-start gap-4 overflow-hidden bg-background  p-4 shadow-lg transition-transform duration-500 [perspective:1000px]",
           containerClassName,
         )}
       >
@@ -76,7 +76,7 @@ export const Tabs = ({
               onMouseLeave={() => setHovering(false)}
               data-state={open}
               className={cn(
-                "justify-left relative flex w-[200px] items-center gap-2 rounded-md px-4 py-2 transition-transform duration-500 data-[state=false]:w-[50px]",
+                "justify-left relative flex w-[200px] items-center gap-2 rounded-md px-4 py-2 transition-transform duration-500 hover:opacity-80 data-[state=false]:w-[50px]",
                 tabClassName,
               )}
               style={{
