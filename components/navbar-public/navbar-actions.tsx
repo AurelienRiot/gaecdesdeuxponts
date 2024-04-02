@@ -30,9 +30,7 @@ const NavbarAction = ({ className }: { className?: string }) => {
         className,
       )}
     >
-      {session.status !== "loading" ? (
-        <AuthNavButton session={session} />
-      ) : null}
+      <AuthNavButton session={session} />
 
       <ThemeToggle />
       <CartButton />
@@ -73,7 +71,7 @@ const CartIcon = forwardRef<HTMLButtonElement, { qty: number }>(
     return (
       <Button
         variant={"outline"}
-        className="group relative border-0 px-3	hover:bg-background hover:text-foreground/80 focus-visible:ring-0   "
+        className="group relative border-0 px-3	hover:bg-background hover:text-foreground/80   "
         ref={ref}
         {...props}
       >

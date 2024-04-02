@@ -24,9 +24,21 @@ const MainNav = ({ className }: { className?: string }) => {
           <StoreIcon className="mr-2 hidden h-4 w-4 xl:flex " />
           Nos Produits
           <ChevronDown className="ml-2 h-4 w-4" />
-          <span className="absolute -bottom-2 left-0 h-0.5 w-full rounded-full bg-blue-900 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          <AnimatedUnderline
+            display={categories.some(
+              (category) =>
+                pathname.startsWith(
+                  `/category/${encodeURIComponent(category.name)}`,
+                ) === true,
+            )}
+          />
         </PopoverTrigger>
-        <PopoverContent side="bottom" align="start" className="flex flex-col ">
+        <PopoverContent
+          side="bottom"
+          align="start"
+          alignOffset={-10}
+          className="flex flex-col "
+        >
           {categories.map((category) => {
             const href = `/category/${encodeURIComponent(category.name)}`;
             const label = category.name;
@@ -55,11 +67,13 @@ const MainNav = ({ className }: { className?: string }) => {
         <Link
           key={href}
           href={href}
-          className={"group relative flex items-center justify-center"}
+          className={`group relative flex items-center justify-center
+          
+          `}
         >
           <Icone className="mr-2 hidden h-4 w-4 xl:flex " />
           {label}
-          <span className="absolute -bottom-2 left-0 h-0.5 w-full rounded-full bg-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          <AnimatedUnderline display={active} />
         </Link>
       ))}
     </nav>
@@ -67,6 +81,16 @@ const MainNav = ({ className }: { className?: string }) => {
 };
 
 export default MainNav;
+
+const AnimatedUnderline = ({ display }: { display?: boolean }) => {
+  return (
+    <div
+      data-state={display}
+      className="absolute 
+    -bottom-2 left-0 h-0.5 w-0 rounded-full bg-primary transition-all duration-300 group-hover:w-full data-[state=true]:w-full data-[state=true]:bg-blue-600"
+    />
+  );
+};
 
 export const publicRoutes = (pathname: string) => [
   // {

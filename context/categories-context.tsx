@@ -1,6 +1,7 @@
 "use client";
 import { Category } from "@prisma/client";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { fetchCategories } from "./categories-fetch";
 
 type CategoriesContextType = {
   categories: Category[];
@@ -13,14 +14,26 @@ export const CategoriesContext = createContext<
 
 export const CategoriesProvider: React.FC<{
   children: React.ReactNode;
-  cat: Category[];
-}> = ({ children, cat }) => {
-  const [categories, setCategories] = useState(cat);
+  isPro: boolean;
+}> = ({ children }) => {
+  const [categories, setCategories] = useState<Category[]>([]);
   return (
     <CategoriesContext.Provider value={{ categories, setCategories }}>
+      <CategoriesInitialValue isPro={false} />
       {children}
     </CategoriesContext.Provider>
   );
+};
+
+const CategoriesInitialValue = ({ isPro }: { isPro: boolean }) => {
+  const { setCategories } = useCategoriesContext();
+
+  useEffect(() => {
+    fetchCategories(isPro).then((categories) => {
+      setCategories(categories);
+    });
+  }, [setCategories, isPro]);
+  return null;
 };
 
 export function useCategoriesContext() {

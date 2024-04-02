@@ -3,7 +3,6 @@
 import { AddressForm, FullAdress } from "@/components/address-form";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import { Button, LoadingButton } from "@/components/ui/button";
-import ButtonBackward from "@/components/ui/button-backward";
 import {
   Form,
   FormControl,
@@ -18,6 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -25,7 +25,7 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import * as z from "zod";
 import { deleteUser, updateUser } from "./server-action";
-import { moveSelectedTabToTop, useTabsContext } from "./tabs-animate";
+import { Tab, moveSelectedTabToTop, useTabsContext } from "./tabs-animate";
 
 interface UserFormProps {
   initialData: {
@@ -113,12 +113,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
       return;
     }
 
-    if (searchParams.get("tab") === "user") {
-      setTabs(moveSelectedTabToTop("user", tabs));
-      router.refresh();
-    } else {
-      router.push("/dashboard-user?tab=user");
-    }
+    redirectTab({ tab: "user", router, searchParams, tabs, setTabs });
 
     toast.success(toastMessage);
   };
@@ -156,7 +151,9 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
         </Button>
       </div>
       <Separator className="mt-4" />
-      <p className="p-6  font-bold">{initialData.email}</p>
+      <p className=" py-6  text-base font-bold sm:text-lg">
+        {initialData.email}
+      </p>
 
       <Form {...form}>
         <form
@@ -219,4 +216,25 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
       </Form>
     </div>
   );
+};
+
+const redirectTab = ({
+  tab: tabName,
+  tabs,
+  setTabs,
+  router,
+  searchParams,
+}: {
+  tab: string;
+  tabs: Tab[];
+  setTabs: (tabs: Tab[]) => void;
+  router: AppRouterInstance;
+  searchParams: URLSearchParams;
+}) => {
+  if (searchParams.get("tab") === tabName) {
+    setTabs(moveSelectedTabToTop(tabName, tabs));
+    router.refresh();
+  } else {
+    router.push(`/dashboard-user?tab=${tabName}`);
+  }
 };

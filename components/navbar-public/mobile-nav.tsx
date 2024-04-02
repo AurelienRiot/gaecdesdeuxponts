@@ -20,7 +20,6 @@ import { useState } from "react";
 import { useCategoriesContext } from "@/context/categories-context";
 import Image from "next/image";
 import { publicRoutes } from "./main-nav";
-import { Category } from "@prisma/client";
 
 type MobileNavProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 export default function MobileNav({ className, ...props }: MobileNavProps) {

@@ -1,3 +1,4 @@
+import { GoogleGeminiEffectDemo } from "./components/effect";
 import ImageV2 from "./components/image-v2";
 import NosProduits from "./components/nos-produits";
 import { SwipeCarousel } from "./components/swipe-carousel";
@@ -48,6 +49,7 @@ export default function Home() {
         </div>
       </div> */}
       <MainPage />
+      <GoogleGeminiEffectDemo />{" "}
     </>
   );
 }

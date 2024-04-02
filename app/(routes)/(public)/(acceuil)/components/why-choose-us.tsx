@@ -70,6 +70,7 @@ const WhyChooseUs = () => {
           Icon={ArrowRightIcon}
           iconPlacement="right"
           className="relative mx-auto mt-8 border border-transparent "
+          aria-label={`En savoir + faq`}
         >
           <Link href="/faq">
             En savoir plus

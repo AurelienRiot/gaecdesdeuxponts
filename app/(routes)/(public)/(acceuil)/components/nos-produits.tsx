@@ -86,7 +86,7 @@ export const CategoryCard = ({
         <Image
           src={imageUrl}
           fill
-          className="pointer-events-none object-cover grayscale transition-all duration-200 group-hover:grayscale-0"
+          className="pointer-events-none object-cover grayscale-0 transition-all duration-200 group-hover:grayscale"
           alt={name}
           sizes="(max-width: 450px) 90vw,  400px"
         />
@@ -96,9 +96,9 @@ export const CategoryCard = ({
         <Button
           asChild
           variant={"shine"}
-          className=" group/button absolute left-1/2 top-1/2 w-fit -translate-x-1/2 -translate-y-1/2 "
+          className=" group/button absolute left-1/2 top-1/2 w-fit -translate-x-1/2 -translate-y-1/2 whitespace-nowrap "
         >
-          <Link href={href}>
+          <Link href={href} aria-label={`En savoir + ${name}`}>
             En savoir +{" "}
             <CornerRightUp className="ml-2 size-0 transition-all group-hover/button:size-4" />
           </Link>

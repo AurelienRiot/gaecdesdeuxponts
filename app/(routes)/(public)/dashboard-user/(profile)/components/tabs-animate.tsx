@@ -129,7 +129,7 @@ export const FadeInDiv = ({
     return tab.iconId === tabs[0].iconId;
   };
   return (
-    <div className="relative h-full w-full ">
+    <div className="relative ml-24 h-full w-full sm:ml-28">
       {tabs.map((tab, idx) => (
         <motion.div
           key={tab.iconId}
@@ -144,7 +144,7 @@ export const FadeInDiv = ({
             y: isActive(tab) ? [0, 40, 0] : 0,
           }}
           className={cn(
-            "absolute left-0 top-0 h-full w-full  rounded-2xl  bg-gradient-to-br from-stone-50 to-neutral-50 pl-20 pt-5 text-xl font-bold dark:bg-gradient-to-br dark:from-stone-950 dark:to-neutral-950  md:text-4xl",
+            "absolute left-0 top-0 h-[95%]  w-full  overflow-hidden rounded-2xl border bg-gradient-to-br from-stone-50 to-neutral-50 pt-5 text-xl font-bold shadow-md dark:bg-gradient-to-br  dark:from-stone-950 dark:to-neutral-950 md:text-4xl",
             className,
           )}
         >

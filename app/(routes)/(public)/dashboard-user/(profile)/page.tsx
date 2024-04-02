@@ -7,6 +7,7 @@ import { OrderTable } from "./components/order-table";
 import ProfilTab from "./components/profil-tab";
 import { Tab, Tabs, TabsProvider } from "./components/tabs-animate";
 import { UserForm } from "./components/user-form";
+import { Suspense } from "react";
 
 const DashboardUser = async ({
   searchParams,
@@ -128,7 +129,9 @@ const DashboardUser = async ({
         <>
           <div className="h-full w-full flex-col  px-8  ">
             <div className=" flex-1 space-y-4 ">
-              <UserForm initialData={formattedUser} />
+              <Suspense fallback={null}>
+                <UserForm initialData={formattedUser} />
+              </Suspense>
             </div>
           </div>
         </>
@@ -137,7 +140,7 @@ const DashboardUser = async ({
   ];
 
   return (
-    <div className=" relative mx-auto mt-4 flex h-[1000px] w-full justify-between   gap-4 pr-4 [perspective:1000px]">
+    <div className=" relative mx-auto mt-4 flex h-[1100px] w-full justify-between   gap-4 pr-4 [perspective:1000px]">
       <TabsProvider initialTabs={tabs} activeTab={searchParams.tab}>
         <Tabs tabs={tabs} />
       </TabsProvider>

@@ -4,6 +4,7 @@ import Container from "@/components/ui/container";
 import { getServerSession } from "next-auth";
 import CartItems from "./components/cart-items";
 import Summary from "./components/summary";
+import { Suspense } from "react";
 
 const CartPage = async () => {
   const session = await getServerSession(authOptions);
@@ -18,7 +19,9 @@ const CartPage = async () => {
         <div className="mt-12 gap-x-12 lg:grid lg:grid-cols-12 lg:items-start">
           <CartItems />
 
-          <Summary userId={userId} shops={shops} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Summary userId={userId} shops={shops} />
+          </Suspense>
         </div>
       </div>
     </Container>
