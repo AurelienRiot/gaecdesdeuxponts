@@ -24,7 +24,7 @@ const Info: React.FC<InfoProps> = ({ data, scroll, linkProducts }) => {
 
   const value = data.price;
 
-  const url = data.isPro ? `/pro/` : `/`;
+  const url = data.isPro ? `/dashboard-user?tab=store&product=` : `/product/`;
 
   const onAddToCart: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.stopPropagation();
@@ -34,7 +34,7 @@ const Info: React.FC<InfoProps> = ({ data, scroll, linkProducts }) => {
   return (
     <div>
       <Link
-        href={url + "product/" + encodeURIComponent(data.name)}
+        href={url + encodeURIComponent(data.name)}
         className="text-3xl font-bold text-gray-900 dark:text-white"
       >
         {data.name}
@@ -60,7 +60,7 @@ const Info: React.FC<InfoProps> = ({ data, scroll, linkProducts }) => {
                 <Badge key={product.id}>
                   <Link
                     className="py-1"
-                    href={url + "product/" + encodeURIComponent(product.name)}
+                    href={url + encodeURIComponent(product.name)}
                   >
                     {product.name}
                   </Link>

@@ -2,12 +2,14 @@ import GetUser from "@/actions/get-user";
 import { currencyFormatter, dateFormatter } from "@/lib/utils";
 import { Role } from "@prisma/client";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import { OrderColumnType } from "./components/order-column";
 import { OrderTable } from "./components/order-table";
+import ProTab from "./components/pro-tab";
 import ProfilTab from "./components/profil-tab";
 import { Tab, Tabs, TabsProvider } from "./components/tabs-animate";
 import { UserForm } from "./components/user-form";
-import { Suspense } from "react";
+import { CategoriesProvider } from "@/context/categories-context";
 
 const DashboardUser = async ({
   searchParams,
@@ -16,7 +18,6 @@ const DashboardUser = async ({
 }) => {
   const user = await GetUser();
   if (!user) redirect("/login");
-  console.log(user.name);
 
   const formattedOrders: OrderColumnType[] = (user.orders || []).map(
     (order) => ({
@@ -112,7 +113,7 @@ const DashboardUser = async ({
       iconId: "orders",
       content: (
         <>
-          <div className="p-4">
+          <div className="p-6">
             {formattedOrders.length > 0 ? (
               <OrderTable data={formattedOrders} />
             ) : (
@@ -127,7 +128,7 @@ const DashboardUser = async ({
       iconId: "settings",
       content: (
         <>
-          <div className="h-full w-full flex-col  px-8  ">
+          <div className="h-full w-full flex-col p-6  ">
             <div className=" flex-1 space-y-4 ">
               <Suspense fallback={null}>
                 <UserForm initialData={formattedUser} />
@@ -139,8 +140,23 @@ const DashboardUser = async ({
     },
   ];
 
+  if (user.role === "pro") {
+    tabs.push({
+      title: "Prduits Pro",
+      iconId: "store",
+
+      content: (
+        <CategoriesProvider isPro={true}>
+          <Suspense fallback={null}>
+            <ProTab />
+          </Suspense>
+        </CategoriesProvider>
+      ),
+    });
+  }
+
   return (
-    <div className=" relative mx-auto mt-4 flex h-[1100px] w-full justify-between   gap-4 pr-4 [perspective:1000px]">
+    <div className=" relative mx-auto mt-4 flex h-[calc(100vh-297px)] w-full  justify-between gap-4   pr-4 [perspective:1000px] sm:h-[calc(100vh-220px)]">
       <TabsProvider initialTabs={tabs} activeTab={searchParams.tab}>
         <Tabs tabs={tabs} />
       </TabsProvider>

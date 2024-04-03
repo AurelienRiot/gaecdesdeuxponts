@@ -7,6 +7,7 @@ interface CartStore {
   items: ProductWithCategoryAndImages[];
   quantities: { [productId: string]: number };
   addItem: (data: ProductWithCategoryAndImages) => void;
+  changeQuantity: (id: string, quantity: number) => void;
   addOneItem: (id: string) => void;
   removeOneItem: (id: string) => void;
   removeItem: (id: string) => void;
@@ -38,6 +39,18 @@ const useCart = create(
         const quantities = get().quantities;
         quantities[id]++;
         set({ quantities });
+      },
+
+      changeQuantity: (id: string, quantity: number) => {
+        const quantities = get().quantities;
+        quantities[id] = quantity;
+
+        if (quantities[id] === 0) {
+          set({ items: [...get().items.filter((item) => item.id !== id)] });
+          toast.success("Produit retiré du panier");
+        } else {
+          set({ quantities });
+        }
       },
 
       removeOneItem: (id: string) => {

@@ -85,12 +85,7 @@ export const AddressInput = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-fit p-0" side="bottom" align="start">
-        <Command
-          filter={(value, search) => {
-            return 1;
-          }}
-          loop
-        >
+        <Command shouldFilter={false} loop>
           <CommandInput
             placeholder="Entrer l'adresse..."
             className="h-9 "
@@ -110,7 +105,7 @@ export const AddressInput = ({
             }}
           />
           <CommandList>
-            {query.length > 2 && (
+            {query.length > 3 && (
               <CommandEmpty>Adresse introuvable</CommandEmpty>
             )}
             {suggestions.map((address, index) => (

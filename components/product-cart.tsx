@@ -24,12 +24,12 @@ const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
     (c) => c.id === data.categoryId,
   );
   if (!category) return null;
-  const url = data.isPro ? `/pro/` : `/`;
+  const url = data.isPro ? `/dashboard-user?tab=store&product=` : `/product/`;
 
   const value = data.price;
 
   const handleClick = () => {
-    router.push(url + "product/" + encodeURIComponent(data.name));
+    router.push(url + encodeURIComponent(data.name));
   };
 
   const onAddToCart: MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -59,6 +59,7 @@ const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
             <IconButton
               className="z-20 sm:opacity-0 sm:group-hover:opacity-100"
               title="Aperçue"
+              onClick={handleClick}
               icon={<FaInfo size={20} className="text-foreground" />}
             />
             <IconButton
@@ -72,17 +73,14 @@ const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
       </div>
       <div>
         <Link
-          href={url + "product/" + encodeURIComponent(data.name)}
+          href={url + encodeURIComponent(data.name)}
           className="block text-lg font-semibold text-primary"
         >
           {data.name}
         </Link>
-        <Link
-          href={url + "category/" + encodeURIComponent(category.name)}
-          className="block text-sm text-secondary-foreground"
-        >
+        <p className="block text-sm text-secondary-foreground">
           {category.name}
-        </Link>
+        </p>
       </div>
       <div className="flex items-center justify-between text-primary">
         <Currency value={value} />

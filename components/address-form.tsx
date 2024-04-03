@@ -113,12 +113,7 @@ export const AddressForm = <T extends { address: FullAdress }>({
                 </div>
               </FormControl>
               <PopoverContent className="w-fit p-0" side="bottom" align="start">
-                <Command
-                  loop
-                  filter={(value, search) => {
-                    return 1;
-                  }}
-                >
+                <Command loop shouldFilter={false}>
                   <CommandInput
                     placeholder="Entrer l'adresse..."
                     className="h-9 "
@@ -139,7 +134,7 @@ export const AddressForm = <T extends { address: FullAdress }>({
                     }}
                   />
                   <CommandList>
-                    {query.length > 2 && (
+                    {query.length > 3 && (
                       <CommandEmpty>Adresse introuvable</CommandEmpty>
                     )}
                     {suggestions.map((address, index) => (

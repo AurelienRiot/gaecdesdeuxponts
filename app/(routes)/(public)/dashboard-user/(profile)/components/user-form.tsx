@@ -19,13 +19,18 @@ import { Trash } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import * as z from "zod";
 import { deleteUser, updateUser } from "./server-action";
-import { Tab, moveSelectedTabToTop, useTabsContext } from "./tabs-animate";
+import {
+  ICONS,
+  Tab,
+  moveSelectedTabToTop,
+  useTabsContext,
+} from "./tabs-animate";
 
 interface UserFormProps {
   initialData: {
@@ -37,7 +42,9 @@ interface UserFormProps {
 }
 
 const formSchema = z.object({
-  name: z.string().min(1),
+  name: z.string().min(1, {
+    message: "Le nom est obligatoire",
+  }),
   phone: z.string().refine(
     (value) => {
       return value === "" || isValidPhoneNumber(value);
@@ -101,7 +108,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
     },
   });
 
-  const { setTabs, tabs } = useTabsContext();
+  const { setTabs, setHovering } = useTabsContext();
 
   const onSubmit = async (data: UserFormValues) => {
     data.name = data.name.trim();
@@ -113,7 +120,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
       return;
     }
 
-    redirectTab({ tab: "user", router, searchParams, tabs, setTabs });
+    redirectTab({ tab: "user", router, searchParams, setTabs });
 
     toast.success(toastMessage);
   };
@@ -137,7 +144,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
       />
-      <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+      <div className=" flex flex-col items-center justify-between gap-4 md:flex-row">
         <h2 className="text-3xl font-bold tracking-tight"> {title} </h2>
 
         <Button
@@ -158,7 +165,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-8"
+          className="w-full space-y-8 pb-4"
         >
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
             <FormField
@@ -206,6 +213,8 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
             />
           </div>
           <LoadingButton
+            onMouseEnter={() => setHovering(true)}
+            onMouseLeave={() => setHovering(false)}
             disabled={form.formState.isSubmitting}
             className="ml-auto "
             type="submit"
@@ -220,19 +229,17 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
 
 const redirectTab = ({
   tab: tabName,
-  tabs,
   setTabs,
   router,
   searchParams,
 }: {
-  tab: string;
-  tabs: Tab[];
-  setTabs: (tabs: Tab[]) => void;
+  tab: keyof typeof ICONS;
+  setTabs: Dispatch<SetStateAction<Tab[]>>;
   router: AppRouterInstance;
   searchParams: URLSearchParams;
 }) => {
   if (searchParams.get("tab") === tabName) {
-    setTabs(moveSelectedTabToTop(tabName, tabs));
+    setTabs((tabs) => moveSelectedTabToTop(tabName, tabs));
     router.refresh();
   } else {
     router.push(`/dashboard-user?tab=${tabName}`);

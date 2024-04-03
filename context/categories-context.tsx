@@ -15,11 +15,11 @@ export const CategoriesContext = createContext<
 export const CategoriesProvider: React.FC<{
   children: React.ReactNode;
   isPro: boolean;
-}> = ({ children }) => {
+}> = ({ children, isPro }) => {
   const [categories, setCategories] = useState<Category[]>([]);
   return (
     <CategoriesContext.Provider value={{ categories, setCategories }}>
-      <CategoriesInitialValue isPro={false} />
+      <CategoriesInitialValue isPro={isPro} />
       {children}
     </CategoriesContext.Provider>
   );

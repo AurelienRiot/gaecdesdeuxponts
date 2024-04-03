@@ -223,7 +223,6 @@ module.exports = {
         blob: "blob 15s linear infinite",
 
         shine: "shine 10s ease-out infinite",
-
         aurora: "aurora 60s linear infinite",
       },
     },

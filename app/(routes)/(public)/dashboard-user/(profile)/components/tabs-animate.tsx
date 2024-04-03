@@ -6,17 +6,17 @@ import { motion } from "framer-motion";
 import {
   ChevronLeft,
   CircleUserRound,
-  Lock,
   Package,
   Settings,
+  Store,
 } from "lucide-react";
 import { createContext, useContext, useEffect, useState } from "react";
 
-const ICONS = {
+export const ICONS = {
   user: CircleUserRound,
   settings: Settings,
-  password: Lock,
   orders: Package,
+  store: Store,
 };
 
 export type Tab = {
@@ -38,10 +38,8 @@ export const Tabs = ({
   tabClassName?: string;
   contentClassName?: string;
 }) => {
-  const { tabs, setTabs } = useTabsContext();
+  const { tabs, setTabs, setHovering } = useTabsContext();
   const [open, setOpen] = useState(false);
-
-  const [hovering, setHovering] = useState(false);
 
   return (
     <>
@@ -105,26 +103,13 @@ export const Tabs = ({
           );
         })}
       </div>
-      <FadeInDiv
-        tabs={tabs}
-        key={tabs[0].iconId}
-        hovering={hovering}
-        className={cn("", contentClassName)}
-      />
+      <FadeInDiv key={tabs[0].iconId} className={cn("", contentClassName)} />
     </>
   );
 };
 
-export const FadeInDiv = ({
-  className,
-  tabs,
-  hovering,
-}: {
-  className?: string;
-  key?: string;
-  tabs: Tab[];
-  hovering?: boolean;
-}) => {
+export const FadeInDiv = ({ className }: { className?: string }) => {
+  const { tabs, hovering } = useTabsContext();
   const isActive = (tab: Tab) => {
     return tab.iconId === tabs[0].iconId;
   };
@@ -139,14 +124,16 @@ export const FadeInDiv = ({
             top: hovering ? idx * -50 : 0,
             zIndex: -idx,
             opacity: idx < 3 ? 1 - idx * 0.1 : 0,
+            scrollBehavior: "smooth",
           }}
           animate={{
             y: isActive(tab) ? [0, 40, 0] : 0,
           }}
           className={cn(
-            "absolute left-0 top-0 h-[95%]  w-full  overflow-hidden rounded-2xl border bg-gradient-to-br from-stone-50 to-neutral-50 pt-5 text-xl font-bold shadow-md dark:bg-gradient-to-br  dark:from-stone-950 dark:to-neutral-950 md:text-4xl",
+            " absolute left-0 top-0  h-[95%] w-full overflow-y-auto rounded-2xl border bg-gradient-to-br from-neutral-50 to-stone-100  shadow-md dark:bg-gradient-to-br  dark:from-stone-950 dark:to-neutral-950 ",
             className,
           )}
+          id="tab-container"
         >
           {tab.content}
         </motion.div>
@@ -158,6 +145,8 @@ export const FadeInDiv = ({
 type TabsContextType = {
   tabs: Tab[];
   setTabs: React.Dispatch<React.SetStateAction<Tab[]>>;
+  hovering: boolean;
+  setHovering: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const TabsContext = createContext<TabsContextType | undefined>(
@@ -170,14 +159,15 @@ export const TabsProvider: React.FC<{
   activeTab: string;
 }> = ({ children, initialTabs, activeTab }) => {
   const [tabs, setTabs] = useState<Tab[]>(
-    moveSelectedTabToTop(activeTab, initialTabs),
+    moveSelectedTabToTop(activeTab as keyof typeof ICONS, initialTabs),
   );
+  const [hovering, setHovering] = useState(false);
 
   useEffect(() => {
-    setTabs(moveSelectedTabToTop(activeTab, initialTabs));
+    setTabs(moveSelectedTabToTop(activeTab as keyof typeof ICONS, initialTabs));
   }, [activeTab, initialTabs]);
   return (
-    <TabsContext.Provider value={{ tabs, setTabs }}>
+    <TabsContext.Provider value={{ tabs, setTabs, hovering, setHovering }}>
       {children}
     </TabsContext.Provider>
   );
@@ -193,7 +183,10 @@ export function useTabsContext() {
   return context;
 }
 
-export const moveSelectedTabToTop = (iconId: string, tabs: Tab[]) => {
+export const moveSelectedTabToTop = (
+  iconId: keyof typeof ICONS,
+  tabs: Tab[],
+) => {
   const index = tabs.findIndex((tab) => tab.iconId === iconId);
   if (index > 0) {
     const newTabs = [...tabs];

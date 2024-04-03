@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
@@ -48,7 +48,7 @@ export const ConicGradientBorder = ({
     <div className="pointer-events-none absolute inset-0 z-10 ">
       <motion.div
         className={cn(
-          " mask-with-browser-support absolute -inset-[1px] rounded-full border border-transparent bg-origin-border",
+          "mask-with-browser-support absolute  -inset-[1px] rounded-full border border-transparent bg-origin-border",
           className,
         )}
         style={{

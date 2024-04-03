@@ -91,7 +91,7 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
             {!!shop.address && (
               <Button asChild variant={"link"} className="justify-start px-0">
                 <Link
-                  href={`https://maps.google.com/?q=${shop.address}`}
+                  href={`https://maps.google.com/?q=${shop.address} ${shop.name} `}
                   target="_blank"
                 >
                   {shop.address}

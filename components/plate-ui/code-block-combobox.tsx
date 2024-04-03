@@ -60,7 +60,7 @@ export function CodeBlockCombobox() {
       <PopoverContent className="w-[200px] p-0">
         <Command>
           <CommandInput placeholder="Recherché un language..." />
-          <CommandEmpty>No language found.</CommandEmpty>
+          <CommandEmpty>Aucun language trouvé</CommandEmpty>
 
           <CommandList>
             {languages.map((language) => (
@@ -76,7 +76,9 @@ export function CodeBlockCombobox() {
                 <Icons.check
                   className={cn(
                     "mr-2 size-4",
-                    state.value === language.value ? "opacity-100" : "opacity-0"
+                    state.value === language.value
+                      ? "opacity-100"
+                      : "opacity-0",
                   )}
                 />
                 {language.label}

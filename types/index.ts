@@ -41,6 +41,13 @@ export type ProductWithCategoryAndImages = Product & {
   category: Category;
 };
 
+export type ProductWithCategoryImagesAndLinkedProducts = Product & {
+  images: Image[];
+  category: Category;
+  linkedBy: { id: string; name: string }[];
+  linkedProducts: { id: string; name: string }[];
+};
+
 export type UserWithOrders = User & {
   orders: Order[];
 };

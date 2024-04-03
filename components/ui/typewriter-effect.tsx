@@ -144,23 +144,6 @@ export const TypewriterEffectSmooth = ({
             </div>
           );
         })}
-        {/* <motion.span
-          initial={{
-            opacity: 0,
-          }}
-          animate={{
-            opacity: 1,
-          }}
-          transition={{
-            duration: 0.5,
-            repeat: Infinity,
-            repeatType: "reverse",
-          }}
-          className={cn(
-            "inline-block h-6 w-0.5 rounded-sm bg-blue-500 sm:h-12",
-            cursorClassName,
-          )}
-        ></motion.span> */}
       </div>
     );
   };
