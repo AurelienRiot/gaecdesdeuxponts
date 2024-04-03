@@ -46,7 +46,7 @@ const ProTab = () => {
         <h2 className=" text-2xl font-semibold">
           Produits pour professionnels
         </h2>
-        <div className=" sticky top-0 z-10 flex flex-wrap gap-4  py-4">
+        <div className="  flex flex-wrap gap-4  py-4">
           {categories && categories.length > 0 ? (
             categories.map((category) => (
               <Button
