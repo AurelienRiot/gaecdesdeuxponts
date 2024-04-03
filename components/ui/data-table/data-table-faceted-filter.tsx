@@ -59,7 +59,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     variant="secondary"
                     className="rounded-sm px-1 font-normal"
                   >
-                    {selectedValues.size} selected
+                    {selectedValues.size} selectionnés
                   </Badge>
                 ) : (
                   options
@@ -141,4 +141,14 @@ export function DataTableFacetedFilter<TData, TValue>({
       </PopoverContent>
     </Popover>
   );
+}
+
+{
+  /* <Toggle
+aria-label="Toggle archivé"
+variant={"outline"}
+onPressedChange={onPressedChange}
+>
+Archivé
+</Toggle> */
 }

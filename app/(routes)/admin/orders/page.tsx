@@ -14,7 +14,7 @@ const OrdersPage = async (context: {
     from = new Date(context.searchParams.from);
     to = new Date(context.searchParams.to);
   } else {
-    from = new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000);
+    from = new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000);
     to = new Date();
   }
 
