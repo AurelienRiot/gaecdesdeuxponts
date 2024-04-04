@@ -9,7 +9,6 @@ import ProTab from "./components/pro-tab";
 import ProfilTab from "./components/profil-tab";
 import { Tab, Tabs, TabsProvider } from "./components/tabs-animate";
 import { UserForm } from "./components/user-form";
-import { CategoriesProvider } from "@/context/categories-context";
 
 const DashboardUser = async ({
   searchParams,
@@ -146,11 +145,9 @@ const DashboardUser = async ({
       iconId: "store",
 
       content: (
-        <CategoriesProvider isPro={true}>
-          <Suspense fallback={null}>
-            <ProTab />
-          </Suspense>
-        </CategoriesProvider>
+        <Suspense fallback={null}>
+          <ProTab />
+        </Suspense>
       ),
     });
   }

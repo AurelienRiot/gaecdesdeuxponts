@@ -31,7 +31,6 @@ const GetUser = async () => {
       },
     },
   });
-  console.log(user?.name);
 
   return user;
 };

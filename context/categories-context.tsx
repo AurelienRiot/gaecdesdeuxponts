@@ -4,8 +4,8 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { fetchCategories } from "./categories-fetch";
 
 type CategoriesContextType = {
-  categories: Category[];
-  setCategories: React.Dispatch<React.SetStateAction<Category[]>>;
+  categories: Category[] | undefined;
+  setCategories: React.Dispatch<React.SetStateAction<Category[] | undefined>>;
 };
 
 export const CategoriesContext = createContext<
@@ -16,7 +16,9 @@ export const CategoriesProvider: React.FC<{
   children: React.ReactNode;
   isPro: boolean;
 }> = ({ children, isPro }) => {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[] | undefined>(
+    undefined,
+  );
   return (
     <CategoriesContext.Provider value={{ categories, setCategories }}>
       <CategoriesInitialValue isPro={isPro} />

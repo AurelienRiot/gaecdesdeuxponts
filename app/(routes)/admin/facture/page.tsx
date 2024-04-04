@@ -1,3 +1,5 @@
+"use client";
+import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
 
 const DisplayPDF = dynamic(() => import("./pdf"), {
@@ -6,8 +8,15 @@ const DisplayPDF = dynamic(() => import("./pdf"), {
 
 const TestPage = () => {
   return (
-    <div className="h-screen w-1/2">
+    <div className="flex h-screen w-full gap-8">
       <DisplayPDF />
+      <Button
+        onClick={() => {
+          window.location.reload();
+        }}
+      >
+        Recharger la page
+      </Button>
     </div>
   );
 };

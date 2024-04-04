@@ -6,15 +6,21 @@ import { Download, ExternalLink } from "lucide-react";
 import { DataInvoiceType } from "./data-invoice";
 import { saveAs } from "file-saver";
 
-const DisplayPDF = ({ data }: { data: DataInvoiceType }) => {
+const DisplayPDF = ({
+  data,
+  isPaid,
+}: {
+  data: DataInvoiceType;
+  isPaid: boolean;
+}) => {
   const saveFile = () => {
-    pdf(<Invoice dataInvoice={data} />)
+    pdf(<Invoice isPaid={isPaid} dataInvoice={data} />)
       .toBlob()
       .then((blob) => saveAs(blob, `facture-${data.order.id}.pdf`));
   };
 
   const viewFile = () => {
-    pdf(<Invoice dataInvoice={data} />)
+    pdf(<Invoice isPaid={isPaid} dataInvoice={data} />)
       .toBlob()
       .then((blob) => {
         const url = URL.createObjectURL(blob);

@@ -69,7 +69,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
   },
   {
     accessorKey: "isPaid",
-    header: "Statut",
+    header: "Payé",
     cell: ({ row }) => (
       <div className="flex gap-2">
         <CheckboxCell

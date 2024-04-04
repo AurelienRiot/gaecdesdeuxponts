@@ -5,8 +5,8 @@ import { PDFViewer } from "@react-pdf/renderer";
 
 const Test = () => {
   return (
-    <PDFViewer className="h-full w-full">
-      <Invoice dataInvoice={data} />
+    <PDFViewer className="h-full w-1/2">
+      <Invoice isPaid={true} dataInvoice={data} />
     </PDFViewer>
   );
 };

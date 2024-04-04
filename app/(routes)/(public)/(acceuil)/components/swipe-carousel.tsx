@@ -50,7 +50,7 @@ export const SwipeCarousel = ({ className }: { className?: string }) => {
     if (containerRef.current) {
       setContainerWidth(containerRef.current.offsetWidth);
     }
-  }, [categories.length]);
+  }, [categories?.length]);
 
   useEffect(() => {
     let intervalRef = null;
@@ -61,7 +61,7 @@ export const SwipeCarousel = ({ className }: { className?: string }) => {
 
         if (x === 0) {
           setImgIndex((pv) => {
-            if (pv === categories.length - 1) {
+            if (pv === (categories?.length ?? 1) - 1) {
               return 0;
             }
             return pv + 1;
@@ -76,6 +76,10 @@ export const SwipeCarousel = ({ className }: { className?: string }) => {
       }
     };
   }, [dragX, categories, isHovered]);
+
+  if (!categories) {
+    return null;
+  }
 
   const onDragEnd = () => {
     const x = dragX.get();
@@ -146,6 +150,9 @@ const Dots = ({
   setImgIndex: Dispatch<SetStateAction<number>>;
 }) => {
   const categories = useCategoriesContext()?.categories;
+  if (!categories) {
+    return null;
+  }
   return (
     <div className="mt-2 flex w-full justify-center gap-2">
       {categories.map((_, idx) => {

@@ -19,6 +19,7 @@ const mainColor = "#00008B";
 const foregroundColor = "#FFFFFF";
 const borderColor = mainColor;
 const logoColor = "#000000";
+const watermarkColor = "rgba(255, 0, 0, 0.5)";
 
 const MainStyles = StyleSheet.create({
   page: {
@@ -29,6 +30,7 @@ const MainStyles = StyleSheet.create({
     paddingRight: 40,
     lineHeight: 1.5,
     flexDirection: "column",
+    position: "relative",
   },
   header: {
     flexDirection: "row",
@@ -37,7 +39,13 @@ const MainStyles = StyleSheet.create({
 });
 
 // Create Document Component
-const Invoice = ({ dataInvoice }: { dataInvoice: DataInvoiceType }) => (
+const Invoice = ({
+  dataInvoice,
+  isPaid,
+}: {
+  isPaid: boolean;
+  dataInvoice: DataInvoiceType;
+}) => (
   <Document title={`Facture-${dataInvoice.order.id}`}>
     <Page size="A4" style={MainStyles.page}>
       <View style={MainStyles.header}>
@@ -48,6 +56,7 @@ const Invoice = ({ dataInvoice }: { dataInvoice: DataInvoiceType }) => (
       <BillTo invoice={dataInvoice} />
       <InvoiceItemsTable invoice={dataInvoice} />
       <InvoiceThankYouMsg />
+      {isPaid && <PaidWatermark />}
     </Page>
   </Document>
 );
@@ -253,6 +262,7 @@ const tableRowStyles = StyleSheet.create({
     width: "40%",
     textAlign: "left",
     paddingLeft: 8,
+    paddingRight: 8,
     flexWrap: "wrap",
   },
 
@@ -417,9 +427,39 @@ const InvoiceThankYouMsg = () => (
   </View>
 );
 
+const watermark = StyleSheet.create({
+  container: {
+    position: "absolute",
+    top: "75%",
+    left: "20%",
+    zIndex: 9999,
+    transform: "rotate(-45deg)",
+    opacity: 0.5,
+    borderWidth: 5,
+    borderRadius: 10,
+    borderColor: "#ff0000",
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+    backgroundColor: "transparent",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  watermarkText: {
+    fontSize: 60,
+    color: watermarkColor,
+  },
+});
+
+const PaidWatermark = () => (
+  <View style={watermark.container}>
+    <Text style={watermark.watermarkText}>Payé</Text>
+  </View>
+);
+
 const Logo = () => (
   <Svg viewBox="0 0 1024 1024" style={CompanyStyles.logo}>
-    <G
+    {/* <G
       transform="translate(0.000000,1024.000000) scale(0.100000,-0.100000)"
       fill={logoColor}
       stroke="none"
@@ -579,6 +619,6 @@ const Logo = () => (
         d="M5466 3378 c-36 -32 -43 -77 -18 -108 l20 -25 304 -5 c166 -3 318 -2
     336 3 39 10 68 60 58 101 -13 52 -37 56 -370 56 -302 0 -305 0 -330 -22z"
       />
-    </G>
+    </G> */}
   </Svg>
 );

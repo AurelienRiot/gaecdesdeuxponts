@@ -136,7 +136,7 @@ export default function MobileNav({ className, ...props }: MobileNavProps) {
                   align="start"
                   className="z-50 w-[200px]"
                 >
-                  {categories.map((category) => {
+                  {categories?.map((category) => {
                     const href = `/category/${encodeURIComponent(category.name)}`;
                     const label = category.name;
                     const active = pathname.startsWith(

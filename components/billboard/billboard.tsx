@@ -10,13 +10,14 @@ interface BillboardProps {
 
 const Billboard: React.FC<BillboardProps> = ({ categoryName }) => {
   const [isMounted, setIsMounted] = useState(false);
-  const category = useCategoriesContext()?.categories.find(
-    (c) => c.name === categoryName,
-  );
+  const { categories } = useCategoriesContext();
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  if (!categories) return null;
+  const category = categories.find((c) => c.name === categoryName);
 
   if (!category || !category.imageUrl) {
     return null;

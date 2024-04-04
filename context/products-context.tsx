@@ -2,10 +2,15 @@
 import { Product } from "@prisma/client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { fetchProducts } from "./products-fetch";
+import { ProductWithCategoryImagesAndLinkedProducts } from "@/types";
 
 type ProductsContextType = {
-  products: Product[];
-  setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
+  products: ProductWithCategoryImagesAndLinkedProducts[] | undefined;
+  setProducts: React.Dispatch<
+    React.SetStateAction<
+      ProductWithCategoryImagesAndLinkedProducts[] | undefined
+    >
+  >;
 };
 
 export const ProductsContext = createContext<ProductsContextType | undefined>(
@@ -16,7 +21,9 @@ export const ProductsProvider: React.FC<{
   children: React.ReactNode;
   isPro: boolean;
 }> = ({ children, isPro }) => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<
+    ProductWithCategoryImagesAndLinkedProducts[] | undefined
+  >(undefined);
   return (
     <ProductsContext.Provider value={{ products, setProducts }}>
       <ProductsInitialValue isPro={isPro} />

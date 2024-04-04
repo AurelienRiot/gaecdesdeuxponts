@@ -16,7 +16,11 @@ const LoginPage = async (context: {
     }
   }
 
-  const callbackUrl = context.searchParams.callbackUrl ?? "/dashboard-user";
+  const callbackUrl = decodeURI(
+    context.searchParams.callbackUrl ?? `${baseUrl}/dashboard-user`,
+  );
+
+  console.log(callbackUrl);
 
   return (
     <div className="flex w-full items-center justify-center bg-slate-100 dark:bg-slate-900">
@@ -25,7 +29,7 @@ const LoginPage = async (context: {
           {" "}
           Page de Connection{" "}
         </h1>
-        <GoogleButton callbackUrl={baseUrl + callbackUrl} />
+        <GoogleButton callbackUrl={callbackUrl} />
         <div
           className={`my-4 flex h-4 flex-row  items-center gap-4 self-stretch whitespace-nowrap
         before:h-0.5 before:w-full 
@@ -34,7 +38,7 @@ const LoginPage = async (context: {
         >
           ou
         </div>
-        <EmailButton callbackUrl={baseUrl + callbackUrl} />
+        <EmailButton callbackUrl={callbackUrl} />
       </div>
     </div>
   );

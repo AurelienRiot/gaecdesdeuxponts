@@ -7,6 +7,18 @@ export const fetchProducts = async (isPro: boolean) => {
       isPro: isPro,
       isArchived: false,
     },
+    include: {
+      category: true,
+      images: { orderBy: { createdAt: "asc" } },
+      linkedBy: {
+        where: { isArchived: false, isPro: true },
+        select: { id: true, name: true },
+      },
+      linkedProducts: {
+        where: { isArchived: false, isPro: true },
+        select: { id: true, name: true },
+      },
+    },
   });
   return products;
 };

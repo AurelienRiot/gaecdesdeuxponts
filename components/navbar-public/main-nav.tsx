@@ -25,7 +25,7 @@ const MainNav = ({ className }: { className?: string }) => {
           Nos Produits
           <ChevronDown className="ml-2 h-4 w-4" />
           <AnimatedUnderline
-            display={categories.some(
+            display={categories?.some(
               (category) =>
                 pathname.startsWith(
                   `/category/${encodeURIComponent(category.name)}`,
@@ -39,7 +39,7 @@ const MainNav = ({ className }: { className?: string }) => {
           alignOffset={-10}
           className="flex flex-col "
         >
-          {categories.map((category) => {
+          {categories?.map((category) => {
             const href = `/category/${encodeURIComponent(category.name)}`;
             const label = category.name;
             const active = pathname.startsWith(

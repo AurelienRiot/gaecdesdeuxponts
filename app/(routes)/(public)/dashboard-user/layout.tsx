@@ -2,6 +2,9 @@ import { redirect } from "next/navigation";
 import React from "react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/components/auth/authOptions";
+import { CategoriesProvider } from "@/context/categories-context";
+import { ProductsProvider } from "@/context/products-context";
+import { checkPro } from "@/components/auth/checkAuth";
 
 export const metadata = {
   title: "RIOT TECH - Profil utilisateur",
@@ -13,16 +16,17 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
-  const callbackUrl = "/dashboard-user";
+  const role = await checkPro();
 
-  if (!session || !session.user) {
-    redirect(`/login?callbackUrl=${callbackUrl}`);
-  }
-
-  if (session.user.role === "admin") {
+  if (role === "admin") {
     redirect("/admin");
   }
 
-  return <div className="relative h-full ">{children}</div>;
+  return (
+    <CategoriesProvider isPro={role === "pro"}>
+      <ProductsProvider isPro={role === "pro"}>
+        <div className="relative h-full ">{children}</div>{" "}
+      </ProductsProvider>
+    </CategoriesProvider>
+  );
 }

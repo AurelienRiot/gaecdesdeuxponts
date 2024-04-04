@@ -20,9 +20,9 @@ interface ProductCartProps {
 const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
   const router = useRouter();
   const cart = useCart();
-  const category = useCategoriesContext().categories.find(
-    (c) => c.id === data.categoryId,
-  );
+  const { categories } = useCategoriesContext();
+  if (!categories) return null;
+  const category = categories.find((c) => c.id === data.categoryId);
   if (!category) return null;
   const url = data.isPro ? `/dashboard-user?tab=store&product=` : `/product/`;
 

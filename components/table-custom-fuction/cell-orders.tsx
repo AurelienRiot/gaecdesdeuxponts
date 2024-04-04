@@ -11,13 +11,7 @@ type FactureCellProps<T = {}> = T & {
 
 function FactureCell<T>({ row }: { row: Row<FactureCellProps<T>> }) {
   return (
-    <>
-      {!row.getValue("isPaid") ? (
-        "Non disponible"
-      ) : (
-        <DisplayPDF data={row.original.dataInvoice} />
-      )}
-    </>
+    <DisplayPDF isPaid={row.original.isPaid} data={row.original.dataInvoice} />
   );
 }
 

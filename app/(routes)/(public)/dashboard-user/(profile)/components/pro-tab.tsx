@@ -1,32 +1,27 @@
 "use client";
-import { getProProducts } from "@/actions/get-pro-product";
-import Spinner from "@/components/animations/spinner";
 import Gallery from "@/components/gallery/gallery";
 import Info from "@/components/info";
 import ProductCart from "@/components/product-cart";
 import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { Button } from "@/components/ui/button";
 import ButtonBackward from "@/components/ui/button-backward";
-import NoResults from "@/components/ui/no-results";
 import { useCategoriesContext } from "@/context/categories-context";
+import { useProductsContext } from "@/context/products-context";
 import { mergeWithoutDuplicates } from "@/lib/utils";
 import { ProductWithCategoryImagesAndLinkedProducts } from "@/types";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import useSWR from "swr";
 
 const ProTab = () => {
-  const { data, error, isLoading } = useSWR("getProProducts", getProProducts);
+  const { products } = useProductsContext();
   const { categories } = useCategoriesContext();
 
   const searchParams = useSearchParams();
-  const product = data?.find(
+  const product = products?.find(
     (item) =>
       item.name === decodeURIComponent(searchParams.get("product") || ""),
   );
 
-  if (isLoading) return <Spinner />;
-  if (!data || data.length === 0 || error) return <NoResults />;
   if (product) {
     return <DisplayProduct product={product} />;
   }
@@ -66,14 +61,17 @@ const ProTab = () => {
           )}
         </div>
         {categories && categories.length > 0
-          ? categories.map((category) => (
-              <DisplayCategory
-                key={category.id}
-                products={data.filter(
-                  (item) => item.categoryId === category.id,
-                )}
-              />
-            ))
+          ? categories.map((category) => {
+              if (!products) return null;
+              return (
+                <DisplayCategory
+                  key={category.id}
+                  products={products.filter(
+                    (product) => product.categoryId === category.id,
+                  )}
+                />
+              );
+            })
           : null}
       </div>
     </>

@@ -3,7 +3,10 @@
 import { ShopCard } from "@/components/display-shops/shop-card";
 import { DataInvoiceType } from "@/components/pdf/data-invoice";
 import DisplayPDF from "@/components/pdf/pdf-button";
-import { ProductCell } from "@/components/table-custom-fuction/cell-orders";
+import {
+  FactureCell,
+  ProductCell,
+} from "@/components/table-custom-fuction/cell-orders";
 import { DateCell } from "@/components/table-custom-fuction/common-cell";
 import { FilterOneInclude } from "@/components/table-custom-fuction/common-filter";
 import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
@@ -49,15 +52,7 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
     accessorKey: "isPaid",
     header: "Facture",
     id: "pdf",
-    cell: ({ row }) => (
-      <>
-        {!row.original.isPaid ? (
-          "Non disponible"
-        ) : (
-          <DisplayPDF data={row.original.dataInvoice} />
-        )}
-      </>
-    ),
+    cell: FactureCell,
   },
   {
     accessorKey: "isPaid",

@@ -16,11 +16,7 @@ import {
 } from "@/components/table-custom-fuction/common-filter";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
 import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
-import {
-  DataTableFilterableColumn,
-  DataTableSearchableColumn,
-  DataTableViewOptionsColumn,
-} from "@/types";
+import { DataTableFilterableColumn, DataTableViewOptionsColumn } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { changeStatus } from "../../../orders/components/server-action";
 import { OrderCellAction } from "./order-cell-action";
@@ -56,7 +52,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
   },
   {
     accessorKey: "isPaid",
-    header: "Statut",
+    header: "Payé",
     cell: ({ row }) => (
       <CheckboxCell
         isCheckbox={row.original.isPaid}
