@@ -1,10 +1,8 @@
-import { redirect } from "next/navigation";
-import React from "react";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/components/auth/authOptions";
+import { checkPro } from "@/components/auth/checkAuth";
 import { CategoriesProvider } from "@/context/categories-context";
 import { ProductsProvider } from "@/context/products-context";
-import { checkPro } from "@/components/auth/checkAuth";
+import { redirect } from "next/navigation";
+import React from "react";
 
 export const metadata = {
   title: "RIOT TECH - Profil utilisateur",

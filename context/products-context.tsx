@@ -3,6 +3,7 @@ import { Product } from "@prisma/client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { fetchProducts } from "./products-fetch";
 import { ProductWithCategoryImagesAndLinkedProducts } from "@/types";
+import useSWR from "swr";
 
 type ProductsContextType = {
   products: ProductWithCategoryImagesAndLinkedProducts[] | undefined;
@@ -24,23 +25,20 @@ export const ProductsProvider: React.FC<{
   const [products, setProducts] = useState<
     ProductWithCategoryImagesAndLinkedProducts[] | undefined
   >(undefined);
+
+  useEffect(() => {
+    const fetchAndSetProducts = async () => {
+      const data = await fetchProducts(isPro);
+      setProducts(data);
+    };
+
+    fetchAndSetProducts();
+  }, [isPro]);
   return (
     <ProductsContext.Provider value={{ products, setProducts }}>
-      <ProductsInitialValue isPro={isPro} />
       {children}
     </ProductsContext.Provider>
   );
-};
-
-const ProductsInitialValue = ({ isPro }: { isPro: boolean }) => {
-  const { setProducts } = useProductsContext();
-
-  useEffect(() => {
-    fetchProducts(isPro).then((products) => {
-      setProducts(products);
-    });
-  }, [setProducts, isPro]);
-  return null;
 };
 
 export function useProductsContext() {

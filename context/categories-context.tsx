@@ -2,6 +2,7 @@
 import { Category } from "@prisma/client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { fetchCategories } from "./categories-fetch";
+import useSWR from "swr";
 
 type CategoriesContextType = {
   categories: Category[] | undefined;
@@ -19,23 +20,19 @@ export const CategoriesProvider: React.FC<{
   const [categories, setCategories] = useState<Category[] | undefined>(
     undefined,
   );
+  useEffect(() => {
+    const fetchAndSetCategories = async () => {
+      const data = await fetchCategories(isPro);
+      setCategories(data);
+    };
+
+    fetchAndSetCategories();
+  }, [isPro]);
   return (
     <CategoriesContext.Provider value={{ categories, setCategories }}>
-      <CategoriesInitialValue isPro={isPro} />
       {children}
     </CategoriesContext.Provider>
   );
-};
-
-const CategoriesInitialValue = ({ isPro }: { isPro: boolean }) => {
-  const { setCategories } = useCategoriesContext();
-
-  useEffect(() => {
-    fetchCategories(isPro).then((categories) => {
-      setCategories(categories);
-    });
-  }, [setCategories, isPro]);
-  return null;
 };
 
 export function useCategoriesContext() {
