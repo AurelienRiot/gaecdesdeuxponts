@@ -32,7 +32,7 @@ const NavBar = async () => {
           className="relative ml-4 hidden items-center gap-2 text-primary transition-all hover:scale-105 sm:flex lg:ml-0"
         >
           <Image
-            src="/logo-rond.png"
+            src="/logo-font-blanc.webp"
             alt="logo"
             width={50}
             height={50}

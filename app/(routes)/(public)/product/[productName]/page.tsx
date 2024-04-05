@@ -17,7 +17,7 @@ export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
   return {
-    title: `GAEC des deux ponts - ${decodeURIComponent(params.productName)}`,
+    title: `Laiterie du Pont Robert - ${decodeURIComponent(params.productName)}`,
   };
 }
 

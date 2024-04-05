@@ -21,7 +21,7 @@ export const authOptions: NextAuthOptions = {
     EmailProvider({
       sendVerificationRequest: async ({ identifier: email, url }) => {
         await transporter.sendMail({
-          from: "gaecdesdeuxponts@gmail.com",
+          from: "laiteriedupontrobert@gmail.com",
           to: email,
           subject: "Connexion à votre compte ",
           html: render(WelcomeEmailProvider({ url, baseUrl })),

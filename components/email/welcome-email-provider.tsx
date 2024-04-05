@@ -22,20 +22,20 @@ export const WelcomeEmailProvider = ({
 }: WelcomeEmailProviderProps) => (
   <Html>
     <Head />
-    <Preview>Bienvenue sur GAEC des deux ponts</Preview>
+    <Preview>Bienvenue sur la Laiterie du Pont Robert</Preview>
     <Body style={main}>
       <Container style={container}>
         <a href={baseUrl} target="_blank">
           <Img
-            src={`${baseUrl}/icone.webp`}
+            src={`${baseUrl}/logo-font-blanc.webp`}
             width="50"
             height="50"
-            alt="GAEC des deux ponts Logo"
+            alt="Laiterie du Pont Robert Logo"
             style={logo}
           />
         </a>
         <Text style={paragraph}>Bonjour,</Text>
-        <Text style={paragraph}>Bienvenue sur GAEC des deux ponts</Text>
+        <Text style={paragraph}>Bienvenue sur Laiterie du Pont Robert</Text>
         <Section style={btnContainer}>
           <Button style={button} href={url} target="_blank">
             Connectez-vous en cliquant ici
@@ -44,7 +44,7 @@ export const WelcomeEmailProvider = ({
         <Text style={paragraph}>
           Cordialement,
           <br />
-          GAEC des deux ponts
+          Laiterie du Pont Robert
         </Text>
         <Hr style={hr} />
         <Text style={footer}>6 B le Pont Robert 44290 MASSERAC</Text>

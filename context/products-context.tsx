@@ -1,9 +1,7 @@
 "use client";
-import { Product } from "@prisma/client";
+import { ProductWithCategoryImagesAndLinkedProducts } from "@/types";
 import { createContext, useContext, useEffect, useState } from "react";
 import { fetchProducts } from "./products-fetch";
-import { ProductWithCategoryImagesAndLinkedProducts } from "@/types";
-import useSWR from "swr";
 
 type ProductsContextType = {
   products: ProductWithCategoryImagesAndLinkedProducts[] | undefined;

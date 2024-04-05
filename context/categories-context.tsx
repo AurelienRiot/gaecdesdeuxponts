@@ -2,7 +2,6 @@
 import { Category } from "@prisma/client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { fetchCategories } from "./categories-fetch";
-import useSWR from "swr";
 
 type CategoriesContextType = {
   categories: Category[] | undefined;

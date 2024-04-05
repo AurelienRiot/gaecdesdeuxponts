@@ -1,4 +1,13 @@
-import { Category, Image, Order, Product, User } from "@prisma/client";
+import {
+  Address,
+  Category,
+  Image,
+  Order,
+  OrderItem,
+  Product,
+  Shop,
+  User,
+} from "@prisma/client";
 
 export interface SearchParams {
   [key: string]: string | string[] | undefined;
@@ -50,4 +59,8 @@ export type ProductWithCategoryImagesAndLinkedProducts = Product & {
 
 export type UserWithOrders = User & {
   orders: Order[];
+};
+export type UserWithOrdersAndAdress = User & {
+  orders: (Order & { orderItems: OrderItem[]; shop: Shop })[];
+  address: Address[];
 };

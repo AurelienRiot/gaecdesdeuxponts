@@ -6,7 +6,10 @@ const Loading = () => {
   const ICONS = [CircleUserRound, Package, Settings];
 
   return (
-    <div className=" relative mx-auto mt-4 flex h-[1100px] w-full justify-between   gap-4 pr-4 [perspective:1000px]">
+    <div
+      className=" 
+    relative mx-auto mt-4 flex h-[calc(100vh-297px)] w-full  justify-between gap-4   pr-4 [perspective:1000px] sm:h-[calc(100vh-220px)]"
+    >
       <div
         className={
           " absolute bottom-0 left-0 top-0 z-20 flex  flex-col items-center justify-start gap-4 overflow-hidden bg-background  p-4 shadow-lg transition-transform duration-500 [perspective:1000px]"
@@ -41,6 +44,7 @@ const Loading = () => {
           );
         })}
       </div>
+
       <div className="relative ml-24 h-full w-full sm:ml-28">
         <div
           style={{
@@ -48,7 +52,7 @@ const Loading = () => {
             top: 0,
           }}
           className={
-            "absolute left-0 top-0 h-[95%]  w-full  overflow-hidden rounded-2xl border bg-gradient-to-br from-stone-50 to-neutral-50 p-10 text-xl font-bold shadow-md  dark:bg-gradient-to-br dark:from-stone-950 dark:to-neutral-950 md:text-4xl"
+            "absolute left-0 top-0 h-[95%]  w-full  overflow-y-auto  rounded-2xl border bg-gradient-to-br from-neutral-50 to-stone-100  shadow-md   dark:from-stone-950 dark:to-neutral-950  "
           }
         >
           <div className="relative h-full w-full ">

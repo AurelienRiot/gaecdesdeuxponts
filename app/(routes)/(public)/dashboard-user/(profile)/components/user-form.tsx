@@ -19,7 +19,7 @@ import { Trash } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
@@ -31,6 +31,8 @@ import {
   moveSelectedTabToTop,
   useTabsContext,
 } from "./tabs-animate";
+import { useUserContext } from "@/context/user-context";
+import { Address } from "@prisma/client";
 
 interface UserFormProps {
   initialData: {
@@ -68,10 +70,10 @@ const formSchema = z.object({
 
 export type UserFormValues = z.infer<typeof formSchema>;
 
-export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
-  const router = useRouter();
+export const UserForm: React.FC<UserFormProps> = ({
+  initialData,
+}: UserFormProps) => {
   const [open, setOpen] = useState(false);
-  const searchParams = useSearchParams();
 
   const [selectedAddress, setSelectedAddress] = useState<FullAdress>(
     initialData.adress
@@ -109,8 +111,10 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
   });
 
   const { setTabs, setHovering } = useTabsContext();
+  const { setUser } = useUserContext();
 
   const onSubmit = async (data: UserFormValues) => {
+    setHovering(true);
     data.name = data.name.trim();
     data.adress = selectedAddress;
 
@@ -119,9 +123,18 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
       toast.error(result.message);
       return;
     }
-
-    redirectTab({ tab: "user", router, searchParams, setTabs });
-
+    setUser((prev) =>
+      prev
+        ? {
+            ...prev,
+            name: data.name,
+            phone: data.phone,
+            address: [data.adress as Address],
+          }
+        : null,
+    );
+    setTabs((tabs) => moveSelectedTabToTop("user", tabs));
+    setHovering(false);
     toast.success(toastMessage);
   };
 
@@ -244,4 +257,34 @@ const redirectTab = ({
   } else {
     router.push(`/dashboard-user?tab=${tabName}`);
   }
+};
+
+export const UserFromWrapper = () => {
+  const { user } = useUserContext();
+
+  if (!user) {
+    return null;
+  }
+
+  const formattedUser = {
+    name: user.name || "",
+    phone: user.phone || "",
+    email: user.email || "",
+    adress: {
+      label: user.address[0]?.label || "",
+      city: user.address[0]?.city || "",
+      country: user.address[0]?.country || "FR",
+      line1: user.address[0]?.line1 || "",
+      line2: user.address[0]?.line2 || "",
+      postalCode: user.address[0]?.postalCode || "",
+      state: user.address[0]?.state || "",
+    },
+  };
+  return (
+    <div className="h-full w-full flex-col p-6  ">
+      <div className=" flex-1 space-y-4 ">
+        <UserForm initialData={formattedUser} />
+      </div>
+    </div>
+  );
 };

@@ -100,7 +100,7 @@ export default function MobileNav({ className, ...props }: MobileNavProps) {
               }}
             >
               <Image
-                src="/logo-rond.png"
+                src="/logo-font-blanc.webp"
                 alt="logo"
                 width={48}
                 height={48}

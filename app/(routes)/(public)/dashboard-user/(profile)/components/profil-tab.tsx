@@ -2,24 +2,21 @@
 import { LogoutButtonText } from "@/components/auth/auth-button";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Address, Role } from "@prisma/client";
+import { useUserContext } from "@/context/user-context";
 import { PencilLine } from "lucide-react";
-import Link from "next/link";
 import { moveSelectedTabToTop, useTabsContext } from "./tabs-animate";
 import UserPhone from "./user-phone";
 
-const ProfilTab = ({
-  user,
-}: {
-  user: {
-    name: string;
-    phone: string;
-    email: string;
-    adress: Address;
-    role: Role;
-  };
-}) => {
+const ProfilTab = () => {
   const { setTabs, setHovering } = useTabsContext();
+  const { user } = useUserContext();
+
+  if (!user) {
+    return null;
+  }
+
+  const adress = user.address.length > 0 ? user.address[0] : null;
+
   return (
     <div className="w-full space-y-10  p-6 ">
       <div className="flex flex-col items-center justify-between gap-y-6  pb-4 sm:flex-row">
@@ -31,9 +28,10 @@ const ProfilTab = ({
           <Button
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
-            onClick={() =>
-              setTabs((prev) => moveSelectedTabToTop("store", prev))
-            }
+            onClick={() => {
+              setTabs((prev) => moveSelectedTabToTop("store", prev));
+              setHovering(false);
+            }}
           >
             Accès Pro
           </Button>
@@ -49,8 +47,8 @@ const ProfilTab = ({
         <div>
           <p className="font-bold dark:text-white">Adresse:</p>
           <p className="dark:text-gray-300">
-            {user.adress?.line1
-              ? `${user.adress.line1}, ${user.adress.postalCode} ${user.adress.city}`
+            {adress?.line1
+              ? `${adress.line1}, ${adress.postalCode} ${adress.city}`
               : "Non renseigné"}
           </p>
         </div>
@@ -62,9 +60,10 @@ const ProfilTab = ({
       <Button
         onMouseEnter={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
-        onClick={() =>
-          setTabs((prev) => moveSelectedTabToTop("settings", prev))
-        }
+        onClick={async () => {
+          setTabs((prev) => moveSelectedTabToTop("settings", prev));
+          setHovering(false);
+        }}
         variant={"expandIcon"}
         iconPlacement="right"
         Icon={PencilLine}

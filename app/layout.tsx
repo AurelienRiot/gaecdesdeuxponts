@@ -13,8 +13,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "GAEC des Deux Ponts",
-  description: "GAEC des Deux Ponts",
+  title: "Laiterie du Pont Robert",
+  description: "Laiterie du Pont Robert",
 };
 
 const fontSans = FontSans({

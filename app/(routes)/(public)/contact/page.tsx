@@ -11,8 +11,8 @@ import { Suspense } from "react";
 import { ContactForm } from "./components/contact-form";
 
 export const metadata = {
-  title: "GAEC des deux ponts - Contact",
-  description: "Contact GAEC des deux ponts",
+  title: "Laiterie du Pont Robert - Contact",
+  description: "Contact Laiterie du Pont Robert",
 };
 
 const ContactPage = () => {
@@ -34,9 +34,9 @@ const ContactPage = () => {
         <p>6 B le Pont Robert 44290 MASSERAC</p>
         <p>06 72 06 45 55</p>
         <Link href="mailto:contact@riottech.fr">
-          gaecdesdeuxponts@gmail.com
+          laiteriedupontrobert@gmail.com
         </Link>
-        <p>Du lundi au vendredi: 9h00 - 17h00</p>
+        <p>Du lundi au samedi: 9h00 - 17h00</p>
       </div>
     </Container>
   );
