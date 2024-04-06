@@ -25,9 +25,9 @@ import { checkOut } from "./server-action";
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
 const getDateFromSearchParam = (param: string | null): Date | undefined => {
-  if (param === null) return undefined; // If param is null, return undefined
+  if (param === null) return undefined;
   const date = new Date(decodeURIComponent(param));
-  return isNaN(date.getTime()) ? undefined : date; // Check if date is valid
+  return isNaN(date.getTime()) ? undefined : date;
 };
 
 interface SummaryProps {

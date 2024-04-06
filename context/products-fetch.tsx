@@ -11,11 +11,11 @@ export const fetchProducts = async (isPro: boolean) => {
       category: true,
       images: { orderBy: { createdAt: "asc" } },
       linkedBy: {
-        where: { isArchived: false, isPro: true },
+        where: { isArchived: false, isPro: isPro },
         select: { id: true, name: true },
       },
       linkedProducts: {
-        where: { isArchived: false, isPro: true },
+        where: { isArchived: false, isPro: isPro },
         select: { id: true, name: true },
       },
     },

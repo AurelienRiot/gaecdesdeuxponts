@@ -7,8 +7,8 @@ const Navbar = async () => {
   return (
     <div className="border-b ">
       <div className="flex h-16 items-center px-4">
-        <MainNav className=" hidden lg:block pl-8" />
-        <MobileNav className="mx-6 lg:hidden" />
+        <MainNav className=" hidden pl-8 md:block" />
+        <MobileNav className="mx-6 md:hidden" />
         <div className="ml-auto flex items-center space-x-4">
           <ThemeToggle />
           <LogoutButton />

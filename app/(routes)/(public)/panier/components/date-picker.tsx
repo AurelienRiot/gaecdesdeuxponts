@@ -82,8 +82,7 @@ const DatePicker = ({ className, date, shopId }: DatePickerProps) => {
             onSelect={onSelectDate}
             // disabledDays={(date) => date.getDay() === 0 || date.getDay() === 6}
             modifiers={{
-              disabled: (date) =>
-                date.getDay() === 0 || date.getDay() === 6 || date < new Date(),
+              disabled: (date) => date.getDay() === 0 || date < new Date(),
             }} // modifiers={{
             //   full: fullDays,
             //   partiallyFull: partiallyFullDays,

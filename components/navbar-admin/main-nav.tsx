@@ -20,7 +20,7 @@ export function MainNav({ className }: React.HTMLAttributes<HTMLElement>) {
   const routes = adminRoutes(pathname);
 
   return (
-    <nav className={cn("flex items-center space-x-4 lg:space-x-6", className)}>
+    <nav className={cn("flex items-center space-x-4 md:space-x-6", className)}>
       {routes.map((route) => (
         <Link
           key={route.href}
@@ -30,7 +30,7 @@ export function MainNav({ className }: React.HTMLAttributes<HTMLElement>) {
             route.active ? "text-primary" : "text-muted-foreground",
           )}
         >
-          {<route.Icone className="mr-2 hidden h-4 w-4 xl:inline-block" />}
+          {<route.Icone className="mr-2 hidden h-4 w-4 lg:inline-block" />}
           {route.label}
         </Link>
       ))}

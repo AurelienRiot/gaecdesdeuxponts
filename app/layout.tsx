@@ -11,6 +11,7 @@ import { AuthProviders } from "@/providers/auth-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { ProductsProvider } from "@/context/products-context";
 
 export const metadata: Metadata = {
   title: "Laiterie du Pont Robert",
@@ -55,7 +56,7 @@ export default function RootLayout({
         <AuthProviders>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
             <TooltipProvider delayDuration={100} skipDelayDuration={0}>
-              {children}
+              <ProductsProvider isPro={false}>{children}</ProductsProvider>
             </TooltipProvider>
             <Toaster />
           </ThemeProvider>
