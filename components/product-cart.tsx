@@ -41,7 +41,7 @@ const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
-      className="group m-2 flex cursor-pointer flex-col justify-between gap-4 rounded-xl border bg-secondary p-3 "
+      className="group m-2 flex w-full cursor-pointer flex-col justify-between gap-4 rounded-xl border bg-secondary p-3 "
     >
       <div
         onClick={handleClick}

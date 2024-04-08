@@ -81,7 +81,8 @@ const CardUser: React.FC<CardUserProps> = ({
               href={`/admin/users/${user.id}`}
               className="capitalize hover:underline"
             >
-              {user.name}
+              <span>{user.name ? user.name : "Non renseigné"}</span>
+              <span>{user.company ? ` - ${user.company}` : ""}</span>
             </Link>
           </CardTitle>
           <CardDescription>
@@ -99,7 +100,7 @@ const CardUser: React.FC<CardUserProps> = ({
         </CardContent>
         <CardFooter className="flex flex-row items-end justify-between  gap-2">
           <Button
-            variant="destructive"
+            variant="outline"
             onClick={() => setOpen(true)}
             className="hover:underline"
           >

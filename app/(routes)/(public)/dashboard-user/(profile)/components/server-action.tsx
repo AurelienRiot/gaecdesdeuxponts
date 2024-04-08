@@ -8,6 +8,7 @@ async function updateUser({
   name,
   phone,
   adress,
+  company,
 }: UserFormValues): Promise<ReturnTypeUserObject> {
   const isAuth = await checkUser();
 
@@ -26,7 +27,7 @@ async function updateUser({
     data: {
       name,
       phone,
-
+      company,
       address: {
         deleteMany: {},
       },

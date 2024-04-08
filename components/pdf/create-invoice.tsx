@@ -439,7 +439,7 @@ const watermark = StyleSheet.create({
     opacity: 0.5,
     borderWidth: 5,
     borderRadius: 10,
-    borderColor: "#ff0000",
+    borderColor: watermarkColor,
     paddingHorizontal: 20,
     paddingVertical: 5,
     backgroundColor: "transparent",

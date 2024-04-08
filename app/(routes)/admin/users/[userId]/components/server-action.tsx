@@ -16,7 +16,7 @@ export type UserReturnType =
     };
 
 async function updateUser(
-  { name, phone, address }: UserFormValues,
+  { name, phone, address, company }: UserFormValues,
   id: string,
 ): Promise<UserReturnType> {
   const isAuth = await checkAdmin();
@@ -34,6 +34,7 @@ async function updateUser(
     },
     data: {
       name,
+      company,
       phone,
 
       address: {

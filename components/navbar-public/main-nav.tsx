@@ -107,7 +107,7 @@ export const publicRoutes = (pathname: string) => [
   // },
   {
     href: `/contact`,
-    label: "Contact",
+    label: "Nous Contacter",
     active: pathname === `/contact`,
     Icone: PhoneCall,
   },

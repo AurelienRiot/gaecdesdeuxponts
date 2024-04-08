@@ -33,7 +33,10 @@ interface UserFormProps {
 }
 
 const formSchema = z.object({
-  name: z.string().min(1),
+  name: z.string().min(1, {
+    message: "Le nom est obligatoire",
+  }),
+  company: z.string().optional(),
   phone: z.string().refine(
     (value) => {
       return value === "" || isValidPhoneNumber(value);
@@ -92,6 +95,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: initialData.name || "",
+      company: initialData.company || "",
       phone: initialData.phone || "",
       address: selectedAddress,
     },
@@ -170,7 +174,25 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                 </FormItem>
               )}
             />
-
+            {initialData.role === "pro" && (
+              <FormField
+                control={form.control}
+                name="company"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Entreprise</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={form.formState.isSubmitting}
+                        placeholder="entreprise"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
               name="phone"

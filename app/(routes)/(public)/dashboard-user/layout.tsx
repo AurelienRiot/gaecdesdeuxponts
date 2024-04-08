@@ -6,8 +6,8 @@ import { redirect } from "next/navigation";
 import React from "react";
 
 export const metadata = {
-  title: "RIOT TECH - Profil utilisateur",
-  description: "Profil utilisateur RIOT TECH",
+  title: " Laiterie du Pont Robert - Profil utilisateur",
+  description: "Profil utilisateur Laiterie du Pont Robert",
 };
 
 export default async function Layout({

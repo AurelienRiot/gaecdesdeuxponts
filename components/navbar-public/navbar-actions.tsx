@@ -50,6 +50,7 @@ const AuthNavButton = ({
       className="relative bg-background px-3	 text-foreground  "
     >
       <Link
+        aria-label="Se connecter"
         href={
           !session.data
             ? "/login"

@@ -44,6 +44,7 @@ model Session {
 model User {
   id               String    @unique @id @default(cuid())
   name             String?
+  company          String?
   email            String?   @unique
   emailVerified    DateTime?
   phone            String? 
@@ -54,6 +55,7 @@ model User {
   sessions         Session[]
   address          Address[]
   messages         Contact[]
+  comments         Comment[]
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt 
 }
@@ -202,9 +204,23 @@ model Shop {
   website String?
   order      Order[] 
   isArchived Boolean  @default(false)
-     createdAt DateTime @default(now()) 
+  createdAt DateTime @default(now()) 
   updatedAt DateTime @updatedAt 
 
    }
 
+model Comment {
+   id        String    @unique @id @default(cuid())
+   name      String
+   company   String?
+   note      Int
+   message   String    @db.VarChar(1000) 
+  isArchived Boolean  @default(false)
+  createdAt  DateTime @default(now()) 
+  updatedAt  DateTime @updatedAt 
 
+  userId     String? 
+  user       User?     @relation(fields: [userId], references: [id])
+
+   @@index([userId])
+}

@@ -61,6 +61,7 @@ import {
   Ungroup,
   WrapText,
   X,
+  Star,
 } from "lucide-react";
 
 import type { LucideIcon } from "lucide-react";
@@ -224,6 +225,7 @@ export const Icons = {
   unlink: Link2Off,
   viewing: Eye,
   embed: Film,
+  star: Star,
 
   // www
   gitHub: (props: LucideProps) => (
@@ -517,6 +519,38 @@ export const Icons = {
       <path
         d="M272.1 107.7c38.8-.6 76.3 14 104.4 40.8l77.7-77.7C405 24.6 339.7-.8 272.1 0 169.2 0 75.1 58 28.9 150l90.4 70.1c21.5-64.5 81.8-112.4 152.8-112.4z"
         fill="#ea4335"
+      />
+    </svg>
+  ),
+  HalfFilledStar: ({
+    fullColor = "yellow-500",
+    emptyColor = "gray-400",
+    ...props
+  }: LucideProps & { fullColor?: string; emptyColor?: string }) => (
+    <svg
+      className="inline"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <defs>
+        <linearGradient
+          id="half-fill-gradient"
+          x1="0%"
+          y1="0%"
+          x2="100%"
+          y2="0%"
+        >
+          <stop offset="50%" stopColor={`var(--${fullColor})`} />
+          <stop offset="50%" stopColor={`var(--${emptyColor})`} />
+        </linearGradient>
+      </defs>
+      <path
+        d="M12 .587l3.668 7.431 8.332.779-6.064 5.828 1.48 8.279L12 18.896l-7.416 3.908 1.48-8.279L0 8.797l8.332-.779L12 .587z"
+        fill="url(#half-fill-gradient)"
       />
     </svg>
   ),

@@ -88,7 +88,7 @@ const DisplayCategory = ({
   return (
     <div>
       <h2 id={products[0].category.name}>{products[0].category.name}</h2>
-      <div className="md:grid-clos-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="md:grid-clos-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
         {products.length > 0 ? (
           products.map((item) => <ProductCart key={item.id} data={item} />)
         ) : (

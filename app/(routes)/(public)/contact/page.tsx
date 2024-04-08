@@ -33,7 +33,7 @@ const ContactPage = () => {
       <div className="mt-8">
         <p>6 B le Pont Robert 44290 MASSERAC</p>
         <p>06 72 06 45 55</p>
-        <Link href="mailto:contact@riottech.fr">
+        <Link href="mailto:laiteriedupontrobert@gmail.com">
           laiteriedupontrobert@gmail.com
         </Link>
         <p>Du lundi au samedi: 9h00 - 17h00</p>

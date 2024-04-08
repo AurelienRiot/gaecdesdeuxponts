@@ -158,6 +158,7 @@ const Dots = ({
       {categories.map((_, idx) => {
         return (
           <button
+            aria-label={`Image ${idx + 1} sur ${categories.length}`}
             key={idx}
             onClick={() => setImgIndex(idx)}
             className={`h-3 w-3 rounded-full transition-colors ${

@@ -13,12 +13,23 @@ import {
 import { useUserContext } from "@/context/user-context";
 import { currencyFormatter, dateFormatter } from "@/lib/utils";
 import NoResults from "@/components/ui/no-results";
+import { DataTableSkeleton } from "@/components/skeleton-ui/data-table-skeleton";
 
 export const OrderTable = () => {
   const { user } = useUserContext();
 
   if (!user) {
-    return null;
+    return (
+      <div className="space-y-4 px-4">
+        <Heading title={`Commandes `} description="Résumé des commandes" />
+        <Separator />
+        <DataTableSkeleton
+          columnCount={6}
+          filterableColumnCount={2}
+          searchableColumnCount={1}
+        />
+      </div>
+    );
   }
 
   const formattedOrders: OrderColumnType[] = (user.orders || []).map(

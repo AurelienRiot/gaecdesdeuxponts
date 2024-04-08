@@ -25,11 +25,15 @@ export function DataTableSkeleton({
     <div className="w-full space-y-3 overflow-auto">
       <div className="flex w-full items-center justify-between space-x-2 overflow-auto p-1">
         <div className="flex flex-1 items-center space-x-2">
-          {searchableColumnCount > 0
-            ? Array.from({ length: searchableColumnCount }).map((_, i) => (
-                <Skeleton key={i} className="h-7 w-[150px] lg:w-[250px]" />
-              ))
-            : null}
+          {searchableColumnCount > 0 && (
+            <>
+              <Skeleton className="h-8 w-[150px] lg:w-[250px]" />
+              {searchableColumnCount > 1 && (
+                <Skeleton className="relative h-8   w-[150px] sm:pl-2" />
+              )}
+            </>
+          )}
+
           {filterableColumnCount > 0
             ? Array.from({ length: filterableColumnCount }).map((_, i) => (
                 <Skeleton key={i} className="h-7 w-[70px] border-dashed" />

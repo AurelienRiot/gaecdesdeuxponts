@@ -37,6 +37,8 @@ import { Address } from "@prisma/client";
 interface UserFormProps {
   initialData: {
     name: string;
+    role: string;
+    company: string;
     email: string;
     phone: string;
     adress: FullAdress;
@@ -47,6 +49,7 @@ const formSchema = z.object({
   name: z.string().min(1, {
     message: "Le nom est obligatoire",
   }),
+  company: z.string().optional(),
   phone: z.string().refine(
     (value) => {
       return value === "" || isValidPhoneNumber(value);
@@ -97,7 +100,9 @@ export const UserForm: React.FC<UserFormProps> = ({
         },
   );
 
-  const title = "Modifier le profil";
+  const title = initialData.name
+    ? "Modifier votre profil"
+    : "Completer votre  profil";
   const toastMessage = "Profil mise à jour";
   const action = "Enregistrer les modifications";
 
@@ -105,6 +110,7 @@ export const UserForm: React.FC<UserFormProps> = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: initialData.name,
+      company: initialData.company,
       phone: initialData.phone,
       adress: selectedAddress,
     },
@@ -129,6 +135,7 @@ export const UserForm: React.FC<UserFormProps> = ({
             ...prev,
             name: data.name,
             phone: data.phone,
+            company: data.company || null,
             address: [data.adress as Address],
           }
         : null,
@@ -198,6 +205,25 @@ export const UserForm: React.FC<UserFormProps> = ({
                 </FormItem>
               )}
             />
+            {initialData.role === "pro" && (
+              <FormField
+                control={form.control}
+                name="company"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Entreprise</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={form.formState.isSubmitting}
+                        placeholder="entreprise"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <FormField
               control={form.control}
@@ -268,8 +294,10 @@ export const UserFromWrapper = () => {
 
   const formattedUser = {
     name: user.name || "",
+    role: user.role || "",
     phone: user.phone || "",
     email: user.email || "",
+    company: user.company || "",
     adress: {
       label: user.address[0]?.label || "",
       city: user.address[0]?.city || "",
