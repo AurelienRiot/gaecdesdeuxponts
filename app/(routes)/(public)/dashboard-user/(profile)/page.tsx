@@ -1,5 +1,4 @@
 import { checkPro } from "@/components/auth/checkAuth";
-import { Suspense } from "react";
 import { OrderTable } from "./components/order-table";
 import ProTab from "./components/pro-tab";
 import ProfilTab from "./components/profil-tab";
@@ -12,7 +11,6 @@ const DashboardUser = async ({
   searchParams: { tab: string };
 }) => {
   const role = await checkPro();
-
   const tabs: Tab[] = [
     {
       title: "Profil",
@@ -40,11 +38,7 @@ const DashboardUser = async ({
       title: "Prduits Pro",
       iconId: "store",
 
-      content: (
-        <Suspense fallback={null}>
-          <ProTab />
-        </Suspense>
-      ),
+      content: <ProTab />,
     });
   }
 

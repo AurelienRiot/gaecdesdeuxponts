@@ -2,7 +2,6 @@
 
 import { ShopCard } from "@/components/display-shops/shop-card";
 import { DataInvoiceType } from "@/components/pdf/data-invoice";
-import DisplayPDF from "@/components/pdf/pdf-button";
 import {
   FactureCell,
   ProductCell,

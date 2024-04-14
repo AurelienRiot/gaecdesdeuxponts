@@ -16,6 +16,8 @@ import Link from "next/link";
 import { Suspense } from "react";
 import UserClient from "./components/client";
 
+export const dynamic = "force-dynamic";
+
 const UserPage = async () => {
   return (
     <Suspense fallback={<SeverUserClientLoading />}>

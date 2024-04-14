@@ -13,6 +13,8 @@ import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 const ProTab = () => {
+  const time = new Date();
+
   const { products } = useProductsContext();
   const { categories } = useCategoriesContext();
 
@@ -35,6 +37,8 @@ const ProTab = () => {
       scrollContainer.scrollTop = relativeTop - 20;
     }
   };
+  const time2 = new Date();
+  console.log(`time page: ${time2.getTime() - time.getTime()}`);
   return (
     <>
       <div className=" w-full flex-col   p-6 ">
@@ -77,8 +81,6 @@ const ProTab = () => {
     </>
   );
 };
-
-export default ProTab;
 
 const DisplayCategory = ({
   products,
@@ -134,3 +136,5 @@ const DisplayProduct = ({
     </div>
   );
 };
+
+export default ProTab;

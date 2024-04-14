@@ -1,3 +1,4 @@
+import ArticlePromotion from "./components/article-promotion";
 import ImageV2 from "./components/image-v2";
 import NosProduits from "./components/nos-produits";
 import { PartenaireCards } from "./components/partenaires";
@@ -10,6 +11,7 @@ export default function Home() {
       <ImageV2 />
       <NosProduits />
       <WhyChooseUs />
+      <ArticlePromotion />
       <PartenaireCards />
     </>
   );

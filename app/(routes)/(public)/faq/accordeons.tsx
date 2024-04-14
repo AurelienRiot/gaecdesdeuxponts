@@ -27,7 +27,11 @@ export const Accordion2 = ({
             position: absolute;
             inset: 0;
             z-index: 0; /* Ensure it's below the content */
-            background: linear-gradient(to right, violet, indigo);
+            background: linear-gradient(
+              to right,
+              var(--neutral-900),
+              var(--slate-900)
+            );
             opacity: 0;
             transition: opacity 0.3s ease;
             pointer-events: none; /* Prevent it from capturing clicks */
@@ -43,16 +47,16 @@ export const Accordion2 = ({
           key={index}
           value={`item-${index}`}
           onMouseEnter={() => setValue(`item-${index}`)}
-          className=" group relative   rounded-md  bg-border p-0.5  transition-all data-[state=open]:bg-gradient-to-r data-[state=open]:from-violet-600 data-[state=open]:to-indigo-600
+          className=" group relative   rounded-md  bg-border p-0.5  transition-all data-[state=open]:bg-gradient-to-r data-[state=open]:from-neutral-900 data-[state=open]:to-slate-900
           "
         >
           <div className="rounded-[calc((var(--radius)-2px)-1px)]   bg-background">
-            <AccordionPrimitive.Trigger className="z-10 w-full cursor-default bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text p-4 text-left  text-xl font-semibold text-transparent group-first:rounded-t-md group-last:rounded-b-md">
+            <AccordionPrimitive.Trigger className="z-10 w-full cursor-default bg-gradient-to-r from-neutral-900 to-slate-900 bg-clip-text p-4 text-left  text-xl font-semibold text-transparent group-first:rounded-t-md group-last:rounded-b-md">
               {faq.question}
             </AccordionPrimitive.Trigger>
             <AccordionPrimitive.Content className="z-10 transition-all  data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
               <div className=" flex flex-col justify-between   transition-opacity duration-200 ease-out ">
-                <ul className=" blue-check-list space-y-4 bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text py-2 text-sm text-transparent">
+                <ul className=" list-check-green-600 space-y-4 bg-gradient-to-r from-neutral-900 to-slate-900 bg-clip-text py-2 text-sm text-transparent">
                   {faq.answer.map((point, pointIndex) => (
                     <li className="mx-4" key={pointIndex}>
                       {point}
@@ -60,7 +64,7 @@ export const Accordion2 = ({
                   ))}
                 </ul>
                 <div className="mt-8 h-[40px] w-full"></div>
-                <button className="group/button absolute bottom-0 left-0 flex w-full items-center justify-center gap-1 rounded-b-md bg-gradient-to-r from-violet-600 to-indigo-600 py-2 font-semibold text-white  opacity-0 transition-all group-data-[state=open]:opacity-100 ">
+                <button className="group/button absolute bottom-0 left-0 flex w-full items-center justify-center gap-1 rounded-b-md bg-gradient-to-r from-neutral-900 to-slate-900 py-2 font-semibold text-white  opacity-0 transition-all group-data-[state=open]:opacity-100 ">
                   <span>En savoir plus</span>
                   <svg
                     stroke="currentColor"

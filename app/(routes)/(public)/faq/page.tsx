@@ -104,7 +104,7 @@ const FAQPage = () => {
         </div>
       </div>
 
-      <Accordion type="single" collapsible className="mt-8 w-full">
+      {/* <Accordion type="single" collapsible className="mt-8 w-full">
         {faqData.map((faq, index) => (
           <AccordionItem key={index} value={`item-${index}`} className="group">
             <AccordionTrigger className="group-first:rounded-t-md group-last:rounded-b-md ">
@@ -121,7 +121,7 @@ const FAQPage = () => {
             </AccordionContent>
           </AccordionItem>
         ))}
-      </Accordion>
+      </Accordion> */}
 
       <Accordion2 data={faqData} />
     </Container>

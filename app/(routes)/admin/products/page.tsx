@@ -3,6 +3,8 @@ import { ProductClient } from "./components/client";
 import { ProductColumn } from "./components/columns";
 import { currencyFormatter, mergeWithoutDuplicates } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 const ProductPage = async () => {
   const products = await prismadb.product.findMany({
     include: {

@@ -20,7 +20,7 @@ const mainColor = "#00008B";
 const foregroundColor = "#FFFFFF";
 const borderColor = mainColor;
 const logoColor = "#000000";
-const watermarkColor = "rgba(255, 0, 0, 0.5)";
+const watermarkColor = "rgb(255, 0, 0)";
 
 const MainStyles = StyleSheet.create({
   page: {

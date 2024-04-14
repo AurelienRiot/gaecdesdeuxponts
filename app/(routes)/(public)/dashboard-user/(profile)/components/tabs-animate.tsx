@@ -1,7 +1,7 @@
 "use client";
 
 import IconButton from "@/components/ui/icon-button";
-import { cn } from "@/lib/utils";
+import { addDelay, cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import {
   ChevronLeft,
@@ -10,6 +10,7 @@ import {
   Settings,
   Store,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
 export const ICONS = {
@@ -38,8 +39,9 @@ export const Tabs = ({
   tabClassName?: string;
   contentClassName?: string;
 }) => {
-  const { tabs, setTabs, setHovering } = useTabsContext();
+  const { tabs, setHovering } = useTabsContext();
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <>
@@ -67,7 +69,7 @@ export const Tabs = ({
             <button
               key={tab.title}
               onClick={() => {
-                setTabs((prev) => moveSelectedTabToTop(tab.iconId, prev));
+                router.push("/dashboard-user?tab=" + tab.iconId);
                 setOpen(false);
               }}
               onMouseEnter={() => setHovering(true)}
@@ -114,7 +116,7 @@ export const FadeInDiv = ({ className }: { className?: string }) => {
     return tab.iconId === tabs[0].iconId;
   };
   return (
-    <div className="relative ml-24 h-full w-full sm:ml-28">
+    <div className="relative ml-24 mt-5 h-full w-full sm:ml-28 sm:mt-10">
       {tabs.map((tab, idx) => (
         <motion.div
           key={tab.iconId}
@@ -123,14 +125,14 @@ export const FadeInDiv = ({ className }: { className?: string }) => {
             scale: 1 - idx * 0.1,
             top: hovering ? idx * -50 : 0,
             zIndex: -idx,
-            opacity: idx < 3 ? 1 - idx * 0.1 : 0,
+            opacity: idx < 3 ? 1 - idx * 0.2 : 0,
             scrollBehavior: "smooth",
           }}
           animate={{
             y: isActive(tab) ? [0, 40, 0] : 0,
           }}
           className={cn(
-            " absolute left-0 top-0  h-[95%] w-full overflow-y-auto rounded-2xl border bg-gradient-to-br from-neutral-50 to-stone-100  shadow-md dark:bg-gradient-to-br  dark:from-stone-950 dark:to-neutral-950 ",
+            " absolute left-0 top-0 h-[95%] w-full overflow-y-auto rounded-2xl border bg-gradient-to-br from-neutral-50 to-stone-100 shadow-md  dark:bg-gradient-to-br dark:from-stone-950  dark:to-neutral-950 sm:h-[90%] ",
             className,
           )}
           id="tab-container"
@@ -164,7 +166,14 @@ export const TabsProvider: React.FC<{
   const [hovering, setHovering] = useState(false);
 
   useEffect(() => {
-    setTabs(moveSelectedTabToTop(activeTab as keyof typeof ICONS, initialTabs));
+    const changeTabs = async () => {
+      setTabs(
+        moveSelectedTabToTop(activeTab as keyof typeof ICONS, initialTabs),
+      );
+      await addDelay(500);
+      setHovering(false);
+    };
+    changeTabs();
   }, [activeTab, initialTabs]);
   return (
     <TabsContext.Provider value={{ tabs, setTabs, hovering, setHovering }}>

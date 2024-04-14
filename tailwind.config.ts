@@ -240,6 +240,7 @@ module.exports = {
     require("tailwind-clip-path"),
     addVariablesForColors,
     addBackgroundGrid,
+    ListStyleCheck,
   ],
 };
 
@@ -280,6 +281,32 @@ function addBackgroundGrid({ matchUtilities, theme }: any) {
     },
     {
       values: flattenColorPalette(theme("backgroundColor")),
+      type: "color",
+    },
+  );
+}
+
+function ListStyleCheck({ matchUtilities, theme }: any) {
+  matchUtilities(
+    {
+      "list-check": (value: any) => ({
+        listStyle: "none",
+        paddingLeft: "0",
+        "& li::before": {
+          content: `url("${svgToDataUri(
+            `<svg width="14" height="12" viewBox="0 0 14 12" xmlns="http://www.w3.org/2000/svg" fill="${value}">
+            <path fill-rule="evenodd" d="M13.685.153a.752.752 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" />
+            </svg>`,
+          )}")`,
+
+          display: "inline-block",
+          marginRight: "8px",
+          verticalAlign: "middle",
+        },
+      }),
+    },
+    {
+      values: flattenColorPalette(theme("colors")),
       type: "color",
     },
   );

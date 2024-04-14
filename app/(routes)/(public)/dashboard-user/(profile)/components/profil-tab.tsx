@@ -1,16 +1,19 @@
 "use client";
 import { LogoutButtonText } from "@/components/auth/auth-button";
+import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useUserContext } from "@/context/user-context";
 import { PencilLine } from "lucide-react";
-import { moveSelectedTabToTop, useTabsContext } from "./tabs-animate";
+import { useRouter } from "next/navigation";
+import { useTabsContext } from "./tabs-animate";
 import UserPhone from "./user-phone";
-import { Skeleton } from "@/components/skeleton-ui/skeleton";
+import { addDelay } from "@/lib/utils";
 
 const ProfilTab = () => {
-  const { setTabs, setHovering } = useTabsContext();
+  const { setHovering } = useTabsContext();
   const { user } = useUserContext();
+  const router = useRouter();
 
   const adress = !user
     ? null
@@ -36,9 +39,8 @@ const ProfilTab = () => {
           <Button
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
-            onClick={() => {
-              setTabs((prev) => moveSelectedTabToTop("store", prev));
-              setHovering(false);
+            onClick={async () => {
+              router.push("/dashboard-user?tab=store");
             }}
           >
             Accès Pro
@@ -58,15 +60,17 @@ const ProfilTab = () => {
         </div>
         <div>
           <p className="font-bold dark:text-white">Adresse:</p>
-          <p className="dark:text-gray-300">
-            {!adress ? (
-              <Skeleton className="h-6 w-40" />
-            ) : adress.line1 ? (
-              `${adress.line1}, ${adress.postalCode} ${adress.city}`
-            ) : (
-              "Non renseigné"
-            )}
-          </p>
+
+          {!adress ? (
+            <Skeleton className="h-6 w-40" />
+          ) : adress.line1 ? (
+            <p className="dark:text-gray-300">
+              {" "}
+              `${adress.line1}, ${adress.postalCode} ${adress.city}`{" "}
+            </p>
+          ) : (
+            <p className="dark:text-gray-300"> Non renseigné </p>
+          )}
         </div>
         <div>
           <p className="font-bold dark:text-white">Téléphone:</p>
@@ -77,12 +81,12 @@ const ProfilTab = () => {
           )}
         </div>
       </div>
+
       <Button
         onMouseEnter={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
         onClick={async () => {
-          setTabs((prev) => moveSelectedTabToTop("settings", prev));
-          setHovering(false);
+          router.push("/dashboard-user?tab=settings");
         }}
         variant={"expandIcon"}
         iconPlacement="right"

@@ -22,7 +22,7 @@ const NavBar = async () => {
 
   return (
     <div
-      className={`fixed top-0 z-30 flex  h-16 w-full items-center justify-between rounded-md border   bg-background px-4 shadow-md sm:px-6 lg:px-4`}
+      className={`fixed top-0 z-30 flex  h-16 w-full items-center justify-between rounded-md border   bg-background px-4 shadow-md sm:px-6 lg:px-4 print:hidden`}
     >
       <MainNav className="hidden lg:flex " />
       <MobileNav className="ml-2 lg:hidden" />

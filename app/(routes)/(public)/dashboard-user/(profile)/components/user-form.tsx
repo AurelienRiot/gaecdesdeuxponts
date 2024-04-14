@@ -14,25 +14,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
+import { useUserContext } from "@/context/user-context";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Address } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { signOut } from "next-auth/react";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Dispatch, SetStateAction, Suspense, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import * as z from "zod";
 import { deleteUser, updateUser } from "./server-action";
-import {
-  ICONS,
-  Tab,
-  moveSelectedTabToTop,
-  useTabsContext,
-} from "./tabs-animate";
-import { useUserContext } from "@/context/user-context";
-import { Address } from "@prisma/client";
+import { useTabsContext } from "./tabs-animate";
 
 interface UserFormProps {
   initialData: {
@@ -116,7 +110,8 @@ export const UserForm: React.FC<UserFormProps> = ({
     },
   });
 
-  const { setTabs, setHovering } = useTabsContext();
+  const { setHovering } = useTabsContext();
+  const router = useRouter();
   const { setUser } = useUserContext();
 
   const onSubmit = async (data: UserFormValues) => {
@@ -140,8 +135,7 @@ export const UserForm: React.FC<UserFormProps> = ({
           }
         : null,
     );
-    setTabs((tabs) => moveSelectedTabToTop("user", tabs));
-    setHovering(false);
+    router.push("/dashboard-user?tab=user");
     toast.success(toastMessage);
   };
 
@@ -264,25 +258,6 @@ export const UserForm: React.FC<UserFormProps> = ({
       </Form>
     </div>
   );
-};
-
-const redirectTab = ({
-  tab: tabName,
-  setTabs,
-  router,
-  searchParams,
-}: {
-  tab: keyof typeof ICONS;
-  setTabs: Dispatch<SetStateAction<Tab[]>>;
-  router: AppRouterInstance;
-  searchParams: URLSearchParams;
-}) => {
-  if (searchParams.get("tab") === tabName) {
-    setTabs((tabs) => moveSelectedTabToTop(tabName, tabs));
-    router.refresh();
-  } else {
-    router.push(`/dashboard-user?tab=${tabName}`);
-  }
 };
 
 export const UserFromWrapper = () => {

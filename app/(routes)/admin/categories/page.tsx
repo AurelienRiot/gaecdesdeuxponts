@@ -2,6 +2,8 @@ import prismadb from "@/lib/prismadb";
 import { CategoryClient } from "./components/client";
 import { CategoryColumnType } from "./components/columns";
 
+export const dynamic = "force-dynamic";
+
 const CategoriesPage = async () => {
   const categories = await prismadb.category.findMany({
     orderBy: {

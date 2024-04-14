@@ -104,7 +104,7 @@ const Summary: React.FC<SummaryProps> = ({ userId, shops }) => {
     if (result.success) {
       toast.success("Commande effectuée avec succès");
       cart.removeAll();
-      router.push("/dashboard-user");
+      router.push("/dashboard-user?tab=orders");
     } else {
       toast.error(result.message);
     }

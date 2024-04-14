@@ -1,7 +1,7 @@
 const ConditionsVentePage = () => {
   return (
-    <section className="flex flex-col max-w-5xl gap-4 pt-12 mx-auto mb-10 text-lg">
-      <h1 className="text-3xl text-center">Conditions générales de vente </h1>
+    <section className="mx-auto mb-10 flex max-w-5xl flex-col gap-4 pt-12 text-lg">
+      <h1 className="text-center text-3xl">Conditions générales de vente </h1>
       <p>
         Les présentes conditions de vente sont conclues d&apos;une part par la
         société RIOT TECH dont le siège social est situé à Kervihan 56930
@@ -11,7 +11,7 @@ const ConditionsVentePage = () => {
         procéder à un achat via le site Internet “ RIOTTECH.fr ” dénommée
         ci-après “ l&apos;acheteur ”.
       </p>
-      <h2 className="text-2xl text-center">Objet</h2>
+      <h2 className="text-center text-2xl">Objet</h2>
       <p>
         Les présentes conditions de vente visent à définir les relations
         contractuelles entre RIOT TECH et l&apos;acheteur et les conditions
@@ -26,7 +26,7 @@ const ConditionsVentePage = () => {
         moment. Dans ce cas, les conditions applicables seront celles en vigueur
         à la date de la commande par l&apos;acheteur.
       </p>
-      <h2 className="text-2xl text-center">
+      <h2 className="text-center text-2xl">
         Caractéristiques des biens et services proposés
       </h2>
       <p>
@@ -42,7 +42,7 @@ const ConditionsVentePage = () => {
         peuvent assurer une similitude parfaite avec le produit offert,
         notamment en ce qui concerne les couleurs.
       </p>
-      <h2 className="text-2xl text-center">Tarifs</h2>
+      <h2 className="text-center text-2xl">Tarifs</h2>
       <p>
         Les prix figurant dans le catalogue sont des prix HT (Hors Taxes) en
         euro, le montant en euro correspondant au taux TVA applicable est ajouté
@@ -54,12 +54,12 @@ const ConditionsVentePage = () => {
         Les prix indiqués ne comprennent pas les frais de traitement de
         commandes, de transport et de livraison.
       </p>
-      <h2 className="text-2xl text-center">Aire géographique</h2>
+      <h2 className="text-center text-2xl">Aire géographique</h2>
       <p>
         La vente en ligne des produits et services présentés dans le site est
         réservée aux acheteurs qui résident en France métropolitaine.
       </p>
-      <h2 className="text-2xl text-center">Commandes</h2>
+      <h2 className="text-center text-2xl">Commandes</h2>
       <div>
         L&apos;acheteur, qui souhaite acheter un produit ou un service doit
         obligatoirement :
@@ -89,7 +89,7 @@ const ConditionsVentePage = () => {
         Le vendeur communiquera par courrier électronique la confirmation de la
         commande enregistrée.
       </div>
-      <h2 className="text-2xl text-center">Rétractation</h2>
+      <h2 className="text-center text-2xl">Rétractation</h2>
       <p>
         Les acheteurs, personnes physiques non professionnelles, bénéficient
         d&apos;un délai de rétractation de sept jours à compter de la livraison
@@ -97,7 +97,7 @@ const ConditionsVentePage = () => {
         remboursement sans pénalité, à l&apos;exception des frais de retour.
         Pour les professionnels, un avoir pourra être demandé.
       </p>
-      <h2 className="text-2xl text-center">Modalités de paiement</h2>
+      <h2 className="text-center text-2xl">Modalités de paiement</h2>
       <p>
         Le prix est exigible à la commande.
         <br />
@@ -113,7 +113,7 @@ const ConditionsVentePage = () => {
         <br />À la demande de l&apos;acheteur, il lui sera adressée une facture
         par mail faisant ressortir la TVA.
       </p>
-      <h2 className="text-2xl text-center">Livraisons</h2>
+      <h2 className="text-center text-2xl">Livraisons</h2>
       <p>
         Les livraisons sont faites à l&apos;adresse indiquée dans le bon de
         commande qui ne peut être que dans la zone géographique convenue.
@@ -127,7 +127,7 @@ const ConditionsVentePage = () => {
         ceux-ci dépassent trente jours à compter de la commande, une demande
         d&apos;avoir pourra être formulée.
       </p>
-      <h2 className="text-2xl text-center">Garantie</h2>
+      <h2 className="text-center text-2xl">Garantie</h2>
       <p>
         Tous les produits fournis par le vendeur bénéficient de la garantie
         légale prévue par les articles 1641 et suivants du Code civil.
@@ -141,13 +141,13 @@ const ConditionsVentePage = () => {
         contact ou à l’adresse e-mail{" "}
         <a
           href="mailto:contact@riottech.fr"
-          className="text-blue-600 hover:underline hover:text-blue-800 visited:text-purple-600 underline-offset-2"
+          className="text-blue-600 underline-offset-2 visited:text-purple-600 hover:text-blue-800 hover:underline"
         >
           contact@riottech.fr
         </a>{" "}
         dans le délai de trente jours à compter de la date de livraison.
       </p>
-      <h2 className="text-2xl text-center">Responsabilité</h2>
+      <h2 className="text-center text-2xl">Responsabilité</h2>
       <p>
         Le vendeur, dans le processus de vente en ligne, n&apos;est tenu que par
         une obligation de moyens ; sa responsabilité ne pourra être engagée pour
@@ -155,7 +155,7 @@ const ConditionsVentePage = () => {
         perte de données, intrusion, virus, rupture du service, ou autres
         problèmes involontaires.
       </p>
-      <h2 className="text-2xl text-center">Propriété intellectuelle</h2>
+      <h2 className="text-center text-2xl">Propriété intellectuelle</h2>
       <p>
         Tous les éléments du site de RIOT TECH sont et restent la propriété
         intellectuelle et exclusive de RIOT TECH et de ses partenaires. <br />
@@ -165,7 +165,7 @@ const ConditionsVentePage = () => {
         Tout lien simple ou par hypertexte est strictement interdit sans un
         accord écrit exprès de RIOT TECH.
       </p>{" "}
-      <h2 className="text-2xl text-center">Données à caractère personnel</h2>
+      <h2 className="text-center text-2xl">Données à caractère personnel</h2>
       <p>
         Conformément à la loi relative à l&apos;informatique, aux fichiers et
         aux libertés du 6 janvier 1978, les informations à caractère nominatif
@@ -180,7 +180,7 @@ const ConditionsVentePage = () => {
         disposent d&apos;un droit d&apos;accès et de rectification des données
         les concernant, conformément à la loi du 6 janvier 1978.
       </p>
-      <h2 className="text-2xl text-center">Archivage - Preuve</h2>
+      <h2 className="text-center text-2xl">Archivage - Preuve</h2>
       <p>
         RIOT TECH archivera les bons de commandes et les factures sur un support
         fiable et durable constituant une copie fidèle conformément aux
@@ -189,29 +189,22 @@ const ConditionsVentePage = () => {
         parties comme preuve des communications, commandes, paiements et
         transactions intervenus entre les parties.
       </p>
-      <h2 className="text-2xl text-center">Règlement des litiges</h2>
+      <h2 className="text-center text-2xl">Règlement des litiges</h2>
       <p>
         Les présentes conditions de vente en ligne sont soumises à la loi
         Française. <br />
         En cas de litige, compétence est attribuée aux tribunaux compétents de
         Lorient, nonobstant pluralité de défendeurs ou appel en garantie.
       </p>
-      <h2 className="text-2xl text-center">
+      <h2 className="text-center text-2xl">
         Conditions et contrats d&apos;abonnement
       </h2>
       <a
         href="/pdf/CGA.pdf"
-        className="text-blue-600 hover:underline hover:text-blue-800 visited:text-purple-600 underline-offset-2"
+        className="text-blue-600 underline-offset-2 visited:text-purple-600 hover:text-blue-800 hover:underline"
         target="_blank"
       >
         Conditions Générales d&apos;Abonnement
-      </a>
-      <a
-        href="/pdf/Brochure-tarifaire-1.pdf"
-        className="text-blue-600 hover:underline hover:text-blue-800 visited:text-purple-600 underline-offset-2"
-        target="_blank"
-      >
-        Brochure Tarifaire
       </a>
     </section>
   );
