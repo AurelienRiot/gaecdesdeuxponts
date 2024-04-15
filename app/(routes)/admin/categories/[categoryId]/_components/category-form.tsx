@@ -22,7 +22,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
-import { deleteCategorie } from "../../components/server-action";
+import { deleteCategorie } from "../../_components/server-action";
 import {
   CategoryReturnType,
   createCategory,

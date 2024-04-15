@@ -14,7 +14,7 @@ import prismadb from "@/lib/prismadb";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
-import UserClient from "./components/client";
+import UserClient from "./_components/client";
 
 export const dynamic = "force-dynamic";
 

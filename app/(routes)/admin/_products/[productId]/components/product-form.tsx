@@ -34,7 +34,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
-import { getFileKey } from "../../../categories/[categoryId]/components/category-form";
+import { getFileKey } from "../../../categories/[categoryId]/_components/category-form";
 import { deleteProduct } from "../../components/server-action";
 import LinkProducts from "./link-products";
 import { PlateEditor } from "./plate-editor";

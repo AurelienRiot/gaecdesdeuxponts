@@ -5,7 +5,7 @@ import Container from "@/components/ui/container";
 import { Input } from "@/components/ui/input";
 import { ChevronDown } from "lucide-react";
 import { Suspense } from "react";
-import { PlacePicker } from "./components/place";
+import { PlacePicker } from "./_components/place";
 
 const OuNousTrouver = async () => {
   return (

@@ -1,5 +1,5 @@
 import prismadb from "@/lib/prismadb";
-import { CategoryForm } from "./components/category-form";
+import { CategoryForm } from "./_components/category-form";
 
 const CategoryPage = async ({ params }: { params: { categoryId: string } }) => {
   const category = await prismadb.category.findUnique({

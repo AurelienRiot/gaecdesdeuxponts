@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import ClientWrapper from "./components/client-wraper";
+import ClientWrapper from "./_components/client-wraper";
 
 interface ProductPageProps {
   params: {

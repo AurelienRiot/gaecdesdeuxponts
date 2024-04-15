@@ -1,9 +1,9 @@
 import ButtonBackward from "@/components/ui/button-backward";
 import prismadb from "@/lib/prismadb";
 import { currencyFormatter, dateFormatter } from "@/lib/utils";
-import { OrderColumn } from "./components/order-column";
-import { OrderTable } from "./components/order-table";
-import { UserForm } from "./components/user-form";
+import { OrderColumn } from "./_components/order-column";
+import { OrderTable } from "./_components/order-table";
+import { UserForm } from "./_components/user-form";
 
 export const dynamic = "force-dynamic";
 

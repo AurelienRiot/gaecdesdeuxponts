@@ -1,9 +1,9 @@
 import { checkPro } from "@/components/auth/checkAuth";
-import { OrderTable } from "./components/order-table";
-import ProTab from "./components/pro-tab";
-import ProfilTab from "./components/profil-tab";
-import { Tab, Tabs, TabsProvider } from "./components/tabs-animate";
-import { UserFromWrapper } from "./components/user-form";
+import { OrderTable } from "./_components/order-table";
+import ProTab from "./_components/pro-tab";
+import ProfilTab from "./_components/profil-tab";
+import { Tab, Tabs, TabsProvider } from "./_components/tabs-animate";
+import { UserFromWrapper } from "./_components/user-form";
 
 const DashboardUser = async ({
   searchParams,

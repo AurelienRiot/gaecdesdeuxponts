@@ -42,7 +42,7 @@ import { UseFormReturn, useForm } from "react-hook-form";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import { z } from "zod";
-import { getFileKey } from "../../../categories/[categoryId]/components/category-form";
+import { getFileKey } from "../../../categories/[categoryId]/_components/category-form";
 import {
   ReturnType,
   createShop,

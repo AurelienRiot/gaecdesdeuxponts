@@ -1,7 +1,7 @@
 import Billboard from "@/components/billboard/billboard";
 import Container from "@/components/ui/container";
 import { Metadata } from "next";
-import DisplayProducts from "./components/display-products";
+import DisplayProducts from "./_components/display-products";
 
 interface CategoryPageProps {
   params: {

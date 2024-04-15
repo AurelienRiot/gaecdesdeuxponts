@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import prismadb from "@/lib/prismadb";
 import { ChevronDown, Plus } from "lucide-react";
 import { Suspense } from "react";
-import DisplayShop from "./components/shops";
+import DisplayShop from "./_components/shops";
 
 export const dynamic = "force-dynamic";
 

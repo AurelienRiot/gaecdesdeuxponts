@@ -1,7 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import { DateRange } from "react-day-picker";
-import { OrderClient } from "./components/client";
-import { formatOrders } from "./components/format-orders";
+import { OrderClient } from "./_components/client";
+import { formatOrders } from "./_components/format-orders";
 
 export const dynamic = "force-dynamic";
 

@@ -61,7 +61,7 @@ export const LogoutButtonText = (
   return (
     <Button
       title="Se deconnecter"
-      variant={"outline"}
+      variant={"destructive"}
       onClick={() => signOut({ callbackUrl: "/" })}
       {...props}
     >

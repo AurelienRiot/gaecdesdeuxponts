@@ -1,6 +1,6 @@
 import prismadb from "@/lib/prismadb";
-import { CategoryClient } from "./components/client";
-import { CategoryColumnType } from "./components/columns";
+import { CategoryClient } from "./_components/client";
+import { CategoryColumnType } from "./_components/columns";
 
 export const dynamic = "force-dynamic";
 

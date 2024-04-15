@@ -75,9 +75,15 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
             ) : (
               <Select
                 onValueChange={(value) => {
-                  value === "10"
-                    ? setCustomQuantity(true)
-                    : handleQuantity(Number(value));
+                  if (value === "0") {
+                    onRemove();
+                    return;
+                  }
+                  if (value === "10") {
+                    setCustomQuantity(true);
+                    return;
+                  }
+                  handleQuantity(Number(value));
                 }}
               >
                 <SelectTrigger
@@ -87,6 +93,9 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
                   Quantité: {quantity}
                 </SelectTrigger>
                 <SelectContent className="w-fit min-w-4 tabular-nums">
+                  <SelectItem className=" py-0.5 text-xs " value={"0"}>
+                    Supprimé
+                  </SelectItem>
                   {[...Array(9)].map((_, i) => (
                     <SelectItem
                       className=" py-0.5 text-xs "
@@ -137,9 +146,7 @@ const CustomQuantity = ({
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     changeQuantity(id, data.quantity);
-    if (data.quantity < 10) {
-      setCustomQuantity(false);
-    }
+    setCustomQuantity(false);
   };
 
   return (

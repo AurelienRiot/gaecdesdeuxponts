@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AlertModal } from "@/components/ui/alert-modal-form";
-import { deleteOrders } from "../../../orders/components/server-action";
+import { deleteOrders } from "../../../orders/_components/server-action";
 
 interface OrderCellActionProps {
   data: OrderColumn;

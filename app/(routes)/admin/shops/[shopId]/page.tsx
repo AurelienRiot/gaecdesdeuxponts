@@ -1,5 +1,5 @@
 import prismadb from "@/lib/prismadb";
-import ShopForm from "./components/shop-form";
+import ShopForm from "./_components/shop-form";
 
 const CategoryPage = async ({ params }: { params: { shopId: string } }) => {
   const shop = await prismadb.shop.findUnique({

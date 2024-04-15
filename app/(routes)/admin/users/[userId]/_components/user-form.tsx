@@ -25,7 +25,7 @@ import { useForm } from "react-hook-form";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import * as z from "zod";
-import { deleteUser } from "../../components/server-action";
+import { deleteUser } from "../../_components/server-action";
 import { updateUser } from "./server-action";
 
 interface UserFormProps {

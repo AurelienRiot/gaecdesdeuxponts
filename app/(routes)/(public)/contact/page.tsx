@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { Suspense } from "react";
-import { ContactForm } from "./components/contact-form";
+import { ContactForm } from "./_components/contact-form";
 
 export const metadata = {
   title: "Laiterie du Pont Robert - Contact",
@@ -93,9 +93,7 @@ const ContactFormLoading = async () => (
           </div>
         </div>
       </div>
-      <LoadingButton disabled={true} variant={"shadow"}>
-        Envoyer
-      </LoadingButton>
+      <LoadingButton disabled={true}>Envoyer</LoadingButton>
     </div>
   </>
 );

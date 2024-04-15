@@ -2,8 +2,8 @@ import getShops from "@/actions/get-shops";
 import { authOptions } from "@/components/auth/authOptions";
 import Container from "@/components/ui/container";
 import { getServerSession } from "next-auth";
-import CartItems from "./components/cart-items";
-import Summary from "./components/summary";
+import CartItems from "./_components/cart-items";
+import Summary from "./_components/summary";
 import { Suspense } from "react";
 
 const CartPage = async () => {

@@ -18,7 +18,7 @@ import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header
 import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
 import { DataTableFilterableColumn, DataTableViewOptionsColumn } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { changeStatus } from "../../../orders/components/server-action";
+import { changeStatus } from "../../../orders/_components/server-action";
 import { OrderCellAction } from "./order-cell-action";
 
 export type OrderColumn = {

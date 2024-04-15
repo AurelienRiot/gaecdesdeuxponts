@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import { forwardRef, useState } from "react";
 import { formatPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
-import { deleteShop } from "../../app/(routes)/admin/shops/[shopId]/components/server-actions";
+import { deleteShop } from "../../app/(routes)/admin/shops/[shopId]/_components/server-actions";
 import { Icons } from "../icons";
 import { AutosizeTextarea } from "../ui/autosize-textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";

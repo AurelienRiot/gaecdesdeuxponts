@@ -1,6 +1,6 @@
 import prismadb from "@/lib/prismadb";
-import { ContactClient } from "./components/client";
-import { ContactColumn } from "./components/columns";
+import { ContactClient } from "./_components/client";
+import { ContactColumn } from "./_components/columns";
 
 export const dynamic = "force-dynamic";
 
