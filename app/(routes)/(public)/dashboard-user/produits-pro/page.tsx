@@ -18,6 +18,16 @@ const PageProductsPro = () => {
     }
   };
 
+  if (!products) return null;
+
+  if (!products[0].isPro) {
+    return (
+      <div className=" p-6">
+        Vous devez être professionnel pour voir les produits
+      </div>
+    );
+  }
+
   return (
     <div className=" w-full flex-col    p-6">
       <h2 className=" text-2xl font-semibold">Produits pour professionnels</h2>
@@ -42,7 +52,6 @@ const PageProductsPro = () => {
       </div>
       {categories && categories.length > 0
         ? categories.map((category) => {
-            if (!products) return null;
             return (
               <DisplayCategory
                 key={category.id}

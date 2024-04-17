@@ -21,13 +21,15 @@ const ProfilTab = () => {
   return (
     <div className="w-full space-y-10  p-6 ">
       <div className="flex flex-col items-center justify-between gap-y-6  pb-4 sm:flex-row">
-        <h1 className="text-2xl font-semibold capitalize dark:text-white">
+        <h1 className="text-2xl font-semibold capitalize ">
           {!user ? (
             <Skeleton className="h-6 w-40" />
           ) : (
             <>
               <span>{user.name || "Compléter votre profil"}</span>
-              <span>{user.company ? ` - ${user.company}` : ""}</span>
+              {user?.role === "pro" && (
+                <span>{user.company ? ` - ${user.company}` : ""}</span>
+              )}
             </>
           )}
         </h1>
@@ -60,8 +62,7 @@ const ProfilTab = () => {
             <Skeleton className="h-6 w-40" />
           ) : adress.line1 ? (
             <p className="dark:text-gray-300">
-              {" "}
-              `${adress.line1}, ${adress.postalCode} ${adress.city}`{" "}
+              {`${adress.line1}, ${adress.postalCode} ${adress.city}`}
             </p>
           ) : (
             <p className="dark:text-gray-300"> Non renseigné </p>
