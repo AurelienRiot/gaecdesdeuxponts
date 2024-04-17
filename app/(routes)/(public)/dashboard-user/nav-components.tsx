@@ -36,7 +36,8 @@ const ProfilNavBar = ({ isPro }: { isPro?: boolean }) => {
         className=" flex w-full items-center justify-center  transition-transform duration-500"
       />
       {routes.map(({ Icon, title, href }) => {
-        const active = pathname === href;
+        const active = isActiveRoute(href, pathname);
+        console.log(active, pathname, href);
         return (
           <button
             key={title}
@@ -74,6 +75,14 @@ const ProfilNavBar = ({ isPro }: { isPro?: boolean }) => {
       })}
     </div>
   );
+};
+
+const isActiveRoute = (href: string, pathname: string): boolean => {
+  if (href === "/dashboard-user") {
+    return pathname === href;
+  } else {
+    return pathname.startsWith(href);
+  }
 };
 
 export const ProfilRoutes = [
