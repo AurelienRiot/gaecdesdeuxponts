@@ -39,7 +39,10 @@ const ImageV2 = () => {
     },
   ];
   return (
-    <div className=" relative flex h-[50vh] w-full items-start  justify-center sm:h-[65vh] ">
+    <div
+      id="image-main"
+      className=" relative  flex h-[60vh] w-full  items-start justify-center  sm:h-[50vh]"
+    >
       <Image
         src="/champ.webp"
         alt="image"
@@ -54,7 +57,7 @@ const ImageV2 = () => {
         Du lait frais du pie de la vache à votre verre
       </h1> */}
       <TypewriterEffectSmooth
-        className="absolute  z-20 px-4 py-2 text-center font-display text-3xl font-bold tracking-wider text-neutral-50 [text-shadow:0px_0px_50px_hsla(0,_0%,_0%,_.4)] sm:py-10 sm:text-5xl "
+        className="absolute  z-20 px-4 py-2 text-center font-display text-xl font-bold tracking-wider text-neutral-50 [text-shadow:0px_0px_50px_hsla(0,_0%,_0%,_.4)] sm:py-10 sm:text-3xl md:text-4xl lg:text-5xl "
         words={words}
       />
     </div>
