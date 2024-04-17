@@ -15,7 +15,7 @@ export const ScreenFitText = ({ text }: { text: string }) => {
   const [initialFontSize, setInitialFontSize] = useState(100);
   const fontSizeResize = useTransform(
     scrollYProgress,
-    [0, 0.05],
+    [0, 0.02],
     [initialFontSize, 20],
   );
   const fontSize = useMotionTemplate`${fontSizeResize}px`;
@@ -30,9 +30,10 @@ export const ScreenFitText = ({ text }: { text: string }) => {
         const textWidth = text.scrollWidth;
         const currentFontSize = parseFloat(text.style.fontSize);
         const newFontSize = Math.round(
-          (containerWidth / textWidth) * currentFontSize - 5,
+          (containerWidth / textWidth) * currentFontSize - 3,
         );
         setInitialFontSize(newFontSize);
+        console.log(text.offsetHeight);
         imageMain.style.marginTop = text.offsetHeight - 64 + "px";
       }
     };
@@ -43,17 +44,13 @@ export const ScreenFitText = ({ text }: { text: string }) => {
     return () => window.removeEventListener("resize", adjustFontSize);
   }, [text, initialFontSize]);
 
-  useEffect(() => {
-    fontSize.onChange((v) => console.log("Scroll Progress:", v));
-  }, [fontSize]);
-
   return (
     <div
       className="absolute left-0 top-0 z-[100] flex min-h-16 w-full items-center overflow-hidden bg-background"
       ref={containerRef}
     >
       <motion.span
-        className="mx-auto whitespace-nowrap text-center font-mono  font-bold uppercase "
+        className="mx-auto flex min-h-16 items-center justify-center whitespace-nowrap text-center font-mono  font-bold uppercase "
         ref={textRef}
         style={{ fontSize }}
       >
