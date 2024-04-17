@@ -24,7 +24,7 @@ const Info: React.FC<InfoProps> = ({ data, scroll, linkProducts }) => {
 
   const value = data.price;
 
-  const url = data.isPro ? `/dashboard-user?tab=store&product=` : `/product/`;
+  const url = data.isPro ? `/dashboard-user/produits-pro/` : `/product/`;
 
   const onAddToCart: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.stopPropagation();
@@ -84,7 +84,7 @@ const Info: React.FC<InfoProps> = ({ data, scroll, linkProducts }) => {
 
       <PlateVis
         value={data.productSpecs}
-        className={scroll ? "hide-scrollbar h-[500px] overflow-scroll" : ""}
+        className={scroll ? "h-[500px] overflow-scroll hide-scrollbar" : ""}
       />
     </div>
   );

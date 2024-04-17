@@ -77,7 +77,7 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
         <PopoverTrigger asChild>
           <Button
             variant={"linkHover2"}
-            className="justify-left flex flex-row items-center gap-2 px-0 after:w-full hover:text-primary"
+            className="justify-left flex flex-row items-center gap-2 whitespace-nowrap px-0 after:w-full hover:text-primary"
           >
             <Search className=" h-4 w-4 flex-shrink-0" />
 

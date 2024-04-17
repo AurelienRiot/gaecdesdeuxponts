@@ -33,7 +33,6 @@ const checkPro = async () => {
   if (session.user.role === "admin") {
     return "admin";
   }
-  console.log(session.user);
 
   const user = await prismadb.user.findUnique({
     where: {

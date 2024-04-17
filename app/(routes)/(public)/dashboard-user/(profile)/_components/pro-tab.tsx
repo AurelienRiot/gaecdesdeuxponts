@@ -13,8 +13,6 @@ import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 const ProTab = () => {
-  const time = new Date();
-
   const { products } = useProductsContext();
   const { categories } = useCategoriesContext();
 
@@ -29,7 +27,7 @@ const ProTab = () => {
   }
   const scrollToTarget = (target: string) => {
     const targetElement = document.getElementById(target);
-    const scrollContainer = document.getElementById("tab-container");
+    const scrollContainer = document.getElementById("store");
     if (targetElement && scrollContainer) {
       const parentRect = scrollContainer.getBoundingClientRect();
       const targetRect = targetElement.getBoundingClientRect();
@@ -37,8 +35,6 @@ const ProTab = () => {
       scrollContainer.scrollTop = relativeTop - 20;
     }
   };
-  const time2 = new Date();
-  console.log(`time page: ${time2.getTime() - time.getTime()}`);
   return (
     <>
       <div className=" w-full flex-col   p-6 ">

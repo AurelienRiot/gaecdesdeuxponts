@@ -11,7 +11,6 @@ import UserPhone from "./user-phone";
 import { addDelay } from "@/lib/utils";
 
 const ProfilTab = () => {
-  const { setHovering } = useTabsContext();
   const { user } = useUserContext();
   const router = useRouter();
 
@@ -37,8 +36,6 @@ const ProfilTab = () => {
 
         {user?.role === "pro" && (
           <Button
-            onMouseEnter={() => setHovering(true)}
-            onMouseLeave={() => setHovering(false)}
             onClick={async () => {
               router.push("/dashboard-user?tab=store");
             }}
@@ -83,8 +80,6 @@ const ProfilTab = () => {
       </div>
 
       <Button
-        onMouseEnter={() => setHovering(true)}
-        onMouseLeave={() => setHovering(false)}
         onClick={async () => {
           router.push("/dashboard-user?tab=settings");
         }}

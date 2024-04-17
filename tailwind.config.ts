@@ -238,11 +238,26 @@ module.exports = {
     require("tailwindcss-animate"),
     require("@tailwindcss/container-queries"),
     require("tailwind-clip-path"),
+    addGlobalUtilities,
     addVariablesForColors,
     addBackgroundGrid,
     ListStyleCheck,
   ],
 };
+
+function addGlobalUtilities({ addUtilities }: any) {
+  const newUtilities = {
+    ".hide-scrollbar": {
+      "-ms-overflow-style": "none",
+      "scrollbar-width": "none",
+      "-webkit-overflow-scrolling": "touch",
+      "&::-webkit-scrollbar": {
+        display: "none",
+      },
+    },
+  };
+  addUtilities(newUtilities, ["responsive"]);
+}
 
 function addVariablesForColors({ addBase, theme }: any) {
   let allColors = flattenColorPalette(theme("colors"));

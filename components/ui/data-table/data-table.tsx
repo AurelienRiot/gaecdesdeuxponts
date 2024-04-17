@@ -51,7 +51,7 @@ export function DataTable<TData, TValue>({
     columns,
   });
   return (
-    <div className="w-full space-y-2.5 overflow-auto">
+    <div className="w-full space-y-2.5 overflow-x-auto  ">
       {advancedFilter ? (
         <DataTableAdvancedToolbar
           table={table}

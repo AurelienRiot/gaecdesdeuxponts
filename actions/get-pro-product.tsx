@@ -23,6 +23,5 @@ export const getProProducts = async () => {
       },
     },
   });
-  console.log(products[0].name);
   return products;
 };

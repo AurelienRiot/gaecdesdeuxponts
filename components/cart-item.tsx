@@ -26,7 +26,7 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
 
   const value = Number(data.price);
   const quantity = cart.quantities[data.id];
-  const url = data.isPro ? `/dashboard-user?tab=store&product=` : `/product/`;
+  const url = data.isPro ? `/dashboard-user/produits-pro/` : `/product/`;
 
   const onRemove = () => {
     cart.removeItem(data.id);

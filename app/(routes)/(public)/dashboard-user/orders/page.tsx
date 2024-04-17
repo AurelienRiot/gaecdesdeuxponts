@@ -9,13 +9,13 @@ import {
   viewOptionsColumns,
   filterableColumns,
   searchableColumns,
-} from "../../orders/_components/order-column";
+} from "./_components/order-column";
 import { useUserContext } from "@/context/user-context";
 import { currencyFormatter, dateFormatter } from "@/lib/utils";
 import NoResults from "@/components/ui/no-results";
 import { DataTableSkeleton } from "@/components/skeleton-ui/data-table-skeleton";
 
-export const OrderTable = () => {
+const PageOrderTable = () => {
   const { user } = useUserContext();
 
   if (!user) {
@@ -93,7 +93,7 @@ export const OrderTable = () => {
   }
 
   return (
-    <div className="space-y-4 p-6">
+    <div className="w-full space-y-4 p-6">
       <Heading
         title={`Commandes (${formattedOrders.length})`}
         description="Résumé des commandes"
@@ -109,3 +109,5 @@ export const OrderTable = () => {
     </div>
   );
 };
+
+export default PageOrderTable;

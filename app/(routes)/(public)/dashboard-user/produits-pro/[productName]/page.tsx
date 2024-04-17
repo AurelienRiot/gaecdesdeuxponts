@@ -1,49 +1,49 @@
 "use client";
+
 import Gallery from "@/components/gallery/gallery";
 import Info from "@/components/info";
-import ProductList from "@/components/products-list";
-import Container from "@/components/ui/container";
+import ButtonBackward from "@/components/ui/button-backward";
 import NoResults from "@/components/ui/no-results";
 import { useProductsContext } from "@/context/products-context";
 import { mergeWithoutDuplicates } from "@/lib/utils";
+import { useParams } from "next/navigation";
+import Loading from "../../../product/[productName]/loading";
 
-const ClientWrapper = ({ productName }: { productName: string }) => {
+const DisplayProduct = () => {
   const { products } = useProductsContext();
+  const params = useParams();
 
   if (!products) {
-    return <NoResults />;
+    return <Loading />;
   }
-  const product = products.find((product) => product.name === productName);
+
+  const productName = params["productName"] as string;
+  const product = products?.find(
+    (item) => item.name === decodeURIComponent(productName),
+  );
 
   if (!product) {
-    return <NoResults />;
+    return <NoResults className="mt-20" />;
   }
-
   const linkProducts = mergeWithoutDuplicates(
     product.linkedBy,
     product.linkedProducts,
   );
+
   const excludeIds = linkProducts.map((product) => product.id);
   excludeIds.push(product.id);
 
-  const suggestedProducts = products.filter((p) => {
-    return (
-      p.categoryId === product.categoryId && !excludeIds.includes(product.id)
-    );
-  });
-
   return (
-    <div className="px-4 py-10 sm:px-6 lg:px-8">
+    <div className="w-full space-y-6 px-4 py-10 sm:px-6 lg:px-8">
+      <ButtonBackward url={`/dashboard-user/produits-pro`} />
       <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
         <Gallery images={product.images} />
         <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
           <Info data={product} linkProducts={linkProducts} />
         </div>
       </div>
-      <hr className="my-10" />
-      <ProductList title="Produits Similaires" items={suggestedProducts} />
     </div>
   );
 };
 
-export default ClientWrapper;
+export default DisplayProduct;

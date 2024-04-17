@@ -24,7 +24,7 @@ const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
   if (!categories) return null;
   const category = categories.find((c) => c.id === data.categoryId);
   if (!category) return null;
-  const url = data.isPro ? `/dashboard-user?tab=store&product=` : `/product/`;
+  const url = data.isPro ? `/dashboard-user/produits-pro/` : `/product/`;
 
   const value = data.price;
 
@@ -41,7 +41,7 @@ const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
-      className="group m-2 flex w-full cursor-pointer flex-col justify-between gap-4 rounded-xl border bg-secondary p-3 "
+      className="group  flex w-full cursor-pointer flex-col justify-between gap-4 rounded-xl border bg-secondary p-3 "
     >
       <div
         onClick={handleClick}
