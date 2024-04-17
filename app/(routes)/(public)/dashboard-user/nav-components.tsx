@@ -21,7 +21,7 @@ const ProfilNavBar = ({ isPro }: { isPro?: boolean }) => {
   return (
     <div
       className={
-        " absolute bottom-0 left-0 top-0 z-20 flex  h-full flex-col items-center justify-start gap-4 overflow-hidden  bg-background p-4 shadow-lg transition-transform duration-500 "
+        " absolute bottom-0 left-0 top-0 z-20 flex  h-full flex-col items-center justify-start gap-4 overflow-hidden  rounded-r-md bg-background p-4 shadow-lg transition-transform duration-500 "
       }
     >
       <IconButton
@@ -37,7 +37,6 @@ const ProfilNavBar = ({ isPro }: { isPro?: boolean }) => {
       />
       {routes.map(({ Icon, title, href }) => {
         const active = isActiveRoute(href, pathname);
-        console.log(active, pathname, href);
         return (
           <button
             key={title}
@@ -49,9 +48,9 @@ const ProfilNavBar = ({ isPro }: { isPro?: boolean }) => {
             className={
               "justify-left relative flex w-[200px] items-center gap-2 rounded-md px-4 py-2 transition-transform duration-500 hover:opacity-80 data-[state=false]:w-[50px]"
             }
-            style={{
-              transformStyle: "preserve-3d",
-            }}
+            // style={{
+            //   transformStyle: "preserve-3d",
+            // }}
           >
             {active && (
               <motion.div

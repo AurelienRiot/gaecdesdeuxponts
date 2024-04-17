@@ -20,7 +20,7 @@ const PageOrderTable = () => {
 
   if (!user) {
     return (
-      <div className="space-y-4 p-6">
+      <div className="w-full space-y-4 p-6">
         <Heading title={`Commandes `} description="Résumé des commandes" />
         <Separator />
         <DataTableSkeleton

@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { useUserContext } from "@/context/user-context";
 import { PencilLine } from "lucide-react";
 import { useRouter } from "next/navigation";
-import UserPhone from "./_components/user-phone";
+import UserPhone from "@/components/user-phone";
 
 const ProfilTab = () => {
   const { user } = useUserContext();
