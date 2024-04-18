@@ -1,61 +1,115 @@
 "use client";
+import { cn } from "@/lib/utils";
 import {
-  motion,
   useMotionTemplate,
-  useMotionValue,
   useScroll,
   useTransform,
+  motion,
+  easeInOut,
 } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
-export const ScreenFitText = ({ text }: { text: string }) => {
+export const ScreenFitText = ({
+  text,
+  className,
+}: {
+  text: string;
+  className?: string;
+}) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const textRef = useRef<HTMLSpanElement | null>(null);
-  const { scrollYProgress } = useScroll();
-  const [initialFontSize, setInitialFontSize] = useState(100);
-  const fontSizeResize = useTransform(
-    scrollYProgress,
-    [0, 0.02],
-    [initialFontSize, 20],
-  );
-  const fontSize = useMotionTemplate`${fontSizeResize}px`;
-
-  useEffect(() => {
-    const adjustFontSize = () => {
-      const container = containerRef.current;
-      const text = textRef.current;
-      const imageMain = document.getElementById("image-main");
-      if (container && text && imageMain) {
-        const containerWidth = container.offsetWidth;
-        const textWidth = text.scrollWidth;
-        const currentFontSize = parseFloat(text.style.fontSize);
-        const newFontSize = Math.round(
-          (containerWidth / textWidth) * currentFontSize - 3,
-        );
-        setInitialFontSize(newFontSize);
-        console.log(text.offsetHeight);
-        imageMain.style.marginTop = text.offsetHeight - 64 + "px";
-      }
-    };
-
-    adjustFontSize();
-    window.addEventListener("resize", adjustFontSize);
-
-    return () => window.removeEventListener("resize", adjustFontSize);
-  }, [text, initialFontSize]);
 
   return (
     <div
-      className="absolute left-0 top-0 z-[100] flex min-h-16 w-full items-center overflow-hidden bg-background"
+      className={cn(
+        "bg-trasparent z-[100] flex min-h-16 w-full  items-center justify-center  overflow-hidden rounded-b-md ",
+        className,
+      )}
       ref={containerRef}
     >
-      <motion.span
-        className="mx-auto flex min-h-16 items-center justify-center whitespace-nowrap text-center font-mono  font-bold uppercase "
-        ref={textRef}
-        style={{ fontSize }}
-      >
-        {text}
-      </motion.span>
+      <TextSVG text={text} />
     </div>
+  );
+};
+
+const TextSVG = ({ text }: { text: string }) => {
+  const { scrollYProgress } = useScroll();
+  const textRef = useRef<SVGSVGElement>(null);
+  const Width = useTransform(scrollYProgress, [0, 0.02], [100, 40], {
+    ease: easeInOut,
+  });
+  const width = useMotionTemplate`${Width}%`;
+
+  useEffect(() => {
+    const adjustMarginTop = () => {
+      const text = textRef.current;
+      const imageMain = document.getElementById("image-main");
+      if (text && imageMain) {
+        const marginTop =
+          text.getBoundingClientRect().height - 64 > 0
+            ? text.getBoundingClientRect().height - 64
+            : 0;
+        imageMain.style.marginTop = `${marginTop}px`;
+      }
+    };
+
+    adjustMarginTop();
+    window.addEventListener("resize", adjustMarginTop);
+
+    return () => window.removeEventListener("resize", adjustMarginTop);
+  }, [text]);
+
+  return (
+    <motion.svg
+      style={{ width }}
+      ref={textRef}
+      className="min-h-16 rounded-b-md bg-background px-2 transition-[width] sm:py-2"
+      viewBox="0 0 63.618359 3.9511108"
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <g id="layer1" transform="translate(-10.195957,-59.363581)">
+        <text
+          style={{
+            fontStyle: "normal",
+            fontVariant: "normal",
+            fontWeight: "normal",
+            fontStretch: "normal",
+            fontSize: "5.64444px",
+            fontFamily: "Phosphate",
+            fontVariantLigatures: "normal",
+            fontVariantCaps: "normal",
+            fontVariantNumeric: "normal",
+            fontVariantEastAsian: "normal",
+            textAlign: "center",
+            textAnchor: "middle",
+            fill: "#000000",
+            strokeWidth: "0",
+          }}
+          x="41.906357"
+          y="63.218735"
+          id="text432"
+        >
+          <tspan
+            id="tspan430"
+            style={{
+              fontStyle: "normal",
+              fontVariant: "normal",
+              fontWeight: "normal",
+              fontStretch: "normal",
+              fontSize: "5.64444px",
+              fontFamily: "Phosphate",
+              fontVariantLigatures: "normal",
+              fontVariantCaps: "normal",
+              fontVariantNumeric: "normal",
+              fontVariantEastAsian: "normal",
+              strokeWidth: "0",
+            }}
+            x="41.906357"
+            y="63.218735"
+          >
+            {text}
+          </tspan>
+        </text>
+      </g>
+    </motion.svg>
   );
 };

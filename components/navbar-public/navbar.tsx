@@ -3,6 +3,7 @@ import NavbarAction from "@/components/navbar-public/navbar-actions";
 import Image from "next/image";
 import Link from "next/link";
 import MobileNav from "./mobile-nav";
+import { ScreenFitText } from "@/app/(routes)/(public)/(acceuil)/_components/screen-fit-text";
 
 const NavBar = async () => {
   // const [navState, setNavState] = useState<"open" | "close">("open");
@@ -22,11 +23,11 @@ const NavBar = async () => {
 
   return (
     <div
-      className={`fixed top-0 z-30 flex  h-16 w-full items-center justify-between rounded-b-md border-b   bg-background px-4 shadow-md sm:px-6 lg:px-4 print:hidden`}
+      className={`fixed top-0 z-30 flex  h-16 w-full items-center justify-between gap-4 overflow-visible rounded-b-md border-b bg-background   px-4 shadow-md sm:px-6 lg:px-4 print:hidden`}
     >
       <MainNav className="hidden lg:flex " />
       <MobileNav className="ml-2 lg:hidden" />
-      <div className="flex items-center justify-center  xl:absolute xl:left-1/2 xl:top-1/2 xl:-translate-x-1/2 xl:-translate-y-1/2 ">
+      {/* <div className="flex items-center justify-center  xl:absolute xl:left-1/2 xl:top-1/2 xl:-translate-x-1/2 xl:-translate-y-1/2 ">
         <Link
           href="/"
           className="relative ml-4 hidden items-center gap-2 text-primary transition-all hover:scale-105 sm:flex lg:ml-0"
@@ -43,7 +44,11 @@ const NavBar = async () => {
             Laiterie du Pont Robert
           </p>
         </Link>
-      </div>
+      </div> */}
+      <ScreenFitText
+        text="Laiterie du Pont Robert"
+        className="absolute left-0 top-0 overflow-visible"
+      />
 
       <NavbarAction />
     </div>

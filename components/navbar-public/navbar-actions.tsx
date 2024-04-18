@@ -24,12 +24,7 @@ const NavbarAction = ({ className }: { className?: string }) => {
   const session = useSession();
 
   return (
-    <div
-      className={cn(
-        "ml-4 flex items-center gap-x-2 py-2 sm:gap-x-4",
-        className,
-      )}
-    >
+    <div className={cn("flex items-center sm:gap-x-4 sm:pr-2", className)}>
       <AuthNavButton session={session} />
 
       <ThemeToggle />

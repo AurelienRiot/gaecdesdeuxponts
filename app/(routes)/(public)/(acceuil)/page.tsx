@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <>
       {" "}
-      <ScreenFitText text="Laiterie du Pont Robert" />
+      {/* <ScreenFitText text="Laiterie du Pont Robert" /> */}
       <ImageV2 />
       <NosProduits />
       <WhyChooseUs />
