@@ -3,39 +3,50 @@ import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
 import Image from "next/image";
 
 const ImageV2 = () => {
+  // const words = [
+  //   {
+  //     text: "Du",
+  //   },
+  //   {
+  //     text: "lait",
+  //   },
+  //   {
+  //     text: "frais",
+  //   },
+  //   {
+  //     text: "du",
+  //   },
+  //   {
+  //     text: "pis",
+  //   },
+  //   {
+  //     text: "de",
+  //   },
+  //   {
+  //     text: "la",
+  //   },
+  //   {
+  //     text: "vache",
+  //   },
+  //   {
+  //     text: "à",
+  //   },
+  //   {
+  //     text: "votre",
+  //   },
+  //   {
+  //     text: "verre",
+  //   },
+  // ];
   const words = [
     {
-      text: "Du",
+      text: "Site",
     },
     {
-      text: "lait",
+      text: "en",
     },
     {
-      text: "frais",
-    },
-    {
-      text: "du",
-    },
-    {
-      text: "pis",
-    },
-    {
-      text: "de",
-    },
-    {
-      text: "la",
-    },
-    {
-      text: "vache",
-    },
-    {
-      text: "à",
-    },
-    {
-      text: "votre",
-    },
-    {
-      text: "verre",
+      text: "construction",
     },
   ];
   return (
@@ -57,7 +68,7 @@ const ImageV2 = () => {
         Du lait frais du pie de la vache à votre verre
       </h1> */}
       <TypewriterEffectSmooth
-        className="absolute  z-20 px-4 py-2 text-center font-display text-xl font-bold tracking-wider text-neutral-50 [text-shadow:0px_0px_50px_hsla(0,_0%,_0%,_.4)] sm:py-10 sm:text-3xl md:text-4xl lg:text-5xl "
+        className="absolute  z-20 px-4 py-2 text-center font-display text-xl font-bold tracking-wider text-orange-500 [text-shadow:0px_0px_50px_hsla(0,_0%,_0%,_.4)] sm:py-10 sm:text-3xl md:text-4xl lg:text-5xl "
         words={words}
       />
     </div>
