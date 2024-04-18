@@ -47,7 +47,7 @@ const NavBar = async () => {
       </div> */}
       <ScreenFitText
         text="Laiterie du Pont Robert"
-        className="absolute left-0 top-0 overflow-visible"
+        className="pointer-events-none absolute left-0 top-0 overflow-visible"
       />
 
       <NavbarAction />
