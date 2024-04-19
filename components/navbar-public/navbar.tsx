@@ -1,9 +1,7 @@
 import MainNav from "@/components/navbar-public/main-nav";
 import NavbarAction from "@/components/navbar-public/navbar-actions";
-import Image from "next/image";
-import Link from "next/link";
 import MobileNav from "./mobile-nav";
-import { ScreenFitText } from "@/app/(routes)/(public)/(acceuil)/_components/screen-fit-text";
+import { ScreenFitText } from "./screen-fit-text";
 
 const NavBar = async () => {
   // const [navState, setNavState] = useState<"open" | "close">("open");
