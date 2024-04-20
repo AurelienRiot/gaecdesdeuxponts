@@ -17,7 +17,10 @@ const MainNav = ({ className }: { className?: string }) => {
 
   return (
     <nav
-      className={cn("mx-6   items-center space-x-4 lg:space-x-6 ", className)}
+      className={cn(
+        "flex w-full items-center justify-start gap-4  lg:gap-6  2xl:px-4 ",
+        className,
+      )}
     >
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger className="group relative flex items-center justify-center ">
@@ -67,7 +70,7 @@ const MainNav = ({ className }: { className?: string }) => {
         <Link
           key={href}
           href={href}
-          className={`group relative flex items-center justify-center
+          className={`group relative flex items-center justify-center last:ml-auto   
           
           `}
         >

@@ -92,7 +92,7 @@ export default function MobileNav({ className, ...props }: MobileNavProps) {
       <PopoverContent className="h-auto w-[400px]  max-w-[100vw] pt-0 ">
         <Command>
           <CommandList>
-            <CommandItem
+            {/* <CommandItem
               className=" relative flex  cursor-pointer items-center justify-center py-2 text-primary aria-selected:bg-background aria-selected:text-primary sm:hidden"
               onSelect={() => {
                 router.push("/");
@@ -111,7 +111,7 @@ export default function MobileNav({ className, ...props }: MobileNavProps) {
                 Laiterie du Pont Robert
               </p>
             </CommandItem>
-            <CommandSeparator className="mb-2 sm:hidden" />
+            <CommandSeparator className="mb-2 sm:hidden" /> */}
             <CommandItem>
               <Popover open={openProduct} onOpenChange={setOpenProduct}>
                 <PopoverTrigger asChild>
