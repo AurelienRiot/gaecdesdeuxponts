@@ -72,7 +72,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
     cell: ({ row }) => (
       <NameCell
         name={row.original.shopName}
-        url={`/admin/shop/${row.original.shopId}`}
+        url={`/admin/shops/${row.original.shopId}`}
       />
     ),
     filterFn: FilterOneInclude,

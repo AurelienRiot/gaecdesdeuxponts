@@ -9,13 +9,7 @@ import {
 } from "framer-motion";
 import { useEffect, useRef } from "react";
 
-export const ScreenFitText = ({
-  text,
-  className,
-}: {
-  text: string;
-  className?: string;
-}) => {
+export const ScreenFitText = ({ className }: { className?: string }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   return (
@@ -26,12 +20,12 @@ export const ScreenFitText = ({
       )}
       ref={containerRef}
     >
-      <TextSVG text={text} />
+      <TextSVG />
     </div>
   );
 };
 
-const TextSVG = ({ text }: { text: string }) => {
+const TextSVG = () => {
   const { scrollYProgress } = useScroll();
   const textRef = useRef<SVGSVGElement>(null);
   const Width = useTransform(scrollYProgress, [0, 0.02], [100, 40], {
@@ -56,7 +50,7 @@ const TextSVG = ({ text }: { text: string }) => {
     window.addEventListener("resize", adjustMarginTop);
 
     return () => window.removeEventListener("resize", adjustMarginTop);
-  }, [text]);
+  }, []);
 
   return (
     <motion.svg
