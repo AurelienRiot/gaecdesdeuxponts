@@ -7,18 +7,16 @@ import {
   motion,
   easeInOut,
 } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 export const ScreenFitText = ({ className }: { className?: string }) => {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-
   return (
     <div
       className={cn(
-        "bg-trasparent z-[100] flex min-h-16 w-full  items-center justify-center  overflow-hidden rounded-b-md ",
+        "pointer-events-none z-[100] flex min-h-16 w-full items-center  justify-center overflow-hidden  rounded-b-md bg-transparent ",
         className,
       )}
-      ref={containerRef}
     >
       <TextSVG />
     </div>
@@ -32,6 +30,7 @@ const TextSVG = () => {
     ease: easeInOut,
   });
   const width = useMotionTemplate`${Width}%`;
+  const router = useRouter();
 
   useEffect(() => {
     const adjustMarginTop = () => {
@@ -54,9 +53,13 @@ const TextSVG = () => {
 
   return (
     <motion.svg
+      onClick={(e) => {
+        e.stopPropagation();
+        router.push("/");
+      }}
       style={{ width }}
       ref={textRef}
-      className="min-h-16 rounded-b-md bg-background px-2 transition-[width] sm:py-2"
+      className="pointer-events-auto min-h-16 cursor-pointer rounded-b-md bg-background  fill-black px-2 transition-[width] sm:py-2"
       viewBox="0 0 63.618359 3.9511108"
       preserveAspectRatio="xMidYMid meet"
     >
