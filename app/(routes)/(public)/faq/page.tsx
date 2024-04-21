@@ -1,10 +1,3 @@
-"use client";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import Container from "@/components/ui/container";
 import { Accordion2 } from "./accordeons";
 

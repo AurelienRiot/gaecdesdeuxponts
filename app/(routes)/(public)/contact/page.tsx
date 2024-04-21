@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { Suspense } from "react";
 import { ContactForm } from "./_components/contact-form";
+import InfoContact from "./_components/info-contact";
 
 export const metadata = {
   title: "Laiterie du Pont Robert - Contact",
@@ -30,14 +31,7 @@ const ContactPage = () => {
         <Form />
       </Suspense>
 
-      <div className="mt-8">
-        <p>6 B le Pont Robert 44290 MASSERAC</p>
-        <p>06 72 06 45 55</p>
-        <Link href="mailto:laiteriedupontrobert@gmail.com">
-          laiteriedupontrobert@gmail.com
-        </Link>
-        <p>Du lundi au samedi: 9h00 - 17h00</p>
-      </div>
+      <InfoContact />
     </Container>
   );
 };

@@ -108,17 +108,17 @@ export const publicRoutes = (pathname: string) => [
   //   active: pathname === `/gallerie`,
   //   Icone: BiPhotoAlbum,
   // },
-  {
-    href: `/contact`,
-    label: "Nous Contacter",
-    active: pathname === `/contact`,
-    Icone: PhoneCall,
-  },
 
   {
     href: `/ou-nous-trouver`,
     label: "Où nous trouver",
-    active: pathname === `/ou-nous-trouver`,
+    active: pathname.startsWith(`/ou-nous-trouver`),
     Icone: Map,
+  },
+  {
+    href: `/contact`,
+    label: "Nous Contacter",
+    active: pathname.startsWith(`/contact`),
+    Icone: PhoneCall,
   },
 ];

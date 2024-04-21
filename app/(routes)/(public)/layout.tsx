@@ -10,7 +10,9 @@ export default async function PublicLayout({
   return (
     <CategoriesProvider isPro={false}>
       <NavBar />
-      <main className="pt-16 print:pt-0">{children}</main>
+      <main id="main-content" className="pt-16 print:pt-0">
+        {children}
+      </main>
       <Footer />
     </CategoriesProvider>
   );

@@ -20,7 +20,7 @@ const NavBar = async () => {
   // });
 
   return (
-    <div
+    <header
       className={`fixed top-0 z-30 flex  h-16 w-full items-center justify-between gap-4 overflow-visible rounded-b-md border-b bg-background   px-4 shadow-md sm:px-6 lg:px-4 print:hidden`}
     >
       <MainNav className="hidden lg:flex " />
@@ -46,7 +46,7 @@ const NavBar = async () => {
       <ScreenFitText className="  absolute left-0 top-0 overflow-visible" />
 
       <NavbarAction />
-    </div>
+    </header>
   );
 };
 

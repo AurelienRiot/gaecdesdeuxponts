@@ -35,7 +35,7 @@ const TextSVG = () => {
   useEffect(() => {
     const adjustMarginTop = () => {
       const text = textRef.current;
-      const imageMain = document.getElementById("image-main");
+      const imageMain = document.getElementById("main-content");
       if (text && imageMain) {
         const marginTop =
           text.getBoundingClientRect().height - 64 > 0

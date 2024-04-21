@@ -5,7 +5,7 @@ import { LogoutButton } from "@/components/auth/auth-button";
 
 const Navbar = async () => {
   return (
-    <div className="border-b ">
+    <header className="border-b ">
       <div className="flex h-16 items-center px-4">
         <MainNav className=" hidden pl-8 md:block" />
         <MobileNav className="mx-6 md:hidden" />
@@ -14,7 +14,7 @@ const Navbar = async () => {
           <LogoutButton />
         </div>
       </div>
-    </div>
+    </header>
   );
 };
 
