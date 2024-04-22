@@ -8,8 +8,7 @@ const Footer = ({ className }: { className?: string }) => {
       <footer className={cn("border-t print:hidden", className)}>
         <div className="mx-auto pb-2 pt-10">
           <p className="text-center text-xs text-primary">
-            &copy; {currentYear} Laiterie du Pont Robert, Inc All right
-            reserved.
+            &copy; {currentYear} Laiterie du Pont Robert. Tous droits réservés.
           </p>
         </div>
         <nav>

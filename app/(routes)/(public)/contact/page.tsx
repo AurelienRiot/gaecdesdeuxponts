@@ -6,7 +6,6 @@ import Container from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import Link from "next/link";
 import { Suspense } from "react";
 import { ContactForm } from "./_components/contact-form";
 import InfoContact from "./_components/info-contact";

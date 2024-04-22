@@ -211,6 +211,24 @@ module.exports = {
             transform: "translate(calc(-50% - 0.5rem))",
           },
         },
+        opacity: {
+          "0%": {
+            opacity: 0,
+            transform: "translate(-50%,-50%) scale(0)",
+          },
+          "33%": {
+            opacity: 1,
+            transform: "translate(-50%,-50%) scale(0.33)",
+          },
+          "67%": {
+            opacity: 0.5,
+            transform: "translate(-50%,-50%) scale(0.67)",
+          },
+          "100%": {
+            opacity: 0,
+            transform: "translate(-50%,-50%) scale(1)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
