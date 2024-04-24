@@ -47,7 +47,7 @@ export default function RootLayout({
       <body
         id="root"
         className={cn(
-          "  min-h-dvh bg-background font-serif antialiased",
+          "  relative min-h-dvh bg-background font-serif antialiased ",
           fontMono.variable,
           fontDisplay.variable,
           fontSerif.variable,
@@ -57,7 +57,10 @@ export default function RootLayout({
         <AuthProviders>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
             <TooltipProvider delayDuration={100} skipDelayDuration={0}>
-              <ProductsProvider isPro={false}>{children}</ProductsProvider>
+              <ProductsProvider isPro={false}>
+                <DebugScreens />
+                {children}
+              </ProductsProvider>
             </TooltipProvider>
             <Toaster />
           </ThemeProvider>
@@ -66,3 +69,24 @@ export default function RootLayout({
     </html>
   );
 }
+
+const DebugScreens = () => {
+  if (process.env.NODE_ENV === "development") {
+    return (
+      <div className="fixed bottom-0 left-0 z-50 bg-foreground p-2 text-background">
+        <ul className="text-xs font-semibold">
+          <li className="block xs:hidden">{" < 400px"}</li>
+          <li className="hidden xs:block sm:hidden">{"xs > 400px "}</li>
+          <li className="hidden sm:block md:hidden">{"sm > 640px "}</li>
+          <li className="hidden md:block lg:hidden">{"md > 768px "}</li>
+          <li className="hidden lg:block xl:hidden">{"lg > 1024x "}</li>
+          <li className="hidden xl:block 2xl:hidden">{"xl > 1220px"}</li>
+          <li className="hidden 2xl:block 3xl:hidden">{"2xl > 1440px"}</li>
+          <li className="hidden 3xl:block">{"3xl > 1700px"}</li>
+        </ul>
+      </div>
+    );
+  }
+
+  return null;
+};

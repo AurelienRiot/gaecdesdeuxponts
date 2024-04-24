@@ -72,7 +72,7 @@ const CartIcon = forwardRef<HTMLButtonElement, { qty: number }>(
         {...props}
       >
         <ShoppingCart size={20} className="group-hover:text-foreground/80" />
-        <span className="absolute -right-2 -top-1  flex h-5  w-5 items-center justify-center rounded-full bg-foreground font-sans text-xs tabular-nums text-background shadow-md group-hover:bg-foreground/80 group-hover:text-background/80">
+        <span className="absolute -right-1 -top-1  flex h-5  w-5 items-center justify-center rounded-full bg-foreground font-sans text-xs tabular-nums text-background shadow-md group-hover:bg-foreground/80 group-hover:text-background/80">
           {qty}
         </span>
       </Button>

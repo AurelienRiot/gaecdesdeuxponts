@@ -63,15 +63,6 @@
 }
 
 @layer components {
-  /* .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  } */
-
   .mask-with-browser-support {
     -webkit-mask: linear-gradient(#000, #000), linear-gradient(#000, #000);
     mask: linear-gradient(#000, #000), linear-gradient(#000, #000);
