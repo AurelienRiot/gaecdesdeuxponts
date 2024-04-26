@@ -55,6 +55,7 @@
 
 @layer base {
   * {
+    scrollbar-gutter: stable;
     @apply border-border;
   }
   body {
