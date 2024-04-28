@@ -41,7 +41,9 @@ const ClientWrapper = ({ productName }: { productName: string }) => {
         </div>
       </div>
       <hr className="my-10" />
-      <ProductList title="Produits Similaires" items={suggestedProducts} />
+      {suggestedProducts.length > 0 && (
+        <ProductList title="Produits Similaires" items={suggestedProducts} />
+      )}
     </div>
   );
 };

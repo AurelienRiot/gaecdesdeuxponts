@@ -1,6 +1,6 @@
 import Gallery from "@/components/skeleton-ui/gallery-skeleton";
 import Info from "@/components/skeleton-ui/info-skeleton";
-import ProductList from "@/components/skeleton-ui/products-list-skeleton";
+import { ProductList } from "@/components/skeleton-ui/products-list-skeleton";
 
 const Loading = () => (
   <div className="px-4 py-10 sm:px-6 lg:px-8">

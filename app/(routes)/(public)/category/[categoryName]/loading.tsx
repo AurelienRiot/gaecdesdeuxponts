@@ -1,5 +1,5 @@
 import BillboardSkeleton from "@/components/skeleton-ui/billboard-skeleton";
-import ProductCart from "@/components/skeleton-ui/product-cart-skeleton";
+import { ProductCart } from "@/components/skeleton-ui/product-cart-skeleton";
 import Container from "@/components/ui/container";
 
 const Loading = () => (

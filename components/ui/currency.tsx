@@ -1,10 +1,8 @@
-"use client";
-
 import { cn, currencyFormatter } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { Skeleton } from "../skeleton-ui/skeleton";
 
 interface CurrencyProps {
-  value: number;
+  value?: number;
   className?: string;
   classNameLogo?: string;
   displayText?: boolean;
@@ -12,15 +10,7 @@ interface CurrencyProps {
 }
 
 const Currency: React.FC<CurrencyProps> = ({ value, className }) => {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return null;
-  }
+  if (!value) return <Skeleton className="h-4 w-12" />;
 
   return (
     <span

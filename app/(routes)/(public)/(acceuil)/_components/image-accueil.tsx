@@ -1,44 +1,42 @@
-"use client";
-import ImageFerme from "@/public/dairy_cows.webp";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import DebugContainer from "@/components/debug/debug-container";
 import Image from "next/image";
+import Link from "next/link";
 
 const ImageAccueil = () => {
-  const { scrollYProgress } = useScroll();
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 2]);
-  // const y = useTransform(scrollY, [0, 1], [0, 1], { clamp: false });
-
-  // const Video = () => {
-  //   return (
-  //     <video
-  //       controls={false}
-  //       autoPlay
-  //       loop
-  //       muted
-  //       playsInline
-  //       className="absolute top-0 left-0 object-cover object-center w-full h-full"
-  //       title="video background"
-  //     >
-  //       <source src="./videos/film_guimbert.webm" type="video/webm" />
-  //     </video>
-  //   );
-  // };
-
   return (
-    <motion.div
-      style={{ scale: scale }}
-      className="fixed left-0 top-0 -z-10 h-full w-full"
+    <section
+      className="grid grid-cols-1 gap-12
+      md:grid-cols-2 lg:grid-cols-[2fr_3fr]"
     >
-      <Image
-        priority
-        src={ImageFerme}
-        alt="image background"
-        width={3859}
-        height={2500}
-        className="absolute left-0 top-0 h-full w-full object-cover object-center"
-      />
-      <div className="absolute left-0 top-0 h-full w-full bg-black/30 " />
-    </motion.div>
+      <div className="flex flex-col justify-center text-center @container">
+        <h2 className="mb-4 text-2xl font-bold @sm:text-3xl @md:text-4xl @lg:text-5xl">
+          Lait cru frais directement de le ferme
+        </h2>
+        <p className="mb-8 @md:text-lg">
+          Découvrez le goût pur et crémeux de notre lait cru frais de la ferme.
+          Rempli de nutriments essentiels, notre lait provient directement de
+          nos vaches heureuses et en bonne santé.
+        </p>
+        <div className="mx-auto flex gap-4">
+          <Button asChild>
+            <Link href="/#Découvrer nos produits">Acheter</Link>
+          </Button>
+          <Button variant={"outline"} asChild>
+            <Link href="/#la-ferme">En savoir plus</Link>
+          </Button>
+        </div>
+      </div>
+      <div>
+        <Image
+          alt="Farm Hero Image"
+          className="h-auto w-full rounded-md object-cover"
+          height={2630}
+          src="/vache-champs.webp"
+          width={4676}
+        />
+      </div>
+    </section>
   );
 };
 

@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { motion, useMotionValue } from "framer-motion";
 import { useCategoriesContext } from "@/context/categories-context";
-import { CategoryCard } from "./nos-produits";
+import { ProductCard } from "./nos-produits";
 import { cn } from "@/lib/utils";
 
 const ONE_SECOND = 1000;
@@ -122,7 +122,7 @@ export const SwipeCarousel = ({ className }: { className?: string }) => {
             transition={SPRING_OPTIONS}
             className="flex w-full flex-col items-center justify-center"
           >
-            <CategoryCard
+            <ProductCard
               index={idx}
               key={category.id}
               name={category.name}

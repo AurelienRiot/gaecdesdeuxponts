@@ -1,11 +1,13 @@
-import ProductCart from "./product-cart-skeleton";
+import { ProductCart } from "./product-cart-skeleton";
 
-const ProductList = ({ title }: { title: string }) => {
+export const ProductList = ({ title }: { title: string }) => {
   return (
     <div className="space-y-4 ">
-      <h2 className="text-3xl font-bold text-primary ">{title}</h2>
+      <h2 className="text-center text-3xl font-bold text-primary lg:text-5xl ">
+        {title}
+      </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="flex flex-wrap justify-center gap-12">
         {Array(4)
           .fill(null)
           .map((_, i) => (
@@ -15,5 +17,3 @@ const ProductList = ({ title }: { title: string }) => {
     </div>
   );
 };
-
-export default ProductList;
