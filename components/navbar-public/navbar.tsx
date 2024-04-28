@@ -43,7 +43,7 @@ const NavBar = async () => {
           </p>
         </Link>
       </div> */}
-      <ScreenFitText className="  absolute left-0 top-0 overflow-visible" />
+      {/* <ScreenFitText className="  absolute left-0 top-0 overflow-visible" /> */}
 
       <NavbarAction />
     </header>

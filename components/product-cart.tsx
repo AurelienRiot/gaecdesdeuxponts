@@ -78,9 +78,12 @@ const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
         >
           {data.name}
         </Link>
-        <p className="block text-sm text-secondary-foreground">
+        {/* <Link
+          href={`/category/${category.name}`}
+          className="block text-sm text-secondary-foreground"
+        >
           {category.name}
-        </p>
+        </Link> */}
       </div>
       <div className="flex items-center justify-between text-primary">
         <Currency value={value} />

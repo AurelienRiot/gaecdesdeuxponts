@@ -4,65 +4,60 @@ import { Card } from "@/components/ui/card";
 import { LucideProps } from "lucide-react";
 import Image from "next/image";
 import { NavigationMenuDemo } from "./_components/nav-bar";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { CartButton } from "@/components/navbar-public/navbar-actions";
+import AuthLink from "./_components/auth-link";
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { PartenaireCards } from "./_components/partenaires";
 
 export default function Component() {
   return (
-    <div className="min-h-screen font-sans  ">
-      <header className="flex h-16 items-center justify-between px-6 py-4  shadow-md ">
-        <Image
-          alt="Logo"
-          className="h-16 w-auto"
-          src="/logo-rect.webp"
-          width={155.86}
-          height={56}
-        />
-        {/* <nav className="flex items-center gap-6">
-          <Link className="transition-colors hover:text-green-500" href="#">
-            Home
-          </Link>
-          <Link className="transition-colors hover:text-green-500" href="#">
-            About
-          </Link>
-          <Link className="transition-colors hover:text-green-500" href="#">
-            Products
-          </Link>
-          <Link className="transition-colors hover:text-green-500" href="#">
-            Contact
-          </Link>
-        </nav> */}
+    <div className="min-h-screen">
+      <header className="fixed top-0   z-30 flex h-16 w-full items-center justify-between bg-background px-2 py-4 shadow-md xs:px-4  sm:px-6 ">
+        <HamburgerMenuIcon className="h-6 w-6 lg:hidden" />
+        <Link href="/">
+          <Image
+            alt="Logo"
+            className="h-16 w-auto "
+            src="/logo-rect.webp"
+            width={155.86}
+            height={56}
+          />
+        </Link>
+
         <NavigationMenuDemo />
+        <div className={"flex items-center sm:gap-x-4 sm:pr-2"}>
+          <AuthLink />
+          <ThemeToggle />
+          <CartButton />
+        </div>
       </header>
       <main className="px-6 py-12">
-        <section className="grid grid-cols-1 gap-12 md:grid-cols-2">
-          <div className="flex flex-col justify-center">
-            <h2 className="mb-4 text-4xl font-bold">
-              Fresh Raw Milk Straight from the Farm
+        <section
+          className="grid max-h-[80vh] grid-cols-1 gap-12
+         md:grid-cols-2 lg:grid-cols-[2fr_3fr]"
+        >
+          <div className="flex flex-col justify-center text-center">
+            <h2 className="mb-4 text-2xl font-bold lg:text-4xl">
+              Lait cru frais directement de le ferme
             </h2>
-            <p className="mb-8 text-lg">
-              Experience the pure, creamy taste of our farm-fresh raw milk.
-              Packed with essential nutrients, our milk is sourced directly from
-              our happy, healthy cows.
+            <p className="mb-8 lg:text-lg">
+              Découvrez le goût pur et crémeux de notre lait cru frais de la
+              ferme. Rempli de nutriments essentiels, notre lait provient
+              directement de nos vaches heureuses et en bonne santé.
             </p>
-            <div className="flex gap-4">
-              <Button className="rounded-md bg-[#4CAF50] px-6 py-3 text-[#fff] transition-colors hover:bg-[#3e8e41]">
-                Buy Now
-              </Button>
-              <Button className="rounded-md border border-[#4CAF50] px-6 py-3 text-[#4CAF50] transition-colors hover:bg-[#4CAF50] hover:text-[#fff]">
-                Learn More
-              </Button>
+            <div className="mx-auto flex gap-4">
+              <Button>Acheter</Button>
+              <Button variant={"outline"}>En savoir plus</Button>
             </div>
           </div>
           <div>
             <Image
               alt="Farm Hero Image"
-              className="rounded-md object-cover"
-              height={400}
-              src="/skeleton-image.webp"
-              style={{
-                aspectRatio: "600/400",
-                objectFit: "cover",
-              }}
-              width={600}
+              className="h-auto w-full rounded-md object-cover"
+              height={2630}
+              src="/vache-champs.webp"
+              width={4676}
             />
           </div>
         </section>
@@ -178,7 +173,9 @@ export default function Component() {
             </div>
           </div>
         </section>
+        <PartenaireCards />
       </main>
+
       <footer className="bg-[#262626] px-6 py-8 text-[#f5f5f5]">
         <div className="container mx-auto flex items-center justify-between">
           <p>© 2023 Meadow Farms. All rights reserved.</p>

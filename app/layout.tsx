@@ -11,8 +11,9 @@ import { AuthProviders } from "@/providers/auth-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { ProductsProvider } from "@/context/products-context";
 import { CSPostHogProvider } from "@/lib/analytics/provider";
+import { CategoriesProvider } from "@/context/categories-context";
+import { ProductsProvider } from "@/context/products-context";
 
 export const metadata: Metadata = {
   title: "Laiterie du Pont Robert",
@@ -59,10 +60,12 @@ export default function RootLayout({
           <CSPostHogProvider>
             <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
               <TooltipProvider delayDuration={100} skipDelayDuration={0}>
-                <ProductsProvider isPro={false}>
-                  <DebugScreens />
-                  {children}
-                </ProductsProvider>
+                <CategoriesProvider isPro={false}>
+                  <ProductsProvider isPro={false}>
+                    <DebugScreens />
+                    {children}
+                  </ProductsProvider>
+                </CategoriesProvider>
               </TooltipProvider>
               <Toaster />
             </ThemeProvider>{" "}

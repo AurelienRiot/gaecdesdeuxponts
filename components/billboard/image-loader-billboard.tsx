@@ -1,19 +1,20 @@
 interface ImageLoaderBillboardProps {
-  children: React.ReactNode
-  src: string
+  children: React.ReactNode;
+  src: string;
 }
 
-const ImageLoaderBillboard: React.FC<ImageLoaderBillboardProps> = ({ 
+const ImageLoaderBillboard: React.FC<ImageLoaderBillboardProps> = ({
   src,
-  children
- }) => {
-
-  
+  children,
+}) => {
   return (
-    <div className="rounded-xl relative aspect-square md:aspect-[3/1] overflow-hidden bg-cover" style={{ backgroundImage: `url(${src})`} }>
+    <div
+      className="relative mx-auto aspect-square max-h-[50vh] overflow-hidden rounded-xl bg-cover "
+      style={{ backgroundImage: `url(${src})` }}
+    >
       {children}
-      </div>
+    </div>
   );
-}
+};
 
 export default ImageLoaderBillboard;
