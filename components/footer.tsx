@@ -5,9 +5,14 @@ const Footer = ({ className }: { className?: string }) => {
   const currentYear = new Date().getFullYear();
   return (
     <>
-      <footer className={cn("border-t print:hidden", className)}>
+      <footer
+        className={cn(
+          "border-t bg-neutral-800 text-neutral-50 print:hidden",
+          className,
+        )}
+      >
         <div className="mx-auto pb-2 pt-10">
-          <p className="text-center text-xs text-primary">
+          <p className="text-center text-xs ">
             &copy; {currentYear} Laiterie du Pont Robert. Tous droits réservés.
           </p>
         </div>
@@ -17,7 +22,7 @@ const Footer = ({ className }: { className?: string }) => {
               <Link
                 prefetch={false}
                 href="/mention-legal"
-                className="text-sm font-medium hover:text-primary hover:underline"
+                className="text-sm font-medium transition-colors hover:text-green-500 hover:underline"
               >
                 Mention légales
               </Link>
@@ -26,7 +31,7 @@ const Footer = ({ className }: { className?: string }) => {
               <Link
                 prefetch={false}
                 href="/pdf/Politique-de-confidentialite.pdf"
-                className="text-sm font-medium hover:text-primary hover:underline"
+                className="text-sm font-medium transition-colors hover:text-green-500 hover:underline"
                 target="_blank"
               >
                 Politique de confidentialité
@@ -36,7 +41,7 @@ const Footer = ({ className }: { className?: string }) => {
               <Link
                 prefetch={false}
                 href="/conditions-generales-de-vente"
-                className="text-sm font-medium hover:text-primary hover:underline"
+                className="text-sm font-medium transition-colors hover:text-green-500 hover:underline"
               >
                 Conditions générales de vente
               </Link>

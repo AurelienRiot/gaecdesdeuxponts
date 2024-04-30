@@ -5,7 +5,6 @@ import IconButton from "@/components/ui/icon-button";
 import { useCategoriesContext } from "@/context/categories-context";
 import useCart from "@/hooks/use-cart";
 import { ProductWithImages } from "@/types";
-import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -39,16 +38,13 @@ const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
   };
 
   return (
-    <motion.div
-      whileHover={{ scale: 1.05 }}
-      className="group  flex w-full cursor-pointer flex-col justify-between gap-4 rounded-xl border bg-secondary p-3 "
-    >
+    <div className="group flex w-40 cursor-pointer flex-col justify-between gap-4 rounded-xl border bg-secondary p-3 transition-transform hover:scale-105 md:w-52 ">
       <div
         onClick={handleClick}
         className="relative aspect-square rounded-xl bg-white before:absolute before:inset-0 before:z-10 before:rounded-xl before:bg-black/20 before:opacity-0 before:duration-300 before:ease-linear before:animate-in group-hover:before:opacity-100 "
       >
         <Image
-          src={data?.images?.[0].url}
+          src={data?.images[0].url}
           fill
           sizes="80vw"
           alt="Image"
@@ -74,7 +70,7 @@ const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
       <div>
         <Link
           href={url + encodeURIComponent(data.name)}
-          className="block text-lg font-semibold text-primary"
+          className="block text-lg font-semibold  text-primary hover:underline hover:underline-offset-2"
         >
           {data.name}
         </Link>
@@ -88,7 +84,7 @@ const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
       <div className="flex items-center justify-between text-primary">
         <Currency value={value} />
       </div>
-    </motion.div>
+    </div>
   );
 };
 

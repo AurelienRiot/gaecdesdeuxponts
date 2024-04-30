@@ -1,25 +1,31 @@
 import { ProductWithCategoryAndImages } from "@/types";
-import { VisibleElement } from "./animations/visible-element";
 import ProductCart from "./product-cart";
+import { ProductCart as ProductCartSkeleton } from "./skeleton-ui/product-cart-skeleton";
+
 import NoResults from "./ui/no-results";
 
 interface ProductListProps {
   title: string;
-  items: ProductWithCategoryAndImages[];
+  items?: ProductWithCategoryAndImages[];
 }
 
 const ProductList: React.FC<ProductListProps> = ({ title, items }) => {
   return (
-    <div className="space-y-4 ">
-      <VisibleElement as="h2" className="text-3xl font-bold text-primary ">
+    <div id={title} className="space-y-10 py-20">
+      <h2 className="text-center text-3xl font-bold text-primary lg:text-5xl ">
         {" "}
         {title}{" "}
-      </VisibleElement>
-      {items.length === 0 && <NoResults />}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {items.map((item) => (
-          <ProductCart data={item} key={item.id} />
-        ))}
+      </h2>
+      <div className="flex flex-wrap justify-center gap-12">
+        {!items ? (
+          Array(4)
+            .fill(null)
+            .map((_, i) => <ProductCartSkeleton key={i} />)
+        ) : items.length === 0 ? (
+          <NoResults />
+        ) : (
+          items.map((item) => <ProductCart data={item} key={item.id} />)
+        )}
       </div>
     </div>
   );

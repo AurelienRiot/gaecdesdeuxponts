@@ -17,7 +17,7 @@ const NosProduits = () => {
     <NavigationMenuItem>
       <NavigationMenuTrigger>Nos produits</NavigationMenuTrigger>
       <NavigationMenuContent>
-        <ul className="grid grid-cols-2 gap-1 p-4 md:w-[420px] ">
+        <ul className="grid w-[calc(100vw-165px)] max-w-[420px] grid-cols-1 gap-1 p-1 xs:p-4 sm:w-[420px] sm:grid-cols-2 ">
           {categories ? (
             categories.map((category) => (
               <NavigationMenuListItem

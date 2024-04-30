@@ -2,7 +2,10 @@ import Image from "next/image";
 
 const ArticlePromotion = () => {
   return (
-    <div className="mx-auto max-w-4xl rounded-lg bg-white p-6 shadow-lg">
+    <div
+      id="la-ferme"
+      className="mx-auto max-w-4xl rounded-lg bg-white p-6 pt-20 shadow-lg"
+    >
       <div className="flex flex-col items-center text-center">
         <h2 className="mb-2 text-2xl font-bold text-green-600">
           GAEC des 2 Ponts de Massérac
