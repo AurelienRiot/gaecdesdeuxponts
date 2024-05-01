@@ -20,16 +20,12 @@ export async function generateMetadata({
 const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
   const categoryName = decodeURIComponent(params.categoryName);
   return (
-    <Container>
+    <>
       <Billboard categoryName={categoryName} />
       <div className="px-4 pb-24 sm:px-6 lg:px-8">
-        <div className="lg-gap-x-8 lg:grid lg:grid-cols-5">
-          <div className="mt-6 lg:col-span-4 lg:mt-0">
-            <DisplayProducts categoryName={categoryName} />
-          </div>
-        </div>
+        <DisplayProducts categoryName={categoryName} />
       </div>
-    </Container>
+    </>
   );
 };
 

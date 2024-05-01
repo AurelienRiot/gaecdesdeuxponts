@@ -125,29 +125,31 @@ async function deleteObject({
     return { success: false, message: "Vous devez être authentifier" };
   }
 
-  const imagesProducts = await prismadb.image.findMany({
+  const imageUrl = `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${publicID}`;
+  const productsWithImage = await prismadb.product.findMany({
     where: {
-      url: `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${publicID}`,
+      imagesUrl: {
+        has: imageUrl,
+      },
     },
-
     select: {
-      product: { select: { name: true } },
+      name: true,
     },
   });
 
-  if (imagesProducts.length > 0) {
-    const productNames = imagesProducts
-      .map((image) => image.product.name)
+  if (productsWithImage.length > 0) {
+    const productNames = productsWithImage
+      .map((category) => category.name)
       .join(", ");
     return {
       success: false,
-      message: `L'image est utilisée par le(s) produit(s) : ${productNames}`,
+      message: `L'image est utilisée par les produits : ${productNames}`,
     };
   }
 
   const imagesCategories = await prismadb.category.findMany({
     where: {
-      imageUrl: `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${publicID}`,
+      imageUrl: imageUrl,
     },
     select: {
       name: true,
@@ -166,7 +168,7 @@ async function deleteObject({
 
   const imagesShop = await prismadb.shop.findMany({
     where: {
-      imageUrl: `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${publicID}`,
+      imageUrl: imageUrl,
     },
     select: {
       name: true,

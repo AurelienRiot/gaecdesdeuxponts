@@ -10,7 +10,12 @@ const MapDisplay = ({
   href: string;
 }) => {
   return (
-    <div className={cn("  flex items-start justify-center", className)}>
+    <div
+      className={cn(
+        "  flex scale-75 items-start  justify-start sm:scale-100 sm:justify-center  ",
+        className,
+      )}
+    >
       <PinContainer title="Laiterie du Pont Robert" href={href}>
         <Image
           src="/map.webp"
@@ -18,7 +23,7 @@ const MapDisplay = ({
           sizes="(max-width: 400px) 90vw, 400px"
           width={400}
           height={400}
-          className="aspect-square h-[400px] max-w-[90vw]  transition-all duration-700 group-hover/pin:scale-125"
+          className="aspect-square h-full max-w-[90vw]  transition-all duration-700  group-hover/pin:scale-125 sm:w-[400px]"
         />
       </PinContainer>
     </div>

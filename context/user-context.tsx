@@ -1,8 +1,7 @@
 "use client";
-import { Category } from "@prisma/client";
+import { UserWithOrdersAndAdress } from "@/types";
 import { createContext, useContext, useEffect, useState } from "react";
 import { fetchUser } from "./user-fetch";
-import { UserWithOrdersAndAdress } from "@/types";
 
 type UserContextType = {
   user: UserWithOrdersAndAdress | null;

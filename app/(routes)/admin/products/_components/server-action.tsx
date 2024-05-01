@@ -18,22 +18,8 @@ async function deleteProduct({
   }
 
   try {
-    await prismadb.$transaction(async (prisma) => {
-      await prisma.product.update({
-        where: { id: id },
-        data: {
-          linkedProducts: {
-            set: [], // Disconnect all linked products
-          },
-          linkedBy: {
-            set: [], // Disconnect all linked by products
-          },
-        },
-      });
-
-      await prisma.product.delete({
-        where: { id: id },
-      });
+    await prismadb.product.delete({
+      where: { id: id },
     });
   } catch (e) {
     console.log(e);

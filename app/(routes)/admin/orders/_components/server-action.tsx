@@ -4,7 +4,6 @@ import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import { DateRange } from "react-day-picker";
 import { OrderColumn } from "./columns";
-import { currencyFormatter, dateFormatter } from "@/lib/utils";
 import { formatOrders } from "./format-orders";
 
 type ReturnType =
@@ -158,4 +157,4 @@ const changeStatus = async ({
   }
 };
 
-export { deleteOrders, getOrders, changeStatus };
+export { changeStatus, deleteOrders, getOrders };

@@ -1,5 +1,6 @@
 "use client";
 import IconButton from "@/components/ui/icon-button";
+import { useUserContext } from "@/context/user-context";
 import { motion } from "framer-motion";
 import {
   ChevronLeft,
@@ -11,12 +12,13 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
-const ProfilNavBar = ({ isPro }: { isPro?: boolean }) => {
+const ProfilNavBar = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { user } = useUserContext();
   const router = useRouter();
 
-  const routes = isPro ? ProfilProRoutes : ProfilRoutes;
+  const routes = user?.role === "pro" ? ProfilProRoutes : ProfilRoutes;
 
   return (
     <div

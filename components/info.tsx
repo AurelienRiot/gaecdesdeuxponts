@@ -6,20 +6,16 @@ import { ShoppingCart } from "lucide-react";
 import { MouseEventHandler } from "react";
 import useCart from "@/hooks/use-cart";
 import Link from "next/link";
-import { ProductWithCategoryAndImages } from "@/types";
+import { ProductWithCategory } from "@/types";
 import { PlateVis } from "./plate-vis";
 import { Badge } from "./ui/badge";
 
 interface InfoProps {
-  data: ProductWithCategoryAndImages;
+  data: ProductWithCategory;
   scroll?: boolean;
-  linkProducts: {
-    id: string;
-    name: string;
-  }[];
 }
 
-const Info: React.FC<InfoProps> = ({ data, scroll, linkProducts }) => {
+const Info: React.FC<InfoProps> = ({ data, scroll }) => {
   const cart = useCart();
 
   const value = data.price;
@@ -51,7 +47,7 @@ const Info: React.FC<InfoProps> = ({ data, scroll, linkProducts }) => {
         </div>
       </div>
       <hr className="my-4" />
-      {linkProducts.length > 0 && (
+      {/* {linkProducts.length > 0 && (
         <>
           <h2 className="mb-4 mt-8 text-xl">Produits liées</h2>
           <div className="flex flex-wrap gap-1">
@@ -70,7 +66,7 @@ const Info: React.FC<InfoProps> = ({ data, scroll, linkProducts }) => {
           </div>
           <hr className="my-4" />
         </>
-      )}
+      )} */}
       <div className="mt-10 flex items-center gap-x-3">
         <Button
           variant="rounded"

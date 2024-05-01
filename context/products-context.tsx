@@ -1,14 +1,12 @@
 "use client";
-import { ProductWithCategoryImagesAndLinkedProducts } from "@/types";
+import { ProductWithCategory } from "@/types";
 import { createContext, useContext, useEffect, useState } from "react";
-import { fetchProducts } from "./products-fetch";
+import { fetchProProducts, fetchProducts } from "./products-fetch";
 
 type ProductsContextType = {
-  products: ProductWithCategoryImagesAndLinkedProducts[] | undefined;
+  products: ProductWithCategory[] | undefined;
   setProducts: React.Dispatch<
-    React.SetStateAction<
-      ProductWithCategoryImagesAndLinkedProducts[] | undefined
-    >
+    React.SetStateAction<ProductWithCategory[] | undefined>
   >;
 };
 
@@ -18,20 +16,41 @@ export const ProductsContext = createContext<ProductsContextType | undefined>(
 
 export const ProductsProvider: React.FC<{
   children: React.ReactNode;
-  isPro: boolean;
-}> = ({ children, isPro }) => {
-  const [products, setProducts] = useState<
-    ProductWithCategoryImagesAndLinkedProducts[] | undefined
-  >(undefined);
+}> = ({ children }) => {
+  const [products, setProducts] = useState<ProductWithCategory[] | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
     const fetchAndSetProducts = async () => {
-      const data = await fetchProducts(isPro);
+      const data = await fetchProducts();
       setProducts(data);
     };
 
     fetchAndSetProducts();
-  }, [isPro]);
+  }, []);
+  return (
+    <ProductsContext.Provider value={{ products, setProducts }}>
+      {children}
+    </ProductsContext.Provider>
+  );
+};
+
+export const ProductsProProvider: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
+  const [products, setProducts] = useState<ProductWithCategory[] | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    const fetchAndSetProducts = async () => {
+      const data = await fetchProProducts();
+      setProducts(data);
+    };
+
+    fetchAndSetProducts();
+  }, []);
   return (
     <ProductsContext.Provider value={{ products, setProducts }}>
       {children}

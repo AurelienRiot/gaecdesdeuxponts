@@ -13,7 +13,7 @@ const WhyChooseUs = () => {
     <div className="relative bg-gradient-to-b from-background to-transparent to-15% py-8">
       <BackgroundGrid />
       <div className="mx-auto max-w-6xl  px-4 text-center sm:px-6 lg:px-8">
-        <h2 className="mb-4 text-center text-2xl font-semibold text-primary">
+        <h2 className="mb-4 text-center text-4xl font-semibold text-primary">
           Pourquoi choisir notre lait ?
         </h2>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">

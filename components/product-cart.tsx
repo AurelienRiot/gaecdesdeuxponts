@@ -4,7 +4,7 @@ import Currency from "@/components/ui/currency";
 import IconButton from "@/components/ui/icon-button";
 import { useCategoriesContext } from "@/context/categories-context";
 import useCart from "@/hooks/use-cart";
-import { ProductWithImages } from "@/types";
+import { Product } from "@prisma/client";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,7 +13,7 @@ import { MouseEventHandler } from "react";
 import { FaInfo } from "react-icons/fa";
 
 interface ProductCartProps {
-  data: ProductWithImages;
+  data: Product;
 }
 
 const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
@@ -44,7 +44,7 @@ const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
         className="relative aspect-square rounded-xl bg-white before:absolute before:inset-0 before:z-10 before:rounded-xl before:bg-black/20 before:opacity-0 before:duration-300 before:ease-linear before:animate-in group-hover:before:opacity-100 "
       >
         <Image
-          src={data?.images[0].url}
+          src={data?.imagesUrl[0]}
           fill
           sizes="80vw"
           alt="Image"
@@ -82,7 +82,7 @@ const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
         </Link> */}
       </div>
       <div className="flex items-center justify-between text-primary">
-        <Currency value={value} />
+        <Currency value={value || 0} />
       </div>
     </div>
   );

@@ -88,38 +88,43 @@ model Category {
 }
 
 model Product {
-  id           String @unique @id @default(uuid())
+  id           String @unique @id @default(cuid())
   categoryId   String
   category     Category @relation("CategoryToProduct", fields: [categoryId], references: [id])
   name         String @unique
   description  String @db.VarChar(1000)
   productSpecs String @db.Text
-  price      Float    
+  price        Float?    
   isFeatured   Boolean @default(false)
   isArchived   Boolean @default(false)
   isPro        Boolean @default(false)
-  images       Image[]
+  imagesUrl    String[]
+  Option    Option[] @relation("ProductToOption")
+
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-   linkedProducts Product[] @relation("ProductLinks")
-  linkedBy       Product[] @relation("ProductLinks")
-
+  
 
   @@index([categoryId])
 }
 
 
-model Image {
-  id        String  @unique @id @default(uuid())
-  productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  url       String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Option {
+  id             String    @unique @id @default(cuid())
+  name           String
+  value          String
+  price          Float
+    productId           String      @unique
+  product             Product     @relation("ProductToOption", fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@index([productId])
-}
+  }
+
+ 
 
 model Order {
   id         String @unique @id @default(uuid())

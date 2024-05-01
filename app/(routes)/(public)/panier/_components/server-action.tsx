@@ -74,7 +74,7 @@ export const checkOut = async ({
 
   const trueTotalPrice = productsWithQuantity.reduce(
     (acc, { item, quantity }) => {
-      return acc + item.price * (quantity || 1);
+      return acc + (item.price || 0) * (quantity || 1);
     },
     0,
   );
@@ -96,7 +96,7 @@ export const checkOut = async ({
           name: product.item.name,
           description: product.item.description,
           categoryName: product.item.category.name,
-          price: product.item.price,
+          price: product.item.price || 0,
           quantity: product.quantity,
         })),
       },

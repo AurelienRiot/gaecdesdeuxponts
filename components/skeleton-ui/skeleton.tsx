@@ -22,7 +22,7 @@ function Skeleton({ className, as = "div", ...props }: SkeletonProps) {
       ) : (
         <span
           className={cn(
-            "animate-[pulse_1s_ease-in-out_infinite] rounded-md bg-muted-foreground/50",
+            "block animate-[pulse_1s_ease-in-out_infinite] rounded-md bg-muted-foreground/50",
             className,
           )}
           {...props}
