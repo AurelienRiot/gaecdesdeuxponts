@@ -1,7 +1,6 @@
 import {
   Address,
   Category,
-  Image,
   Order,
   OrderItem,
   Product,
@@ -42,25 +41,24 @@ export interface DataTableViewOptionsColumn<TData> {
   title: string;
 }
 
-export type ProductWithImages = Product & {
-  images: Image[];
-};
-export type ProductWithCategoryAndImages = Product & {
-  images: Image[];
+export interface ProductWithCategory extends Product {
   category: Category;
-};
+}
 
-export type ProductWithCategoryImagesAndLinkedProducts = Product & {
-  images: Image[];
-  category: Category;
-  linkedBy: { id: string; name: string }[];
-  linkedProducts: { id: string; name: string }[];
-};
-
-export type UserWithOrders = User & {
+export interface UserWithOrders extends User {
   orders: Order[];
-};
-export type UserWithOrdersAndAdress = User & {
+}
+export interface UserWithOrdersAndAdress extends User {
   orders: (Order & { orderItems: OrderItem[]; shop: Shop })[];
   address: Address[];
-};
+}
+
+export type ReturnTypeServerAction<T> =
+  | {
+      success: true;
+      data: T;
+    }
+  | {
+      success: false;
+      message: string;
+    };

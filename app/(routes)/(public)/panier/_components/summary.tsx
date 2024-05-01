@@ -70,10 +70,12 @@ const Summary: React.FC<SummaryProps> = ({ userId, shops }) => {
     return null;
   }
 
-  const totalPrice = cart.items.reduce((total, item) => {
-    return total + item.price * cart.quantities[item.id];
-  }, 0);
-
+  const totalPrice =
+    cart.items.length > 0
+      ? cart.items.reduce((total, item) => {
+          return total + (item.price || 0) * cart.quantities[item.id];
+        }, 0)
+      : 0;
   const onCheckout = async () => {
     setLoading(true);
     if (!userId) {

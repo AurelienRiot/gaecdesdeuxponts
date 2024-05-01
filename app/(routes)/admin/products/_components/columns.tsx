@@ -1,6 +1,5 @@
 "use client";
 
-import { LinkProductsCell } from "@/components/table-custom-fuction/cell-products";
 import {
   CheckboxCell,
   DateCell,
@@ -23,10 +22,6 @@ export type ProductColumn = {
   imageUrl: string;
   price: string;
   category: string;
-  linkProducts: {
-    id: string;
-    name: string;
-  }[];
   isFeatured: boolean;
   isArchived: boolean;
   isPro: boolean;
@@ -88,11 +83,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
     header: "Categorie",
     filterFn: FilterOneInclude,
   },
-  {
-    accessorKey: "linkProducts",
-    header: "Produits liées",
-    cell: LinkProductsCell,
-  },
+
   {
     accessorKey: "createdAt",
     header: CreatedAtHeader,
@@ -182,11 +173,6 @@ export const viewOptionsColumns: DataTableViewOptionsColumn<ProductColumn>[] = [
   {
     id: "category",
     title: "Categorie",
-  },
-
-  {
-    id: "linkProducts",
-    title: "Produits liées",
   },
   {
     id: "createdAt",

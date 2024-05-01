@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useCategoriesContext } from "@/context/categories-context";
 import { useProductsContext } from "@/context/products-context";
-import { ProductWithCategoryImagesAndLinkedProducts } from "@/types";
+import { ProductWithCategory } from "@/types";
 
 const PageProductsPro = () => {
   const { products } = useProductsContext();
@@ -66,11 +66,7 @@ const PageProductsPro = () => {
   );
 };
 
-const DisplayCategory = ({
-  products,
-}: {
-  products: ProductWithCategoryImagesAndLinkedProducts[];
-}) => {
+const DisplayCategory = ({ products }: { products: ProductWithCategory[] }) => {
   return (
     <div className="mb-6 space-y-4">
       <h2 id={products[0].category.name} className="text-3xl font-semibold">

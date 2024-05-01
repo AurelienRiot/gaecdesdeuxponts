@@ -1,8 +1,8 @@
 "use client";
-import ImageLoaderBillboard from "@/components/billboard/image-loader-billboard";
 import { useCategoriesContext } from "@/context/categories-context";
-import { useEffect, useState } from "react";
 import BillboardSkeleton from "../skeleton-ui/billboard-skeleton";
+import Image from "next/image";
+import { Skeleton } from "../skeleton-ui/skeleton";
 
 interface BillboardProps {
   categoryName: string;
@@ -18,14 +18,21 @@ const Billboard: React.FC<BillboardProps> = ({ categoryName }) => {
   }
 
   return (
-    <div className="overflow-hidden rounded-xl p-4 sm:p-6 lg:p-8">
-      <ImageLoaderBillboard src={category.imageUrl}>
-        <div className="flex h-full w-full flex-col items-center justify-center gap-y-8 text-center">
-          <div className="max-w-xs rounded-lg bg-gray-800 bg-opacity-40 p-2 pb-3 font-display text-3xl font-bold text-gray-50 sm:max-w-xl sm:text-5xl lg:text-6xl">
-            {category?.name}
-          </div>
-        </div>
-      </ImageLoaderBillboard>
+    <div className="grid grid-cols-1 items-center  justify-items-center gap-8 p-4 sm:grid-cols-2 sm:p-6 lg:p-8 ">
+      <div className=" max-w-xs space-y-6 text-center sm:max-w-xl">
+        <h1 className="  font-display text-4xl font-bold   sm:text-5xl lg:text-6xl">
+          {category?.name}
+        </h1>
+        <p>{category?.description}</p>
+      </div>
+      <div className="relative aspect-square max-h-[50vh] min-h-[300px] overflow-hidden rounded-xl">
+        <Image
+          src={category.imageUrl}
+          alt={category.name}
+          fill
+          className="h-full w-full object-cover"
+        />
+      </div>
     </div>
   );
 };

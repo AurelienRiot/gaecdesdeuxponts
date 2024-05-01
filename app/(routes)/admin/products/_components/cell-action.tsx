@@ -35,7 +35,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       toast.error(deletePro.message);
     } else {
       router.refresh();
-      toast.success("Categorie supprimée");
+      toast.success("Produit supprimée");
     }
     setOpen(false);
   };

@@ -3,7 +3,7 @@
 import Currency from "@/components/ui/currency";
 import IconButton from "@/components/ui/icon-button";
 import useCart from "@/hooks/use-cart";
-import { ProductWithCategoryAndImages } from "@/types";
+import { ProductWithCategory } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { X } from "lucide-react";
 import Image from "next/image";
@@ -17,7 +17,7 @@ import { Input } from "./ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
 
 interface CartItemProps {
-  data: ProductWithCategoryAndImages;
+  data: ProductWithCategory;
 }
 
 const CartItem: React.FC<CartItemProps> = ({ data }) => {
@@ -41,7 +41,7 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
       <div className="relative size-24  overflow-hidden rounded-md bg-white @sm:size-48 ">
         <Image
           fill
-          src={data.images[0].url}
+          src={data.imagesUrl[0]}
           sizes="100%"
           alt="image"
           className="object-cover object-center"

@@ -2,7 +2,7 @@ import { cn, currencyFormatter } from "@/lib/utils";
 import { Skeleton } from "../skeleton-ui/skeleton";
 
 interface CurrencyProps {
-  value?: number;
+  value?: number | null;
   className?: string;
   classNameLogo?: string;
   displayText?: boolean;
@@ -10,8 +10,7 @@ interface CurrencyProps {
 }
 
 const Currency: React.FC<CurrencyProps> = ({ value, className }) => {
-  if (!value) return <Skeleton className="h-4 w-12" />;
-
+  if (typeof value !== "number") return <Skeleton className="h-4 w-12" />;
   return (
     <span
       className={cn(

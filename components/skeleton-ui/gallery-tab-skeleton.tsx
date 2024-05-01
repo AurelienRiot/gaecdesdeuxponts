@@ -1,6 +1,4 @@
 import { cn } from "@/lib/utils";
-import { Image as ImageType } from "@prisma/client";
-import Image from "next/image";
 import { TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "./skeleton";
 

@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
-import { Option } from "@/components/ui/multiple-selector";
 import {
   Select,
   SelectContent,
@@ -25,89 +24,59 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { mergeWithoutDuplicates } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Category, Image, Product } from "@prisma/client";
+import { Category, Product } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { getFileKey } from "../../../categories/[categoryId]/_components/category-form";
-import { deleteProduct } from "../../components/server-action";
-import LinkProducts from "./link-products";
+import { deleteProduct } from "../../_components/server-action";
 import { PlateEditor } from "./plate-editor";
-import {
-  ProductReturnType,
-  createProduct,
-  updateProduct,
-} from "./server-action";
+import { updateProduct } from "../_actions/update-product";
+import { createProduct } from "../_actions/create-product";
+import { PlusCircledIcon } from "@radix-ui/react-icons";
 
-const formSchema = z.object({
-  name: z.string().min(1, { message: "Le nom est requis" }),
-  images: z
-    .object({
-      url: z.string(),
-    })
-    .array(),
-  price: z.coerce
-    .number()
-    .min(1, { message: "Le prix doit être supérieur à 0" }),
+const OptionSchema = z.object({
+  name: z.string(),
+  value: z.string(),
+  price: z.number(),
+});
+
+const productSchema = z.object({
   categoryId: z.string().min(1, { message: "La catégorie est requise" }),
+  name: z.string().min(1, { message: "Le nom est requis" }),
+  description: z.string().min(1, { message: "La description est requise" }),
   productSpecs: z
     .string()
     .min(1, { message: "Les spécifications sont requises" }),
-  description: z.string().min(1, { message: "La description est requise" }),
-  linkProducts: z
-    .object({
-      value: z.string(),
-      label: z.string(),
-    })
-    .array()
-    .optional(),
-  isFeatured: z.boolean().default(false).optional(),
-  isArchived: z.boolean().default(false).optional(),
-  isPro: z.boolean().default(false).optional(),
+  price: z.coerce.number().optional(),
+  isFeatured: z.boolean().default(false),
+  isArchived: z.boolean().default(false),
+  isPro: z.boolean().default(false),
+  imagesUrl: z.array(z.string()).optional(),
+  option: OptionSchema.optional(),
 });
 
-export type ProductFormValues = z.infer<typeof formSchema>;
+export type ProductFormValues = z.infer<typeof productSchema>;
 
 type ProductFormProps = {
-  initialData:
-    | (Product & {
-        images: Image[];
-        linkedProducts: { id: string; name: string }[];
-        linkedBy: { id: string; name: string }[];
-      })
-    | null;
+  initialData: Product | null;
   categories: Category[];
-  products: { id: string; name: string; categoryId: string; isPro: boolean }[];
 };
 
 export const ProductForm: React.FC<ProductFormProps> = ({
   initialData,
   categories,
-  products,
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<string[]>(
-    initialData?.images.map((image) => getFileKey(image.url)) || [],
+    initialData?.imagesUrl.map((image) => getFileKey(image)) || [],
   );
-  const [options, setOptions] = useState<Option[]>(
-    products
-      .filter(
-        (product) =>
-          product.id !== initialData?.id &&
-          product.categoryId === initialData?.categoryId &&
-          product.isPro === initialData?.isPro,
-      )
-      .map((product) => ({
-        value: product.id,
-        label: product.name,
-      })),
-  );
+
   const title = initialData ? "Modifier le produit" : "Crée un nouveau produit";
   const description = initialData
     ? "Modifier le produit"
@@ -118,31 +87,21 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     : "Crée le produit";
 
   const form = useForm<ProductFormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(productSchema),
     defaultValues: initialData
       ? {
           name: initialData.name,
-          images: [],
-          price: initialData.price,
+          price: initialData.price || undefined,
+          imagesUrl: initialData.imagesUrl,
           categoryId: initialData.categoryId,
           description: initialData.description,
           productSpecs: initialData.productSpecs,
           isFeatured: initialData.isFeatured,
           isArchived: initialData.isArchived,
           isPro: initialData.isPro,
-          linkProducts: mergeWithoutDuplicates(
-            initialData.linkedProducts,
-            initialData.linkedBy,
-          ).map((product) => ({
-            value: product.id,
-            label: product.name,
-          })),
         }
       : {
           name: "",
-          images: [],
-          linkProducts: [],
-          price: 0,
           categoryId: "",
           description: "",
           productSpecs: "",
@@ -157,58 +116,30 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       toast.error("Veuillez ajouter au moins une image");
       return;
     }
-    data.images = selectedFiles.map((file) => ({
-      url: `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${file}`,
-    }));
+    data.imagesUrl = selectedFiles.map(
+      (file) =>
+        `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${file}`,
+    );
 
-    let result: ProductReturnType;
+    console.log(data);
+
     if (initialData) {
-      result = await updateProduct(data, initialData.id);
+      const result = await updateProduct(data, initialData.id);
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
     } else {
-      result = await createProduct(data);
+      const result = await createProduct(data);
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
     }
-    if (!result.success) {
-      toast.error(result.message);
-      return;
-    }
+
     router.push(`/admin/products`);
     router.refresh();
     toast.success(toastMessage);
-  };
-
-  const onChangeCategory = (value: string) => {
-    form.setValue("categoryId", value);
-    form.setValue("linkProducts", []);
-    setOptions(
-      products
-        .filter(
-          (product) =>
-            product.id !== initialData?.id &&
-            product.categoryId === value &&
-            product.isPro === form.getValues("isPro"),
-        )
-        .map((product) => ({
-          value: product.id,
-          label: product.name,
-        })),
-    );
-  };
-  const onChangeIsPro = (value: boolean) => {
-    form.setValue("isPro", value);
-    form.setValue("linkProducts", []);
-    setOptions(
-      products
-        .filter(
-          (product) =>
-            product.id !== initialData?.id &&
-            product.categoryId === form.getValues("categoryId") &&
-            product.isPro === value,
-        )
-        .map((product) => ({
-          value: product.id,
-          label: product.name,
-        })),
-    );
   };
 
   const onDelete = async () => {
@@ -252,7 +183,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
         >
           <FormField
             control={form.control}
-            name="images"
+            name="imagesUrl"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Images</FormLabel>
@@ -297,6 +228,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       disabled={form.formState.isSubmitting}
                       placeholder="9,99"
                       {...field}
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <FormMessage />
@@ -311,7 +243,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   <FormLabel>Categorie</FormLabel>
                   <Select
                     disabled={form.formState.isSubmitting}
-                    onValueChange={onChangeCategory}
+                    onValueChange={field.onChange}
                     value={field.value}
                     defaultValue={field.value}
                   >
@@ -407,7 +339,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     <FormControl>
                       <Checkbox
                         checked={field.value}
-                        onCheckedChange={onChangeIsPro}
+                        onCheckedChange={field.onChange}
                         disabled={form.formState.isSubmitting}
                       />
                     </FormControl>
@@ -424,9 +356,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               )}
             />
           </div>
-
-          <LinkProducts form={form} options={options} />
-
+          {/* <ProductOptions /> */}
           <PlateEditor
             loading={form.formState.isSubmitting}
             initialValue={
@@ -453,3 +383,170 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     </>
   );
 };
+
+// const ProductOptions = () => {
+//   const form = useFormContext<ProductFormValues>();
+//   const option = form.watch("option");
+//   console.log(option);
+
+//   const handleAddOptionClick = () => {
+//     const addOptionRecursively = (option: Option | undefined): Option => {
+//       if (!option) {
+//         return {
+//           name: "",
+//           optionValues: [{ name: "", price: undefined, imagesUrl: [] }],
+//         };
+//       } else {
+//         return {
+//           ...option,
+//           optionValues: option.optionValues.map((optionValue) => ({
+//             ...optionValue,
+//             option: addOptionRecursively(optionValue.option),
+//           })),
+//         };
+//       }
+//     };
+
+//     const updatedOption = addOptionRecursively(option);
+//     form.setValue("option", updatedOption);
+//   };
+
+//   return (
+//     <div className="w-full space-y-6">
+//       <Button
+//         type="button"
+//         variant="outline"
+//         size="sm"
+//         className="h-8 whitespace-nowrap border-dashed"
+//         onClick={handleAddOptionClick}
+//       >
+//         <PlusCircledIcon className="mr-2 size-4" />
+//         {"Ajouter une option"}
+//       </Button>
+//       <OptionForm option={option} optionPath="option" />
+//     </div>
+//   );
+// };
+
+// const OptionForm = ({
+//   option,
+//   optionPath,
+//   prevOption,
+//   prevOptionPath,
+// }: {
+//   option?: Option;
+//   prevOption?: Option;
+//   optionPath: string;
+//   prevOptionPath?: string;
+// }) => {
+//   const form = useFormContext<ProductFormValues>();
+//   if (!option) {
+//     return null;
+//   }
+
+//   const addOptionValue = () => {
+//     // @ts-ignore
+//     form.setValue(`${optionPath}.optionValues`, [
+//       ...option.optionValues,
+//       { name: "", price: undefined, imagesUrl: [] },
+//     ]);
+//   };
+
+//   return (
+//     <>
+//       <div className=" space-y-4 pl-4">
+//         <div className="flex gap-4">
+//           <Input
+//             disabled={form.formState.isSubmitting}
+//             placeholder="Nom de l'option"
+//             value={
+//               prevOption
+//                 ? prevOption?.optionValues[0].option?.name
+//                 : option?.name || ""
+//             }
+//             onChange={(e) => {
+//               const formPath = prevOptionPath
+//                 ? `${prevOptionPath}.optionValues.0.option.name`
+//                 : `${optionPath}.name`;
+//               // @ts-ignore
+//               form.setValue(formPath, e.target.value);
+//             }}
+//             className="w-48"
+//           />
+//           <Button
+//             type="button"
+//             variant="outline"
+//             size="sm"
+//             className="h-8 whitespace-nowrap border-dashed"
+//             onClick={addOptionValue}
+//           >
+//             <PlusCircledIcon className="mr-2 size-4" />
+//             {"Ajouter une valeur"}
+//           </Button>
+//         </div>
+//         {option.optionValues.map((_, index) => (
+//           <OptionValueForm
+//             key={index}
+//             index={index}
+//             option={option}
+//             optionPath={optionPath}
+//           />
+//         ))}
+//       </div>
+//     </>
+//   );
+// };
+
+// const OptionValueForm = ({
+//   index,
+//   option,
+//   optionPath,
+// }: {
+//   index: number;
+//   option: Option;
+//   optionPath: string;
+// }) => {
+//   const form = useFormContext<ProductFormValues>();
+
+//   return (
+//     <div className=" space-y-4 pl-2">
+//       <div className="flex gap-4">
+//         <Input
+//           type="text"
+//           disabled={form.formState.isSubmitting}
+//           placeholder="Nom de la valeur"
+//           value={option.optionValues[index].name || ""}
+//           onChange={(e) => {
+//             form.setValue(
+//               // @ts-ignore
+//               `${optionPath}.optionValues.${index}.name`,
+//               e.target.value,
+//             );
+//           }}
+//           className="w-48"
+//         />
+
+//         <Input
+//           type="number"
+//           disabled={form.formState.isSubmitting}
+//           placeholder="Prix"
+//           value={option.optionValues[index].price || ""}
+//           onChange={(e) => {
+//             const value = e.target.value ? Number(e.target.value) : undefined;
+//             // @ts-ignore
+//             form.setValue(`${optionPath}.optionValues.${index}.price`, value);
+//           }}
+//           className="w-48"
+//         />
+//       </div>
+//       {option.optionValues[index].option ? (
+//         <OptionForm
+//           option={option.optionValues[index].option}
+//           prevOption={option}
+//           prevOptionPath={optionPath}
+//           optionPath={`${optionPath}.optionValues.${index}.option`}
+//         />
+//       ) : null}
+//     </div>
+//   );
+// };

@@ -9,7 +9,7 @@ export default async function PublicLayout({
   return (
     <>
       <PublicHeader />
-      <main id="main-content" className="p-4 pt-16 print:pt-0">
+      <main id="main-content" className="p-4 pt-16 print:pt-0 ">
         {children}
       </main>
       <Footer />

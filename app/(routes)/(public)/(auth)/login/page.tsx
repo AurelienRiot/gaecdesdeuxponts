@@ -1,21 +1,10 @@
 import { EmailButton, GoogleButton } from "@/components/auth/auth-button";
-import { checkUser } from "@/components/auth/checkAuth";
-import { redirect } from "next/navigation";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
 const LoginPage = async (context: {
   searchParams: { callbackUrl: string };
 }) => {
-  const isAuth = await checkUser();
-  if (isAuth) {
-    if (isAuth.role === "admin") {
-      redirect("/admin");
-    } else {
-      redirect("/dashboard-user");
-    }
-  }
-
   const callbackUrl = decodeURI(
     context.searchParams.callbackUrl ?? `${baseUrl}/dashboard-user`,
   );

@@ -26,11 +26,10 @@ const ContactPage = () => {
         </p>
       </div>
 
+      <InfoContact />
       <Suspense fallback={<ContactFormLoading />}>
         <Form />
       </Suspense>
-
-      <InfoContact />
     </Container>
   );
 };

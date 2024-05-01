@@ -4,7 +4,7 @@ import { CategoriesProvider } from "@/context/categories-context";
 
 const NotFound = () => {
   return (
-    <CategoriesProvider isPro={false}>
+    <CategoriesProvider>
       <NavBar />
 
       <div className="pt-16">

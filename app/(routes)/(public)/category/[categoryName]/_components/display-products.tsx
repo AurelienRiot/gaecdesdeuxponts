@@ -13,7 +13,7 @@ const DisplayProducts = ({ categoryName }: { categoryName: string }) => {
   );
 
   return (
-    <div className="flex flex-wrap justify-center gap-12">
+    <div className="justify-le ft mx-auto flex flex-wrap gap-12">
       {!productsCat ? (
         Array(4)
           .fill(null)

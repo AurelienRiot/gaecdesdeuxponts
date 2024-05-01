@@ -14,7 +14,7 @@ const PublicHeader = () => {
         <Link href="/" className="hidden xs:block">
           <Image
             alt="Logo"
-            className="h-16 w-auto "
+            className="h-16 w-auto rounded-md "
             src="/logo-rect.webp"
             width={155.86}
             height={56}

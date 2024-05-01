@@ -1,23 +1,33 @@
 "use server";
+import { checkPro } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 
-export const fetchProducts = async (isPro: boolean) => {
+export const fetchProducts = async () => {
   const products = await prismadb.product.findMany({
     where: {
-      isPro: isPro,
+      isPro: false,
       isArchived: false,
     },
     include: {
       category: true,
-      images: { orderBy: { createdAt: "asc" } },
-      linkedBy: {
-        where: { isArchived: false, isPro: isPro },
-        select: { id: true, name: true },
-      },
-      linkedProducts: {
-        where: { isArchived: false, isPro: isPro },
-        select: { id: true, name: true },
-      },
+    },
+  });
+  return products;
+};
+
+export const fetchProProducts = async () => {
+  const user = checkPro();
+
+  if (!user) {
+    return undefined;
+  }
+  const products = await prismadb.product.findMany({
+    where: {
+      isPro: true,
+      isArchived: false,
+    },
+    include: {
+      category: true,
     },
   });
   return products;

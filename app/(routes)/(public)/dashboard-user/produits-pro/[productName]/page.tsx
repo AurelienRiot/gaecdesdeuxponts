@@ -5,7 +5,6 @@ import Info from "@/components/info";
 import ButtonBackward from "@/components/ui/button-backward";
 import NoResults from "@/components/ui/no-results";
 import { useProductsContext } from "@/context/products-context";
-import { mergeWithoutDuplicates } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import Loading from "../../../product/[productName]/loading";
 
@@ -25,21 +24,14 @@ const DisplayProduct = () => {
   if (!product) {
     return <NoResults className="mt-20" />;
   }
-  const linkProducts = mergeWithoutDuplicates(
-    product.linkedBy,
-    product.linkedProducts,
-  );
-
-  const excludeIds = linkProducts.map((product) => product.id);
-  excludeIds.push(product.id);
 
   return (
     <div className="w-full space-y-6 px-4 py-10 sm:px-6 lg:px-8">
       <ButtonBackward url={`/dashboard-user/produits-pro`} />
       <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
-        <Gallery images={product.images} />
+        <Gallery images={product.imagesUrl} />
         <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-          <Info data={product} linkProducts={linkProducts} />
+          <Info data={product} />
         </div>
       </div>
     </div>

@@ -29,7 +29,7 @@ import {
   useOpenState,
 } from "./dropdown-menu";
 import { ToolbarButton } from "./toolbar";
-import GridCells from "@/app/(routes)/admin/products/[productId]/components/grid-cells";
+import GridCells from "@/app/(routes)/admin/products/[productId]/_components/grid-cells";
 
 export function TableDropdownMenu(props: DropdownMenuProps) {
   const tableSelected = useEditorSelector(

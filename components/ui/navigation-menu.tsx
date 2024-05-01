@@ -17,7 +17,7 @@ const NavigationMenu = React.forwardRef<
       className,
     )}
     {...props}
-    delayDuration={100}
+    delayDuration={10000}
   >
     {children}
     <NavigationMenuViewport orientation={props.orientation} />

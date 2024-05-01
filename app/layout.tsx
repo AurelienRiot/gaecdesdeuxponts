@@ -60,8 +60,8 @@ export default function RootLayout({
           <CSPostHogProvider>
             <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
               <TooltipProvider delayDuration={100} skipDelayDuration={0}>
-                <CategoriesProvider isPro={false}>
-                  <ProductsProvider isPro={false}>
+                <CategoriesProvider>
+                  <ProductsProvider>
                     <DebugScreens />
                     {children}
                   </ProductsProvider>

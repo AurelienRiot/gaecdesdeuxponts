@@ -1,4 +1,4 @@
-import { ProductWithCategoryAndImages } from "@/types";
+import { ProductWithCategory } from "@/types";
 import ProductCart from "./product-cart";
 import { ProductCart as ProductCartSkeleton } from "./skeleton-ui/product-cart-skeleton";
 
@@ -6,7 +6,7 @@ import NoResults from "./ui/no-results";
 
 interface ProductListProps {
   title: string;
-  items?: ProductWithCategoryAndImages[];
+  items?: ProductWithCategory[];
 }
 
 const ProductList: React.FC<ProductListProps> = ({ title, items }) => {
