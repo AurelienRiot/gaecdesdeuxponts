@@ -68,7 +68,7 @@ const OptionsDisplay = ({ optionsArray, product, sameProducts }: InfoProps) => {
   return (
     <div>
       {optionsArray.map((option, index) => (
-        <>
+        <div key={option.name + index}>
           <h3 className="mb-4 mt-8 text-lg">{option.name}</h3>
           <div className="flex flex-wrap gap-2">
             {option.values.map((value, i) => {
@@ -115,7 +115,7 @@ const OptionsDisplay = ({ optionsArray, product, sameProducts }: InfoProps) => {
               );
             })}
           </div>
-        </>
+        </div>
       ))}
     </div>
   );

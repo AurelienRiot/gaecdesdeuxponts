@@ -59,7 +59,7 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
             type="button"
             className="bg-primary-foreground"
             onClick={onRemove}
-            icon={<X size={15} className="text-primary" />}
+            icon={<X className="size-4 text-primary" />}
           />
         </div>
         <div className="relative flex h-full flex-col content-center justify-between gap-2">
