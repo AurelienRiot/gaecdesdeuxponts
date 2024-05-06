@@ -19,15 +19,17 @@ const ImageAccueil = () => {
           nos vaches heureuses et en bonne santé.
         </p>
         <div className="mx-auto flex gap-4">
-          <Button asChild>
-            <Link href="/#Découvrer nos produits">Acheter</Link>
+          <Button asChild variant={"heartbeat"}>
+            <Link href="/category/Lait/product/Lait%20cru?Contenant=Bouteille%20verre">
+              Acheter
+            </Link>
           </Button>
           <Button variant={"outline"} asChild>
             <Link href="/#la-ferme">En savoir plus</Link>
           </Button>
         </div>
       </div>
-      <div>
+      <div className="group relative">
         <Image
           alt="Farm Hero Image"
           className="h-auto w-full rounded-md object-cover"
@@ -35,6 +37,10 @@ const ImageAccueil = () => {
           src="/vache-champs.webp"
           width={4676}
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-background from-5% to-25% transition-all duration-500 group-hover:translate-y-[5%]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background from-[1%] to-10% transition-all duration-500 group-hover:translate-x-[-1%]" />
+        <div className="absolute inset-0 bg-gradient-to-l from-background from-[1%] to-10% transition-all duration-500 group-hover:translate-x-[1%]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background from-5% to-35% transition-all duration-500 group-hover:translate-y-[-5%]" />
       </div>
     </section>
   );

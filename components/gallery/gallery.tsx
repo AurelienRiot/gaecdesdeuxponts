@@ -19,7 +19,7 @@ const Gallery: React.FC<GalleryProps> = ({ images }) => {
     <Tabs
       onValueChange={setCurrentImage}
       value={currentImage}
-      className="flex flex-col-reverse"
+      className="relative flex  flex-col-reverse"
     >
       <div className="mx-auto mt-6  block w-full max-w-2xl  lg:max-w-none">
         <TabsList className="grid h-fit grid-cols-4 gap-6 ">
@@ -28,10 +28,10 @@ const Gallery: React.FC<GalleryProps> = ({ images }) => {
           ))}
         </TabsList>
       </div>
-      <div className="aspect-square w-full bg-white sm:rounded-lg">
+      <div className="relative aspect-square w-full bg-white sm:rounded-lg">
         {images.map((image) => (
           <TabsContent value={image} key={image}>
-            <div className="relative aspect-square h-full w-full overflow-hidden sm:rounded-lg">
+            <div className="relative aspect-square h-full w-full overflow-clip sm:rounded-lg">
               <Image
                 fill
                 sizes="80vw"

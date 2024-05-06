@@ -86,7 +86,7 @@ const InfoContact = () => {
         ))}
       </div>
 
-      <MapDisplay className="relative w-full " href={href} />
+      <MapDisplay href={href} />
     </div>
   );
 };

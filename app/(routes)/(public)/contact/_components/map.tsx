@@ -12,7 +12,7 @@ const MapDisplay = ({
   return (
     <div
       className={cn(
-        "  flex scale-75 items-start  justify-start sm:scale-100 sm:justify-center  ",
+        " relative mb-16 hidden items-start  justify-start  sm:flex sm:justify-center  lg:mb-0",
         className,
       )}
     >
@@ -47,7 +47,7 @@ export const PinContainer = ({
 }) => {
   return (
     <Link
-      className={cn("group/pin relative  cursor-pointer", containerClassName)}
+      className={cn("group/pin relative  cursor-pointer ", containerClassName)}
       href={href}
       target={"_blank"}
     >
@@ -62,7 +62,6 @@ export const PinContainer = ({
           className="absolute left-1/2 top-1/2 flex  items-start justify-start  overflow-hidden  rounded-2xl border border-white/[0.1] bg-black p-4 shadow-[0_8px_16px_rgb(0_0_0/0.4)] transition duration-700
          [transform:translate(-50%,-50%)_rotateX(0deg)_scale(1)] group-hover/pin:border-white/[0.2] 
          group-hover/pin:[transform:translate(-50%,-50%)_rotateX(40deg)_scale(0.8)]
-          
           "
         >
           <div

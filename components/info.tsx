@@ -33,20 +33,28 @@ const Info: React.FC<InfoProps> = ({
           <Currency value={value} />
         </p>
       </div>
-      <Separator className="w-48" />
+      {!!product.description && (
+        <>
+          <Separator className="w-48" />
 
-      <div className="flex flex-col gap-y-6">
-        <div className="flex items-center gap-x-4">
-          <p>{product.description}</p>
-        </div>
-      </div>
-      <Separator className="w-48" />
+          <div className="flex flex-col gap-y-6">
+            <div className="flex items-center gap-x-4">
+              <p>{product.description}</p>
+            </div>
+          </div>
+        </>
+      )}
+      {optionsArray.length > 0 && (
+        <>
+          <Separator className="w-48" />
 
-      <OptionsDisplay
-        optionsArray={optionsArray}
-        product={product}
-        sameProducts={sameProducts}
-      />
+          <OptionsDisplay
+            optionsArray={optionsArray}
+            product={product}
+            sameProducts={sameProducts}
+          />
+        </>
+      )}
       <Separator className="w-48" />
 
       <AddToCartButton type="text" data={product} />

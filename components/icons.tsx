@@ -50,6 +50,7 @@ import {
   Search,
   Settings,
   Smile,
+  Star,
   Strikethrough,
   Subscript,
   SunMedium,
@@ -61,7 +62,6 @@ import {
   Ungroup,
   WrapText,
   X,
-  Star,
 } from "lucide-react";
 
 import type { LucideIcon } from "lucide-react";

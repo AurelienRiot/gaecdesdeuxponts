@@ -1,17 +1,17 @@
-import type { Metadata } from "next";
-import {
-  Roboto_Mono as FontMono,
-  Playfair_Display as FontDisplay,
-  EB_Garamond as FontSerif,
-  Inter as FontSans,
-} from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "@/providers/theme-provider";
-import { AuthProviders } from "@/providers/auth-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
 import { CSPostHogProvider } from "@/lib/analytics/provider";
+import { cn } from "@/lib/utils";
+import { AuthProviders } from "@/providers/auth-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
+import type { Metadata } from "next";
+import {
+  Playfair_Display as FontDisplay,
+  Roboto_Mono as FontMono,
+  Inter as FontSans,
+  EB_Garamond as FontSerif,
+} from "next/font/google";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Laiterie du Pont Robert",

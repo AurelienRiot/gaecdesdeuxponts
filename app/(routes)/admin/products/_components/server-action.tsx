@@ -2,12 +2,13 @@
 
 import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
+import { ReturnTypeServerAction } from "@/types";
 
 async function deleteProduct({
   id,
 }: {
   id: string | undefined;
-}): Promise<ReturnType> {
+}): Promise<ReturnTypeServerAction<null>> {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
@@ -18,7 +19,7 @@ async function deleteProduct({
   }
 
   try {
-    await prismadb.product.delete({
+    await prismadb.mainProduct.delete({
       where: { id: id },
     });
   } catch (e) {
@@ -31,6 +32,7 @@ async function deleteProduct({
 
   return {
     success: true,
+    data: null,
   };
 }
 
@@ -40,7 +42,7 @@ const changeArchived = async ({
 }: {
   id: string;
   isArchived: boolean | "indeterminate";
-}): Promise<ReturnType> => {
+}): Promise<ReturnTypeServerAction<null>> => {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
@@ -67,48 +69,7 @@ const changeArchived = async ({
     });
     return {
       success: true,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      message: "Une erreur est survenue, veuillez reessayer",
-    };
-  }
-};
-
-const changeFeatured = async ({
-  id,
-  isFeatured,
-}: {
-  id: string;
-  isFeatured: boolean | "indeterminate";
-}): Promise<ReturnType> => {
-  const isAuth = await checkAdmin();
-
-  if (!isAuth) {
-    return {
-      success: false,
-      message: "Vous devez être authentifier",
-    };
-  }
-
-  if (isFeatured === "indeterminate") {
-    return {
-      success: false,
-      message: "Une erreur est survenue, veuillez reessayer",
-    };
-  }
-  try {
-    const product = await prismadb.product.update({
-      where: {
-        id,
-      },
-      data: {
-        isFeatured,
-      },
-    });
-    return {
-      success: true,
+      data: null,
     };
   } catch (error) {
     return {
@@ -124,7 +85,7 @@ const changePro = async ({
 }: {
   id: string;
   isPro: boolean | "indeterminate";
-}): Promise<ReturnType> => {
+}): Promise<ReturnTypeServerAction<null>> => {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
@@ -151,6 +112,7 @@ const changePro = async ({
     });
     return {
       success: true,
+      data: null,
     };
   } catch (error) {
     return {
@@ -160,13 +122,4 @@ const changePro = async ({
   }
 };
 
-type ReturnType =
-  | {
-      success: true;
-    }
-  | {
-      success: false;
-      message: string;
-    };
-
-export { deleteProduct, changeArchived, changeFeatured, changePro };
+export { deleteProduct, changeArchived, changePro };

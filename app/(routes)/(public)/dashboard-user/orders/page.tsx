@@ -1,19 +1,18 @@
 "use client";
 
+import { DataTableSkeleton } from "@/components/skeleton-ui/data-table-skeleton";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
+import { useUserContext } from "@/context/user-context";
+import { currencyFormatter, dateFormatter } from "@/lib/utils";
 import {
   OrderColumnType,
   OrdersColumn,
-  viewOptionsColumns,
   filterableColumns,
   searchableColumns,
+  viewOptionsColumns,
 } from "./_components/order-column";
-import { useUserContext } from "@/context/user-context";
-import { currencyFormatter, dateFormatter } from "@/lib/utils";
-import NoResults from "@/components/ui/no-results";
-import { DataTableSkeleton } from "@/components/skeleton-ui/data-table-skeleton";
 
 const PageOrderTable = () => {
   const { user } = useUserContext();
@@ -87,10 +86,6 @@ const PageOrderTable = () => {
       },
     }),
   );
-
-  if (formattedOrders.length === 0) {
-    return <NoResults />;
-  }
 
   return (
     <div className="w-full space-y-4 p-6">

@@ -23,7 +23,7 @@ const ProfilNavBar = () => {
   return (
     <div
       className={
-        " absolute bottom-0 left-0 top-0 z-20 flex  h-full flex-col items-center justify-start gap-4 overflow-hidden  rounded-r-md bg-background p-4 shadow-lg transition-transform duration-500 "
+        " absolute bottom-0 left-0 top-0 z-20 flex  h-full flex-col items-center justify-start gap-4 overflow-hidden  rounded-r-md bg-background p-4 shadow-lg transition-all duration-500 "
       }
     >
       <IconButton
@@ -31,11 +31,11 @@ const ProfilNavBar = () => {
         icon={
           <ChevronLeft
             data-state={open}
-            className="h-4 w-4  transition-transform duration-500 data-[state=false]:rotate-180"
+            className="h-4 w-4  transition-all duration-500 data-[state=false]:rotate-180"
           />
         }
         data-state={open}
-        className=" flex w-full items-center justify-center  transition-transform duration-500"
+        className=" flex w-full items-center justify-center  transition-all duration-500"
       />
       {routes.map(({ Icon, title, href }) => {
         const active = isActiveRoute(href, pathname);
@@ -48,7 +48,7 @@ const ProfilNavBar = () => {
             }}
             data-state={open}
             className={
-              "justify-left relative flex w-[200px] items-center gap-2 rounded-md px-4 py-2 transition-transform duration-500 hover:opacity-80 data-[state=false]:w-[50px]"
+              "justify-left relative flex w-[200px] items-center gap-2 rounded-md px-4 py-2 transition-all duration-500 hover:opacity-80 data-[state=false]:w-[50px]"
             }
             // style={{
             //   transformStyle: "preserve-3d",
@@ -67,7 +67,7 @@ const ProfilNavBar = () => {
             <Icon className="relative size-4 shrink-0 " />
             <span
               data-state={open}
-              className="relative whitespace-nowrap transition-opacity data-[state=false]:opacity-0"
+              className="relative whitespace-nowrap transition-all data-[state=false]:opacity-0"
             >
               {title}
             </span>

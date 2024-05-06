@@ -235,6 +235,20 @@ module.exports = {
             transform: "translate(-50%,-50%) scale(1)",
           },
         },
+        heartbeat: {
+          "0%": {
+            "box-shadow": '0 0 0 0 theme("colors.green.500")',
+            transform: "scale(1)",
+          },
+          "50%": {
+            "box-shadow": '0 0 0 7px theme("colors.green.500/0")',
+            transform: "scale(1.05)",
+          },
+          "100%": {
+            "box-shadow": '0 0 0 0 theme("colors.green.500/0")',
+            transform: "scale(1)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -256,6 +270,7 @@ module.exports = {
         aurora: "aurora 60s linear infinite",
         scroll:
           "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
+        heartbeat: "heartbeat 2s infinite ease-in-out",
       },
     },
   },

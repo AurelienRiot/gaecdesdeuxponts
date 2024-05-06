@@ -151,7 +151,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
     router.push("/admin/products");
     router.refresh();
-    console.log(data);
     toast.success(toastMessage);
   };
 

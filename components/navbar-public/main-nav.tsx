@@ -73,7 +73,7 @@ export function MainNav({
 
 export const aProposRoutes = [
   {
-    href: `ou-nous-trouver`,
+    href: `/ou-nous-trouver`,
     title: "Points de vente",
     descripton: "Retrouver nos produits dans ces points de vente",
     Icone: MapIcon,
