@@ -1,15 +1,9 @@
 "use client";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { motion, useMotionValue } from "framer-motion";
-import { useCategoriesContext } from "@/context/categories-context";
-import { ProductCard } from "./nos-produits";
 import { cn } from "@/lib/utils";
+import { Category } from "@prisma/client";
+import { motion, useMotionValue } from "framer-motion";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { ProductCard } from "./nos-produits";
 
 const ONE_SECOND = 1000;
 const AUTO_DELAY = ONE_SECOND * 5;
@@ -22,8 +16,13 @@ const SPRING_OPTIONS = {
   damping: 50,
 };
 
-export const SwipeCarousel = ({ className }: { className?: string }) => {
-  const categories = useCategoriesContext()?.categories;
+export const SwipeCarousel = ({
+  className,
+  categories,
+}: {
+  className?: string;
+  categories: Category[];
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [imgIndex, setImgIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -137,7 +136,11 @@ export const SwipeCarousel = ({ className }: { className?: string }) => {
         ))}
       </motion.div>
 
-      <Dots imgIndex={imgIndex} setImgIndex={setImgIndex} />
+      <Dots
+        imgIndex={imgIndex}
+        setImgIndex={setImgIndex}
+        categories={categories}
+      />
     </div>
   );
 };
@@ -145,14 +148,12 @@ export const SwipeCarousel = ({ className }: { className?: string }) => {
 const Dots = ({
   imgIndex,
   setImgIndex,
+  categories,
 }: {
   imgIndex: number;
   setImgIndex: Dispatch<SetStateAction<number>>;
+  categories: Category[];
 }) => {
-  const categories = useCategoriesContext()?.categories;
-  if (!categories) {
-    return null;
-  }
   return (
     <div className="mt-2 flex w-full justify-center gap-2">
       {categories.map((_, idx) => {

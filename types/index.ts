@@ -6,6 +6,8 @@ import {
   Product,
   Shop,
   User,
+  Option as OptionType,
+  MainProduct,
 } from "@prisma/client";
 
 export interface SearchParams {
@@ -41,8 +43,13 @@ export interface DataTableViewOptionsColumn<TData> {
   title: string;
 }
 
-export interface ProductWithCategory extends Product {
-  category: Category;
+export interface ProductWithOptionsAndMain extends Product {
+  options: OptionType[];
+  product: MainProduct;
+}
+
+export interface ProductWithOptions extends Product {
+  options: OptionType[];
 }
 
 export interface UserWithOrders extends User {
@@ -51,6 +58,10 @@ export interface UserWithOrders extends User {
 export interface UserWithOrdersAndAdress extends User {
   orders: (Order & { orderItems: OrderItem[]; shop: Shop })[];
   address: Address[];
+}
+
+export interface MainProductWithProducts extends MainProduct {
+  products: ProductWithOptions[];
 }
 
 export type ReturnTypeServerAction<T> =

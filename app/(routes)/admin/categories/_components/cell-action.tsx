@@ -30,7 +30,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   };
 
   const onDelete = async () => {
-    const deleteCat = await deleteCategorie({ id: data.id });
+    const deleteCat = await deleteCategorie({ name: data.name });
     if (!deleteCat.success) {
       toast.error(deleteCat.message);
     } else {

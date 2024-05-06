@@ -2,6 +2,7 @@
 
 import UploadImage from "@/components/images-upload/image-upload";
 import { AlertModal } from "@/components/ui/alert-modal-form";
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button, LoadingButton } from "@/components/ui/button";
 import {
   Form,
@@ -23,36 +24,23 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { deleteCategorie } from "../../_components/server-action";
-import {
-  CategoryReturnType,
-  createCategory,
-  updateCategory,
-} from "./server-action";
-import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
+import { createCategory, updateCategory } from "./server-action";
 
 interface CategoryFormProps {
   initialData: Category | null;
 }
 
 const formSchema = z.object({
-  name: z.string().min(1),
-  imageUrl: z.string().min(0),
-  description: z.string().min(1),
+  name: z.string().min(1, { message: "Le nom est obligatoire" }),
+  imageUrl: z.string().min(1, { message: "L'image est obligatoire" }),
+  description: z.string().min(1, { message: "La description est obligatoire" }),
 });
-
-export const getFileKey = (url: string): string => {
-  const parts = url.split("/");
-  return `farm/${parts[parts.length - 1]}`;
-};
 
 export type CategoryFormValues = z.infer<typeof formSchema>;
 
 export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState<string[]>(
-    initialData?.imageUrl ? [getFileKey(initialData?.imageUrl)] : [],
-  );
 
   const title = initialData
     ? "Modifier la categorie"
@@ -71,24 +59,15 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: initialData?.name || "",
-      imageUrl: getFileKey(initialData?.imageUrl || ""),
+      imageUrl: initialData?.imageUrl || "",
       description: initialData?.description || "",
     },
   });
 
   const onSubmit = async (data: CategoryFormValues) => {
-    if (!selectedFiles[0]) {
-      toast.error("Veuillez ajouter une image");
-      return;
-    }
-    data.imageUrl = `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${selectedFiles[0]}`;
-
-    let result: CategoryReturnType;
-    if (initialData) {
-      result = await updateCategory(data, initialData.id);
-    } else {
-      result = await createCategory(data);
-    }
+    const result = initialData
+      ? await updateCategory(data, initialData.id)
+      : await createCategory(data);
 
     if (!result.success) {
       toast.error(result.message);
@@ -101,7 +80,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
   };
 
   const onDelete = async () => {
-    const deleteCat = await deleteCategorie({ id: initialData?.id });
+    const deleteCat = await deleteCategorie({ name: initialData?.name });
     if (!deleteCat.success) {
       toast.error(deleteCat.message);
       setOpen(false);
@@ -147,8 +126,14 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
                 <FormLabel>{"Image du panneau d'affichage"} </FormLabel>
                 <FormControl>
                   <UploadImage
-                    selectedFiles={selectedFiles}
-                    setSelectedFiles={setSelectedFiles}
+                    selectedFiles={field.value ? [field.value] : []}
+                    setSelectedFiles={(files: string[]) => {
+                      if (files.length > 0) {
+                        field.onChange(files[0]);
+                      } else {
+                        field.onChange("");
+                      }
+                    }}
                   />
                 </FormControl>
                 <FormMessage />

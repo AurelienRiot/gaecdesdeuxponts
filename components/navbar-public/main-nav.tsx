@@ -1,124 +1,93 @@
-"use client";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuListItem,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import Image from "next/image";
+import NosProduits from "./nos-produits";
+import { MapIcon } from "lucide-react";
+import { TiBusinessCard } from "react-icons/ti";
+import { GiCow } from "react-icons/gi";
+import AuthLink from "./auth-link";
 
-import { useCategoriesContext } from "@/context/categories-context";
-import { cn } from "@/lib/utils";
-import { ChevronDown, Map, PhoneCall, StoreIcon } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { Button } from "../ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-
-const MainNav = ({ className }: { className?: string }) => {
-  const pathname = usePathname();
-  const [open, setOpen] = useState(false);
-  const routes = publicRoutes(pathname);
-  const { categories } = useCategoriesContext();
-
+export function MainNav({
+  className,
+  orientation,
+}: {
+  className?: string;
+  orientation?: "horizontal" | "vertical";
+}) {
   return (
-    <nav
-      className={cn(
-        "flex w-full items-center justify-start gap-4  lg:gap-6  2xl:px-4 ",
-        className,
-      )}
+    <NavigationMenu
+      delayDuration={10000}
+      skipDelayDuration={500}
+      orientation={orientation}
+      className={className}
     >
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger className="group relative flex items-center justify-center ">
-          <StoreIcon className="mr-2 hidden h-4 w-4 xl:flex " />
-          Nos Produits
-          <ChevronDown className="ml-2 h-4 w-4" />
-          <AnimatedUnderline
-            display={categories?.some(
-              (category) =>
-                pathname.startsWith(
-                  `/category/${encodeURIComponent(category.name)}`,
-                ) === true,
-            )}
-          />
-        </PopoverTrigger>
-        <PopoverContent
-          side="bottom"
-          align="start"
-          alignOffset={-10}
-          className="flex flex-col "
-        >
-          {categories?.map((category) => {
-            const href = `/category/${encodeURIComponent(category.name)}`;
-            const label = category.name;
-            const active = pathname.startsWith(
-              `/category/${encodeURIComponent(category.name)}`,
-            );
-            return (
-              <Button
-                asChild
-                key={href}
-                variant={"link"}
-                className={cn(
-                  "w-full justify-start ",
-                  active && " bg-primary text-primary-foreground",
-                )}
-              >
-                <Link onClick={() => setOpen(false)} href={href}>
-                  {label}{" "}
-                </Link>
-              </Button>
-            );
-          })}
-        </PopoverContent>
-      </Popover>
-      {routes.map(({ href, label, active, Icone }) => (
-        <Link
-          key={href}
-          href={href}
-          className={`group relative flex items-center justify-center last:ml-auto   
-          
-          `}
-        >
-          <Icone className="mr-2 hidden h-4 w-4 xl:flex " />
-          {label}
-          <AnimatedUnderline display={active} />
-        </Link>
-      ))}
-    </nav>
+      <NavigationMenuList>
+        <NosProduits />
+
+        <NavigationMenuItem>
+          <NavigationMenuTrigger>À propos</NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ul className="grid w-[calc(100vw-165px)] max-w-[420px] grid-cols-1 gap-3 p-1 xs:p-4 sm:w-[420px] sm:grid-cols-[.75fr_1fr]">
+              <li className="row-span-3 hidden sm:block">
+                <Image
+                  src={"/vache.webp"}
+                  alt="Vache"
+                  width={1200}
+                  height={1600}
+                  sizes="160px"
+                  className="h-full w-full rounded-md object-cover"
+                />
+              </li>
+              {aProposRoutes.map(({ href, title, descripton, Icone }) => (
+                <NavigationMenuListItem
+                  key={href}
+                  href={href}
+                  title={title}
+                  Icone={<Icone className="mr-2 size-4" />}
+                >
+                  {descripton}
+                </NavigationMenuListItem>
+              ))}
+            </ul>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink href={"/contact"}>Contact</NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild className="sm:hidden">
+            <AuthLink />
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
   );
-};
+}
 
-export default MainNav;
-
-const AnimatedUnderline = ({ display }: { display?: boolean }) => {
-  return (
-    <div
-      data-state={display}
-      className="absolute 
-    -bottom-2 left-0 h-0.5 w-0 rounded-full bg-primary transition-all duration-300 group-hover:w-full data-[state=true]:w-full data-[state=true]:bg-blue-600"
-    />
-  );
-};
-
-export const publicRoutes = (pathname: string) => [
-  // {
-  //   href: `/faq`,
-  //   label: "FAQ sur le Lait Cru",
-  //   active: pathname === `/faq`,
-  //   Icone: HelpCircle,
-  // },
-  // {
-  //   href: `/gallerie`,
-  //   label: "Gallerie",
-  //   active: pathname === `/gallerie`,
-  //   Icone: BiPhotoAlbum,
-  // },
-
+export const aProposRoutes = [
   {
-    href: `/ou-nous-trouver`,
-    label: "Où nous trouver",
-    active: pathname.startsWith(`/ou-nous-trouver`),
-    Icone: Map,
+    href: `ou-nous-trouver`,
+    title: "Points de vente",
+    descripton: "Retrouver nos produits dans ces points de vente",
+    Icone: MapIcon,
   },
   {
-    href: `/contact`,
-    label: "Nous Contacter",
-    active: pathname.startsWith(`/contact`),
-    Icone: PhoneCall,
+    href: "/#partenaires",
+    title: "Nos partenaires",
+    descripton: "Ils nous font confiance",
+    Icone: TiBusinessCard,
+  },
+  {
+    href: "/#la-ferme",
+    title: "La Ferme",
+    descripton: "Venez chercher votre lait directment à la ferme",
+    Icone: GiCow,
   },
 ];

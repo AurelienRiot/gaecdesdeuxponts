@@ -1,86 +1,59 @@
-"use client";
+import { getProCategories } from "@/actions/get-category";
+import Spinner from "@/components/animations/spinner";
+import { Category } from "@prisma/client";
+import Image from "next/image";
+import Link from "next/link";
+import { Suspense } from "react";
 
-import ProductCart from "@/components/product-cart";
-import { Skeleton } from "@/components/skeleton-ui/skeleton";
-import { Button } from "@/components/ui/button";
-import { useCategoriesContext } from "@/context/categories-context";
-import { useProductsContext } from "@/context/products-context";
-import { ProductWithCategory } from "@/types";
+export const dynamic = "force-dynamic";
 
-const PageProductsPro = () => {
-  const { products } = useProductsContext();
-  const { categories } = useCategoriesContext();
-
-  const scrollToCategory = (categoryName: string) => {
-    const categoryElement = document.getElementById(categoryName);
-    if (categoryElement) {
-      categoryElement.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  };
-
-  if (!products) return null;
-
-  if (!products[0].isPro) {
-    return (
-      <div className=" p-6">
-        Vous devez être professionnel pour voir les produits
-      </div>
-    );
-  }
-
+const PageProductsPro = async () => {
   return (
-    <div className=" w-full flex-col    p-6">
+    <div className=" space-y-6    p-6">
       <h2 className=" text-2xl font-semibold">Produits pour professionnels</h2>
-      <div className="  flex flex-wrap gap-4  py-4">
-        {categories && categories.length > 0 ? (
-          categories.map((category) => (
-            <Button
-              key={category.id}
-              aria-label={`Toggle ${category.name}`}
-              variant={"outline"}
-              onClick={() => scrollToCategory(category.name)}
-            >
-              {category.name}
-            </Button>
-          ))
-        ) : (
-          <>
-            <Skeleton className="h-4 w-[50px]  " />
-            <Skeleton className="h-4 w-[50px]  " />
-          </>
-        )}
-      </div>
-      {categories && categories.length > 0
-        ? categories.map((category) => {
-            return (
-              <DisplayCategory
-                key={category.id}
-                products={products.filter(
-                  (product) => product.categoryId === category.id,
-                )}
-              />
-            );
-          })
-        : null}
+      <Suspense fallback={<Spinner size={20} />}>
+        <CategoriesList />
+      </Suspense>
     </div>
   );
 };
 
-const DisplayCategory = ({ products }: { products: ProductWithCategory[] }) => {
+const CategoriesList = async () => {
+  const categories = await getProCategories();
+
   return (
-    <div className="mb-6 space-y-4">
-      <h2 id={products[0].category.name} className="text-3xl font-semibold">
-        {products[0].category.name}
-      </h2>
-      <div className="md:grid-clos-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
-        {products.length > 0 ? (
-          products.map((item) => <ProductCart key={item.id} data={item} />)
-        ) : (
-          <div className="flex h-full w-full items-center justify-center text-neutral-500">
-            Aucun produit disponible pour le moment
-          </div>
-        )}
-      </div>
+    <ul className="flex">
+      {categories.map((category) => (
+        <li key={category.name}>
+          <Link
+            href={`/dashboard-user/produits-pro/category/${encodeURIComponent(category.name)}`}
+            className={
+              "block select-none  space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+            }
+          >
+            <div className="justify-left flex items-center text-base font-medium leading-none">
+              <CategoryImage category={category} /> {category.name}
+            </div>
+            <p className="line-clamp-3 text-left   text-sm leading-snug text-muted-foreground">
+              {category.description}
+            </p>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+const CategoryImage = ({ category }: { category: Category }) => {
+  return (
+    <div className="relative  mr-2  h-5 w-5 overflow-clip  rounded-md">
+      <Image
+        src={category.imageUrl}
+        alt={category.name}
+        fill
+        sizes="20px"
+        className=" h-full w-full object-cover"
+      />
     </div>
   );
 };

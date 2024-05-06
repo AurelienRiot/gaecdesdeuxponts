@@ -1,18 +1,13 @@
 "use client";
-import { useCategoriesContext } from "@/context/categories-context";
-import BillboardSkeleton from "../skeleton-ui/billboard-skeleton";
+import { Category } from "@prisma/client";
 import Image from "next/image";
-import { Skeleton } from "../skeleton-ui/skeleton";
+import BillboardSkeleton from "../skeleton-ui/billboard-skeleton";
 
 interface BillboardProps {
-  categoryName: string;
+  category: Category;
 }
 
-const Billboard: React.FC<BillboardProps> = ({ categoryName }) => {
-  const { categories } = useCategoriesContext();
-
-  const category = categories?.find((c) => c.name === categoryName);
-
+const Billboard: React.FC<BillboardProps> = ({ category }) => {
   if (!category || !category.imageUrl) {
     return <BillboardSkeleton />;
   }

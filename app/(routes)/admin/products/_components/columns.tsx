@@ -4,8 +4,12 @@ import {
   CheckboxCell,
   DateCell,
   NameWithImageCell,
+  OptionsCell,
 } from "@/components/table-custom-fuction/common-cell";
-import { FilterOneInclude } from "@/components/table-custom-fuction/common-filter";
+import {
+  FilterAllInclude,
+  FilterOneInclude,
+} from "@/components/table-custom-fuction/common-filter";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
 import {
   DataTableFilterableColumn,
@@ -14,15 +18,18 @@ import {
 } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
-import { changeArchived, changeFeatured, changePro } from "./server-action";
+import { changeArchived, changePro } from "./server-action";
 
 export type ProductColumn = {
   id: string;
   name: string;
   imageUrl: string;
-  price: string;
   category: string;
-  isFeatured: boolean;
+  optionsName: string;
+  productOptions: {
+    price: number;
+    options: { name: string; value: string }[];
+  }[];
   isArchived: boolean;
   isPro: boolean;
   type: "products";
@@ -34,6 +41,18 @@ export const columns: ColumnDef<ProductColumn>[] = [
     accessorKey: "name",
     header: "Nom",
     cell: NameWithImageCell,
+    filterFn: FilterOneInclude,
+  },
+  {
+    accessorKey: "category",
+    header: "Categorie",
+    filterFn: FilterOneInclude,
+  },
+  {
+    accessorKey: "optionsName",
+    header: "Options",
+    cell: OptionsCell,
+    filterFn: FilterAllInclude,
   },
   {
     accessorKey: "isArchived",
@@ -48,19 +67,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
     ),
     filterFn: FilterOneInclude,
   },
-  {
-    accessorKey: "isFeatured",
-    header: "Mise en avant",
-    cell: ({ row }) => (
-      <CheckboxCell
-        isCheckbox={row.original.isFeatured}
-        onChange={(e: boolean | "indeterminate") =>
-          changeFeatured({ id: row.original.id, isFeatured: e })
-        }
-      />
-    ),
-    filterFn: FilterOneInclude,
-  },
+
   {
     accessorKey: "isPro",
     header: "Professionnel",
@@ -72,15 +79,6 @@ export const columns: ColumnDef<ProductColumn>[] = [
         }
       />
     ),
-    filterFn: FilterOneInclude,
-  },
-  {
-    accessorKey: "price",
-    header: "Prix",
-  },
-  {
-    accessorKey: "category",
-    header: "Categorie",
     filterFn: FilterOneInclude,
   },
 
@@ -95,15 +93,46 @@ export const columns: ColumnDef<ProductColumn>[] = [
   },
 ];
 
-export const filterableColumns = (
-  categories: string[],
-): DataTableFilterableColumn<ProductColumn>[] => {
-  const catArray = categories.map((item) => ({
+export const filterableColumns = ({
+  categoryNames,
+  productNames,
+  optionValues,
+}: {
+  categoryNames: string[];
+  productNames: string[];
+  optionValues: string[];
+}): DataTableFilterableColumn<ProductColumn>[] => {
+  const catArray = categoryNames.map((item) => ({
+    label: item,
+    value: item,
+  }));
+
+  const nameArray = productNames.map((item) => ({
+    label: item,
+    value: item,
+  }));
+
+  const optionArray = optionValues.map((item) => ({
     label: item,
     value: item,
   }));
 
   return [
+    {
+      id: "name",
+      title: "Nom",
+      options: nameArray,
+    },
+    {
+      id: "category",
+      title: "Catégorie",
+      options: catArray,
+    },
+    {
+      id: "optionsName",
+      title: "Options",
+      options: optionArray,
+    },
     {
       id: "isArchived",
       title: "Archivé",
@@ -112,14 +141,7 @@ export const filterableColumns = (
         { label: "Non archivé", value: "false" },
       ],
     },
-    {
-      id: "isFeatured",
-      title: "Mise en avant",
-      options: [
-        { label: "Mise en avant", value: "true" },
-        { label: "Non mise en avant", value: "false" },
-      ],
-    },
+
     {
       id: "isPro",
       title: "Professionnel",
@@ -127,11 +149,6 @@ export const filterableColumns = (
         { label: "Professionnel", value: "true" },
         { label: "Particulier", value: "false" },
       ],
-    },
-    {
-      id: "category",
-      title: "Catégorie",
-      options: catArray,
     },
   ];
 };
@@ -141,10 +158,11 @@ export const searchableColumns: DataTableSearchableColumn<ProductColumn>[] = [
     id: "name",
     title: "Nom",
   },
-  {
-    id: "price",
-    title: "Prix",
-  },
+
+  // {
+  //   id: "price",
+  //   title: "Prix",
+  // },
 ];
 
 export const viewOptionsColumns: DataTableViewOptionsColumn<ProductColumn>[] = [
@@ -152,28 +170,24 @@ export const viewOptionsColumns: DataTableViewOptionsColumn<ProductColumn>[] = [
     id: "name",
     title: "Produits",
   },
-
+  {
+    id: "category",
+    title: "Categorie",
+  },
+  {
+    id: "optionsName",
+    title: "Options",
+  },
   {
     id: "isArchived",
     title: "Archivé",
   },
 
   {
-    id: "isFeatured",
-    title: "Mise en avant",
-  },
-  {
     id: "isPro",
     title: "Professionnel",
   },
-  {
-    id: "price",
-    title: "Prix",
-  },
-  {
-    id: "category",
-    title: "Categorie",
-  },
+
   {
     id: "createdAt",
     title: "Date de création",

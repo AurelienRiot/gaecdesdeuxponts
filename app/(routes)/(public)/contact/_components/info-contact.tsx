@@ -1,9 +1,7 @@
+import { Icons } from "@/components/icons";
 import { LocateIcon, MailboxIcon, Network, PhoneIcon } from "lucide-react";
 import Link from "next/link";
 import MapDisplay from "./map";
-import { Icons } from "@/components/icons";
-import { FaFacebook } from "react-icons/fa";
-import { InstagramLogoIcon } from "@radix-ui/react-icons";
 
 const InfoContact = () => {
   const href =

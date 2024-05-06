@@ -6,9 +6,13 @@ import { ProductColumn } from "./_components/columns";
 export const dynamic = "force-dynamic";
 
 const ProductPage = async () => {
-  const products = await prismadb.product.findMany({
+  const products = await prismadb.mainProduct.findMany({
     include: {
-      category: true,
+      products: {
+        include: {
+          options: true,
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",
@@ -18,13 +22,27 @@ const ProductPage = async () => {
   const formattedProducts: ProductColumn[] = products.map((item) => ({
     id: item.id,
     name: item.name,
+    productOptions: item.products.map((product) => {
+      return {
+        price: product.price,
+        options: product.options.map((option) => ({
+          name: option.name,
+          value: option.value,
+        })),
+      };
+    }),
+    optionsName: item.products
+      .map((product) =>
+        product.options
+          .map((option) => `${option.name}: ${option.value}`)
+          .join(", "),
+      )
+      .join(", "),
     imageUrl: item.imagesUrl[0],
-    isFeatured: item.isFeatured,
     isArchived: item.isArchived,
     isPro: item.isPro,
-    price: item.price ? currencyFormatter.format(item.price) : "",
     type: "products",
-    category: item.category.name,
+    category: item.categoryName,
     createdAt: item.createdAt,
   }));
 

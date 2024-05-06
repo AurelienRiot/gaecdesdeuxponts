@@ -2,6 +2,7 @@
 
 import { checkUser } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
+import { ReturnTypeServerAction } from "@/types";
 
 type CheckOutProps = {
   totalPrice: number;
@@ -14,20 +15,12 @@ type CheckOutProps = {
   shopId: string;
 };
 
-type CheckOutReturnType =
-  | {
-      success: true;
-    }
-  | {
-      success: false;
-      message: string;
-    };
 export const checkOut = async ({
   itemsWithQuantities,
   date,
   totalPrice,
   shopId,
-}: CheckOutProps): Promise<CheckOutReturnType> => {
+}: CheckOutProps): Promise<ReturnTypeServerAction<null>> => {
   const isAuth = await checkUser();
 
   if (!isAuth) {
@@ -60,7 +53,7 @@ export const checkOut = async ({
       },
     },
     include: {
-      category: true,
+      product: true,
     },
   });
 
@@ -95,8 +88,8 @@ export const checkOut = async ({
         create: productsWithQuantity.map((product) => ({
           name: product.item.name,
           description: product.item.description,
-          categoryName: product.item.category.name,
-          price: product.item.price || 0,
+          categoryName: product.item.product.categoryName,
+          price: product.item.price,
           quantity: product.quantity,
         })),
       },
@@ -108,5 +101,6 @@ export const checkOut = async ({
   });
   return {
     success: true,
+    data: null,
   };
 };

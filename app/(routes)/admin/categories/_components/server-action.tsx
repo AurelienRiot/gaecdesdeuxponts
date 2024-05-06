@@ -2,12 +2,13 @@
 
 import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
+import { ReturnTypeServerAction } from "@/types";
 
 async function deleteCategorie({
-  id,
+  name,
 }: {
-  id: string | undefined;
-}): Promise<ReturnTypeDeleteObject> {
+  name: string | undefined;
+}): Promise<ReturnTypeServerAction<null>> {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
@@ -17,9 +18,9 @@ async function deleteCategorie({
     };
   }
 
-  const products = await prismadb.product.findMany({
+  const products = await prismadb.mainProduct.findMany({
     where: {
-      categoryId: id,
+      categoryName: name,
     },
   });
 
@@ -33,7 +34,7 @@ async function deleteCategorie({
 
   const category = await prismadb.category.deleteMany({
     where: {
-      id,
+      name,
     },
   });
 
@@ -46,16 +47,8 @@ async function deleteCategorie({
 
   return {
     success: true,
+    data: null,
   };
 }
-
-type ReturnTypeDeleteObject =
-  | {
-      success: true;
-    }
-  | {
-      success: false;
-      message: string;
-    };
 
 export { deleteCategorie };

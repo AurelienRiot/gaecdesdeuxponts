@@ -2,12 +2,13 @@
 
 import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
+import { ReturnTypeServerAction } from "@/types";
 
 async function deleteContact({
   id,
 }: {
   id: string | undefined;
-}): Promise<ReturnTypeContactObject> {
+}): Promise<ReturnTypeServerAction<null>> {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
@@ -31,16 +32,8 @@ async function deleteContact({
 
   return {
     success: true,
+    data: null,
   };
 }
-
-type ReturnTypeContactObject =
-  | {
-      success: true;
-    }
-  | {
-      success: false;
-      message: string;
-    };
 
 export { deleteContact };

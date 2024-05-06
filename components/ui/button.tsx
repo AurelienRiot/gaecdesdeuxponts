@@ -140,4 +140,40 @@ const LoadingButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 LoadingButton.displayName = "LoadingButton";
 
-export { Button, LoadingButton, buttonVariants };
+export interface IconButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  asChild?: boolean;
+  Icon: React.ElementType;
+  iconClassName?: string;
+}
+
+const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
+  (
+    {
+      className,
+      Icon,
+      asChild = false,
+      iconClassName: buttonClassName,
+      ...props
+    },
+    ref,
+  ) => {
+    const Comp = asChild ? Slot : "button";
+    return (
+      <Comp
+        ref={ref}
+        className={cn(
+          "flex items-center justify-center rounded-full border bg-background p-2 shadow-md transition-all hover:scale-110 active:scale-95",
+          className,
+        )}
+        {...props}
+      >
+        <Icon className={buttonClassName} />
+      </Comp>
+    );
+  },
+);
+
+IconButton.displayName = "IconButton";
+
+export { Button, LoadingButton, buttonVariants, IconButton };

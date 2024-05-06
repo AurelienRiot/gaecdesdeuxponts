@@ -2,7 +2,6 @@
 
 import UploadImage from "@/components/images-upload/image-upload";
 import { AlertModal } from "@/components/ui/alert-modal-form";
-import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button, LoadingButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -24,58 +23,73 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { MainProductWithProducts } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Category, Product } from "@prisma/client";
+import { Category } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm, useFormContext } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
-import { getFileKey } from "../../../categories/[categoryId]/_components/category-form";
 import { deleteProduct } from "../../_components/server-action";
+import { OptionsArray } from "../page";
 import { PlateEditor } from "./plate-editor";
+import { ProductWithOptions } from "./product-with-options-form";
 import { updateProduct } from "../_actions/update-product";
 import { createProduct } from "../_actions/create-product";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 
 const OptionSchema = z.object({
-  name: z.string(),
-  value: z.string(),
-  price: z.number(),
+  name: z.string().min(1, { message: "Le nom de l'option est requis" }),
+  value: z.string().min(1, { message: "La valeur de l'option est requis" }),
 });
 
 const productSchema = z.object({
-  categoryId: z.string().min(1, { message: "La catégorie est requise" }),
   name: z.string().min(1, { message: "Le nom est requis" }),
-  description: z.string().min(1, { message: "La description est requise" }),
+  description: z.string(),
+  price: z.coerce
+    .number()
+    .optional()
+    .refine((val) => val !== undefined, {
+      message: "Veuillez entrer un prix valide",
+    }),
+  isFeatured: z.boolean().default(false),
+  isArchived: z.boolean().default(false),
+  imagesUrl: z.array(z.string()),
+  options: z.array(OptionSchema),
+});
+
+const mainProductSchema = z.object({
+  categoryName: z.string().min(1, { message: "La catégorie est requise" }),
+  name: z.string().min(1, { message: "Le nom est requis" }),
   productSpecs: z
     .string()
     .min(1, { message: "Les spécifications sont requises" }),
-  price: z.coerce.number().optional(),
-  isFeatured: z.boolean().default(false),
   isArchived: z.boolean().default(false),
   isPro: z.boolean().default(false),
-  imagesUrl: z.array(z.string()).optional(),
-  option: OptionSchema.optional(),
+  imagesUrl: z.array(z.string()).refine((data) => data.length > 0, {
+    message: "Au moins une image est requise",
+  }),
+  products: z
+    .array(productSchema)
+    .nonempty("Veuillez ajouter au moins un produit"),
 });
 
-export type ProductFormValues = z.infer<typeof productSchema>;
+export type ProductFormValues = z.infer<typeof mainProductSchema>;
 
 type ProductFormProps = {
-  initialData: Product | null;
+  initialData: MainProductWithProducts | null;
   categories: Category[];
+  optionsArray: OptionsArray;
 };
 
 export const ProductForm: React.FC<ProductFormProps> = ({
   initialData,
   categories,
+  optionsArray,
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState<string[]>(
-    initialData?.imagesUrl.map((image) => getFileKey(image)) || [],
-  );
 
   const title = initialData ? "Modifier le produit" : "Crée un nouveau produit";
   const description = initialData
@@ -87,42 +101,40 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     : "Crée le produit";
 
   const form = useForm<ProductFormValues>({
-    resolver: zodResolver(productSchema),
-    defaultValues: initialData
-      ? {
-          name: initialData.name,
-          price: initialData.price || undefined,
-          imagesUrl: initialData.imagesUrl,
-          categoryId: initialData.categoryId,
-          description: initialData.description,
-          productSpecs: initialData.productSpecs,
-          isFeatured: initialData.isFeatured,
-          isArchived: initialData.isArchived,
-          isPro: initialData.isPro,
-        }
-      : {
+    resolver: zodResolver(mainProductSchema),
+    defaultValues: {
+      name: initialData?.name || "",
+      imagesUrl: initialData?.imagesUrl || [],
+      categoryName: initialData?.categoryName || "",
+      productSpecs: initialData?.productSpecs || "",
+      isArchived: initialData?.isArchived || false,
+      isPro: initialData?.isPro || false,
+      products: initialData?.products.map((product) => ({
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        isFeatured: product.isFeatured,
+        isArchived: product.isArchived,
+        imagesUrl: product.imagesUrl,
+        options: product.options.map((option) => ({
+          name: option.name,
+          value: option.value,
+        })),
+      })) || [
+        {
           name: "",
-          categoryId: "",
           description: "",
-          productSpecs: "",
+          price: undefined,
           isFeatured: false,
           isArchived: false,
-          isPro: false,
+          imagesUrl: [],
+          options: [],
         },
+      ],
+    },
   });
 
   const onSubmit = async (data: ProductFormValues) => {
-    if (selectedFiles.length === 0) {
-      toast.error("Veuillez ajouter au moins une image");
-      return;
-    }
-    data.imagesUrl = selectedFiles.map(
-      (file) =>
-        `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${file}`,
-    );
-
-    console.log(data);
-
     if (initialData) {
       const result = await updateProduct(data, initialData.id);
       if (!result.success) {
@@ -137,8 +149,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       }
     }
 
-    router.push(`/admin/products`);
+    router.push("/admin/products");
     router.refresh();
+    console.log(data);
     toast.success(toastMessage);
   };
 
@@ -189,8 +202,10 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 <FormLabel>Images</FormLabel>
                 <FormControl>
                   <UploadImage
-                    selectedFiles={selectedFiles}
-                    setSelectedFiles={setSelectedFiles}
+                    selectedFiles={field.value}
+                    setSelectedFiles={(files: string[]) => {
+                      field.onChange(files);
+                    }}
                     multipleImages
                   />
                 </FormControl>
@@ -216,28 +231,10 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem className="w-48">
-                  <FormLabel>Prix</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      disabled={form.formState.isSubmitting}
-                      placeholder="9,99"
-                      {...field}
-                      value={field.value || ""}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="categoryId"
+              name="categoryName"
               render={({ field }) => (
                 <FormItem className="w-48">
                   <FormLabel>Categorie</FormLabel>
@@ -257,7 +254,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     </FormControl>
                     <SelectContent>
                       {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
+                        <SelectItem key={category.id} value={category.name}>
                           {category.name}
                         </SelectItem>
                       ))}
@@ -267,46 +264,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem className="w-96">
-                  <FormLabel>Drescription</FormLabel>
-                  <FormControl>
-                    <AutosizeTextarea
-                      disabled={form.formState.isSubmitting}
-                      placeholder="Description du produit"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="isFeatured"
-              render={({ field }) => (
-                <FormItem className="flex cursor-pointer flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                  <label className="flex cursor-pointer flex-row items-start space-x-3 space-y-0">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        disabled={form.formState.isSubmitting}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>Mise en avant</FormLabel>
-                      <FormDescription>
-                        {"Ce produit apparaitra sur la page d'accueil."}
-                      </FormDescription>
-                    </div>
-                  </label>
-                </FormItem>
-              )}
-            />
+
             <FormField
               control={form.control}
               name="isArchived"
@@ -356,7 +314,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               )}
             />
           </div>
-          {/* <ProductOptions /> */}
+          <ProductWithOptions optionsArray={optionsArray} />
           <PlateEditor
             loading={form.formState.isSubmitting}
             initialValue={
@@ -383,170 +341,3 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     </>
   );
 };
-
-// const ProductOptions = () => {
-//   const form = useFormContext<ProductFormValues>();
-//   const option = form.watch("option");
-//   console.log(option);
-
-//   const handleAddOptionClick = () => {
-//     const addOptionRecursively = (option: Option | undefined): Option => {
-//       if (!option) {
-//         return {
-//           name: "",
-//           optionValues: [{ name: "", price: undefined, imagesUrl: [] }],
-//         };
-//       } else {
-//         return {
-//           ...option,
-//           optionValues: option.optionValues.map((optionValue) => ({
-//             ...optionValue,
-//             option: addOptionRecursively(optionValue.option),
-//           })),
-//         };
-//       }
-//     };
-
-//     const updatedOption = addOptionRecursively(option);
-//     form.setValue("option", updatedOption);
-//   };
-
-//   return (
-//     <div className="w-full space-y-6">
-//       <Button
-//         type="button"
-//         variant="outline"
-//         size="sm"
-//         className="h-8 whitespace-nowrap border-dashed"
-//         onClick={handleAddOptionClick}
-//       >
-//         <PlusCircledIcon className="mr-2 size-4" />
-//         {"Ajouter une option"}
-//       </Button>
-//       <OptionForm option={option} optionPath="option" />
-//     </div>
-//   );
-// };
-
-// const OptionForm = ({
-//   option,
-//   optionPath,
-//   prevOption,
-//   prevOptionPath,
-// }: {
-//   option?: Option;
-//   prevOption?: Option;
-//   optionPath: string;
-//   prevOptionPath?: string;
-// }) => {
-//   const form = useFormContext<ProductFormValues>();
-//   if (!option) {
-//     return null;
-//   }
-
-//   const addOptionValue = () => {
-//     // @ts-ignore
-//     form.setValue(`${optionPath}.optionValues`, [
-//       ...option.optionValues,
-//       { name: "", price: undefined, imagesUrl: [] },
-//     ]);
-//   };
-
-//   return (
-//     <>
-//       <div className=" space-y-4 pl-4">
-//         <div className="flex gap-4">
-//           <Input
-//             disabled={form.formState.isSubmitting}
-//             placeholder="Nom de l'option"
-//             value={
-//               prevOption
-//                 ? prevOption?.optionValues[0].option?.name
-//                 : option?.name || ""
-//             }
-//             onChange={(e) => {
-//               const formPath = prevOptionPath
-//                 ? `${prevOptionPath}.optionValues.0.option.name`
-//                 : `${optionPath}.name`;
-//               // @ts-ignore
-//               form.setValue(formPath, e.target.value);
-//             }}
-//             className="w-48"
-//           />
-//           <Button
-//             type="button"
-//             variant="outline"
-//             size="sm"
-//             className="h-8 whitespace-nowrap border-dashed"
-//             onClick={addOptionValue}
-//           >
-//             <PlusCircledIcon className="mr-2 size-4" />
-//             {"Ajouter une valeur"}
-//           </Button>
-//         </div>
-//         {option.optionValues.map((_, index) => (
-//           <OptionValueForm
-//             key={index}
-//             index={index}
-//             option={option}
-//             optionPath={optionPath}
-//           />
-//         ))}
-//       </div>
-//     </>
-//   );
-// };
-
-// const OptionValueForm = ({
-//   index,
-//   option,
-//   optionPath,
-// }: {
-//   index: number;
-//   option: Option;
-//   optionPath: string;
-// }) => {
-//   const form = useFormContext<ProductFormValues>();
-
-//   return (
-//     <div className=" space-y-4 pl-2">
-//       <div className="flex gap-4">
-//         <Input
-//           type="text"
-//           disabled={form.formState.isSubmitting}
-//           placeholder="Nom de la valeur"
-//           value={option.optionValues[index].name || ""}
-//           onChange={(e) => {
-//             form.setValue(
-//               // @ts-ignore
-//               `${optionPath}.optionValues.${index}.name`,
-//               e.target.value,
-//             );
-//           }}
-//           className="w-48"
-//         />
-
-//         <Input
-//           type="number"
-//           disabled={form.formState.isSubmitting}
-//           placeholder="Prix"
-//           value={option.optionValues[index].price || ""}
-//           onChange={(e) => {
-//             const value = e.target.value ? Number(e.target.value) : undefined;
-//             // @ts-ignore
-//             form.setValue(`${optionPath}.optionValues.${index}.price`, value);
-//           }}
-//           className="w-48"
-//         />
-//       </div>
-//       {option.optionValues[index].option ? (
-//         <OptionForm
-//           option={option.optionValues[index].option}
-//           prevOption={option}
-//           prevOptionPath={optionPath}
-//           optionPath={`${optionPath}.optionValues.${index}.option`}
-//         />
-//       ) : null}
-//     </div>
-//   );
-// };

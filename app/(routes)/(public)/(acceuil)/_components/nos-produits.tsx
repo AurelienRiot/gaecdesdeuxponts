@@ -1,44 +1,16 @@
-"use client";
+import { getFeaturedProducts } from "@/actions/get-products";
 import ProductList from "@/components/products-list";
-import { ProductList as ProductListSkeleton } from "@/components/skeleton-ui/products-list-skeleton";
 import { Button } from "@/components/ui/button";
-import { useProductsContext } from "@/context/products-context";
 import { cn } from "@/lib/utils";
 import { CornerRightUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-const NosProduits = () => {
-  const { products } = useProductsContext();
-  const featuredProducts = products?.filter((product) => product.isFeatured);
+const NosProduits = async () => {
+  const products = await getFeaturedProducts();
   const title = "Découvrer nos produits";
 
-  return (
-    // <div className="flex w-full flex-col items-center justify-center gap-4 rounded-xl  py-6 font-bold text-primary">
-    //   <h2 className="  relative py-6   text-3xl  md:text-5xl ">
-    //     Découvrez Nos Produits
-    //   </h2>
-    //   <div className="flex w-full flex-wrap justify-center gap-10">
-    //     {featuredProducts.map(
-    //       ({ name, description, images, id, isPro }, index) => {
-    //         const url = isPro ? `/dashboard-user/produits-pro/` : `/product/`;
-
-    //         return (
-    //           <ProductCard
-    //             index={index}
-    //             href={url + encodeURIComponent(name)}
-    //             key={id}
-    //             name={name}
-    //             description={description}
-    //             imageUrl={images[0].url}
-    //           />
-    //         );
-    //       },
-    //     )}
-    //   </div>
-    // </div>
-    <ProductList title={title} items={featuredProducts} />
-  );
+  return <ProductList title={title} items={products} />;
 };
 
 export default NosProduits;

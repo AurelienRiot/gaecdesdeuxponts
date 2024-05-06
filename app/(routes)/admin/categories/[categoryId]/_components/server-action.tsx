@@ -4,22 +4,13 @@ import { checkAdmin } from "@/components/auth/checkAuth";
 import { CategoryFormValues } from "./category-form";
 import prismadb from "@/lib/prismadb";
 import { Category } from "@prisma/client";
-
-export type CategoryReturnType =
-  | {
-      success: true;
-      data: Category;
-    }
-  | {
-      success: false;
-      message: string;
-    };
+import { ReturnTypeServerAction } from "@/types";
 
 async function createCategory({
   imageUrl,
   name,
   description,
-}: CategoryFormValues): Promise<CategoryReturnType> {
+}: CategoryFormValues): Promise<ReturnTypeServerAction<Category>> {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
@@ -58,7 +49,7 @@ async function createCategory({
 async function updateCategory(
   { imageUrl, name, description }: CategoryFormValues,
   id: string,
-): Promise<CategoryReturnType> {
+): Promise<ReturnTypeServerAction<Category>> {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {

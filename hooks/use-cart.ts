@@ -1,12 +1,12 @@
-import { ProductWithCategory } from "@/types";
+import { ProductWithOptionsAndMain } from "@/types";
 import { toast } from "sonner";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 interface CartStore {
-  items: ProductWithCategory[];
+  items: ProductWithOptionsAndMain[];
   quantities: { [productId: string]: number };
-  addItem: (data: ProductWithCategory) => void;
+  addItem: (data: ProductWithOptionsAndMain, quantity?: number) => void;
   changeQuantity: (id: string, quantity: number) => void;
   addOneItem: (id: string) => void;
   removeOneItem: (id: string) => void;
@@ -20,15 +20,15 @@ const useCart = create(
       items: [],
       quantities: {},
 
-      addItem: (data: ProductWithCategory) => {
+      addItem: (data: ProductWithOptionsAndMain, quantity?: number) => {
         const quantities = get().quantities;
         const currentItems = get().items;
         const existingItem = currentItems.find((item) => item.id === data.id);
 
         if (existingItem) {
-          quantities[data.id]++;
+          quantities[data.id] += quantity || 1;
         } else {
-          quantities[data.id] = 1;
+          quantities[data.id] = quantity || 1;
           set({ items: [...get().items, data] });
         }
         set({ quantities });

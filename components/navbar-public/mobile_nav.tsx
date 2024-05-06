@@ -12,7 +12,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { MainNav } from "./main-nav";
 
-const MobileNav = () => {
+const MobileNav = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Sheet onOpenChange={setIsOpen} open={isOpen}>
@@ -35,11 +35,8 @@ const MobileNav = () => {
               />
             </Link>
           </SheetTitle>
-          {/* <SheetDescription className="justify-left flex items-center pl-2">
-            Contenue de votre panier
-          </SheetDescription> */}
         </SheetHeader>
-        <MainNav orientation="vertical" />
+        {children}
       </SheetContent>
     </Sheet>
   );

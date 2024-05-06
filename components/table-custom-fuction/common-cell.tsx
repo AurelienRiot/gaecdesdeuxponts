@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { AutosizeTextarea } from "../ui/autosize-textarea";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
+import Currency from "../ui/currency";
 
 type DateCellProps = {
   date: Date;
@@ -99,6 +100,30 @@ function CheckboxCell({ isCheckbox, onChange }: CheckboxCellProps) {
   );
 }
 
+type OptionsCellProps<T = {}> = T & {
+  productOptions: {
+    price: number;
+    options: { name: string; value: string }[];
+  }[];
+};
+
+function OptionsCell<T>({ row }: { row: Row<OptionsCellProps<T>> }) {
+  return (
+    <ul className="">
+      {row.original.productOptions.map((product, index) => {
+        const optionsValue = product.options.map((option) => option.value);
+
+        return (
+          <li key={index}>
+            {optionsValue.length > 0 ? `${optionsValue.join(", ")} : ` : null}
+            <Currency value={product.price} />
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 type NameWithImageCellProps<T = {}> = T & {
   imageUrl: string;
   id: string;
@@ -141,4 +166,5 @@ export {
   NameWithImageCell,
   PhoneCell,
   TextCell,
+  OptionsCell,
 };

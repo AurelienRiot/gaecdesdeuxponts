@@ -4,9 +4,6 @@ import { Skeleton } from "../skeleton-ui/skeleton";
 interface CurrencyProps {
   value?: number | null;
   className?: string;
-  classNameLogo?: string;
-  displayText?: boolean;
-  displayLogo?: boolean;
 }
 
 const Currency: React.FC<CurrencyProps> = ({ value, className }) => {

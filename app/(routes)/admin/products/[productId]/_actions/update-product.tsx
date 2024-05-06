@@ -7,15 +7,13 @@ import prismadb from "@/lib/prismadb";
 
 export async function updateProduct(
   {
-    categoryId,
+    categoryName,
     name,
     imagesUrl,
-    price,
-    description,
     productSpecs,
-    isFeatured,
     isArchived,
     isPro,
+    products,
   }: ProductFormValues,
   id: string,
 ): Promise<ReturnTypeServerAction<null>> {
@@ -28,7 +26,7 @@ export async function updateProduct(
     };
   }
 
-  const sameProduct = await prismadb.product.findUnique({
+  const sameProduct = await prismadb.mainProduct.findUnique({
     where: {
       name,
       NOT: { id },
@@ -41,20 +39,43 @@ export async function updateProduct(
     };
   }
 
-  const product = await prismadb.product.update({
+  await prismadb.product.deleteMany({
+    where: {
+      productName: name,
+    },
+  });
+
+  const product = await prismadb.mainProduct.update({
     where: {
       id,
     },
     data: {
       name,
-      price,
-      categoryId,
-      description,
-      productSpecs,
       imagesUrl,
-      isFeatured,
+      categoryName,
+      productSpecs,
       isArchived,
       isPro,
+      products: {
+        create: products.map((product) => {
+          return {
+            name: product.name,
+            description: product.description,
+            price: product.price || 0,
+            isFeatured: product.isFeatured,
+            isArchived: product.isArchived,
+            imagesUrl: product.imagesUrl,
+            options: {
+              create: product.options.map((option) => {
+                return {
+                  name: option.name,
+                  value: option.value,
+                };
+              }),
+            },
+          };
+        }),
+      },
     },
   });
 

@@ -6,16 +6,13 @@ import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 
 export async function createProduct({
-  categoryId,
+  categoryName,
   name,
   imagesUrl,
-  price,
-  description,
   productSpecs,
-  isFeatured,
   isArchived,
   isPro,
-  option,
+  products,
 }: ProductFormValues): Promise<ReturnTypeServerAction<null>> {
   const isAuth = await checkAdmin();
 
@@ -26,7 +23,7 @@ export async function createProduct({
     };
   }
 
-  const sameProduct = await prismadb.product.findUnique({
+  const sameProduct = await prismadb.mainProduct.findUnique({
     where: {
       name,
     },
@@ -38,17 +35,34 @@ export async function createProduct({
     };
   }
 
-  await prismadb.product.create({
+  await prismadb.mainProduct.create({
     data: {
       name,
-      price,
       imagesUrl,
-      categoryId,
-      description,
+      categoryName,
       productSpecs,
-      isFeatured,
       isArchived,
       isPro,
+      products: {
+        create: products.map((product) => {
+          return {
+            name: product.name,
+            description: product.description,
+            price: product.price || 0,
+            isFeatured: product.isFeatured,
+            isArchived: product.isArchived,
+            imagesUrl: product.imagesUrl,
+            options: {
+              create: product.options.map((option) => {
+                return {
+                  name: option.name,
+                  value: option.value,
+                };
+              }),
+            },
+          };
+        }),
+      },
     },
   });
 

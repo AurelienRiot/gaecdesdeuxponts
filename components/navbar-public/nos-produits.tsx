@@ -1,4 +1,4 @@
-"use client";
+import { getCategories } from "@/actions/get-category";
 import Spinner from "@/components/animations/spinner";
 import {
   NavigationMenuContent,
@@ -6,35 +6,41 @@ import {
   NavigationMenuListItem,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { useCategoriesContext } from "@/context/categories-context";
 import { Category } from "@prisma/client";
 import Image from "next/image";
+import { Suspense } from "react";
+
+export const dynamic = "force-dynamic";
 
 const NosProduits = () => {
-  const { categories } = useCategoriesContext();
-
   return (
     <NavigationMenuItem>
       <NavigationMenuTrigger>Nos produits</NavigationMenuTrigger>
       <NavigationMenuContent>
-        <ul className="grid w-[calc(100vw-165px)] max-w-[420px] grid-cols-1 gap-1 p-1 xs:p-4 sm:w-[420px] sm:grid-cols-2 ">
-          {categories ? (
-            categories.map((category) => (
-              <NavigationMenuListItem
-                key={category.name}
-                title={category.name}
-                href={`/category/${encodeURIComponent(category.name)}`}
-                Icone={<CategoryImage category={category} />}
-              >
-                {category.description}
-              </NavigationMenuListItem>
-            ))
-          ) : (
-            <Spinner size={20} />
-          )}
-        </ul>
+        <Suspense fallback={<Spinner size={20} />}>
+          <CategoriesList />
+        </Suspense>
       </NavigationMenuContent>
     </NavigationMenuItem>
+  );
+};
+
+const CategoriesList = async () => {
+  const categories = await getCategories();
+
+  return (
+    <ul className="grid w-[calc(100vw-165px)] max-w-[420px] grid-cols-1 gap-1 p-1 xs:p-4 sm:w-[420px] sm:grid-cols-2 ">
+      {categories.map((category) => (
+        <NavigationMenuListItem
+          key={category.name}
+          title={category.name}
+          href={`/category/${encodeURIComponent(category.name)}`}
+          Icone={<CategoryImage category={category} />}
+        >
+          {category.description}
+        </NavigationMenuListItem>
+      ))}
+    </ul>
   );
 };
 

@@ -3,13 +3,13 @@ import { addDelay, checkIfUrlAccessible } from "@/lib/utils";
 import { AnimatePresence, Reorder } from "framer-motion";
 import { Loader2, Plus, Trash, UploadCloud, X } from "lucide-react";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { AnimateHeight } from "../animations/animate-size";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
-import { Ressources, deleteObject, getSignature, listFiles } from "./server";
+import { deleteObject, getSignature, listFiles } from "./server";
 
 const generateRandomString = (length: number) => {
   const characters =
@@ -21,9 +21,18 @@ const generateRandomString = (length: number) => {
   return result;
 };
 
+export const getFileKey = (url: string): string => {
+  const parts = url.split("/");
+  return `farm/${parts[parts.length - 1]}`;
+};
+
+export const makeURL = (key: string) => {
+  return `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${key}`;
+};
+
 type UploadImageProps = {
   selectedFiles: string[];
-  setSelectedFiles: Dispatch<SetStateAction<string[]>>;
+  setSelectedFiles: (files: string[]) => void;
   multipleImages?: boolean;
 };
 
@@ -32,7 +41,7 @@ const UploadImage = ({
   setSelectedFiles,
   multipleImages = false,
 }: UploadImageProps) => {
-  const [files, setFiles] = useState<Ressources[]>([]);
+  const [allFiles, setAllFiles] = useState<string[]>([]);
 
   const [loading, setLoading] = useState(false);
 
@@ -130,14 +139,14 @@ const UploadImage = ({
       return;
     }
 
-    setFiles(updatedFiles.data);
+    setAllFiles(updatedFiles.data.map((item) => makeURL(item.public_id)));
     if (multipleImages) {
-      setSelectedFiles((prev) => [
-        ...prev,
-        ...validUrls.map((item) => item.publicId),
+      setSelectedFiles([
+        ...selectedFiles,
+        ...validUrls.map((item) => makeURL(item.publicId)),
       ]);
     } else {
-      setSelectedFiles([validUrls[0].publicId]);
+      setSelectedFiles([makeURL(validUrls[0].publicId)]);
     }
     setLoading(false);
   };
@@ -149,7 +158,7 @@ const UploadImage = ({
         toast.error(files.message);
         return;
       }
-      setFiles(files.data);
+      setAllFiles(files.data.map((item) => makeURL(item.public_id)));
     };
     fetchFiles();
   }, []);
@@ -224,8 +233,8 @@ const UploadImage = ({
       />
 
       <DisplayImages
-        files={files}
-        setFiles={setFiles}
+        allFiles={allFiles}
+        setFiles={setAllFiles}
         selectedFiles={selectedFiles}
         setSelectedFiles={setSelectedFiles}
         multipleImages={multipleImages}
@@ -239,7 +248,7 @@ export default UploadImage;
 
 type DisplaySelectedImagesProps = {
   selectedFiles: string[];
-  setSelectedFiles: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelectedFiles: (files: string[]) => void;
   multipleImages: boolean;
 };
 
@@ -253,7 +262,9 @@ const DisplaySelectedImages = ({
       <div>
         <h1 className="text-primary">
           {" "}
-          {multipleImages ? "Images selectionnées" : "Image selectionnée"}
+          {multipleImages && selectedFiles.length > 1
+            ? "Images selectionnées"
+            : "Image selectionnée"}
         </h1>
         {selectedFiles.length !== 0 ? (
           <Reorder.Group
@@ -261,14 +272,14 @@ const DisplaySelectedImages = ({
             values={selectedFiles}
             onReorder={setSelectedFiles}
             layoutScroll
-            className="hide-scrollbar flex max-w-[1000px] flex-row gap-4 overflow-x-scroll p-2"
+            className="flex max-w-[1000px] flex-row gap-4 overflow-x-scroll p-2 hide-scrollbar"
             axis="x"
           >
             <AnimatePresence>
-              {selectedFiles.map((key) => (
+              {selectedFiles.map((url) => (
                 <Reorder.Item
-                  key={key}
-                  value={key}
+                  key={url}
+                  value={url}
                   initial={{ opacity: 0, width: 0 }}
                   animate={{ opacity: 1, width: "100px" }}
                   exit={{ opacity: 0, width: 0 }}
@@ -276,7 +287,7 @@ const DisplaySelectedImages = ({
                   className="group relative aspect-square h-[100px] cursor-pointer   rounded-xl bg-transparent hover:ring-2"
                 >
                   <Image
-                    src={`https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${key}`}
+                    src={url}
                     alt=""
                     fill
                     sizes="(max-width: 768px) 100px, (max-width: 1200px) 100px, 100px"
@@ -285,8 +296,9 @@ const DisplaySelectedImages = ({
                   <button
                     type="button"
                     onClick={(e) => {
-                      setSelectedFiles((prev) =>
-                        prev.filter((item) => item !== key),
+                      console.log(selectedFiles.filter((item) => item !== url));
+                      setSelectedFiles(
+                        selectedFiles.filter((item) => item !== url),
                       );
                     }}
                     className="absolute right-0 z-10 hidden items-center justify-center  rounded-tr-md bg-destructive px-2 text-destructive-foreground transition-all hover:bg-destructive/90 group-hover:flex"
@@ -306,16 +318,16 @@ const DisplaySelectedImages = ({
 };
 
 type DisplayImagesProps = {
-  files: Ressources[];
-  setFiles: React.Dispatch<React.SetStateAction<Ressources[]>>;
+  allFiles: string[];
+  setFiles: React.Dispatch<React.SetStateAction<string[]>>;
   selectedFiles: string[];
-  setSelectedFiles: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelectedFiles: (files: string[]) => void;
   multipleImages: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const DisplayImages = ({
-  files,
+  allFiles,
   setFiles,
   selectedFiles,
   setSelectedFiles,
@@ -326,18 +338,17 @@ const DisplayImages = ({
   const imagesPerPage = 10;
   const [displayFiles, setDisplayFiles] = useState(false);
 
-  const onDelete = async (publicID: string | undefined) => {
-    if (!publicID) {
+  const onDelete = async (url: string | undefined) => {
+    if (!url) {
       toast.error("Erreur.");
       return;
     }
     const deleted = await deleteObject({
-      publicID,
+      publicID: getFileKey(url),
     });
 
     if (deleted.success) {
-      setFiles((prev) => prev.filter((file) => file.public_id !== publicID));
-      setSelectedFiles((prev) => prev.filter((file) => file !== publicID));
+      setFiles(allFiles.filter((fileUrl) => fileUrl !== url));
       toast.success("Image supprimée");
     } else {
       toast.error(deleted.message);
@@ -360,22 +371,22 @@ const DisplayImages = ({
           className="flex max-w-[1000px] flex-row flex-wrap gap-4 whitespace-nowrap
             p-2 "
         >
-          {files.length > 0 ? (
-            files
-              .filter((file) => !selectedFiles.includes(file.public_id ?? ""))
+          {allFiles.length > 0 ? (
+            allFiles
+              .filter((fileUrl) => !selectedFiles.includes(fileUrl))
               .slice(
                 (currentPage - 1) * imagesPerPage,
                 currentPage * imagesPerPage,
               )
-              .map((file) => (
+              .map((fileUrl) => (
                 <div
-                  key={file.public_id}
+                  key={fileUrl}
                   className="justify-left group relative flex gap-2 overflow-hidden rounded-lg  border border-slate-100 pr-2 transition-all hover:border-slate-300"
                 >
                   <div className="flex  w-fit flex-1  items-center p-2">
                     <div className="relative aspect-square h-10 rounded-xl text-white">
                       <Image
-                        src={`https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${file.public_id}`}
+                        src={fileUrl}
                         alt=""
                         fill
                         sizes="(max-width: 768px) 40px, (max-width: 1200px) 40px, 40px"
@@ -388,7 +399,7 @@ const DisplayImages = ({
                     >
                       <div className="flex justify-between text-sm">
                         <p className="text-muted-foreground ">
-                          {file.public_id}
+                          {getFileKey(fileUrl)}
                         </p>
                       </div>
                     </div>
@@ -397,7 +408,7 @@ const DisplayImages = ({
                     type="button"
                     onClick={async (e) => {
                       setLoading(true);
-                      await onDelete(file.public_id);
+                      await onDelete(fileUrl);
                       setLoading(false);
                     }}
                     className="absolute right-0 hidden items-center justify-center  rounded-tr-md bg-destructive px-2 py-1 text-destructive-foreground transition-all hover:bg-destructive/90 group-hover:flex"
@@ -408,12 +419,9 @@ const DisplayImages = ({
                     type="button"
                     onClick={(e) => {
                       if (multipleImages) {
-                        setSelectedFiles((prev) => [
-                          ...prev,
-                          file.public_id ?? "",
-                        ]);
+                        setSelectedFiles([...selectedFiles, fileUrl]);
                       } else {
-                        setSelectedFiles([file.public_id ?? ""]);
+                        setSelectedFiles([fileUrl]);
                       }
                     }}
                     className="absolute left-0 hidden items-center justify-center  rounded-tl-md bg-green-800 px-2 py-1 text-green-50 transition-all hover:bg-green-800/90 group-hover:flex"
@@ -446,7 +454,8 @@ const DisplayImages = ({
               setCurrentPage((prev) => prev + 1);
             }}
             disabled={
-              currentPage * imagesPerPage >= files.length - selectedFiles.length
+              currentPage * imagesPerPage >=
+              allFiles.length - selectedFiles.length
             }
           >
             Suivant

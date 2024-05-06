@@ -2,6 +2,15 @@ import { authOptions } from "@/components/auth/authOptions";
 import prismadb from "@/lib/prismadb";
 import { getServerSession } from "next-auth";
 
+export const getSessionUser = async () => {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user || !session.user.id) {
+    return null;
+  }
+  return session.user;
+};
+
 const GetUser = async () => {
   const session = await getServerSession(authOptions);
 

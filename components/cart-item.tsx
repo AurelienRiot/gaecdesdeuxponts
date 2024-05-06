@@ -3,7 +3,7 @@
 import Currency from "@/components/ui/currency";
 import IconButton from "@/components/ui/icon-button";
 import useCart from "@/hooks/use-cart";
-import { ProductWithCategory } from "@/types";
+import { ProductWithOptionsAndMain } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { X } from "lucide-react";
 import Image from "next/image";
@@ -15,18 +15,24 @@ import { Button } from "./ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
+import { Badge } from "./ui/badge";
+import { makeProductUrl } from "./product/main-product-cart";
 
 interface CartItemProps {
-  data: ProductWithCategory;
+  data: ProductWithOptionsAndMain;
 }
 
 const CartItem: React.FC<CartItemProps> = ({ data }) => {
   const cart = useCart();
   const [customQuantity, setCustomQuantity] = useState(false);
 
+  const productUrl = makeProductUrl(data);
+  const url = data.product.isPro
+    ? `/dashboard-user/produits-pro/category/${data.product.categoryName}`
+    : `/category/${data.product.categoryName}`;
+
   const value = Number(data.price);
   const quantity = cart.quantities[data.id];
-  const url = data.isPro ? `/dashboard-user/produits-pro/` : `/product/`;
 
   const onRemove = () => {
     cart.removeItem(data.id);
@@ -56,14 +62,23 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
             icon={<X size={15} className="text-primary" />}
           />
         </div>
-        <div className="relative flex h-full flex-col content-center justify-between ">
-          <div className="flex justify-between ">
+        <div className="relative flex h-full flex-col content-center justify-between gap-2">
+          <div className="flex flex-wrap gap-2 pr-10 ">
             <Link
-              href={url + encodeURIComponent(data.name)}
-              className="pr-10 font-semibold text-primary @xs:text-lg"
+              href={url + productUrl}
+              className=" font-semibold text-primary @xs:text-lg "
             >
               {data.name}
             </Link>
+            {/* {data.options.map((option) => (
+              <Badge
+                key={option.name}
+                variant={"green"}
+                className="h-fit w-fit"
+              >
+                {option.name} : {option.value}
+              </Badge>
+            ))} */}
           </div>
           <Currency value={value} />
           <div className="flex items-center gap-2 tabular-nums	">

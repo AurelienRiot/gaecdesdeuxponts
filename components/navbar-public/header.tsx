@@ -10,7 +10,9 @@ const PublicHeader = () => {
   return (
     <header className="fixed top-0   z-30 flex h-16 w-full items-center justify-between bg-background px-4 py-4  shadow-md  sm:px-6 ">
       <div className="flex items-center justify-center gap-4">
-        <MobileNav />
+        <MobileNav>
+          <MainNav orientation="vertical" className="mt-10" />
+        </MobileNav>
         <Link href="/" className="hidden xs:block">
           <Image
             alt="Logo"

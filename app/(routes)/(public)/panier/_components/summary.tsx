@@ -160,8 +160,6 @@ const Summary: React.FC<SummaryProps> = ({ userId, shops }) => {
               </div>
               <Currency
                 value={Number(item.price) * cart.quantities[item.id]}
-                displayText={false}
-                displayLogo={false}
                 className="justify-self-end"
               />
             </li>
@@ -170,7 +168,7 @@ const Summary: React.FC<SummaryProps> = ({ userId, shops }) => {
         <div className="mt-6 space-y-4">
           <div className="flex items-center justify-between border-t border-gray-200 pt-4">
             <div className="text-base font-medium text-gray-500">Total</div>
-            <Currency value={totalPrice} displayLogo={false} />
+            <Currency value={totalPrice} />
           </div>
         </div>
         <DatePicker date={date} className="mt-6" shopId={shopId} />

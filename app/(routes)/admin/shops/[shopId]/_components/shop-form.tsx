@@ -42,7 +42,6 @@ import { UseFormReturn, useForm } from "react-hook-form";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import { z } from "zod";
-import { getFileKey } from "../../../categories/[categoryId]/_components/category-form";
 import {
   ReturnType,
   createShop,
@@ -73,39 +72,23 @@ const formSchema = z.object({
 export type ShopFormValues = z.infer<typeof formSchema>;
 
 const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
-  const [selectedFiles, setSelectedFiles] = useState<string[]>(
-    initialData?.imageUrl ? [getFileKey(initialData?.imageUrl)] : [],
-  );
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
   const form = useForm<ShopFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData
-      ? {
-          name: initialData.name,
-          imageUrl: "",
-          description: initialData.description,
-          lat: initialData.lat,
-          long: initialData.long,
-          address: initialData.address,
-          phone: initialData.phone,
-          website: initialData.website || "",
-          email: initialData.email,
-          isArchived: initialData.isArchived,
-        }
-      : {
-          name: "",
-          imageUrl: "",
-          description: "",
-          lat: 0,
-          long: 0,
-          address: "",
-          phone: "",
-          website: "",
-          email: "",
-          isArchived: false,
-        },
+    defaultValues: {
+      name: initialData?.name || "",
+      imageUrl: initialData?.imageUrl || "",
+      description: initialData?.description || "",
+      lat: initialData?.lat || undefined,
+      long: initialData?.long || undefined,
+      address: initialData?.address || "",
+      phone: initialData?.phone || "",
+      website: initialData?.website || "",
+      email: initialData?.email || "",
+      isArchived: initialData?.isArchived || false,
+    },
   });
 
   const title = initialData
@@ -120,11 +103,6 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
     : "Créer le magasin";
 
   const onSubmit = async (data: ShopFormValues) => {
-    data.imageUrl = selectedFiles[0]
-      ? `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${selectedFiles[0]}`
-      : "";
-    if (initialData) {
-    }
     let result: ReturnType;
     if (initialData) {
       result = await updateShop({ data, id: initialData.id });
@@ -188,8 +166,14 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
                 <FormLabel>Images</FormLabel>
                 <FormControl>
                   <UploadImage
-                    selectedFiles={selectedFiles}
-                    setSelectedFiles={setSelectedFiles}
+                    selectedFiles={field.value ? [field.value] : []}
+                    setSelectedFiles={(files: string[]) => {
+                      if (files.length > 0) {
+                        field.onChange(files[0]);
+                      } else {
+                        field.onChange("");
+                      }
+                    }}
                   />
                 </FormControl>
                 <FormMessage />
@@ -326,6 +310,7 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
                       disabled={form.formState.isSubmitting}
                       placeholder="Lattitude"
                       {...field}
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <FormMessage />
@@ -344,6 +329,7 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
                       disabled={form.formState.isSubmitting}
                       placeholder="longitude"
                       {...field}
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <FormMessage />

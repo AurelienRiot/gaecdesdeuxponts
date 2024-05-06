@@ -4,6 +4,8 @@ import ImageAccueil from "./_components/image-accueil";
 import NosProduits from "./_components/nos-produits";
 import { PartenaireCards } from "./_components/partenaires";
 import WhyChooseUs from "./_components/why-choose-us";
+import { Suspense } from "react";
+import { ProductCart } from "@/components/skeleton-ui/product-cart-skeleton";
 
 export default function Home() {
   return (
@@ -14,7 +16,15 @@ export default function Home() {
       />
 
       <ImageAccueil />
-      <NosProduits />
+      <Suspense
+        fallback={Array(4)
+          .fill(null)
+          .map((_, i) => (
+            <ProductCart key={i} />
+          ))}
+      >
+        <NosProduits />
+      </Suspense>
       <WhyChooseUs />
       <ArticlePromotion />
       <PartenaireCards />

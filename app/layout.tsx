@@ -12,8 +12,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { CSPostHogProvider } from "@/lib/analytics/provider";
-import { CategoriesProvider } from "@/context/categories-context";
-import { ProductsProvider } from "@/context/products-context";
 
 export const metadata: Metadata = {
   title: "Laiterie du Pont Robert",
@@ -60,12 +58,8 @@ export default function RootLayout({
           <CSPostHogProvider>
             <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
               <TooltipProvider delayDuration={100} skipDelayDuration={0}>
-                <CategoriesProvider>
-                  <ProductsProvider>
-                    <DebugScreens />
-                    {children}
-                  </ProductsProvider>
-                </CategoriesProvider>
+                <DebugScreens />
+                {children}
               </TooltipProvider>
               <Toaster />
             </ThemeProvider>{" "}

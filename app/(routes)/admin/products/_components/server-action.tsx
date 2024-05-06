@@ -57,7 +57,7 @@ const changeArchived = async ({
     };
   }
   try {
-    const product = await prismadb.product.update({
+    const product = await prismadb.mainProduct.update({
       where: {
         id,
       },
@@ -141,7 +141,7 @@ const changePro = async ({
     };
   }
   try {
-    const product = await prismadb.product.update({
+    const product = await prismadb.mainProduct.update({
       where: {
         id,
       },

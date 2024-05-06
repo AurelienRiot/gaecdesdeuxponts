@@ -21,10 +21,20 @@ interface ProductClientProps {
 export const ProductClient: React.FC<ProductClientProps> = ({ data }) => {
   const router = useRouter();
 
+  const productNames = data.map((product) => product.name);
+
   const categories = data.map((product) => product.category);
-  const categoriesWithoutDuplicates = [
-    ...new Set(categories.map((category) => category)),
-  ];
+  const categoryNames = [...new Set(categories.map((category) => category))];
+
+  const options = data.flatMap((product) =>
+    product.productOptions.flatMap((option) =>
+      option.options.map((opt) => opt.value),
+    ),
+  );
+
+  const optionValues = [...new Set(options.map((value) => value))].sort(
+    (a, b) => b.localeCompare(a),
+  );
 
   return (
     <>
@@ -43,8 +53,11 @@ export const ProductClient: React.FC<ProductClientProps> = ({ data }) => {
       </div>
       <Separator />
       <DataTable
-        filterableColumns={filterableColumns(categoriesWithoutDuplicates)}
-        searchableColumns={searchableColumns}
+        filterableColumns={filterableColumns({
+          categoryNames,
+          productNames,
+          optionValues,
+        })}
         viewOptionsColumns={viewOptionsColumns}
         columns={columns}
         data={data}
