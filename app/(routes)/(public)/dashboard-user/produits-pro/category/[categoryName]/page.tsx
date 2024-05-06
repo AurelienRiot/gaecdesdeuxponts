@@ -34,12 +34,12 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
     return <NoResults />;
   }
 
-  if (products.length === 1) {
-    const url = products[0].isPro
-      ? `/dashboard-user/produits-pro/category/${products[0].categoryName}/product/${products[0].name}`
-      : `/category/${products[0].categoryName}/product/${products[0].name}`;
-    redirect(url);
-  }
+  // if (products.length === 1) {
+  //   const url = products[0].isPro
+  //     ? `/dashboard-user/produits-pro/category/${products[0].categoryName}/product/${products[0].name}`
+  //     : `/category/${products[0].categoryName}/product/${products[0].name}`;
+  //   redirect(url);
+  // }
 
   return (
     <div className="w-full">

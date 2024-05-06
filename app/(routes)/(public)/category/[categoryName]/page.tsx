@@ -34,9 +34,9 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
     return <NoResults />;
   }
 
-  if (products.length === 1) {
-    redirect(`/category/${category.name}/product/${products[0].name}`);
-  }
+  // if (products.length === 1) {
+  //   redirect(`/category/${category.name}/product/${products[0].name}`);
+  // }
 
   return (
     <>

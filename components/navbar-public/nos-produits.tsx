@@ -10,8 +10,6 @@ import { Category } from "@prisma/client";
 import Image from "next/image";
 import { Suspense } from "react";
 
-export const dynamic = "force-dynamic";
-
 const NosProduits = () => {
   return (
     <NavigationMenuItem>

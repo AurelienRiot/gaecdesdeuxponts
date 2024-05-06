@@ -1,4 +1,3 @@
-import React from "react";
 import {
   MARK_BOLD,
   MARK_CODE,
@@ -14,12 +13,10 @@ import { ELEMENT_IMAGE } from "@udecode/plate-media";
 import { Icons, iconVariants } from "@/components/icons";
 import { AlignDropdownMenu } from "@/components/plate-ui/align-dropdown-menu";
 import { ColorDropdownMenu } from "@/components/plate-ui/color-dropdown-menu";
-import { CommentToolbarButton } from "@/components/plate-ui/comment-toolbar-button";
 import { EmojiDropdownMenu } from "@/components/plate-ui/emoji-dropdown-menu";
 import { IndentListToolbarButton } from "@/components/plate-ui/indent-list-toolbar-button";
 import { IndentToolbarButton } from "@/components/plate-ui/indent-toolbar-button";
 import { LineHeightDropdownMenu } from "@/components/plate-ui/line-height-dropdown-menu";
-import { LinkToolbarButton } from "@/components/plate-ui/link-toolbar-button";
 import { MediaToolbarButton } from "@/components/plate-ui/media-toolbar-button";
 import { MoreDropdownMenu } from "@/components/plate-ui/more-dropdown-menu";
 import { OutdentToolbarButton } from "@/components/plate-ui/outdent-toolbar-button";

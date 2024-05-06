@@ -71,7 +71,7 @@ const OptionsDisplay = ({ optionsArray, product, sameProducts }: InfoProps) => {
         <>
           <h3 className="mb-4 mt-8 text-lg">{option.name}</h3>
           <div className="flex flex-wrap gap-2">
-            {option.values.map((value) => {
+            {option.values.map((value, i) => {
               const isActive = value === product.options[index].value;
               const productOption = product.options.map((o, idx) => ({
                 name: o.name,
@@ -100,7 +100,7 @@ const OptionsDisplay = ({ optionsArray, product, sameProducts }: InfoProps) => {
 
               return (
                 <Badge
-                  key={value}
+                  key={value + i}
                   variant={
                     isActive ? "green" : !isAvailable ? "disable" : "outline"
                   }

@@ -6,7 +6,7 @@ import NoResults from "./ui/no-results";
 
 interface ProductListProps {
   title: string;
-  items?: ProductWithOptionsAndMain[];
+  items: ProductWithOptionsAndMain[];
 }
 
 const ProductList: React.FC<ProductListProps> = ({ title, items }) => {

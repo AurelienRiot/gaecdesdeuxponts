@@ -10,7 +10,6 @@ import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { MainNav } from "./main-nav";
 
 const MobileNav = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
