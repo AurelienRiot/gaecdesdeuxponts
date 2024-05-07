@@ -59,14 +59,12 @@ export const PinContainer = ({
         className="absolute  left-1/2 top-1/2 ml-[0.09375rem] mt-4 -translate-x-1/2 -translate-y-1/2 "
       >
         <div
-          className="absolute left-1/2 top-1/2 flex  items-start justify-start  overflow-hidden  rounded-2xl border border-white/[0.1] bg-black p-4 shadow-[0_8px_16px_rgb(0_0_0/0.4)] transition duration-700
+          className="absolute left-1/2 top-1/2 flex  items-start justify-start  overflow-clip  rounded-2xl border border-white/[0.1] bg-black p-4 shadow-[0_8px_16px_rgb(0_0_0/0.4)] transition duration-700
          [transform:translate(-50%,-50%)_rotateX(0deg)_scale(1)] group-hover/pin:border-white/[0.2] 
          group-hover/pin:[transform:translate(-50%,-50%)_rotateX(40deg)_scale(0.8)]
           "
         >
-          <div
-            className={cn(" relative overflow-hidden rounded-2xl", className)}
-          >
+          <div className={cn(" relative overflow-clip rounded-2xl", className)}>
             {children}
           </div>
         </div>

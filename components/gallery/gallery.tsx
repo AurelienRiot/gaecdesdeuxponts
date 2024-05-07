@@ -37,7 +37,7 @@ const Gallery: React.FC<GalleryProps> = ({ images }) => {
                 sizes="80vw"
                 src={image}
                 alt="image"
-                className="object-cover object-center"
+                className="object-contain object-center"
               />
             </div>
           </TabsContent>

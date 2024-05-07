@@ -1,7 +1,8 @@
-import { Button } from "@/components/ui/button";
+import { Button, IconButton } from "@/components/ui/button";
 import DebugContainer from "@/components/debug/debug-container";
 import Image from "next/image";
 import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 
 const ImageAccueil = () => {
   return (

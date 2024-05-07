@@ -143,25 +143,14 @@ LoadingButton.displayName = "LoadingButton";
 
 export interface IconButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  asChild?: boolean;
   Icon: React.ElementType;
   iconClassName?: string;
 }
 
 const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
-  (
-    {
-      className,
-      Icon,
-      asChild = false,
-      iconClassName: buttonClassName,
-      ...props
-    },
-    ref,
-  ) => {
-    const Comp = asChild ? Slot : "button";
+  ({ className, Icon, iconClassName: buttonClassName, ...props }, ref) => {
     return (
-      <Comp
+      <button
         ref={ref}
         className={cn(
           "flex items-center justify-center rounded-full border bg-background p-2 shadow-md transition-all hover:scale-110 active:scale-95",
@@ -170,7 +159,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
         {...props}
       >
         <Icon className={buttonClassName} />
-      </Comp>
+      </button>
     );
   },
 );
