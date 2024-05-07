@@ -57,17 +57,19 @@ const FeaturesData: Feature[] = [
 const FeaturesGrid = () => {
   return (
     <div>
-      <div className="mt-8 grid w-full grid-cols-1 gap-12 text-foreground md:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-8 grid w-full grid-cols-1 gap-12 text-foreground md:grid-cols-2 xl:grid-cols-3">
         {FeaturesData.map((feature) => {
           return (
-            <div key={feature.id} className="width-fit text-left">
-              <div className="mb-2 w-fit rounded-lg bg-green-500 p-1 text-center ">
+            <div key={feature.id} className="width-fit space-y-2 text-left">
+              <div className=" w-fit rounded-lg bg-green-500 p-1 text-center ">
                 {feature.icon}
               </div>
-              <div className="text-md mb-1 font-semibold">{feature.name}</div>
-              <div className="font-regular max-w-sm text-xs ">
+              <h3 className="md:text-md font-semibold  sm:text-base lg:text-lg">
+                {feature.name}
+              </h3>
+              <p className="font-regular lg:text-md max-w-sm text-xs sm:text-sm md:text-base ">
                 {feature.description}
-              </div>
+              </p>
             </div>
           );
         })}
@@ -79,7 +81,7 @@ const FeaturesGrid = () => {
 const FeaturesWithHeading = () => {
   return (
     <div className="my-12 flex w-full flex-col items-center justify-center">
-      <h2 className="mb-2 max-w-3xl text-center text-2xl font-semibold tracking-tighter  text-primary  md:text-4xl ">
+      <h2 className="mb-2 max-w-3xl text-center text-2xl font-semibold text-primary  md:text-4xl ">
         Découvrez la Pureté du Lait Directement de la Ferme
       </h2>
       <p className="max-w-sm text-center  text-secondary-foreground">

@@ -43,11 +43,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" suppressHydrationWarning>
+    <html lang="fr" className=" scroll-p-16 scroll-smooth">
       <body
         id="root"
         className={cn(
-          "  relative min-h-dvh bg-background font-serif antialiased ",
+          "  relative min-h-dvh bg-background font-serif text-foreground antialiased",
           fontMono.variable,
           fontDisplay.variable,
           fontSerif.variable,

@@ -61,8 +61,10 @@ export default MainProductCart;
 
 export const makeProductUrl = (product: ProductWithOptionsAndMain) => {
   let url = `/product/${encodeURIComponent(product.productName)}?`;
-  product.options.forEach((option) => {
-    url += `${option.name}=${encodeURIComponent(option.value)}&`;
-  });
+  if (product.options) {
+    product.options.forEach((option) => {
+      url += `${option.name}=${encodeURIComponent(option.value)}&`;
+    });
+  }
   return url;
 };

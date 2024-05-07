@@ -1,16 +1,14 @@
-import { Button, IconButton } from "@/components/ui/button";
-import DebugContainer from "@/components/debug/debug-container";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
 
 const ImageAccueil = () => {
   return (
     <section
       className="grid grid-cols-1 gap-12
-      md:grid-cols-2 lg:grid-cols-[2fr_3fr]"
+      md:grid-cols-2 lg:grid-cols-[2fr_3fr] "
     >
-      <div className="flex flex-col justify-center text-center @container">
+      <div className="flex flex-col justify-center p-6 text-center @container">
         <h2 className="mb-4 text-2xl font-bold @sm:text-3xl @md:text-4xl @lg:text-5xl">
           Lait cru frais directement de le ferme
         </h2>

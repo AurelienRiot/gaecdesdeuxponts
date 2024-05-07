@@ -24,7 +24,7 @@ export function MainNav({
   return (
     <NavigationMenu
       delayDuration={10000}
-      skipDelayDuration={500}
+      skipDelayDuration={300}
       orientation={orientation}
       className={className}
     >

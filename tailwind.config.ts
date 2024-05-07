@@ -278,7 +278,7 @@ module.exports = {
     require("tailwindcss-animate"),
     require("@tailwindcss/container-queries"),
     require("tailwind-clip-path"),
-    addGlobalUtilities,
+    // addGlobalUtilities,
     addVariablesForColors,
     addBackgroundGrid,
     ListStyleCheck,
