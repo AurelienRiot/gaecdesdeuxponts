@@ -41,7 +41,9 @@ export async function updateProduct(
 
   await prismadb.product.deleteMany({
     where: {
-      productName: name,
+      product: {
+        id: id,
+      },
     },
   });
 

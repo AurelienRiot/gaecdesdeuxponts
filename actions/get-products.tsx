@@ -15,11 +15,40 @@ export const getProductsByCategoryName = async (categoryName: string) => {
   return products;
 };
 
+export const getProProductsByCategoryName = async (categoryName: string) => {
+  const products = await prismadb.product.findMany({
+    where: {
+      isArchived: false,
+      product: {
+        categoryName: categoryName,
+        isArchived: false,
+        isPro: true,
+      },
+    },
+    include: { options: true, product: true },
+  });
+  return products;
+};
+
 export const getMainProductsByCategoryName = async (categoryName: string) => {
   const products = await prismadb.mainProduct.findMany({
     where: {
       isArchived: false,
       isPro: false,
+      categoryName,
+    },
+    include: { products: { include: { options: true } } },
+  });
+  return products;
+};
+
+export const getProMainProductsByCategoryName = async (
+  categoryName: string,
+) => {
+  const products = await prismadb.mainProduct.findMany({
+    where: {
+      isArchived: false,
+      isPro: true,
       categoryName,
     },
     include: { products: { include: { options: true } } },

@@ -16,6 +16,22 @@ export const getCategoryByName = async (categoryName: string) => {
   return category;
 };
 
+export const getProCategoryByName = async (categoryName: string) => {
+  const category = await prismadb.category.findUnique({
+    where: {
+      products: {
+        some: {
+          isPro: true,
+          isArchived: false,
+          products: { some: { isArchived: false } },
+        },
+      },
+      name: categoryName,
+    },
+  });
+  return category;
+};
+
 export const getCategories = async () => {
   const category = await prismadb.category.findMany({
     where: {

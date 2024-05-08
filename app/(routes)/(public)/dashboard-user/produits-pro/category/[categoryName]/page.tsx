@@ -1,11 +1,10 @@
 import { getCategoryByName } from "@/actions/get-category";
-import { getMainProductsByCategoryName } from "@/actions/get-products";
+import { getProMainProductsByCategoryName } from "@/actions/get-products";
 import Billboard from "@/components/billboard/billboard";
 import NotFound from "@/components/not-found";
 import MainProductCart from "@/components/product/main-product-cart";
 import NoResults from "@/components/ui/no-results";
 import { Metadata } from "next";
-import { redirect } from "next/navigation";
 
 interface CategoryPageProps {
   params: {
@@ -28,7 +27,7 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
   if (!category) {
     return <NotFound />;
   }
-  const products = await getMainProductsByCategoryName(category.name);
+  const products = await getProMainProductsByCategoryName(category.name);
 
   if (products.length === 0) {
     return <NoResults />;

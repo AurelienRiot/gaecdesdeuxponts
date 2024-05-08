@@ -17,11 +17,7 @@ const ProductList: React.FC<ProductListProps> = ({ title, items }) => {
         {title}{" "}
       </h2>
       <div className="flex flex-wrap justify-center gap-12">
-        {!items ? (
-          Array(4)
-            .fill(null)
-            .map((_, i) => <ProductCartSkeleton key={i} />)
-        ) : items.length === 0 ? (
+        {items.length === 0 ? (
           <NoResults />
         ) : (
           items.map((item) => <ProductCart data={item} key={item.id} />)

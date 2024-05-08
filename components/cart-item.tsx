@@ -11,12 +11,11 @@ import Link from "next/link";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { makeProductUrl } from "./product/main-product-cart";
 import { Button } from "./ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
-import { Badge } from "./ui/badge";
-import { makeProductUrl } from "./product/main-product-cart";
 
 interface CartItemProps {
   data: ProductWithOptionsAndMain;
@@ -44,10 +43,10 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
 
   return (
     <>
-      <div className="relative size-24  overflow-hidden rounded-md bg-white @sm:size-48 ">
+      <div className="relative size-24  overflow-clip rounded-md bg-white @sm:size-48 ">
         <Image
           fill
-          src={data.imagesUrl[0]}
+          src={data.imagesUrl[0] ?? data.product.imagesUrl[0]}
           sizes="100%"
           alt="image"
           className="object-cover object-center"
