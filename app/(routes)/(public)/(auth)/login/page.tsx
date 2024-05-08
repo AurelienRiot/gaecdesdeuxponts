@@ -9,8 +9,6 @@ const LoginPage = async (context: {
     context.searchParams.callbackUrl ?? `${baseUrl}/dashboard-user`,
   );
 
-  console.log(callbackUrl);
-
   return (
     <div className="flex w-full items-center justify-center bg-slate-100 dark:bg-slate-900">
       <div className="space-y-12 rounded-xl px-2 pb-8 pt-12 sm:bg-white sm:px-8 sm:shadow-xl sm:dark:bg-black">

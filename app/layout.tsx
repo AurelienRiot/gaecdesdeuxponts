@@ -43,7 +43,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className=" scroll-p-16 scroll-smooth">
+    <html
+      lang="fr"
+      className=" scroll-p-16 scroll-smooth"
+      suppressHydrationWarning
+    >
       <body
         id="root"
         className={cn(
@@ -58,10 +62,10 @@ export default function RootLayout({
           <CSPostHogProvider>
             <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
               <TooltipProvider delayDuration={100} skipDelayDuration={0}>
+                <Toaster />
                 <DebugScreens />
                 {children}
               </TooltipProvider>
-              <Toaster />
             </ThemeProvider>{" "}
           </CSPostHogProvider>
         </AuthProviders>

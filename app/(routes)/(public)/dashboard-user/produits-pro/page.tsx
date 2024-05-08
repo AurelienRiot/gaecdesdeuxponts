@@ -5,12 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 
-export const dynamic = "force-dynamic";
-
 const PageProductsPro = async () => {
   return (
     <div className=" space-y-6    p-6">
-      <h2 className=" text-2xl font-semibold">Produits pour professionnels</h2>
+      <h2 className=" text-3xl font-bold">Produits pour professionnels</h2>
       <Suspense fallback={<Spinner size={20} />}>
         <CategoriesList />
       </Suspense>

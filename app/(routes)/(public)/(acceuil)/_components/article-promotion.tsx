@@ -29,7 +29,6 @@ const ArticlePromotion = () => {
           Don...`}
         </p>
       </div>
-      qq
     </div>
   );
 };

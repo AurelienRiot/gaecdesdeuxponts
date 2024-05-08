@@ -29,7 +29,7 @@ module.exports = {
         sans: ["var(--font-sans)", ...fontFamily.sans],
         mono: ["var(--font-mono)", ...fontFamily.mono],
         serif: ["var(--font-serif)", ...fontFamily.serif],
-        display: ["var(--font-display)"],
+        display: ["var(--font-display)", ...fontFamily.sans],
       },
       boxShadow: {
         "2xl":
@@ -278,7 +278,7 @@ module.exports = {
     require("tailwindcss-animate"),
     require("@tailwindcss/container-queries"),
     require("tailwind-clip-path"),
-    // addGlobalUtilities,
+    addGlobalUtilities,
     addVariablesForColors,
     addBackgroundGrid,
     ListStyleCheck,

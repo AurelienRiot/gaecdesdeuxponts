@@ -86,7 +86,7 @@ const SeverUserClientLoading = () => {
                   <Skeleton className="h-4 w-16 rounded-full" />
                 </CardTitle>
                 <CardDescription className="justify-left flex items-center">
-                  <Skeleton as="span" className="h-4 w-24 rounded-full" />
+                  <Skeleton className="h-4 w-24 rounded-full" />
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col items-center justify-center">

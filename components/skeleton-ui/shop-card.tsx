@@ -42,7 +42,7 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
                 className="justify-left flex flex-row items-center gap-4"
               >
                 <span className="font-bold">{key} :</span>{" "}
-                <Skeleton as="span" className="h-4 w-28" />
+                <Skeleton className="h-4 w-28" />
               </CardDescription>
             ))}
           </CardContent>

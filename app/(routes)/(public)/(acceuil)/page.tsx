@@ -1,12 +1,12 @@
+import { ProductCart } from "@/components/skeleton-ui/product-cart-skeleton";
 import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
+import { Suspense } from "react";
 import ArticlePromotion from "./_components/article-promotion";
+import FeaturesWithHeading from "./_components/features";
 import ImageAccueil from "./_components/image-accueil";
 import NosProduits from "./_components/nos-produits";
 import { PartenaireCards } from "./_components/partenaires";
 import WhyChooseUs from "./_components/why-choose-us";
-import { Suspense } from "react";
-import { ProductCart } from "@/components/skeleton-ui/product-cart-skeleton";
-import FeaturesWithHeading from "./_components/features";
 
 export default function Home() {
   return (

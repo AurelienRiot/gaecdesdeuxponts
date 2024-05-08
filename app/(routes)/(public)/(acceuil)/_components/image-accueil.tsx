@@ -6,7 +6,7 @@ const ImageAccueil = () => {
   return (
     <section
       className="grid grid-cols-1 gap-12
-      md:grid-cols-2 lg:grid-cols-[2fr_3fr] "
+      p-2 md:grid-cols-2  lg:grid-cols-[2fr_3fr]"
     >
       <div className="flex flex-col justify-center p-6 text-center @container">
         <h2 className="mb-4 text-2xl font-bold @sm:text-3xl @md:text-4xl @lg:text-5xl">
@@ -28,7 +28,7 @@ const ImageAccueil = () => {
           </Button>
         </div>
       </div>
-      <div className="group relative">
+      <div className="group relative ">
         <Image
           alt="Farm Hero Image"
           className="h-auto w-full rounded-md object-cover"

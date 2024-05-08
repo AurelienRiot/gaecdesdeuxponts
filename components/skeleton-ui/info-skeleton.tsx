@@ -11,7 +11,7 @@ const Info = () => {
       </div>
       <div className="mt-3 items-end justify-between">
         <p className="text-2xl text-gray-900 dark:text-white">
-          <Skeleton as="span" className="h-4 w-24" />
+          <Skeleton className="h-4 w-24" />
         </p>
       </div>
       <hr className="my-4" />

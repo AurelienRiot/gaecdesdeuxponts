@@ -15,7 +15,7 @@ export default async function Layout({
 }) {
   return (
     <UserProvider>
-      <div className="      relative flex min-h-screen   justify-between gap-4   pl-20 pr-4 ">
+      <div className="      relative flex min-h-[80vh]   justify-between gap-4   pl-24 pr-4 ">
         <ProfilNavBar />
         {children}
       </div>{" "}

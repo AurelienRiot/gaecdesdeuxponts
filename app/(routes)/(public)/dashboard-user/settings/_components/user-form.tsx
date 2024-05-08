@@ -149,14 +149,14 @@ export const UserForm: React.FC<UserFormProps> = ({
   };
 
   return (
-    <div>
+    <>
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
       />
       <div className=" flex flex-col items-center justify-between gap-4 md:flex-row">
-        <h2 className="text-3xl font-bold tracking-tight"> {title} </h2>
+        <h2 className="text-3xl font-bold "> {title} </h2>
 
         <Button
           disabled={form.formState.isSubmitting}
@@ -240,6 +240,7 @@ export const UserForm: React.FC<UserFormProps> = ({
             <AddressForm
               selectedAddress={selectedAddress}
               setSelectedAddress={setSelectedAddress}
+              className="max-w-lg sm:col-span-2"
             />
           </div>
           <LoadingButton
@@ -251,6 +252,6 @@ export const UserForm: React.FC<UserFormProps> = ({
           </LoadingButton>
         </form>
       </Form>
-    </div>
+    </>
   );
 };
