@@ -5,6 +5,12 @@ import prismadb from "@/lib/prismadb";
 import { DateRange } from "react-day-picker";
 import { OrderColumn } from "./columns";
 import { formatOrders } from "./format-orders";
+import { transporter } from "@/lib/nodemailer";
+import { render } from "@react-email/render";
+import BillingEmail from "@/components/email/billing";
+import { currencyFormatter, dateFormatter } from "@/lib/utils";
+
+const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 
 type ReturnType =
   | {
@@ -145,7 +151,28 @@ const changeStatus = async ({
       data: {
         isPaid,
       },
+      include: {
+        user: { select: { email: true } },
+      },
     });
+
+    if (isPaid) {
+      await transporter.sendMail({
+        from: "laiteriedupontrobert@gmail.com",
+        to: order.user.email || "",
+        subject:
+          "Confirmation du paiement de votre commande - Laiterie du Pont Robert",
+        html: render(
+          BillingEmail({
+            date: dateFormatter(order.createdAt),
+            baseUrl,
+            id: order.id,
+            price: currencyFormatter.format(order.totalPrice),
+          }),
+        ),
+      });
+    }
+
     return {
       success: true,
     };

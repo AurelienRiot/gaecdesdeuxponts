@@ -71,27 +71,15 @@ export const UserForm: React.FC<UserFormProps> = ({
 }: UserFormProps) => {
   const [open, setOpen] = useState(false);
 
-  const [selectedAddress, setSelectedAddress] = useState<FullAdress>(
-    initialData.adress
-      ? {
-          label: initialData.adress.label || "",
-          city: initialData.adress.city || "",
-          country: initialData.adress.country || "FR",
-          line1: initialData.adress.line1 || "",
-          line2: initialData.adress.line2 || "",
-          postalCode: initialData.adress.postalCode || "",
-          state: initialData.adress.state || "",
-        }
-      : {
-          label: "",
-          city: "",
-          country: "FR",
-          line1: "",
-          line2: "",
-          postalCode: "",
-          state: "",
-        },
-  );
+  const [selectedAddress, setSelectedAddress] = useState<FullAdress>({
+    label: initialData.adress.label || "",
+    city: initialData.adress.city || "",
+    country: initialData.adress.country || "FR",
+    line1: initialData.adress.line1 || "",
+    line2: initialData.adress.line2 || "",
+    postalCode: initialData.adress.postalCode || "",
+    state: initialData.adress.state || "",
+  });
 
   const title = initialData.name
     ? "Modifier votre profil"

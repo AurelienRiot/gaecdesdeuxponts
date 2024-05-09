@@ -1,6 +1,10 @@
 import ButtonBackward from "@/components/ui/button-backward";
 import prismadb from "@/lib/prismadb";
-import { currencyFormatter, dateFormatter } from "@/lib/utils";
+import {
+  addressFormatter,
+  currencyFormatter,
+  dateFormatter,
+} from "@/lib/utils";
 import { OrderColumn } from "./_components/order-column";
 import { OrderTable } from "./_components/order-table";
 import { UserForm } from "./_components/user-form";
@@ -63,16 +67,17 @@ const UserPage = async ({ params }: { params: { userId: string } }) => {
     isPaid: order.isPaid,
     totalPrice: currencyFormatter.format(Number(order.totalPrice)),
     createdAt: order.createdAt,
-    shopName: order.shop.name,
-    shopId: order.shop.id,
+    shopName: order.shop?.name || "Livraison à domicile",
+    shopId: order.shop?.id || "",
     dataInvoice: {
       customer: {
         id: user.id || "",
         name: user.name || "",
         address: (() => {
-          const a = user?.address[0]
-            ? `${user?.address[0].line1} ${user?.address[0].postalCode} ${user?.address[0].city}`
-            : "";
+          const a =
+            user?.address[0] && user?.address[0].line1
+              ? addressFormatter(user.address[0])
+              : "";
           return a;
         })(),
         phone: user.phone || "",

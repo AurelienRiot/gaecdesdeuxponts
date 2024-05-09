@@ -1,12 +1,11 @@
-import prismadb from "@/lib/prismadb";
-import { type NextAuthOptions } from "next-auth";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import EmailProvider from "next-auth/providers/email";
-import { render } from "@react-email/render";
-import WelcomeEmailProvider from "@/components/email/welcome-email-provider";
 import { transporter } from "@/lib/nodemailer";
-import { User } from "next-auth";
+import prismadb from "@/lib/prismadb";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { render } from "@react-email/render";
+import { User, type NextAuthOptions } from "next-auth";
+import EmailProvider from "next-auth/providers/email";
 import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
+import WelcomeEmail from "../email/welcome";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 
@@ -24,7 +23,7 @@ export const authOptions: NextAuthOptions = {
           from: "laiteriedupontrobert@gmail.com",
           to: email,
           subject: "Connexion à votre compte ",
-          html: render(WelcomeEmailProvider({ url, baseUrl })),
+          html: render(WelcomeEmail({ url, baseUrl })),
         });
       },
     }),

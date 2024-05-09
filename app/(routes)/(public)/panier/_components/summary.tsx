@@ -3,9 +3,9 @@
 import { Button } from "@/components/ui/button";
 import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
-import { cn } from "@/lib/utils";
+import { addDelay, cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { EmailButton, GoogleButton } from "@/components/auth/auth-button";
 import { Icons } from "@/components/icons";
@@ -21,8 +21,11 @@ import { toast } from "sonner";
 import DatePicker from "./date-picker";
 import PlaceModal from "./place-modal";
 import { checkOut } from "./server-action";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
+const farmShopId = "ac771e24-2fd8-4827-af71-8d3c566f62bb";
 
 const getDateFromSearchParam = (param: string | null): Date | undefined => {
   if (param === null) return undefined;
@@ -31,11 +34,11 @@ const getDateFromSearchParam = (param: string | null): Date | undefined => {
 };
 
 interface SummaryProps {
-  userId: string | undefined;
+  role: string | undefined;
   shops: Shop[];
 }
 
-const Summary: React.FC<SummaryProps> = ({ userId, shops }) => {
+const Summary: React.FC<SummaryProps> = ({ role, shops }) => {
   const [loading, setLoading] = useState(false);
   const cart = useCart();
   const router = useRouter();
@@ -46,7 +49,7 @@ const Summary: React.FC<SummaryProps> = ({ userId, shops }) => {
 
   const [isMounted, setIsMounted] = useState(false);
 
-  const tooltipText = !userId
+  const tooltipText = !role
     ? "Veuillez vous connecter pour valider votre commande"
     : cart.items.length === 0
       ? "Veuillez ajouter au moins un article"
@@ -78,7 +81,7 @@ const Summary: React.FC<SummaryProps> = ({ userId, shops }) => {
       : 0;
   const onCheckout = async () => {
     setLoading(true);
-    if (!userId) {
+    if (!role) {
       toast.error("Veuillez vous connecter pour valider votre commande");
       return;
     }
@@ -104,9 +107,10 @@ const Summary: React.FC<SummaryProps> = ({ userId, shops }) => {
       shopId,
     });
     if (result.success) {
+      router.push("/dashboard-user/orders");
+      await addDelay(500);
       toast.success("Commande effectuée avec succès");
       cart.removeAll();
-      router.push("/dashboard-user/orders");
     } else {
       toast.error(result.message);
     }
@@ -121,22 +125,9 @@ const Summary: React.FC<SummaryProps> = ({ userId, shops }) => {
       return;
     }
 
-    if (date) {
-      const queryParams = new URLSearchParams({
-        date: date.toISOString(),
-        shopId,
-      }).toString();
-      router.push(`/panier?${queryParams}`, {
-        scroll: false,
-      });
-    } else {
-      const queryParams = new URLSearchParams({
-        shopId,
-      }).toString();
-      router.push(`/panier?${queryParams}`, {
-        scroll: false,
-      });
-    }
+    router.push(makeCartUrl(shopId, date), {
+      scroll: false,
+    });
   };
 
   return (
@@ -147,8 +138,10 @@ const Summary: React.FC<SummaryProps> = ({ userId, shops }) => {
         shops={shops}
         onSelect={onSelectPlace}
       />
-      <div className="relative mb-[450px] mt-16 rounded-lg border-2 bg-gray-100 px-4 py-6 dark:bg-black sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
-        <h2 className="text-xl font-medium text-gray-500">Votre Commmande</h2>
+      <div className="relative mb-[450px] mt-16 space-y-6 rounded-lg border-2 bg-gray-100 px-4 py-6 dark:bg-black sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
+        <h2 className="text-xl font-medium text-secondary-foreground">
+          Votre Commmande
+        </h2>
         <ul className="pt-4">
           {cart.items.map((item) => (
             <li key={item.id} className="flex justify-between tabular-nums	">
@@ -165,15 +158,118 @@ const Summary: React.FC<SummaryProps> = ({ userId, shops }) => {
             </li>
           ))}
         </ul>
-        <div className="mt-6 space-y-4">
+        <div className=" space-y-4">
           <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-            <div className="text-base font-medium text-gray-500">Total</div>
+            <div className="text-base font-medium text-secondary-foreground">
+              Total
+            </div>
             <Currency value={totalPrice} />
           </div>
         </div>
-        <DatePicker date={date} className="mt-6" shopId={shopId} />
-        <div className={"relative  mt-6 flex items-center justify-between "}>
-          <div className="text-base font-medium text-gray-500">
+        <DatePicker date={date} shopId={shopId} />
+
+        <PickUpPlace
+          date={date}
+          shopId={shopId}
+          setOpen={setOpen}
+          shops={shops}
+          role={role}
+        />
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              disabled={loading || !!tooltipText}
+              onClick={onCheckout}
+              variant="rounded"
+              className=" w-full "
+            >
+              {loading && <Loader2 className={"mr-2 h-4 w-4 animate-spin"} />}
+              Passer la commande
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent
+            data-state={!!tooltipText}
+            className="data-[state=false]:hidden"
+          >
+            <p>{tooltipText}</p>
+          </TooltipContent>
+        </Tooltip>
+        {!role && (
+          <LoginCard
+            date={date}
+            shopId={shopId}
+            className="absolute left-1/2 top-full -translate-x-1/2  "
+          />
+        )}
+      </div>
+    </>
+  );
+};
+export default Summary;
+
+const PickUpPlace = ({
+  date,
+  shopId,
+  setOpen,
+  shops,
+  className,
+  role,
+}: {
+  date: Date | undefined;
+  shopId: string | undefined;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  shops: Shop[];
+  className?: string;
+  role: string | undefined;
+}) => {
+  const router = useRouter();
+  return (
+    <>
+      {role === "pro" || role === "admin" ? (
+        <div className="flex items-center justify-between space-x-2">
+          <Label
+            htmlFor="domicile"
+            className="text-base font-medium text-secondary-foreground"
+          >
+            Livraison à domicile
+          </Label>
+          <Switch
+            id="domicile"
+            checked={shopId === "domicile"}
+            onCheckedChange={(check) =>
+              router.push(makeCartUrl(check ? "domicile" : undefined, date), {
+                scroll: false,
+              })
+            }
+          />
+        </div>
+      ) : null}
+      <div className="flex items-center justify-between space-x-2">
+        <Label
+          htmlFor="farm-pickup"
+          className="text-base font-medium text-secondary-foreground"
+        >
+          Venir chercher à la ferme
+        </Label>
+        <Switch
+          id="farm-pickup"
+          checked={shopId === farmShopId}
+          onCheckedChange={(check) =>
+            router.push(makeCartUrl(check ? farmShopId : undefined, date), {
+              scroll: false,
+            })
+          }
+        />
+      </div>
+      {shopId !== "domicile" && shopId !== farmShopId ? (
+        <div
+          className={cn(
+            "relative   flex items-center justify-between ",
+            className,
+          )}
+        >
+          <div className="text-base font-medium text-secondary-foreground">
             Lieu de retrait
           </div>
           <Button
@@ -195,38 +291,10 @@ const Summary: React.FC<SummaryProps> = ({ userId, shops }) => {
             />
           </Button>
         </div>
-
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              disabled={loading || !!tooltipText}
-              onClick={onCheckout}
-              variant="rounded"
-              className="mt-6 w-full "
-            >
-              {loading && <Loader2 className={"mr-2 h-4 w-4 animate-spin"} />}
-              Passer la commande
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent
-            data-state={!!tooltipText}
-            className="data-[state=false]:hidden"
-          >
-            <p>{tooltipText}</p>
-          </TooltipContent>
-        </Tooltip>
-        {!userId && (
-          <LoginCard
-            date={date}
-            shopId={shopId}
-            className="absolute left-1/2 top-full -translate-x-1/2  "
-          />
-        )}
-      </div>
+      ) : null}
     </>
   );
 };
-export default Summary;
 
 const LoginCard = ({
   className,
@@ -280,4 +348,27 @@ after:flex-grow  after:bg-primary/30  `}
       </CardContent>
     </Card>
   );
+};
+
+export const makeCartUrl = (
+  shopId: string | undefined,
+  date: Date | undefined,
+) => {
+  let queryParams: string | undefined;
+  if (date && shopId) {
+    queryParams = new URLSearchParams({
+      date: date.toISOString(),
+      shopId,
+    }).toString();
+  } else if (shopId) {
+    queryParams = new URLSearchParams({
+      shopId,
+    }).toString();
+  } else if (date) {
+    queryParams = new URLSearchParams({
+      date: date.toISOString(),
+    }).toString();
+  }
+
+  return queryParams ? `/panier?${queryParams}` : "/panier";
 };

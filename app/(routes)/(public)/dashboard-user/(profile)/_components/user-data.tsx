@@ -2,6 +2,7 @@
 import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/user-context";
+import { addressFormatter } from "@/lib/utils";
 import Link from "next/link";
 import { formatPhoneNumber } from "react-phone-number-input";
 
@@ -43,7 +44,7 @@ export const UserAddress = () => {
 
   const address =
     user?.address?.length && user?.address[0].line1
-      ? `${user?.address[0].line1}, ${user?.address[0].postalCode} ${user?.address[0].city}`
+      ? addressFormatter(user.address[0])
       : null;
 
   return !user ? (

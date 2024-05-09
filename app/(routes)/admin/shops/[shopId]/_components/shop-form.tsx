@@ -63,7 +63,7 @@ const formSchema = z.object({
       message: "Le numéro de téléphone n'est pas valide",
     },
   ),
-  email: z.string().email({ message: "L'email est invalide" }),
+  email: z.string().email({ message: "L'email est invalide" }).optional(),
   website: z.string().optional(),
   description: z.string(),
   isArchived: z.boolean().default(false).optional(),

@@ -17,18 +17,28 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 import AutoCloseSheet from "../auto-close-sheet";
+import { cn } from "@/lib/utils";
 
 const CartIcon = forwardRef<HTMLButtonElement, { qty: number }>(
   ({ qty, ...props }, ref) => {
     return (
       <Button
         variant={"outline"}
-        className="group relative border-0 px-3	hover:bg-background hover:text-foreground/80   "
+        className="group relative  border-0	px-3 hover:bg-background hover:text-foreground/80   "
         ref={ref}
         {...props}
       >
         <ShoppingCart size={20} className="group-hover:text-foreground/80" />
-        <span className="absolute -right-1 -top-1  flex h-5  w-5 items-center justify-center rounded-full bg-foreground font-sans text-xs tabular-nums text-background shadow-md group-hover:bg-foreground/80 group-hover:text-background/80">
+        <span
+          className={cn(
+            "absolute  -right-1 -top-1 flex aspect-square  min-w-5  items-center justify-center rounded-full bg-foreground px-1 font-sans text-xs tabular-nums text-background shadow-md group-hover:bg-foreground/80 group-hover:text-background/80",
+            qty > 99
+              ? "-right-2 -top-2 scale-[0.6]"
+              : qty > 9
+                ? "-right-1 -top-1 scale-[0.8]"
+                : "",
+          )}
+        >
           {qty}
         </span>
       </Button>

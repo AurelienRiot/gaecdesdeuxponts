@@ -77,7 +77,7 @@ model VerificationToken {
 
 
 model Category {
-  id          String @unique @id @default(uuid())
+  id          String @unique @id @default(cuid())
   name        String @unique
   description String?
    imageUrl   String
@@ -141,16 +141,16 @@ model Option {
  
 
 model Order {
-  id         String @unique @id @default(uuid())
+  id         String @unique @id @default(cuid())
   orderItems OrderItem[]
-  totalPrice Float @default(1)
+  totalPrice Float 
   name       String @default("")
   pdfUrl     String @default("")
   isPaid     Boolean @default(false)
   userId     String  
   user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  shopId    String 
-  shop       Shop @relation(fields: [shopId], references: [id])
+  shopId    String? 
+  shop       Shop? @relation(fields: [shopId], references: [id])
   datePickUp DateTime
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -161,7 +161,7 @@ model Order {
 }
 
 model OrderItem {
-  id        String @unique @id @default(uuid())
+  id        String @unique @id @default(cuid())
   price     Float
   quantity  Float @default(1)
   name      String
@@ -174,7 +174,7 @@ model OrderItem {
 }
 
 model Contact {
-  id        String   @unique @id @default(uuid())
+  id        String   @unique @id @default(cuid())
   name      String
   email      String
   phone     String? 
@@ -192,7 +192,7 @@ model Contact {
 }
 
 model Address {
-  id         String  @unique @id @default(uuid())
+  id         String  @unique @id @default(cuid())
   label      String?
   line1      String?
   line2      String?
@@ -211,13 +211,13 @@ model Address {
 }
 
 model Shop {
-  id String @unique @id @default(uuid())
+  id String @unique @id @default(cuid())
   name String
   lat Float 
   long Float
   address String
   phone String
-  email String
+  email String?
   description String
   imageUrl String?
   website String?

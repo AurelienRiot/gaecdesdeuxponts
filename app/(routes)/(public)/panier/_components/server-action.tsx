@@ -1,8 +1,15 @@
 "use server";
 
 import { checkUser } from "@/components/auth/checkAuth";
+import OrderEmail from "@/components/email/order";
+import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
+import { currencyFormatter, dateFormatter } from "@/lib/utils";
 import { ReturnTypeServerAction } from "@/types";
+import { render } from "@react-email/render";
+import { nanoid } from "nanoid";
+
+const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 
 type CheckOutProps = {
   totalPrice: number;
@@ -82,6 +89,7 @@ export const checkOut = async ({
 
   const order = await prismadb.order.create({
     data: {
+      id: `FA_${nanoid()}`,
       totalPrice,
       pdfUrl: "",
       orderItems: {
@@ -94,11 +102,26 @@ export const checkOut = async ({
         })),
       },
       userId: isAuth.id,
-      shopId,
+      shopId: shopId === "domicile" ? null : shopId,
       name: user.name || user.email || "",
       datePickUp: date,
     },
   });
+
+  await transporter.sendMail({
+    from: "laiteriedupontrobert@gmail.com",
+    to: user.email || "",
+    subject: "Confirmation de votre commande - Laiterie du Pont Robert",
+    html: render(
+      OrderEmail({
+        date: dateFormatter(order.createdAt),
+        baseUrl,
+        id: order.id,
+        price: currencyFormatter.format(totalPrice),
+      }),
+    ),
+  });
+
   return {
     success: true,
     data: null,

@@ -24,6 +24,7 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
 import { changeStatus } from "./server-action";
+import { Button } from "@/components/ui/button";
 
 export type OrderColumn = {
   id: string;
@@ -91,12 +92,17 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "shopName",
     header: "Lieu de retrait",
-    cell: ({ row }) => (
-      <NameCell
-        name={row.original.shopName}
-        url={`/admin/shops/${row.original.shopId}`}
-      />
-    ),
+    cell: ({ row }) =>
+      row.original.shopName !== "Livraison à domicile" ? (
+        <NameCell
+          name={row.original.shopName}
+          url={`/admin/shops/${row.original.shopId}`}
+        />
+      ) : (
+        <Button variant={"ghost"} className="cursor-default px-0">
+          {row.original.shopName}
+        </Button>
+      ),
     filterFn: FilterOneInclude,
   },
   {

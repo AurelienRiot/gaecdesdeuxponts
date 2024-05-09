@@ -7,8 +7,6 @@ import { ChevronDown, Plus } from "lucide-react";
 import { Suspense } from "react";
 import DisplayShop from "./_components/shops";
 
-export const dynamic = "force-dynamic";
-
 const ShopPage = async () => {
   return (
     <div className="flex-col">

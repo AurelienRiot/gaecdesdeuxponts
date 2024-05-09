@@ -7,6 +7,8 @@ import { ChevronDown } from "lucide-react";
 import { Suspense } from "react";
 import { PlacePicker } from "./_components/place";
 
+export const dynamic = "force-dynamic";
+
 const OuNousTrouver = async () => {
   return (
     <Container className="my-8 space-y-8 p-2">

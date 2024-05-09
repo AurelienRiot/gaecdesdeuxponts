@@ -26,7 +26,6 @@ import {
 } from "./ui/form";
 import { CountriesList, CountrySelect, isCountry } from "./ui/phone-input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Skeleton } from "./skeleton-ui/skeleton";
 import { Switch } from "./ui/switch";
 
 export type FullAdress = {

@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { fr } from "date-fns/locale";
 import { format } from "date-fns";
+import { Address } from "@prisma/client";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -23,6 +24,10 @@ export const currencyFormatter = (() => {
 
 export const dateFormatter = (date: Date) => {
   return format(date, "d MMMM yyyy", { locale: fr });
+};
+
+export const addressFormatter = (address: Address) => {
+  return `${address.line1}, ${address.postalCode}, ${address.city}`;
 };
 
 export function addDelay(ms: number) {

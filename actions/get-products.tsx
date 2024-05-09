@@ -1,34 +1,43 @@
 import prismadb from "@/lib/prismadb";
+import { unstable_cache } from "next/cache";
 
-export const getProductsByCategoryName = async (categoryName: string) => {
-  const products = await prismadb.product.findMany({
-    where: {
-      isArchived: false,
-      product: {
-        categoryName: categoryName,
+export const getProductsByCategoryName = unstable_cache(
+  async (categoryName: string) => {
+    const products = await prismadb.product.findMany({
+      where: {
         isArchived: false,
-        isPro: false,
+        product: {
+          categoryName: categoryName,
+          isArchived: false,
+          isPro: false,
+        },
       },
-    },
-    include: { options: true, product: true },
-  });
-  return products;
-};
+      include: { options: true, product: true },
+    });
+    return products;
+  },
+  ["getProductsByCategoryName"],
+  { revalidate: 60 * 10 },
+);
 
-export const getProProductsByCategoryName = async (categoryName: string) => {
-  const products = await prismadb.product.findMany({
-    where: {
-      isArchived: false,
-      product: {
-        categoryName: categoryName,
+export const getProProductsByCategoryName = unstable_cache(
+  async (categoryName: string) => {
+    const products = await prismadb.product.findMany({
+      where: {
         isArchived: false,
-        isPro: true,
+        product: {
+          categoryName: categoryName,
+          isArchived: false,
+          isPro: true,
+        },
       },
-    },
-    include: { options: true, product: true },
-  });
-  return products;
-};
+      include: { options: true, product: true },
+    });
+    return products;
+  },
+  ["getProProductsByCategoryName"],
+  { revalidate: 60 * 10 },
+);
 
 export const getMainProductsByCategoryName = async (categoryName: string) => {
   const products = await prismadb.mainProduct.findMany({

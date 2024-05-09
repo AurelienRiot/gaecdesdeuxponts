@@ -20,6 +20,7 @@ import { DataTableFilterableColumn, DataTableViewOptionsColumn } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { changeStatus } from "../../../orders/_components/server-action";
 import { OrderCellAction } from "./order-cell-action";
+import { Button } from "@/components/ui/button";
 
 export type OrderColumn = {
   id: string;
@@ -69,12 +70,17 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "shopName",
     header: "Lieu de retrait",
-    cell: ({ row }) => (
-      <NameCell
-        name={row.original.shopName}
-        url={`/admin/shops/${row.original.shopId}`}
-      />
-    ),
+    cell: ({ row }) =>
+      row.original.shopName !== "Livraison à domicile" ? (
+        <NameCell
+          name={row.original.shopName}
+          url={`/admin/shops/${row.original.shopId}`}
+        />
+      ) : (
+        <Button variant={"ghost"} className="cursor-default px-0">
+          {row.original.shopName}
+        </Button>
+      ),
     filterFn: FilterOneInclude,
   },
   {

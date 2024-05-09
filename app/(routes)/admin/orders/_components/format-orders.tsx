@@ -1,4 +1,8 @@
-import { currencyFormatter, dateFormatter } from "@/lib/utils";
+import {
+  addressFormatter,
+  currencyFormatter,
+  dateFormatter,
+} from "@/lib/utils";
 import { OrderColumn } from "./columns";
 import { Address, Order, OrderItem } from "@prisma/client";
 
@@ -7,7 +11,7 @@ type Orders = Order & {
   shop: {
     name: string;
     id: string;
-  };
+  } | null;
   user: {
     id: string;
     name: string | null;
@@ -43,8 +47,8 @@ export function formatOrders(orders: Orders[]): OrderColumn[] {
       .join(", "),
     totalPrice: currencyFormatter.format(order.totalPrice),
     createdAt: order.createdAt,
-    shopName: order.shop.name,
-    shopId: order.shop.id,
+    shopName: order.shop?.name || "Livraison à domicile",
+    shopId: order.shop?.id || "",
     dataInvoice: {
       customer: {
         id: order.user.id || "",
@@ -53,7 +57,7 @@ export function formatOrders(orders: Orders[]): OrderColumn[] {
           const u = order.user;
           const a =
             order.user.address[0] && u.address[0].line1
-              ? `${u.address[0].line1} ${u.address[0].postalCode} ${u.address[0].city}`
+              ? addressFormatter(u.address[0])
               : "";
 
           return a;

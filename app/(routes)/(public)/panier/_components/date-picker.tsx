@@ -11,6 +11,7 @@ import { fr } from "date-fns/locale";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { makeCartUrl } from "./summary";
 
 type DatePickerProps = {
   className?: string;
@@ -30,22 +31,9 @@ const DatePicker = ({ className, date, shopId }: DatePickerProps) => {
       return;
     }
 
-    if (shopId) {
-      const queryParams = new URLSearchParams({
-        date: date.toISOString(),
-        shopId,
-      }).toString();
-      router.push(`/panier?${queryParams}`, {
-        scroll: false,
-      });
-    } else {
-      const queryParams = new URLSearchParams({
-        date: date.toISOString(),
-      }).toString();
-      router.push(`/panier?${queryParams}`, {
-        scroll: false,
-      });
-    }
+    router.push(makeCartUrl(shopId, date), {
+      scroll: false,
+    });
 
     setOpen(false);
   };
@@ -54,7 +42,9 @@ const DatePicker = ({ className, date, shopId }: DatePickerProps) => {
     <div
       className={cn("relative  flex items-center justify-between ", className)}
     >
-      <div className="text-base font-medium text-gray-500">Date de retrait</div>
+      <div className="text-base font-medium text-secondary-foreground">
+        Date de retrait
+      </div>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button

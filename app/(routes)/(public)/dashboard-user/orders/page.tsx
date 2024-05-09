@@ -5,7 +5,11 @@ import { DataTable } from "@/components/ui/data-table/data-table";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { useUserContext } from "@/context/user-context";
-import { currencyFormatter, dateFormatter } from "@/lib/utils";
+import {
+  addressFormatter,
+  currencyFormatter,
+  dateFormatter,
+} from "@/lib/utils";
 import {
   OrderColumnType,
   OrdersColumn,
@@ -55,17 +59,17 @@ const PageOrderTable = () => {
       totalPrice: currencyFormatter.format(Number(order.totalPrice)),
       isPaid: order.isPaid,
       datePickUp: order.datePickUp,
-      shopName: order.shop.name,
-      shop: order.shop,
+      shopName: order.shop?.name || "Livraison à domicile",
+      shop: order.shop || undefined,
       createdAt: order.createdAt,
       dataInvoice: {
         customer: {
           id: user.id || "",
-          name: user.name || "",
+          name: user.name ? user.name + " - " + user.company : "",
           address: (() => {
             const a =
               user?.address[0] && user?.address[0].line1
-                ? `${user?.address[0].line1} ${user?.address[0].postalCode} ${user?.address[0].city}`
+                ? addressFormatter(user.address[0])
                 : "";
             return a;
           })(),

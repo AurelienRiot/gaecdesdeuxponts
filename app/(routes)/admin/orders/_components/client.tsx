@@ -65,7 +65,6 @@ export const OrderClient: React.FC<OrderClientProps> = ({
   const shopsNameWithoutDuplicates = [
     ...new Set(shopsName.map((product) => product)),
   ].sort((a, b) => a.localeCompare(b));
-
   return (
     <>
       <Heading

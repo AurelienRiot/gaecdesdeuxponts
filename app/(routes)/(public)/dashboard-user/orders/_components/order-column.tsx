@@ -34,7 +34,7 @@ export type OrderColumnType = {
   productsList: { name: string; quantity?: string }[];
   createdAt: Date;
   shopName: string;
-  shop: Shop;
+  shop?: Shop;
   dataInvoice: DataInvoiceType;
 };
 export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
@@ -72,28 +72,33 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
   {
     accessorKey: "shopName",
     header: "Lieu de retrait",
-    cell: ({ row }) => (
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant={"linkHover2"}
-            className="justify-left flex flex-row items-center gap-2 whitespace-nowrap px-0 after:w-full hover:text-primary"
-          >
-            <Search className=" h-4 w-4 flex-shrink-0" />
+    cell: ({ row }) =>
+      row.original.shop ? (
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"linkHover2"}
+              className="justify-left flex flex-row items-center gap-2 whitespace-nowrap px-0 after:w-full hover:text-primary"
+            >
+              <Search className=" h-4 w-4 flex-shrink-0" />
 
-            {row.getValue("shopName")}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent asChild align="center" side="top">
-          <ShopCard
-            className="min-w-[500px]"
-            display="profile"
-            shop={row.original.shop}
-            coordinates={{ lat: undefined, long: undefined }}
-          />
-        </PopoverContent>
-      </Popover>
-    ),
+              {row.getValue("shopName")}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent asChild align="center" side="top">
+            <ShopCard
+              className="min-w-[500px]"
+              display="profile"
+              shop={row.original.shop}
+              coordinates={{ lat: undefined, long: undefined }}
+            />
+          </PopoverContent>
+        </Popover>
+      ) : (
+        <Button variant={"ghost"} className="cursor-default px-0">
+          {"Livraison à domicile"}
+        </Button>
+      ),
   },
 ];
 

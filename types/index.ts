@@ -56,7 +56,7 @@ export interface UserWithOrders extends User {
   orders: Order[];
 }
 export interface UserWithOrdersAndAdress extends User {
-  orders: (Order & { orderItems: OrderItem[]; shop: Shop })[];
+  orders: (Order & { orderItems: OrderItem[]; shop: Shop | null })[];
   address: Address[];
 }
 
