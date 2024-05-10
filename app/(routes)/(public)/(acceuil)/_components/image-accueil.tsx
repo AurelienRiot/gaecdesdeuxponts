@@ -10,7 +10,8 @@ const ImageAccueil = () => {
     >
       <div className="flex flex-col justify-center p-6 text-center @container">
         <h2 className="mb-4 text-2xl font-bold @sm:text-3xl @md:text-4xl @lg:text-5xl">
-          Lait cru frais directement de le ferme
+          Lait cru frais <span className="text-green-500">Bio</span> directement
+          de le ferme
         </h2>
         <p className="mb-8 @md:text-lg">
           Découvrez le goût pur et crémeux de notre lait cru frais de la ferme.

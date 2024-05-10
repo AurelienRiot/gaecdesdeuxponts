@@ -58,7 +58,7 @@ export const CartButton = () => {
   const cart = useCart();
 
   const totalQuantity = Object.values(cart.quantities).reduce((total, qte) => {
-    return total + qte;
+    return total + Math.floor(qte);
   }, 0);
 
   if (!isMounted) {

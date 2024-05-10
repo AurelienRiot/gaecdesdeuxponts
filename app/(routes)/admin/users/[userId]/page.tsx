@@ -49,7 +49,7 @@ const UserPage = async ({ params }: { params: { userId: string } }) => {
     products: order.orderItems
       .map((item) => {
         let name = item.name;
-        if (Number(item.quantity) > 1) {
+        if (item.quantity > 0 && item.quantity !== 1) {
           name += ` x${item.quantity}`;
         }
         return name;
@@ -57,7 +57,7 @@ const UserPage = async ({ params }: { params: { userId: string } }) => {
       .join(", "),
     productsList: order.orderItems.map((item) => {
       let name = item.name;
-      if (Number(item.quantity) > 1) {
+      if (item.quantity > 0 && item.quantity !== 1) {
         const quantity = ` x${item.quantity}`;
         return { name, quantity: quantity };
       }

@@ -41,7 +41,7 @@ const PageOrderTable = () => {
 
       productsList: order.orderItems.map((item) => {
         let name = item.name;
-        if (Number(item.quantity) > 1) {
+        if (item.quantity > 0 && item.quantity !== 1) {
           const quantity = ` x${item.quantity}`;
           return { name, quantity: quantity };
         }
@@ -50,7 +50,7 @@ const PageOrderTable = () => {
       products: order.orderItems
         .map((item) => {
           let name = item.name;
-          if (Number(item.quantity) > 1) {
+          if (item.quantity > 0 && item.quantity !== 1) {
             name += ` x${item.quantity}`;
           }
           return name;

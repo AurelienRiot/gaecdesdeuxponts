@@ -3,9 +3,12 @@ import Currency from "@/components/ui/currency";
 import { ProductWithOptionsAndMain } from "@/types";
 import Link from "next/link";
 import { PlateVis } from "./plate-vis";
-import AddToCartButton from "./product/cart-button";
+import AddToCartButton, {
+  CustomQuantityAddToCart,
+} from "./product/cart-button";
 import { Badge } from "./ui/badge";
 import { Separator } from "./ui/separator";
+import { toast } from "sonner";
 
 interface InfoProps {
   product: ProductWithOptionsAndMain;
@@ -57,7 +60,17 @@ const Info: React.FC<InfoProps> = ({
       )}
       <Separator className="w-48" />
 
-      <AddToCartButton type="text" data={product} />
+      {product.options.length > 0 && product.options[0].value === "Vrac" ? (
+        <CustomQuantityAddToCart
+          data={product}
+          custom={true}
+          onChange={() => {
+            toast.success("Produit ajouté au panier");
+          }}
+        />
+      ) : (
+        <AddToCartButton type="text" data={product} />
+      )}
 
       <PlateVis
         value={product.product.productSpecs}

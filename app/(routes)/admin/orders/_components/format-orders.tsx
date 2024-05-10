@@ -30,16 +30,16 @@ export function formatOrders(orders: Orders[]): OrderColumn[] {
     name: order.name,
     productsList: order.orderItems.map((item) => {
       let name = item.name;
-      if (Number(item.quantity) > 1) {
+      if (item.quantity > 0 && item.quantity !== 1) {
         const quantity = ` x${item.quantity}`;
-        return { name, quantity: quantity };
+        return { name, quantity };
       }
       return { name, quantity: "" };
     }),
     products: order.orderItems
       .map((item) => {
         let name = item.name;
-        if (Number(item.quantity) > 1) {
+        if (item.quantity > 0 && item.quantity !== 1) {
           name += ` x${item.quantity}`;
         }
         return name;

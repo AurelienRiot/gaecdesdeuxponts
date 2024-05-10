@@ -146,9 +146,10 @@ const Summary: React.FC<SummaryProps> = ({ role, shops }) => {
           {cart.items.map((item) => (
             <li key={item.id} className="flex justify-between tabular-nums	">
               <div>
-                {cart.quantities[item.id] > 1 && (
-                  <span> {cart.quantities[item.id]}x </span>
-                )}
+                {cart.quantities[item.id] > 0 &&
+                  cart.quantities[item.id] !== 1 && (
+                    <span> {cart.quantities[item.id]}x </span>
+                  )}
                 <strong>{item.name} </strong>{" "}
               </div>
               <Currency

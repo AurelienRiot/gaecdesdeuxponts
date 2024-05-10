@@ -24,19 +24,26 @@ const MobileNav = ({ children }: { children: React.ReactNode }) => {
         </SheetTrigger>
         <SheetContent
           side={"left"}
-          className=" min-w-[30vw] max-w-[90vw]   overflow-x-visible"
+          className=" min-w-[30vw] max-w-[90vw]   overflow-x-visible px-2 xs:px-6"
         >
           <SheetHeader>
-            <SheetTitle className="justify-left flex items-center">
+            <SheetTitle className="flex flex-wrap items-center justify-center gap-4 ">
               <Link href="/">
                 <Image
                   alt="Logo"
-                  className="h-16 w-auto "
+                  className="h-16 w-auto rounded-md"
                   src="/logo-rect.webp"
                   width={155.86}
                   height={56}
                 />
               </Link>
+              <Image
+                alt="Logo Agriculture-biologique"
+                className=" h-16 w-auto rounded-md bg-neutral-50 p-1"
+                src="/Agriculture-biologique.png"
+                width={67}
+                height={56}
+              />
             </SheetTitle>
           </SheetHeader>
           {children}

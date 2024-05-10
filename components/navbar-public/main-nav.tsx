@@ -23,7 +23,7 @@ export function MainNav({
 }) {
   return (
     <NavigationMenu
-      delayDuration={0}
+      delayDuration={10000}
       skipDelayDuration={0}
       orientation={orientation}
       className={className}
