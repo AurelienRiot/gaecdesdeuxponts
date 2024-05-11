@@ -33,7 +33,7 @@ export const UserPhone = () => {
   return !user ? (
     <Skeleton className="h-6 w-40" />
   ) : user.phone ? (
-    formatPhoneNumber(user.phone)
+    formatPhoneNumber(user.phone as any)
   ) : (
     "Non renseigné"
   );

@@ -84,7 +84,7 @@ const FeaturesWithHeading = () => {
       <h2 className="mb-2 max-w-3xl text-center text-2xl font-semibold text-primary  md:text-4xl ">
         Découvrez la Pureté du Lait Directement de la Ferme
       </h2>
-      <p className="max-w-sm text-center  text-secondary-foreground">
+      <p className="max-w-md text-center  text-secondary-foreground">
         Nos produits laitiers sont issus de fermes locales, garantissant une
         fraîcheur et une qualité inégalées. Profitez de la richesse naturelle du
         lait cru et des produits faits maison, sans conservateurs ni additifs.

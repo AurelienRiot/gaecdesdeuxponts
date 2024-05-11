@@ -29,6 +29,7 @@ export default function Home() {
       <FeaturesWithHeading />
       <WhyChooseUs />
       <ArticlePromotion />
+
       <PartenaireCards />
     </>
   );

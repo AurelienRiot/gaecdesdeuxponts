@@ -83,9 +83,6 @@ const Info: React.FC<InfoProps> = ({
 export default Info;
 
 const OptionsDisplay = ({ optionsArray, product, sameProducts }: InfoProps) => {
-  const url = product.product.isPro
-    ? `/dashboard-user/produits-pro/category/${product.product.categoryName}`
-    : `/category/${product.product.categoryName}`;
   return (
     <div>
       {optionsArray.map((option, index) => (
@@ -110,7 +107,7 @@ const OptionsDisplay = ({ optionsArray, product, sameProducts }: InfoProps) => {
 
               const isAvailable = index === 0 || selectedProduct;
 
-              let productUrl = `/product/${encodeURIComponent(product.productName)}?`;
+              let productUrl = "?";
               productOption.forEach((option, idx) => {
                 option.value
                   ? (productUrl += `${option.name}=${encodeURIComponent(option.value)}&`)
@@ -128,7 +125,7 @@ const OptionsDisplay = ({ optionsArray, product, sameProducts }: InfoProps) => {
                   className="py-1"
                 >
                   {isAvailable ? (
-                    <Link href={url + productUrl}>{value}</Link>
+                    <Link href={productUrl}>{value}</Link>
                   ) : (
                     <span aria-disabled>{value}</span>
                   )}

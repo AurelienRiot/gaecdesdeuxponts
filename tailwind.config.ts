@@ -249,6 +249,21 @@ module.exports = {
             transform: "scale(1)",
           },
         },
+        "disapear-top": {
+          "0%": {
+            transform: "translateY(25px)",
+            opacity: 0,
+          },
+          "10%,33%": {
+            transform: "translateY(0%)",
+            opacity: 1,
+          },
+
+          "40%,100%": {
+            transform: "translateY(-25px)",
+            opacity: 0,
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",

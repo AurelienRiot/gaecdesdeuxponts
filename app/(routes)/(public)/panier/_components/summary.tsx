@@ -371,5 +371,5 @@ export const makeCartUrl = (
     }).toString();
   }
 
-  return queryParams ? `/panier?${queryParams}` : "/panier";
+  return queryParams ? `?${queryParams}` : "?";
 };

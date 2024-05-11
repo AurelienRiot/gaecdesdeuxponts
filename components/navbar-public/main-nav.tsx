@@ -23,8 +23,8 @@ export function MainNav({
 }) {
   return (
     <NavigationMenu
-      delayDuration={10000}
-      skipDelayDuration={0}
+      delayDuration={100}
+      skipDelayDuration={500}
       orientation={orientation}
       className={className}
     >
@@ -79,13 +79,13 @@ export const aProposRoutes = [
     Icone: MapIcon,
   },
   {
-    href: "/#partenaires",
+    href: "#partenaires",
     title: "Nos partenaires",
     descripton: "Ils nous font confiance",
     Icone: TiBusinessCard,
   },
   {
-    href: "/#la-ferme",
+    href: "/la-ferme",
     title: "La Ferme",
     descripton: "Venez chercher votre lait directment à la ferme",
     Icone: GiCow,

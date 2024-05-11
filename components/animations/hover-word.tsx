@@ -1,14 +1,21 @@
-type HoverWordProps = {
-  word: string;
-};
-const HoverWord = ({ word }: HoverWordProps) => {
+import { cn } from "@/lib/utils";
+
+const HoverWord = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
   return (
-    <>
-      {" "}
-      <span className="inline-block relative z-10 before:inset-0   before:absolute  before:bg-sky-400 dark:before:bg-sky-600 before:z-[-1] before:max-w-0 before:animate-max-w before:duration-300 before:ease-linear group-hover:before:max-w-full">
-        {word}
-      </span>{" "}
-    </>
+    <span
+      className={cn(
+        " relative z-10 inline-block px-1 before:absolute   before:inset-0 before:z-[-1] before:max-w-0  before:rotate-1 before:skew-y-1 before:rounded-sm before:bg-green-500 before:duration-300 before:ease-linear group-hover:before:max-w-full ",
+        className,
+      )}
+    >
+      {children}
+    </span>
   );
 };
 

@@ -41,7 +41,7 @@ function PhoneCell<T>({ row }: { row: Row<PhoneCellProps<T>> }) {
   return (
     <>
       {row.getValue("phone") ? (
-        <span>{formatPhoneNumber(row.getValue("phone"))}</span>
+        <span>{formatPhoneNumber(row.getValue("phone") as any)}</span>
       ) : (
         <span>Non renseigné</span>
       )}

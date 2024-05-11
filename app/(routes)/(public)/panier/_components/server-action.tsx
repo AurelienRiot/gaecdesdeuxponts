@@ -83,7 +83,7 @@ export const checkOut = async ({
     return {
       success: false,
       message:
-        "Des prix ont changé et votre panier n'est pas valide, vider le panier et recharger la page",
+        "Des prix ont changé depuis votre dernière visite et votre panier n'est pas valide, vider le panier et recharger la page",
     };
   }
 

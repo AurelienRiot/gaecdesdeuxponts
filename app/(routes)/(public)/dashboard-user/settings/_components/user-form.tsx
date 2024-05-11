@@ -211,6 +211,7 @@ export const UserForm: React.FC<UserFormProps> = ({
                 <FormItem>
                   <FormLabel>Numéro de téléphone</FormLabel>
                   <FormControl>
+                    {/* @ts-ignore */}
                     <PhoneInput
                       defaultCountry="FR"
                       placeholder="Entrer un numéro de téléphone"

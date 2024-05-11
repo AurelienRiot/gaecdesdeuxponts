@@ -100,7 +100,7 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
             )}
             {!!shop.phone && (
               <Link href={`tel:${shop.phone}`} target="_blank">
-                {formatPhoneNumber(shop.phone)}
+                {formatPhoneNumber(shop.phone as any)}
               </Link>
             )}
             {!!shop.email && (
@@ -183,7 +183,7 @@ const CardInfo = ({ description }: { description: string }) => {
       </PopoverTrigger>
       <PopoverContent
         className={
-          " hide-scrollbar z-[101]   w-[400px] max-w-[90vw]    overscroll-none border-4 border-border p-0 outline-none"
+          " z-[101] w-[400px]   max-w-[90vw] overscroll-none    border-4 border-border p-0 outline-none hide-scrollbar"
         }
         align="center"
         side="bottom"

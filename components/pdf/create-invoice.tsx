@@ -176,7 +176,7 @@ const BillTo = ({ invoice }: { invoice: DataInvoiceType }) => (
     {!!invoice.customer.name && <Text>{invoice.customer.name}</Text>}
     {!!invoice.customer.address && <Text>{invoice.customer.address}</Text>}
     {!!invoice.customer.phone && (
-      <Text>{formatPhoneNumber(invoice.customer.phone)}</Text>
+      <Text>{formatPhoneNumber(invoice.customer.phone as any)}</Text>
     )}
     {!!invoice.customer.email && <Text>{invoice.customer.email}</Text>}
   </View>

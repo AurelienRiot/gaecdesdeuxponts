@@ -25,6 +25,10 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: "/qr-code",
+        destination: "/",
+      },
+      {
         source: "/ingest/static/:path*",
         destination: "https://eu-assets.i.posthog.com/static/:path*",
       },
