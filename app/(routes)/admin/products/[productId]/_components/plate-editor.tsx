@@ -3,8 +3,6 @@
 import { cn } from "@udecode/cn";
 import { Plate, TElement } from "@udecode/plate-common";
 import { useRef } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 
 import { CursorOverlay } from "@/components/plate-ui/cursor-overlay";
 import { Editor } from "@/components/plate-ui/editor";
@@ -45,41 +43,39 @@ export function PlateEditor({ loading, initialValue }: PlateEditorProps) {
 
             <div className="flex">
               <FormControl className="min-h-[20rem] lg:w-1/2">
-                <DndProvider backend={HTML5Backend}>
-                  <Plate
-                    plugins={plugins}
-                    initialValue={initialValue}
-                    onChange={(value) => {
-                      field.onChange(JSON.stringify(value));
-                    }}
+                <Plate
+                  plugins={plugins}
+                  initialValue={initialValue}
+                  onChange={(value) => {
+                    field.onChange(JSON.stringify(value));
+                  }}
+                >
+                  <div
+                    ref={containerRef}
+                    className={cn(
+                      // Block selection
+                      "rounded-md border border-input [&_.slate-start-area-left]:!w-[64px] [&_.slate-start-area-right]:!w-[64px] [&_.slate-start-area-top]:!h-4",
+                    )}
                   >
-                    <div
-                      ref={containerRef}
-                      className={cn(
-                        // Block selection
-                        "rounded-md border border-input [&_.slate-start-area-left]:!w-[64px] [&_.slate-start-area-right]:!w-[64px] [&_.slate-start-area-top]:!h-4 ",
-                      )}
-                    >
-                      <FixedToolbar>
-                        <FixedToolbarButtons />
-                      </FixedToolbar>
-                      <Editor
-                        disabled={loading}
-                        className="rounded-t-none bg-white bg-clip-content px-[96px] py-16 shadow-inner dark:bg-black"
-                        autoFocus
-                        focusRing={false}
-                        variant="ghost"
-                        size="md"
-                      />
-                      <FloatingToolbar>
-                        <FloatingToolbarButtons />
-                      </FloatingToolbar>
-                      <MentionCombobox items={MENTIONABLES} />
+                    <FixedToolbar>
+                      <FixedToolbarButtons />
+                    </FixedToolbar>
+                    <Editor
+                      disabled={loading}
+                      className="rounded-t-none  bg-clip-content  shadow-inner dark:bg-black"
+                      autoFocus
+                      focusRing={false}
+                      variant="ghost"
+                      size="md"
+                    />
+                    <FloatingToolbar>
+                      <FloatingToolbarButtons />
+                    </FloatingToolbar>
+                    <MentionCombobox items={MENTIONABLES} />
 
-                      <CursorOverlay containerRef={containerRef} />
-                    </div>
-                  </Plate>
-                </DndProvider>
+                    <CursorOverlay containerRef={containerRef} />
+                  </div>
+                </Plate>
               </FormControl>
             </div>
 

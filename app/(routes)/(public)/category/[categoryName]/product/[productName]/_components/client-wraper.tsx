@@ -1,7 +1,7 @@
 "use client";
 import { OptionsArray } from "@/app/(routes)/admin/products/[productId]/page";
 import Gallery from "@/components/gallery/gallery";
-import Info from "@/components/info";
+import Info from "@/components/product/info";
 import ProductList from "@/components/products-list";
 import { ProductWithOptionsAndMain } from "@/types";
 import { useSearchParams } from "next/navigation";

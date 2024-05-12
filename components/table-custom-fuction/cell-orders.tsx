@@ -17,7 +17,7 @@ function FactureCell<T>({ row }: { row: Row<FactureCellProps<T>> }) {
 
 type ProductCellProps<T = {}> = T & {
   products: string;
-  productsList: { name: string; quantity?: string }[];
+  productsList: { name: string; quantity?: string; unit?: string }[];
 };
 
 function ProductCell<T>({ row }: { row: Row<ProductCellProps<T>> }) {
@@ -25,8 +25,17 @@ function ProductCell<T>({ row }: { row: Row<ProductCellProps<T>> }) {
     <div className="flex flex-col gap-[1px]">
       {row.original.productsList.map((product) => (
         <span className="whitespace-nowrap" key={product.name}>
-          <strong>{product.name}</strong>
-          {product.quantity}
+          {!product.unit ? (
+            <>
+              <strong>{product.name}</strong>
+              {product.quantity ? ` x${product.quantity}` : ""}
+            </>
+          ) : (
+            <>
+              <strong>{product.name}</strong> {product.quantity}
+              {product.unit}
+            </>
+          )}
         </span>
       ))}
     </div>

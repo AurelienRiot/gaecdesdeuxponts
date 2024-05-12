@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { StickyScrollRevealDemo } from "./_components/scroll-reveal";
 
 const PageLaFerme = () => {
   return (
@@ -32,6 +33,7 @@ const PageLaFerme = () => {
           </div>
         </div>
       </div>
+      <StickyScrollRevealDemo />
     </section>
   );
 };

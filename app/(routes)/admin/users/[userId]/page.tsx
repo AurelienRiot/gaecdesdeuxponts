@@ -58,8 +58,8 @@ const UserPage = async ({ params }: { params: { userId: string } }) => {
     productsList: order.orderItems.map((item) => {
       let name = item.name;
       if (item.quantity > 0 && item.quantity !== 1) {
-        const quantity = ` x${item.quantity}`;
-        return { name, quantity: quantity };
+        const quantity = `${item.quantity}`;
+        return { name, quantity: quantity, unit: item.unit || undefined };
       }
       return { name, quantity: "" };
     }),

@@ -1,13 +1,12 @@
 import {
   Address,
-  Category,
+  MainProduct,
+  Option as OptionType,
   Order,
   OrderItem,
   Product,
   Shop,
   User,
-  Option as OptionType,
-  MainProduct,
 } from "@prisma/client";
 
 export interface SearchParams {

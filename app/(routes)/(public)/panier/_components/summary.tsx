@@ -23,6 +23,10 @@ import PlaceModal from "./place-modal";
 import { checkOut } from "./server-action";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import {
+  getUnitLabel,
+  hasOptionWithValue,
+} from "@/components/product/product-function";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 const farmShopId = "ac771e24-2fd8-4827-af71-8d3c566f62bb";
@@ -106,13 +110,25 @@ const Summary: React.FC<SummaryProps> = ({ role, shops }) => {
       totalPrice,
       shopId,
     });
+
     if (result.success) {
       router.push("/dashboard-user/orders");
       await addDelay(500);
       toast.success("Commande effectuée avec succès");
       cart.removeAll();
     } else {
-      toast.error(result.message);
+      if (result.ids) {
+        const changedProducts = result.ids.map(
+          (id) => cart.items.find((item) => item.id === id)?.name || "",
+        );
+        toast.error(
+          `Les produits suivants ont été modifiés depuis votre dernière visite veuillez les réajouter : ${changedProducts.join(", ")}`,
+          { position: "top-left", duration: 10000 },
+        );
+        result.ids.map((id) => cart.removeItem(id));
+      } else {
+        toast.error(result.message);
+      }
     }
 
     setLoading(false);
@@ -145,13 +161,20 @@ const Summary: React.FC<SummaryProps> = ({ role, shops }) => {
         <ul className="pt-4">
           {cart.items.map((item) => (
             <li key={item.id} className="flex justify-between tabular-nums	">
-              <div>
-                {cart.quantities[item.id] > 0 &&
-                  cart.quantities[item.id] !== 1 && (
-                    <span> {cart.quantities[item.id]}x </span>
-                  )}
-                <strong>{item.name} </strong>{" "}
-              </div>
+              {hasOptionWithValue(item.options, "Vrac") ? (
+                <div>
+                  {`${cart.quantities[item.id]}${getUnitLabel(item.unit).quantity} `}
+                  <strong>{item.name} </strong>{" "}
+                </div>
+              ) : (
+                <div>
+                  {cart.quantities[item.id] > 0 &&
+                    cart.quantities[item.id] !== 1 && (
+                      <span> {cart.quantities[item.id]}x </span>
+                    )}
+                  <strong>{item.name} </strong>{" "}
+                </div>
+              )}
               <Currency
                 value={Number(item.price) * cart.quantities[item.id]}
                 className="justify-self-end"

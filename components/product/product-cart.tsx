@@ -5,7 +5,7 @@ import Link from "next/link";
 import { FaInfo } from "react-icons/fa";
 import { Badge } from "../ui/badge";
 import { IconButton } from "../ui/button";
-import AddToCartButton from "./cart-button";
+import AddToCartButton from "./cart-buttons";
 import { makeProductUrl } from "./main-product-cart";
 
 interface ProductCartProps {
@@ -66,7 +66,7 @@ const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
           ))}
         </div>
         <div className="flex flex-wrap items-center justify-between text-primary">
-          <Currency className="text-lg" value={value || 0} />
+          <Currency className="text-lg" value={value || 0} unit={data.unit} />
           <AddToCartButton
             data={data}
             type="text"

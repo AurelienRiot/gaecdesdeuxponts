@@ -4,6 +4,7 @@ import { ReturnTypeServerAction } from "@/types";
 import { ProductFormValues } from "../_components/product-form";
 import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
+import { revalidateTag } from "next/cache";
 
 export async function createProduct({
   categoryName,
@@ -49,6 +50,7 @@ export async function createProduct({
             name: product.name,
             description: product.description,
             price: product.price || 0,
+            unit: product.unit,
             isFeatured: product.isFeatured,
             isArchived: product.isArchived,
             imagesUrl: product.imagesUrl,
@@ -65,6 +67,8 @@ export async function createProduct({
       },
     },
   });
+
+  revalidateTag("productfetch");
 
   return {
     success: true,

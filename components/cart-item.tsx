@@ -9,7 +9,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { makeProductUrl } from "./product/main-product-cart";
-import { CustomQuantityAddToCart } from "./product/cart-button";
+import { BulkQuantity, CustomQuantityAddToCart } from "./product/cart-buttons";
+import { hasOptionWithValue } from "./product/product-function";
 
 interface CartItemProps {
   data: ProductWithOptionsAndMain;
@@ -57,19 +58,14 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
             >
               {data.name}
             </Link>
-            {/* {data.options.map((option) => (
-              <Badge
-                key={option.name}
-                variant={"green"}
-                className="h-fit w-fit"
-              >
-                {option.name} : {option.value}
-              </Badge>
-            ))} */}
           </div>
-          <Currency value={value} />
+          <Currency value={value} unit={data.unit} />
 
-          <CustomQuantityAddToCart data={data} />
+          {hasOptionWithValue(data.options, "Vrac") ? (
+            <BulkQuantity product={data} />
+          ) : (
+            <CustomQuantityAddToCart data={data} />
+          )}
         </div>
       </div>
     </>

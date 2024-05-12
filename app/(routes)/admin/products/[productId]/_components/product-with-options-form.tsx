@@ -1,3 +1,5 @@
+import UploadImage from "@/components/images-upload/image-upload";
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button, IconButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -15,6 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Modal } from "@/components/ui/modal";
 import {
   Popover,
   PopoverContent,
@@ -22,21 +25,42 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
-import { Check, ChevronsUpDown, UploadCloud, X } from "lucide-react";
+import {
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsDown,
+  ChevronsUp,
+  ChevronsUpDown,
+  Trash,
+  UploadCloud,
+  X,
+} from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { OptionsArray } from "../page";
 import OptionValueForm from "./options-values-form";
 import { ProductFormValues } from "./product-form";
-import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
-import { Modal } from "@/components/ui/modal";
-import UploadImage from "@/components/images-upload/image-upload";
+import {
+  getUnitLabel,
+  hasOptionWithValue,
+} from "@/components/product/product-function";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Unit } from "@prisma/client";
 
 export const ProductWithOptions = ({
   optionsArray,
 }: {
   optionsArray: OptionsArray;
 }) => {
+  const [listChanges, setListChanges] = useState(0);
+
   const form = useFormContext<ProductFormValues>();
   const products = form.watch("products");
   const options = products[0].options;
@@ -44,7 +68,7 @@ export const ProductWithOptions = ({
   const addProduct = () => {
     const newProduct = {
       name: "",
-      description: "ajoutez une description",
+      description: "",
       isArchived: false,
       isFeatured: false,
       imagesUrl: [],
@@ -72,11 +96,11 @@ export const ProductWithOptions = ({
       control={form.control}
       name="products"
       render={({ field }) => (
-        <FormItem className="">
+        <FormItem key={listChanges} className="">
           <FormLabel>Produits</FormLabel>
           <FormControl>
             <div className="space-y-4">
-              <div className="flex items-end  gap-2">
+              <div className="flex flex-wrap items-end gap-4">
                 <Button
                   type="button"
                   variant="outline"
@@ -96,26 +120,30 @@ export const ProductWithOptions = ({
                   {"Ajouter une option"}
                 </Button>
 
-                <div className="flex gap-2">
-                  {options.map((_, optionIndex) => (
-                    <OptionsName
-                      options={options}
-                      optionIndex={optionIndex}
-                      optionsArray={optionsArray}
-                      products={products}
-                      key={optionIndex}
-                    />
-                  ))}
-                </div>
+                {options.map((_, optionIndex) => (
+                  <OptionsName
+                    options={options}
+                    optionIndex={optionIndex}
+                    optionsArray={optionsArray}
+                    products={products}
+                    key={optionIndex}
+                    setListChanges={setListChanges}
+                  />
+                ))}
               </div>
               {products.map((_, productIndex) => (
-                <ProductName
+                <div
                   key={productIndex}
-                  products={products}
-                  productIndex={productIndex}
-                  options={options}
-                  optionsArray={optionsArray}
-                />
+                  className="overflow-x-auto rounded-md p-4 pb-4    thin-scrollbar even:bg-secondary"
+                >
+                  <ProductName
+                    setListChanges={setListChanges}
+                    products={products}
+                    productIndex={productIndex}
+                    options={options}
+                    optionsArray={optionsArray}
+                  />
+                </div>
               ))}
             </div>
           </FormControl>
@@ -136,188 +164,265 @@ export function ProductName({
   options,
   optionsArray,
   products,
+  setListChanges,
 }: {
   productIndex: number;
   options: { name: string; value: string }[];
   optionsArray: OptionsArray;
   products: ProductFormValues["products"];
+  setListChanges: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const form = useFormContext<ProductFormValues>();
   const [openImage, setOpenImage] = useState(false);
 
+  const moveProductUp = () => {
+    if (productIndex > 0) {
+      const newProducts: ProductFormValues["products"] = [...products];
+      const temp = newProducts[productIndex - 1];
+      newProducts[productIndex - 1] = newProducts[productIndex];
+      newProducts[productIndex] = temp;
+      form.setValue("products", newProducts);
+      setListChanges((prev) => prev + 1);
+    }
+  };
+
+  const moveProductDown = () => {
+    if (productIndex < products.length - 1) {
+      const newProducts: ProductFormValues["products"] = [...products];
+      const temp = newProducts[productIndex + 1];
+      newProducts[productIndex + 1] = newProducts[productIndex];
+      newProducts[productIndex] = temp;
+      form.setValue("products", newProducts);
+      setListChanges((prev) => prev + 1);
+    }
+  };
+
   const deleteProduct = () => {
-    form.setValue(
-      "products",
-      products.filter(
-        (_, index) => index !== productIndex,
-      ) as ProductFormValues["products"],
-    );
+    const newProducts = products.filter((_, index) => index !== productIndex);
+    form.setValue("products", newProducts as ProductFormValues["products"]);
+    setListChanges((prev) => prev + 1);
   };
 
   return (
     <>
-      <div className="  space-y-4 overflow-x-auto px-4 pb-4">
-        <div className="flex w-[1800px] gap-4">
-          <FormField
-            control={form.control}
-            name={`products.${productIndex}.name`}
-            render={({ field }) => (
-              <FormItem className="relative w-48">
-                <FormLabel>{`Name du produit ${productIndex + 1}`}</FormLabel>
+      <div className="flex min-w-[1800px] gap-4">
+        <div className="flex h-full flex-col justify-between gap-4 py-2">
+          <IconButton
+            Icon={ChevronsUp}
+            className={
+              productIndex === 0
+                ? " cursor-not-allowed opacity-50 hover:scale-100"
+                : ""
+            }
+            iconClassName={"size-4"}
+            onClick={moveProductUp}
+            type="button"
+          />
+          <IconButton
+            Icon={ChevronsDown}
+            className={
+              productIndex === products.length - 1
+                ? " cursor-not-allowed opacity-50 hover:scale-100"
+                : ""
+            }
+            iconClassName="size-4"
+            onClick={moveProductDown}
+            type="button"
+          />
+        </div>
+
+        <FormField
+          control={form.control}
+          name={`products.${productIndex}.name`}
+          render={({ field }) => (
+            <FormItem className="relative w-48">
+              <FormLabel>{`Name du produit ${productIndex + 1}`}</FormLabel>
+              <FormControl>
+                <Input
+                  disabled={form.formState.isSubmitting}
+                  placeholder="Nom du produit"
+                  {...field}
+                />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name={`products.${productIndex}.price`}
+          render={({ field }) => (
+            <FormItem className="w-48">
+              <FormLabel>Prix</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  disabled={form.formState.isSubmitting}
+                  placeholder="9,99"
+                  {...field}
+                  value={products[productIndex].price || ""}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name={`products.${productIndex}.description`}
+          render={({ field }) => (
+            <FormItem className="w-96">
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <AutosizeTextarea
+                  disabled={form.formState.isSubmitting}
+                  placeholder="Description du produit"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name={`products.${productIndex}.isArchived`}
+          render={({ field }) => (
+            <FormItem className="flex  flex-row items-start space-x-3 space-y-0 rounded-md border ">
+              <label className="flex h-full w-full cursor-pointer flex-row items-start space-x-3 space-y-0 p-4">
                 <FormControl>
-                  <Input
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
                     disabled={form.formState.isSubmitting}
-                    placeholder="Nom du produit"
-                    {...field}
                   />
                 </FormControl>
-                {productIndex > 0 && (
-                  <IconButton
-                    type="button"
-                    onClick={deleteProduct}
-                    className="absolute -left-2 top-4 bg-destructive p-1 text-destructive-foreground"
-                    iconClassName="size-3"
-                    Icon={X}
+                <div className="space-y-1 leading-none">
+                  <FormLabel className="cursor-pointer">Archivé</FormLabel>
+                  <FormDescription>
+                    {"Ce produit n'apparaitra pas sur le site."}
+                  </FormDescription>
+                </div>
+              </label>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name={`products.${productIndex}.isFeatured`}
+          render={({ field }) => (
+            <FormItem className="flex  flex-row items-start space-x-3 space-y-0 rounded-md border ">
+              <label className="flex h-full w-full cursor-pointer flex-row items-start space-x-3 space-y-0 p-4">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    disabled={form.formState.isSubmitting}
                   />
-                )}
-                <FormMessage />
-              </FormItem>
-            )}
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel className="cursor-pointer">
+                    Mise en avant
+                  </FormLabel>
+                  <FormDescription>
+                    {"Ce produit apparaitra sur la page d'accueil."}
+                  </FormDescription>
+                </div>
+              </label>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name={`products.${productIndex}.imagesUrl`}
+          render={({ field }) => (
+            <FormItem className="">
+              <FormControl>
+                <>
+                  <ImageModal
+                    isOpen={openImage}
+                    onClose={() => setOpenImage(false)}
+                    selectedFiles={field.value}
+                    setSelectedFiles={(files: string[]) => {
+                      field.onChange(files);
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setOpenImage(true)}
+                    className="relative flex aspect-square  cursor-pointer flex-col items-center justify-center  rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-10 py-6 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700 
+                    "
+                  >
+                    <div className=" text-center ">
+                      <div className=" mx-auto max-w-min rounded-md border bg-foreground p-2">
+                        <UploadCloud
+                          size={20}
+                          className="text-primary-foreground"
+                        />
+                      </div>
+
+                      <FormLabel className="mt-2 text-sm font-semibold text-primary">
+                        Images
+                      </FormLabel>
+                    </div>
+                  </button>
+                </>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {productIndex > 0 || products.length > 1 ? (
+          <IconButton
+            type="button"
+            onClick={deleteProduct}
+            className="my-auto h-fit rounded-md bg-destructive p-1 text-destructive-foreground"
+            iconClassName="size-6 "
+            Icon={Trash}
           />
+        ) : null}
+      </div>
+      <div className="flex gap-4 pl-4">
+        {options.map((_, optionIndex) => (
+          <OptionValueForm
+            key={optionIndex}
+            options={options}
+            productIndex={productIndex}
+            optionIndex={optionIndex}
+            optionsArray={optionsArray}
+          />
+        ))}
+        {hasOptionWithValue(products[productIndex].options, "Vrac") && (
           <FormField
             control={form.control}
-            name={`products.${productIndex}.price`}
+            name={`products.${productIndex}.unit`}
             render={({ field }) => (
               <FormItem className="w-48">
-                <FormLabel>Prix</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    disabled={form.formState.isSubmitting}
-                    placeholder="9,99"
-                    {...field}
-                    value={field.value || ""}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name={`products.${productIndex}.description`}
-            render={({ field }) => (
-              <FormItem className="w-96">
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <AutosizeTextarea
-                    disabled={form.formState.isSubmitting}
-                    placeholder="Description du produit"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name={`products.${productIndex}.isArchived`}
-            render={({ field }) => (
-              <FormItem className="flex cursor-pointer flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                <label className="flex cursor-pointer flex-row items-start space-x-3 space-y-0">
+                <FormLabel>Unité</FormLabel>
+                <Select
+                  disabled={form.formState.isSubmitting}
+                  onValueChange={field.onChange}
+                  value={field.value}
+                >
                   <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      disabled={form.formState.isSubmitting}
-                    />
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selectionner l'unité" />
+                    </SelectTrigger>
                   </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>Archivé</FormLabel>
-                    <FormDescription>
-                      {"Ce produit n'apparaitra pas sur le site."}
-                    </FormDescription>
-                  </div>
-                </label>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name={`products.${productIndex}.isFeatured`}
-            render={({ field }) => (
-              <FormItem className="flex cursor-pointer flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                <label className="flex cursor-pointer flex-row items-start space-x-3 space-y-0">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      disabled={form.formState.isSubmitting}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>Mise en avant</FormLabel>
-                    <FormDescription>
-                      {"Ce produit apparaitra sur la page d'accueil."}
-                    </FormDescription>
-                  </div>
-                </label>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name={`products.${productIndex}.imagesUrl`}
-            render={({ field }) => (
-              <FormItem className="">
-                <FormControl>
-                  <>
-                    <ImageModal
-                      isOpen={openImage}
-                      onClose={() => setOpenImage(false)}
-                      selectedFiles={field.value}
-                      setSelectedFiles={(files: string[]) => {
-                        field.onChange(files);
-                      }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setOpenImage(true)}
-                      className="relative flex aspect-square  cursor-pointer flex-col items-center justify-center  rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-10 py-6 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700 
-                    "
-                    >
-                      <div className=" text-center ">
-                        <div className=" mx-auto max-w-min rounded-md border bg-foreground p-2">
-                          <UploadCloud
-                            size={20}
-                            className="text-primary-foreground"
-                          />
-                        </div>
-
-                        <FormLabel className="mt-2 text-sm font-semibold text-primary">
-                          Images
-                        </FormLabel>
-                      </div>
-                    </button>
-                  </>
-                </FormControl>
+                  <SelectContent>
+                    {Object.values(Unit).map((unit) => (
+                      <SelectItem key={unit} value={unit}>
+                        {getUnitLabel(unit).price}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
           />
-        </div>
-        <div className="space-y-4 pl-4">
-          {options.map((_, optionIndex) => (
-            <OptionValueForm
-              key={optionIndex}
-              options={options}
-              productIndex={productIndex}
-              optionIndex={optionIndex}
-              optionsArray={optionsArray}
-            />
-          ))}
-        </div>
+        )}
       </div>
     </>
   );
@@ -327,10 +432,12 @@ const OptionsName = ({
   products,
   optionIndex,
   options,
+  setListChanges,
 }: {
   optionsArray: OptionsArray;
   products: ProductFormValues["products"];
   optionIndex: number;
+  setListChanges: React.Dispatch<React.SetStateAction<number>>;
   options: { name: string; value: string }[];
 }) => {
   const form = useFormContext<ProductFormValues>();
@@ -354,13 +461,64 @@ const OptionsName = ({
       );
     });
   };
+
+  const moveOptionLeft = () => {
+    if (optionIndex > 0) {
+      const newOptions = [...options];
+      const temp = newOptions[optionIndex - 1];
+      newOptions[optionIndex - 1] = newOptions[optionIndex];
+      newOptions[optionIndex] = temp;
+      products.map((_, productIndex) => {
+        form.setValue(`products.${productIndex}.options`, newOptions);
+      });
+      setListChanges((prev) => prev + 1);
+    }
+  };
+
+  const moveOptionRigth = () => {
+    if (optionIndex < products.length - 1) {
+      const newOptions = [...options];
+      const temp = newOptions[optionIndex + 1];
+      newOptions[optionIndex + 1] = newOptions[optionIndex];
+      newOptions[optionIndex] = temp;
+      products.map((_, productIndex) => {
+        form.setValue(`products.${productIndex}.options`, newOptions);
+      });
+      setListChanges((prev) => prev + 1);
+    }
+  };
+
   return (
     <FormField
       control={form.control}
       name={`products.0.options.${optionIndex}.name`}
       render={({ field }) => (
         <FormItem className="relative w-48">
-          <FormLabel>{`Nom de l'option ${optionIndex + 1}`}</FormLabel>
+          <FormLabel className="flex gap-2 ">
+            <span className="flex items-center">{`Nom de l'option ${optionIndex + 1}`}</span>
+            <IconButton
+              Icon={ChevronLeft}
+              className={
+                optionIndex === 0
+                  ? " cursor-not-allowed opacity-50 hover:scale-100"
+                  : ""
+              }
+              iconClassName={"size-2"}
+              onClick={moveOptionLeft}
+              type="button"
+            />
+            <IconButton
+              Icon={ChevronRight}
+              className={
+                optionIndex === options.length - 1
+                  ? " cursor-not-allowed opacity-50 hover:scale-100"
+                  : ""
+              }
+              iconClassName="size-2"
+              onClick={moveOptionRigth}
+              type="button"
+            />
+          </FormLabel>
           <FormControl>
             <Popover open={openName} onOpenChange={setOpenName}>
               <PopoverTrigger asChild>
@@ -465,7 +623,7 @@ const ImageModal = ({
       description=""
       isOpen={isOpen}
       onClose={onClose}
-      className=" hide-scrollbar left-[50%] top-[50%] max-h-[90%] w-[90%] max-w-[90%] overflow-y-scroll"
+      className=" left-[50%] top-[50%] max-h-[90%] w-[90%] max-w-[90%] overflow-y-scroll hide-scrollbar"
     >
       <UploadImage
         selectedFiles={selectedFiles}

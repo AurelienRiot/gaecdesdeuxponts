@@ -115,6 +115,7 @@ model Product {
   isArchived   Boolean @default(false)
   imagesUrl    String[]
   options       Option[] @relation("ProductToOption")
+  unit          Unit? 
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -122,6 +123,12 @@ model Product {
   
 
   @@index([productName])
+}
+
+enum Unit {
+centgramme
+Kilogramme
+Litre
 }
 
 
@@ -164,6 +171,7 @@ model OrderItem {
   id        String @unique @id @default(cuid())
   price     Float
   quantity  Float @default(1)
+  unit      String?
   name      String
   categoryName String
   description  String @db.VarChar(1000)

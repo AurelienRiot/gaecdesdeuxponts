@@ -64,11 +64,16 @@
   h4,
   h5,
   h6 {
-    @apply font-display font-semibold;
+    @apply font-display font-bold;
   }
   h1,
   h2 {
     @apply tracking-tight;
+  }
+
+  .plate-ui h1,
+  .plate-ui h2 {
+    @apply tracking-wide;
   }
 }
 

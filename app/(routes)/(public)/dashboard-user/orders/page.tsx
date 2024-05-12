@@ -38,12 +38,14 @@ const PageOrderTable = () => {
   const formattedOrders: OrderColumnType[] = (user.orders || []).map(
     (order) => ({
       id: order.id,
-
       productsList: order.orderItems.map((item) => {
         let name = item.name;
         if (item.quantity > 0 && item.quantity !== 1) {
-          const quantity = ` x${item.quantity}`;
-          return { name, quantity: quantity };
+          return {
+            name,
+            quantity: `${item.quantity}`,
+            unit: item.unit || undefined,
+          };
         }
         return { name, quantity: "" };
       }),

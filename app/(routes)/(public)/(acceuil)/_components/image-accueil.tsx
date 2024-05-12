@@ -1,5 +1,3 @@
-import HoverWord from "@/components/animations/hover-word";
-import DebugContainer from "@/components/debug/debug-container";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,15 +5,12 @@ import Link from "next/link";
 const placeholders = [
   {
     text: "Cru",
-    animation: "animate-[disapear-top_6s_ease-in-out_infinite]",
   },
   {
     text: "Frais",
-    animation: "animate-[disapear-top_6s_ease-in-out_2s_infinite]",
   },
   {
     text: "Bio",
-    animation: "animate-[disapear-top_6s_ease-in-out_4s_infinite]",
   },
 ];
 
@@ -33,9 +28,9 @@ const ImageAccueil = () => {
               <span
                 key={i}
                 className={
-                  "absolute left-0 top-0 translate-y-0 text-green-500 opacity-0 " +
-                  placeholder.animation
+                  "absolute left-0 top-0 translate-y-0 animate-[disappear-top_6s_linear_infinite] text-green-500 opacity-0"
                 }
+                style={{ animationDelay: `${i * 2}s` }}
               >
                 {placeholder.text}
               </span>

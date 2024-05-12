@@ -6,12 +6,15 @@ const {
 function addGlobalUtilities({ addUtilities }: any) {
   const newUtilities = {
     ".hide-scrollbar": {
-      "-ms-overflow-style": "none",
       "scrollbar-width": "none",
+      "-ms-overflow-style": "-ms-autohiding-scrollbar",
       "-webkit-overflow-scrolling": "touch",
       "&::-webkit-scrollbar": {
         display: "none",
       },
+    },
+    ".thin-scrollbar": {
+      "scrollbar-width": "thin",
     },
   };
   addUtilities(newUtilities, ["responsive"]);

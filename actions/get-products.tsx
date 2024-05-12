@@ -16,8 +16,8 @@ export const getProductsByCategoryName = unstable_cache(
     });
     return products;
   },
-  ["getProductsByCategoryName"],
-  { revalidate: 60 * 1 },
+  ["getProductsByCategoryName", "productfetch"],
+  { revalidate: 60 * 60 },
 );
 
 export const getProProductsByCategoryName = unstable_cache(
@@ -35,8 +35,8 @@ export const getProProductsByCategoryName = unstable_cache(
     });
     return products;
   },
-  ["getProProductsByCategoryName"],
-  { revalidate: 60 * 1 },
+  ["getProProductsByCategoryName", "productfetch"],
+  { revalidate: 60 * 60 },
 );
 
 export const getMainProductsByCategoryName = async (categoryName: string) => {

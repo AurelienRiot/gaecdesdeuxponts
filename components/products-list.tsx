@@ -1,6 +1,5 @@
 import { ProductWithOptionsAndMain } from "@/types";
 import ProductCart from "./product/product-cart";
-import { ProductCart as ProductCartSkeleton } from "./skeleton-ui/product-cart-skeleton";
 
 import NoResults from "./ui/no-results";
 

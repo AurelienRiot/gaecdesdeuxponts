@@ -1,14 +1,15 @@
 "use client";
 
 import useCart from "@/hooks/use-cart";
-import { ProductWithOptionsAndMain } from "@/types";
-import { Button, IconButton } from "../ui/button";
-import { ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ProductWithOptionsAndMain } from "@/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ShoppingCart } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Button, IconButton } from "../ui/button";
 import {
   Form,
   FormControl,
@@ -18,6 +19,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
+import { getUnitLabel } from "./product-function";
 
 const AddToCartButton = ({
   data,
@@ -166,9 +168,10 @@ const CustomQuantity = ({
     quantity: z.coerce
       .number({
         required_error: "Veuillez entrer un nombre",
-        invalid_type_error: "Veuillez entrer un nombre",
+        invalid_type_error: "Veuillez entrer un nombre entier",
       })
-      .min(0.1, { message: "Veuillez entrer une quantité supérieur à 0.1" }),
+      .int({ message: "Veuillez entrer un nombre entier" })
+      .min(1, { message: "Veuillez entrer un nombre entier positif" }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -179,7 +182,7 @@ const CustomQuantity = ({
   });
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-    handleQuantity(parseFloat(data.quantity.toFixed(1)));
+    handleQuantity(data.quantity);
     setCustomQuantity(false);
   };
 
@@ -196,14 +199,7 @@ const CustomQuantity = ({
             <FormItem className="w-20">
               <FormMessage className="whitespace-nowrap" />
               <FormControl>
-                <Input
-                  placeholder="Quantité"
-                  className="w-20"
-                  {...field}
-                  onChange={(e) =>
-                    field.onChange(e.target.value.replace(",", "."))
-                  }
-                />
+                <Input placeholder="Quantité" className="w-20" {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -214,6 +210,81 @@ const CustomQuantity = ({
           type="submit"
         >
           Valider
+        </Button>
+      </form>
+    </Form>
+  );
+};
+
+export const BulkQuantity = ({
+  product,
+}: {
+  product: ProductWithOptionsAndMain;
+}) => {
+  const { quantities, addItem, changeQuantity } = useCart();
+  const quantity = quantities[product.id] || undefined;
+  const formSchema = z.object({
+    quantity: z.coerce
+      .number({
+        required_error: "Veuillez entrer un nombre",
+        invalid_type_error: "Veuillez entrer un nombre",
+      })
+      .min(0, { message: "Veuillez entrer un nombre positif" }),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      quantity,
+    },
+  });
+
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    const qty = Number(data.quantity.toFixed(1));
+    if (quantity) {
+      changeQuantity(product.id, qty);
+      toast.success("Quantité modifiée");
+    } else {
+      if (data.quantity > 0) {
+        addItem(product, qty);
+      }
+    }
+    form.reset({ quantity: qty });
+  };
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-wrap items-end gap-4 pt-4"
+      >
+        <FormField
+          control={form.control}
+          name="quantity"
+          render={({ field }) => (
+            <FormItem className="justify-left relative flex w-fit items-center gap-1 ">
+              <FormMessage className="absolute -top-6 left-0 whitespace-nowrap" />
+              <FormControl>
+                <Input
+                  placeholder={getUnitLabel(product.unit).type || "Quantité"}
+                  className="w-[70px]"
+                  {...field}
+                  onChange={(e) =>
+                    field.onChange(e.target.value.replace(",", "."))
+                  }
+                />
+              </FormControl>
+              {getUnitLabel(product.unit).quantity}
+            </FormItem>
+          )}
+        />
+        <Button
+          variant="rounded"
+          className={"flex items-center gap-x-2 hover:scale-105"}
+          type="submit"
+        >
+          {quantity ? "Modifier la quantité" : " Ajouter au panier"}
+          <ShoppingCart className={"size-4"} />
         </Button>
       </form>
     </Form>

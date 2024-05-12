@@ -1,9 +1,8 @@
 "use client";
 import { plugins } from "@/lib/plate/plate-plugins";
+import { cn } from "@/lib/utils";
 import { Plate } from "@udecode/plate-common";
 import { Editor } from "./plate-ui/editor";
-import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
 
 export const PlateVis = ({
   value,

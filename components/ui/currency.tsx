@@ -1,12 +1,15 @@
 import { cn, currencyFormatter } from "@/lib/utils";
 import { Skeleton } from "../skeleton-ui/skeleton";
+import { getUnitLabel } from "../product/product-function";
+import { Unit } from "@prisma/client";
 
 interface CurrencyProps {
   value?: number | null;
+  unit?: Unit | null;
   className?: string;
 }
 
-const Currency: React.FC<CurrencyProps> = ({ value, className }) => {
+const Currency: React.FC<CurrencyProps> = ({ value, className, unit }) => {
   if (typeof value !== "number") return <Skeleton className="h-4 w-12" />;
   return (
     <span
@@ -15,7 +18,7 @@ const Currency: React.FC<CurrencyProps> = ({ value, className }) => {
         className,
       )}
     >
-      {`${currencyFormatter.format(value)} `}
+      {`${currencyFormatter.format(value)} `} {getUnitLabel(unit).price}
     </span>
   );
 };

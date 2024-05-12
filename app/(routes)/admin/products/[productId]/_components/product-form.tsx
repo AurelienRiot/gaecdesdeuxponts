@@ -25,7 +25,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { MainProductWithProducts } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Category } from "@prisma/client";
+import { Category, Unit } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -53,6 +53,7 @@ const productSchema = z.object({
     .refine((val) => val !== undefined, {
       message: "Veuillez entrer un prix valide",
     }),
+  unit: z.enum(["centgramme", "Kilogramme", "Litre"]).optional(),
   isFeatured: z.boolean().default(false),
   isArchived: z.boolean().default(false),
   imagesUrl: z.array(z.string()),
@@ -74,6 +75,8 @@ const mainProductSchema = z.object({
     .array(productSchema)
     .nonempty("Veuillez ajouter au moins un produit"),
 });
+
+export type ProductSchema = z.infer<typeof productSchema>;
 
 export type ProductFormValues = z.infer<typeof mainProductSchema>;
 
@@ -113,6 +116,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
         name: product.name,
         description: product.description,
         price: product.price,
+        unit: product.unit || undefined,
         isFeatured: product.isFeatured,
         isArchived: product.isArchived,
         imagesUrl: product.imagesUrl,
@@ -268,7 +272,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               control={form.control}
               name="isArchived"
               render={({ field }) => (
-                <FormItem className="flex cursor-pointer flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormItem className="flex  flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                   <label className="flex cursor-pointer flex-row items-start space-x-3 space-y-0">
                     <FormControl>
                       <Checkbox
@@ -278,7 +282,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       />
                     </FormControl>
                     <div className="space-y-1 leading-none">
-                      <FormLabel>Archivé</FormLabel>
+                      <FormLabel className="cursor-pointer">Archivé</FormLabel>
                       <FormDescription>
                         {"Ce produit n'apparaitra pas sur le site."}
                       </FormDescription>
@@ -291,7 +295,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               control={form.control}
               name="isPro"
               render={({ field }) => (
-                <FormItem className="flex cursor-pointer flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormItem className="flex  flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                   <label className="flex cursor-pointer flex-row items-start space-x-3 space-y-0">
                     <FormControl>
                       <Checkbox
@@ -301,7 +305,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       />
                     </FormControl>
                     <div className="space-y-1 leading-none">
-                      <FormLabel>Professionel</FormLabel>
+                      <FormLabel className="cursor-pointer">
+                        Professionel
+                      </FormLabel>
                       <FormDescription>
                         {
                           "Ce produit apparaitra sur la partie professionnel du site."

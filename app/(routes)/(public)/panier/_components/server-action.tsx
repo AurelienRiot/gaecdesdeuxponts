@@ -2,6 +2,7 @@
 
 import { checkUser } from "@/components/auth/checkAuth";
 import OrderEmail from "@/components/email/order";
+import { getUnitLabel } from "@/components/product/product-function";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import { currencyFormatter, dateFormatter } from "@/lib/utils";
@@ -10,6 +11,16 @@ import { render } from "@react-email/render";
 import { nanoid } from "nanoid";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
+
+type CheckOutReturnType =
+  | {
+      success: true;
+    }
+  | {
+      success: false;
+      message: string;
+      ids?: string[];
+    };
 
 type CheckOutProps = {
   totalPrice: number;
@@ -27,7 +38,7 @@ export const checkOut = async ({
   date,
   totalPrice,
   shopId,
-}: CheckOutProps): Promise<ReturnTypeServerAction<null>> => {
+}: CheckOutProps): Promise<CheckOutReturnType> => {
   const isAuth = await checkUser();
 
   if (!isAuth) {
@@ -63,6 +74,17 @@ export const checkOut = async ({
       product: true,
     },
   });
+  const foundProductIds = products.map((product) => product.id);
+  const notFoundProductIds = productIds.filter(
+    (id) => !foundProductIds.includes(id),
+  );
+  if (notFoundProductIds.length > 0) {
+    return {
+      success: false,
+      message: `Produits modifiés`,
+      ids: notFoundProductIds,
+    };
+  }
 
   const productsWithQuantity = products.map((product) => {
     return {
@@ -98,6 +120,7 @@ export const checkOut = async ({
           description: product.item.description,
           categoryName: product.item.product.categoryName,
           price: product.item.price,
+          unit: getUnitLabel(product.item.unit).quantity,
           quantity: product.quantity,
         })),
       },
@@ -124,6 +147,5 @@ export const checkOut = async ({
 
   return {
     success: true,
-    data: null,
   };
 };

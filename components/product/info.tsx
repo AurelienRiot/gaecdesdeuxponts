@@ -1,14 +1,15 @@
 import { OptionsArray } from "@/app/(routes)/admin/products/[productId]/page";
 import Currency from "@/components/ui/currency";
+import useCart from "@/hooks/use-cart";
 import { ProductWithOptionsAndMain } from "@/types";
 import Link from "next/link";
-import { PlateVis } from "./plate-vis";
+import { PlateVis } from "../plate-vis";
+import { Badge } from "../ui/badge";
+import { Separator } from "../ui/separator";
 import AddToCartButton, {
+  BulkQuantity,
   CustomQuantityAddToCart,
-} from "./product/cart-button";
-import { Badge } from "./ui/badge";
-import { Separator } from "./ui/separator";
-import { toast } from "sonner";
+} from "./cart-buttons";
 
 interface InfoProps {
   product: ProductWithOptionsAndMain;
@@ -23,8 +24,8 @@ const Info: React.FC<InfoProps> = ({
   product,
   optionsArray,
 }) => {
+  const { quantities } = useCart();
   const value = product.price;
-
   return (
     <div className="space-y-6">
       <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
@@ -33,7 +34,7 @@ const Info: React.FC<InfoProps> = ({
       <Separator className="w-48" />
       <div className="mt-3 items-end justify-between ">
         <p className="text-2xl text-gray-900 dark:text-white">
-          <Currency value={value} />
+          <Currency value={value} unit={product.unit} />
         </p>
       </div>
       {!!product.description && (
@@ -61,13 +62,9 @@ const Info: React.FC<InfoProps> = ({
       <Separator className="w-48" />
 
       {product.options.length > 0 && product.options[0].value === "Vrac" ? (
-        <CustomQuantityAddToCart
-          data={product}
-          custom={true}
-          onChange={() => {
-            toast.success("Produit ajouté au panier");
-          }}
-        />
+        <BulkQuantity product={product} />
+      ) : quantities[product.id] ? (
+        <CustomQuantityAddToCart data={product} />
       ) : (
         <AddToCartButton type="text" data={product} />
       )}
@@ -95,13 +92,15 @@ const OptionsDisplay = ({ optionsArray, product, sameProducts }: InfoProps) => {
                 name: o.name,
                 value: idx < index ? o.value : null,
               }));
-              const selectedProduct = sameProducts.find((p) => {
+              const selectedProduct = sameProducts.some((p) => {
                 return productOption.every((o, idx) => {
                   return o.value
                     ? o.value ===
                         p.options.find((op) => op.name === o.name)?.value
-                    : p.options.find((op) => op.name === o.name)?.value ===
-                        value;
+                    : idx === index
+                      ? value ===
+                        p.options.find((op) => op.name === o.name)?.value
+                      : true;
                 });
               });
 

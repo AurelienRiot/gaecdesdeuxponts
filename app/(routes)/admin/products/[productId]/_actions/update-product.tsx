@@ -4,6 +4,7 @@ import { ReturnTypeServerAction } from "@/types";
 import { ProductFormValues } from "../_components/product-form";
 import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
+import { revalidateTag } from "next/cache";
 
 export async function updateProduct(
   {
@@ -62,6 +63,7 @@ export async function updateProduct(
         create: products.map((product) => {
           return {
             name: product.name,
+            unit: product.unit,
             description: product.description,
             price: product.price || 0,
             isFeatured: product.isFeatured,
@@ -80,6 +82,7 @@ export async function updateProduct(
       },
     },
   });
+  revalidateTag("productfetch");
 
   return {
     success: true,

@@ -31,7 +31,7 @@ export type OrderColumnType = {
   datePickUp: Date;
   totalPrice: string;
   products: string;
-  productsList: { name: string; quantity?: string }[];
+  productsList: { name: string; quantity?: string; unit?: string }[];
   createdAt: Date;
   shopName: string;
   shop?: Shop;
