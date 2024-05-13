@@ -4,7 +4,7 @@ import useCart from "@/hooks/use-cart";
 import { AnimatePresence, motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import { forwardRef, useEffect, useState } from "react";
+import { Suspense, forwardRef, useEffect, useState } from "react";
 import { HiOutlineExternalLink } from "react-icons/hi";
 import CartItem from "../cart-item";
 import { Button } from "../ui/button";
@@ -66,7 +66,10 @@ export const CartButton = () => {
   }
   return (
     <>
-      <AutoCloseSheet setIsOpen={setIsOpen} />
+      <Suspense fallback={null}>
+        {" "}
+        <AutoCloseSheet setIsOpen={setIsOpen} />{" "}
+      </Suspense>
       <Sheet onOpenChange={setIsOpen} open={isOpen}>
         <SheetTrigger asChild>
           <CartIcon qty={totalQuantity} />

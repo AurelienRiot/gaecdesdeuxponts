@@ -9,7 +9,7 @@ import {
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import AutoCloseSheet from "../auto-close-sheet";
 
 const MobileNav = ({ children }: { children: React.ReactNode }) => {
@@ -17,7 +17,10 @@ const MobileNav = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <AutoCloseSheet setIsOpen={setIsOpen} />
+      <Suspense fallback={null}>
+        {" "}
+        <AutoCloseSheet setIsOpen={setIsOpen} />{" "}
+      </Suspense>
       <Sheet onOpenChange={setIsOpen} open={isOpen}>
         <SheetTrigger>
           <HamburgerMenuIcon className="h-6 w-6 lg:hidden" />

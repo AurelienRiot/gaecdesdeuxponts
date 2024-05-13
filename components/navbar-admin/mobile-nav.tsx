@@ -17,7 +17,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown, Menu } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { adminRoutes } from "./main-nav";
 import AutoCloseSheet from "../auto-close-sheet";
 
@@ -36,7 +36,10 @@ export default function MobileNav({ className }: MobileNavProps) {
 
   return (
     <>
-      <AutoCloseSheet setIsOpen={setOpen} />
+      <Suspense fallback={null}>
+        {" "}
+        <AutoCloseSheet setIsOpen={setOpen} />{" "}
+      </Suspense>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
