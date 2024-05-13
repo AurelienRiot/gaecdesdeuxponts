@@ -1,4 +1,5 @@
-import { usePathname } from "next/navigation";
+"use client";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 const AutoCloseSheet = ({
@@ -7,9 +8,10 @@ const AutoCloseSheet = ({
   setIsOpen: (isOpen: boolean) => void;
 }) => {
   const pathName = usePathname();
+  const searchParams = useSearchParams();
   useEffect(() => {
     setIsOpen(false);
-  }, [pathName, setIsOpen]);
+  }, [pathName, searchParams, setIsOpen]);
 
   return null;
 };

@@ -10,13 +10,21 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { X } from "lucide-react";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Marker, useMap } from "react-leaflet";
 import { MakePin } from "./marker-pin";
 import "./marker.css";
 import { cn } from "@/lib/utils";
 
-const MapFocus = ({ className }: { className?: string }) => {
+const MapFocus = ({
+  className,
+  setCoordinates,
+}: {
+  className?: string;
+  setCoordinates: Dispatch<
+    SetStateAction<{ long: number | undefined; lat: number | undefined }>
+  >;
+}) => {
   const [suggestions, setSuggestions] = useState<Suggestion[] | undefined>(
     undefined,
   );
@@ -66,7 +74,7 @@ const MapFocus = ({ className }: { className?: string }) => {
           {suggestions &&
             suggestions.map((address, index) => (
               <CommandItem
-                className="cursor-pointer    bg-popover text-popover-foreground"
+                className="cursor-pointer   bg-popover text-popover-foreground"
                 value={index.toString()}
                 key={address.label}
                 onSelect={() => {
@@ -80,6 +88,10 @@ const MapFocus = ({ className }: { className?: string }) => {
                     lat: address.coordinates[1],
                     long: address.coordinates[0],
                   });
+                  setCoordinates({
+                    long: address.coordinates[0],
+                    lat: address.coordinates[1],
+                  });
                   setSuggestions(undefined);
                   setQuery(address.label);
                 }}
@@ -92,7 +104,7 @@ const MapFocus = ({ className }: { className?: string }) => {
       {!!pin && (
         <Marker
           position={[pin.lat, pin.long]}
-          icon={MakePin("green", pin.label)}
+          icon={MakePin("green", pin.label, null)}
         ></Marker>
       )}
     </>

@@ -5,7 +5,7 @@ import { ShopCard } from "@/components/display-shops/shop-card";
 import { Shop } from "@prisma/client";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { MapContainer, Marker, Popup, TileLayer, Tooltip } from "react-leaflet";
 import MapFocus from "./map-focus";
 import { MakePin } from "./marker-pin";
@@ -25,7 +25,12 @@ const PlacePicker = ({
 
   return (
     <>
-      <Leaflet shops={shops} farmShop={farmShop} />
+      <Leaflet
+        shops={shops}
+        farmShop={farmShop}
+        setCoordinates={setCoordinates}
+        coordinates={coordinates}
+      />
       <div className="flex flex-wrap items-center justify-start gap-2">
         <AddressInput
           setSortedShops={setSortedShops}
@@ -56,9 +61,15 @@ const PlacePicker = ({
 const Leaflet = ({
   shops,
   farmShop,
+  setCoordinates,
+  coordinates,
 }: {
   shops: Shop[];
   farmShop: Shop | null;
+  setCoordinates: Dispatch<
+    SetStateAction<{ long: number | undefined; lat: number | undefined }>
+  >;
+  coordinates: { long: number | undefined; lat: number | undefined };
 }) => {
   return (
     <MapContainer
@@ -71,22 +82,25 @@ const Leaflet = ({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
 
-      <MapFocus className="absolute left-12 top-3  w-fit items-center bg-transparent" />
+      <MapFocus
+        className="absolute left-12 top-3  w-fit items-center bg-transparent"
+        setCoordinates={setCoordinates}
+      />
       {shops.map((shop) => (
         <Marker
           key={shop.id}
           position={[shop.lat, shop.long]}
-          icon={MakePin("blue", shop.name)}
+          icon={MakePin("blue", shop.name, shop.imageUrl)}
         >
           <Popup>
             <ShopCard
               display="find"
               shop={shop}
               key={shop.name}
-              coordinates={{ long: undefined, lat: undefined }}
+              coordinates={coordinates}
             />{" "}
           </Popup>
-          <Tooltip direction="bottom" offset={[0, -25]} opacity={1}>
+          <Tooltip direction="top" offset={[0, -65]} opacity={1}>
             <span>{"Afficher"}</span>
           </Tooltip>
         </Marker>
@@ -94,13 +108,13 @@ const Leaflet = ({
       {farmShop && (
         <Marker
           position={[farmShop.lat, farmShop.long]}
-          icon={MakePin("red", farmShop.name)}
+          icon={MakePin("red", farmShop.name, farmShop.imageUrl)}
         >
           <Popup>
             <ShopCard
               display="find"
               shop={farmShop}
-              coordinates={{ long: undefined, lat: undefined }}
+              coordinates={coordinates}
             />{" "}
           </Popup>
           <Tooltip direction="top" offset={[0, -65]} opacity={1}>

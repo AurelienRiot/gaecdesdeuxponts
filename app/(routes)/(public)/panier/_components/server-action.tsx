@@ -6,7 +6,6 @@ import { getUnitLabel } from "@/components/product/product-function";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import { currencyFormatter, dateFormatter } from "@/lib/utils";
-import { ReturnTypeServerAction } from "@/types";
 import { render } from "@react-email/render";
 import { nanoid } from "nanoid";
 
@@ -74,17 +73,6 @@ export const checkOut = async ({
       product: true,
     },
   });
-  const foundProductIds = products.map((product) => product.id);
-  const notFoundProductIds = productIds.filter(
-    (id) => !foundProductIds.includes(id),
-  );
-  if (notFoundProductIds.length > 0) {
-    return {
-      success: false,
-      message: `Produits modifiés`,
-      ids: notFoundProductIds,
-    };
-  }
 
   const productsWithQuantity = products.map((product) => {
     return {
@@ -102,11 +90,17 @@ export const checkOut = async ({
   );
 
   if (trueTotalPrice !== totalPrice) {
-    return {
-      success: false,
-      message:
-        "Des prix ont changé depuis votre dernière visite et votre panier n'est pas valide, vider le panier et recharger la page",
-    };
+    const foundProductIds = products.map((product) => product.id);
+    const notFoundProductIds = productIds.filter(
+      (id) => !foundProductIds.includes(id),
+    );
+    if (notFoundProductIds.length > 0) {
+      return {
+        success: false,
+        message: `Produits modifiés`,
+        ids: notFoundProductIds,
+      };
+    }
   }
 
   const order = await prismadb.order.create({

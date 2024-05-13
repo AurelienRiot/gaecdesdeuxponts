@@ -69,19 +69,19 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
           {...props}
         >
           <CardHeader>
-            <CardTitle className="flex  cursor-pointer items-center justify-start gap-2">
+            <CardTitle className="flex  cursor-pointer items-center justify-center gap-2">
               {shop.imageUrl ? (
-                <span className=" relative aspect-square h-[30px] rounded-sm bg-transparent transition-transform hover:scale-150">
+                <span className=" relative size-16 rounded-sm bg-transparent transition-transform hover:scale-150">
                   <Image
                     src={shop.imageUrl}
                     alt={shop.name}
                     fill
                     sizes="(max-width: 768px) 45px, (max-width: 1200px) 45px, 45px"
-                    className="rounded-sm object-cover"
+                    className="rounded-sm object-contain"
                   />
                 </span>
               ) : null}
-              <span className="text-lg sm:text-xl lg:text-2xl">
+              <span className="text-balance text-center text-lg sm:text-xl lg:text-2xl">
                 {shop.name}
               </span>
             </CardTitle>
