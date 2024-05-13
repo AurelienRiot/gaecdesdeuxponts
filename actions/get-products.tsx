@@ -39,31 +39,35 @@ export const getProProductsByCategoryName = unstable_cache(
   { revalidate: 60 * 60 },
 );
 
-export const getMainProductsByCategoryName = async (categoryName: string) => {
-  const products = await prismadb.mainProduct.findMany({
-    where: {
-      isArchived: false,
-      isPro: false,
-      categoryName,
-    },
-    include: { products: { include: { options: true } } },
-  });
-  return products;
-};
+export const getMainProductsByCategoryName = unstable_cache(
+  async (categoryName: string) => {
+    const products = await prismadb.mainProduct.findMany({
+      where: {
+        isArchived: false,
+        isPro: false,
+        categoryName,
+      },
+    });
+    return products;
+  },
+  ["getMainProductsByCategoryName", "productfetch"],
+  { revalidate: 60 * 60 },
+);
 
-export const getProMainProductsByCategoryName = async (
-  categoryName: string,
-) => {
-  const products = await prismadb.mainProduct.findMany({
-    where: {
-      isArchived: false,
-      isPro: true,
-      categoryName,
-    },
-    include: { products: { include: { options: true } } },
-  });
-  return products;
-};
+export const getProMainProductsByCategoryName = unstable_cache(
+  async (categoryName: string) => {
+    const products = await prismadb.mainProduct.findMany({
+      where: {
+        isArchived: false,
+        isPro: true,
+        categoryName,
+      },
+    });
+    return products;
+  },
+  ["getProMainProductsByCategoryName", "productfetch"],
+  { revalidate: 60 * 60 },
+);
 
 export const getUniqueProductsByCategory = async (categoryName: string) => {
   const products = await prismadb.mainProduct.findMany({
@@ -75,16 +79,20 @@ export const getUniqueProductsByCategory = async (categoryName: string) => {
   return products;
 };
 
-export const getFeaturedProducts = async () => {
-  const products = await prismadb.product.findMany({
-    where: {
-      isArchived: false,
-      isFeatured: true,
-    },
-    include: {
-      options: true,
-      product: true,
-    },
-  });
-  return products;
-};
+export const getFeaturedProducts = unstable_cache(
+  async () => {
+    const products = await prismadb.product.findMany({
+      where: {
+        isArchived: false,
+        isFeatured: true,
+      },
+      include: {
+        options: true,
+        product: true,
+      },
+    });
+    return products;
+  },
+  ["getFeaturedProducts", "productfetch"],
+  { revalidate: 60 * 60 },
+);

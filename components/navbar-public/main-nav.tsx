@@ -79,7 +79,7 @@ export const aProposRoutes = [
     Icone: MapIcon,
   },
   {
-    href: "#partenaires",
+    href: "/#partenaires",
     title: "Nos partenaires",
     descripton: "Ils nous font confiance",
     Icone: TiBusinessCard,

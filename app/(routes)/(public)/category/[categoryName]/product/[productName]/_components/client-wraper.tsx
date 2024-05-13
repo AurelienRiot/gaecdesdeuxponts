@@ -2,8 +2,10 @@
 import { OptionsArray } from "@/app/(routes)/admin/products/[productId]/page";
 import Gallery from "@/components/gallery/gallery";
 import Info from "@/components/product/info";
+import MainProductCart from "@/components/product/main-product-cart";
 import ProductList from "@/components/products-list";
 import { ProductWithOptionsAndMain } from "@/types";
+import { MainProduct } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -13,7 +15,7 @@ const ClientWrapper = ({
   optionsArray,
 }: {
   products: ProductWithOptionsAndMain[];
-  suggestedProducts: ProductWithOptionsAndMain[];
+  suggestedProducts: MainProduct[];
   optionsArray: OptionsArray;
 }) => {
   const [product, setProduct] = useState(products[0]);
@@ -54,7 +56,16 @@ const ClientWrapper = ({
       </div>
       <hr className="my-10" />
       {suggestedProducts.length > 0 && (
-        <ProductList title="Produits Similaires" items={suggestedProducts} />
+        <div className="space-y-10 py-20">
+          <h2 className="text-center text-3xl font-bold text-primary lg:text-5xl ">
+            Autres produits de la categorie {product.product.categoryName}
+          </h2>
+          <div className="flex flex-wrap justify-center gap-12">
+            {suggestedProducts.map((item) => (
+              <MainProductCart data={item} key={item.id} />
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );

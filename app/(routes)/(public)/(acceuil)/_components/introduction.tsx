@@ -1,4 +1,5 @@
 import Image from "next/image";
+import LogoAB from "@/public/Logo-AB.jpg";
 
 const farmInfo = [
   {
@@ -24,7 +25,13 @@ function FarmIntroduction() {
           <h2 className="mb-4 text-4xl font-semibold">
             Introduction à la Ferme
           </h2>
-          <Image src={"/Logo-AB.jpg"} alt="logo AB" width={209} height={100} />
+          <Image
+            src={LogoAB}
+            placeholder="blur"
+            alt="logo AB"
+            width={209}
+            height={100}
+          />
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-4">

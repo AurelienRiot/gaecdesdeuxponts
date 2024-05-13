@@ -3,6 +3,7 @@ import { getAllOptions } from "@/app/(routes)/admin/products/[productId]/page";
 import { Metadata } from "next";
 import ClientWrapper from "./_components/client-wraper";
 import NotFound from "@/components/not-found";
+import { MainProduct } from "@prisma/client";
 
 interface ProductPageProps {
   params: {
@@ -37,6 +38,18 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
     (product) => product.productName !== productName,
   );
 
+  const uniqueProductsName = Array.from(
+    new Set(suggestedProducts.map((product) => product.productName)),
+  );
+
+  const uniqueProducts: MainProduct[] = [];
+  uniqueProductsName.map((productName) => {
+    const first = suggestedProducts.find(
+      (product) => product.productName === productName,
+    )?.product;
+    if (first) uniqueProducts.push(first);
+  });
+
   const optionsArray = getAllOptions(
     products.flatMap((product) =>
       product.options.flatMap((option) => ({
@@ -49,7 +62,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
   return (
     <ClientWrapper
       products={products}
-      suggestedProducts={suggestedProducts.slice(0, 4)}
+      suggestedProducts={uniqueProducts}
       optionsArray={optionsArray}
     />
   );

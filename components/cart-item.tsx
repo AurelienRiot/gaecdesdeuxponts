@@ -8,9 +8,8 @@ import { X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { makeProductUrl } from "./product/main-product-cart";
 import { BulkQuantity, CustomQuantityAddToCart } from "./product/cart-buttons";
-import { hasOptionWithValue } from "./product/product-function";
+import { hasOptionWithValue, makeProductUrl } from "./product/product-function";
 
 interface CartItemProps {
   data: ProductWithOptionsAndMain;
@@ -19,10 +18,12 @@ interface CartItemProps {
 const CartItem: React.FC<CartItemProps> = ({ data }) => {
   const cart = useCart();
 
-  const productUrl = makeProductUrl(data);
-  const url = data.product.isPro
-    ? `/dashboard-user/produits-pro/category/${data.product.categoryName}`
-    : `/category/${data.product.categoryName}`;
+  const productUrl = makeProductUrl(
+    data.productName,
+    data.product.categoryName,
+    data.product.isPro,
+    data.options,
+  );
 
   const value = Number(data.price);
 
@@ -53,7 +54,7 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
         <div className="relative flex h-full flex-col content-center justify-between gap-2">
           <div className="flex flex-wrap gap-2 pr-10 ">
             <Link
-              href={url + productUrl}
+              href={productUrl}
               className=" font-semibold text-primary @xs:text-lg "
             >
               {data.name}

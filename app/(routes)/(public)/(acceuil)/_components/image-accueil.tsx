@@ -21,8 +21,8 @@ const ImageAccueil = () => {
       className="grid grid-cols-1 gap-12
       p-2 md:grid-cols-[4fr_5fr]  lg:grid-cols-[5fr_4fr]"
     >
-      <div className=" flex flex-col justify-center p-6 text-center @container">
-        <h2 className="group mb-4 text-2xl font-bold @sm:text-3xl @md:text-4xl @lg:text-5xl">
+      <div className=" flex flex-col items-center justify-center p-6 text-center @container">
+        <h2 className="group mb-4 text-3xl font-bold @sm:text-4xl @md:text-5xl @lg:text-6xl">
           Lait
           <span className="relative ml-1 inline-block @sm:ml-2 @lg:ml-3">
             {placeholders.map((placeholder, i) => (
@@ -43,7 +43,7 @@ const ImageAccueil = () => {
           <HoverWord className=" mx-1 ">Bio</HoverWord> */}
           <span className="block">directement de le ferme</span>
         </h2>
-        <p className="mb-8 @md:text-lg">
+        <p className="mb-8 max-w-xl @md:text-lg">
           Découvrez le goût pur et crémeux de notre lait cru frais de la ferme.
           Rempli de nutriments essentiels, notre lait provient directement de
           nos vaches heureuses et en bonne santé.

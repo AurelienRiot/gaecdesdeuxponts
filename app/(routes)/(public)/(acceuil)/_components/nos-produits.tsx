@@ -6,9 +6,8 @@ import { CornerRightUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-const NosProduits = async () => {
+const NosProduits = async ({ title }: { title: string }) => {
   const products = await getFeaturedProducts();
-  const title = "Découvrer nos produits";
 
   return <ProductList title={title} items={products} />;
 };

@@ -1,17 +1,16 @@
-import { MainProductWithProducts, ProductWithOptionsAndMain } from "@/types";
+import { MainProduct } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { FaInfo } from "react-icons/fa";
 import { IconButton } from "../ui/button";
+import { makeProductUrl } from "./product-function";
 
 interface ProductCartProps {
-  data: MainProductWithProducts;
+  data: MainProduct;
 }
 
 const MainProductCart: React.FC<ProductCartProps> = ({ data }) => {
-  const url = data.isPro
-    ? `/dashboard-user/produits-pro/category/${data.categoryName}/product/${data.name}`
-    : `/category/${data.categoryName}/product/${data.name}`;
+  const url = makeProductUrl(data.name, data.categoryName, data.isPro);
 
   return (
     <div className="group flex w-40 cursor-pointer flex-col justify-between gap-4 rounded-xl border bg-secondary p-3 transition-transform hover:scale-105 md:w-52 ">
@@ -58,13 +57,3 @@ const MainProductCart: React.FC<ProductCartProps> = ({ data }) => {
 };
 
 export default MainProductCart;
-
-export const makeProductUrl = (product: ProductWithOptionsAndMain) => {
-  let url = `/product/${encodeURIComponent(product.productName)}?`;
-  if (product.options) {
-    product.options.forEach((option) => {
-      url += `${option.name}=${encodeURIComponent(option.value)}&`;
-    });
-  }
-  return url;
-};
