@@ -5,6 +5,7 @@ import { CategoryFormValues } from "./category-form";
 import prismadb from "@/lib/prismadb";
 import { Category } from "@prisma/client";
 import { ReturnTypeServerAction } from "@/types";
+import { revalidateTag } from "next/cache";
 
 async function createCategory({
   imageUrl,
@@ -39,6 +40,7 @@ async function createCategory({
       description,
     },
   });
+  revalidateTag("categories");
 
   return {
     success: true,
@@ -81,6 +83,8 @@ async function updateCategory(
       description,
     },
   });
+
+  revalidateTag("categories");
 
   return {
     success: true,

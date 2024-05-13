@@ -62,7 +62,7 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
         <Card
           data-state={display}
           className={cn(
-            "flex h-full w-full min-w-[300px] max-w-[90vw] flex-col justify-between ",
+            "relative flex h-full w-full min-w-[300px] max-w-[90vw] flex-col justify-between ",
             className,
           )}
           ref={ref}
@@ -183,7 +183,7 @@ const CardInfo = ({ description }: { description: string }) => {
       </PopoverTrigger>
       <PopoverContent
         className={
-          " z-[101] w-[400px]   max-w-[90vw] overscroll-none    border-4 border-border p-0 outline-none hide-scrollbar"
+          "  w-[400px]   max-w-[90vw] overscroll-none    border-4 border-border p-0 outline-none hide-scrollbar"
         }
         align="center"
         side="bottom"

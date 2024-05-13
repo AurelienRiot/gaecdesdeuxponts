@@ -262,8 +262,9 @@ export const BulkQuantity = ({
           control={form.control}
           name="quantity"
           render={({ field }) => (
-            <FormItem className="justify-left relative flex w-fit items-center gap-1 ">
-              <FormMessage className="absolute -top-6 left-0 whitespace-nowrap" />
+            <FormItem className="justify-left relative flex w-auto items-center gap-1 space-y-0 ">
+              <FormMessage className="absolute -top-7 left-0 whitespace-nowrap" />
+
               <FormControl>
                 <Input
                   placeholder={getUnitLabel(product.unit).type || "Quantité"}
@@ -274,7 +275,9 @@ export const BulkQuantity = ({
                   }
                 />
               </FormControl>
-              {getUnitLabel(product.unit).quantity}
+              <span className="flex h-full items-center justify-center">
+                {getUnitLabel(product.unit).quantity}
+              </span>
             </FormItem>
           )}
         />

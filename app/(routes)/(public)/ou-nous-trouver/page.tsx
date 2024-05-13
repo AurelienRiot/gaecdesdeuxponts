@@ -5,9 +5,15 @@ import Container from "@/components/ui/container";
 import { Input } from "@/components/ui/input";
 import { ChevronDown } from "lucide-react";
 import { Suspense } from "react";
-import { PlacePicker } from "./_components/place";
+import dynamicImport from "next/dynamic";
+import prismadb from "@/lib/prismadb";
+
+const PlacePicker = dynamicImport(() => import("./_components/place"), {
+  ssr: false,
+});
 
 export const dynamic = "force-dynamic";
+const farmShopId = process.env.NEXT_PUBLIC_FARM_ID;
 
 const OuNousTrouver = async () => {
   return (
@@ -29,8 +35,11 @@ export default OuNousTrouver;
 
 const ServerPlace = async () => {
   const shops = await getShops();
+  const farmShop = await prismadb.shop.findUnique({
+    where: { id: farmShopId },
+  });
 
-  return <PlacePicker shops={shops} />;
+  return <PlacePicker shops={shops} farmShop={farmShop} />;
 };
 
 const PlaceLoading = () => (

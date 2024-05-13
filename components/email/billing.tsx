@@ -39,7 +39,7 @@ export const BillingBody = ({
     <Text className="text-left text-base ">Bonjour,</Text>
 
     <Text className="text-left text-base ">{`
-    Nous avons le plaisir de vous informer que le paiement de votre commande numéro ${id} du ${date} pour un montant de ${price} a été comfirmé.
+    Nous avons le plaisir de vous informer que le paiement de votre commande numéro ${id} du ${date} pour un montant de ${price} a été confirmée.
 
 `}</Text>
 

@@ -43,5 +43,7 @@ export function getUnitLabel(value?: Unit | null) {
       return { price: "par kilogramme", quantity: "kg", type: "poids" };
     case "Litre":
       return { price: "par litre", quantity: "L", type: "volume" };
+    default:
+      return { price: value, quantity: value, type: value };
   }
 }

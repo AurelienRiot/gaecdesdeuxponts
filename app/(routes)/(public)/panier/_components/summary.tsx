@@ -29,7 +29,7 @@ import {
 } from "@/components/product/product-function";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
-const farmShopId = "ac771e24-2fd8-4827-af71-8d3c566f62bb";
+const farmShopId = process.env.NEXT_PUBLIC_FARM_ID;
 
 const getDateFromSearchParam = (param: string | null): Date | undefined => {
   if (param === null) return undefined;

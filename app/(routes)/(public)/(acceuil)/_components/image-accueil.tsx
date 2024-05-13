@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+import VacheChamps from "@/public/vache-champs.webp";
 
 const placeholders = [
   {
@@ -18,7 +19,7 @@ const ImageAccueil = () => {
   return (
     <section
       className="grid grid-cols-1 gap-12
-      p-2 md:grid-cols-2  lg:grid-cols-[2fr_3fr]"
+      p-2 md:grid-cols-[4fr_5fr]  lg:grid-cols-[5fr_4fr]"
     >
       <div className=" flex flex-col justify-center p-6 text-center @container">
         <h2 className="group mb-4 text-2xl font-bold @sm:text-3xl @md:text-4xl @lg:text-5xl">
@@ -61,9 +62,10 @@ const ImageAccueil = () => {
       <div className="group relative ">
         <Image
           alt="Farm Hero Image"
-          className="h-auto w-full rounded-md object-cover"
+          className="h-full w-full rounded-md object-cover"
           height={2630}
-          src="/vache-champs.webp"
+          src={VacheChamps}
+          placeholder="blur"
           width={4676}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background from-5% to-25% transition-all duration-500 group-hover:translate-y-[5%]" />

@@ -3,6 +3,7 @@
 import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import { ReturnTypeServerAction } from "@/types";
+import { revalidateTag } from "next/cache";
 
 async function deleteProduct({
   id,
@@ -29,6 +30,7 @@ async function deleteProduct({
       message: "Une erreur est survenue",
     };
   }
+  revalidateTag("productfetch");
 
   return {
     success: true,
@@ -67,6 +69,8 @@ const changeArchived = async ({
         isArchived,
       },
     });
+    revalidateTag("productfetch");
+
     return {
       success: true,
       data: null,
@@ -110,6 +114,8 @@ const changePro = async ({
         isPro,
       },
     });
+    revalidateTag("productfetch");
+
     return {
       success: true,
       data: null,

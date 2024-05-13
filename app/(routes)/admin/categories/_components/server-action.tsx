@@ -3,6 +3,7 @@
 import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import { ReturnTypeServerAction } from "@/types";
+import { revalidateTag } from "next/cache";
 
 async function deleteCategorie({
   name,
@@ -45,6 +46,7 @@ async function deleteCategorie({
     };
   }
 
+  revalidateTag("categories");
   return {
     success: true,
     data: null,

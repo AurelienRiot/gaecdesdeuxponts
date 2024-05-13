@@ -48,8 +48,8 @@ export const getCategories = unstable_cache(
     });
     return category;
   },
-  ["getCategories"],
-  { revalidate: 60 * 1 },
+  ["getCategories", "categories"],
+  { revalidate: 60 * 60 * 10 },
 );
 
 export const getProCategories = async () => {

@@ -10,13 +10,13 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "object-storage-dev.s3.fr-par.scw.cloud",
+        hostname: "*.s3.fr-par.scw.cloud",
         port: "",
         pathname: "/**",
       },
       {
         protocol: "https",
-        hostname: "lh3.googleusercontent.com",
+        hostname: "*.googleusercontent.com",
         port: "",
         pathname: "/**",
       },

@@ -1,0 +1,22 @@
+.custom-marker {
+  position: relative;
+  text-align: center;
+  color: black; /* Change this to the desired text color */
+}
+
+.marker-label {
+  position: absolute;
+  top: -25px; /* Adjust this value to move the label above the marker */
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 2px 5px;
+  border-radius: 3px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.leaflet-attribution-flag[aria-hidden="true"] {
+  display: none !important;
+}
