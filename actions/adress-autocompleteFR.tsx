@@ -55,4 +55,32 @@ const AddressAutocomplete = async (value: string) => {
   return suggestions as Suggestion[];
 };
 
+export const LocationAutocomplete = async ({
+  latitude,
+  longitude,
+}: {
+  latitude: number;
+  longitude: number;
+}) => {
+  if (latitude === 0 && longitude === 0) return [] as Suggestion[];
+
+  const response = await fetch(
+    `https://api-adresse.data.gouv.fr/reverse/?lat=${encodeURIComponent(
+      latitude.toString(),
+    )}&lon=${encodeURIComponent(longitude.toString())}`,
+  );
+  const data = await response.json();
+  const features = data.features;
+  const suggestions = features.map((feature: Feature) => ({
+    label: feature.properties.label,
+    city: feature.properties.city,
+    country: "FR",
+    line1: feature.properties.name,
+    postal_code: feature.properties.postcode,
+    state: feature.properties.context.split(", ").at(-1),
+    coordinates: feature.geometry.coordinates,
+  }));
+  return suggestions as Suggestion[];
+};
+
 export default AddressAutocomplete;

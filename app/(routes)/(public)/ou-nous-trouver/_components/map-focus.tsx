@@ -91,7 +91,11 @@ const MapFocus = ({
                 onSelect={() => {
                   const longitude = address.coordinates[0];
                   const latitude = address.coordinates[1];
-                  posthog?.capture("location_found", { latitude, longitude });
+                  posthog?.capture("localisation_trouvée", {
+                    latitude,
+                    longitude,
+                    adresse: address.label,
+                  });
 
                   map.setView([latitude, longitude], 10);
                   setPin({
