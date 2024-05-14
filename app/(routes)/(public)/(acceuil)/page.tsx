@@ -25,8 +25,6 @@ export default function Home() {
         <NosProduits title="Découvrer nos produits" />
       </Suspense>
       <FeaturesWithHeading />
-      {/* <WhyChooseUs /> */}
-      {/* <ArticlePromotion /> */}
 
       <PartenaireCards />
     </>

@@ -25,6 +25,8 @@ const Billboard: React.FC<BillboardProps> = ({ category }) => {
           src={category.imageUrl}
           alt={category.name}
           fill
+          priority
+          sizes="(max-width: 640px) 100vw,  50vw"
           className="h-full w-full object-cover"
         />
       </div>

@@ -34,6 +34,7 @@ const Gallery: React.FC<GalleryProps> = ({ images }) => {
             <div className="relative aspect-square h-full w-full overflow-clip sm:rounded-lg">
               <Image
                 fill
+                priority
                 sizes="80vw"
                 src={image}
                 alt="image"

@@ -22,7 +22,7 @@ const MobileNav = ({ children }: { children: React.ReactNode }) => {
         <AutoCloseSheet setIsOpen={setIsOpen} />{" "}
       </Suspense>
       <Sheet onOpenChange={setIsOpen} open={isOpen}>
-        <SheetTrigger>
+        <SheetTrigger title="Ouvrir le menu de navigation">
           <HamburgerMenuIcon className="h-6 w-6 lg:hidden" />
         </SheetTrigger>
         <SheetContent

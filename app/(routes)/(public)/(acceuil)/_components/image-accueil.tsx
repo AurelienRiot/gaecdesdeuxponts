@@ -64,6 +64,8 @@ const ImageAccueil = () => {
           alt="Farm Hero Image"
           className="h-full w-full rounded-md object-cover"
           height={2630}
+          sizes="(max-width: 768px) 100vw,(max-width: 1024px) 55vw,  45vw"
+          priority
           src={VacheChamps}
           placeholder="blur"
           width={4676}

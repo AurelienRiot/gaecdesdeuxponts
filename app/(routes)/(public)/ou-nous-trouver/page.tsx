@@ -5,12 +5,9 @@ import Container from "@/components/ui/container";
 import { Input } from "@/components/ui/input";
 import { ChevronDown } from "lucide-react";
 import { Suspense } from "react";
-import dynamicImport from "next/dynamic";
 import prismadb from "@/lib/prismadb";
-
-const PlacePicker = dynamicImport(() => import("./_components/place"), {
-  ssr: false,
-});
+import Image from "next/image";
+import PlacePicker from "./_components/place";
 
 export const dynamic = "force-dynamic";
 const farmShopId = process.env.NEXT_PUBLIC_FARM_ID;
@@ -42,8 +39,15 @@ const ServerPlace = async () => {
   return <PlacePicker shops={shops} farmShop={farmShop} />;
 };
 
-const PlaceLoading = () => (
+export const PlaceLoading = () => (
   <>
+    <Image
+      alt="chargement"
+      className="h-[70vh] w-full rounded-md  object-cover"
+      src="/skeleton-image.webp"
+      width={1600}
+      height={1067}
+    />
     <div className="flex flex-wrap items-center justify-start gap-2">
       <Button
         disabled

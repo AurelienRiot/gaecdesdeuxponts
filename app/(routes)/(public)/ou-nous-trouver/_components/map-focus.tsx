@@ -15,6 +15,8 @@ import { Marker, useMap } from "react-leaflet";
 import { MakePin } from "./marker-pin";
 import "./marker.css";
 import { cn } from "@/lib/utils";
+import LocationMarker from "./location-marker";
+import { usePostHog } from "posthog-js/react";
 
 const MapFocus = ({
   className,
@@ -33,6 +35,8 @@ const MapFocus = ({
     { label: string; lat: number; long: number } | undefined
   >(undefined);
   const map = useMap();
+  const posthog = usePostHog();
+
   const setSearchTerm = async (value: string) => {
     setQuery(value);
     const temp = await AddressAutocomplete(value);
@@ -41,8 +45,15 @@ const MapFocus = ({
 
   return (
     <>
+      <LocationMarker
+        setPin={setPin}
+        setCoordinates={setCoordinates}
+        className="absolute right-3 top-3 z-[1000]"
+      />
+
       <Command loop shouldFilter={false} className={className}>
         <CommandInput
+          title="Entrer votre adresse"
           placeholder="Entrer votre adresse..."
           className="z-[400] mb-1 h-9 min-w-48 bg-neutral-50 p-4 shadow-md"
           value={query}
@@ -78,19 +89,19 @@ const MapFocus = ({
                 value={index.toString()}
                 key={address.label}
                 onSelect={() => {
-                  console.log(address.label);
-                  map.setView(
-                    [address.coordinates[1], address.coordinates[0]],
-                    10,
-                  );
+                  const longitude = address.coordinates[0];
+                  const latitude = address.coordinates[1];
+                  posthog?.capture("location_found", { latitude, longitude });
+
+                  map.setView([latitude, longitude], 10);
                   setPin({
-                    label: address.label,
-                    lat: address.coordinates[1],
-                    long: address.coordinates[0],
+                    label: "Votre position",
+                    lat: latitude,
+                    long: longitude,
                   });
                   setCoordinates({
-                    long: address.coordinates[0],
-                    lat: address.coordinates[1],
+                    long: longitude,
+                    lat: latitude,
                   });
                   setSuggestions(undefined);
                   setQuery(address.label);

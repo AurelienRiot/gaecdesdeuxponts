@@ -120,7 +120,7 @@ const StarRating = ({ rating }: { rating: number }) => {
   const emptyStars = 5 - fullStars - halfStar;
 
   return (
-    <div aria-label={`Note: ${rating} sur 10`} className="star-rating">
+    <div title={`Note: ${rating} sur 10`} className="star-rating">
       {[...Array(fullStars)].map((_, i) => (
         <Icons.star
           key={`full-${i}`}
