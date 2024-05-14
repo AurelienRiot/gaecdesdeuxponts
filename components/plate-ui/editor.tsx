@@ -2,6 +2,7 @@ import React from "react";
 import { cn } from "@udecode/cn";
 import { PlateContent } from "@udecode/plate-common";
 import { cva } from "class-variance-authority";
+import "./plate-ui.css";
 
 import type { PlateContentProps } from "@udecode/plate-common";
 import type { VariantProps } from "class-variance-authority";

@@ -1,4 +1,7 @@
-import { getCategoryByName } from "@/actions/get-category";
+import {
+  getCategoryByName,
+  getProCategoryByName,
+} from "@/actions/get-category";
 import { getProMainProductsByCategoryName } from "@/actions/get-products";
 import Billboard from "@/components/billboard/billboard";
 import NotFound from "@/components/not-found";
@@ -23,7 +26,7 @@ export async function generateMetadata({
 const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
   const categoryName = decodeURIComponent(params.categoryName);
 
-  const category = await getCategoryByName(categoryName);
+  const category = await getProCategoryByName(categoryName);
   if (!category) {
     return <NotFound />;
   }

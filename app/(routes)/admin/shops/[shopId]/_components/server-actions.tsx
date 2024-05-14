@@ -2,6 +2,7 @@
 import { checkAdmin } from "@/components/auth/checkAuth";
 import { ShopFormValues } from "./shop-form";
 import prismadb from "@/lib/prismadb";
+import { revalidateTag } from "next/cache";
 
 export type ReturnType =
   | {
@@ -25,6 +26,8 @@ async function createShop(data: ShopFormValues): Promise<ReturnType> {
   const shop = await prismadb.shop.create({
     data,
   });
+
+  revalidateTag("shops");
 
   return {
     success: true,
@@ -53,6 +56,7 @@ async function updateShop({
     },
     data,
   });
+  revalidateTag("shops");
 
   return {
     success: true,
@@ -98,6 +102,8 @@ async function deleteShop({
       message: "Une erreur est survenue",
     };
   }
+
+  revalidateTag("shops");
 
   return {
     success: true,

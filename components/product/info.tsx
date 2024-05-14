@@ -71,7 +71,7 @@ const Info: React.FC<InfoProps> = ({
 
       <PlateVis
         value={product.product.productSpecs}
-        className={scroll ? "h-[500px] overflow-scroll hide-scrollbar" : ""}
+        className={scroll ? "h-[500px] overflow-scroll  hide-scrollbar" : "p-0"}
       />
     </div>
   );
@@ -124,7 +124,9 @@ const OptionsDisplay = ({ optionsArray, product, sameProducts }: InfoProps) => {
                   className="py-1"
                 >
                   {isAvailable ? (
-                    <Link href={productUrl}>{value}</Link>
+                    <Link href={productUrl} scroll={false}>
+                      {value}
+                    </Link>
                   ) : (
                     <span aria-disabled>{value}</span>
                   )}

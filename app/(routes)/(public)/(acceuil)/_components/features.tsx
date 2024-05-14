@@ -1,4 +1,16 @@
-import { Handshake, Heart, Leaf, Palette, Recycle, Truck } from "lucide-react";
+import { ConicGradientBorder } from "@/components/animations/conic-gradient-border";
+import BackgroundGrid from "@/components/grid";
+import { Button } from "@/components/ui/button";
+import {
+  ArrowRightIcon,
+  Handshake,
+  Heart,
+  Leaf,
+  Palette,
+  Recycle,
+  Truck,
+} from "lucide-react";
+import Link from "next/link";
 
 interface Feature {
   id: number;
@@ -56,7 +68,7 @@ const FeaturesData: Feature[] = [
 
 const FeaturesGrid = () => {
   return (
-    <div>
+    <div className="px-8">
       <div className="mt-8 grid w-full grid-cols-1 gap-12 text-foreground md:grid-cols-2 xl:grid-cols-3">
         {FeaturesData.map((feature) => {
           return (
@@ -80,7 +92,8 @@ const FeaturesGrid = () => {
 
 const FeaturesWithHeading = () => {
   return (
-    <div className="my-12 flex w-full flex-col items-center justify-center">
+    <div className="relative my-12 flex w-full flex-col items-center justify-center">
+      <BackgroundGrid />
       <h2 className="mb-2 max-w-3xl text-center text-2xl font-semibold text-primary  md:text-4xl ">
         Découvrez la Pureté du Lait Directement de la Ferme
       </h2>
@@ -90,6 +103,19 @@ const FeaturesWithHeading = () => {
         lait cru et des produits faits maison, sans conservateurs ni additifs.
       </p>
       <FeaturesGrid />
+      <Button
+        asChild
+        variant={"expandIcon"}
+        Icon={ArrowRightIcon}
+        iconPlacement="right"
+        className="relative mx-auto mt-8 border border-transparent"
+        aria-label={`En savoir + faq`}
+      >
+        <Link href="/faq">
+          En savoir plus
+          <ConicGradientBorder className="rounded-md border" color="white" />
+        </Link>
+      </Button>
     </div>
   );
 };

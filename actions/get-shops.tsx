@@ -13,8 +13,8 @@ const getShops = unstable_cache(
     });
     return shops;
   },
-  ["shops"],
-  { revalidate: 60 * 10 },
+  ["getShops"],
+  { revalidate: 60 * 60, tags: ["shops"] },
 );
 
 export default getShops;

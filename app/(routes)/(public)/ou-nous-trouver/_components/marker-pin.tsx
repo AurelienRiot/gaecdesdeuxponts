@@ -18,25 +18,47 @@ function Pin(color: keyof typeof colors) {
       xml:space="preserve"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:svg="http://www.w3.org/2000/svg">
-    <defs
+      <defs
       id="defs185"><filter
-        id="f1"
-        x="-0.18550351"
-        y="-0.1171875"
-        width="1.371007"
-        height="1.234375">
-      <feGaussianBlur
-      in="SourceGraphic"
-      stdDeviation="25"
-      id="feGaussianBlur182" />
-    </filter></defs>
+        style="color-interpolation-filters:sRGB"
+        id="filter1091"
+        x="-0.32383439"
+        y="-0.27601853"
+        width="1.6476688"
+        height="1.552037"><feGaussianBlur
+          stdDeviation="25.558679"
+          result="fbSourceGraphic"
+          id="feGaussianBlur1089" /><feColorMatrix
+          result="fbSourceGraphicAlpha"
+          in="fbSourceGraphic"
+          values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+          id="feColorMatrix1093" /><feGaussianBlur
+          id="feGaussianBlur1095"
+          stdDeviation="2 2"
+          result="fbSourceGraphic"
+          in="fbSourceGraphic" /><feColorMatrix
+          result="fbSourceGraphicAlpha"
+          in="fbSourceGraphic"
+          values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+          id="feColorMatrix1097" /><feGaussianBlur
+          id="feGaussianBlur1099"
+          stdDeviation="2 2"
+          result="fbSourceGraphic"
+          in="fbSourceGraphic" /><feColorMatrix
+          result="fbSourceGraphicAlpha"
+          in="fbSourceGraphic"
+          values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+          id="feColorMatrix2190" /><feGaussianBlur
+          id="feGaussianBlur2192"
+          stdDeviation="5 5"
+          result="blur"
+          in="fbSourceGraphic" /></filter></defs>
     
-    <path
-      filter="url(#f1)"
-      fill="rgba(0,0,0,0.5)"
-      style=" opacity: 1; transform:rotateX(60deg) rotateY(40deg) translateX(15%) translateY(27%)"
-      d="M 255.999,0 C 166.683,0 94.278,72.405 94.278,161.722 94.278,242.982 157.25,396.928 256,512 354.75,396.929 417.722,242.982 417.722,161.722 417.722,72.405 345.316,0 255.999,0 Z"
-      id="path187" />
+          <path
+          style="opacity:0.733193;mix-blend-mode:normal;fill:#000000;stroke-width:0.531061;filter:url(#filter1091)"
+          d="m 471.82783,215.25169 c -42.36223,-0.75587 -108.14786,41.12406 -146.93665,93.54199 -35.28979,47.68946 -72.27847,138.56946 -75.41551,206.93803 96.81008,-66.69659 193.53396,-156.51129 228.82379,-204.20077 38.78879,-52.4179 35.89106,-95.52334 -6.47163,-96.27925 z"
+          id="path189-6"
+          transform="matrix(0.96117253,0.0074331,-0.00743217,0.96129356,-5.742501,10.514794)" />
     <path
       style="fill:#ff6465"
       d="M 255.999,0 C 166.683,0 94.278,72.405 94.278,161.722 94.278,242.982 157.25,396.928 256,512 354.75,396.929 417.722,242.982 417.722,161.722 417.722,72.405 345.316,0 255.999,0 Z"
@@ -198,18 +220,47 @@ function Pin(color: keyof typeof colors) {
       return `
      <svg height="40px" width="40px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
      viewBox="0 0 512 512" xml:space="preserve">
-     <defs>
-      <filter id="f1" x="0" y="0" xmlns="http://www.w3.org/2000/svg">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="25" />
-      </filter>
-     </defs>
-     
-     <path  filter="url(#f1)"
-            fill="rgba(0,0,0,0.5)"
-            style=" opacity: 1; transform:rotateX(60deg) rotateY(40deg) translateX(15%) translateY(27%)"
-            d="M255.999,0C166.683,0,94.278,72.405,94.278,161.722c0,81.26,62.972,235.206,161.722,350.278
-            c98.75-115.071,161.722-269.018,161.722-350.278C417.722,72.405,345.316,0,255.999,0z"
-          />
+     <defs
+      id="defs185"><filter
+        style="color-interpolation-filters:sRGB"
+        id="filter1091"
+        x="-0.32383439"
+        y="-0.27601853"
+        width="1.6476688"
+        height="1.552037"><feGaussianBlur
+          stdDeviation="25.558679"
+          result="fbSourceGraphic"
+          id="feGaussianBlur1089" /><feColorMatrix
+          result="fbSourceGraphicAlpha"
+          in="fbSourceGraphic"
+          values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+          id="feColorMatrix1093" /><feGaussianBlur
+          id="feGaussianBlur1095"
+          stdDeviation="2 2"
+          result="fbSourceGraphic"
+          in="fbSourceGraphic" /><feColorMatrix
+          result="fbSourceGraphicAlpha"
+          in="fbSourceGraphic"
+          values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+          id="feColorMatrix1097" /><feGaussianBlur
+          id="feGaussianBlur1099"
+          stdDeviation="2 2"
+          result="fbSourceGraphic"
+          in="fbSourceGraphic" /><feColorMatrix
+          result="fbSourceGraphicAlpha"
+          in="fbSourceGraphic"
+          values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+          id="feColorMatrix2190" /><feGaussianBlur
+          id="feGaussianBlur2192"
+          stdDeviation="5 5"
+          result="blur"
+          in="fbSourceGraphic" /></filter></defs>
+    
+          <path
+          style="opacity:0.733193;mix-blend-mode:normal;fill:#000000;stroke-width:0.531061;filter:url(#filter1091)"
+          d="m 471.82783,215.25169 c -42.36223,-0.75587 -108.14786,41.12406 -146.93665,93.54199 -35.28979,47.68946 -72.27847,138.56946 -75.41551,206.93803 96.81008,-66.69659 193.53396,-156.51129 228.82379,-204.20077 38.78879,-52.4179 35.89106,-95.52334 -6.47163,-96.27925 z"
+          id="path189-6"
+          transform="matrix(0.96117253,0.0074331,-0.00743217,0.96129356,-5.742501,10.514794)" />
      <path style="fill:${colors[color]};" d="M255.999,0C166.683,0,94.278,72.405,94.278,161.722c0,81.26,62.972,235.206,161.722,350.278
      c98.75-115.071,161.722-269.018,161.722-350.278C417.722,72.405,345.316,0,255.999,0z"/>
      <g style="opacity:0.1;">
@@ -234,7 +285,7 @@ export function MakePin(
     html: `
         <div class="custom-marker">
             <div class="marker-label ${color === "red" ? "marker-label-red" : ""}">
-            ${imagesUrl ? `<img src="${imagesUrl}" alt="${label}" class="marker-icon" />` : ""}
+            ${imagesUrl ? `<img src="${`/_next/image?url=${imagesUrl}`}&w=48&q=75" alt="${label}" class="marker-icon" />` : ""}
             ${label}
             </div>
             ${Pin(color)}
