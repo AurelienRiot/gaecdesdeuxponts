@@ -62,7 +62,7 @@ export function PlateEditor({ loading, initialValue }: PlateEditorProps) {
                     </FixedToolbar>
                     <Editor
                       disabled={loading}
-                      className="rounded-t-none  bg-clip-content  shadow-inner dark:bg-black"
+                      className="rounded-t-none  bg-clip-content  shadow-inner "
                       autoFocus
                       focusRing={false}
                       variant="ghost"

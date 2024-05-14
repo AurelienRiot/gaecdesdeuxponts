@@ -2,7 +2,8 @@
 
 import { Button, LoadingButton } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
-import { useEffect, useState } from "react";
+import useIsComponentMounted from "@/hooks/use-mounted";
+import { useState } from "react";
 
 interface AlertModalProps {
   isOpen: boolean;
@@ -15,12 +16,9 @@ export const AlertModal: React.FC<AlertModalProps> = ({
   onClose,
   onConfirm,
 }) => {
-  const [isMounted, setIsMounted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const isMounted = useIsComponentMounted();
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
   if (!isMounted) {
     return null;
   }

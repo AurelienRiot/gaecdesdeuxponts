@@ -1,3 +1,4 @@
+import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -111,6 +112,7 @@ export const PinPerspective = ({ title }: { title?: string }) => {
         </div>
 
         <>
+          <Icons.Tractor className="absolute bottom-1/2 right-1/2 z-40 h-4 w-4 translate-x-2 translate-y-5 " />
           <div
             className="absolute bottom-1/2 right-1/2 h-40 w-px  translate-y-[14px] scale-50 
           bg-gradient-to-b  from-transparent to-red-500    blur-[2px]"

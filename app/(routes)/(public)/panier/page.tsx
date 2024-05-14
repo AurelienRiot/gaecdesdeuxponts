@@ -9,10 +9,7 @@ import { Suspense } from "react";
 export const dynamic = "force-dynamic";
 
 const CartPage = async () => {
-  const session = await getServerSession(authOptions);
-
   const shops = await getShops();
-  const role = session?.user?.role;
 
   return (
     <Container>
@@ -22,7 +19,7 @@ const CartPage = async () => {
           <CartItems />
 
           <Suspense fallback={<div>Loading...</div>}>
-            <Summary role={role} shops={shops} />
+            <Summary shops={shops} />
           </Suspense>
         </div>
       </div>

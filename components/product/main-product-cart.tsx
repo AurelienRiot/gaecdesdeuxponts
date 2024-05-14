@@ -1,9 +1,9 @@
 import { MainProduct } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
-import { FaInfo } from "react-icons/fa";
-import { IconButton } from "../ui/button";
 import { makeProductUrl } from "./product-function";
+import { IconButton } from "../ui/button";
+import { FaInfo } from "react-icons/fa";
 
 interface ProductCartProps {
   data: MainProduct;

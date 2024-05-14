@@ -1,11 +1,14 @@
 "use client";
 
 import useCart from "@/hooks/use-cart";
+import useIsComponentMounted from "@/hooks/use-mounted";
+import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import { Suspense, forwardRef, useEffect, useState } from "react";
+import { Suspense, forwardRef, useState } from "react";
 import { HiOutlineExternalLink } from "react-icons/hi";
+import AutoCloseSheet from "../auto-close-sheet";
 import CartItem from "../cart-item";
 import { Button } from "../ui/button";
 import {
@@ -16,8 +19,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
-import AutoCloseSheet from "../auto-close-sheet";
-import { cn } from "@/lib/utils";
 
 const CartIcon = forwardRef<HTMLButtonElement, { qty: number }>(
   ({ qty, ...props }, ref) => {
@@ -48,12 +49,8 @@ const CartIcon = forwardRef<HTMLButtonElement, { qty: number }>(
 CartIcon.displayName = "CartIcon";
 
 export const CartButton = () => {
-  const [isMounted, setIsMounted] = useState(false);
+  const isMounted = useIsComponentMounted();
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   const cart = useCart();
 

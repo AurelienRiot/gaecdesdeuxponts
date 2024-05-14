@@ -3,33 +3,31 @@
 import { Button } from "@/components/ui/button";
 import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
-import { addDelay, cn } from "@/lib/utils";
+import { addDelay } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { EmailButton, GoogleButton } from "@/components/auth/auth-button";
-import { Icons } from "@/components/icons";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  getUnitLabel,
+  hasOptionWithValue,
+} from "@/components/product/product-function";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import useIsComponentMounted from "@/hooks/use-mounted";
 import { Shop } from "@prisma/client";
 import { Loader2 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import DatePicker from "./date-picker";
+import LoginCard from "./login-card";
 import PlaceModal from "./place-modal";
 import { checkOut } from "./server-action";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import {
-  getUnitLabel,
-  hasOptionWithValue,
-} from "@/components/product/product-function";
-
-const baseUrl = process.env.NEXT_PUBLIC_URL;
-const farmShopId = process.env.NEXT_PUBLIC_FARM_ID;
+import PickUpPlace from "./pick-up-place";
+import { ProductWithOptionsAndMain } from "@/types";
+import { Skeleton } from "@/components/skeleton-ui/skeleton";
 
 const getDateFromSearchParam = (param: string | null): Date | undefined => {
   if (param === null) return undefined;
@@ -38,20 +36,20 @@ const getDateFromSearchParam = (param: string | null): Date | undefined => {
 };
 
 interface SummaryProps {
-  role: string | undefined;
   shops: Shop[];
 }
 
-const Summary: React.FC<SummaryProps> = ({ role, shops }) => {
+const Summary: React.FC<SummaryProps> = ({ shops }) => {
   const [loading, setLoading] = useState(false);
+  const session = useSession();
+  const role = session.data?.user?.role;
   const cart = useCart();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [date, setDate] = useState<Date | undefined>();
   const [shopId, setShopId] = useState<string | undefined>();
   const [open, setOpen] = useState(false);
-
-  const [isMounted, setIsMounted] = useState(false);
+  const isMounted = useIsComponentMounted();
 
   const tooltipText = !role
     ? "Veuillez vous connecter pour valider votre commande"
@@ -69,16 +67,8 @@ const Summary: React.FC<SummaryProps> = ({ role, shops }) => {
     setShopId(shopId ? decodeURIComponent(shopId) : undefined);
   }, [searchParams]);
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return null;
-  }
-
   const totalPrice =
-    cart.items.length > 0
+    cart.items?.length > 0
       ? cart.items.reduce((total, item) => {
           return total + (item.price || 0) * cart.quantities[item.id];
         }, 0)
@@ -134,53 +124,19 @@ const Summary: React.FC<SummaryProps> = ({ role, shops }) => {
     setLoading(false);
   };
 
-  const onSelectPlace = (shopId: string | undefined) => {
-    if (!shopId) {
-      router.refresh();
-      toast.error("Erreur veuillez réssayer");
-      return;
-    }
-
-    router.push(makeCartUrl(shopId, date), {
-      scroll: false,
-    });
-  };
-
   return (
     <>
-      <PlaceModal
-        isOpen={open}
-        setIsOpen={setOpen}
-        shops={shops}
-        onSelect={onSelectPlace}
-      />
+      <PlaceModal isOpen={open} setIsOpen={setOpen} shops={shops} date={date} />
       <div className="relative mb-[450px] mt-16 space-y-6 rounded-lg border-2 bg-gray-100 px-4 py-6 dark:bg-black sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
         <h2 className="text-xl font-medium text-secondary-foreground">
           Votre Commmande
         </h2>
         <ul className="pt-4">
-          {cart.items.map((item) => (
-            <li key={item.id} className="flex justify-between tabular-nums	">
-              {hasOptionWithValue(item.options, "Vrac") ? (
-                <div>
-                  {`${cart.quantities[item.id]}${getUnitLabel(item.unit).quantity} `}
-                  <strong>{item.name} </strong>{" "}
-                </div>
-              ) : (
-                <div>
-                  {cart.quantities[item.id] > 0 &&
-                    cart.quantities[item.id] !== 1 && (
-                      <span> {cart.quantities[item.id]}x </span>
-                    )}
-                  <strong>{item.name} </strong>{" "}
-                </div>
-              )}
-              <Currency
-                value={Number(item.price) * cart.quantities[item.id]}
-                className="justify-self-end"
-              />
-            </li>
-          ))}
+          {isMounted
+            ? cart.items.map((item) => <ItemsPrice key={item.id} item={item} />)
+            : Array.from({ length: 4 }, (_, i) => (
+                <ItemPriceSkeleton key={i} />
+              ))}
         </ul>
         <div className=" space-y-4">
           <div className="flex items-center justify-between border-t border-gray-200 pt-4">
@@ -232,145 +188,37 @@ const Summary: React.FC<SummaryProps> = ({ role, shops }) => {
 };
 export default Summary;
 
-const PickUpPlace = ({
-  date,
-  shopId,
-  setOpen,
-  shops,
-  className,
-  role,
-}: {
-  date: Date | undefined;
-  shopId: string | undefined;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-  shops: Shop[];
-  className?: string;
-  role: string | undefined;
-}) => {
-  const router = useRouter();
+const ItemsPrice = ({ item }: { item: ProductWithOptionsAndMain }) => {
+  const cart = useCart();
   return (
-    <>
-      {role === "pro" || role === "admin" ? (
-        <div className="flex items-center justify-between space-x-2">
-          <Label
-            htmlFor="domicile"
-            className="text-base font-medium text-secondary-foreground"
-          >
-            Livraison à domicile
-          </Label>
-          <Switch
-            id="domicile"
-            checked={shopId === "domicile"}
-            onCheckedChange={(check) =>
-              router.push(makeCartUrl(check ? "domicile" : undefined, date), {
-                scroll: false,
-              })
-            }
-          />
+    <li className="flex justify-between tabular-nums	">
+      {hasOptionWithValue(item.options, "Vrac") ? (
+        <div>
+          {`${cart.quantities[item.id]}${getUnitLabel(item.unit).quantity} `}
+          <strong>{item.name} </strong>{" "}
         </div>
-      ) : null}
-      <div className="flex items-center justify-between space-x-2">
-        <Label
-          htmlFor="farm-pickup"
-          className="text-base font-medium text-secondary-foreground"
-        >
-          Venir chercher à la ferme
-        </Label>
-        <Switch
-          id="farm-pickup"
-          checked={shopId === farmShopId}
-          onCheckedChange={(check) =>
-            router.push(makeCartUrl(check ? farmShopId : undefined, date), {
-              scroll: false,
-            })
-          }
-        />
-      </div>
-      {shopId !== "domicile" && shopId !== farmShopId ? (
-        <div
-          className={cn(
-            "relative   flex items-center justify-between ",
-            className,
+      ) : (
+        <div>
+          {cart.quantities[item.id] > 0 && cart.quantities[item.id] !== 1 && (
+            <span> {cart.quantities[item.id]}x </span>
           )}
-        >
-          <div className="text-base font-medium text-secondary-foreground">
-            Lieu de retrait
-          </div>
-          <Button
-            variant={"outline"}
-            className={cn(
-              "w-[240px] pl-3 text-left font-normal",
-              !date && "text-muted-foreground",
-            )}
-            onClick={() => setOpen((open) => !open)}
-          >
-            {shopId ? (
-              shops.find((shop) => shop.id === shopId)?.name
-            ) : (
-              <span>Choisir un lieu</span>
-            )}
-            <Icons.pinMap
-              data-state={!!shopId}
-              className="ml-auto h-4 w-4 opacity-100 data-[state=false]:opacity-50"
-            />
-          </Button>
+          <strong>{item.name} </strong>{" "}
         </div>
-      ) : null}
-    </>
+      )}
+      <Currency
+        value={Number(item.price) * cart.quantities[item.id]}
+        className="justify-self-end"
+      />
+    </li>
   );
 };
 
-const LoginCard = ({
-  className,
-  date,
-  shopId,
-}: {
-  className?: string;
-  date: Date | undefined;
-  shopId: string | undefined;
-}) => {
-  let callbackUrl = baseUrl + "/panier";
-
-  if (shopId) {
-    callbackUrl += `?shopId=${encodeURIComponent(shopId)}`;
-    if (date) {
-      const dateString = encodeURIComponent(date.toISOString());
-      callbackUrl += `&date=${dateString}`;
-    }
-  } else {
-    if (date) {
-      const dateString = encodeURIComponent(date.toISOString());
-      callbackUrl += `?date=${dateString}`;
-    }
-  }
-
+const ItemPriceSkeleton = () => {
   return (
-    <Card
-      className={cn(
-        "mt-6 flex h-[450px] max-w-[500px] flex-col justify-between",
-        className,
-      )}
-    >
-      <CardHeader className="text-center text-2xl font-semibold ">
-        Connecté vous pour valider votre commande
-      </CardHeader>
-      <CardContent className="flex  flex-col items-center justify-center">
-        <GoogleButton callbackUrl={callbackUrl} />
-      </CardContent>
-      <CardContent className="flex  flex-col items-center justify-center">
-        <div
-          className={`my-4 flex h-4 flex-row  items-center gap-4 self-stretch whitespace-nowrap
-before:h-0.5 before:w-full 
-before:flex-grow before:bg-primary/30  after:h-0.5  after:w-full 
-after:flex-grow  after:bg-primary/30  `}
-        >
-          ou
-        </div>
-      </CardContent>
-      <CardContent className="flex  flex-col items-center justify-center">
-        <EmailButton callbackUrl={callbackUrl} />
-      </CardContent>
-    </Card>
+    <li className="mb-2 flex justify-between	tabular-nums">
+      <Skeleton size={"lg"} className="h-4" />
+      <Currency value={undefined} className="justify-self-end" />
+    </li>
   );
 };
 

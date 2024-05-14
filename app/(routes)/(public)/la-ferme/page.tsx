@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Ferme from "@/public/ferme.webp";
+import Vache from "@/public/vache.webp";
 
 const PageLaFerme = () => {
   return (
@@ -9,9 +11,10 @@ const PageLaFerme = () => {
         </h2>
         <div className="grid grid-cols-1 items-center justify-center gap-4 text-center sm:grid-cols-2 ">
           <Image
-            src="/ferme.webp"
+            src={Ferme}
             width={2936}
             height={1168}
+            placeholder="blur"
             alt="Photo de la ferme"
             className=" rounded-lg  shadow-md "
           />
@@ -42,7 +45,8 @@ const PageLaFerme = () => {
             </p>
           </div>
           <Image
-            src="/vache.webp"
+            src={Vache}
+            placeholder="blur"
             width={1200}
             height={1600}
             alt="Photo de la ferme"

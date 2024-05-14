@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import useIsComponentMounted from "@/hooks/use-mounted";
 import { interpolate } from "flubber";
 import {
   motion,
@@ -9,18 +10,21 @@ import {
   useTransform,
 } from "framer-motion";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
+  const isMounted = useIsComponentMounted();
+
   return (
     <Button
       variant={"rounded"}
       onClick={() => {
         setTheme(theme === "light" ? "dark" : "light");
       }}
+      disabled={!isMounted}
       size="icon"
       className=" bg-transparent  px-0 py-0 text-foreground "
+      type="button"
     >
       <AnimatedIcon
         className="h-6 w-6 transition-all duration-300 "
@@ -39,7 +43,7 @@ const AnimatedIcon = ({
   className: string;
   theme: string | undefined;
 }) => {
-  const [isMounted, setIsMounted] = useState(false);
+  const isMounted = useIsComponentMounted();
   const [scope, animate] = useAnimate();
   const progress = useMotionValue(theme === "dark" ? 0 : 1);
   const indexOfPath = useMotionValue(theme === "dark" ? 1 : 0);
@@ -48,10 +52,6 @@ const AnimatedIcon = ({
   const path = useTransform(progress, [0, 1], [sun, moon], {
     mixer: (a, b) => interpolate(a, b, { maxSegmentLength: 1 }),
   });
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   if (!isMounted)
     return (

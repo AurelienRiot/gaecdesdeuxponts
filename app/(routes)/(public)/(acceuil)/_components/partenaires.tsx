@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { InfiniteMovingCards } from "@/components/animations/infinite-moving-cards";
 import { Icons } from "@/components/icons";
@@ -8,7 +6,7 @@ export function PartenaireCards() {
   return (
     <div
       id="partenaires"
-      className="relative flex flex-col  items-center justify-center overflow-hidden rounded-md pt-24  dark:bg-grid-white/[0.05]"
+      className="relative flex flex-col  items-center justify-center overflow-hidden rounded-md pt-24  "
     >
       <h3 className="text-3xl">Nos Partenaires</h3>
       <InfiniteMovingCards

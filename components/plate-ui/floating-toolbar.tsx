@@ -1,17 +1,21 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { cn, withRef } from '@udecode/cn';
-import { PortalBody, useComposedRef } from '@udecode/plate-common';
+import React from "react";
+import { cn, withRef } from "@udecode/cn";
+import {
+  PortalBody,
+  useComposedRef,
+  useEditorReadOnly,
+} from "@udecode/plate-common";
 import {
   flip,
   FloatingToolbarState,
   offset,
   useFloatingToolbar,
   useFloatingToolbarState,
-} from '@udecode/plate-floating';
+} from "@udecode/plate-floating";
 
-import { Toolbar } from './toolbar';
+import { Toolbar } from "./toolbar";
 
 export const FloatingToolbar = withRef<
   typeof Toolbar,
@@ -22,16 +26,16 @@ export const FloatingToolbar = withRef<
   const floatingToolbarState = useFloatingToolbarState({
     ...state,
     floatingOptions: {
-      placement: 'top',
+      placement: "bottom",
       middleware: [
         offset(12),
         flip({
           padding: 12,
           fallbackPlacements: [
-            'top-start',
-            'top-end',
-            'bottom-start',
-            'bottom-end',
+            "bottom-start",
+            "bottom-end",
+            "top-start",
+            "top-end",
           ],
         }),
       ],
@@ -46,15 +50,16 @@ export const FloatingToolbar = withRef<
   } = useFloatingToolbar(floatingToolbarState);
 
   const ref = useComposedRef<HTMLDivElement>(componentRef, floatingRef);
+  const readOnly = useEditorReadOnly();
 
-  if (hidden) return null;
+  if (hidden || readOnly) return null;
 
   return (
     <PortalBody>
       <Toolbar
         ref={ref}
         className={cn(
-          'absolute z-50 whitespace-nowrap border bg-popover px-1 opacity-100 shadow-md print:hidden'
+          "absolute z-50 whitespace-nowrap border bg-popover px-1 opacity-100 shadow-md print:hidden",
         )}
         {...rootProps}
         {...props}

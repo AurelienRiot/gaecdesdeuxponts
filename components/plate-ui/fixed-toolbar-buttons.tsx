@@ -27,6 +27,7 @@ import { MarkToolbarButton } from "./mark-toolbar-button";
 import { ModeDropdownMenu } from "./mode-dropdown-menu";
 import { ToolbarGroup } from "./toolbar";
 import { TurnIntoDropdownMenu } from "./turn-into-dropdown-menu";
+import { ThemeToggle } from "../theme-toggle";
 
 export function FixedToolbarButtons() {
   const readOnly = useEditorReadOnly();
@@ -119,6 +120,7 @@ export function FixedToolbarButtons() {
 
         <ToolbarGroup noSeparator>
           {/* <CommentToolbarButton /> */}
+          <ThemeToggle />
           <ModeDropdownMenu />
         </ToolbarGroup>
       </div>

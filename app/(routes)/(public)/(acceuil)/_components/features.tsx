@@ -92,7 +92,7 @@ const FeaturesGrid = () => {
 
 const FeaturesWithHeading = () => {
   return (
-    <div className="relative my-12 flex w-full flex-col items-center justify-center">
+    <div className="m relative flex w-full flex-col items-center justify-center py-12">
       <BackgroundGrid />
       <h2 className="mb-2 max-w-3xl text-center text-2xl font-semibold text-primary  md:text-4xl ">
         Découvrez la Pureté du Lait Directement de la Ferme

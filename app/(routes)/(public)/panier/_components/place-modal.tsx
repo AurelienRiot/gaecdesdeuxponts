@@ -4,21 +4,19 @@ import NameInput from "@/components/display-shops/name-input";
 import { ShopCard } from "@/components/display-shops/shop-card";
 import { Modal } from "@/components/ui/modal";
 import { Shop } from "@prisma/client";
+import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
+import { makeCartUrl } from "./summary";
+import { toast } from "sonner";
 
 interface PlaceModalProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   shops: Shop[];
-  onSelect: (shopId: string) => void;
+  date: Date | undefined;
 }
 
-const PlaceModal = ({
-  isOpen,
-  setIsOpen,
-  shops,
-  onSelect,
-}: PlaceModalProps) => {
+const PlaceModal = ({ isOpen, setIsOpen, shops, date }: PlaceModalProps) => {
   const [sortedShops, setSortedShops] = useState<Shop[]>(shops);
   const [coordinates, setCoordinates] = useState<{
     long: number | undefined;
@@ -27,6 +25,19 @@ const PlaceModal = ({
     long: undefined,
     lat: undefined,
   });
+  const router = useRouter();
+
+  const onSelectPlace = (shopId: string | undefined) => {
+    if (!shopId) {
+      router.refresh();
+      toast.error("Erreur veuillez réssayer");
+      return;
+    }
+
+    router.push(makeCartUrl(shopId, date), {
+      scroll: false,
+    });
+  };
 
   return (
     <Modal
@@ -34,7 +45,7 @@ const PlaceModal = ({
       description="Trouvez le magasin le plus proche de chez vous"
       isOpen={isOpen}
       onClose={() => setIsOpen((prev) => !prev)}
-      className=" hide-scrollbar left-[50%] top-[50%] max-h-[90%] w-[90%] max-w-[90%] overflow-y-scroll"
+      className=" left-[50%] top-[50%] max-h-[90%] w-[90%] max-w-[90%] overflow-y-scroll hide-scrollbar"
     >
       <div className=" space-y-8 p-2">
         <div className="flex flex-wrap items-center justify-start gap-2">
@@ -53,7 +64,7 @@ const PlaceModal = ({
           {sortedShops.map((shop) => (
             <ShopCard
               onSelect={(shopId: string) => {
-                onSelect(shopId);
+                onSelectPlace(shopId);
                 setIsOpen(false);
               }}
               display="cart"
