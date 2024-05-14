@@ -39,7 +39,7 @@ const ServerPlace = async () => {
   return <PlacePicker shops={shops} farmShop={farmShop} />;
 };
 
-export const PlaceLoading = () => (
+const PlaceLoading = () => (
   <>
     <Image
       alt="chargement"
