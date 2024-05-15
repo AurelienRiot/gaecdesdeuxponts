@@ -1,6 +1,6 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { CSPostHogProvider } from "@/lib/analytics/provider";
+import { CSPostHogProvider } from "@/providers/posthog-provider";
 import { cn } from "@/lib/utils";
 import { AuthProviders } from "@/providers/auth-provider";
 import { ThemeProvider } from "@/providers/theme-provider";

@@ -19,23 +19,27 @@ const Gallery: React.FC<GalleryProps> = ({ images }) => {
     <Tabs
       onValueChange={setCurrentImage}
       value={currentImage}
-      className="relative flex  flex-col-reverse"
+      className="relative mx-auto flex w-full max-w-[60vw]  flex-col-reverse justify-self-center lg:max-w-xl"
     >
-      <div className="mx-auto mt-6  block w-full max-w-2xl  lg:max-w-none">
+      <div className="mx-auto mt-6  block w-full  lg:max-w-none">
         <TabsList className="grid h-fit grid-cols-4 gap-6 ">
           {images.map((image) => (
-            <GalleryTab key={image} image={image} />
+            <GalleryTab
+              key={image}
+              selected={image === currentImage}
+              image={image}
+            />
           ))}
         </TabsList>
       </div>
-      <div className="relative aspect-square w-full bg-white sm:rounded-lg">
+      <div className="relative aspect-square w-full  rounded-lg bg-white">
         {images.map((image) => (
           <TabsContent value={image} key={image}>
             <div className="relative aspect-square h-full w-full overflow-clip sm:rounded-lg">
               <Image
                 fill
                 priority
-                sizes="80vw"
+                sizes="(max-width: 1024px) 80vw, 50vw"
                 src={image}
                 alt="image"
                 className="object-contain object-center"

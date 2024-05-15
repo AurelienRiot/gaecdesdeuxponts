@@ -1,5 +1,6 @@
 import { getProCategories } from "@/actions/get-category";
 import Spinner from "@/components/animations/spinner";
+import { makeCategoryUrl } from "@/components/product/product-function";
 import { Category } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,14 +27,14 @@ const CategoriesList = async () => {
       {categories.map((category) => (
         <li key={category.name}>
           <Link
-            href={`/dashboard-user/produits-pro/category/${encodeURIComponent(category.name)}`}
+            href={makeCategoryUrl(category.name, true)}
             className={
-              "block select-none  space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+              "block max-w-md  select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
             }
           >
-            <div className="justify-left flex items-center text-base font-medium leading-none">
+            <h2 className="flex items-center  justify-center text-3xl font-medium leading-none">
               <CategoryImage category={category} /> {category.name}
-            </div>
+            </h2>
             <p className="line-clamp-3 text-left   text-sm leading-snug text-muted-foreground">
               {category.description}
             </p>
@@ -46,15 +47,15 @@ const CategoriesList = async () => {
 
 const CategoryImage = ({ category }: { category: Category }) => {
   return (
-    <div className="relative  mr-2  h-5 w-5 overflow-clip  rounded-md">
+    <span className="relative  mr-2  h-20 w-20 overflow-clip  rounded-md">
       <Image
         src={category.imageUrl}
         alt={category.name}
         fill
-        sizes="20px"
+        sizes="80px"
         className=" h-full w-full object-cover"
       />
-    </div>
+    </span>
   );
 };
 

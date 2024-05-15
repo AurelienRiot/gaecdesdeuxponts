@@ -1,10 +1,9 @@
+import { ShopCard } from "@/components/display-shops/shop-card";
+import { Shop } from "@prisma/client";
 import { Dispatch, SetStateAction } from "react";
 import { MapContainer, Marker, Popup, TileLayer, Tooltip } from "react-leaflet";
 import MapFocus from "./map-focus";
 import { MakePin } from "./marker-pin";
-import { Shop } from "@prisma/client";
-import { ShopCard } from "@/components/display-shops/shop-card";
-import LocationMarker from "./location-marker";
 
 const Leaflet = ({
   shops,

@@ -4,16 +4,16 @@ import posthog from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
 import { useEffect } from "react";
 
+if (typeof window !== "undefined" && process.env.NODE_ENV !== "development") {
+  posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
+    api_host: "/ingest",
+    ui_host: "https://eu.i.posthog.com",
+  });
+}
+
 export function CSPostHogProvider({ children }: { children: React.ReactNode }) {
   if (process.env.NODE_ENV === "development") {
     return <>{children}</>;
-  }
-
-  if (typeof window !== "undefined") {
-    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
-      api_host: "/ingest",
-      ui_host: "https://eu.i.posthog.com",
-    });
   }
 
   return (
