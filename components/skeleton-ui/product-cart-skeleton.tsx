@@ -1,8 +1,8 @@
-import IconButton from "@/components/ui/icon-button";
 import { ShoppingCart } from "lucide-react";
 import { FaInfo } from "react-icons/fa";
 import { Skeleton } from "./skeleton";
 import Currency from "../ui/currency";
+import { IconButton } from "../ui/button";
 
 export const ProductCart = () => {
   return (
@@ -14,13 +14,14 @@ export const ProductCart = () => {
             <IconButton
               className="z-20 sm:opacity-0 sm:group-hover:opacity-100"
               title="Aperçue"
-              icon={<FaInfo size={20} className="text-foreground" />}
+              Icon={FaInfo}
+              iconClassName="text-foreground size-4"
             />
-            <IconButton
+            {/* <IconButton
               className="z-20 sm:opacity-0 sm:group-hover:opacity-100"
               title="Ajouté au panier"
               icon={<ShoppingCart size={20} className="text-foreground" />}
-            />
+            /> */}
           </div>
         </div>
       </div>

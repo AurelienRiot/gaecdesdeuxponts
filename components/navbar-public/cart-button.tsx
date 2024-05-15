@@ -30,6 +30,7 @@ const CartIcon = forwardRef<HTMLButtonElement, { qty: number }>(
         {...props}
       >
         <ShoppingCart size={20} className="group-hover:text-foreground/80" />
+        <span className="sr-only ">Ouvrir le panier</span>
         <span
           className={cn(
             "absolute  -right-1 -top-1 flex aspect-square  min-w-5  items-center justify-center rounded-full bg-foreground px-1 font-sans text-xs tabular-nums text-background shadow-md group-hover:bg-foreground/80 group-hover:text-background/80",

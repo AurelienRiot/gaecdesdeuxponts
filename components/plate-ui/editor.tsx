@@ -62,7 +62,7 @@ const Editor = React.forwardRef<HTMLDivElement, EditorProps>(
     ref,
   ) => {
     return (
-      <div ref={ref} className="plate-ui relative w-full">
+      <div ref={ref} className="plate-ui relative w-full max-w-2xl">
         <PlateContent
           className={cn(
             editorVariants({

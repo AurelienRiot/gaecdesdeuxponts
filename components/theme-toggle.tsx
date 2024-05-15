@@ -31,7 +31,7 @@ export function ThemeToggle() {
         theme={theme}
       />
 
-      <span className="sr-only w-0">Toggle theme</span>
+      <span className="sr-only w-0">Changer de thème</span>
     </Button>
   );
 }

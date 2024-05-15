@@ -1,7 +1,6 @@
 "use client";
 
 import Currency from "@/components/ui/currency";
-import IconButton from "@/components/ui/icon-button";
 import useCart from "@/hooks/use-cart";
 import { ProductWithOptionsAndMain } from "@/types";
 import { X } from "lucide-react";
@@ -10,6 +9,7 @@ import Link from "next/link";
 
 import { BulkQuantity, CustomQuantityAddToCart } from "./product/cart-buttons";
 import { hasOptionWithValue, makeProductUrl } from "./product/product-function";
+import { IconButton } from "./ui/button";
 
 interface CartItemProps {
   data: ProductWithOptionsAndMain;
@@ -46,9 +46,11 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
         <div className="absolute right-0 top-0 z-10">
           <IconButton
             type="button"
+            Icon={X}
+            iconClassName="size-4 text-primary"
             className="bg-primary-foreground"
             onClick={onRemove}
-            icon={<X className="size-4 text-primary" />}
+            title="Supprimer du panier"
           />
         </div>
         <div className="relative flex h-full flex-col content-center justify-between gap-2">

@@ -3,8 +3,8 @@ import { ChevronDown, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Currency from "../ui/currency";
-import IconButton from "../ui/icon-button";
 import { Skeleton } from "./skeleton";
+import { IconButton } from "../ui/button";
 
 export const CartItemSkeleton = () => {
   return (
@@ -22,8 +22,10 @@ export const CartItemSkeleton = () => {
         <div className="absolute right-0 top-0 z-10">
           <IconButton
             type="button"
+            Icon={X}
+            iconClassName="size-4 text-primary"
             className="bg-primary-foreground"
-            icon={<X className="size-4 text-primary" />}
+            title="Supprimer du panier"
           />
         </div>
         <div className="relative flex h-full flex-col content-center justify-between gap-2">

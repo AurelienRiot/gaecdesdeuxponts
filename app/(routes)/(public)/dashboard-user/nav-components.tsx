@@ -1,5 +1,5 @@
 "use client";
-import IconButton from "@/components/ui/icon-button";
+import { IconButton } from "@/components/ui/button";
 import { useUserContext } from "@/context/user-context";
 import { motion } from "framer-motion";
 import {
@@ -28,12 +28,11 @@ const ProfilNavBar = () => {
     >
       <IconButton
         onClick={() => setOpen(!open)}
-        icon={
-          <ChevronLeft
-            data-state={open}
-            className="h-4 w-4  transition-all duration-500 data-[state=false]:rotate-180"
-          />
+        Icon={ChevronLeft}
+        iconClassName={
+          "h-4 w-4  transition-all duration-500 data-[state=false]:rotate-180"
         }
+        title={open ? "fermer" : "ouvrir"}
         data-state={open}
         className=" flex w-full items-center justify-center  transition-all duration-500"
       />

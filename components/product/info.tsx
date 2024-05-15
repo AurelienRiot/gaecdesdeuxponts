@@ -41,7 +41,7 @@ const Info: React.FC<InfoProps> = ({
         <>
           <Separator className="w-48" />
 
-          <div className="flex flex-col gap-y-6">
+          <div className="flex max-w-2xl flex-col gap-y-6">
             <div className="flex items-center gap-x-4">
               <p>{product.description}</p>
             </div>

@@ -145,20 +145,24 @@ export interface IconButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   Icon: React.ElementType;
   iconClassName?: string;
+  noStyle?: boolean;
 }
 
 const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
-  ({ className, Icon, iconClassName: buttonClassName, ...props }, ref) => {
+  ({ className, noStyle, Icon, iconClassName, title, ...props }, ref) => {
     return (
       <button
         ref={ref}
         className={cn(
-          "flex items-center justify-center rounded-full border bg-background p-2 shadow-md transition-all hover:scale-110 active:scale-95",
+          noStyle
+            ? ""
+            : "flex items-center justify-center rounded-full border bg-background p-2 shadow-md transition-all hover:scale-110 active:scale-95",
           className,
         )}
         {...props}
       >
-        <Icon className={buttonClassName} />
+        <Icon className={iconClassName} />
+        <span className="sr-only">{title}</span>
       </button>
     );
   },

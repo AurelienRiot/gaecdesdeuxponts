@@ -61,6 +61,7 @@ const LocationMarker = ({
       className={className}
       iconClassName="size-4 "
       onClick={handleClick}
+      title="Trouver votre position"
     />
   );
 };

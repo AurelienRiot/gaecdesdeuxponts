@@ -3,10 +3,10 @@ import { ShopCard } from "@/components/skeleton-ui/shop-card";
 import { Button } from "@/components/ui/button";
 import Container from "@/components/ui/container";
 import { Input } from "@/components/ui/input";
-import { ChevronDown } from "lucide-react";
-import { Suspense } from "react";
 import prismadb from "@/lib/prismadb";
+import { ChevronDown } from "lucide-react";
 import Image from "next/image";
+import { Suspense } from "react";
 import PlacePicker from "./_components/place";
 
 export const dynamic = "force-dynamic";
@@ -15,8 +15,8 @@ const farmShopId = process.env.NEXT_PUBLIC_FARM_ID;
 const OuNousTrouver = async () => {
   return (
     <Container className="my-8 space-y-8 p-2">
-      <div className="">
-        <h1 className="text-4xl font-bold">Trouver un magasin</h1>
+      <div className="text-center xl:text-left">
+        <h1 className=" text-4xl font-bold">Trouver un magasin</h1>
         <p className="text-lg">
           Trouvez le magasin le plus proche de chez vous
         </p>

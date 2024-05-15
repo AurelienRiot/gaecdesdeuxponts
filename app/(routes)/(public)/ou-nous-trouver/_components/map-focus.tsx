@@ -17,6 +17,7 @@ import "./marker.css";
 import { cn } from "@/lib/utils";
 import LocationMarker from "./location-marker";
 import { usePostHog } from "posthog-js/react";
+import { IconButton } from "@/components/ui/button";
 
 const MapFocus = ({
   className,
@@ -62,13 +63,17 @@ const MapFocus = ({
             setSearchTerm(e);
           }}
         />
-        <X
+        <IconButton
+          Icon={X}
           onClick={() => {
             setSuggestions(undefined);
             setQuery("");
           }}
-          className="absolute -right-0.5
-           top-[6px] z-[401] cursor-pointer p-1 opacity-50 "
+          noStyle
+          iconClassName="size-4"
+          className="absolute -right-0
+          top-[10px] z-[401] cursor-pointer  opacity-50"
+          title="Fermer la recherche"
         />
 
         <CommandList
