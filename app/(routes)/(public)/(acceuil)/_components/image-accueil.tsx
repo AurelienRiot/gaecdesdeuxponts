@@ -41,7 +41,7 @@ const ImageAccueil = () => {
           {/*           
            cru frais
           <HoverWord className=" mx-1 ">Bio</HoverWord> */}
-          <span className="block">directement de le ferme</span>
+          <span className="block">directement de la ferme</span>
         </h2>
         <p className="mb-8 max-w-xl @md:text-lg">
           Découvrez le goût pur et crémeux de notre lait cru frais de la ferme.

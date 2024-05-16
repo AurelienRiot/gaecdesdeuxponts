@@ -3,7 +3,6 @@ import { OptionsArray } from "@/app/(routes)/admin/products/[productId]/page";
 import Gallery from "@/components/gallery/gallery";
 import Info from "@/components/product/info";
 import MainProductCart from "@/components/product/main-product-cart";
-import ProductList from "@/components/products-list";
 import { ProductWithOptionsAndMain } from "@/types";
 import { MainProduct } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
@@ -46,7 +45,7 @@ const ClientWrapper = ({
         <Gallery
           images={[...product.product.imagesUrl, ...product.imagesUrl]}
         />
-        <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0 lg:justify-self-center">
+        <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0 lg:justify-self-start">
           <Info
             sameProducts={products}
             product={product}

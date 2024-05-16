@@ -6,6 +6,7 @@ import { getUnitLabel } from "@/components/product/product-function";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import { currencyFormatter, dateFormatter } from "@/lib/utils";
+import { ProductWithMain } from "@/types";
 import { render } from "@react-email/render";
 import { nanoid } from "nanoid";
 
@@ -103,26 +104,22 @@ export const checkOut = async ({
     }
   }
 
-  const order = await prismadb.order.create({
-    data: {
-      id: `FA_${nanoid()}`,
-      totalPrice,
-      pdfUrl: "",
-      orderItems: {
-        create: productsWithQuantity.map((product) => ({
-          name: product.item.name,
-          description: product.item.description,
-          categoryName: product.item.product.categoryName,
-          price: product.item.price,
-          unit: getUnitLabel(product.item.unit).quantity,
-          quantity: product.quantity,
-        })),
-      },
-      userId: isAuth.id,
-      shopId: shopId === "domicile" ? null : shopId,
-      name: user.name || user.email || "",
-      datePickUp: date,
-    },
+  const order = await createOrder({
+    productsWithQuantity,
+    totalPrice,
+    userId: isAuth.id,
+    datePickUp: date,
+    shopId,
+    name: user.name || user.email || "",
+  });
+
+  await createShippingOrder({
+    productsWithQuantity,
+    totalPrice,
+    userId: isAuth.id,
+    datePickUp: date,
+    shopId,
+    name: user.name || user.email || "",
   });
 
   await transporter.sendMail({
@@ -143,3 +140,75 @@ export const checkOut = async ({
     success: true,
   };
 };
+
+type CreateOrder = {
+  totalPrice: number;
+  productsWithQuantity: { item: ProductWithMain; quantity?: number }[];
+  shopId: string;
+  userId: string;
+  name: string;
+  datePickUp: Date;
+};
+
+async function createOrder({
+  totalPrice,
+  productsWithQuantity,
+  shopId,
+  userId,
+  name,
+  datePickUp,
+}: CreateOrder) {
+  const order = await prismadb.order.create({
+    data: {
+      id: `BC_${nanoid()}`,
+      totalPrice,
+      orderItems: {
+        create: productsWithQuantity.map((product) => ({
+          name: product.item.name,
+          description: product.item.description,
+          categoryName: product.item.product.categoryName,
+          price: product.item.price,
+          unit: getUnitLabel(product.item.unit).quantity,
+          quantity: product.quantity,
+        })),
+      },
+      userId,
+      shopId: shopId === "domicile" ? null : shopId,
+      name,
+      datePickUp,
+    },
+  });
+  return order;
+}
+
+type CreateShippingOrder = CreateOrder;
+
+async function createShippingOrder({
+  totalPrice,
+  productsWithQuantity,
+  shopId,
+  userId,
+  name,
+  datePickUp,
+}: CreateShippingOrder) {
+  await prismadb.order.create({
+    data: {
+      id: `BC_${nanoid()}`,
+      totalPrice,
+      orderItems: {
+        create: productsWithQuantity.map((product) => ({
+          name: product.item.name,
+          description: product.item.description,
+          categoryName: product.item.product.categoryName,
+          price: product.item.price,
+          unit: getUnitLabel(product.item.unit).quantity,
+          quantity: product.quantity,
+        })),
+      },
+      userId,
+      shopId: shopId === "domicile" ? null : shopId,
+      name,
+      datePickUp,
+    },
+  });
+}

@@ -19,7 +19,7 @@ const Gallery: React.FC<GalleryProps> = ({ images }) => {
     <Tabs
       onValueChange={setCurrentImage}
       value={currentImage}
-      className="relative mx-auto flex w-full max-w-[60vw]  flex-col-reverse justify-self-center lg:max-w-xl"
+      className="relative mx-auto flex w-full max-w-[60vw] flex-col-reverse lg:ml-auto  lg:mr-0 lg:max-w-xl lg:justify-self-end"
     >
       <div className="mx-auto mt-6  block w-full  lg:max-w-none">
         <TabsList className="grid h-fit grid-cols-4 gap-6 ">

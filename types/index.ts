@@ -41,10 +41,12 @@ export interface DataTableViewOptionsColumn<TData> {
   id: keyof TData;
   title: string;
 }
-
-export interface ProductWithOptionsAndMain extends Product {
-  options: OptionType[];
+export interface ProductWithMain extends Product {
   product: MainProduct;
+}
+
+export interface ProductWithOptionsAndMain extends ProductWithMain {
+  options: OptionType[];
 }
 
 export interface ProductWithOptions extends Product {

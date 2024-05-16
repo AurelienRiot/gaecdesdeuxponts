@@ -159,7 +159,7 @@ export const ProductWithOptions = ({
   );
 };
 
-export function ProductName({
+function ProductName({
   productIndex,
   options,
   optionsArray,
@@ -209,22 +209,14 @@ export function ProductName({
         <div className="flex h-full flex-col justify-between gap-4 py-2">
           <IconButton
             Icon={ChevronsUp}
-            className={
-              productIndex === 0
-                ? " cursor-not-allowed opacity-50 hover:scale-100"
-                : ""
-            }
+            className={productIndex === 0 ? " opacity-0 " : ""}
             iconClassName={"size-4"}
             onClick={moveProductUp}
             type="button"
           />
           <IconButton
             Icon={ChevronsDown}
-            className={
-              productIndex === products.length - 1
-                ? " cursor-not-allowed opacity-50 hover:scale-100"
-                : ""
-            }
+            className={productIndex === products.length - 1 ? "opacity-0" : ""}
             iconClassName="size-4"
             onClick={moveProductDown}
             type="button"
@@ -498,23 +490,15 @@ const OptionsName = ({
             <span className="flex items-center">{`Nom de l'option ${optionIndex + 1}`}</span>
             <IconButton
               Icon={ChevronLeft}
-              className={
-                optionIndex === 0
-                  ? " cursor-not-allowed opacity-50 hover:scale-100"
-                  : ""
-              }
-              iconClassName={"size-2"}
+              className={optionIndex === 0 ? "opacity-0" : ""}
+              iconClassName={"size-4"}
               onClick={moveOptionLeft}
               type="button"
             />
             <IconButton
               Icon={ChevronRight}
-              className={
-                optionIndex === options.length - 1
-                  ? " cursor-not-allowed opacity-50 hover:scale-100"
-                  : ""
-              }
-              iconClassName="size-2"
+              className={optionIndex === options.length - 1 ? "opacity-0" : ""}
+              iconClassName="size-4"
               onClick={moveOptionRigth}
               type="button"
             />

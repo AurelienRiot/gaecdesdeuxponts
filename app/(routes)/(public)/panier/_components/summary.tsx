@@ -24,7 +24,7 @@ import { toast } from "sonner";
 import DatePicker from "./date-picker";
 import LoginCard from "./login-card";
 import PlaceModal from "./place-modal";
-import { checkOut } from "./server-action";
+import { checkOut } from "../_actions/check-out";
 import PickUpPlace from "./pick-up-place";
 import { ProductWithOptionsAndMain } from "@/types";
 import { Skeleton } from "@/components/skeleton-ui/skeleton";

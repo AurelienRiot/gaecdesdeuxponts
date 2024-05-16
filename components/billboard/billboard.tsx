@@ -27,7 +27,7 @@ const Billboard: React.FC<BillboardProps> = ({ category }) => {
           fill
           priority
           sizes="(max-width: 640px) 100vw,  50vw"
-          className="h-full w-full object-cover"
+          className=" rounded-xl object-contain"
         />
       </div>
     </div>

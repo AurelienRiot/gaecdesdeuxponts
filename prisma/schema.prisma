@@ -51,6 +51,7 @@ model User {
   image            String?
   role             Role @default(user)
   orders           Order[]
+  shippingOrders    ShippingOrder[]
   accounts         Account[]
   sessions         Session[]
   address          Address[]
@@ -88,17 +89,17 @@ model Category {
 }
 
 model MainProduct {
- id           String @unique @id @default(cuid())
- name        String @unique
-  categoryName String
-  category     Category @relation("CategoryToProduct", fields: [categoryName], references: [name])
-productSpecs String @db.Text
- imagesUrl    String[]
+ id            String @unique @id @default(cuid())
+ name          String @unique
+ categoryName  String
+ category      Category @relation("CategoryToProduct", fields: [categoryName], references: [name])
+ productSpecs  String @db.Text
+ imagesUrl     String[]
  products      Product[] @relation("MainProductToProduct")
-  isArchived   Boolean @default(false)
-  isPro        Boolean @default(false)
-   createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+ isArchived    Boolean @default(false)
+ isPro         Boolean @default(false)
+ createdAt     DateTime @default(now())
+ updatedAt     DateTime @updatedAt
 
   @@index([categoryName])
 
@@ -106,16 +107,16 @@ productSpecs String @db.Text
 
 model Product {
   id           String @unique @id @default(cuid())
-  productName String
-  product     MainProduct @relation("MainProductToProduct", fields: [productName], references: [name],onDelete: Cascade)
+  productName  String
+  product      MainProduct @relation("MainProductToProduct", fields: [productName], references: [name],onDelete: Cascade)
   name         String 
   description  String @db.VarChar(1000)
   price        Float 
   isFeatured   Boolean @default(false)
   isArchived   Boolean @default(false)
   imagesUrl    String[]
-  options       Option[] @relation("ProductToOption")
-  unit          Unit? 
+  options      Option[] @relation("ProductToOption")
+  unit         Unit? 
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -151,32 +152,65 @@ model Order {
   id         String @unique @id @default(cuid())
   orderItems OrderItem[]
   totalPrice Float 
-  name       String @default("")
-  pdfUrl     String @default("")
+  name       String @default("")  
   isPaid     Boolean @default(false)
   userId     String  
   user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  shopId    String? 
+  shopId     String? 
   shop       Shop? @relation(fields: [shopId], references: [id])
   datePickUp DateTime
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   @@index([userId])
-   @@index([shopId])
+  @@index([shopId])
 
 }
 
+model ShippingOrder {
+  id                  String @unique @id @default(cuid())
+  shippingOrderItems  ShippingOrderItem[]
+  totalPrice          Float 
+  name                String @default("")
+  isPaid              Boolean @default(false)
+  isValidated         Boolean @default(false)
+  userId              String  
+  user                User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shopId              String? 
+  shop                Shop? @relation(fields: [shopId], references: [id])
+  datePickUp          DateTime
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([userId])
+  @@index([shopId])
+
+}
+
+model ShippingOrderItem {
+  id                String @unique @id @default(cuid())
+  price             Float
+  quantity          Float @default(1)
+  unit              String?
+  name              String
+  categoryName      String
+  description       String @db.VarChar(1000)
+  shippingOrderId   String
+  order             ShippingOrder @relation(fields: [shippingOrderId], references: [id], onDelete: Cascade)
+
+  @@index([shippingOrderId])
+}
+
 model OrderItem {
-  id        String @unique @id @default(cuid())
-  price     Float
-  quantity  Float @default(1)
-  unit      String?
-  name      String
+  id           String @unique @id @default(cuid())
+  price        Float
+  quantity     Float @default(1)
+  unit         String?
+  name         String
   categoryName String
   description  String @db.VarChar(1000)
-  orderId   String
-  order     Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId      String
+  order        Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   @@index([orderId])
 }
@@ -184,7 +218,7 @@ model OrderItem {
 model Contact {
   id        String   @unique @id @default(cuid())
   name      String
-  email      String
+  email     String
   phone     String? 
   subject   String
   message   String   @db.VarChar(1000) 
@@ -210,8 +244,8 @@ model Address {
   country    String?
   userId     String   
   user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now()) 
-  updatedAt DateTime @updatedAt 
+  createdAt  DateTime @default(now()) 
+  updatedAt  DateTime @updatedAt 
 
 
   @@index([userId])
@@ -219,20 +253,21 @@ model Address {
 }
 
 model Shop {
-  id String @unique @id @default(cuid())
-  name String
-  lat Float 
-  long Float
-  address String
-  phone String
-  email String?
-  description String
-  imageUrl String?
-  website String?
-  order      Order[] 
-  isArchived Boolean  @default(false)
-  createdAt DateTime @default(now()) 
-  updatedAt DateTime @updatedAt 
+  id            String @unique @id @default(cuid())
+  name          String
+  lat           Float 
+  long          Float
+  address       String
+  phone         String
+  email         String?
+  description   String
+  imageUrl      String?
+  website       String?
+  order         Order[] 
+  shippingOrder ShippingOrder[]
+  isArchived    Boolean  @default(false)
+  createdAt     DateTime @default(now()) 
+  updatedAt     DateTime @updatedAt 
 
    }
 
