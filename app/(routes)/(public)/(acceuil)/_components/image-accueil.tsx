@@ -43,6 +43,11 @@ const ImageAccueil = () => {
           <HoverWord className=" mx-1 ">Bio</HoverWord> */}
           <span className="block">directement de la ferme</span>
         </h2>
+        <p className="mb-4 max-w-lg text-xl font-bold @md:text-2xl">
+          Venez chercher votre lait à la ferme.
+          <br />
+          Aux heures de la traite 8h30-9h30/18h-19h du lundi au samedi
+        </p>
         <p className="mb-8 max-w-xl @md:text-lg">
           Découvrez le goût pur et crémeux de notre lait cru frais de la ferme.
           Rempli de nutriments essentiels, notre lait provient directement de
