@@ -6,7 +6,6 @@ import {
   ProductCell,
 } from "@/components/table-custom-fuction/cell-orders";
 import {
-  CheckboxCell,
   DateCell,
   NameCell,
 } from "@/components/table-custom-fuction/common-cell";
@@ -16,15 +15,15 @@ import {
 } from "@/components/table-custom-fuction/common-filter";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
 import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
+import { Button } from "@/components/ui/button";
 import { DataTableFilterableColumn, DataTableViewOptionsColumn } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { changeStatus } from "../../../orders/_components/server-action";
 import { OrderCellAction } from "./order-cell-action";
-import { Button } from "@/components/ui/button";
 
 export type OrderColumn = {
   id: string;
   isPaid: boolean;
+  status: "En cours de validation" | "Validé" | "Payé";
   datePickUp: Date;
   totalPrice: string;
   products: string;
@@ -48,19 +47,11 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "isPaid",
     header: "Facture",
-    id: "pdf",
     cell: FactureCell,
   },
   {
-    accessorKey: "isPaid",
-    header: "Payé",
-    cell: ({ row }) => (
-      <CheckboxCell
-        isCheckbox={row.original.isPaid}
-        onChange={(e) => changeStatus({ isPaid: e, id: row.original.id })}
-      />
-    ),
-    filterFn: FilterOneInclude,
+    accessorKey: "status",
+    header: "Statut",
   },
   {
     accessorKey: "datePickUp",
@@ -122,14 +113,6 @@ export const filterableColumns = ({
       title: "Lieu de retrait",
       options: shopArray,
     },
-    {
-      id: "isPaid",
-      title: "Status",
-      options: [
-        { label: "Payé", value: "true" },
-        { label: "Non Payé", value: "false" },
-      ],
-    },
   ];
 };
 
@@ -145,7 +128,7 @@ export const viewOptionsColumns: DataTableViewOptionsColumn<OrderColumn>[] = [
   },
 
   {
-    id: "pdf" as keyof OrderColumn,
+    id: "isPaid",
     title: "Facture",
   },
   {

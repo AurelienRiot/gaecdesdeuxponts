@@ -53,6 +53,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Unit } from "@prisma/client";
+import { nanoid } from "nanoid";
 
 export const ProductWithOptions = ({
   optionsArray,
@@ -67,6 +68,7 @@ export const ProductWithOptions = ({
 
   const addProduct = () => {
     const newProduct = {
+      id: `PR_${nanoid()}`,
       name: "",
       description: "",
       isArchived: false,

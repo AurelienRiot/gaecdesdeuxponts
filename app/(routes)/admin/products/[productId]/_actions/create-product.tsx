@@ -47,6 +47,7 @@ export async function createProduct({
       products: {
         create: products.map((product) => {
           return {
+            id: product.id,
             name: product.name,
             description: product.description,
             price: product.price || 0,

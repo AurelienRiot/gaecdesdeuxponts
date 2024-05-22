@@ -19,6 +19,7 @@ export default WelcomeEmail;
 
 WelcomeEmail.PreviewProps = {
   url: "https://www.laiteriedupontrobert.fr",
+  baseUrl: "https://www.laiteriedupontrobert.fr",
 } as WelcomeEmailProps;
 
 const WelcomeBody = ({ url }: { url: string }) => (

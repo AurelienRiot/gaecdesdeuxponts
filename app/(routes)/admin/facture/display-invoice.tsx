@@ -3,12 +3,12 @@ import Invoice from "@/components/pdf/create-invoice";
 import { data } from "@/components/pdf/data-invoice";
 import { PDFViewer } from "@react-pdf/renderer";
 
-const Test = () => {
+const DisplayInvoice = () => {
   return (
-    <PDFViewer className="h-full w-1/2">
+    <PDFViewer className="h-full w-full">
       <Invoice isPaid={true} dataInvoice={data} />
     </PDFViewer>
   );
 };
 
-export default Test;
+export default DisplayInvoice;

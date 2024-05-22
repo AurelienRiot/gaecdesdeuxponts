@@ -26,16 +26,8 @@ const OrdersPage = async (context: {
   const orders = await prismadb.order.findMany({
     include: {
       orderItems: true,
-      shop: { select: { name: true, id: true } },
-      user: {
-        select: {
-          id: true,
-          name: true,
-          address: true,
-          phone: true,
-          email: true,
-        },
-      },
+      shop: true,
+      user: { include: { address: true } },
     },
     where: {
       createdAt: {

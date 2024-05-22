@@ -1,19 +1,20 @@
 "use client";
 
 import { DataTableSkeleton } from "@/components/skeleton-ui/data-table-skeleton";
+import {
+  createDataInvoice,
+  createProduct,
+  createProductList,
+  createStatus,
+} from "@/components/table-custom-fuction/cell-orders";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { useUserContext } from "@/context/user-context";
-import {
-  addressFormatter,
-  currencyFormatter,
-  dateFormatter,
-} from "@/lib/utils";
+import { currencyFormatter } from "@/lib/utils";
 import {
   OrderColumnType,
   OrdersColumn,
-  filterableColumns,
   searchableColumns,
   viewOptionsColumns,
 } from "./_components/order-column";
@@ -38,58 +39,15 @@ const PageOrderTable = () => {
   const formattedOrders: OrderColumnType[] = (user.orders || []).map(
     (order) => ({
       id: order.id,
-      productsList: order.orderItems.map((item) => {
-        let name = item.name;
-        if (item.quantity > 0 && item.quantity !== 1) {
-          return {
-            name,
-            quantity: `${item.quantity}`,
-            unit: item.unit || undefined,
-          };
-        }
-        return { name, quantity: "" };
-      }),
-      products: order.orderItems
-        .map((item) => {
-          let name = item.name;
-          if (item.quantity > 0 && item.quantity !== 1) {
-            name += ` x${item.quantity}`;
-          }
-          return name;
-        })
-        .join(", "),
-      totalPrice: currencyFormatter.format(Number(order.totalPrice)),
-      isPaid: order.isPaid,
-      datePickUp: order.datePickUp,
+      productsList: createProductList(order),
+      products: createProduct(order),
+      totalPrice: currencyFormatter.format(order.totalPrice),
+      status: createStatus(order),
+      datePickUp: order.dateOfShipping ?? order.datePickUp,
       shopName: order.shop?.name || "Livraison à domicile",
       shop: order.shop || undefined,
       createdAt: order.createdAt,
-      dataInvoice: {
-        customer: {
-          id: user.id || "",
-          name: user.name ? user.name + " - " + user.company : "",
-          address: (() => {
-            const a =
-              user?.address[0] && user?.address[0].line1
-                ? addressFormatter(user.address[0])
-                : "";
-            return a;
-          })(),
-          phone: user.phone || "",
-          email: user.email || "",
-        },
-        order: {
-          id: order.id,
-          dateOfPayment: dateFormatter(order.datePickUp),
-          dateOfEdition: dateFormatter(new Date()),
-          items: order.orderItems.map((item) => ({
-            desc: item.name,
-            qty: item.quantity,
-            priceTTC: item.price,
-          })),
-          total: order.totalPrice,
-        },
-      },
+      dataInvoice: createDataInvoice({ user, order }),
     }),
   );
 
@@ -103,7 +61,6 @@ const PageOrderTable = () => {
       <DataTable
         data={formattedOrders}
         columns={OrdersColumn}
-        filterableColumns={filterableColumns}
         searchableColumns={searchableColumns}
         viewOptionsColumns={viewOptionsColumns}
       />

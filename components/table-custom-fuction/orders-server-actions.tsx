@@ -1,23 +1,13 @@
 "use server";
+import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
-import { checkAdmin } from "../auth/checkAuth";
+import { ReturnTypeServerAction } from "@/types";
 
-type ReturnType =
-  | {
-      success: true;
-    }
-  | {
-      success: false;
-      message: string;
-    };
-
-const changeStatus = async ({
+async function deleteOrders({
   id,
-  isPaid,
 }: {
-  id: string;
-  isPaid: boolean | "indeterminate";
-}): Promise<ReturnType> => {
+  id: string | undefined;
+}): Promise<ReturnTypeServerAction<null>> {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
@@ -27,30 +17,21 @@ const changeStatus = async ({
     };
   }
 
-  if (isPaid === "indeterminate") {
-    return {
-      success: false,
-      message: "Une erreur est survenue, veuillez reessayer",
-    };
-  }
   try {
-    const order = await prismadb.order.update({
-      where: {
-        id,
-      },
-      data: {
-        isPaid,
-      },
+    await prismadb.order.delete({
+      where: { id: id },
     });
-    return {
-      success: true,
-    };
-  } catch (error) {
+  } catch (e) {
+    console.log(e);
     return {
       success: false,
-      message: "Une erreur est survenue, veuillez reessayer",
+      message: "Une erreur est survenue",
     };
   }
-};
 
-export { changeStatus };
+  return {
+    success: true,
+    data: null,
+  };
+}
+export { deleteOrders };

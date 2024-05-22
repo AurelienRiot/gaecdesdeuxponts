@@ -2,6 +2,7 @@ import AddressAutocomplete, {
   LocationAutocomplete,
 } from "@/actions/adress-autocompleteFR";
 import { IconButton } from "@/components/ui/button";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 import { Locate } from "lucide-react";
 import { usePostHog } from "posthog-js/react";
 import { Dispatch, SetStateAction } from "react";
@@ -22,12 +23,14 @@ const LocationMarker = ({
   >;
 }) => {
   const map = useMap();
+  const { getValue } = useLocalStorage("cookies-banner");
   const posthog = usePostHog();
 
   const handleLocationFound = async (e: GeolocationPosition) => {
     const { latitude, longitude } = e.coords;
 
     map.setView([latitude, longitude], 10);
+    const { accept } = getValue();
 
     setPin({
       label: "Votre position",
@@ -39,12 +42,15 @@ const LocationMarker = ({
       long: longitude,
       lat: latitude,
     });
-    const temp = await LocationAutocomplete({ latitude, longitude });
-    posthog?.capture("localisation_trouvée", {
-      latitude,
-      longitude,
-      adresse: temp.length > 0 ? temp[0].label : "Erreur de localisation",
-    });
+    if (accept) {
+      const temp = await LocationAutocomplete({ latitude, longitude });
+
+      posthog?.capture("localisation_trouvée", {
+        latitude,
+        longitude,
+        adresse: temp.length > 0 ? temp[0].label : "Erreur de localisation",
+      });
+    }
   };
 
   const handleClick = () => {

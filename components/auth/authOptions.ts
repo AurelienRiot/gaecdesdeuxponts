@@ -31,7 +31,7 @@ export const authOptions: NextAuthOptions = {
       profile(profile: GoogleProfile) {
         return {
           id: profile.sub.toString(),
-          name: profile.given_name + " " + profile.family_name,
+          name: profile.name,
           email: profile.email,
           image: profile.picture,
         };

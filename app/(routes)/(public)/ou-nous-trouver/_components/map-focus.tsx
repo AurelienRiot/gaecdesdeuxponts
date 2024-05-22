@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import LocationMarker from "./location-marker";
 import { usePostHog } from "posthog-js/react";
 import { IconButton } from "@/components/ui/button";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 
 const MapFocus = ({
   className,
@@ -28,6 +29,7 @@ const MapFocus = ({
     SetStateAction<{ long: number | undefined; lat: number | undefined }>
   >;
 }) => {
+  const { getValue } = useLocalStorage("cookies-banner");
   const [suggestions, setSuggestions] = useState<Suggestion[] | undefined>(
     undefined,
   );
@@ -43,6 +45,33 @@ const MapFocus = ({
     const temp = await AddressAutocomplete(value);
     setSuggestions(temp);
   };
+
+  function onSelectAddress(address: Suggestion) {
+    const longitude = address.coordinates[0];
+    const latitude = address.coordinates[1];
+    const { accept } = getValue();
+
+    if (accept) {
+      posthog?.capture("localisation_trouvée", {
+        latitude,
+        longitude,
+        adresse: address.label,
+      });
+    }
+
+    map.setView([latitude, longitude], 10);
+    setPin({
+      label: "Votre position",
+      lat: latitude,
+      long: longitude,
+    });
+    setCoordinates({
+      long: longitude,
+      lat: latitude,
+    });
+    setSuggestions(undefined);
+    setQuery(address.label);
+  }
 
   return (
     <>
@@ -93,28 +122,7 @@ const MapFocus = ({
                 className="cursor-pointer   bg-popover text-popover-foreground"
                 value={index.toString()}
                 key={address.label}
-                onSelect={() => {
-                  const longitude = address.coordinates[0];
-                  const latitude = address.coordinates[1];
-                  posthog?.capture("localisation_trouvée", {
-                    latitude,
-                    longitude,
-                    adresse: address.label,
-                  });
-
-                  map.setView([latitude, longitude], 10);
-                  setPin({
-                    label: "Votre position",
-                    lat: latitude,
-                    long: longitude,
-                  });
-                  setCoordinates({
-                    long: longitude,
-                    lat: latitude,
-                  });
-                  setSuggestions(undefined);
-                  setQuery(address.label);
-                }}
+                onSelect={() => onSelectAddress(address)}
               >
                 {address.label}
               </CommandItem>

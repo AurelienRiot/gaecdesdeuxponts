@@ -56,9 +56,25 @@ export interface ProductWithOptions extends Product {
 export interface UserWithOrders extends User {
   orders: Order[];
 }
-export interface UserWithOrdersAndAdress extends User {
-  orders: (Order & { orderItems: OrderItem[]; shop: Shop | null })[];
+
+export interface UserWithAddress extends User {
   address: Address[];
+}
+export interface UserWithOrdersAndAdress extends User {
+  orders: (Order & {
+    orderItems: OrderItem[];
+    shop: Shop | null;
+  })[];
+  address: Address[];
+}
+
+export interface OrderWithItemsAndShop extends Order {
+  orderItems: OrderItem[];
+  shop: Shop | null;
+}
+
+export interface OrderWithItemsAndUserAndShop extends OrderWithItemsAndShop {
+  user: UserWithAddress;
 }
 
 export interface MainProductWithProducts extends MainProduct {

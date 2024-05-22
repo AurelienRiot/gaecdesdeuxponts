@@ -1,43 +1,15 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 
-import {
-  Page,
-  Document,
-  Svg,
-  Path,
-  StyleSheet,
-  View,
-  Text,
-  G,
-  Image,
-} from "@react-pdf/renderer";
+import { StyleSheet, Text, View } from "@react-pdf/renderer";
 import { DataInvoiceType } from "./data-invoice";
-import { formatPhoneNumber } from "react-phone-number-input";
-
-const tableRowsCount = 11;
-
-const mainColor = "#00008B";
-const foregroundColor = "#FFFFFF";
-const borderColor = mainColor;
-const logoColor = "#000000";
-const watermarkColor = "rgb(255, 0, 0)";
-
-const MainStyles = StyleSheet.create({
-  page: {
-    fontFamily: "Helvetica",
-    fontSize: 11,
-    paddingTop: 10,
-    paddingLeft: 40,
-    paddingRight: 40,
-    lineHeight: 1.5,
-    flexDirection: "column",
-    position: "relative",
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-});
+import Details from "./details";
+import MainDocument, {
+  borderColor,
+  foregroundColor,
+  mainColor,
+  tableRowsCount,
+} from "./main-document";
+import PaidWatermark from "./paid-watermark";
 
 // Create Document Component
 const Invoice = ({
@@ -47,140 +19,20 @@ const Invoice = ({
   isPaid: boolean;
   dataInvoice: DataInvoiceType;
 }) => (
-  <Document title={`Facture-${dataInvoice.order.id}`}>
-    <Page size="A4" style={MainStyles.page}>
-      <View style={MainStyles.header}>
-        <Company />
-        <Details invoice={dataInvoice} title="Facture" />
-      </View>
-
-      <BillTo invoice={dataInvoice} />
+  <MainDocument
+    customer={dataInvoice.customer}
+    title={`Facture-${dataInvoice.order.id}`}
+    details={<Details invoice={dataInvoice} title="Facture" />}
+  >
+    <Fragment>
       <InvoiceItemsTable invoice={dataInvoice} />
       <InvoiceThankYouMsg />
       {isPaid && <PaidWatermark />}
-    </Page>
-  </Document>
+    </Fragment>
+  </MainDocument>
 );
 
 export default Invoice;
-
-const CompanyStyles = StyleSheet.create({
-  headerContainer: {
-    marginTop: 10,
-  },
-  logo: {
-    marginBottom: 10,
-    width: 100,
-    height: 100,
-  },
-});
-
-const Company = () => (
-  <View style={CompanyStyles.headerContainer}>
-    <Logo />
-    <Text>Gaec des deux ponts</Text>
-    <Text>6 B le Pont Robert 44290 MASSERAC</Text>
-    <Text>06 72 06 45 55</Text>
-    <Text>laiteriedupontrobert@gmail.com</Text>
-  </View>
-);
-
-const detailsStyles = StyleSheet.create({
-  container: {
-    flexDirection: "column",
-    marginTop: 24,
-  },
-});
-
-const Details = ({
-  title,
-  invoice,
-}: {
-  title: string;
-  invoice: DataInvoiceType;
-}) => (
-  <View style={detailsStyles.container}>
-    <InvoiceTitle title={title} />
-    <InvoiceNo invoice={invoice} />
-  </View>
-);
-
-const headingStyles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    marginTop: 24,
-    justifyContent: "flex-end",
-  },
-  reportTitle: {
-    color: mainColor,
-    letterSpacing: 4,
-    fontSize: 25,
-    textAlign: "center",
-    textTransform: "uppercase",
-  },
-});
-
-const InvoiceTitle = ({ title }: { title: string }) => (
-  <View style={headingStyles.titleContainer}>
-    <Text style={headingStyles.reportTitle}>{title}</Text>
-  </View>
-);
-
-const noStyles = StyleSheet.create({
-  invoiceDateContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    marginTop: 10,
-  },
-  invoiceDate: {
-    fontSize: 12,
-    fontStyle: "bold",
-  },
-  label: {},
-});
-
-const InvoiceNo = ({ invoice }: { invoice: DataInvoiceType }) => (
-  <Fragment>
-    <View style={noStyles.invoiceDateContainer}>
-      <Text style={noStyles.label}>N° de facture : </Text>
-      <Text style={noStyles.invoiceDate}>{invoice.order.id}</Text>
-    </View>
-    <View style={noStyles.invoiceDateContainer}>
-      <Text style={noStyles.label}>N° de client : </Text>
-      <Text style={noStyles.invoiceDate}>{invoice.customer.id}</Text>
-    </View>
-    <View style={noStyles.invoiceDateContainer}>
-      <Text style={noStyles.label}>Date de facturation : </Text>
-      <Text style={noStyles.invoiceDate}>{invoice.order.dateOfPayment}</Text>
-    </View>
-    <View style={noStyles.invoiceDateContainer}>
-      <Text style={noStyles.label}>{"Date de d'édition :"} </Text>
-      <Text style={noStyles.invoiceDate}>{invoice.order.dateOfEdition}</Text>
-    </View>
-  </Fragment>
-);
-
-const billStyles = StyleSheet.create({
-  headerContainer: {
-    marginTop: 15,
-  },
-  billTo: {
-    marginTop: 20,
-    paddingBottom: 3,
-  },
-});
-
-const BillTo = ({ invoice }: { invoice: DataInvoiceType }) => (
-  <View style={billStyles.headerContainer}>
-    <Text style={billStyles.billTo}>À :</Text>
-    {!!invoice.customer.name && <Text>{invoice.customer.name}</Text>}
-    {!!invoice.customer.address && <Text>{invoice.customer.address}</Text>}
-    {!!invoice.customer.phone && (
-      <Text>{formatPhoneNumber(invoice.customer.phone as any)}</Text>
-    )}
-    {!!invoice.customer.email && <Text>{invoice.customer.email}</Text>}
-  </View>
-);
 
 const itemsTableStyles = StyleSheet.create({
   tableContainer: {
@@ -427,39 +279,4 @@ const InvoiceThankYouMsg = () => (
     </Text>
     <Text style={thankYouMsgStyles.iban}>Code Bic : AGRIFRPP836</Text>
   </View>
-);
-
-const watermark = StyleSheet.create({
-  container: {
-    position: "absolute",
-    top: "75%",
-    left: "20%",
-    zIndex: 9999,
-    transform: "rotate(-45deg)",
-    opacity: 0.5,
-    borderWidth: 5,
-    borderRadius: 10,
-    borderColor: watermarkColor,
-    paddingHorizontal: 20,
-    paddingVertical: 5,
-    backgroundColor: "transparent",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  watermarkText: {
-    fontSize: 60,
-    color: watermarkColor,
-  },
-});
-
-const PaidWatermark = () => (
-  <View style={watermark.container}>
-    <Text style={watermark.watermarkText}>Payé</Text>
-  </View>
-);
-
-const Logo = () => (
-  // eslint-disable-next-line jsx-a11y/alt-text
-  <Image style={CompanyStyles.logo} src="\logo-font-blanc.png" cache={false} />
 );

@@ -51,7 +51,6 @@ model User {
   image            String?
   role             Role @default(user)
   orders           Order[]
-  shippingOrders    ShippingOrder[]
   accounts         Account[]
   sessions         Session[]
   address          Address[]
@@ -153,7 +152,8 @@ model Order {
   orderItems OrderItem[]
   totalPrice Float 
   name       String @default("")  
-  isPaid     Boolean @default(false)
+  dateOfPayment       DateTime?
+  dateOfShipping      DateTime?
   userId     String  
   user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
   shopId     String? 
@@ -167,42 +167,11 @@ model Order {
 
 }
 
-model ShippingOrder {
-  id                  String @unique @id @default(cuid())
-  shippingOrderItems  ShippingOrderItem[]
-  totalPrice          Float 
-  name                String @default("")
-  isPaid              Boolean @default(false)
-  isValidated         Boolean @default(false)
-  userId              String  
-  user                User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  shopId              String? 
-  shop                Shop? @relation(fields: [shopId], references: [id])
-  datePickUp          DateTime
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
 
-  @@index([userId])
-  @@index([shopId])
-
-}
-
-model ShippingOrderItem {
-  id                String @unique @id @default(cuid())
-  price             Float
-  quantity          Float @default(1)
-  unit              String?
-  name              String
-  categoryName      String
-  description       String @db.VarChar(1000)
-  shippingOrderId   String
-  order             ShippingOrder @relation(fields: [shippingOrderId], references: [id], onDelete: Cascade)
-
-  @@index([shippingOrderId])
-}
 
 model OrderItem {
   id           String @unique @id @default(cuid())
+  itemId       String
   price        Float
   quantity     Float @default(1)
   unit         String?
@@ -264,7 +233,6 @@ model Shop {
   imageUrl      String?
   website       String?
   order         Order[] 
-  shippingOrder ShippingOrder[]
   isArchived    Boolean  @default(false)
   createdAt     DateTime @default(now()) 
   updatedAt     DateTime @updatedAt 

@@ -9,12 +9,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { OrderColumn } from "./order-column";
 import { Button } from "@/components/ui/button";
-import { Copy, MoreHorizontal, Trash } from "lucide-react";
+import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AlertModal } from "@/components/ui/alert-modal-form";
-import { deleteOrders } from "../../../orders/_components/server-action";
+import { deleteOrders } from "@/components/table-custom-fuction/orders-server-actions";
 
 interface OrderCellActionProps {
   data: OrderColumn;
@@ -61,6 +61,12 @@ export const OrderCellAction: React.FC<OrderCellActionProps> = ({ data }) => {
           >
             <Copy className="mr-2 h-4 w-4" />
             Copier Id
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => router.push(`/admin/orders/${data.id}`)}
+          >
+            <Edit className="mr-2 h-4 w-4" />
+            Éditer
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="mr-2 h-4 w-4" />

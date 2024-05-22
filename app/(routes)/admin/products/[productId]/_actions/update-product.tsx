@@ -62,6 +62,7 @@ export async function updateProduct(
       products: {
         create: products.map((product) => {
           return {
+            id: product.id,
             name: product.name,
             unit: product.unit,
             description: product.description,

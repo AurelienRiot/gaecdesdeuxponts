@@ -217,9 +217,13 @@ const CustomQuantity = ({
 };
 
 export const BulkQuantity = ({
+  className,
   product,
+  iconClassName,
 }: {
   product: ProductWithOptionsAndMain;
+  className?: string;
+  iconClassName?: string;
 }) => {
   const { quantities, addItem, changeQuantity } = useCart();
   const quantity = quantities[product.id] || undefined;
@@ -249,7 +253,7 @@ export const BulkQuantity = ({
         addItem(product, qty);
       }
     }
-    form.reset({ quantity: qty });
+    form.reset({ quantity: qty ? qty : undefined });
   };
 
   return (
@@ -270,6 +274,7 @@ export const BulkQuantity = ({
                   placeholder={getUnitLabel(product.unit).type || "Quantité"}
                   className="w-[70px]"
                   {...field}
+                  value={field.value || ""}
                   onChange={(e) =>
                     field.onChange(e.target.value.replace(",", "."))
                   }
@@ -283,11 +288,11 @@ export const BulkQuantity = ({
         />
         <Button
           variant="rounded"
-          className={"flex items-center gap-x-2 hover:scale-105"}
+          className={cn("flex items-center gap-x-2 hover:scale-105", className)}
           type="submit"
         >
           {quantity ? "Modifier la quantité" : " Ajouter au panier"}
-          <ShoppingCart className={"size-4"} />
+          <ShoppingCart className={cn("size-4", iconClassName)} />
         </Button>
       </form>
     </Form>

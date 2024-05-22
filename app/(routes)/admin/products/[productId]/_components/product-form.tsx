@@ -38,6 +38,7 @@ import { PlateEditor } from "./plate-editor";
 import { ProductWithOptions } from "./product-with-options-form";
 import { updateProduct } from "../_actions/update-product";
 import { createProduct } from "../_actions/create-product";
+import { nanoid } from "nanoid";
 
 const OptionSchema = z.object({
   name: z.string().min(1, { message: "Le nom de l'option est requis" }),
@@ -45,6 +46,7 @@ const OptionSchema = z.object({
 });
 
 const productSchema = z.object({
+  id: z.string(),
   name: z.string().min(1, { message: "Le nom est requis" }),
   description: z.string(),
   price: z.coerce
@@ -113,6 +115,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       isArchived: initialData?.isArchived || false,
       isPro: initialData?.isPro || false,
       products: initialData?.products.map((product) => ({
+        id: product.id,
         name: product.name,
         description: product.description,
         price: product.price,
@@ -127,6 +130,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       })) || [
         {
           name: "",
+          id: `PR_${nanoid()}`,
           description: "",
           price: undefined,
           isFeatured: false,

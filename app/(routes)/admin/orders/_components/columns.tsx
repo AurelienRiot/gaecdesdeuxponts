@@ -1,12 +1,9 @@
 "use client";
 
 import { DataInvoiceType } from "@/components/pdf/data-invoice";
+import { DisplayInvoice } from "@/components/pdf/pdf-button";
+import { ProductCell } from "@/components/table-custom-fuction/cell-orders";
 import {
-  FactureCell,
-  ProductCell,
-} from "@/components/table-custom-fuction/cell-orders";
-import {
-  CheckboxCell,
   DateCell,
   NameCell,
 } from "@/components/table-custom-fuction/common-cell";
@@ -16,15 +13,15 @@ import {
 } from "@/components/table-custom-fuction/common-filter";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
 import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
+import { Button } from "@/components/ui/button";
 import {
   DataTableFilterableColumn,
   DataTableSearchableColumn,
   DataTableViewOptionsColumn,
 } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
 import { CellAction } from "./cell-action";
-import { changeStatus } from "./server-action";
-import { Button } from "@/components/ui/button";
 
 export type OrderColumn = {
   id: string;
@@ -34,6 +31,7 @@ export type OrderColumn = {
   datePickUp: Date;
   totalPrice: string;
   products: string;
+  status: "En cours de validation" | "Validé" | "Payé";
   productsList: { name: string; quantity?: string; unit?: string }[];
   shopName: string;
   shopId: string;
@@ -59,30 +57,31 @@ export const columns: ColumnDef<OrderColumn>[] = [
     ),
   },
   {
+    accessorKey: "status",
+    header: "Statut",
+  },
+  {
     accessorKey: "totalPrice",
     header: "Prix Total",
   },
   {
-    accessorKey: "isPaid",
+    accessorKey: "dataInvoice",
     header: "Facture",
     id: "pdf",
-    cell: FactureCell,
-  },
-  {
-    accessorKey: "isPaid",
-    header: "Payé",
-    cell: ({ row }) => (
-      <div className="flex gap-2">
-        <CheckboxCell
-          isCheckbox={row.getValue("isPaid")}
-          onChange={(e: boolean | "indeterminate") =>
-            changeStatus({ id: row.original.id, isPaid: e })
-          }
+    cell: ({ row }) => {
+      return row.original.status === "En cours de validation" ? (
+        <Button asChild variant={"link"} className="px-0">
+          <Link href={`/admin/orders/${row.original.id}`}>
+            Éditer le bon de livraison
+          </Link>
+        </Button>
+      ) : (
+        <DisplayInvoice
+          isPaid={row.original.status === "Payé"}
+          data={row.original.dataInvoice}
         />
-      </div>
-    ),
-
-    filterFn: FilterOneInclude,
+      );
+    },
   },
   {
     accessorKey: "datePickUp",
@@ -144,14 +143,6 @@ export const filterableColumns = ({
       title: "Lieu de retrait",
       options: shopArray,
     },
-    {
-      id: "isPaid",
-      title: "Status",
-      options: [
-        { label: "Payé", value: "true" },
-        { label: "Non Payé", value: "false" },
-      ],
-    },
   ];
 };
 
@@ -180,14 +171,6 @@ export const viewOptionsColumns: DataTableViewOptionsColumn<OrderColumn>[] = [
     title: "Prix",
   },
 
-  {
-    id: "pdf" as keyof OrderColumn,
-    title: "Facture",
-  },
-  {
-    id: "isPaid",
-    title: "Status",
-  },
   {
     id: "datePickUp",
     title: "Date de livraison",

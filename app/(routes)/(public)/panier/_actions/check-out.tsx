@@ -2,12 +2,15 @@
 
 import { checkUser } from "@/components/auth/checkAuth";
 import OrderEmail from "@/components/email/order";
+import Order from "@/components/pdf/create-commande";
+import { createDataOrder } from "@/components/pdf/data-order";
 import { getUnitLabel } from "@/components/product/product-function";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import { currencyFormatter, dateFormatter } from "@/lib/utils";
-import { ProductWithMain } from "@/types";
+import { OrderWithItemsAndUserAndShop, ProductWithMain } from "@/types";
 import { render } from "@react-email/render";
+import { pdf } from "@react-pdf/renderer";
 import { nanoid } from "nanoid";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
@@ -23,10 +26,9 @@ type CheckOutReturnType =
     };
 
 type CheckOutProps = {
-  totalPrice: number;
-
   itemsWithQuantities: {
     id: string;
+    price: number;
     quantity: number;
   }[];
   date: Date;
@@ -36,7 +38,6 @@ type CheckOutProps = {
 export const checkOut = async ({
   itemsWithQuantities,
   date,
-  totalPrice,
   shopId,
 }: CheckOutProps): Promise<CheckOutReturnType> => {
   const isAuth = await checkUser();
@@ -83,63 +84,74 @@ export const checkOut = async ({
     };
   });
 
-  const trueTotalPrice = productsWithQuantity.reduce(
-    (acc, { item, quantity }) => {
-      return acc + (item.price || 0) * (quantity || 1);
-    },
-    0,
-  );
+  const mismatchedProducts = itemsWithQuantities.filter((item) => {
+    const matchingProduct = products.find((product) => product.id === item.id);
+    return !matchingProduct || matchingProduct.price !== item.price;
+  });
 
-  if (trueTotalPrice !== totalPrice) {
-    const foundProductIds = products.map((product) => product.id);
-    const notFoundProductIds = productIds.filter(
-      (id) => !foundProductIds.includes(id),
-    );
-    if (notFoundProductIds.length > 0) {
-      return {
-        success: false,
-        message: `Produits modifiés`,
-        ids: notFoundProductIds,
-      };
-    }
+  const totalPrice = itemsWithQuantities.reduce((acc, { price, quantity }) => {
+    return acc + (price || 0) * (quantity || 1);
+  }, 0);
+
+  if (mismatchedProducts.length > 0) {
+    console.log("Mismatched IDs:", mismatchedProducts);
+    return {
+      success: false,
+      message: `Produits modifiés`,
+      ids: mismatchedProducts.map((product) => product.id),
+    };
   }
 
-  const order = await createOrder({
-    productsWithQuantity,
-    totalPrice,
-    userId: isAuth.id,
-    datePickUp: date,
-    shopId,
-    name: user.name || user.email || "",
-  });
+  try {
+    const order = await createOrder({
+      productsWithQuantity,
+      totalPrice,
+      userId: isAuth.id,
+      datePickUp: date,
+      shopId,
+      name: user.name || user.email || "",
+    });
+    const pdfBuffer = await generatePdf(order);
 
-  await createShippingOrder({
-    productsWithQuantity,
-    totalPrice,
-    userId: isAuth.id,
-    datePickUp: date,
-    shopId,
-    name: user.name || user.email || "",
-  });
+    await transporter.sendMail({
+      from: "laiteriedupontrobert@gmail.com",
+      to: user.email || "",
+      subject: "Confirmation de votre commande - Laiterie du Pont Robert",
+      html: render(
+        OrderEmail({
+          date: dateFormatter(order.createdAt),
+          baseUrl,
+          id: order.id,
+          price: currencyFormatter.format(totalPrice),
+        }),
+      ),
+      attachments: [
+        {
+          filename: `Bon_de_commande-${order.id}.pdf`,
+          content: pdfBuffer,
+          contentType: "application/pdf",
+        },
+      ],
+    });
 
-  await transporter.sendMail({
-    from: "laiteriedupontrobert@gmail.com",
-    to: user.email || "",
-    subject: "Confirmation de votre commande - Laiterie du Pont Robert",
-    html: render(
-      OrderEmail({
-        date: dateFormatter(order.createdAt),
-        baseUrl,
-        id: order.id,
-        price: currencyFormatter.format(totalPrice),
-      }),
-    ),
-  });
-
-  return {
-    success: true,
-  };
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: "Erreur lors de la commande.",
+    };
+  }
 };
+
+async function generatePdf(order: OrderWithItemsAndUserAndShop) {
+  const doc = <Order data={createDataOrder(order)} />;
+  const pdfBlob = await pdf(doc).toBlob();
+  const arrayBuffer = await pdfBlob.arrayBuffer();
+  return Buffer.from(arrayBuffer);
+}
 
 type CreateOrder = {
   totalPrice: number;
@@ -160,10 +172,11 @@ async function createOrder({
 }: CreateOrder) {
   const order = await prismadb.order.create({
     data: {
-      id: `BC_${nanoid()}`,
+      id: nanoid(),
       totalPrice,
       orderItems: {
         create: productsWithQuantity.map((product) => ({
+          itemId: product.item.id,
           name: product.item.name,
           description: product.item.description,
           categoryName: product.item.product.categoryName,
@@ -176,39 +189,12 @@ async function createOrder({
       shopId: shopId === "domicile" ? null : shopId,
       name,
       datePickUp,
+    },
+    include: {
+      user: { include: { address: true } },
+      shop: true,
+      orderItems: true,
     },
   });
   return order;
-}
-
-type CreateShippingOrder = CreateOrder;
-
-async function createShippingOrder({
-  totalPrice,
-  productsWithQuantity,
-  shopId,
-  userId,
-  name,
-  datePickUp,
-}: CreateShippingOrder) {
-  await prismadb.order.create({
-    data: {
-      id: `BC_${nanoid()}`,
-      totalPrice,
-      orderItems: {
-        create: productsWithQuantity.map((product) => ({
-          name: product.item.name,
-          description: product.item.description,
-          categoryName: product.item.product.categoryName,
-          price: product.item.price,
-          unit: getUnitLabel(product.item.unit).quantity,
-          quantity: product.quantity,
-        })),
-      },
-      userId,
-      shopId: shopId === "domicile" ? null : shopId,
-      name,
-      datePickUp,
-    },
-  });
 }

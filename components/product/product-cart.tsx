@@ -5,8 +5,8 @@ import Link from "next/link";
 import { FaInfo } from "react-icons/fa";
 import { Badge } from "../ui/badge";
 import { IconButton } from "../ui/button";
-import AddToCartButton from "./cart-buttons";
-import { makeProductUrl } from "./product-function";
+import AddToCartButton, { BulkQuantity } from "./cart-buttons";
+import { hasOptionWithValue, makeProductUrl } from "./product-function";
 
 interface ProductCartProps {
   data: ProductWithOptionsAndMain;
@@ -66,12 +66,20 @@ const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
       </div>
       <div className="flex flex-wrap items-center justify-between gap-2 text-primary">
         <Currency className="text-lg" value={value || 0} unit={data.unit} />
-        <AddToCartButton
-          data={data}
-          type="text"
-          iconClassName="hidden"
-          className="text-xs"
-        />
+        {hasOptionWithValue(data.options, "Vrac") ? (
+          <BulkQuantity
+            product={data}
+            className="text-xs"
+            iconClassName="hidden"
+          />
+        ) : (
+          <AddToCartButton
+            data={data}
+            type="text"
+            iconClassName="hidden"
+            className="text-xs"
+          />
+        )}
       </div>
     </div>
   );

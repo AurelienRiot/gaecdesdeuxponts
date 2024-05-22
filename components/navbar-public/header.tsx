@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 const PublicHeader = () => {
   return (
-    <header className="fixed top-0   z-[1200] flex h-16 w-full items-center justify-between bg-background px-4 py-4  shadow-md  sm:px-6 ">
+    <header className="fixed top-0   z-[1100] flex h-16 w-full items-center justify-between bg-background px-4 py-4  shadow-md  sm:px-6 ">
       <div className="flex items-center justify-center gap-4 ">
         <MobileNav>
           <MainNav orientation="vertical" className="mt-10" />

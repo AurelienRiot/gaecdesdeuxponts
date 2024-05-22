@@ -2,35 +2,27 @@
 
 import { ShopCard } from "@/components/display-shops/shop-card";
 import { DataInvoiceType } from "@/components/pdf/data-invoice";
-import {
-  FactureCell,
-  ProductCell,
-} from "@/components/table-custom-fuction/cell-orders";
+import { DisplayInvoice } from "@/components/pdf/pdf-button";
+import { ProductCell } from "@/components/table-custom-fuction/cell-orders";
 import { DateCell } from "@/components/table-custom-fuction/common-cell";
-import { FilterOneInclude } from "@/components/table-custom-fuction/common-filter";
 import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  DataTableFilterableColumn,
-  DataTableSearchableColumn,
-  DataTableViewOptionsColumn,
-} from "@/types";
+import { DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
 import { Shop } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { Search } from "lucide-react";
 
 export type OrderColumnType = {
   id: string;
-  isPaid: boolean;
   datePickUp: Date;
   totalPrice: string;
   products: string;
+  status: "En cours de validation" | "Validé" | "Payé";
   productsList: { name: string; quantity?: string; unit?: string }[];
   createdAt: Date;
   shopName: string;
@@ -48,21 +40,22 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
     header: "Prix total",
   },
   {
-    accessorKey: "isPaid",
-    header: "Facture",
-    id: "pdf",
-    cell: FactureCell,
+    accessorKey: "status",
+    header: "Statut",
   },
   {
-    accessorKey: "isPaid",
-    header: "Payé",
-    cell: ({ row }) => (
-      <Checkbox
-        className="cursor-default self-center"
-        checked={row.original.isPaid}
-      />
-    ),
-    filterFn: FilterOneInclude,
+    accessorKey: "dataInvoice",
+    header: "Facture",
+    cell: ({ row }) => {
+      return row.original.status === "En cours de validation" ? (
+        "Non disponible"
+      ) : (
+        <DisplayInvoice
+          isPaid={row.original.status === "Payé"}
+          data={row.original.dataInvoice}
+        />
+      );
+    },
   },
   {
     accessorKey: "datePickUp",
@@ -102,17 +95,6 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
   },
 ];
 
-export const filterableColumns: DataTableFilterableColumn<OrderColumnType>[] = [
-  {
-    id: "isPaid",
-    title: "Status",
-    options: [
-      { label: "Payé", value: "true" },
-      { label: "Non Payé", value: "false" },
-    ],
-  },
-];
-
 export const searchableColumns: DataTableSearchableColumn<OrderColumnType>[] = [
   {
     id: "products",
@@ -136,12 +118,12 @@ export const viewOptionsColumns: DataTableViewOptionsColumn<OrderColumnType>[] =
     },
 
     {
-      id: "pdf" as keyof OrderColumnType,
-      title: "Facture",
+      id: "status",
+      title: "Statut",
     },
     {
-      id: "isPaid",
-      title: "Status",
+      id: "dataInvoice",
+      title: "Facture",
     },
     {
       id: "datePickUp",

@@ -11,23 +11,23 @@ import {
   getUnitLabel,
   hasOptionWithValue,
 } from "@/components/product/product-function";
+import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import useIsComponentMounted from "@/hooks/use-mounted";
+import { ProductWithOptionsAndMain } from "@/types";
 import { Shop } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+import { checkOut } from "../_actions/check-out";
 import DatePicker from "./date-picker";
 import LoginCard from "./login-card";
-import PlaceModal from "./place-modal";
-import { checkOut } from "../_actions/check-out";
 import PickUpPlace from "./pick-up-place";
-import { ProductWithOptionsAndMain } from "@/types";
-import { Skeleton } from "@/components/skeleton-ui/skeleton";
+import PlaceModal from "./place-modal";
 
 const getDateFromSearchParam = (param: string | null): Date | undefined => {
   if (param === null) return undefined;
@@ -90,6 +90,7 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
     const itemsWithQuantities = cart.items.map((item) => {
       return {
         id: item.id,
+        price: item.price,
         quantity: cart.quantities[item.id],
       };
     });
@@ -97,7 +98,6 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
     const result = await checkOut({
       itemsWithQuantities,
       date,
-      totalPrice,
       shopId,
     });
 
