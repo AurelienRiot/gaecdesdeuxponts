@@ -64,7 +64,9 @@ export const getCategories = unstable_cache(
           some: {
             isPro: false,
             isArchived: false,
-            products: { some: { isArchived: false } },
+            products: {
+              some: { isArchived: false, product: { isArchived: false } },
+            },
           },
         },
       },

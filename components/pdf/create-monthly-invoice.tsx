@@ -26,7 +26,6 @@ const MonthlyInvoice = ({
   >
     <Fragment>
       <ShippingItemsTable data={data} />
-      <Signature />
       <InvoiceThankYouMsg />
       {isPaid && <PaidWatermark />}
     </Fragment>
@@ -324,5 +323,9 @@ const thankYouMsgStyles = StyleSheet.create({
 const InvoiceThankYouMsg = () => (
   <View style={thankYouMsgStyles.titleContainer}>
     <Text style={thankYouMsgStyles.reportTitle}>Merci de votre confiance</Text>
+    <Text style={thankYouMsgStyles.iban}>
+      IBAN : FR76 1234 5678 9012 3456 7890
+    </Text>
+    <Text style={thankYouMsgStyles.iban}>Code Bic : AGRIFRPP836</Text>
   </View>
 );

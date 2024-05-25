@@ -69,6 +69,7 @@ export async function createProduct({
     },
   });
 
+  revalidateTag("categories");
   revalidateTag("productfetch");
 
   return {

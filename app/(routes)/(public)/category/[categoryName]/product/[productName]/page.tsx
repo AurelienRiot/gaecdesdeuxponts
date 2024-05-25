@@ -15,8 +15,20 @@ interface ProductPageProps {
 export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
+  const productName = decodeURIComponent(params.productName);
+  const categoryName = decodeURIComponent(params.categoryName);
+  const allProducts = await getProductsByCategoryName(categoryName);
+  const products = allProducts.filter(
+    (product) => product.productName === productName,
+  );
+
   return {
-    title: `${decodeURIComponent(params.productName)} - Laiterie du Pont Robert`,
+    title: productName,
+    openGraph: {
+      title: productName,
+      description: "",
+      images: products.length > 0 ? products[0].product.imagesUrl : "",
+    },
   };
 }
 

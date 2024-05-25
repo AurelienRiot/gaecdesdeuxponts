@@ -4,8 +4,8 @@ import { watermarkColor } from "./main-document";
 const watermark = StyleSheet.create({
   container: {
     position: "absolute",
-    top: "75%",
-    left: "20%",
+    top: "600px",
+    left: "100px",
     zIndex: 9999,
     transform: "rotate(-45deg)",
     opacity: 0.5,

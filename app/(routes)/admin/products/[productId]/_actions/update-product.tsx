@@ -84,6 +84,7 @@ export async function updateProduct(
     },
   });
   revalidateTag("productfetch");
+  revalidateTag("categories");
 
   return {
     success: true,

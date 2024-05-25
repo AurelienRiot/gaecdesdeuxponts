@@ -16,8 +16,16 @@ interface CategoryPageProps {
 export async function generateMetadata({
   params,
 }: CategoryPageProps): Promise<Metadata> {
+  const categoryName = decodeURIComponent(params.categoryName);
+  const category = await getCategoryByName(categoryName);
+
   return {
-    title: `${decodeURIComponent(params.categoryName)} - Laiterie du Pont Robert`,
+    title: categoryName,
+    openGraph: {
+      title: categoryName,
+      description: category?.description || "",
+      images: category?.imageUrl,
+    },
   };
 }
 

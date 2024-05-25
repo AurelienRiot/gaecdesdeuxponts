@@ -1,5 +1,17 @@
 import Container from "@/components/ui/container";
 import { Accordion2 } from "./accordeons";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "FAQ sur le Lait Cru",
+    openGraph: {
+      title: "FAQ sur le Lait Cru",
+      description:
+        "Trouvez les réponses aux questions fréquemment posées sur notre lait cru, ses bienfaits, et comment nous assurons sa qualité et sécurité pour vous.",
+    },
+  };
+}
 
 const faqData = [
   {
@@ -22,7 +34,7 @@ const faqData = [
     answer: [
       "Le lait cru doit être réfrigéré immédiatement après l'achat.",
       "Il est conseillé de le stocker à une température inférieure à 4°C.",
-      "Consommez-le dans les 5 à 7 jours pour garantir sa fraîcheur et sa sécurité.",
+      "Consommez-le dans les 5 jours pour garantir sa fraîcheur et sa sécurité.",
     ],
   },
   {

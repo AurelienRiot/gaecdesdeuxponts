@@ -52,17 +52,17 @@ const InfoContact = () => {
         <div className="justify-left flex items-center gap-4 sm:gap-8">
           <Link
             target="_blank"
-            href={"https://www.facebook.com/laiterie.du.pont.robert"}
+            href={"https://www.facebook.com/profile.php?id=61559928455527"}
           >
             <Icons.Facebook className="size-6" />
           </Link>
-          <Link
-            target="_blank"
-            href={"https://www.instagram.com/laiterie.du.pont.robert"}
-          >
+          <Link target="_blank" href={"https://www.instagram.com/"}>
             <Icons.Instagram className="size-7" />
           </Link>
-          <Link target="_blank" href={"https://www.leboncoin.fr/"}>
+          <Link
+            target="_blank"
+            href={"https://www.leboncoin.fr/ad/autres_services/2711381825"}
+          >
             <Icons.LeBonCoin className="size-14" />
           </Link>
         </div>

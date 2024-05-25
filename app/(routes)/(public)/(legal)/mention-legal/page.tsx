@@ -1,3 +1,15 @@
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Mention légales",
+    openGraph: {
+      title: "Mention légales",
+      description: "Mention légales de Laiterie du Pont Robert",
+    },
+  };
+}
+
 const MentionLegalPage = () => {
   return (
     <section className="mx-auto mb-10 flex max-w-5xl flex-col gap-4 pt-12 text-lg">

@@ -9,11 +9,18 @@ import { Separator } from "@/components/ui/separator";
 import { Suspense } from "react";
 import { ContactForm } from "./_components/contact-form";
 import InfoContact from "./_components/info-contact";
+import { Metadata } from "next";
 
-export const metadata = {
-  title: "Laiterie du Pont Robert - Contact",
-  description: "Contact Laiterie du Pont Robert",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Contact",
+    openGraph: {
+      title: "Contact",
+      description:
+        "Nous sommes là pour répondre à toutes vos questions sur notre lait cru et nos pratiques à la ferme.",
+    },
+  };
+}
 
 const ContactPage = () => {
   return (

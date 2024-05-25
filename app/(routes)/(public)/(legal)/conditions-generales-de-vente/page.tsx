@@ -1,3 +1,15 @@
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Conditions générales de vente",
+    openGraph: {
+      title: "Conditions générales de vente",
+      description: "Conditions générales de vente de Laiterie du Pont Robert",
+    },
+  };
+}
+
 const ConditionsVentePage = () => {
   return (
     <section className="mx-auto mb-10 flex max-w-5xl flex-col gap-4 pt-12 text-lg">

@@ -13,6 +13,7 @@ import { MapIcon } from "lucide-react";
 import { TiBusinessCard } from "react-icons/ti";
 import { GiCow } from "react-icons/gi";
 import AuthLink from "./auth-link";
+import Vache from "@/public/vache.webp";
 
 export function MainNav({
   className,
@@ -37,8 +38,9 @@ export function MainNav({
             <ul className="grid w-[calc(100vw-165px)] max-w-[420px] grid-cols-1 gap-3 p-1 xs:p-4 sm:w-[420px] sm:grid-cols-[.75fr_1fr]">
               <li className="row-span-3 hidden sm:block">
                 <Image
-                  src={"/vache.webp"}
+                  src={Vache}
                   alt="Vache"
+                  placeholder="blur"
                   width={1200}
                   height={1600}
                   sizes="160px"

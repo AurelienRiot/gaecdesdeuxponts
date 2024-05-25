@@ -18,12 +18,12 @@ interface CartItemProps {
 const CartItem: React.FC<CartItemProps> = ({ data }) => {
   const cart = useCart();
 
-  const productUrl = makeProductUrl(
-    data.productName,
-    data.product.categoryName,
-    data.product.isPro,
-    data.options,
-  );
+  const productUrl = makeProductUrl({
+    productName: data.productName,
+    categoryName: data.product.categoryName,
+    isPro: data.product.isPro,
+    options: data.options,
+  });
 
   const value = Number(data.price);
 

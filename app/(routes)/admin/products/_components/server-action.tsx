@@ -31,7 +31,7 @@ async function deleteProduct({
     };
   }
   revalidateTag("productfetch");
-
+  revalidateTag("categories");
   return {
     success: true,
     data: null,
@@ -70,6 +70,7 @@ const changeArchived = async ({
       },
     });
     revalidateTag("productfetch");
+    revalidateTag("categories");
 
     return {
       success: true,
@@ -114,6 +115,7 @@ const changePro = async ({
         isPro,
       },
     });
+    revalidateTag("categories");
     revalidateTag("productfetch");
 
     return {

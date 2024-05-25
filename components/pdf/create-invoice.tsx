@@ -191,7 +191,7 @@ const tableBlankSpaceStyles = StyleSheet.create({
 });
 
 const InvoiceTableBlankSpace = ({ rowsCount }: { rowsCount: number }) => {
-  const blankRows = Array(rowsCount).fill(0);
+  const blankRows = rowsCount > 0 ? Array(rowsCount).fill(0) : [];
   const rows = blankRows.map((x, i) => (
     <View style={tableBlankSpaceStyles.row} key={`BR${i}`}>
       <Text style={tableBlankSpaceStyles.description}>-</Text>

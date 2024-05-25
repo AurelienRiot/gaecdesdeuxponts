@@ -14,8 +14,24 @@ import {
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Laiterie du Pont Robert",
-  description: "Laiterie du Pont Robert",
+  metadataBase: new URL("https://www.laiteriedupontrobert.fr"),
+  keywords: [
+    "Lait",
+    "Local",
+    "Vente directe",
+    "Ferme",
+    "Vrac",
+    "Agriculture Biologique",
+  ],
+  title: {
+    default: "Laiterie du Pont Robert",
+    template: `%s | Laiterie du Pont Robert`,
+  },
+  openGraph: {
+    description:
+      "Lait Cru Frais et Bio directement de la ferme. Venez chercher votre lait à la ferme. Aux heures de la traite 8h30-9h3/018h-19h du lundi au samedi",
+    images: [""],
+  },
 };
 
 const fontSans = FontSans({

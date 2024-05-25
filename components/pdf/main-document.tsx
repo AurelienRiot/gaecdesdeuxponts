@@ -8,7 +8,7 @@ import {
 } from "@react-pdf/renderer";
 import { DataInvoiceType } from "./data-invoice";
 
-export const tableRowsCount = 11;
+export const tableRowsCount = 10;
 export const mainColor = "#00008B";
 export const foregroundColor = "#FFFFFF";
 export const borderColor = mainColor;
@@ -19,6 +19,7 @@ const MainStyles = StyleSheet.create({
     fontFamily: "Helvetica",
     fontSize: 11,
     paddingTop: 10,
+    paddingBottom: 10,
     paddingLeft: 40,
     paddingRight: 40,
     lineHeight: 1.5,

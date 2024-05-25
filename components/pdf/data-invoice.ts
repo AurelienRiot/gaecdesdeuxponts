@@ -1,3 +1,5 @@
+import { dateFormatter } from "@/lib/utils";
+
 export type Customer = {
   id: string;
   name: string;
@@ -26,49 +28,37 @@ export type DataInvoiceType = {
 
 export const data: DataInvoiceType = {
   customer: {
-    id: "5df3180a09ea16dc4b95f910",
+    id: "clvurl15d000cn7yjhkdo7wo2",
     name: "MANTRI",
     email: "susanafuentes@mantrix.com",
     phone: "+1 (872) 588-3809",
     address: "922 Campus Road, Drytown, Wisconsin, 1986",
   },
   order: {
-    id: "9ea16dc4b95f9105df3180a0",
-    dateOfEdition: "03/03/2024",
-    dateOfPayment: "01/03/2024",
-    dateOfShipping: "03/03/2024",
+    id: "RwZJdKN8VZIq0__djiWeq",
+    dateOfEdition: dateFormatter(new Date()),
+    dateOfPayment: dateFormatter(new Date()),
+    dateOfShipping: dateFormatter(new Date()),
     items: [
       {
-        id: "5df3180a09ea16dc4b95f910",
-        priceTTC: 450,
-        desc: "ad sunt culpa occaecat qui ad sunt culpa occaecat qui",
+        id: "PR_clw6c4e5g0001jurxfos6jkhl",
+        priceTTC: 10,
+        desc: "Fromage blanc",
         qty: 5,
       },
       {
-        id: "5df3180a09ea16dc4b95f910",
-        priceTTC: 400,
-        desc: "cillum quis sunt qui aute",
-        qty: 5,
+        id: "PR_clw7wb8u600041e4kk8bs9c62",
+        priceTTC: 2,
+        desc: "Crème liquide 25cl",
+        qty: 2,
       },
       {
-        id: "5df3180a09ea16dc4b95f910",
-        priceTTC: 500,
-        desc: "ea commodo labore culpa irure",
-        qty: 5,
-      },
-      {
-        id: "5df3180a09ea16dc4b95f910",
-        priceTTC: 800,
-        desc: "nisi consequat et adipisicing dolor",
-        qty: 10,
-      },
-      {
-        id: "5df3180a09ea16dc4b95f910",
-        priceTTC: 160,
-        desc: "proident cillum anim elit esse",
-        qty: 4,
+        id: "PR_clw7wb8u600001e4k8wkufzcq",
+        priceTTC: 10,
+        desc: "Crème liquide 1L",
+        qty: 1,
       },
     ],
-    totalPrice: 2000,
+    totalPrice: 64,
   },
 };

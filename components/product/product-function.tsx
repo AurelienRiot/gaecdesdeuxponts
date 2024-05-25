@@ -12,24 +12,37 @@ export function makeCategoryUrl(categoryName: string, isPro: boolean) {
     : `/category/${categoryName}`;
 }
 
-export function makeOptionsUrl(options: Option[]) {
-  let url = "?";
-  options.forEach((option) => {
-    url += `${option.name}=${encodeURIComponent(option.value)}&`;
+export function makeOptionsUrl(options: Option[], parsing?: boolean) {
+  let url = "";
+  options.forEach((option, index) => {
+    url += `${option.name}=${encodeURIComponent(option.value)}`;
+    if (index < options.length - 1) {
+      parsing ? (url += "&amp;") : (url += "&");
+    }
   });
+  if (url) {
+    url = "?" + url;
+  }
   return url;
 }
 
-export function makeProductUrl(
-  productName: string,
-  categoryName: string,
-  isPro: boolean,
-  options?: Option[],
-) {
+export function makeProductUrl({
+  productName,
+  categoryName,
+  isPro,
+  options,
+  parsing,
+}: {
+  productName: string;
+  categoryName: string;
+  isPro: boolean;
+  options?: Option[];
+  parsing?: boolean;
+}) {
   const categoryUrl = makeCategoryUrl(categoryName, isPro);
   const url =
     options && options.length > 0
-      ? `${categoryUrl}/product/${encodeURIComponent(productName)}${makeOptionsUrl(options)}`
+      ? `${categoryUrl}/product/${encodeURIComponent(productName)}${makeOptionsUrl(options, parsing)}`
       : `${categoryUrl}/product/${encodeURIComponent(productName)}`;
   return url;
 }

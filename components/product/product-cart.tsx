@@ -13,12 +13,12 @@ interface ProductCartProps {
 }
 
 const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
-  const productUrl = makeProductUrl(
-    data.productName,
-    data.product.categoryName,
-    data.product.isPro,
-    data.options,
-  );
+  const productUrl = makeProductUrl({
+    productName: data.productName,
+    categoryName: data.product.categoryName,
+    isPro: data.product.isPro,
+    options: data.options,
+  });
 
   const value = data.price;
 

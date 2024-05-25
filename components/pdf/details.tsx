@@ -43,7 +43,7 @@ const Details = ({ title, invoice }: DetailsProps) => (
       <Text style={noStyles.label}>N° de client : </Text>
       <Text style={noStyles.invoiceDate}>{invoice.customer.id}</Text>
     </View>
-    {title === "Facture" && (
+    {title === "Facture" && invoice.order.dateOfPayment && (
       <View style={noStyles.invoiceDateContainer}>
         <Text style={noStyles.label}>Date de facturation : </Text>
         <Text style={noStyles.invoiceDate}>{invoice.order.dateOfPayment}</Text>

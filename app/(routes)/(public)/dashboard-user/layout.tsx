@@ -2,11 +2,17 @@ import { UserProvider } from "@/context/user-context";
 
 import React from "react";
 import { ProfilNavBar } from "./nav-components";
+import { Metadata } from "next";
 
-export const metadata = {
-  title: " Laiterie du Pont Robert - Profil utilisateur",
-  description: "Profil utilisateur Laiterie du Pont Robert",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Profil utilisateur",
+    openGraph: {
+      title: "Profil utilisateur",
+      description: "Profil utilisateur Laiterie du Pont Robert",
+    },
+  };
+}
 
 export default async function Layout({
   children,
