@@ -21,9 +21,8 @@ export async function generateMetadata({
 
   return {
     title: categoryName,
+    description: category?.description || "",
     openGraph: {
-      title: categoryName,
-      description: category?.description || "",
       images: category?.imageUrl,
     },
   };

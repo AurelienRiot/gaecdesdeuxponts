@@ -19,7 +19,7 @@ export async function generateMetadata({
   params,
 }: CategoryPageProps): Promise<Metadata> {
   return {
-    title: `${decodeURIComponent(params.categoryName)} - Laiterie du Pont Robert`,
+    title: `${decodeURIComponent(params.categoryName)}`,
   };
 }
 

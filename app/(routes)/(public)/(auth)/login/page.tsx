@@ -5,10 +5,8 @@ const baseUrl = process.env.NEXT_PUBLIC_URL;
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    openGraph: {
-      title: "Page de connection",
-      description: "Connectez-vous à Laiterie du Pont Robert",
-    },
+    title: "Page de connection",
+    description: "Connectez-vous à Laiterie du Pont Robert",
   };
 }
 

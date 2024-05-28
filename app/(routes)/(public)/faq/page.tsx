@@ -5,11 +5,8 @@ import { Metadata } from "next";
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "FAQ sur le Lait Cru",
-    openGraph: {
-      title: "FAQ sur le Lait Cru",
-      description:
-        "Trouvez les réponses aux questions fréquemment posées sur notre lait cru, ses bienfaits, et comment nous assurons sa qualité et sécurité pour vous.",
-    },
+    description:
+      "Trouvez les réponses aux questions fréquemment posées sur notre lait cru, ses bienfaits, et comment nous assurons sa qualité et sécurité pour vous.",
   };
 }
 

@@ -3,10 +3,7 @@ import { Metadata } from "next";
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Mention légales",
-    openGraph: {
-      title: "Mention légales",
-      description: "Mention légales de Laiterie du Pont Robert",
-    },
+    description: "Mention légales de Laiterie du Pont Robert",
   };
 }
 

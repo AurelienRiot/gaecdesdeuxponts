@@ -22,46 +22,33 @@ import { useForm } from "react-hook-form";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import * as z from "zod";
-import { createContact } from "./server-action";
+import { createContact } from "../_actions/create-actions";
+import { formSchema } from "./shema";
 
-const formSchema = z.object({
-  name: z
+const formSchemaWithPhone = formSchema.extend({
+  phone: z
     .string()
-    .min(1, { message: "Veuillez entrer votre nom" })
-    .max(50, { message: "Le nom ne peut pas dépasser 50 caractères" }),
-  email: z
-    .string()
-    .email({ message: "L'email doit être un email valide" })
-    .min(1, { message: "Veuillez entrer votre email" })
-    .max(100, { message: "L'email ne peut pas dépasser 100 caractères" }),
-  phone: z.string().refine(
-    (value) => {
-      return value === "" || isValidPhoneNumber(value);
-    },
-    {
-      message: "Le numéro de téléphone n'est pas valide",
-    },
-  ),
-  subject: z
-    .string()
-    .min(1, { message: "Le sujet ne peut pas être vide" })
-    .max(100, { message: "Le sujet ne peut pas dépasser 100 caractères" }),
-  message: z
-    .string()
-    .min(1, { message: "Le message ne peut pas être vide" })
-    .max(1000, { message: "Le message ne peut pas dépasser 1000 caractères" }),
+    .optional()
+    .refine(
+      (value) => {
+        return !value || isValidPhoneNumber(value);
+      },
+      {
+        message: "Le numéro de téléphone n'est pas valide",
+      },
+    ),
 });
 
-export type ContactFormValues = z.infer<typeof formSchema>;
+export type ContactFormValues = z.infer<typeof formSchemaWithPhone>;
 
 export const ContactForm = ({
   name,
   email,
   phone,
 }: {
-  name: string | undefined | null;
-  email: string | null | undefined;
-  phone: string | null | undefined;
+  name?: string | null;
+  email?: string | null;
+  phone?: string | null;
 }): React.ReactNode => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -82,11 +69,11 @@ export const ContactForm = ({
     const result = await createContact(data);
 
     if (!result.success) {
-      toast.error("Erreur.");
+      toast.error(result.message);
       return;
     }
 
-    router.refresh();
+    // router.refresh();
     router.push(`/`);
     toast.success("Message envoyé");
   };
@@ -161,7 +148,6 @@ export const ContactForm = ({
                 <FormItem>
                   <FormLabel>{"Numéro de téléphone (facultatif)"}</FormLabel>
                   <FormControl>
-                    {/* @ts-ignore */}
                     <PhoneInput
                       placeholder="Entrer un numéro de téléphone"
                       defaultCountry="FR"

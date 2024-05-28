@@ -7,10 +7,7 @@ import { Metadata } from "next";
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Profil utilisateur",
-    openGraph: {
-      title: "Profil utilisateur",
-      description: "Profil utilisateur Laiterie du Pont Robert",
-    },
+    description: "Profil utilisateur Laiterie du Pont Robert",
   };
 }
 

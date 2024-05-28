@@ -28,7 +28,7 @@ type NameCellProps = {
 function NameCell({ name, url }: NameCellProps) {
   return (
     <Button asChild variant={url ? "link" : "ghost"} className="px-0">
-      {url ? <Link href={url}>{name}</Link> : name}
+      {url ? <Link href={url}>{name}</Link> : <span>{name}</span>}
     </Button>
   );
 }

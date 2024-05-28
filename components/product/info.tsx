@@ -1,3 +1,4 @@
+"use client";
 import { OptionsArray } from "@/app/(routes)/admin/products/[productId]/page";
 import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";

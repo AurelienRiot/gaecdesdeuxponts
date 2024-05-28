@@ -12,24 +12,28 @@ const AuthLink = forwardRef<
 >(({ className, ...props }, ref) => {
   const session = useSession();
 
-  const isMounted = useIsComponentMounted();
+  // const isMounted = useIsComponentMounted();
 
-  if (!isMounted) {
-    return (
-      <Button
-        variant={"outline"}
-        className={cn("text-base", className)}
-        asChild
-      >
-        <Link {...props} href={"#"} ref={ref}>
-          {"Se connecter"}
-        </Link>
-      </Button>
-    );
-  }
+  // if (!isMounted) {
+  //   return (
+  //     <Button
+  //       variant={"outline"}
+  //       className={cn("text-base", className)}
+  //       asChild
+  //     >
+  //       <Link {...props} href={"#"} ref={ref}>
+  //         {"Se connecter"}
+  //       </Link>
+  //     </Button>
+  //   );
+  // }
 
   return (
-    <Button variant={"outline"} className={cn("text-base", className)} asChild>
+    <Button
+      disabled={session.status === "loading"}
+      variant={"outline"}
+      className={cn("text-base", className)}
+    >
       <Link
         {...props}
         href={

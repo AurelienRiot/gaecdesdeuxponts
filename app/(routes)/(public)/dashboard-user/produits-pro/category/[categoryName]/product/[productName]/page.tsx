@@ -1,11 +1,8 @@
-import { Metadata } from "next";
-import ClientWrapper from "./_components/client-wraper";
-import {
-  getProProductsByCategoryName,
-  getProductsByCategoryName,
-} from "@/actions/get-products";
+import { getProProductsByCategoryName } from "@/actions/get-products";
 import { getAllOptions } from "@/app/(routes)/admin/products/[productId]/page";
 import NotFound from "@/components/not-found";
+import { Metadata } from "next";
+import ClientWrapper from "./_components/client-wraper";
 
 interface ProductPageProps {
   params: {
@@ -18,7 +15,7 @@ export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
   return {
-    title: `${decodeURIComponent(params.productName)} - Laiterie du Pont Robert`,
+    title: `${decodeURIComponent(params.productName)}`,
   };
 }
 

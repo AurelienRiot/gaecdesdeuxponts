@@ -3,10 +3,7 @@ import { Metadata } from "next";
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Conditions générales de vente",
-    openGraph: {
-      title: "Conditions générales de vente",
-      description: "Conditions générales de vente de Laiterie du Pont Robert",
-    },
+    description: "Conditions générales de vente de Laiterie du Pont Robert",
   };
 }
 

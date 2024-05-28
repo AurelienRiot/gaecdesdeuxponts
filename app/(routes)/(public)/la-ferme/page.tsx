@@ -6,17 +6,14 @@ import { Metadata } from "next";
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "À propos de nous",
-    openGraph: {
-      title: "À propos de nous",
-      description:
-        "Nous possédons une exploitation d’une surface totale de 130ha, dont 40% sont " +
-        "des prairies naturelles humides de fond de vallée, régulièrement inondées " +
-        "en hiver par les crues de la rivière du Don. Bien que le contexte naturel et le " +
-        "caractère sensible de ces prairies limitent les périodes d’exploitation de ces " +
-        "prairies, nous y prêtons une attention très particulière et " +
-        "cherchons à les valoriser au maximum pour l’alimentation de leur troupeau " +
-        "et l’autonomie alimentaire de leur ferme.",
-    },
+    description:
+      "Nous possédons une exploitation d’une surface totale de 130ha, dont 40% sont " +
+      "des prairies naturelles humides de fond de vallée, régulièrement inondées " +
+      "en hiver par les crues de la rivière du Don. Bien que le contexte naturel et le " +
+      "caractère sensible de ces prairies limitent les périodes d’exploitation de ces " +
+      "prairies, nous y prêtons une attention très particulière et " +
+      "cherchons à les valoriser au maximum pour l’alimentation de leur troupeau " +
+      "et l’autonomie alimentaire de leur ferme.",
   };
 }
 

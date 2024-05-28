@@ -28,14 +28,14 @@ type PhoneInputProps = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
   "onChange" | "value"
 > &
-  Omit<RPNInput.Props<typeof RPNInput.default>, "onChange"> & {
-    onChange: (value: RPNInput.Value | "") => void;
-    value: RPNInput.Value;
+  Omit<RPNInput.Props<typeof RPNInput.default>, "onChange" | "value"> & {
+    onChange: (value: string | undefined) => void;
+    value: string | undefined;
   };
 
 const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> =
   React.forwardRef<React.ElementRef<typeof RPNInput.default>, PhoneInputProps>(
-    ({ className, onChange, ...props }, ref) => (
+    ({ className, onChange, value, ...props }, ref) => (
       <RPNInput.default
         ref={ref}
         className={cn("flex", className)}
@@ -43,6 +43,11 @@ const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> =
         countrySelectComponent={CountrySelect}
         inputComponent={InputComponent}
         onChange={(value) => onChange(value || "")}
+        value={
+          value as string & {
+            __tag: "E164Number";
+          }
+        }
         {...props}
       />
     ),
