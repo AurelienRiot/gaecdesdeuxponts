@@ -1,4 +1,5 @@
-import { addressFormatter, dateFormatter } from "@/lib/utils";
+import { dateFormatter } from "@/lib/date-utils";
+import { addressFormatter } from "@/lib/utils";
 import { OrderWithItemsAndUserAndShop } from "@/types";
 import { DataInvoiceType } from "./data-invoice";
 

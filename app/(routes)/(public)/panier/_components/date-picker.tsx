@@ -6,7 +6,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn, dateFormatter } from "@/lib/utils";
+import { MIN_DAYS, dateFormatter, isDateDisabled } from "@/lib/date-utils";
+import { cn } from "@/lib/utils";
+import { addMonths } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -67,13 +69,22 @@ const DatePicker = ({ className, date, shopId }: DatePickerProps) => {
             mode="single"
             captionLayout="buttons"
             selected={date}
-            // month={month}
+            defaultMonth={
+              new Date().getDate() + MIN_DAYS >
+              new Date(
+                new Date().getFullYear(),
+                new Date().getMonth() + 1,
+                0,
+              ).getDate()
+                ? addMonths(new Date(), 1)
+                : new Date()
+            }
             locale={fr}
             onSelect={onSelectDate}
-            // disabledDays={(date) => date.getDay() === 0 || date.getDay() === 6}
             modifiers={{
-              disabled: (date) => date.getDay() === 0 || date < new Date(),
-            }} // modifiers={{
+              disabled: (date) => isDateDisabled(date),
+            }}
+            // modifiers={{
             //   full: fullDays,
             //   partiallyFull: partiallyFullDays,
             //   free: freeDays,
@@ -85,7 +96,6 @@ const DatePicker = ({ className, date, shopId }: DatePickerProps) => {
             // }}
             // onDayClick={handleDayClick}
             // footer={GetFooterMessage(isDayAvailable)}
-            // onMonthChange={setMonth}
           />
         </PopoverContent>
       </Popover>

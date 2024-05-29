@@ -5,9 +5,10 @@ import OrderEmail from "@/components/email/order";
 import Order from "@/components/pdf/create-commande";
 import { createDataOrder } from "@/components/pdf/data-order";
 import { getUnitLabel } from "@/components/product/product-function";
+import { dateFormatter, isDateDisabled } from "@/lib/date-utils";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
-import { currencyFormatter, dateFormatter } from "@/lib/utils";
+import { currencyFormatter } from "@/lib/utils";
 import { OrderWithItemsAndUserAndShop, ProductWithMain } from "@/types";
 import { render } from "@react-email/render";
 import { pdf } from "@react-pdf/renderer";
@@ -41,6 +42,14 @@ export const checkOut = async ({
   shopId,
 }: CheckOutProps): Promise<CheckOutReturnType> => {
   const isAuth = await checkUser();
+
+  if (isDateDisabled(date)) {
+    return {
+      success: false,
+      message:
+        "La date n'est pas valide, veuillez selectionner une date correcte",
+    };
+  }
 
   if (!isAuth) {
     return {
@@ -172,7 +181,7 @@ async function createOrder({
 }: CreateOrder) {
   const order = await prismadb.order.create({
     data: {
-      id: nanoid(),
+      id: generateOrderId(),
       totalPrice,
       orderItems: {
         create: productsWithQuantity.map((product) => ({
@@ -198,3 +207,5 @@ async function createOrder({
   });
   return order;
 }
+const generateOrderId = () =>
+  `${new Date().getDate()}-${new Date().getFullYear()}-${nanoid(7)}`;

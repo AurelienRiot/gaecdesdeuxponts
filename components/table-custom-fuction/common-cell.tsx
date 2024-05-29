@@ -1,5 +1,5 @@
 "use client";
-import { dateFormatter } from "@/lib/utils";
+import { dateFormatter } from "@/lib/date-utils";
 import { Row } from "@tanstack/react-table";
 import Image from "next/image";
 import Link from "next/link";

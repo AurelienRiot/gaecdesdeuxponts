@@ -1,7 +1,8 @@
 import { DataInvoiceType } from "@/components/pdf/data-invoice";
 import { DisplayInvoice } from "@/components/pdf/pdf-button";
 import { Label } from "@/components/ui/label";
-import { addressFormatter, dateFormatter } from "@/lib/utils";
+import { dateFormatter } from "@/lib/date-utils";
+import { addressFormatter } from "@/lib/utils";
 import { UserWithAddress } from "@/types";
 import { useFormContext } from "react-hook-form";
 import { OrderFormValues } from "./order-form";

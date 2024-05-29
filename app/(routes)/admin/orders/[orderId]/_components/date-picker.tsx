@@ -7,7 +7,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn, dateFormatter } from "@/lib/utils";
+import { dateFormatter, isDateDisabled } from "@/lib/date-utils";
+import { cn } from "@/lib/utils";
 import { fr } from "date-fns/locale";
 import { useState } from "react";
 
@@ -77,7 +78,9 @@ const FormDatePicker = ({
               onSelectDate(d);
               setOpen(false);
             }}
-            // disabledDays={(date) => date.getDay() === 0 || date.getDay() === 6}
+            modifiers={{
+              disabled: (date) => isDateDisabled(date),
+            }}
             // modifiers={{
             //   full: fullDays,
             //   partiallyFull: partiallyFullDays,

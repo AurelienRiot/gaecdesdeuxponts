@@ -1,4 +1,4 @@
-import { dateFormatter } from "@/lib/utils";
+import { dateFormatter } from "@/lib/date-utils";
 
 export type Customer = {
   id: string;

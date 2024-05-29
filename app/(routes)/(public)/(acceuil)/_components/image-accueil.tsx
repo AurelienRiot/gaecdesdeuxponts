@@ -43,24 +43,25 @@ const ImageAccueil = () => {
           <HoverWord className=" mx-1 ">Bio</HoverWord> */}
           <span className="block">directement de la ferme</span>
         </h2>
-        <p className="mb-4 max-w-lg text-xl font-bold @md:text-2xl">
-          Venez chercher votre lait à la ferme.
+        <p className="mb-4 max-w-xl text-balance text-xl font-bold @md:text-2xl">
+          Venez chercher le lait avec votre contenant à la ferme.
           <br />
-          Aux heures de la traite 8h30-9h30/18h-19h du lundi au samedi
+          Aux heures de la traite 8h30-9h30/18h-19h
+          <br /> du lundi au samedi
         </p>
-        <p className="mb-8 max-w-xl @md:text-lg">
+        <p className="mb-8 max-w-xl text-balance @md:text-lg">
           Découvrez le goût pur et crémeux de notre lait cru frais de la ferme.
           Rempli de nutriments essentiels, notre lait provient directement de
           nos vaches heureuses et en bonne santé.
         </p>
         <div className="mx-auto flex gap-4">
           <Button asChild variant={"heartbeat"}>
-            <Link href="/category/Lait/product/Lait%20cru?Contenant=Bouteille%20verre">
+            <Link href="/category/Lait/product/Lait%20cru?Contenant=Vrac">
               Acheter
             </Link>
           </Button>
           <Button variant={"outline"} asChild>
-            <Link href="/la-ferme">En savoir plus</Link>
+            <Link href="/lait-cru">En savoir plus</Link>
           </Button>
         </div>
       </div>

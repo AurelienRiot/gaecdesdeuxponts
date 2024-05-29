@@ -1,7 +1,8 @@
 import { useFormContext } from "react-hook-form";
 import { DisplayShippingOrder } from "@/components/pdf/pdf-button";
 import { UserWithAddress } from "@/types";
-import { addressFormatter, dateFormatter } from "@/lib/utils";
+import { dateFormatter } from "@/lib/date-utils";
+import { addressFormatter } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { OrderFormValues } from "./order-form";
 import { DataShippingOrderType } from "@/components/pdf/data-shipping";

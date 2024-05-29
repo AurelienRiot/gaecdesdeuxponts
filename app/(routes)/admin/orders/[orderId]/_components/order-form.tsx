@@ -122,14 +122,14 @@ export const OrderForm: React.FC<ProductFormProps> = ({
   });
 
   const onDelete = async () => {
-    const deletePro = await deleteOrders({ id: initialData?.id });
-    if (!deletePro.success) {
-      toast.error(deletePro.message);
+    const del = await deleteOrders({ id: initialData?.id });
+    if (!del.success) {
+      toast.error(del.message);
       setOpen(false);
     } else {
-      router.push(`/admin/products`);
+      router.push(`/admin/orders`);
       router.refresh();
-      toast.success("Produit supprimé");
+      toast.success("Commande supprimé");
     }
     setOpen(false);
   };

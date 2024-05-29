@@ -1,8 +1,7 @@
-import { User } from "@prisma/client";
+import { dateFormatter } from "@/lib/date-utils";
+import { addressFormatter } from "@/lib/utils";
+import { UserWithOrdersAndAdress } from "@/types";
 import { Customer, DataOrder } from "./data-invoice";
-import { OrderWithItemsAndUserAndShop, UserWithOrdersAndAdress } from "@/types";
-import { addressFormatter, dateFormatter } from "@/lib/utils";
-import { id } from "date-fns/locale";
 
 export type DataMonthlyInvoiceType = {
   customer: Customer;

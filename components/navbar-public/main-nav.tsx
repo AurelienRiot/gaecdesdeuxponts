@@ -14,6 +14,7 @@ import { TiBusinessCard } from "react-icons/ti";
 import { GiCow } from "react-icons/gi";
 import AuthLink from "./auth-link";
 import Vache from "@/public/vache.webp";
+import { QuestionMarkIcon } from "@radix-ui/react-icons";
 
 export function MainNav({
   className,
@@ -97,6 +98,12 @@ export const aProposRoutes = [
     title: "FAQ",
     descripton:
       "Trouvez les réponses aux questions fréquemment posées sur notre lait cru",
+    Icone: QuestionMarkIcon,
+  },
+  {
+    href: "/lait-cru",
+    title: "Lait cru",
+    descripton: "Notre démarche sur le lait cru",
     Icone: Milk,
   },
 ];
