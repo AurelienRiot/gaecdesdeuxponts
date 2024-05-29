@@ -104,8 +104,8 @@ export const ContactForm = ({
             {"Envoie du message"}{" "}
           </span>
           <Button
-            size={"sm"}
-            className="animate-[hide-element_2s_forwards]"
+            size={"xs"}
+            className="animate-[hide-element_2s_forwards] text-xs"
             onClick={() => {
               console.log("Cancel!");
               abortController.abort();

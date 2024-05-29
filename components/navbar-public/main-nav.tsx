@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import Image from "next/image";
 import NosProduits from "./nos-produits";
-import { MapIcon } from "lucide-react";
+import { MapIcon, Milk } from "lucide-react";
 import { TiBusinessCard } from "react-icons/ti";
 import { GiCow } from "react-icons/gi";
 import AuthLink from "./auth-link";
@@ -74,22 +74,29 @@ export function MainNav({
 }
 
 export const aProposRoutes = [
-  {
-    href: `/ou-nous-trouver`,
-    title: "Points de vente",
-    descripton: "Retrouver nos produits dans ces points de vente",
-    Icone: MapIcon,
-  },
-  {
-    href: "/#partenaires",
-    title: "Nos partenaires",
-    descripton: "Ils nous font confiance",
-    Icone: TiBusinessCard,
-  },
+  // {
+  //   href: `/ou-nous-trouver`,
+  //   title: "Points de vente",
+  //   descripton: "Retrouver nos produits dans ces points de vente",
+  //   Icone: MapIcon,
+  // },
+  // {
+  //   href: "/#partenaires",
+  //   title: "Nos partenaires",
+  //   descripton: "Ils nous font confiance",
+  //   Icone: TiBusinessCard,
+  // },
   {
     href: "/la-ferme",
     title: "La Ferme",
     descripton: "Venez chercher votre lait directment à la ferme",
     Icone: GiCow,
+  },
+  {
+    href: "/faq",
+    title: "FAQ",
+    descripton:
+      "Trouvez les réponses aux questions fréquemment posées sur notre lait cru",
+    Icone: Milk,
   },
 ];
