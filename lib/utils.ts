@@ -30,8 +30,16 @@ export const addressFormatter = (address: Address) => {
   return `${address.line1}, ${address.postalCode}, ${address.city}`;
 };
 
-export function addDelay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+export function addDelay(ms: number, signal?: AbortSignal) {
+  return new Promise((resolve, reject) => {
+    const timeoutId = setTimeout(resolve, ms);
+    if (signal) {
+      signal.addEventListener("abort", () => {
+        clearTimeout(timeoutId);
+        reject(new DOMException("Aborted", "AbortError"));
+      });
+    }
+  });
 }
 
 export const checkIfUrlAccessible = async (url: string): Promise<boolean> => {

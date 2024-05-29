@@ -2,9 +2,10 @@
 
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
-import { LoadingButton } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Form,
+  FormButton,
   FormControl,
   FormField,
   FormItem,
@@ -15,15 +16,18 @@ import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
+import { addDelay } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { FaSpinner } from "react-icons/fa";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import * as z from "zod";
-import { createContact } from "../_actions/create-actions";
+import { createContact } from "../_actions/create-contact";
 import { formSchema } from "./shema";
+import { Loader, Loader2 } from "lucide-react";
 
 const formSchemaWithPhone = formSchema.extend({
   phone: z
@@ -51,8 +55,8 @@ export const ContactForm = ({
   phone?: string | null;
 }): React.ReactNode => {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
   const action = "Envoyer";
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(formSchema),
@@ -66,31 +70,70 @@ export const ContactForm = ({
   });
 
   const onSubmit = async (data: ContactFormValues) => {
-    const result = await createContact(data);
+    setLoading(true);
+    // const result = await createContact(data);
 
-    if (!result.success) {
-      toast.error(result.message);
-      return;
-    }
+    // if (!result.success) {
+    //   toast.error(result.message);
+    //   return;
+    // }
 
-    // router.refresh();
-    router.push(`/`);
-    toast.success("Message envoyé");
-  };
+    const abortController = new AbortController();
+    const { signal } = abortController;
+    const promise = async () => {
+      try {
+        await addDelay(2100, signal);
 
-  const handleModalConfirm = async () => {
-    await onSubmit(form.getValues());
-    setOpen(false);
+        await createContact(data);
+      } catch (e) {
+        const error = e as Error;
+        if (error?.name === "AbortError") {
+          throw new Error("Envoie du message annulé");
+        }
+        throw e; // Rethrow other errors
+      }
+
+      return signal;
+    };
+    toast.promise(promise, {
+      position: "top-center",
+      loading: (
+        <div className="flex w-full items-center justify-between">
+          <span className="align-middle">
+            <Loader2 className="my-auto mr-2 inline size-4 animate-spin" />{" "}
+            {"Envoie du message"}{" "}
+          </span>
+          <Button
+            size={"sm"}
+            className="animate-[hide-element_2s_forwards]"
+            onClick={() => {
+              console.log("Cancel!");
+              abortController.abort();
+            }}
+          >
+            Annuler
+          </Button>
+        </div>
+      ),
+      success: (data) => {
+        return `Message envoyé`;
+      },
+      error: (e) => {
+        const error = e as Error;
+        return error?.message || "Message non envoyé";
+      },
+      finally: () => {
+        setLoading(false);
+      },
+    });
+
+    // router.push(`/`);
+    // toast.success("Message envoyé");
   };
 
   return (
     <>
-      <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={handleModalConfirm}
-      />
-      <div className="mt-8 flex items-center justify-between">
+      <div className="mt-8 flex  items-center justify-between">
         <Heading
           title="Formulaire de Contact"
           description="Demande d'information"
@@ -99,7 +142,7 @@ export const ContactForm = ({
       <Separator className="my-2" />
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(() => setOpen(true))}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-8"
         >
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -201,9 +244,7 @@ export const ContactForm = ({
               )}
             />
           </div>
-          <LoadingButton disabled={form.formState.isSubmitting}>
-            {action}
-          </LoadingButton>
+          <FormButton disabled={loading}>{action}</FormButton>
         </form>
       </Form>
     </>

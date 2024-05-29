@@ -250,6 +250,10 @@ module.exports = {
           },
         },
         "disappear-top": disappearTop(3),
+        "hide-element": {
+          "95%": { display: "block", opacity: "1", visibility: "visible" },
+          "100%": { display: "none", visibility: "hidden", opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",

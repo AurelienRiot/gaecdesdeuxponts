@@ -12,6 +12,8 @@ import {
 
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
+import { Loader2 } from "lucide-react";
+import { ButtonProps, buttonVariants } from "./button";
 
 const Form = FormProvider;
 
@@ -165,6 +167,33 @@ const FormMessage = React.forwardRef<
 });
 FormMessage.displayName = "FormMessage";
 
+const FormButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, disabled, children, ...props }, ref) => {
+    const {
+      formState: { isSubmitting },
+    } = useFormContext();
+    return (
+      <button
+        className={cn(buttonVariants({ variant, size, className }))}
+        disabled={isSubmitting || disabled}
+        ref={ref}
+        {...props}
+      >
+        <>
+          {isSubmitting ||
+            (disabled && (
+              <Loader2
+                className={cn("h-4 w-4 animate-spin", children ? "mr-2" : "")}
+              />
+            ))}
+          {children}
+        </>
+      </button>
+    );
+  },
+);
+FormButton.displayName = "FormButton";
+
 export {
   useFormField,
   Form,
@@ -174,4 +203,5 @@ export {
   FormDescription,
   FormMessage,
   FormField,
+  FormButton,
 };

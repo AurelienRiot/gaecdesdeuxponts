@@ -12,10 +12,7 @@ async function createContact(
   const isAuth = await checkUser();
   const validatedData = formSchema.safeParse(data);
   if (!validatedData.success) {
-    return {
-      success: false,
-      message: "Veuillez remplir tous les champs",
-    };
+    throw new Error(`Erreur de validation`);
   }
 
   if (!isAuth) {

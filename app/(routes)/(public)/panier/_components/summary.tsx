@@ -47,7 +47,9 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [date, setDate] = useState<Date | undefined>();
-  const [shopId, setShopId] = useState<string | undefined>();
+  const [shopId, setShopId] = useState<string | undefined>(
+    process.env.NEXT_PUBLIC_FARM_ID,
+  );
   const [open, setOpen] = useState(false);
   const isMounted = useIsComponentMounted();
 
@@ -57,14 +59,14 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
       ? "Veuillez ajouter au moins un article"
       : !date
         ? "Veuillez sélectionner une date"
-        : !shopId
-          ? "Veuillez sélectionner un lieu de retrait"
-          : null;
+        : // : !shopId
+          //   ? "Veuillez sélectionner un lieu de retrait"
+          null;
 
   useEffect(() => {
     setDate(getDateFromSearchParam(searchParams.get("date")));
-    const shopId = searchParams.get("shopId");
-    setShopId(shopId ? decodeURIComponent(shopId) : undefined);
+    // const shopId = searchParams.get("shopId");
+    // setShopId(shopId ? decodeURIComponent(shopId) : undefined);
   }, [searchParams]);
 
   const totalPrice =
@@ -147,14 +149,14 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
           </div>
         </div>
         <DatePicker date={date} shopId={shopId} />
-
+        {/* 
         <PickUpPlace
           date={date}
           shopId={shopId}
           setOpen={setOpen}
           shops={shops}
           role={role}
-        />
+        /> */}
 
         <Tooltip>
           <TooltipTrigger asChild>
