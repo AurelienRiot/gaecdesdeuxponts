@@ -70,7 +70,7 @@ const NavigationMenuContent = React.forwardRef<
   <NavigationMenuPrimitive.Content
     ref={ref}
     className={cn(
-      `absolute left-0  top-0 w-auto data-[motion^=from-]:animate-in data-[motion^=to-]:animate-out data-[motion^=from-]:fade-in 
+      `absolute left-0  top-0 w-auto  data-[motion^=from-]:animate-in data-[motion^=to-]:animate-out data-[motion^=from-]:fade-in
       data-[motion^=to-]:fade-out data-[motion=from-end]:slide-in-from-right-52 
       data-[motion=from-start]:slide-in-from-left-52 data-[motion=to-end]:slide-out-to-right-52
   data-[motion=to-start]:slide-out-to-left-52
@@ -104,13 +104,13 @@ const NavigationMenuViewport = React.forwardRef<
 >(({ className, orientation, ...props }, ref) => (
   <div
     className={cn(
-      `data-[orientation=vertical]:left absolute left-0 top-full flex   justify-center `,
+      `data-[orientation=vertical]:left absolute left-0 top-full flex justify-center    `,
       orientation === "vertical" && "left-full top-0",
     )}
   >
     <NavigationMenuPrimitive.Viewport
       className={cn(
-        "origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)]  w-[var(--radix-navigation-menu-viewport-width)] overflow-hidden rounded-md border bg-popover text-popover-foreground  shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90",
+        "origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-[var(--radix-navigation-menu-viewport-width)]  rounded-md border bg-popover text-popover-foreground  shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90",
         className,
       )}
       ref={ref}
