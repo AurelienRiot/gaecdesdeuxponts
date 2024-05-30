@@ -22,7 +22,7 @@ const ImageAccueil = () => {
       p-2 md:grid-cols-[4fr_5fr]  lg:grid-cols-[5fr_4fr]"
     >
       <div className=" flex flex-col items-center justify-center p-6 text-center @container">
-        <h2 className="group mb-4 text-3xl font-bold @sm:text-4xl @md:text-5xl @lg:text-6xl">
+        <h1 className="group mb-4 text-3xl font-bold @sm:text-4xl @md:text-5xl @lg:text-6xl">
           Lait
           <span className="relative ml-1 inline-block @sm:ml-2 @lg:ml-3">
             {placeholders.map((placeholder, i) => (
@@ -42,7 +42,7 @@ const ImageAccueil = () => {
            cru frais
           <HoverWord className=" mx-1 ">Bio</HoverWord> */}
           <span className="block">directement de la ferme</span>
-        </h2>
+        </h1>
         <p className="mb-4 max-w-xl text-balance text-xl font-bold @md:text-2xl">
           Venez chercher le lait avec votre contenant à la ferme.
           <br />

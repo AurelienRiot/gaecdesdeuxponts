@@ -77,10 +77,10 @@ const LaitCruPage = () => {
             width={5184}
             height={3456}
             placeholder="blur"
-            alt="Photo Julie et Jean-Marc"
-            className=" mx-auto max-w-sm rounded-lg shadow-md sm:max-w-full md:max-w-sm"
+            alt="Veau"
+            className=" mx-auto hidden max-w-sm rounded-lg shadow-md sm:block sm:max-w-full md:max-w-sm"
           />
-          <div className="space-y-2 text-base lg:text-lg ">
+          <div className=" space-y-2 text-base  lg:text-lg ">
             <p>
               Notre démarche repose également sur une transparence totale et une
               relation de confiance avec nos clients. Nous invitons les
@@ -96,6 +96,14 @@ const LaitCruPage = () => {
               l’économie locale.
             </p>
           </div>
+          <Image
+            src={Veau}
+            width={5184}
+            height={3456}
+            placeholder="blur"
+            alt="Veau"
+            className=" mx-auto max-w-sm rounded-lg shadow-md sm:hidden sm:max-w-full md:max-w-sm"
+          />
         </div>
       </div>
     </section>
