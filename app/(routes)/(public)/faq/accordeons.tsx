@@ -1,5 +1,6 @@
 "use client";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
+import { useState } from "react";
 
 export const Accordion2 = ({
   data,
@@ -9,11 +10,14 @@ export const Accordion2 = ({
     answer: string[];
   }[];
 }) => {
+  const [question, setQuestion] = useState<string | undefined>(undefined);
   return (
     <AccordionPrimitive.Root
       type="single"
       collapsible
       className=" relative mt-8 flex w-full flex-col gap-4 "
+      value={question}
+      onValueChange={setQuestion}
     >
       {data.map((faq, index) => (
         <AccordionPrimitive.Item
@@ -35,8 +39,11 @@ export const Accordion2 = ({
                   ))}
                 </ul>
                 <div className="mt-8 h-[40px] w-full"></div>
-                <button className="group/button absolute bottom-0 left-0 flex w-full items-center justify-center gap-1 rounded-b-md bg-gradient-to-r from-neutral-900 to-slate-900 py-2 font-semibold text-white  opacity-0 transition-all group-data-[state=open]:opacity-100 ">
-                  <span>En savoir plus</span>
+                <button
+                  onClick={() => setQuestion("")}
+                  className="group/button absolute bottom-0 left-0 flex w-full items-center justify-center gap-1 rounded-b-md bg-gradient-to-r from-neutral-900 to-slate-900 py-2 font-semibold text-white  opacity-0 transition-all group-data-[state=open]:opacity-100 "
+                >
+                  <span>Fermer</span>
                   <svg
                     stroke="currentColor"
                     fill="none"

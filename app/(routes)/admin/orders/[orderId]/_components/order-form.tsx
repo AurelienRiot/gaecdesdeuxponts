@@ -135,7 +135,6 @@ export const OrderForm: React.FC<ProductFormProps> = ({
   };
 
   const onSubmit = async (data: OrderFormValues) => {
-    console.log("data", data);
     let result: ReturnTypeServerAction<null>;
     if (initialData) {
       result = await updateOrder(data, initialData.id);

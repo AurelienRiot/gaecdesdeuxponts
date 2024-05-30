@@ -1,19 +1,14 @@
 import Image from "next/image";
 import Ferme from "@/public/ferme.webp";
 import Vache from "@/public/vache.webp";
+import Photo from "@/public/photo.webp";
 import { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "À propos de nous",
     description:
-      "Nous possédons une exploitation d’une surface totale de 130ha, dont 40% sont " +
-      "des prairies naturelles humides de fond de vallée, régulièrement inondées " +
-      "en hiver par les crues de la rivière du Don. Bien que le contexte naturel et le " +
-      "caractère sensible de ces prairies limitent les périodes d’exploitation de ces " +
-      "prairies, nous y prêtons une attention très particulière et " +
-      "cherchons à les valoriser au maximum pour l’alimentation de leur troupeau " +
-      "et l’autonomie alimentaire de leur ferme.",
+      "Nous sommes Julie et Jean-Marc, les heureux propriétaires d’une jeune exploitation agricole située dans la vallée du Don, en plein cœur du territoire des Marais de Vilaine. Notre ferme s’étend sur 130 hectares, dont 40% sont des prairies naturelles humides. Ces prairies, souvent inondées en hiver par les crues de la rivière, sont une véritable richesse pour notre exploitation. Nous y portons une attention particulière pour les valoriser au maximum, tant pour l’alimentation de notre troupeau de 60 vaches laitières élevées en agriculture biologique que pour assurer l’autonomie alimentaire de notre ferme.",
   };
 }
 
@@ -26,58 +21,77 @@ const PageLaFerme = () => {
         </h2>
         <div className="grid grid-cols-1 items-center justify-center gap-4 text-center sm:grid-cols-2 ">
           <Image
-            src={Ferme}
-            width={2936}
-            height={1168}
+            src={Photo}
+            width={1106}
+            height={984}
             placeholder="blur"
-            alt="Photo de la ferme"
-            className=" rounded-lg  shadow-md "
+            alt="Photo Julie et Jean-Marc"
+            className=" mx-auto max-w-sm rounded-lg shadow-md sm:max-w-full md:max-w-sm"
           />
           <div className="space-y-2 text-base lg:text-lg ">
             <p>
-              {
-                " Fondée en 1992, notre ferme familiale est située au cœur de la              région de Normandie, où nous cultivons avec passion et respect de              l'environnement. Nos pratiques agricoles durables soutiennent la              biodiversité et préservent les ressources naturelles."
-              }
+              Nous sommes Julie et Jean-Marc, les heureux propriétaires d’une
+              jeune exploitation agricole située dans la vallée du Don, en plein
+              cœur du territoire des Marais de Vilaine. Notre ferme s’étend sur
+              130 hectares, dont 40% sont des prairies naturelles humides. Ces
+              prairies, souvent inondées en hiver par les crues de la rivière,
+              sont une véritable richesse pour notre exploitation.
             </p>
             <p>
-              Nous nous engageons à fournir des produits frais et de haute
-              qualité directement de la ferme à votre table. Découvrez nos
-              légumes biologiques, nos fromages artisanaux et notre gamme de
-              produits faits maison.
+              Nous y portons une attention particulière pour les valoriser au
+              maximum, tant pour l’alimentation de notre troupeau de 60 vaches
+              laitières élevées en agriculture biologique que pour assurer
+              l’autonomie alimentaire de notre ferme.
             </p>
           </div>
-          <div className="space-y-2 text-base lg:text-lg ">
-            <p>
-              {
-                " Fondée en 1992, notre ferme familiale est située au cœur de la              région de Normandie, où nous cultivons avec passion et respect de              l'environnement. Nos pratiques agricoles durables soutiennent la              biodiversité et préservent les ressources naturelles."
-              }
-            </p>
-            <p>
-              Nous nous engageons à fournir des produits frais et de haute
-              qualité directement de la ferme à votre table. Découvrez nos
-              légumes biologiques, nos fromages artisanaux et notre gamme de
-              produits faits maison.
-            </p>
-          </div>
+
+          <p className="space-y-2 text-base lg:text-lg ">
+            Pour tirer le meilleur parti de ces prairies tout en respectant leur
+            équilibre naturel, nous avons mis en place une gestion minutieuse
+            basée sur une fauche de fin de printemps, destinée à nourrir nos
+            animaux à forts besoins, comme les vaches en lactation, et un
+            pâturage tournant sur quatre paddocks délimités par des clôtures
+            mobiles.
+          </p>
           <Image
             src={Vache}
             placeholder="blur"
             width={1200}
             height={1600}
             alt="Photo de la ferme"
-            className=" max-h-[50vh] w-auto justify-self-center rounded-lg  object-contain shadow-md sm:row-span-2 "
+            className=" mx-auto max-h-[60vh] w-auto rounded-lg  shadow-md sm:row-span-2 "
+          />
+          <p className="space-y-2 text-base lg:text-lg ">
+            Située dans le périmètre du site Natura 2000 Marais de Vilaine,
+            notre parcelle est un véritable havre de biodiversité. La riche
+            microfaune présente attire une multitude d’oiseaux au printemps, et
+            les berges de notre rivière sont fréquentées par la loutre d’Europe,
+            une espèce protégée.
+          </p>
+
+          <Image
+            src={Ferme}
+            width={2936}
+            height={1168}
+            placeholder="blur"
+            alt="Ferme"
+            className=" mx-auto rounded-lg shadow-md "
           />
           <div className="space-y-2 text-base lg:text-lg ">
             <p>
-              {
-                " Fondée en 1992, notre ferme familiale est située au cœur de la              région de Normandie, où nous cultivons avec passion et respect de              l'environnement. Nos pratiques agricoles durables soutiennent la              biodiversité et préservent les ressources naturelles."
-              }
+              La diversité floristique exceptionnelle de nos prairies, avec plus
+              de 50 espèces différentes, nous garantit une excellente
+              productivité ainsi qu’un fourrage appétent et nutritif pour nos
+              animaux. Cette richesse floristique nous offre également une
+              souplesse économique appréciable. Enfin, notre ferme contribue à
+              la beauté paysagère de la région.
             </p>
             <p>
-              Nous nous engageons à fournir des produits frais et de haute
-              qualité directement de la ferme à votre table. Découvrez nos
-              légumes biologiques, nos fromages artisanaux et notre gamme de
-              produits faits maison.
+              Depuis le sommet du Rocher du Vau, à moins d’un kilomètre, la vue
+              sur la vallée est spectaculaire, surtout au début du printemps.
+              Nous sommes fiers de notre engagement en faveur de pratiques
+              agro-écologiques et de notre contribution à la préservation de ce
+              précieux écosystème.
             </p>
           </div>
         </div>

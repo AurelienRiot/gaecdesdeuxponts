@@ -177,6 +177,7 @@ const FormButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(buttonVariants({ variant, size, className }))}
         disabled={isSubmitting || disabled}
         ref={ref}
+        type="submit"
         {...props}
       >
         <>

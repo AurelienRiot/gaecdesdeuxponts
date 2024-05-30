@@ -4,6 +4,8 @@ import FeaturesWithHeading from "./_components/features";
 import ImageAccueil from "./_components/image-accueil";
 import NosProduits from "./_components/nos-produits";
 
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   return (
     <>
