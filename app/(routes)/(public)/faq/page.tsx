@@ -1,5 +1,10 @@
 import Container from "@/components/ui/container";
-import { Accordion2 } from "./accordeons";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "./accordion";
 import { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -106,16 +111,18 @@ const FAQPage = () => {
         </div>
       </div>
 
-      {/* <Accordion type="single" collapsible className="mt-8 w-full">
+      <Accordion
+        type="single"
+        collapsible
+        className=" relative mt-8 flex w-full flex-col gap-4 "
+      >
         {faqData.map((faq, index) => (
-          <AccordionItem key={index} value={`item-${index}`} className="group">
-            <AccordionTrigger className="group-first:rounded-t-md group-last:rounded-b-md ">
-              {faq.question}
-            </AccordionTrigger>
+          <AccordionItem key={index} value={`item-${index}`}>
+            <AccordionTrigger>{faq.question}</AccordionTrigger>
             <AccordionContent>
-              <ul className=" my-10 list-inside list-disc">
+              <ul className=" space-y-4 bg-gradient-to-r from-neutral-900 to-slate-900 bg-clip-text py-2 text-sm text-transparent list-check-green-600">
                 {faq.answer.map((point, pointIndex) => (
-                  <li className="p-2" key={pointIndex}>
+                  <li className="mx-4" key={pointIndex}>
                     {point}
                   </li>
                 ))}
@@ -123,9 +130,9 @@ const FAQPage = () => {
             </AccordionContent>
           </AccordionItem>
         ))}
-      </Accordion> */}
+      </Accordion>
 
-      <Accordion2 data={faqData} />
+      {/* <Accordion2 data={faqData} /> */}
     </Container>
   );
 };
