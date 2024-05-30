@@ -16,9 +16,9 @@ const PageLaFerme = () => {
   return (
     <section id="about" className="py-16">
       <div className="container mx-auto px-4">
-        <h2 className="mb-8 text-center text-3xl font-bold">
+        <h1 className="mb-8 text-center text-5xl font-bold">
           À propos de nous
-        </h2>
+        </h1>
         <div className="grid grid-cols-1 items-center justify-center gap-4 text-center sm:grid-cols-2 ">
           <Image
             src={Photo}

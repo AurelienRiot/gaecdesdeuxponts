@@ -111,15 +111,11 @@ const FAQPage = () => {
         </div>
       </div>
 
-      <Accordion
-        type="single"
-        collapsible
-        className=" relative mt-8 flex w-full flex-col gap-4 "
-      >
+      <Accordion className=" relative mt-8 flex w-full flex-col gap-4 ">
         {faqData.map((faq, index) => (
           <AccordionItem key={index} value={`item-${index}`}>
             <AccordionTrigger>{faq.question}</AccordionTrigger>
-            <AccordionContent>
+            <AccordionContent value={`item-${index}`}>
               <ul className=" space-y-4 bg-gradient-to-r from-neutral-900 to-slate-900 bg-clip-text py-2 text-sm text-transparent list-check-green-600">
                 {faq.answer.map((point, pointIndex) => (
                   <li className="mx-4" key={pointIndex}>

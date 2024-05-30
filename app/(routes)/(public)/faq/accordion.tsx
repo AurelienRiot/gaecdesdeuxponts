@@ -3,7 +3,57 @@ import { cn } from "@/lib/utils";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import * as React from "react";
 
-const Accordion = AccordionPrimitive.Root;
+type AccordionContextValue = {
+  value: string[] | undefined;
+  onValueChange: (value: string[] | undefined) => void;
+};
+
+const AccordionContext = React.createContext<AccordionContextValue>(
+  {} as AccordionContextValue,
+);
+
+// const Accordion = AccordionPrimitive.Root;
+
+const Accordion = React.forwardRef<
+  React.ElementRef<typeof AccordionPrimitive.Root>,
+  Omit<
+    React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Root>,
+    "value" | "onValueChange" | "type"
+  >
+>(({ className, children, defaultValue, ...props }, ref) => {
+  const [value, onValueChange] = React.useState<string[] | undefined>(
+    undefined,
+  );
+  return (
+    <AccordionPrimitive.Root
+      ref={ref}
+      type="multiple"
+      // collapsible
+      onValueChange={onValueChange}
+      value={value}
+      defaultValue={
+        Array.isArray(defaultValue)
+          ? defaultValue
+          : defaultValue
+            ? [defaultValue]
+            : undefined
+      }
+      {...props}
+    >
+      <AccordionContext.Provider value={{ value, onValueChange }}>
+        <div
+          className={cn(
+            "rounded-[calc((var(--radius)-2px)-1px)]   bg-background",
+            className,
+          )}
+        >
+          {children}
+        </div>
+      </AccordionContext.Provider>
+    </AccordionPrimitive.Root>
+  );
+});
+Accordion.displayName = "Accordion";
 
 const AccordionItem = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Item>,
@@ -47,43 +97,48 @@ AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName;
 
 const AccordionContent = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content>
->(({ className, children, ...props }, ref) => (
-  <AccordionPrimitive.Content
-    ref={ref}
-    className={cn(
-      "relative z-10 overflow-hidden transition-all  data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down",
-      className,
-    )}
-    {...props}
-  >
-    <div className="flex flex-col justify-between   ">
-      {children}
-      <div className="mt-8 h-[40px] w-full"></div>
-      <button
-        // onClick={() => setQuestion("")}
-        className="group/button absolute bottom-0 left-0 flex w-full items-center justify-center gap-1 rounded-b-md bg-gradient-to-r from-neutral-900 to-slate-900 py-2 font-semibold text-white   opacity-0 transition-opacity  duration-200 group-data-[state=open]:opacity-100    "
-      >
-        <span>Fermer</span>
-        <svg
-          stroke="currentColor"
-          fill="none"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="size-4 transition-transform group-hover/button:-rotate-45"
-          height="1em"
-          width="1em"
-          xmlns="http://www.w3.org/2000/svg"
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content> & {
+    value: string;
+  }
+>(({ className, children, value, ...props }, ref) => {
+  const { value: values, onValueChange } = React.useContext(AccordionContext);
+  return (
+    <AccordionPrimitive.Content
+      ref={ref}
+      className={cn(
+        "relative z-10 overflow-hidden transition-all  data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down",
+        className,
+      )}
+      {...props}
+    >
+      <div className="flex flex-col justify-between   ">
+        {children}
+        <div className="mt-8 h-[40px] w-full"></div>
+        <button
+          onClick={() => onValueChange(values?.filter((v) => v !== value))}
+          className="group/button absolute bottom-0 left-0 flex w-full items-center justify-center gap-1 rounded-b-md bg-gradient-to-r from-neutral-900 to-slate-900 py-2 font-semibold text-white   opacity-0 transition-opacity  duration-200 group-data-[state=open]:opacity-100    "
         >
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-          <polyline points="12 5 19 12 12 19"></polyline>
-        </svg>
-      </button>
-    </div>
-  </AccordionPrimitive.Content>
-));
+          <span>Fermer</span>
+          <svg
+            stroke="currentColor"
+            fill="none"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="size-4 transition-transform group-hover/button:-rotate-45"
+            height="1em"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+    </AccordionPrimitive.Content>
+  );
+});
 AccordionContent.displayName = AccordionPrimitive.Content.displayName;
 
 export const Accordion2 = ({

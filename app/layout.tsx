@@ -28,9 +28,11 @@ export const metadata: Metadata = {
     template: `%s | Laiterie du Pont Robert`,
   },
   description:
-    "Lait Cru Frais et Bio directement de la ferme. Venez chercher votre lait à la ferme. Aux heures de la traite 8h30-9h3/018h-19h du lundi au samedi",
+    "Lait Cru Frais et Bio directement de la ferme. Venez chercher votre lait à la ferme. Aux heures de la traite 8h30-9h30/18h-19h du lundi au samedi",
   openGraph: {
-    images: [""],
+    images: [
+      "https://www.laiteriedupontrobert.fr/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fferme.77874bf1.webp&w=3840&q=75",
+    ],
   },
 };
 
