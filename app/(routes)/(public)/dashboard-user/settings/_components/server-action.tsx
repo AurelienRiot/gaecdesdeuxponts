@@ -29,21 +29,22 @@ async function updateUser({
       phone,
       company,
       address: {
-        deleteMany: {},
-      },
-    },
-  });
-
-  const user = await prismadb.user.update({
-    where: {
-      id: isAuth.id,
-    },
-    data: {
-      address: {
+        delete: true,
         create: adress,
       },
     },
   });
+
+  // const user = await prismadb.user.update({
+  //   where: {
+  //     id: isAuth.id,
+  //   },
+  //   data: {
+  //     address: {
+  //       create: adress,
+  //     },
+  //   },
+  // });
 
   return {
     success: true,

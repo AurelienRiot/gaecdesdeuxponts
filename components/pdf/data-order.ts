@@ -57,10 +57,9 @@ export const data: DataOrderType = {
 export function createDataOrder(
   order: OrderWithItemsAndUserAndShop,
 ): DataOrderType {
-  const address =
-    order.user.address.length > 0
-      ? addressFormatter(order.user.address[0])
-      : "";
+  const address = order.user.address
+    ? addressFormatter(order.user.address)
+    : "";
 
   return {
     customer: {

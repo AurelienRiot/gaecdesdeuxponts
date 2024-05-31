@@ -195,8 +195,7 @@ export function createMonthlyDataInvoice({
 
   const isPaid = orders.every((order) => order.dateOfPayment);
 
-  const address =
-    user.address.length > 0 ? addressFormatter(user.address[0]) : "";
+  const address = user.address ? addressFormatter(user.address) : "";
 
   const data = {
     customer: {

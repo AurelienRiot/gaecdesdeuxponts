@@ -116,7 +116,7 @@ export const UserForm: React.FC<UserFormProps> = ({
             name: data.name,
             phone: data.phone,
             company: data.company || null,
-            address: [data.adress as Address],
+            address: (data.adress as Address) ?? null,
           }
         : null,
     );

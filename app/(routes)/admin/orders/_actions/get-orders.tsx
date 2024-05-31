@@ -30,7 +30,7 @@ const getOrders = async (
     include: {
       orderItems: true,
       shop: true,
-      user: { include: { address: true } },
+      user: { include: { address: true, billingAddress: true } },
     },
     where: {
       createdAt: {

@@ -53,7 +53,8 @@ model User {
   orders           Order[]
   accounts         Account[]
   sessions         Session[]
-  address          Address[]
+  address          Address? 
+  billingAddress   BillingAddress? 
   messages         Contact[]
   comments         Comment[]
   createdAt        DateTime @default(now())
@@ -211,7 +212,26 @@ model Address {
   state      String?
   postalCode String?
   country    String?
-  userId     String   
+  userId     String  @unique  
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now()) 
+  updatedAt  DateTime @updatedAt 
+
+
+  @@index([userId])
+
+}
+
+model BillingAddress {
+  id         String  @unique @id @default(cuid())
+  label      String?
+  line1      String?
+  line2      String?
+  city       String?
+  state      String?
+  postalCode String?
+  country    String?
+  userId     String   @unique
   user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now()) 
   updatedAt  DateTime @updatedAt 

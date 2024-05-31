@@ -23,13 +23,13 @@ const PageSettings = () => {
     email: user.email || "",
     company: user.company || "",
     adress: {
-      label: user.address[0]?.label || "",
-      city: user.address[0]?.city || "",
-      country: user.address[0]?.country || "FR",
-      line1: user.address[0]?.line1 || "",
-      line2: user.address[0]?.line2 || "",
-      postalCode: user.address[0]?.postalCode || "",
-      state: user.address[0]?.state || "",
+      label: user.address?.label || "",
+      city: user.address?.city || "",
+      country: user.address?.country || "FR",
+      line1: user.address?.line1 || "",
+      line2: user.address?.line2 || "",
+      postalCode: user.address?.postalCode || "",
+      state: user.address?.state || "",
     },
   };
   return (

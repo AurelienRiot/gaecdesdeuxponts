@@ -28,7 +28,7 @@ async function updateUser(
     };
   }
 
-  await prismadb.user.update({
+  const user = await prismadb.user.update({
     where: {
       id,
     },
@@ -38,17 +38,7 @@ async function updateUser(
       phone,
 
       address: {
-        deleteMany: {},
-      },
-    },
-  });
-
-  const user = await prismadb.user.update({
-    where: {
-      id,
-    },
-    data: {
-      address: {
+        delete: true,
         create: address,
       },
     },

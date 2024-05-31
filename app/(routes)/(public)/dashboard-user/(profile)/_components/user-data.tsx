@@ -41,11 +41,9 @@ export const UserPhone = () => {
 
 export const UserAddress = () => {
   const { user } = useUserContext();
+  console.log(user?.address);
 
-  const address =
-    user?.address?.length && user?.address[0].line1
-      ? addressFormatter(user.address[0])
-      : null;
+  const address = user?.address ? addressFormatter(user.address) : null;
 
   return !user ? (
     <Skeleton className="h-6 w-40" />

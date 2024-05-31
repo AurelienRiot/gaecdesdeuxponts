@@ -34,6 +34,7 @@ const ProductPage = async ({ params }: { params: { orderId: string } }) => {
     },
     include: {
       address: true,
+      billingAddress: true,
     },
   });
 

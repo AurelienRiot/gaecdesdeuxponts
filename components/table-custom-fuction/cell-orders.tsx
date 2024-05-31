@@ -60,8 +60,8 @@ function createDataInvoice({
       name: user.name ? user.name + " - " + user.company : "",
       address: (() => {
         const a =
-          user?.address[0] && user?.address[0].line1
-            ? addressFormatter(user.address[0])
+          user?.address && user?.address.line1
+            ? addressFormatter(user.address)
             : "";
         return a;
       })(),

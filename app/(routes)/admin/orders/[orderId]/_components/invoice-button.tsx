@@ -11,10 +11,7 @@ const InvoiceButton = ({ users }: { users: UserWithAddress[] }) => {
   const form = useFormContext<OrderFormValues>();
 
   const user = users.find((user) => user.id === form.getValues("userId"));
-  const address =
-    user?.address && user.address.length > 0
-      ? addressFormatter(user.address[0])
-      : "";
+  const address = user?.address ? addressFormatter(user.address) : "";
   const dateOfShipping = form.getValues("dateOfShipping");
   const dateOfPayment = form.getValues("dateOfPayment");
 

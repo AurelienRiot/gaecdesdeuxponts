@@ -21,6 +21,7 @@ const UserPage = async ({ params }: { params: { userId: string } }) => {
     },
     include: {
       address: true,
+      billingAddress: true,
       orders: {
         orderBy: {
           createdAt: "asc",

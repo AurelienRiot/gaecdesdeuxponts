@@ -27,9 +27,10 @@ import { toast } from "sonner";
 import * as z from "zod";
 import { deleteUser } from "../../_components/server-action";
 import { updateUser } from "./server-action";
+import { UserWithOrdersAndAdress } from "@/types";
 
 interface UserFormProps {
-  initialData: User & { address: Address[]; orders: Order[] };
+  initialData: UserWithOrdersAndAdress;
 }
 
 const formSchema = z.object({
@@ -65,15 +66,15 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
   const [open, setOpen] = useState(false);
 
   const [selectedAddress, setSelectedAddress] = useState<FullAdress>(
-    initialData.address[0]
+    initialData.address
       ? {
-          label: initialData.address[0].label || "",
-          city: initialData.address[0].city || "",
-          country: initialData.address[0].country || "FR",
-          line1: initialData.address[0].line1 || "",
-          line2: initialData.address[0].line2 || "",
-          postalCode: initialData.address[0].postalCode || "",
-          state: initialData.address[0].state || "",
+          label: initialData.address.label || "",
+          city: initialData.address.city || "",
+          country: initialData.address.country || "FR",
+          line1: initialData.address.line1 || "",
+          line2: initialData.address.line2 || "",
+          postalCode: initialData.address.postalCode || "",
+          state: initialData.address.state || "",
         }
       : {
           label: "",

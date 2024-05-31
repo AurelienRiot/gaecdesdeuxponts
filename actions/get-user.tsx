@@ -33,11 +33,8 @@ const GetUser = async () => {
         },
       },
 
-      address: {
-        orderBy: {
-          createdAt: "desc",
-        },
-      },
+      address: true,
+      billingAddress: true,
     },
   });
 
@@ -115,19 +112,18 @@ const testUser = {
       },
     },
   ],
-  address: [
-    {
-      id: "efce71b0-8932-4ca2-adce-5706fbf5191a",
-      label: "Rue des Aires 04230 Cruis",
-      line1: "Rue des Aires",
-      line2: "",
-      city: "Cruis",
-      state: "Provence-Alpes-Côte d'Azur",
-      postalCode: "04230",
-      country: "FR",
-      userId: "cltioydna0000iegfbsdhjb0g",
-      createdAt: new Date("2024-03-08T13:29:44.386Z"),
-      updatedAt: new Date("2024-03-08T13:29:44.386Z"),
-    },
-  ],
+  address: {
+    id: "efce71b0-8932-4ca2-adce-5706fbf5191a",
+    label: "Rue des Aires 04230 Cruis",
+    line1: "Rue des Aires",
+    line2: "",
+    city: "Cruis",
+    state: "Provence-Alpes-Côte d'Azur",
+    postalCode: "04230",
+    country: "FR",
+    userId: "cltioydna0000iegfbsdhjb0g",
+    createdAt: new Date("2024-03-08T13:29:44.386Z"),
+    updatedAt: new Date("2024-03-08T13:29:44.386Z"),
+  },
+  billingAddress: null,
 };

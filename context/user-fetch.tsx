@@ -20,11 +20,8 @@ export const fetchUser = async () => {
         },
       },
 
-      address: {
-        orderBy: {
-          createdAt: "desc",
-        },
-      },
+      address: true,
+      billingAddress: true,
     },
   });
   return user;

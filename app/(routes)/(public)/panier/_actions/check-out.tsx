@@ -200,7 +200,7 @@ async function createOrder({
       datePickUp,
     },
     include: {
-      user: { include: { address: true } },
+      user: { include: { address: true, billingAddress: true } },
       shop: true,
       orderItems: true,
     },

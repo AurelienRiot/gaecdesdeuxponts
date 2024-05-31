@@ -58,14 +58,16 @@ export interface UserWithOrders extends User {
 }
 
 export interface UserWithAddress extends User {
-  address: Address[];
+  address: Address | null;
+  billingAddress: Address | null;
 }
 export interface UserWithOrdersAndAdress extends User {
   orders: (Order & {
     orderItems: OrderItem[];
     shop: Shop | null;
   })[];
-  address: Address[];
+  address: Address | null;
+  billingAddress: Address | null;
 }
 
 export interface OrderWithItemsAndShop extends Order {
