@@ -3,7 +3,6 @@ import { Suspense } from "react";
 import FeaturesWithHeading from "./_components/features";
 import ImageAccueil from "./_components/image-accueil";
 import NosProduits from "./_components/nos-produits";
-import { TrashAnimation } from "@/components/animations/lottie-animation/lottie-animation";
 
 export const dynamic = "force-dynamic";
 
