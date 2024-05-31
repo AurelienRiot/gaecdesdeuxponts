@@ -1,8 +1,9 @@
 "use client";
 
 import { AddressForm, FullAdress } from "@/components/address-form";
+import { TrashButton } from "@/components/animations/lottie-animation/lottie-animation";
 import { AlertModal } from "@/components/ui/alert-modal-form";
-import { Button, LoadingButton } from "@/components/ui/button";
+import { LoadingButton } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,7 +18,6 @@ import { Separator } from "@/components/ui/separator";
 import { useUserContext } from "@/context/user-context";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Address } from "@prisma/client";
-import { Trash } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -144,17 +144,18 @@ export const UserForm: React.FC<UserFormProps> = ({
         onConfirm={onDelete}
       />
       <div className=" flex flex-col items-center justify-between gap-4 md:flex-row">
-        <h2 className="text-3xl font-bold "> {title} </h2>
+        <h2 className="text-center text-3xl font-bold "> {title} </h2>
 
-        <Button
+        <TrashButton
           disabled={form.formState.isSubmitting}
           variant="destructive"
           size="sm"
           onClick={() => setOpen(true)}
           className="ml-3"
+          iconClassName="ml-2 size-6"
         >
-          Supprimer le compte <Trash className="ml-2 h-4 w-4" />
-        </Button>
+          Supprimer le compte
+        </TrashButton>
       </div>
       <Separator className="mt-4" />
       <p className=" py-6  text-base font-bold sm:text-lg">

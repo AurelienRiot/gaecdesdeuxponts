@@ -32,7 +32,7 @@ const TestPage = () => {
         Recharger la page
       </Button>
       <Tabs
-        defaultValue="monthlyInvoice"
+        defaultValue="shippingOrder"
         className=" h-full w-full max-w-[1000px]"
       >
         <TabsList className="flex w-full gap-2 ">

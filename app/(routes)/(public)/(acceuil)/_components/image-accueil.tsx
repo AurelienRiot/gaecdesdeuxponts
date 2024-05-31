@@ -47,7 +47,8 @@ const ImageAccueil = () => {
           Venez chercher le lait avec votre contenant à la ferme.
           <br />
           Aux heures de la traite 8h30-9h30/18h-19h
-          <br /> du lundi au samedi
+          <br /> du lundi au samedi <br />
+          Retrait possible en dehors de la traite sur commande
         </p>
         <p className="mb-8 max-w-xl text-balance @md:text-lg">
           Découvrez le goût pur et crémeux de notre lait cru frais de la ferme.

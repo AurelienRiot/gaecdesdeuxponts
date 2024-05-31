@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { useUserContext } from "@/context/user-context";
 import { Trash } from "lucide-react";
 import { UserForm } from "./_components/user-form";
+import { TrashButton } from "@/components/animations/lottie-animation/lottie-animation";
 
 const PageSettings = () => {
   const { user } = useUserContext();
@@ -50,15 +51,15 @@ const LoadingUserForm = () => (
           {" "}
           <Skeleton className="h-4 w-32" />{" "}
         </h2>
-
-        <Button
+        <TrashButton
           disabled={true}
           variant="destructive"
           size="sm"
           className="ml-3"
+          iconClassName="ml-2 size-6"
         >
-          Supprimer le compte <Trash className="ml-2 h-4 w-4" />
-        </Button>
+          Supprimer le compte
+        </TrashButton>
       </div>
       <Separator className="mt-4" />
       <p className=" py-6  text-base font-bold sm:text-lg">

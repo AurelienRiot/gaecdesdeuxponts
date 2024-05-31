@@ -29,11 +29,7 @@ const AuthLink = forwardRef<
   // }
 
   return (
-    <Button
-      disabled={session.status === "loading"}
-      variant={"outline"}
-      className={cn("text-base", className)}
-    >
+    <Button variant={"outline"} className={cn("text-base", className)}>
       <Link
         {...props}
         href={

@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 import { EmailButton, GoogleButton } from "@/components/auth/auth-button";
+import { getSessionUser } from "@/actions/get-user";
+import { redirect } from "next/navigation";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
@@ -16,6 +18,10 @@ const LoginPage = async (context: {
   const callbackUrl = decodeURI(
     context.searchParams.callbackUrl ?? `${baseUrl}/dashboard-user`,
   );
+  const user = await getSessionUser();
+  if (user) {
+    return redirect(callbackUrl);
+  }
 
   return (
     <div className="flex w-full items-center justify-center bg-slate-100 dark:bg-slate-900">

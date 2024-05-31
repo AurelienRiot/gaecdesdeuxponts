@@ -66,6 +66,7 @@ const tableHeaderStyles = StyleSheet.create({
     color: foregroundColor,
     borderBottomWidth: 1,
     alignItems: "center",
+    justifyContent: "center",
     height: 24,
     textAlign: "center",
     fontStyle: "bold",
@@ -73,29 +74,38 @@ const tableHeaderStyles = StyleSheet.create({
   },
   description: {
     width: "40%",
+    height: "100%",
+    paddingTop: 4,
     borderRightColor: borderColor,
     borderRightWidth: 1,
   },
   unit: {
     width: "20%",
+    height: "100%",
+    paddingTop: 4,
     borderRightColor: borderColor,
     borderRightWidth: 1,
   },
   qty: {
     width: "10%",
+    height: "100%",
+    paddingTop: 4,
     borderRightColor: borderColor,
     borderRightWidth: 1,
   },
   totalHT: {
     width: "15%",
+    height: "100%",
+    paddingTop: 4,
     borderRightColor: borderColor,
     borderRightWidth: 1,
   },
   totalTTC: {
+    paddingTop: 4,
+    height: "100%",
     width: "15%",
   },
 });
-
 const ShippingTableHeader = () => (
   <View style={tableHeaderStyles.container}>
     <Text style={tableHeaderStyles.description}>Description</Text>

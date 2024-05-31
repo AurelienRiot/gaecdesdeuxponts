@@ -66,18 +66,22 @@ const tableHeaderStyles = StyleSheet.create({
   },
   ref: {
     width: "40%",
+    height: "100%",
+    paddingTop: 4,
     borderRightColor: borderColor,
     borderRightWidth: 1,
   },
   description: {
     width: "40%",
+    height: "100%",
+    paddingTop: 4,
     borderRightColor: borderColor,
     borderRightWidth: 1,
   },
   qty: {
     width: "20%",
-    borderRightColor: borderColor,
-    borderRightWidth: 1,
+    height: "100%",
+    paddingTop: 4,
   },
 });
 
@@ -191,12 +195,12 @@ const signatureStyle = StyleSheet.create({
 const Signature = () => (
   <Fragment>
     <View style={signatureStyle.container1}>
-      <Text>Reçu le :</Text>
+      {/* <Text>Reçu le :</Text> */}
       <Text>Livré le :</Text>
     </View>
     <View style={signatureStyle.container2}>
-      <Text>Signature expediteur :</Text>
-      <Text>Signature destinataire :</Text>
+      {/* <Text>Signature expediteur :</Text> */}
+      <Text>Signature :</Text>
     </View>
   </Fragment>
 );
@@ -220,5 +224,9 @@ const thankYouMsgStyles = StyleSheet.create({
 const InvoiceThankYouMsg = () => (
   <View style={thankYouMsgStyles.titleContainer}>
     <Text style={thankYouMsgStyles.reportTitle}>Merci de votre confiance</Text>
+    <Text style={thankYouMsgStyles.iban}>
+      IBAN : FR76 1234 5678 9012 3456 7890
+    </Text>
+    <Text style={thankYouMsgStyles.iban}>Code Bic : AGRIFRPP836</Text>
   </View>
 );

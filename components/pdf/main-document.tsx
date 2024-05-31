@@ -9,9 +9,9 @@ import {
 import { DataInvoiceType } from "./data-invoice";
 
 export const tableRowsCount = 10;
-export const mainColor = "#00008B";
+export const mainColor = "#D3D3D3";
 export const foregroundColor = "#FFFFFF";
-export const borderColor = mainColor;
+export const borderColor = "#000000";
 export const watermarkColor = "rgb(255, 0, 0)";
 
 const MainStyles = StyleSheet.create({
@@ -29,6 +29,14 @@ const MainStyles = StyleSheet.create({
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  footer: {
+    position: "absolute",
+    bottom: 10,
+    left: 0,
+    right: 0,
+    textAlign: "center",
+    fontSize: 12,
   },
 });
 
@@ -52,6 +60,12 @@ const MainDocument = ({
 
       <BillTo customer={customer} />
       {children}
+      {/* <Text
+        style={MainStyles.footer}
+        render={({ pageNumber, totalPages }) =>
+          `Page ${pageNumber} / ${totalPages}`
+        }
+      /> */}
     </Page>
   </Document>
 );

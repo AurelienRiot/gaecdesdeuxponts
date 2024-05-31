@@ -30,11 +30,11 @@ const ProfilNavBar = () => {
         onClick={() => setOpen(!open)}
         Icon={ChevronLeft}
         iconClassName={
-          "h-4 w-4  transition-all duration-500 data-[state=false]:rotate-180"
+          "h-4 w-4  transition-all duration-500  group-data-[state=true]/icon:rotate-0  rotate-180"
         }
         title={open ? "fermer" : "ouvrir"}
         data-state={open}
-        className=" flex w-full items-center justify-center  transition-all duration-500"
+        className="group/icon flex w-full items-center justify-center  transition-all duration-500"
       />
       {routes.map(({ Icon, title, href }) => {
         const active = isActiveRoute(href, pathname);
@@ -47,7 +47,7 @@ const ProfilNavBar = () => {
             }}
             data-state={open}
             className={
-              "justify-left relative flex w-[200px] items-center gap-2 rounded-md px-4 py-2 transition-all duration-500 hover:opacity-80 data-[state=false]:w-[50px]"
+              "justify-left relative flex w-[200px] items-center gap-2 rounded-md px-4 py-2 transition-all duration-500 hover:opacity-50 data-[state=false]:w-[50px]"
             }
             // style={{
             //   transformStyle: "preserve-3d",
