@@ -14,10 +14,11 @@ import Currency from "../ui/currency";
 
 type DateCellProps = {
   date: Date;
+  hours?: boolean;
 };
 
-function DateCell({ date }: DateCellProps) {
-  return <div className="flex md:pl-10">{dateFormatter(date)}</div>;
+function DateCell({ date, hours }: DateCellProps) {
+  return <div className="flex md:pl-10">{dateFormatter(date, hours)}</div>;
 }
 
 type NameCellProps = {
@@ -164,7 +165,7 @@ export {
   DateCell,
   NameCell,
   NameWithImageCell,
+  OptionsCell,
   PhoneCell,
   TextCell,
-  OptionsCell,
 };

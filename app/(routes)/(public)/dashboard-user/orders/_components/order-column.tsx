@@ -60,7 +60,7 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
   {
     accessorKey: "datePickUp",
     header: DatePickUpHeader,
-    cell: ({ row }) => <DateCell date={row.original.datePickUp} />,
+    cell: ({ row }) => <DateCell date={row.original.datePickUp} hours />,
   },
   {
     accessorKey: "shopName",

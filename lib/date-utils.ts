@@ -1,8 +1,9 @@
 import { fr } from "date-fns/locale";
 import { addDays, format } from "date-fns";
 
-export const dateFormatter = (date: Date) => {
-  return format(date, "d MMMM yyyy", { locale: fr });
+export const dateFormatter = (date: Date, hours?: boolean) => {
+  if (!hours) return format(date, "d MMMM yyyy", { locale: fr });
+  return format(date, "d MMMM yyyy, HH:mm", { locale: fr });
 };
 
 export const MIN_DAYS = 3;

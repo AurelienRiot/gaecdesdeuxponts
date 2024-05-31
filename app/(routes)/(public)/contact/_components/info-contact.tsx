@@ -56,9 +56,12 @@ const InfoContact = () => {
           >
             <Icons.Facebook className="size-6" />
           </Link>
-          {/* <Link target="_blank" href={"https://www.instagram.com/"}>
+          <Link
+            target="_blank"
+            href={"https://www.instagram.com/julie_jeanmarc"}
+          >
             <Icons.Instagram className="size-7" />
-          </Link> */}
+          </Link>
           <Link
             target="_blank"
             href={"https://www.leboncoin.fr/ad/autres_services/2711381825"}

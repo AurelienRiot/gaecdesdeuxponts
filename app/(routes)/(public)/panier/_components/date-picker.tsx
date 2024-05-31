@@ -26,14 +26,22 @@ const DatePicker = ({ className, date, shopId }: DatePickerProps) => {
 
   const router = useRouter();
 
-  const onSelectDate = (date: Date | undefined) => {
-    if (!date) {
+  const onSelectDate = (selectedDate: Date | undefined) => {
+    if (!selectedDate) {
       router.refresh();
       toast.error("Erreur veuillez réssayer");
       return;
     }
+    if (date) {
+      selectedDate.setHours(date.getHours());
+      selectedDate.setMinutes(date.getMinutes());
+    } else {
+      selectedDate.setHours(8);
+      selectedDate.setMinutes(30);
+    }
+    console.log(dateFormatter(selectedDate, true));
 
-    router.push(makeCartUrl(shopId, date), {
+    router.push(makeCartUrl(shopId, selectedDate), {
       scroll: false,
     });
 
@@ -42,7 +50,10 @@ const DatePicker = ({ className, date, shopId }: DatePickerProps) => {
 
   return (
     <div
-      className={cn("relative  flex items-center justify-between ", className)}
+      className={cn(
+        "relative  flex flex-wrap items-center justify-between gap-y-2",
+        className,
+      )}
     >
       <div className="text-base font-medium text-secondary-foreground">
         Date de retrait
@@ -67,6 +78,7 @@ const DatePicker = ({ className, date, shopId }: DatePickerProps) => {
         <PopoverContent align="start" className="absolute w-auto p-0">
           <Calendar
             mode="single"
+            className="p-3"
             captionLayout="buttons"
             selected={date}
             defaultMonth={

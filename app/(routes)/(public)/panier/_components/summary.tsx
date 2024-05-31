@@ -5,7 +5,7 @@ import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
 import { addDelay } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
   getUnitLabel,
@@ -26,8 +26,7 @@ import { toast } from "sonner";
 import { checkOut } from "../_actions/check-out";
 import DatePicker from "./date-picker";
 import LoginCard from "./login-card";
-import PickUpPlace from "./pick-up-place";
-import PlaceModal from "./place-modal";
+import TimePicker from "./time-picker";
 
 const getDateFromSearchParam = (param: string | null): Date | undefined => {
   if (param === null) return undefined;
@@ -46,11 +45,15 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
   const cart = useCart();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [date, setDate] = useState<Date | undefined>();
-  const [shopId, setShopId] = useState<string | undefined>(
-    process.env.NEXT_PUBLIC_FARM_ID,
+  const date: Date | undefined = getDateFromSearchParam(
+    searchParams.get("date"),
   );
-  const [open, setOpen] = useState(false);
+  // const [time, setTime] = useState<{ hours: number; minutes: number }>({
+  //   hours: 8,
+  //   minutes: 30,
+  // });
+  const shopId: string | undefined = process.env.NEXT_PUBLIC_FARM_ID;
+  // searchParams.get("shopId")
   const isMounted = useIsComponentMounted();
 
   const tooltipText = !role
@@ -63,12 +66,18 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
           //   ? "Veuillez sélectionner un lieu de retrait"
           null;
 
-  useEffect(() => {
-    setDate(getDateFromSearchParam(searchParams.get("date")));
-    // const shopId = searchParams.get("shopId");
-    // setShopId(shopId ? decodeURIComponent(shopId) : undefined);
-  }, [searchParams]);
-
+  // useEffect(() => {
+  //   const searchDate = getDateFromSearchParam(searchParams.get("date"));
+  //   setDate(searchDate);
+  //   if (searchDate) {
+  //     setTime({
+  //       hours: searchDate.getHours(),
+  //       minutes: searchDate.getMinutes(),
+  //     });
+  //   }
+  //   // const shopId = searchParams.get("shopId");
+  //   // setShopId(shopId ? decodeURIComponent(shopId) : undefined);
+  // }, [searchParams]);
   const totalPrice =
     cart.items?.length > 0
       ? cart.items.reduce((total, item) => {
@@ -128,7 +137,7 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
 
   return (
     <>
-      <PlaceModal isOpen={open} setIsOpen={setOpen} shops={shops} date={date} />
+      {/* <PlaceModal isOpen={open} setIsOpen={setOpen} shops={shops} date={date} /> */}
       <div className="relative mb-[450px] mt-16 space-y-6 rounded-lg border-2 bg-gray-100 px-4 py-6 dark:bg-black sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
         <h2 className="text-xl font-medium text-secondary-foreground">
           Votre Commmande
@@ -148,7 +157,8 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
             <Currency value={totalPrice} />
           </div>
         </div>
-        <DatePicker date={date} shopId={shopId} />
+        <DatePicker date={date} shopId={shopId} />{" "}
+        {isMounted && date && <TimePicker date={date} shopId={shopId} />}
         {/* 
         <PickUpPlace
           date={date}
@@ -157,7 +167,6 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
           shops={shops}
           role={role}
         /> */}
-
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
