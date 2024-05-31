@@ -1,37 +1,22 @@
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import {
+  Command,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { MIN_DAYS, dateFormatter, isDateDisabled } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
-import { addMonths } from "date-fns";
-import { fr } from "date-fns/locale";
+import { setHours, setMinutes } from "date-fns";
+import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { toast } from "sonner";
 import { makeCartUrl } from "./summary";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Check, ChevronsUpDown } from "lucide-react";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import useIsComponentMounted from "@/hooks/use-mounted";
 
 type HourPickerProps = {
   className?: string;
@@ -42,6 +27,16 @@ type HourPickerProps = {
 const TimePicker = ({ className, date, shopId }: HourPickerProps) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+
+  if (
+    date.getHours() < 8 ||
+    (date.getHours() === 8 && date.getMinutes() < 30) ||
+    date.getHours() > 18 ||
+    (date.getHours() === 18 && date.getMinutes() > 30)
+  ) {
+    router.replace(makeCartUrl(shopId, setMinutes(setHours(date, 8), 30)));
+    return null;
+  }
 
   const onSelectTime = (dateValue: string) => {
     const selectedDate = new Date(dateValue);
@@ -83,9 +78,7 @@ const TimePicker = ({ className, date, shopId }: HourPickerProps) => {
           </PopoverTrigger>
           <PopoverContent className="w-[200px] p-0">
             <Command>
-              {/* <CommandInput placeholder="Choisir l'heure" /> */}
               <CommandList>
-                {/* <CommandEmpty>Heure introuvable</CommandEmpty> */}
                 <CommandGroup>
                   {timeOptions.map((time) => {
                     const dateValue = time.toISOString();
@@ -121,8 +114,8 @@ const TimePicker = ({ className, date, shopId }: HourPickerProps) => {
         </Popover>
       </div>
       <p className="text-balance text-sm text-muted-foreground">
-        Si vous voulez du lait frais, venir aux heures de traite entre 8h30-9h30
-        et 18h-19h
+        Venir aux heures de traite entre 8h30-9h30 et 18h-19h pour avoir du lait
+        frais.
       </p>
     </>
   );
