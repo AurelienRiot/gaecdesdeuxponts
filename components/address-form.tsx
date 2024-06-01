@@ -4,9 +4,10 @@ import AddressAutocomplete, {
 } from "@/actions/adress-autocompleteFR";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
-import { Dispatch, InputHTMLAttributes, SetStateAction, useState } from "react";
-import { Path, PathValue, useFormContext } from "react-hook-form";
+import { InputHTMLAttributes, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import * as RPNInput from "react-phone-number-input";
+import * as z from "zod";
 import { AnimateHeight } from "./animations/animate-size";
 import { Button } from "./ui/button";
 import {
@@ -38,26 +39,28 @@ export type FullAdress = {
   state: string;
 };
 
+export const addressSchema = z.object({
+  label: z.string().optional(),
+  city: z.string().optional(),
+  country: z.string().optional(),
+  line1: z.string().optional(),
+  line2: z.string().optional(),
+  postalCode: z.string().optional(),
+  state: z.string().optional(),
+});
+
 interface AdressFormProps {
-  selectedAddress: FullAdress;
-  setSelectedAddress: Dispatch<SetStateAction<FullAdress>>;
   className?: string;
 }
 
-export const AddressForm = <T extends { address: FullAdress }>({
-  selectedAddress,
-  setSelectedAddress,
-  className,
-}: AdressFormProps) => {
-  const form = useFormContext<T>();
+export const AddressForm = ({ className }: AdressFormProps) => {
+  const form = useFormContext<{ address: z.infer<typeof addressSchema> }>();
+  const address = form.watch("address");
   const [open, setOpen] = useState(false);
   const [suggestions, setSuggestions] = useState([] as Suggestion[]);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState(
-    selectedAddress.country.toUpperCase() === "FR" ? true : false,
-  );
-  const [country, setCountry] = useState<RPNInput.Country>(
-    isCountry(selectedAddress.country) ? selectedAddress.country : "FR",
+    address.country?.toUpperCase() === "FR" ? true : false,
   );
 
   const setSearchTerm = async (value: string) => {
@@ -70,7 +73,7 @@ export const AddressForm = <T extends { address: FullAdress }>({
     <div className={cn("-mb-8 space-y-4", className)}>
       <FormField
         control={form.control}
-        name={"address" as Path<T>}
+        name={"address"}
         render={({ field }) => (
           <FormItem className="flex flex-col">
             <FormLabel>Adresse</FormLabel>
@@ -82,11 +85,7 @@ export const AddressForm = <T extends { address: FullAdress }>({
                     <Switch
                       onCheckedChange={() => {
                         setFilter(!filter);
-                        setSelectedAddress({
-                          ...selectedAddress,
-                          country: "FR",
-                        });
-                        setCountry("FR");
+                        form.setValue("address.country", "FR");
                       }}
                       checked={filter}
                     />
@@ -101,7 +100,8 @@ export const AddressForm = <T extends { address: FullAdress }>({
                         disabled={!filter || form.formState.isSubmitting}
                         className={cn(
                           " justify-between active:scale-100 ",
-                          field.value && "font-normal text-muted-foreground ",
+                          field.value.label &&
+                            "font-normal text-muted-foreground ",
                         )}
                       >
                         Rechercher votre adresse
@@ -120,14 +120,7 @@ export const AddressForm = <T extends { address: FullAdress }>({
                     onValueChange={(e) => {
                       setSearchTerm(e);
                       if (query.length < 3) {
-                        const prev = form.getValues();
-                        form.setValue(
-                          "address" as Path<T>,
-                          { ...prev.address, label: "" } as PathValue<
-                            T,
-                            Path<T>
-                          >,
-                        );
+                        form.setValue("address.label", "");
                       }
                       setOpen(true);
                     }}
@@ -136,34 +129,27 @@ export const AddressForm = <T extends { address: FullAdress }>({
                     {query.length > 3 && (
                       <CommandEmpty>Adresse introuvable</CommandEmpty>
                     )}
-                    {suggestions.map((address, index) => (
+                    {suggestions.map((suggestion, index) => (
                       <CommandItem
                         className="cursor-pointer
                           bg-popover  text-popover-foreground"
-                        value={index.toString()}
-                        key={address.label}
+                        value={suggestion.label + index}
+                        key={suggestion.label}
                         onSelect={() => {
-                          const prev = form.getValues();
-                          form.setValue(
-                            "address" as Path<T>,
-                            {
-                              ...prev.address,
-                              label: address.label,
-                            } as PathValue<T, Path<T>>,
-                          );
-                          setSelectedAddress((prev) => ({
-                            ...prev,
-                            label: address.label,
-                            city: address.city,
+                          form.setValue("address", {
+                            label: suggestion.label,
+                            city: suggestion.city,
                             country: address.country,
-                            line1: address.line1,
-                            postalCode: address.postal_code,
-                            state: address.state,
-                          }));
+                            line1: suggestion.line1,
+                            line2: address.line2,
+                            postalCode: suggestion.postal_code,
+                            state: suggestion.state,
+                          });
+
                           setOpen(false);
                         }}
                       >
-                        {address.label}
+                        {suggestion.label}
                       </CommandItem>
                     ))}
                   </CommandList>
@@ -178,49 +164,30 @@ export const AddressForm = <T extends { address: FullAdress }>({
         <AddressInput
           label="Adresse"
           addressKey="line1"
-          disabled={form.formState.isSubmitting}
           autoComplete="street-address"
-          selectedAddress={selectedAddress}
-          setSelectedAddress={setSelectedAddress}
         />
-        <AddressInput
-          label="Complément d'adresse"
-          addressKey="line2"
-          disabled={form.formState.isSubmitting}
-          selectedAddress={selectedAddress}
-          setSelectedAddress={setSelectedAddress}
-        />
+        <AddressInput label="Complément d'adresse" addressKey="line2" />
         <AddressInput
           label="Ville"
           addressKey="city"
-          disabled={form.formState.isSubmitting}
           autoComplete="address-level2"
-          selectedAddress={selectedAddress}
-          setSelectedAddress={setSelectedAddress}
         />
         <AddressInput
           label="Code postal"
           addressKey="postalCode"
-          disabled={form.formState.isSubmitting}
           autoComplete="postal-code"
-          selectedAddress={selectedAddress}
-          setSelectedAddress={setSelectedAddress}
         />
         <AddressInput
           label="Région"
           addressKey="state"
-          disabled={form.formState.isSubmitting}
           autoComplete="address-level1"
-          selectedAddress={selectedAddress}
-          setSelectedAddress={setSelectedAddress}
         />
 
         <AnimateHeight display={!filter} className="mb-4 p-1">
           <CountrySelect
-            value={country}
+            value={address.country as RPNInput.Country}
             onChange={(value) => {
-              setCountry(value);
-              setSelectedAddress((prev) => ({ ...prev, country: value }));
+              form.setValue("address.country", isCountry(value) ? value : "FR");
             }}
             disabled={filter || form.formState.isSubmitting}
             options={CountriesList}
@@ -233,35 +200,38 @@ export const AddressForm = <T extends { address: FullAdress }>({
   );
 };
 
-type AddressInputProps = InputHTMLAttributes<HTMLInputElement> & {
+type AddressInputProps = Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "onChange" | "value" | "id"
+> & {
   label: string;
-  addressKey: keyof FullAdress;
-  selectedAddress: FullAdress;
-  setSelectedAddress: Dispatch<SetStateAction<FullAdress>>;
+  addressKey: keyof z.infer<typeof addressSchema>;
 };
 
 const AddressInput = ({
   label,
   addressKey,
-  selectedAddress,
-  setSelectedAddress,
+  disabled,
+  className,
+  type = "text",
   ...props
 }: AddressInputProps) => {
+  const form = useFormContext<{ address: z.infer<typeof addressSchema> }>();
+  const addressValue = form.watch(`address.${addressKey}`);
+  const id = "address-" + addressKey;
+
   return (
-    <div className="relative p-2">
+    <div className={cn("relative p-2", className)}>
       <FloatingInput
-        {...props}
-        id={addressKey}
-        type="text"
-        value={selectedAddress[addressKey]}
+        disabled={form.formState.isSubmitting || disabled}
+        id={id}
+        value={addressValue}
         onChange={(e) => {
-          setSelectedAddress((prev) => ({
-            ...prev,
-            [addressKey]: e.target.value,
-          }));
+          form.setValue(`address.${addressKey}`, e.target.value);
         }}
+        {...props}
       />
-      <FloatingLabel htmlFor={addressKey}>{label}</FloatingLabel>
+      <FloatingLabel htmlFor={id}>{label}</FloatingLabel>
     </div>
   );
 };

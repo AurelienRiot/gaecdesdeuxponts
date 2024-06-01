@@ -1,6 +1,5 @@
 "use client";
 
-import { AlertModal } from "@/components/ui/alert-modal-form";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,16 +17,15 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
 import { addDelay } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaSpinner } from "react-icons/fa";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import * as z from "zod";
 import { createContact } from "../_actions/create-contact";
 import { formSchema } from "./shema";
-import { Loader, Loader2 } from "lucide-react";
 
 const formSchemaWithPhone = formSchema.extend({
   phone: z

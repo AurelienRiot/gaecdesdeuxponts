@@ -1,9 +1,13 @@
 "use client";
 
-import { AddressForm, FullAdress } from "@/components/address-form";
+import {
+  AddressForm,
+  FullAdress,
+  addressSchema,
+  defaultAddress,
+} from "@/components/address-form";
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import { AlertModal } from "@/components/ui/alert-modal-form";
-import { LoadingButton } from "@/components/ui/button";
 import {
   Form,
   FormButton,
@@ -17,8 +21,8 @@ import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
 import { useUserContext } from "@/context/user-context";
+import { addDelay } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Address } from "@prisma/client";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -27,7 +31,7 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import * as z from "zod";
 import { deleteUser, updateUser } from "./server-action";
-import { addDelay } from "@/lib/utils";
+import { Address } from "@prisma/client";
 
 interface UserFormProps {
   initialData: {
@@ -53,17 +57,7 @@ const formSchema = z.object({
       message: "Le numéro de téléphone n'est pas valide",
     },
   ),
-  address: z
-    .object({
-      label: z.string().optional(),
-      city: z.string().optional(),
-      country: z.string().optional(),
-      line1: z.string().optional(),
-      line2: z.string().optional(),
-      postalCode: z.string().optional(),
-      state: z.string().optional(),
-    })
-    .optional(),
+  address: addressSchema.optional(),
 });
 
 export type UserFormValues = z.infer<typeof formSchema>;
@@ -72,16 +66,6 @@ export const UserForm: React.FC<UserFormProps> = ({
   initialData,
 }: UserFormProps) => {
   const [open, setOpen] = useState(false);
-
-  const [selectedAddress, setSelectedAddress] = useState<FullAdress>({
-    label: initialData.address.label || "",
-    city: initialData.address.city || "",
-    country: initialData.address.country || "FR",
-    line1: initialData.address.line1 || "",
-    line2: initialData.address.line2 || "",
-    postalCode: initialData.address.postalCode || "",
-    state: initialData.address.state || "",
-  });
 
   const title = initialData.name
     ? "Modifier votre profil"
@@ -95,7 +79,7 @@ export const UserForm: React.FC<UserFormProps> = ({
       name: initialData.name,
       company: initialData.company,
       phone: initialData.phone,
-      address: selectedAddress,
+      address: initialData.address ?? defaultAddress,
     },
   });
 
@@ -104,7 +88,6 @@ export const UserForm: React.FC<UserFormProps> = ({
 
   const onSubmit = async (data: UserFormValues) => {
     data.name = data.name.trim();
-    data.address = selectedAddress;
 
     const result = await updateUser(data);
     if (!result.success) {
@@ -215,7 +198,6 @@ export const UserForm: React.FC<UserFormProps> = ({
                 <FormItem>
                   <FormLabel>Numéro de téléphone</FormLabel>
                   <FormControl>
-                    {/* @ts-ignore */}
                     <PhoneInput
                       defaultCountry="FR"
                       placeholder="Entrer un numéro de téléphone"
@@ -230,11 +212,7 @@ export const UserForm: React.FC<UserFormProps> = ({
               )}
             />
 
-            <AddressForm
-              selectedAddress={selectedAddress}
-              setSelectedAddress={setSelectedAddress}
-              className="max-w-lg sm:col-span-2"
-            />
+            <AddressForm className="max-w-lg sm:col-span-2" />
           </div>
           <FormButton className="ml-auto ">{action}</FormButton>
         </form>

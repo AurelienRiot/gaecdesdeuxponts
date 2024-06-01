@@ -1,11 +1,12 @@
 "use client";
 
-import { AddressForm, FullAdress } from "@/components/address-form";
+import { AddressForm, addressSchema } from "@/components/address-form";
 import { AlertModal } from "@/components/ui/alert-modal-form";
-import { Button, LoadingButton } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import ButtonBackward from "@/components/ui/button-backward";
 import {
   Form,
+  FormButton,
   FormControl,
   FormField,
   FormItem,
@@ -16,8 +17,8 @@ import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
+import { UserWithOrdersAndAdress } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Address, Order, User } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -27,7 +28,6 @@ import { toast } from "sonner";
 import * as z from "zod";
 import { deleteUser } from "../../_components/server-action";
 import { updateUser } from "./server-action";
-import { UserWithOrdersAndAdress } from "@/types";
 
 interface UserFormProps {
   initialData: UserWithOrdersAndAdress;
@@ -46,17 +46,7 @@ const formSchema = z.object({
       message: "Le numéro de téléphone n'est pas valide",
     },
   ),
-  address: z
-    .object({
-      label: z.string().optional(),
-      city: z.string().optional(),
-      country: z.string().optional(),
-      line1: z.string().optional(),
-      line2: z.string().optional(),
-      postalCode: z.string().optional(),
-      state: z.string().optional(),
-    })
-    .optional(),
+  address: addressSchema.optional(),
 });
 
 export type UserFormValues = z.infer<typeof formSchema>;
@@ -64,28 +54,6 @@ export type UserFormValues = z.infer<typeof formSchema>;
 export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-
-  const [selectedAddress, setSelectedAddress] = useState<FullAdress>(
-    initialData.address
-      ? {
-          label: initialData.address.label || "",
-          city: initialData.address.city || "",
-          country: initialData.address.country || "FR",
-          line1: initialData.address.line1 || "",
-          line2: initialData.address.line2 || "",
-          postalCode: initialData.address.postalCode || "",
-          state: initialData.address.state || "",
-        }
-      : {
-          label: "",
-          city: "",
-          country: "FR",
-          line1: "",
-          line2: "",
-          postalCode: "",
-          state: "",
-        },
-  );
 
   const title = "Modifier l'utilisateur";
   const description = "Modifier un utilisateur";
@@ -98,13 +66,20 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
       name: initialData.name || "",
       company: initialData.company || "",
       phone: initialData.phone || "",
-      address: selectedAddress,
+      address: {
+        label: initialData.address?.label || "",
+        city: initialData.address?.city || "",
+        country: initialData.address?.country || "FR",
+        line1: initialData.address?.line1 || "",
+        line2: initialData.address?.line2 || "",
+        postalCode: initialData.address?.postalCode || "",
+        state: initialData.address?.state || "",
+      },
     },
   });
 
   const onSubmit = async (data: UserFormValues) => {
     data.name = data.name.trim();
-    data.address = selectedAddress;
 
     const result = await updateUser(data, initialData.id);
     if (!result.success) {
@@ -201,7 +176,6 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                 <FormItem>
                   <FormLabel>Numéro de téléphone</FormLabel>
                   <FormControl>
-                    {/* @ts-ignore */}
                     <PhoneInput
                       placeholder="Entrer un numéro de téléphone"
                       defaultCountry="FR"
@@ -214,18 +188,9 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                 </FormItem>
               )}
             />
-            <AddressForm
-              selectedAddress={selectedAddress}
-              setSelectedAddress={setSelectedAddress}
-            />
+            <AddressForm />
           </div>
-          <LoadingButton
-            disabled={form.formState.isSubmitting}
-            className="ml-auto"
-            type="submit"
-          >
-            {action}
-          </LoadingButton>
+          <FormButton className="ml-auto">{action}</FormButton>
         </form>
       </Form>
       <ButtonBackward />

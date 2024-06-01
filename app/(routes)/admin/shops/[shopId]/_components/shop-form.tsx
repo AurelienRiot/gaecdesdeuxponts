@@ -243,7 +243,6 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
                 <FormItem className="w-[300px]">
                   <FormLabel>Numéros de téléphone</FormLabel>
                   <FormControl>
-                    {/* @ts-ignore */}
                     <PhoneInput
                       placeholder="Entrer un numéro de téléphone"
                       defaultCountry="FR"
