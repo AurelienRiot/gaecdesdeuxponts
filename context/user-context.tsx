@@ -1,7 +1,6 @@
 "use client";
 import { UserWithOrdersAndAdress } from "@/types";
-import { createContext, useContext, useEffect, useState } from "react";
-import { fetchUser } from "./user-fetch";
+import { createContext, useContext, useState } from "react";
 
 type UserContextType = {
   user: UserWithOrdersAndAdress | null;
@@ -14,16 +13,17 @@ export const UserContext = createContext<UserContextType | undefined>(
 
 export const UserProvider: React.FC<{
   children: React.ReactNode;
-}> = ({ children }) => {
-  const [user, setUser] = useState<UserWithOrdersAndAdress | null>(null);
-  useEffect(() => {
-    const fetchAndSetUser = async () => {
-      const data = await fetchUser();
-      setUser(data);
-    };
+  data: UserWithOrdersAndAdress | null;
+}> = ({ children, data }) => {
+  const [user, setUser] = useState<UserWithOrdersAndAdress | null>(data);
+  // useEffect(() => {
+  //   const fetchAndSetUser = async () => {
+  //     const data = await fetchUser();
+  //     setUser(data);
+  //   };
 
-    fetchAndSetUser();
-  }, []);
+  //   fetchAndSetUser();
+  // }, []);
   return (
     <UserContext.Provider value={{ user, setUser }}>
       {children}
