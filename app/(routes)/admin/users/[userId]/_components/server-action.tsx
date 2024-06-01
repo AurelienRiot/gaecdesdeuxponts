@@ -4,7 +4,8 @@ import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import { User } from "@prisma/client";
 import { UserFormValues } from "./user-form";
-import { defaultAddress } from "@/components/address-form";
+import { defaultAddress } from "@/components/billing-address-form";
+import { ReturnTypeServerAction } from "@/types";
 
 export type UserReturnType =
   | {
@@ -17,9 +18,9 @@ export type UserReturnType =
     };
 
 async function updateUser(
-  { name, phone, address, company }: UserFormValues,
+  { name, phone, address, billingAddress, company }: UserFormValues,
   id: string,
-): Promise<UserReturnType> {
+): Promise<ReturnTypeServerAction<null>> {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
@@ -29,7 +30,12 @@ async function updateUser(
     };
   }
 
-  const user = await prismadb.user.update({
+  const user = await prismadb.user.findUnique({
+    where: { id: id },
+    select: { billingAddress: true },
+  });
+
+  await prismadb.user.update({
     where: {
       id,
     },
@@ -44,12 +50,22 @@ async function updateUser(
           update: address ?? defaultAddress,
         },
       },
+      billingAddress: billingAddress
+        ? {
+            upsert: {
+              create: billingAddress,
+              update: billingAddress,
+            },
+          }
+        : user?.billingAddress
+          ? { delete: true }
+          : undefined,
     },
   });
 
   return {
     success: true,
-    data: user,
+    data: null,
   };
 }
 

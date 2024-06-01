@@ -30,6 +30,17 @@ const PageSettings = () => {
       postalCode: user.address?.postalCode || "",
       state: user.address?.state || "",
     },
+    billingAddress: user.billingAddress
+      ? {
+          label: user.billingAddress.label || "",
+          city: user.billingAddress.city,
+          country: user.billingAddress.country,
+          line1: user.billingAddress.line1,
+          line2: user.billingAddress.line2 || "",
+          postalCode: user.billingAddress.postalCode,
+          state: user.billingAddress.state,
+        }
+      : undefined,
   };
   return (
     <div className="h-full w-full flex-col p-6  ">

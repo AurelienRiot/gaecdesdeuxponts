@@ -4,7 +4,6 @@ import {
   AddressForm,
   FullAdress,
   addressSchema,
-  defaultAddress,
 } from "@/components/address-form";
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import { AlertModal } from "@/components/ui/alert-modal-form";
@@ -31,7 +30,12 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import * as z from "zod";
 import { deleteUser, updateUser } from "./server-action";
-import { Address } from "@prisma/client";
+import { Address, BillingAddress } from "@prisma/client";
+import {
+  BillingAddressForm,
+  billingAddressSchema,
+  defaultAddress,
+} from "@/components/billing-address-form";
 
 interface UserFormProps {
   initialData: {
@@ -41,6 +45,7 @@ interface UserFormProps {
     email: string;
     phone: string;
     address: FullAdress;
+    billingAddress?: FullAdress;
   };
 }
 
@@ -57,7 +62,8 @@ const formSchema = z.object({
       message: "Le numéro de téléphone n'est pas valide",
     },
   ),
-  address: addressSchema.optional(),
+  address: addressSchema,
+  billingAddress: billingAddressSchema,
 });
 
 export type UserFormValues = z.infer<typeof formSchema>;
@@ -80,6 +86,7 @@ export const UserForm: React.FC<UserFormProps> = ({
       company: initialData.company,
       phone: initialData.phone,
       address: initialData.address ?? defaultAddress,
+      billingAddress: initialData.billingAddress,
     },
   });
 
@@ -102,6 +109,7 @@ export const UserForm: React.FC<UserFormProps> = ({
             phone: data.phone,
             company: data.company || null,
             address: (data.address as Address) ?? null,
+            billingAddress: (data.billingAddress as BillingAddress) ?? null,
           }
         : null,
     );
@@ -153,7 +161,7 @@ export const UserForm: React.FC<UserFormProps> = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-8 pb-4"
         >
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 ">
             <FormField
               control={form.control}
               name="name"
@@ -212,7 +220,8 @@ export const UserForm: React.FC<UserFormProps> = ({
               )}
             />
 
-            <AddressForm className="max-w-lg sm:col-span-2" />
+            <AddressForm className="max-w-lg lg:col-span-2" />
+            <BillingAddressForm className="mb-4 max-w-lg lg:col-span-2" />
           </div>
           <FormButton className="ml-auto ">{action}</FormButton>
         </form>

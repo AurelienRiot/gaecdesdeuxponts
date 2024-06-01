@@ -28,6 +28,10 @@ import { toast } from "sonner";
 import * as z from "zod";
 import { deleteUser } from "../../_components/server-action";
 import { updateUser } from "./server-action";
+import {
+  BillingAddressForm,
+  billingAddressSchema,
+} from "@/components/billing-address-form";
 
 interface UserFormProps {
   initialData: UserWithOrdersAndAdress;
@@ -46,7 +50,8 @@ const formSchema = z.object({
       message: "Le numéro de téléphone n'est pas valide",
     },
   ),
-  address: addressSchema.optional(),
+  address: addressSchema,
+  billingAddress: billingAddressSchema,
 });
 
 export type UserFormValues = z.infer<typeof formSchema>;
@@ -75,12 +80,22 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
         postalCode: initialData.address?.postalCode || "",
         state: initialData.address?.state || "",
       },
+      billingAddress: initialData.billingAddress
+        ? {
+            label: initialData.billingAddress.label || "",
+            city: initialData.billingAddress.city,
+            country: initialData.billingAddress.country,
+            line1: initialData.billingAddress.line1,
+            line2: initialData.billingAddress.line2 || "",
+            postalCode: initialData.billingAddress.postalCode,
+            state: initialData.billingAddress.state,
+          }
+        : undefined,
     },
   });
 
   const onSubmit = async (data: UserFormValues) => {
     data.name = data.name.trim();
-
     const result = await updateUser(data, initialData.id);
     if (!result.success) {
       toast.error(result.message);
@@ -189,6 +204,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
               )}
             />
             <AddressForm />
+            <BillingAddressForm />
           </div>
           <FormButton className="ml-auto">{action}</FormButton>
         </form>

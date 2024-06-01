@@ -76,7 +76,9 @@ export const AddressForm = ({ className }: AdressFormProps) => {
         name={"address"}
         render={({ field }) => (
           <FormItem className="flex flex-col">
-            <FormLabel>Adresse</FormLabel>
+            <FormLabel className="my-auto h-6 leading-normal">
+              Adresse
+            </FormLabel>
             <Popover open={open} onOpenChange={setOpen}>
               <FormControl>
                 <div className="relative items-start space-y-2 text-sm">
@@ -200,10 +202,7 @@ export const AddressForm = ({ className }: AdressFormProps) => {
   );
 };
 
-type AddressInputProps = Omit<
-  InputHTMLAttributes<HTMLInputElement>,
-  "onChange" | "value" | "id"
-> & {
+type AddressInputProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   addressKey: keyof z.infer<typeof addressSchema>;
 };
@@ -221,27 +220,17 @@ const AddressInput = ({
   const id = "address-" + addressKey;
 
   return (
-    <div className={cn("relative p-2", className)}>
+    <div className={cn("relative p-2", className)} {...props}>
       <FloatingInput
         disabled={form.formState.isSubmitting || disabled}
         id={id}
+        type="text"
         value={addressValue}
         onChange={(e) => {
           form.setValue(`address.${addressKey}`, e.target.value);
         }}
-        {...props}
       />
       <FloatingLabel htmlFor={id}>{label}</FloatingLabel>
     </div>
   );
-};
-
-export const defaultAddress: FullAdress = {
-  label: "",
-  city: "",
-  country: "FR",
-  line1: "",
-  line2: "",
-  postalCode: "",
-  state: "",
 };

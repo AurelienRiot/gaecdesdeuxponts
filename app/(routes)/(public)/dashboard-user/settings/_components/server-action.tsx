@@ -3,12 +3,13 @@
 import { checkUser } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import { UserFormValues } from "./user-form";
-import { defaultAddress } from "@/components/address-form";
+import { defaultAddress } from "@/components/billing-address-form";
 
 async function updateUser({
   name,
   phone,
   address,
+  billingAddress,
   company,
 }: UserFormValues): Promise<ReturnTypeUserObject> {
   const isAuth = await checkUser();
@@ -20,6 +21,11 @@ async function updateUser({
         "Erreur d'authentification, déconnectez-vous et reconnectez-vous.",
     };
   }
+
+  const user = await prismadb.user.findUnique({
+    where: { id: isAuth.id },
+    select: { billingAddress: true },
+  });
 
   await prismadb.user.update({
     where: {
@@ -35,19 +41,18 @@ async function updateUser({
           update: address ?? defaultAddress,
         },
       },
+      billingAddress: billingAddress
+        ? {
+            upsert: {
+              create: billingAddress,
+              update: billingAddress,
+            },
+          }
+        : user?.billingAddress
+          ? { delete: true }
+          : undefined,
     },
   });
-
-  // const user = await prismadb.user.update({
-  //   where: {
-  //     id: isAuth.id,
-  //   },
-  //   data: {
-  //     address: {
-  //       create: adress,
-  //     },
-  //   },
-  // });
 
   return {
     success: true,
