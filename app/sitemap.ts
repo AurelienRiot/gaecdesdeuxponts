@@ -37,22 +37,18 @@ export default async function sitemap() {
     {
       url: `${baseUrl}/login`,
       lastModified: new Date(),
-      changeFrequency: "weekly",
     },
     {
       url: `${baseUrl}/contact`,
       lastModified: new Date(),
-      changeFrequency: "weekly",
     },
     {
       url: `${baseUrl}/faq`,
       lastModified: new Date(),
-      changeFrequency: "weekly",
     },
     {
       url: `${baseUrl}/la-ferme`,
       lastModified: new Date(),
-      changeFrequency: "weekly",
     },
     ...productsSitemap,
     ...categoriesSitemap,

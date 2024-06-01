@@ -1,23 +1,25 @@
 "use server";
 
-import { checkUser } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import { ReturnTypeServerAction } from "@/types";
-import { ContactFormValues } from "../_components/contact-form";
-import { formSchema } from "../_components/shema";
+import { checkUser } from "../auth/checkAuth";
+import { BugReportValues, bugReportSchema } from "./bug-report-schema";
 
-async function createContact(
-  data: ContactFormValues,
+async function createBugReport(
+  data: BugReportValues,
 ): Promise<ReturnTypeServerAction<null>> {
   const isAuth = await checkUser();
-  const validatedData = formSchema.safeParse(data);
+  const validatedData = bugReportSchema.safeParse(data);
   if (!validatedData.success) {
     throw new Error(`Erreur de validation`);
   }
 
   const contact = await prismadb.contact.create({
     data: {
-      ...data,
+      subject: "RAPPORT DE BUG",
+      message: data.message,
+      name: isAuth ? isAuth.name || "" : "",
+      email: isAuth ? isAuth?.email || "" : "",
       userId: isAuth ? isAuth.id : null,
     },
   });
@@ -28,4 +30,4 @@ async function createContact(
   };
 }
 
-export { createContact };
+export { createBugReport };
