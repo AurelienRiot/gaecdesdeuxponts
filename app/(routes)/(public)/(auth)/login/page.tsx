@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const LoginPage = async (context: {
-  searchParams: { callbackUrl: string };
+  searchParams: { callbackUrl: string | undefined; error: string | undefined };
 }) => {
   const callbackUrl = decodeURI(
     context.searchParams.callbackUrl ?? `${baseUrl}/dashboard-user`,
@@ -23,6 +23,8 @@ const LoginPage = async (context: {
     return redirect(callbackUrl);
   }
 
+  const error = context.searchParams.error;
+
   return (
     <div className="flex w-full items-center justify-center bg-slate-100 dark:bg-slate-900">
       <div className="space-y-12 rounded-xl px-2 pb-8 pt-12 sm:bg-white sm:px-8 sm:shadow-xl sm:dark:bg-black">
@@ -31,6 +33,7 @@ const LoginPage = async (context: {
           Page de Connection{" "}
         </h1>
         <GoogleButton callbackUrl={callbackUrl} />
+
         <div
           className={`my-4 flex h-4 flex-row  items-center gap-4 self-stretch whitespace-nowrap
         before:h-0.5 before:w-full 

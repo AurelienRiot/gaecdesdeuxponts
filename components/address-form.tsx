@@ -215,7 +215,7 @@ export const AddressForm = <T extends { address: FullAdress }>({
           setSelectedAddress={setSelectedAddress}
         />
 
-        <AnimateHeight display={!filter} className="p-1">
+        <AnimateHeight display={!filter} className="mb-4 p-1">
           <CountrySelect
             value={country}
             onChange={(value) => {
@@ -264,4 +264,14 @@ const AddressInput = ({
       <FloatingLabel htmlFor={addressKey}>{label}</FloatingLabel>
     </div>
   );
+};
+
+export const defaultAddress: FullAdress = {
+  label: "",
+  city: "",
+  country: "FR",
+  line1: "",
+  line2: "",
+  postalCode: "",
+  state: "",
 };

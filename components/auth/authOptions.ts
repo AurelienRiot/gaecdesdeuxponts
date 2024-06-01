@@ -28,6 +28,7 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     GoogleProvider({
+      allowDangerousEmailAccountLinking: true,
       profile(profile: GoogleProfile) {
         return {
           id: profile.sub.toString(),

@@ -1,13 +1,12 @@
 "use client";
+import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import { SkeletonAdressForm } from "@/components/skeleton-ui/address-skeleton";
 import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useUserContext } from "@/context/user-context";
-import { Trash } from "lucide-react";
 import { UserForm } from "./_components/user-form";
-import { TrashButton } from "@/components/animations/lottie-animation/lottie-animation";
 
 const PageSettings = () => {
   const { user } = useUserContext();
@@ -22,7 +21,7 @@ const PageSettings = () => {
     phone: user.phone || "",
     email: user.email || "",
     company: user.company || "",
-    adress: {
+    address: {
       label: user.address?.label || "",
       city: user.address?.city || "",
       country: user.address?.country || "FR",

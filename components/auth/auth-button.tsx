@@ -10,7 +10,9 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import MovingArrow from "../animations/lottie-animation/moving-arrow";
 import Spinner from "../animations/spinner";
+import { Icons } from "../icons";
 import {
   Form,
   FormControl,
@@ -20,7 +22,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { Icons } from "../icons";
 
 export const LoginButton = (
   props: React.AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -144,7 +145,7 @@ export const EmailButton = ({ callbackUrl }: { callbackUrl: string }) => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <div className="flex items-start gap-x-4">
+                      <div className="relative flex items-center gap-1 ">
                         <Input
                           type="email"
                           autoCapitalize="off"

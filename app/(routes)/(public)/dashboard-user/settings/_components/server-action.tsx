@@ -3,11 +3,12 @@
 import { checkUser } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import { UserFormValues } from "./user-form";
+import { defaultAddress } from "@/components/address-form";
 
 async function updateUser({
   name,
   phone,
-  adress,
+  address,
   company,
 }: UserFormValues): Promise<ReturnTypeUserObject> {
   const isAuth = await checkUser();
@@ -29,8 +30,10 @@ async function updateUser({
       phone,
       company,
       address: {
-        delete: true,
-        create: adress,
+        upsert: {
+          create: address ?? defaultAddress,
+          update: address ?? defaultAddress,
+        },
       },
     },
   });

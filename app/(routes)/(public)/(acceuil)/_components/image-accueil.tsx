@@ -50,11 +50,11 @@ const ImageAccueil = () => {
           <br /> du lundi au samedi <br />
           Retrait possible en dehors de la traite sur commande
         </p>
-        <p className="mb-8 max-w-xl text-balance @md:text-lg">
+        {/* <p className="mb-8 max-w-xl text-balance @md:text-lg">
           Découvrez le goût pur et crémeux de notre lait cru frais de la ferme.
           Rempli de nutriments essentiels, notre lait provient directement de
           nos vaches heureuses et en bonne santé.
-        </p>
+        </p> */}
         <div className="mx-auto flex gap-4">
           <Button asChild variant={"heartbeat"}>
             <Link href="/category/Lait/product/Lait%20cru?Contenant=Vrac">

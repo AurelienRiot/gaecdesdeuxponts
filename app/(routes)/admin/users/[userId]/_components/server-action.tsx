@@ -4,6 +4,7 @@ import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import { User } from "@prisma/client";
 import { UserFormValues } from "./user-form";
+import { defaultAddress } from "@/components/address-form";
 
 export type UserReturnType =
   | {
@@ -38,8 +39,10 @@ async function updateUser(
       phone,
 
       address: {
-        delete: true,
-        create: address,
+        upsert: {
+          create: address ?? defaultAddress,
+          update: address ?? defaultAddress,
+        },
       },
     },
   });

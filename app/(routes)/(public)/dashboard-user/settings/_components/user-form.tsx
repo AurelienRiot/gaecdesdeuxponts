@@ -1,11 +1,12 @@
 "use client";
 
 import { AddressForm, FullAdress } from "@/components/address-form";
-import { TrashButton } from "@/components/animations/lottie-animation/lottie-animation";
+import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import { LoadingButton } from "@/components/ui/button";
 import {
   Form,
+  FormButton,
   FormControl,
   FormField,
   FormItem,
@@ -26,6 +27,7 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import * as z from "zod";
 import { deleteUser, updateUser } from "./server-action";
+import { addDelay } from "@/lib/utils";
 
 interface UserFormProps {
   initialData: {
@@ -34,7 +36,7 @@ interface UserFormProps {
     company: string;
     email: string;
     phone: string;
-    adress: FullAdress;
+    address: FullAdress;
   };
 }
 
@@ -51,7 +53,7 @@ const formSchema = z.object({
       message: "Le numéro de téléphone n'est pas valide",
     },
   ),
-  adress: z
+  address: z
     .object({
       label: z.string().optional(),
       city: z.string().optional(),
@@ -72,13 +74,13 @@ export const UserForm: React.FC<UserFormProps> = ({
   const [open, setOpen] = useState(false);
 
   const [selectedAddress, setSelectedAddress] = useState<FullAdress>({
-    label: initialData.adress.label || "",
-    city: initialData.adress.city || "",
-    country: initialData.adress.country || "FR",
-    line1: initialData.adress.line1 || "",
-    line2: initialData.adress.line2 || "",
-    postalCode: initialData.adress.postalCode || "",
-    state: initialData.adress.state || "",
+    label: initialData.address.label || "",
+    city: initialData.address.city || "",
+    country: initialData.address.country || "FR",
+    line1: initialData.address.line1 || "",
+    line2: initialData.address.line2 || "",
+    postalCode: initialData.address.postalCode || "",
+    state: initialData.address.state || "",
   });
 
   const title = initialData.name
@@ -93,7 +95,7 @@ export const UserForm: React.FC<UserFormProps> = ({
       name: initialData.name,
       company: initialData.company,
       phone: initialData.phone,
-      adress: selectedAddress,
+      address: selectedAddress,
     },
   });
 
@@ -102,7 +104,7 @@ export const UserForm: React.FC<UserFormProps> = ({
 
   const onSubmit = async (data: UserFormValues) => {
     data.name = data.name.trim();
-    data.adress = selectedAddress;
+    data.address = selectedAddress;
 
     const result = await updateUser(data);
     if (!result.success) {
@@ -116,7 +118,7 @@ export const UserForm: React.FC<UserFormProps> = ({
             name: data.name,
             phone: data.phone,
             company: data.company || null,
-            address: (data.adress as Address) ?? null,
+            address: (data.address as Address) ?? null,
           }
         : null,
     );
@@ -130,7 +132,8 @@ export const UserForm: React.FC<UserFormProps> = ({
       toast.error(deleteU.message);
     } else {
       signOut({ callbackUrl: "/" });
-      toast.success("Utilisateur supprimée");
+      await addDelay(1000);
+      toast.success("Compte supprimé", { position: "top-center" });
     }
 
     setOpen(false);
@@ -233,13 +236,7 @@ export const UserForm: React.FC<UserFormProps> = ({
               className="max-w-lg sm:col-span-2"
             />
           </div>
-          <LoadingButton
-            disabled={form.formState.isSubmitting}
-            className="ml-auto "
-            type="submit"
-          >
-            {action}
-          </LoadingButton>
+          <FormButton className="ml-auto ">{action}</FormButton>
         </form>
       </Form>
     </>
