@@ -122,19 +122,18 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
     : "Créer le magasin";
 
   const onSubmit = async (data: ShopFormValues) => {
-    //   let result: ReturnType;
-    //   if (initialData) {
-    //     result = await updateShop({ data, id: initialData.id });
-    //   } else {
-    //     result = await createShop(data);
-    //   }
-    //   if (!result.success) {
-    //     toast.error(result.message);
-    //     return;
-    //   }
-    //   router.push(`/admin/shops`);
-    //   router.refresh();
-    console.log(data);
+    let result: ReturnType;
+    if (initialData) {
+      result = await updateShop({ data, id: initialData.id });
+    } else {
+      result = await createShop(data);
+    }
+    if (!result.success) {
+      toast.error(result.message);
+      return;
+    }
+    router.push(`/admin/shops`);
+    router.refresh();
     toast.success(toastMessage);
   };
 
