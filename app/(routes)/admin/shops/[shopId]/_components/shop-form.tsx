@@ -49,22 +49,29 @@ import {
   updateShop,
 } from "./server-actions";
 
+const customNumberSchema = z
+  .string({
+    required_error: "Veuillez entrer un nombre",
+  })
+  .refine((value) => value !== "", {
+    message: "Veuillez entrer un nombre",
+  })
+  .transform((value) => {
+    const num = Number(value);
+    if (isNaN(num)) {
+      throw new Error("Veuillez entrer un nombre");
+    }
+    return num;
+  })
+  .refine((value) => typeof value === "number", {
+    message: "Veuillez entrer un nombre",
+  });
+
 const formSchema = z.object({
   name: z.string().min(1, { message: "Le nom est requis" }),
   imageUrl: z.string().optional(),
-  lat: z.coerce
-    .number()
-    .optional()
-    .refine((val) => val !== undefined, {
-      message: "Veuillez entrer une latitude valide",
-    }),
-
-  long: z.coerce
-    .number()
-    .optional()
-    .refine((val) => val !== undefined, {
-      message: "Veuillez entrer une longitude valide",
-    }),
+  lat: customNumberSchema,
+  long: customNumberSchema,
 
   address: z.string().min(1, { message: "L'adresse est requise" }),
   phone: z.string().refine(
@@ -115,18 +122,19 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
     : "Créer le magasin";
 
   const onSubmit = async (data: ShopFormValues) => {
-    let result: ReturnType;
-    if (initialData) {
-      result = await updateShop({ data, id: initialData.id });
-    } else {
-      result = await createShop(data);
-    }
-    if (!result.success) {
-      toast.error(result.message);
-      return;
-    }
-    router.push(`/admin/shops`);
-    router.refresh();
+    //   let result: ReturnType;
+    //   if (initialData) {
+    //     result = await updateShop({ data, id: initialData.id });
+    //   } else {
+    //     result = await createShop(data);
+    //   }
+    //   if (!result.success) {
+    //     toast.error(result.message);
+    //     return;
+    //   }
+    //   router.push(`/admin/shops`);
+    //   router.refresh();
+    console.log(data);
     toast.success(toastMessage);
   };
 
