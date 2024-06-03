@@ -22,8 +22,10 @@ declare module "next-auth/jwt" {
 }
 
 export const Logout = ({ callbackUrl }: { callbackUrl: string }) => {
-  signOut({
-    callbackUrl: `/login`,
-  });
+  if (typeof window !== "undefined") {
+    signOut({
+      callbackUrl,
+    });
+  }
   return null;
 };

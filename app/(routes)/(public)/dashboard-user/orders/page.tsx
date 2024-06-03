@@ -43,7 +43,7 @@ const PageOrderTable = () => {
       products: createProduct(order),
       totalPrice: currencyFormatter.format(order.totalPrice),
       status: createStatus(order),
-      datePickUp: order.dateOfShipping ?? order.datePickUp,
+      datePickUp: order.datePickUp,
       shopName: order.shop?.name || "Livraison à domicile",
       shop: order.shop || undefined,
       createdAt: order.createdAt,

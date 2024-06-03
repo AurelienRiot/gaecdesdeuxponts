@@ -5,7 +5,7 @@ import MapDisplay from "./map";
 
 const InfoContact = () => {
   const href =
-    "https://www.google.fr/maps/place/Le+Pont+Robert,+44290+Massérac/@47.6591569,-1.9109437,765m/data=!3m1!1e3!4m6!3m5!1s0x480f7144a9b29e6b:0xab5c4202f2099f7!8m2!3d47.6590663!4d-1.9082427!16s%2Fg%2F1td3qwys?entry=ttu";
+    "    https://www.google.com/maps/place/Laiterie+du+Pont+Robert/@47.6600571,-1.9121281,17z/data=!3m1!4b1!4m6!3m5!1s0x480f71090cddeeb3:0x3d5bf2c6c171230f!8m2!3d47.6600535!4d-1.9095532!16s%2Fg%2F11v_0vq263?entry=ttu";
   const features = [
     {
       Icone: MailboxIcon,

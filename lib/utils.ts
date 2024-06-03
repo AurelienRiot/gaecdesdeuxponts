@@ -1,3 +1,4 @@
+import { FullAdress } from "./../components/address-form";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -21,7 +22,10 @@ export const currencyFormatter = (() => {
   };
 })();
 
-export const addressFormatter = (address: Address) => {
+export const addressFormatter = (address: Address, full: boolean = true) => {
+  if (full) {
+    return `${address.line1}, ${address.postalCode}, ${address.city}, ${address.country}`;
+  }
   return `${address.line1}, ${address.postalCode}, ${address.city}`;
 };
 

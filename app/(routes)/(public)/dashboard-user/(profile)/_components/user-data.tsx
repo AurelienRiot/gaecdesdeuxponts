@@ -42,7 +42,7 @@ export const UserPhone = () => {
 export const UserAddress = () => {
   const { user } = useUserContext();
 
-  const address = user?.address ? addressFormatter(user.address) : null;
+  const address = user?.address ? addressFormatter(user.address, false) : null;
 
   return !user ? (
     <Skeleton className="h-6 w-40" />

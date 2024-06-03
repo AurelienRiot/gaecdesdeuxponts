@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import { EmailButton, GoogleButton } from "@/components/auth/auth-button";
 import { getSessionUser } from "@/actions/get-user";
 import { redirect } from "next/navigation";
+import { signOut } from "next-auth/react";
+import { Logout } from "@/components/auth/auth";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
@@ -20,7 +22,15 @@ const LoginPage = async (context: {
   );
   const user = await getSessionUser();
   if (user) {
-    return redirect(callbackUrl);
+    if (user.role !== "admin" && callbackUrl.includes("/admin")) {
+      return (
+        <Logout
+          callbackUrl={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`}
+        />
+      );
+    } else {
+      return redirect(callbackUrl);
+    }
   }
 
   const error = context.searchParams.error;
