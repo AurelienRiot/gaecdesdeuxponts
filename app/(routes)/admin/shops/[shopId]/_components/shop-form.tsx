@@ -52,8 +52,19 @@ import {
 const formSchema = z.object({
   name: z.string().min(1, { message: "Le nom est requis" }),
   imageUrl: z.string().optional(),
-  lat: z.number(),
-  long: z.number(),
+  lat: z.coerce
+    .number()
+    .optional()
+    .refine((val) => val !== undefined, {
+      message: "Veuillez entrer une latitude valide",
+    }),
+
+  long: z.coerce
+    .number()
+    .optional()
+    .refine((val) => val !== undefined, {
+      message: "Veuillez entrer une longitude valide",
+    }),
   address: z.string().min(1, { message: "L'adresse est requise" }),
   phone: z.string().refine(
     (value) => {
