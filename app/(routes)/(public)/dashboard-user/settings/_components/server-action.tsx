@@ -1,9 +1,10 @@
 "use server";
 
 import { checkUser } from "@/components/auth/checkAuth";
-import prismadb from "@/lib/prismadb";
-import { UserFormValues } from "./user-form";
 import { defaultAddress } from "@/components/billing-address-form";
+import prismadb from "@/lib/prismadb";
+import { ReturnTypeServerAction } from "@/types";
+import { UserFormValues } from "./user-form";
 
 async function updateUser({
   name,
@@ -11,7 +12,7 @@ async function updateUser({
   address,
   billingAddress,
   company,
-}: UserFormValues): Promise<ReturnTypeUserObject> {
+}: UserFormValues): Promise<ReturnTypeServerAction<null>> {
   const isAuth = await checkUser();
 
   if (!isAuth) {
@@ -56,6 +57,7 @@ async function updateUser({
 
   return {
     success: true,
+    data: null,
   };
 }
 

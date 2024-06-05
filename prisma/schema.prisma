@@ -153,6 +153,8 @@ model Order {
   orderItems OrderItem[]
   totalPrice Float 
   name       String @default("")  
+  // invoice    Invoice[]
+  // shipping   Shipping[]
   dateOfPayment       DateTime?
   dateOfShipping      DateTime?
   userId     String  
@@ -168,6 +170,36 @@ model Order {
 
 }
 
+// model Invoice {
+//   id         String @unique @id @default(cuid())
+//   customerId   String
+//   cusomerName String
+//   customerEmail String
+//   customerPhone String
+//   customerShippingAddress String
+//   customerFacturationAddress String
+
+//   orderId      String
+//   order        Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+//   @@index([orderId])
+// }
+
+
+// model Shipping {
+//     id         String @unique @id @default(cuid())
+
+//   orderId      String
+//   order        Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+//   @@index([orderId])
+
+// }
+
+// model Customer {
+//    id String @unique @id @default(cuid())
+  
+// }
 
 
 model OrderItem {

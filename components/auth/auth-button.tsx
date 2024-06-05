@@ -10,7 +10,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import MovingArrow from "../animations/lottie-animation/moving-arrow";
 import Spinner from "../animations/spinner";
 import { Icons } from "../icons";
 import {

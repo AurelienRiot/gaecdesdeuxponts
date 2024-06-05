@@ -15,7 +15,7 @@ export function formatOrders(
     id: order.id,
     userId: order.userId,
     isPaid: !!order.dateOfPayment,
-    datePickUp: order.dateOfShipping || order.datePickUp,
+    datePickUp: order.datePickUp,
     name: order.name,
     productsList: createProductList(order),
     products: createProduct(order),

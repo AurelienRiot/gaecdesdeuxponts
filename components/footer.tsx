@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import BugReport from "./bug-report/bug-report";
 
 const Footer = ({ className }: { className?: string }) => {
   const currentYear = new Date().getFullYear();
@@ -7,7 +8,7 @@ const Footer = ({ className }: { className?: string }) => {
     <>
       <footer
         className={cn(
-          "border-t bg-neutral-800 text-neutral-50 print:hidden",
+          "space-y-2 border-t bg-neutral-800 pb-6 text-neutral-50 print:hidden",
           className,
         )}
       >
@@ -16,8 +17,8 @@ const Footer = ({ className }: { className?: string }) => {
             &copy; {currentYear} Laiterie du Pont Robert. Tous droits réservés.
           </p>
         </div>
-        <nav>
-          <ul className="flex flex-col justify-center gap-6 pb-6 pt-2 text-center sm:flex-row ">
+        <nav className="space-y-2">
+          <ul className="flex flex-col justify-center gap-6  text-center sm:flex-row ">
             <li>
               <Link
                 prefetch={false}
@@ -46,7 +47,20 @@ const Footer = ({ className }: { className?: string }) => {
                 Conditions générales de vente
               </Link>
             </li>
+            <li>
+              <Link
+                prefetch={false}
+                href="/contact#contact"
+                scroll={true}
+                className="text-sm font-medium transition-colors hover:text-green-500 hover:underline"
+              >
+                Contact{" "}
+              </Link>
+            </li>
           </ul>
+          <div className="flex items-center justify-center">
+            <BugReport className=" text-neutral-50" />
+          </div>
         </nav>
       </footer>
     </>

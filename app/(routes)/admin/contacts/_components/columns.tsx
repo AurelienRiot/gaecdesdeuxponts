@@ -49,6 +49,17 @@ export const columns: ColumnDef<ContactColumn>[] = [
   {
     accessorKey: "subject",
     header: "Sujet",
+    cell: ({ row }) => (
+      <p
+        className={
+          row.original.subject === "RAPPORT DE BUG"
+            ? "font-bold text-destructive"
+            : ""
+        }
+      >
+        {row.original.subject}
+      </p>
+    ),
   },
   {
     accessorKey: "text",

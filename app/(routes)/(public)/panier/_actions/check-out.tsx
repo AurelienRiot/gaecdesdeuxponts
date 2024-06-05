@@ -13,6 +13,7 @@ import { OrderWithItemsAndUserAndShop, ProductWithMain } from "@/types";
 import { render } from "@react-email/render";
 import { pdf } from "@react-pdf/renderer";
 import { nanoid } from "nanoid";
+import { revalidatePath } from "next/cache";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 
@@ -142,6 +143,8 @@ export const checkOut = async ({
         },
       ],
     });
+
+    revalidatePath("/dashboard-user/orders");
 
     return {
       success: true,

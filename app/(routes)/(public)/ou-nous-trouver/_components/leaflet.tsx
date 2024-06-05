@@ -20,7 +20,7 @@ const Leaflet = ({
 }) => {
   return (
     <MapContainer
-      center={[47.6591569, -1.9109437]}
+      center={[47.6600571, -1.9121281]}
       zoom={10}
       style={{ height: "70vh", width: "100%" }}
       className="rounded-md shadow-md"

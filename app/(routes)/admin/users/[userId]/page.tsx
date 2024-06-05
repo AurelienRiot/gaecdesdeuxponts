@@ -52,7 +52,7 @@ const UserPage = async ({ params }: { params: { userId: string } }) => {
     id: order.id,
     products: createProduct(order),
     productsList: createProductList(order),
-    datePickUp: order.dateOfShipping || order.datePickUp,
+    datePickUp: order.datePickUp,
     status: createStatus(order),
     isPaid: !!order.dateOfPayment,
     totalPrice: currencyFormatter.format(order.totalPrice),

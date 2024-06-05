@@ -2,10 +2,11 @@ import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { render } from "@react-email/render";
-import { User, type NextAuthOptions } from "next-auth";
+import { type NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
 import WelcomeEmail from "../email/welcome";
+import { User } from "@prisma/client";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 
@@ -63,6 +64,7 @@ export const authOptions: NextAuthOptions = {
     },
     session: async ({ session, token }) => {
       if (token) {
+    
         return {
           ...session,
           user: {
