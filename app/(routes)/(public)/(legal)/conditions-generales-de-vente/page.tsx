@@ -9,7 +9,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const ConditionsVentePage = () => {
   return (
-    <section className="mx-auto mb-10 flex max-w-5xl flex-col gap-4 pt-12 text-lg">
+    <section className="mx-auto mb-10 flex max-w-5xl flex-col gap-4 px-4 pt-12 text-lg">
       <h1 className="text-center text-3xl">Conditions générales de vente </h1>
       <p>
         Les présentes conditions de vente sont conclues d&apos;une part par la
@@ -45,10 +45,6 @@ const ConditionsVentePage = () => {
         Les produits et services offerts sont ceux qui figurent dans le
         catalogue publié sur le site de Laiterie du Pont Robert. Ces produits et
         services sont offerts dans la limite des stocks disponibles.
-        <br />
-        Chaque produit est accompagné d&apos;un descriptif établi par le
-        fournisseur; pour certains d&apos;entre eux l&apos;acheteur peut avoir
-        accès à la documentation du fournisseur.
         <br />
         Les photographies du catalogue sont les plus fidèles possibles mais ne
         peuvent assurer une similitude parfaite avec le produit offert,
@@ -102,26 +98,27 @@ const ConditionsVentePage = () => {
       </div>
       <h2 className="text-center text-2xl">Rétractation</h2>
       <p>
-        Les acheteurs, personnes physiques non professionnelles, bénéficient
-        d&apos;un délai de rétractation de sept jours à compter de la livraison
-        de leur commande pour faire retour du produit au vendeur pour échange ou
-        remboursement sans pénalité, à l&apos;exception des frais de retour.
-        Pour les professionnels, un avoir pourra être demandé.
+        Conformément à la législation en vigueur, les produits périssables ne
+        bénéficient pas du droit de rétractation. Par conséquent, les acheteurs
+        ne peuvent pas retourner ces produits pour un échange ou un
+        remboursement, sauf en cas de produit défectueux ou non conforme à la
+        commande. Nous vous invitons à vérifier attentivement votre commande à
+        la livraison.
       </p>
       <h2 className="text-center text-2xl">Livraisons</h2>
       <p>
-        Les livraisons sont faites à l&apos;adresse indiquée dans le bon de
-        commande qui ne peut être que dans la zone géographique convenue.
+        Les livraisons peuvent être effectuées soit à domicile pour les
+        professionnels, soit à la Laiterie du Pont Robert, soit dans un point de
+        vente partenaire selon l&apos;option choisie lors de la commande.
+        <br />
+        Les livraisons à domicile sont faites à l&apos;adresse indiquée dans le
+        bon de commande, qui doit se trouver dans la zone géographique convenue.
         <br />
         Les risques sont à la charge de l&apos;acquéreur à compter du moment où
         les produits ont quitté les locaux de Laiterie du Pont Robert. En cas de
-        dommage pendant le transport, la protestation motivée doit être formulée
-        auprès du transporteur dans un délai de trois jours à compter de la
-        livraison.
-        <br />
-        Les délais de livraison ne sont donnés qu&apos;à titre indicatif ; si
-        ceux-ci dépassent trente jours à compter de la commande, une demande
-        d&apos;avoir pourra être formulée.
+        dommage pendant le transport, une protestation motivée doit être
+        formulée auprès du transporteur dans un délai de trois jours à compter
+        de la livraison.
       </p>
       <h2 className="text-center text-2xl">Garantie</h2>
       <p>

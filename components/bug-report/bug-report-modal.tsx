@@ -42,7 +42,7 @@ const BugReportModal = ({ isOpen, setIsOpen }: BugReportModalProps) => {
     toastPromise({
       serverAction: createBugReport,
       data,
-      setLoading,
+      onFinally: () => setLoading(false),
       onError: () => setIsOpen(true),
       onSuccess: () => form.reset(),
     });
@@ -55,7 +55,7 @@ const BugReportModal = ({ isOpen, setIsOpen }: BugReportModalProps) => {
   return (
     <Modal
       title="Rapporter un bug"
-      description="Décrivez le bug que vous avez rencontrer"
+      description="Décrivez le bug que vous avez rencontré"
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
       className="left-[50%] top-[50%] max-h-[90vh]  overflow-y-auto"

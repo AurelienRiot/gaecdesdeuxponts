@@ -67,63 +67,14 @@ export const ContactForm = ({
     toastPromise({
       serverAction: createContact,
       data,
-      setLoading,
+      onFinally: () => setLoading(false),
       onSuccess: () => router.push("/"),
     });
-
-    // const abortController = new AbortController();
-    // const { signal } = abortController;
-    // const promise = async () => {
-    //   try {
-    //     await addDelay(2100, signal);
-
-    //     await createContact(data);
-    //   } catch (e) {
-    //     const error = e as Error;
-    //     if (error?.name === "AbortError") {
-    //       throw new Error("Envoie du message annulé");
-    //     }
-    //     throw e; // Rethrow other errors
-    //   }
-
-    //   return signal;
-    // };
-    // toast.promise(promise, {
-    //   position: "top-center",
-    //   loading: (
-    //     <div className="flex w-full items-center justify-between">
-    //       <span className="align-middle">
-    //         <Loader2 className="my-auto mr-2 inline size-4 animate-spin" />{" "}
-    //         {"Envoie du message"}{" "}
-    //       </span>
-    //       <Button
-    //         size={"xs"}
-    //         className="animate-[hide-element_2s_forwards] text-xs"
-    //         onClick={() => {
-    //           console.log("Cancel!");
-    //           abortController.abort();
-    //         }}
-    //       >
-    //         Annuler
-    //       </Button>
-    //     </div>
-    //   ),
-    //   success: (data) => {
-    //     return `Message envoyé`;
-    //   },
-    //   error: (e) => {
-    //     const error = e as Error;
-    //     return error?.message || "Message non envoyé";
-    //   },
-    //   finally: () => {
-    //     setLoading(false);
-    //   },
-    // });
   };
 
   return (
     <>
-      <div className="mt-8 flex  items-center justify-between">
+      <div id="contact" className="mt-8 flex  items-center justify-between">
         <Heading
           title="Formulaire de Contact"
           description="Demande d'information"

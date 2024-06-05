@@ -119,6 +119,7 @@ const UploadImage = ({
       const response = await fetch(url, {
         method: "POST",
         body: formdata,
+        cache: "no-store",
       });
       const data = await response.json();
       return { publicId: data.public_id, secureUrl: data.secure_url }; // Return the successful upload's data

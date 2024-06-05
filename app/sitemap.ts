@@ -1,3 +1,4 @@
+import { MetadataRoute } from "next";
 import { getCategories } from "@/actions/get-category";
 import { getProducts } from "@/actions/get-products";
 import {
@@ -5,7 +6,7 @@ import {
   makeProductUrl,
 } from "@/components/product/product-function";
 
-export default async function sitemap() {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://www.laiteriedupontrobert.fr";
 
   const products = await getProducts();
@@ -50,7 +51,11 @@ export default async function sitemap() {
       url: `${baseUrl}/la-ferme`,
       lastModified: new Date(),
     },
-    ...productsSitemap,
+    {
+      url: `${baseUrl}/lait-cru`,
+      lastModified: new Date(),
+    },
     ...categoriesSitemap,
+    ...productsSitemap,
   ];
 }

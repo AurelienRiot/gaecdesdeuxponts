@@ -1,9 +1,10 @@
 import { Metadata } from "next";
 import { EmailButton, GoogleButton } from "@/components/auth/auth-button";
-import { getSessionUser } from "@/actions/get-user";
+import GetUser, { getBasicUser, getSessionUser } from "@/actions/get-user";
 import { redirect } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { Logout } from "@/components/auth/auth";
+import { Heading } from "@/components/ui/heading";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
@@ -20,17 +21,25 @@ const LoginPage = async (context: {
   const callbackUrl = decodeURI(
     context.searchParams.callbackUrl ?? `${baseUrl}/dashboard-user`,
   );
-  const user = await getSessionUser();
+  const user = await getBasicUser();
+  console.log({ callbackUrl });
   if (user) {
     if (user.role !== "admin" && callbackUrl.includes("/admin")) {
       return (
         <Logout
-          callbackUrl={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`}
+          callbackUrl={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}&error=admin`}
         />
       );
-    } else {
-      return redirect(callbackUrl);
     }
+    if (user.role !== "pro" && callbackUrl.includes("/dashboard-user/produits-pro")) {
+      return (
+        <Logout
+          callbackUrl={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}&error=pro`}
+        />
+      );
+    }
+      return redirect(callbackUrl);
+    
   }
 
   const error = context.searchParams.error;
@@ -38,10 +47,13 @@ const LoginPage = async (context: {
   return (
     <div className="flex w-full items-center justify-center bg-slate-100 dark:bg-slate-900">
       <div className="space-y-12 rounded-xl px-2 pb-8 pt-12 sm:bg-white sm:px-8 sm:shadow-xl sm:dark:bg-black">
-        <h1 className="text-center text-2xl font-semibold ">
-          {" "}
-          Page de Connection{" "}
-        </h1>
+      <h2 className="text-3xl font-bold tracking-tight"> Page de Connection</h2>
+           {error === "admin" && <p className="text-sm text-destructive">
+              Veuillez vous connecter avec un compte administrateur
+            </p>     }   {error === "pro" && <p className="text-sm text-destructive">
+              Veuillez vous connecter avec un compte professionnel
+            </p>     }   
+
         <GoogleButton callbackUrl={callbackUrl} />
 
         <div

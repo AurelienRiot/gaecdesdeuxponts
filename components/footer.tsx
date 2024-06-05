@@ -47,6 +47,16 @@ const Footer = ({ className }: { className?: string }) => {
                 Conditions générales de vente
               </Link>
             </li>
+            <li>
+              <Link
+                prefetch={false}
+                href="/contact#contact"
+                scroll={true}
+                className="text-sm font-medium transition-colors hover:text-green-500 hover:underline"
+              >
+                Contact{" "}
+              </Link>
+            </li>
           </ul>
           <div className="flex items-center justify-center">
             <BugReport className=" text-neutral-50" />

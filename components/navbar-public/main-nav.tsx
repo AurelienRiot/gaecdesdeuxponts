@@ -7,14 +7,13 @@ import {
   NavigationMenuListItem,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import Image from "next/image";
-import NosProduits from "./nos-produits";
-import { MapIcon, Milk } from "lucide-react";
-import { TiBusinessCard } from "react-icons/ti";
-import { GiCow } from "react-icons/gi";
-import AuthLink from "./auth-link";
 import Vache from "@/public/vache.webp";
 import { QuestionMarkIcon } from "@radix-ui/react-icons";
+import { Milk } from "lucide-react";
+import Image from "next/image";
+import { GiCow } from "react-icons/gi";
+import AuthLink from "./auth-link";
+import NosProduits from "./nos-produits";
 
 export function MainNav({
   className,

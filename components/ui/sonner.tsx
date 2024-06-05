@@ -37,10 +37,10 @@ const Toaster = ({ ...props }: ToasterProps) => {
 type ToastPromiseProps<T> = {
   serverAction: (data: T) => Promise<ReturnTypeServerAction<null>>;
   data: T;
-  envoieAnnuler?: string;
-  envoieReussis?: string;
+  errorMessage?: string;
+  successMessage?: string;
   message?: string;
-  setLoading: (loading: boolean) => void;
+  onFinally?: () => void;
   onError?: () => void;
   onSuccess?: () => void;
 };
@@ -48,10 +48,10 @@ type ToastPromiseProps<T> = {
 const toastPromise = <T,>({
   serverAction,
   data,
-  envoieAnnuler = "Envoie du message annulé",
+  errorMessage = "Envoie du message annulé",
   message = "Envoie du message",
-  envoieReussis = "Message envoyé",
-  setLoading,
+  successMessage = "Message envoyé",
+  onFinally,
   onError,
   onSuccess,
 }: ToastPromiseProps<T>) => {
@@ -65,9 +65,9 @@ const toastPromise = <T,>({
     } catch (e) {
       const error = e as Error;
       if (error?.name === "AbortError") {
-        throw new Error(envoieAnnuler);
+        throw new Error(errorMessage);
       }
-      throw e; // Rethrow other errors
+      throw e;
     }
 
     return signal;
@@ -85,7 +85,6 @@ const toastPromise = <T,>({
           size={"xs"}
           className="animate-[hide-element_2s_forwards] text-xs"
           onClick={() => {
-            console.log("Cancel!");
             abortController.abort();
           }}
         >
@@ -93,17 +92,17 @@ const toastPromise = <T,>({
         </Button>
       </div>
     ),
-    success: (data) => {
+    success: () => {
       onSuccess?.();
-      return envoieReussis;
+      return successMessage;
     },
     error: (e) => {
       const error = e as Error;
       onError?.();
-      return error?.message || "Message non envoyé";
+      return error?.message || "Erreur";
     },
     finally: () => {
-      setLoading(false);
+      onFinally?.();
     },
   });
 };

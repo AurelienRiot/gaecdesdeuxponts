@@ -9,7 +9,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const MentionLegalPage = () => {
   return (
-    <section className="mx-auto mb-10 flex max-w-5xl flex-col gap-4 pt-12 text-lg">
+    <section className="mx-auto mb-10 flex max-w-5xl flex-col gap-4 px-4 pt-12 text-lg">
       <h1 className="text-center text-3xl">Mention légales</h1>
       <p className="flex flex-col">
         <span>

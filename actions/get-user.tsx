@@ -11,16 +11,34 @@ export const getSessionUser = async () => {
   return session.user;
 };
 
-const GetUser = async () => {
-  const session = await getServerSession(authOptions);
+export const getBasicUser = async () => {
+ const sessionUser= await getSessionUser()
 
-  if (!session || !session.user || !session.user.id) {
+ if (!sessionUser) {
+  return null;
+}
+
+ const user = await prismadb.user.findUnique({
+  where: {
+    id: sessionUser.id,
+  },
+});
+
+return user;
+}
+
+const GetUser = async () => {
+ 
+
+  const sessionUser= await getSessionUser()
+
+  if (!sessionUser) {
     return null;
   }
 
   const user = await prismadb.user.findUnique({
     where: {
-      id: session.user.id,
+      id: sessionUser.id,
     },
     include: {
       orders: {

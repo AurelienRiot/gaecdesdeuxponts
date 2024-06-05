@@ -13,7 +13,9 @@ const BugReport = ({ className }: { className?: string }) => {
     <>
       <BugReportModal
         isOpen={isOpen}
-        setIsOpen={(isOpen) => setIsOpen(isOpen)}
+        setIsOpen={(isOpen) => {
+          setIsOpen(isOpen);
+        }}
       />
 
       <Button
