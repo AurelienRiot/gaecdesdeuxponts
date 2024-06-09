@@ -3,16 +3,24 @@
 import { checkUser } from "@/components/auth/checkAuth";
 import OrderEmail from "@/components/email/order";
 import Order from "@/components/pdf/create-commande";
-import { createDataOrder } from "@/components/pdf/data-order";
+import {
+  createCustomer,
+  createPDFData,
+  generateOrderId,
+} from "@/components/pdf/pdf-data";
 import { getUnitLabel } from "@/components/product/product-function";
 import { dateFormatter, isDateDisabled } from "@/lib/date-utils";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import { currencyFormatter } from "@/lib/utils";
-import { OrderWithItemsAndUserAndShop, ProductWithMain } from "@/types";
+import {
+  FullOrder,
+  OrderWithItemsAndUserAndShop,
+  ProductWithMain,
+  UserWithAddress,
+} from "@/types";
 import { render } from "@react-email/render";
 import { pdf } from "@react-pdf/renderer";
-import { nanoid } from "nanoid";
 import { revalidatePath } from "next/cache";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
@@ -63,6 +71,10 @@ export const checkOut = async ({
   const user = await prismadb.user.findUnique({
     where: {
       id: isAuth.id,
+    },
+    include: {
+      address: true,
+      billingAddress: true,
     },
   });
 
@@ -116,10 +128,9 @@ export const checkOut = async ({
     const order = await createOrder({
       productsWithQuantity,
       totalPrice,
-      userId: isAuth.id,
+      user,
       datePickUp: date,
       shopId,
-      name: user.name || user.email || "",
     });
     const pdfBuffer = await generatePdf(order);
 
@@ -158,19 +169,18 @@ export const checkOut = async ({
   }
 };
 
-async function generatePdf(order: OrderWithItemsAndUserAndShop) {
-  const doc = <Order data={createDataOrder(order)} />;
+async function generatePdf(order: FullOrder) {
+  const doc = <Order data={createPDFData(order)} />;
   const pdfBlob = await pdf(doc).toBlob();
   const arrayBuffer = await pdfBlob.arrayBuffer();
   return Buffer.from(arrayBuffer);
 }
 
-type CreateOrder = {
+type CreateOrderType = {
   totalPrice: number;
   productsWithQuantity: { item: ProductWithMain; quantity?: number }[];
   shopId: string;
-  userId: string;
-  name: string;
+  user: UserWithAddress;
   datePickUp: Date;
 };
 
@@ -178,10 +188,9 @@ async function createOrder({
   totalPrice,
   productsWithQuantity,
   shopId,
-  userId,
-  name,
+  user,
   datePickUp,
-}: CreateOrder) {
+}: CreateOrderType) {
   const order = await prismadb.order.create({
     data: {
       id: generateOrderId(),
@@ -197,18 +206,18 @@ async function createOrder({
           quantity: product.quantity,
         })),
       },
-      userId,
+      userId: user.id,
       shopId: shopId === "domicile" ? null : shopId,
-      name,
       datePickUp,
+      customer: {
+        create: createCustomer(user),
+      },
     },
     include: {
-      user: { include: { address: true, billingAddress: true } },
       shop: true,
       orderItems: true,
+      customer: true,
     },
   });
   return order;
 }
-const generateOrderId = () =>
-  `${new Date().getDate()}-${new Date().getFullYear()}-${nanoid(7)}`;

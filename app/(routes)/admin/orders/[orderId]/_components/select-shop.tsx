@@ -22,13 +22,14 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import { OrderFormValues } from "./order-form";
+import { OrderFormValues } from "./order-shema";
 
 const SelectShop = ({ shops }: { shops: Shop[] }) => {
   const form = useFormContext<OrderFormValues>();
   const [open, setOpen] = useState(false);
 
   function onValueChange(value: string | undefined) {
+    console.log({ value });
     if (!value) {
       form.setValue("shopId", undefined);
       return;
@@ -39,6 +40,7 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
       return;
     }
     form.setValue("shopId", value);
+    setOpen(false);
   }
 
   return (
@@ -54,7 +56,7 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
               onClick={() => onValueChange(undefined)}
               type="button"
               size={"xs"}
-              className="border-dashed  text-xs"
+              className="border-dashed text-xs"
             >
               Réninitialiser
             </Button>
@@ -72,7 +74,7 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
               >
                 {form.getValues("shopId")
                   ? shops.find((shop) => shop.id === field.value)?.name
-                  : "Nom du magasin"}
+                  : "A domicile"}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -90,7 +92,9 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
                       <Check
                         className={cn(
                           "mr-2 h-4 w-4",
-                          field.value === shop.id ? "opacity-100" : "opacity-0",
+                          form.getValues("shopId") === shop.id
+                            ? "opacity-100"
+                            : "opacity-0",
                         )}
                       />
                       {shop.name}

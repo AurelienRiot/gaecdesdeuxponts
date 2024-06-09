@@ -1,5 +1,6 @@
 "use client";
 import { DisplayMonthlyInvoice } from "@/components/pdf/pdf-button";
+import { monthlyOrdersType } from "@/components/pdf/pdf-data";
 import {
   Select,
   SelectContent,
@@ -7,31 +8,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { UserWithOrdersAndAdress } from "@/types";
 import { useState } from "react";
 
-const MonthlyInvoice = ({ user }: { user: UserWithOrdersAndAdress }) => {
+const MonthlyInvoice = ({ orders }: { orders: monthlyOrdersType[] }) => {
   const [selectedMonth, setSelectedMonth] = useState<number>(
     new Date().getMonth() + 1,
   );
   const [selectedYear, setSelectedYear] = useState<number>(
     new Date().getFullYear(),
   );
+  const selectedOrders = orders.filter((order) => {
+    return order?.month === selectedMonth && order.year === selectedYear;
+  });
 
-  const years = Array.from(
-    new Set(
-      user.orders.map((order) =>
-        new Date(order.dateOfShipping || new Date()).getFullYear(),
-      ),
-    ),
-  );
-  const months = Array.from(
-    new Set(
-      user.orders.map(
-        (order) => new Date(order.dateOfShipping || new Date()).getMonth() + 1,
-      ),
-    ),
-  );
+  const years = Array.from(new Set(orders.map((order) => order.year)));
+  const months = Array.from(new Set(orders.map((order) => order.month)));
 
   return (
     <div className="justify-left flex items-center gap-4">
@@ -72,11 +63,7 @@ const MonthlyInvoice = ({ user }: { user: UserWithOrdersAndAdress }) => {
           ))}
         </SelectContent>
       </Select>
-      <DisplayMonthlyInvoice
-        user={user}
-        month={selectedMonth}
-        year={selectedYear}
-      />
+      <DisplayMonthlyInvoice orders={selectedOrders} />
     </div>
   );
 };

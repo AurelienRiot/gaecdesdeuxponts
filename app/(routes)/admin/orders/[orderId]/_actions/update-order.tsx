@@ -3,7 +3,8 @@
 import { checkAdmin } from "@/components/auth/checkAuth";
 import { ReturnTypeServerAction } from "@/types";
 import prismadb from "@/lib/prismadb";
-import { OrderFormValues } from "../_components/order-form";
+import { OrderFormValues, orderSchema } from "../_components/order-shema";
+import { createCustomer, createPDFData } from "@/components/pdf/pdf-data";
 
 export async function updateOrder(
   data: OrderFormValues,
@@ -15,6 +16,14 @@ export async function updateOrder(
     return {
       success: false,
       message: "Vous devez être authentifier",
+    };
+  }
+
+  const validatedData = orderSchema.safeParse(data);
+  if (!validatedData.success) {
+    return {
+      success: false,
+      message: "Erreur lors de la validation des informations",
     };
   }
 
@@ -33,6 +42,7 @@ export async function updateOrder(
       totalPrice: data.totalPrice,
       dateOfShipping: data.dateOfShipping,
       dateOfPayment: data.dateOfPayment,
+      dateOfEdition: data.dateOfEdition || new Date(),
       datePickUp: data.datePickUp,
       orderItems: {
         create: data.orderItems.map((product) => {
@@ -48,8 +58,28 @@ export async function updateOrder(
         }),
       },
     },
+    include: { user: { include: { address: true, billingAddress: true } } },
   });
 
+  if (
+    shippingOrder.dateOfEdition?.setHours(0, 0, 0, 0) ===
+    new Date().setHours(0, 0, 0, 0)
+  ) {
+    const customer = createCustomer(shippingOrder.user);
+    await prismadb.order.update({
+      where: {
+        id,
+      },
+      data: {
+        customer: {
+          upsert: {
+            create: customer,
+            update: customer,
+          },
+        },
+      },
+    });
+  }
   return {
     success: true,
     data: null,

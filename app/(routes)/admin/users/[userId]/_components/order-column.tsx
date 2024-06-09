@@ -1,9 +1,8 @@
 "use client";
 
-import { DataInvoiceType } from "@/components/pdf/data-invoice";
 import {
-  FactureCell,
   ProductCell,
+  Status,
 } from "@/components/table-custom-fuction/cell-orders";
 import {
   DateCell,
@@ -19,11 +18,13 @@ import { Button } from "@/components/ui/button";
 import { DataTableFilterableColumn, DataTableViewOptionsColumn } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { OrderCellAction } from "./order-cell-action";
+import Link from "next/link";
+import { DisplayInvoice } from "@/components/pdf/pdf-button";
 
 export type OrderColumn = {
   id: string;
   isPaid: boolean;
-  status: "En cours de validation" | "Validé" | "Payé";
+  status: Status;
   datePickUp: Date;
   totalPrice: string;
   products: string;
@@ -31,7 +32,6 @@ export type OrderColumn = {
   createdAt: Date;
   shopName: string;
   shopId: string;
-  dataInvoice: DataInvoiceType;
 };
 export const columns: ColumnDef<OrderColumn>[] = [
   {
@@ -45,9 +45,19 @@ export const columns: ColumnDef<OrderColumn>[] = [
     header: "Prix total",
   },
   {
-    accessorKey: "isPaid",
+    accessorKey: "id",
     header: "Facture",
-    cell: FactureCell,
+    cell: ({ row }) => {
+      return row.original.status === "En cours de validation" ? (
+        <Button asChild variant={"link"} className="px-0">
+          <Link href={`/admin/orders/${row.original.id}`}>
+            Éditer le bon de livraison
+          </Link>
+        </Button>
+      ) : (
+        <DisplayInvoice orderId={row.original.id} />
+      );
+    },
   },
   {
     accessorKey: "status",
@@ -128,11 +138,11 @@ export const viewOptionsColumns: DataTableViewOptionsColumn<OrderColumn>[] = [
   },
 
   {
-    id: "isPaid",
+    id: "id",
     title: "Facture",
   },
   {
-    id: "isPaid",
+    id: "status",
     title: "Status",
   },
   {

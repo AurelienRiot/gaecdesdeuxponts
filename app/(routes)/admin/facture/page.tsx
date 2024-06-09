@@ -22,7 +22,7 @@ const DisplayMonthlyInvoice = dynamic(
 
 const TestPage = () => {
   return (
-    <div className="h-dvh space-y-4 p-4">
+    <div className="h-[calc(100vh-66px)] space-y-4 p-4">
       <Button
         className="mx-auto ml-8 mt-6"
         onClick={() => {
@@ -32,10 +32,10 @@ const TestPage = () => {
         Recharger la page
       </Button>
       <Tabs
-        defaultValue="shippingOrder"
-        className=" h-full w-full max-w-[1000px]"
+        defaultValue="monthlyInvoice"
+        className="h-full w-full max-w-[1000px]"
       >
-        <TabsList className="flex w-full gap-2 ">
+        <TabsList className="flex w-full gap-2">
           <TabsTrigger value="invoice">Facture</TabsTrigger>
           <TabsTrigger value="monthlyInvoice">Facture mensuelle</TabsTrigger>
           <TabsTrigger value="order">Bon de commande</TabsTrigger>

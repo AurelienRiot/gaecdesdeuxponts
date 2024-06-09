@@ -28,6 +28,7 @@ const OrdersPage = async (context: {
       orderItems: true,
       shop: true,
       user: { include: { address: true, billingAddress: true } },
+      customer: true,
     },
     where: {
       createdAt: {

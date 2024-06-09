@@ -1,8 +1,10 @@
 "use client";
 
-import { DataInvoiceType } from "@/components/pdf/data-invoice";
 import { DisplayInvoice } from "@/components/pdf/pdf-button";
-import { ProductCell } from "@/components/table-custom-fuction/cell-orders";
+import {
+  ProductCell,
+  Status,
+} from "@/components/table-custom-fuction/cell-orders";
 import {
   DateCell,
   NameCell,
@@ -31,12 +33,11 @@ export type OrderColumn = {
   datePickUp: Date;
   totalPrice: string;
   products: string;
-  status: "En cours de validation" | "Validé" | "Payé";
+  status: Status;
   productsList: { name: string; quantity?: string; unit?: string }[];
   shopName: string;
   shopId: string;
   createdAt: Date;
-  dataInvoice: DataInvoiceType;
 };
 
 export const columns: ColumnDef<OrderColumn>[] = [
@@ -65,9 +66,8 @@ export const columns: ColumnDef<OrderColumn>[] = [
     header: "Prix Total",
   },
   {
-    accessorKey: "dataInvoice",
+    accessorKey: "id",
     header: "Facture",
-    id: "pdf",
     cell: ({ row }) => {
       return row.original.status === "En cours de validation" ? (
         <Button asChild variant={"link"} className="px-0">
@@ -76,10 +76,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
           </Link>
         </Button>
       ) : (
-        <DisplayInvoice
-          isPaid={row.original.status === "Payé"}
-          data={row.original.dataInvoice}
-        />
+        <DisplayInvoice orderId={row.original.id} />
       );
     },
   },
@@ -170,7 +167,10 @@ export const viewOptionsColumns: DataTableViewOptionsColumn<OrderColumn>[] = [
     id: "totalPrice",
     title: "Prix",
   },
-
+  {
+    id: "id",
+    title: "Facture",
+  },
   {
     id: "datePickUp",
     title: "Date de livraison",

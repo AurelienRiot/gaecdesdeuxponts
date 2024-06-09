@@ -1,108 +1,186 @@
 "use client";
-import Invoice from "@/components/pdf/create-invoice";
 import { Button } from "@/components/ui/button";
-import { UserWithOrdersAndAdress } from "@/types";
 import { pdf } from "@react-pdf/renderer";
 import { saveAs } from "file-saver";
 import { Download, ExternalLink } from "lucide-react";
-import MonthlyInvoice from "./create-monthly-invoice";
-import ShippingOrder from "./create-shipping";
-import { DataInvoiceType } from "./data-invoice";
-import { createMonthlyDataInvoice } from "./data-monthly-invoice";
-import { DataShippingOrderType } from "./data-shipping";
 import { toast } from "sonner";
+import MonthlyInvoice from "./create-monthly-invoice";
+import { createMonthlyPDF64String, createPDF64String } from "./server-actions";
+import { monthlyOrdersType } from "./pdf-data";
+import { useState } from "react";
+import Spinner from "../animations/spinner";
 
-export const DisplayInvoice = ({
-  data,
-  isPaid,
-}: {
-  data: DataInvoiceType;
-  isPaid: boolean;
-}) => {
-  const saveFile = () => {
-    pdf(<Invoice isPaid={isPaid} dataInvoice={data} />)
-      .toBlob()
-      .then((blob) => saveAs(blob, `Facture-${data.order.id}.pdf`));
-  };
+function base64ToBlob(
+  base64: string,
+  contentType: string = "application/pdf",
+  sliceSize: number = 512,
+): Blob {
+  const byteCharacters = Buffer.from(base64, "base64").toString("binary");
+  const byteArrays: Uint8Array[] = [];
 
-  const viewFile = () => {
-    pdf(<Invoice isPaid={isPaid} dataInvoice={data} />)
-      .toBlob()
-      .then((blob) => {
+  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+  const blob = new Blob(byteArrays, { type: contentType });
+
+  return blob;
+}
+
+export const DisplayInvoice = ({ orderId }: { orderId: string }) => {
+  const [loading, setLoading] = useState(false);
+  const onViewFile = async () => {
+    setLoading(true);
+    createPDF64String({ orderId, type: "invoice" })
+      .then((pdfString64) => {
+        const blob = base64ToBlob(pdfString64);
         const url = URL.createObjectURL(blob);
         window.open(url, "_blank");
-        URL.revokeObjectURL(url);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
-  return <PdfButton viewFile={viewFile} saveFile={saveFile} />;
+
+  const onSaveFile = async () => {
+    setLoading(true);
+    createPDF64String({ orderId, type: "invoice" })
+      .then((pdfString64) => {
+        const blob = base64ToBlob(pdfString64);
+        saveAs(blob, `Facture ${orderId}.pdf`);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+  return (
+    <PdfButton
+      disabled={loading}
+      onViewFile={onViewFile}
+      onSaveFile={onSaveFile}
+    />
+  );
 };
 
 export const DisplayMonthlyInvoice = ({
-  user,
-  month,
-  year,
+  orders,
 }: {
-  user: UserWithOrdersAndAdress;
-  month: number;
-  year: number;
+  orders: monthlyOrdersType[];
 }) => {
-  const saveFile = () => {
-    const { data, isPaid } = createMonthlyDataInvoice({ user, month, year });
-    if (data.order.length === 0) {
-      toast.error("Aucune commande pour ce mois");
-      return;
-    }
-    pdf(<MonthlyInvoice data={data} isPaid={isPaid} />)
-      .toBlob()
-      .then((blob) => saveAs(blob, `Facture-mensuelle.pdf`));
-  };
+  const [loading, setLoading] = useState(false);
 
-  const viewFile = () => {
-    const { data, isPaid } = createMonthlyDataInvoice({ user, month, year });
-    if (data.order.length === 0) {
-      toast.error("Aucune commande pour ce mois");
-      return;
-    }
-    pdf(<MonthlyInvoice data={data} isPaid={isPaid} />)
-      .toBlob()
-      .then((blob) => {
+  const ordersId = orders.map((order) => order.orderId);
+
+  const onViewFile = async () => {
+    setLoading(true);
+    createMonthlyPDF64String(ordersId)
+      .then(({ base64String }) => {
+        const blob = base64ToBlob(base64String);
         const url = URL.createObjectURL(blob);
         window.open(url, "_blank");
-        URL.revokeObjectURL(url);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
-  return <PdfButton viewFile={viewFile} saveFile={saveFile} />;
+
+  const onSaveFile = async () => {
+    setLoading(true);
+    createMonthlyPDF64String(ordersId)
+      .then(({ base64String, date }) => {
+        const blob = base64ToBlob(base64String);
+        saveAs(blob, `Facture mensuelle ${date}.pdf`);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  return (
+    <PdfButton
+      disabled={loading}
+      onViewFile={onViewFile}
+      onSaveFile={onSaveFile}
+    />
+  );
 };
 
-export const DisplayShippingOrder = ({
-  data,
-}: {
-  data: DataShippingOrderType;
-}) => {
-  const saveFile = () => {
-    pdf(<ShippingOrder dataOrder={data} />)
-      .toBlob()
-      .then((blob) => saveAs(blob, `Bon_de_livraison-${data.order.id}.pdf`));
-  };
+export const DisplayShippingOrder = ({ orderId }: { orderId: string }) => {
+  const [loading, setLoading] = useState(false);
 
-  const viewFile = () => {
-    pdf(<ShippingOrder dataOrder={data} />)
-      .toBlob()
-      .then((blob) => {
+  const onViewFile = async () => {
+    setLoading(true);
+    createPDF64String({ orderId, type: "shipping" })
+      .then((pdfString64) => {
+        const blob = base64ToBlob(pdfString64);
         const url = URL.createObjectURL(blob);
         window.open(url, "_blank");
-        URL.revokeObjectURL(url);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
-  return <PdfButton viewFile={viewFile} saveFile={saveFile} />;
+
+  const onSaveFile = async () => {
+    setLoading(true);
+    createPDF64String({ orderId, type: "shipping" })
+      .then((pdfString64) => {
+        const blob = base64ToBlob(pdfString64);
+        saveAs(blob, `Bon de livraison ${orderId}.pdf`);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  return (
+    <PdfButton
+      disabled={loading}
+      onViewFile={onViewFile}
+      onSaveFile={onSaveFile}
+    />
+  );
 };
 
 function PdfButton({
-  viewFile,
-  saveFile,
+  onViewFile,
+  onSaveFile,
+  disabled,
 }: {
-  viewFile: () => void;
-  saveFile: () => void;
+  onViewFile: () => void;
+  onSaveFile: () => void;
+  disabled?: boolean;
 }) {
   return (
     <div className="flex flex-row gap-1">
@@ -110,18 +188,23 @@ function PdfButton({
         variant={"expandIcon"}
         Icon={ExternalLink}
         iconPlacement="right"
-        onClick={viewFile}
+        onClick={onViewFile}
         type="button"
+        disabled={disabled}
       >
+        {disabled && <Spinner className="h-5 w-5" />}
         {"Afficher"}
       </Button>
       <Button
         variant={"expandIcon"}
         Icon={Download}
         iconPlacement="right"
-        onClick={saveFile}
+        onClick={onSaveFile}
         type="button"
+        disabled={disabled}
       >
+        {disabled && <Spinner className="h-5 w-5" />}
+
         {"Télecharger"}
       </Button>
     </div>

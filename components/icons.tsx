@@ -497,7 +497,7 @@ export const Icons = {
   google: (props: LucideProps) => (
     <svg
       className={cn(
-        "h-12 w-12 rounded-sm border-2 border-[#4285F4] bg-white  p-2 hover:border-[#4285F4]/90",
+        "h-12 w-12 rounded-sm border-2 border-[#4285F4] bg-white p-2 hover:border-[#4285F4]/90",
         props.className,
       )}
       xmlns="http://www.w3.org/2000/svg"

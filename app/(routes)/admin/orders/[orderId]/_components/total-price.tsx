@@ -8,7 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useFormContext } from "react-hook-form";
 import { useEffect } from "react";
-import { OrderFormValues } from "./order-form";
+import { OrderFormValues } from "./order-shema";
 
 const TotalPrice = () => {
   const form = useFormContext<OrderFormValues>();
@@ -30,12 +30,7 @@ const TotalPrice = () => {
         <FormItem className="w-48">
           <FormLabel>Prix total</FormLabel>
           <FormControl>
-            <Input
-              type="number"
-              disabled={true}
-              placeholder="Quantité du produit"
-              {...field}
-            />
+            <Input onChange={() => {}} value={`${field.value || 0}€`} />
           </FormControl>
           <FormMessage />
         </FormItem>

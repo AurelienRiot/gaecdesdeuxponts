@@ -1,24 +1,5 @@
-import { dateFormatter } from "@/lib/date-utils";
-import { addressFormatter } from "@/lib/utils";
-import { OrderWithItemsAndShop, UserWithAddress } from "@/types";
+import { OrderWithItemsAndShop } from "@/types";
 import { Row } from "@tanstack/react-table";
-import { DataInvoiceType } from "../pdf/data-invoice";
-import { DisplayInvoice } from "../pdf/pdf-button";
-
-type FactureCellProps<T = {}> = T & {
-  id: string;
-  isPaid: boolean;
-  dataInvoice: DataInvoiceType;
-};
-
-function FactureCell<T>({ row }: { row: Row<FactureCellProps<T>> }) {
-  return (
-    <DisplayInvoice
-      isPaid={row.original.isPaid}
-      data={row.original.dataInvoice}
-    />
-  );
-}
 
 type ProductCellProps<T = {}> = T & {
   products: string;
@@ -47,43 +28,6 @@ function ProductCell<T>({ row }: { row: Row<ProductCellProps<T>> }) {
   );
 }
 
-function createDataInvoice({
-  user,
-  order,
-}: {
-  user: UserWithAddress;
-  order: OrderWithItemsAndShop;
-}): DataInvoiceType {
-  return {
-    customer: {
-      id: user.id || "",
-      name: user.name ? user.name + " - " + user.company : "",
-      address: (() => {
-        const a =
-          user?.address && user?.address.line1
-            ? addressFormatter(user.address)
-            : "";
-        return a;
-      })(),
-      phone: user.phone || "",
-      email: user.email || "",
-    },
-    order: {
-      id: order.id,
-      dateOfPayment: dateFormatter(order.datePickUp),
-      dateOfEdition: dateFormatter(new Date()),
-      dateOfShipping: null,
-      items: order.orderItems.map((item) => ({
-        id: item.itemId,
-        desc: item.name,
-        qty: item.quantity,
-        priceTTC: item.price,
-      })),
-      totalPrice: order.totalPrice,
-    },
-  };
-}
-
 function createProductList(order: OrderWithItemsAndShop) {
   return order.orderItems.map((item) => {
     let name = item.name;
@@ -110,18 +54,19 @@ function createProduct(order: OrderWithItemsAndShop) {
     .join(", ");
 }
 
-function createStatus(order: OrderWithItemsAndShop) {
-  return !order.dateOfShipping
+export type Status =
+  | "En cours de validation"
+  | "Commande valide"
+  | "En cours de paiement"
+  | "Payé";
+
+function createStatus(order: OrderWithItemsAndShop): Status {
+  return !order.dateOfEdition
     ? "En cours de validation"
-    : !order.dateOfPayment
-      ? "Validé"
-      : "Payé";
+    : !order.dateOfShipping
+      ? "Commande valide"
+      : !order.dateOfPayment
+        ? "En cours de paiement"
+        : "Payé";
 }
-export {
-  FactureCell,
-  ProductCell,
-  createDataInvoice,
-  createProduct,
-  createProductList,
-  createStatus,
-};
+export { ProductCell, createProduct, createProductList, createStatus };

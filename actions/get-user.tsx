@@ -12,25 +12,23 @@ export const getSessionUser = async () => {
 };
 
 export const getBasicUser = async () => {
- const sessionUser= await getSessionUser()
+  const sessionUser = await getSessionUser();
 
- if (!sessionUser) {
-  return null;
-}
+  if (!sessionUser) {
+    return null;
+  }
 
- const user = await prismadb.user.findUnique({
-  where: {
-    id: sessionUser.id,
-  },
-});
+  const user = await prismadb.user.findUnique({
+    where: {
+      id: sessionUser.id,
+    },
+  });
 
-return user;
-}
+  return user;
+};
 
 const GetUser = async () => {
- 
-
-  const sessionUser= await getSessionUser()
+  const sessionUser = await getSessionUser();
 
   if (!sessionUser) {
     return null;
@@ -48,6 +46,7 @@ const GetUser = async () => {
         include: {
           orderItems: true,
           shop: true,
+          customer: true,
         },
       },
 

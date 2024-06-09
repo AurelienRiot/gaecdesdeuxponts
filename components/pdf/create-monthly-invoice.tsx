@@ -1,7 +1,6 @@
 import { Fragment } from "react";
 
 import { StyleSheet, Text, View } from "@react-pdf/renderer";
-import { DataMonthlyInvoiceType } from "./data-monthly-invoice";
 import Details from "./details";
 import MainDocument, {
   borderColor,
@@ -10,6 +9,7 @@ import MainDocument, {
   tableRowsCount,
 } from "./main-document";
 import PaidWatermark from "./paid-watermark";
+import { MonthlyPDFDataType } from "./pdf-data";
 
 // Create Document Component
 const MonthlyInvoice = ({
@@ -17,16 +17,15 @@ const MonthlyInvoice = ({
   data,
 }: {
   isPaid: boolean;
-  data: DataMonthlyInvoiceType;
+  data: MonthlyPDFDataType;
 }) => (
   <MainDocument
     customer={data.customer}
-    title={`Facture-mensuelle`}
-    details={<Details invoice={data} title="Facture mensuelle" />}
+    title={`Facture mensuelle ${data.date}`}
+    details={<Details pdfData={data} title={`Facture mensuelle`} />}
   >
     <Fragment>
       <ShippingItemsTable data={data} />
-      <InvoiceThankYouMsg />
       {isPaid && <PaidWatermark />}
     </Fragment>
   </MainDocument>
@@ -44,17 +43,17 @@ const itemsTableStyles = StyleSheet.create({
   },
 });
 
-const ShippingItemsTable = ({ data }: { data: DataMonthlyInvoiceType }) => (
+const ShippingItemsTable = ({ data }: { data: MonthlyPDFDataType }) => (
   <View style={itemsTableStyles.tableContainer}>
     <ShippingTableHeader />
-    <ShippingTableRow orders={data.order} />
+    <ShippingTableRow orders={data.orders} />
     <ShippingTableBlankSpace
       rowsCount={
         tableRowsCount -
-        data.order.reduce((acc, order) => acc + order.items.length + 1, 0)
+        data.orders.reduce((acc, order) => acc + order.items.length + 1, 0)
       }
     />
-    <InvoiceTableFooter orders={data.order} />
+    <InvoiceTableFooter orders={data.orders} />
   </View>
 );
 
@@ -165,7 +164,7 @@ const tableRowStyles = StyleSheet.create({
 const ShippingTableRow = ({
   orders,
 }: {
-  orders: DataMonthlyInvoiceType["order"];
+  orders: MonthlyPDFDataType["orders"];
 }) => (
   <Fragment>
     {orders.map((order, i) => (
@@ -256,7 +255,7 @@ const tableFooterStyles = StyleSheet.create({
 const InvoiceTableFooter = ({
   orders,
 }: {
-  orders: DataMonthlyInvoiceType["order"];
+  orders: MonthlyPDFDataType["orders"];
 }) => {
   const totalHT = orders
     .map((order) => (order.totalPrice || 0) / 1.2)
@@ -284,58 +283,3 @@ const InvoiceTableFooter = ({
     </>
   );
 };
-
-const signatureStyle = StyleSheet.create({
-  container1: {
-    marginTop: 30,
-    marginBottom: 30,
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  container2: {
-    marginBottom: 40,
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-});
-
-const Signature = () => (
-  <Fragment>
-    <View style={signatureStyle.container1}>
-      <Text>Reçu le :</Text>
-      <Text>Livré le :</Text>
-    </View>
-    <View style={signatureStyle.container2}>
-      <Text>Signature expediteur :</Text>
-      <Text>Signature destinataire :</Text>
-    </View>
-  </Fragment>
-);
-
-const thankYouMsgStyles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "column",
-    marginTop: 10,
-  },
-  reportTitle: {
-    fontSize: 12,
-    textAlign: "left",
-    textTransform: "uppercase",
-  },
-  iban: {
-    fontSize: 10,
-    textAlign: "left",
-  },
-});
-
-const InvoiceThankYouMsg = () => (
-  <View style={thankYouMsgStyles.titleContainer}>
-    <Text style={thankYouMsgStyles.reportTitle}>Merci de votre confiance</Text>
-    <Text style={thankYouMsgStyles.iban}>
-      IBAN : FR76 1234 5678 9012 3456 7890
-    </Text>
-    <Text style={thankYouMsgStyles.iban}>Code Bic : AGRIFRPP836</Text>
-  </View>
-);

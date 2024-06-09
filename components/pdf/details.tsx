@@ -1,64 +1,70 @@
 import { StyleSheet, Text, View } from "@react-pdf/renderer";
-import { DataInvoiceType } from "./data-invoice";
-import { DataMonthlyInvoiceType } from "./data-monthly-invoice";
-import { DataOrderType } from "./data-order";
-import { DataShippingOrderType } from "./data-shipping";
 import { mainColor } from "./main-document";
+import { MonthlyPDFDataType, PDFData } from "./pdf-data";
 
 const detailsStyles = StyleSheet.create({
   container: {
     flexDirection: "column",
-    marginTop: 24,
+    marginTop: 14,
   },
 });
 
 type DetailsProps =
   | {
-      title: "Facture";
-      invoice: DataInvoiceType;
+      title: "Facture" | "Bon de commande" | "Bon de livraison";
+      pdfData: PDFData;
     }
   | {
       title: "Facture mensuelle";
-      invoice: DataMonthlyInvoiceType;
-    }
-  | {
-      title: "Bon de commande";
-      invoice: DataOrderType;
-    }
-  | {
-      title: "Bon de livraison";
-      invoice: DataShippingOrderType;
+      pdfData: MonthlyPDFDataType;
     };
 
-const Details = ({ title, invoice }: DetailsProps) => (
+const noStyles = StyleSheet.create({
+  invoiceDateContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginTop: 2,
+  },
+  invoiceDate: {
+    fontSize: 12,
+    fontStyle: "bold",
+  },
+  label: {},
+});
+
+const Details = ({ title, pdfData }: DetailsProps) => (
   <View style={detailsStyles.container}>
     <InvoiceTitle title={title} />
-    {title !== "Facture mensuelle" && (
+    {title !== "Facture mensuelle" ? (
       <View style={noStyles.invoiceDateContainer}>
         <Text style={noStyles.label}>N° de commande : </Text>
-        <Text style={noStyles.invoiceDate}>{invoice.order?.id}</Text>
+        <Text style={noStyles.invoiceDate}>{pdfData.order?.id}</Text>
+      </View>
+    ) : (
+      <View style={noStyles.invoiceDateContainer}>
+        <Text style={noStyles.label}>{pdfData.date} </Text>
       </View>
     )}
     <View style={noStyles.invoiceDateContainer}>
       <Text style={noStyles.label}>N° de client : </Text>
-      <Text style={noStyles.invoiceDate}>{invoice.customer.id}</Text>
+      <Text style={noStyles.invoiceDate}>{pdfData.customer.id}</Text>
     </View>
-    {title === "Facture" && invoice.order.dateOfPayment && (
+    {title === "Facture" && pdfData.order.dateOfPayment && (
       <View style={noStyles.invoiceDateContainer}>
         <Text style={noStyles.label}>Date de facturation : </Text>
-        <Text style={noStyles.invoiceDate}>{invoice.order.dateOfPayment}</Text>
+        <Text style={noStyles.invoiceDate}>{pdfData.order.dateOfPayment}</Text>
       </View>
     )}
     {title !== "Facture mensuelle" ? (
       <View style={noStyles.invoiceDateContainer}>
         <Text style={noStyles.label}>{"Date de d'édition :"} </Text>
-        <Text style={noStyles.invoiceDate}>{invoice.order.dateOfEdition}</Text>
+        <Text style={noStyles.invoiceDate}>{pdfData.order.dateOfEdition}</Text>
       </View>
     ) : (
       <View style={noStyles.invoiceDateContainer}>
         <Text style={noStyles.label}>{"Date de d'édition :"} </Text>
         <Text style={noStyles.invoiceDate}>
-          {invoice.order.length > 0 && invoice.order[0].dateOfEdition}
+          {pdfData.orders.length > 0 && pdfData.orders[0].dateOfEdition}
         </Text>
       </View>
     )}
@@ -68,7 +74,7 @@ const Details = ({ title, invoice }: DetailsProps) => (
 const headingStyles = StyleSheet.create({
   titleContainer: {
     flexDirection: "row",
-    marginTop: 24,
+    marginTop: 4,
     justifyContent: "flex-end",
   },
   reportTitle: {
@@ -85,18 +91,5 @@ const InvoiceTitle = ({ title }: { title: string }) => (
     <Text style={headingStyles.reportTitle}>{title}</Text>
   </View>
 );
-
-const noStyles = StyleSheet.create({
-  invoiceDateContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    marginTop: 10,
-  },
-  invoiceDate: {
-    fontSize: 12,
-    fontStyle: "bold",
-  },
-  label: {},
-});
 
 export default Details;

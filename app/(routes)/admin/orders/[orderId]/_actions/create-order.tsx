@@ -1,9 +1,10 @@
 "use server";
 
 import { checkAdmin } from "@/components/auth/checkAuth";
-import { OrderFormValues } from "../_components/order-form";
+import { OrderFormValues, orderSchema } from "../_components/order-shema";
 import { ReturnTypeServerAction } from "@/types";
 import prismadb from "@/lib/prismadb";
+import { createCustomer } from "@/components/pdf/pdf-data";
 
 export async function createOrder(
   data: OrderFormValues,
@@ -16,7 +17,16 @@ export async function createOrder(
       message: "Vous devez être authentifier",
     };
   }
-  await prismadb.order.create({
+
+  const validatedData = orderSchema.safeParse(data);
+  if (!validatedData.success) {
+    return {
+      success: false,
+      message: "Erreur lors de la validation des informations",
+    };
+  }
+
+  const order = await prismadb.order.create({
     data: {
       id: data.id,
       totalPrice: data.totalPrice,
@@ -36,6 +46,18 @@ export async function createOrder(
             description: product.description,
           };
         }),
+      },
+    },
+    include: { user: { include: { address: true, billingAddress: true } } },
+  });
+
+  await prismadb.order.update({
+    where: {
+      id: data.id,
+    },
+    data: {
+      customer: {
+        create: createCustomer(order.user),
       },
     },
   });

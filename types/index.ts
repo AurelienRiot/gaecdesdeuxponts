@@ -1,6 +1,7 @@
 import {
   Address,
   BillingAddress,
+  Customer,
   MainProduct,
   Option as OptionType,
   Order,
@@ -63,10 +64,7 @@ export interface UserWithAddress extends User {
   billingAddress: BillingAddress | null;
 }
 export interface UserWithOrdersAndAdress extends User {
-  orders: (Order & {
-    orderItems: OrderItem[];
-    shop: Shop | null;
-  })[];
+  orders: FullOrder[];
   address: Address | null;
   billingAddress: BillingAddress | null;
 }
@@ -74,6 +72,10 @@ export interface UserWithOrdersAndAdress extends User {
 export interface OrderWithItemsAndShop extends Order {
   orderItems: OrderItem[];
   shop: Shop | null;
+}
+
+export interface FullOrder extends OrderWithItemsAndShop {
+  customer: Customer | null;
 }
 
 export interface OrderWithItemsAndUserAndShop extends OrderWithItemsAndShop {

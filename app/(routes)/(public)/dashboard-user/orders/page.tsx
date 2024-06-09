@@ -2,7 +2,6 @@
 
 import { DataTableSkeleton } from "@/components/skeleton-ui/data-table-skeleton";
 import {
-  createDataInvoice,
   createProduct,
   createProductList,
   createStatus,
@@ -18,6 +17,7 @@ import {
   searchableColumns,
   viewOptionsColumns,
 } from "./_components/order-column";
+import { createPDFData } from "@/components/pdf/pdf-data";
 
 const PageOrderTable = () => {
   const { user } = useUserContext();
@@ -47,7 +47,6 @@ const PageOrderTable = () => {
       shopName: order.shop?.name || "Livraison à domicile",
       shop: order.shop || undefined,
       createdAt: order.createdAt,
-      dataInvoice: createDataInvoice({ user, order }),
     }),
   );
 

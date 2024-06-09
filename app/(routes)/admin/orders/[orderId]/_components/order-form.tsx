@@ -1,9 +1,16 @@
 "use client";
+import {
+  DisplayInvoice,
+  DisplayShippingOrder,
+} from "@/components/pdf/pdf-button";
+import { generateOrderId } from "@/components/pdf/pdf-data";
 import { deleteOrders } from "@/components/table-custom-fuction/orders-server-actions";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import { Button, LoadingButton } from "@/components/ui/button";
+import ButtonBackward from "@/components/ui/button-backward";
 import { Form, FormField } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
+import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import {
   ProductWithMain,
@@ -13,58 +20,25 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Shop } from "@prisma/client";
 import { Trash } from "lucide-react";
-import { nanoid } from "nanoid";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import * as z from "zod";
+import createOrder from "../_actions/create-order";
+import updateOrder from "../_actions/update-order";
 import FormDatePicker from "./date-picker";
+import { OrderFormValues, orderSchema } from "./order-shema";
+import { ShippingProducts } from "./products";
 import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
-import OrderButton from "./order-button";
-import { ShippingProducts } from "./products";
 import TotalPrice from "./total-price";
-import updateOrder from "../_actions/update-order";
-import createOrder from "../_actions/create-order";
-import InvoiceButton from "./invoice-button";
-
-const orderItemSchema = z.object({
-  itemId: z.string(),
-  unit: z.string().optional().nullable(),
-  price: z.coerce
-    .number()
-    .optional()
-    .refine((val) => val !== undefined, {
-      message: "Veuillez entrer un prix valide",
-    }),
-
-  quantity: z.coerce.number().min(0, { message: "La quantité est requise" }),
-  name: z.string().min(1, { message: "Le nom est requis" }),
-  categoryName: z.string().min(0, { message: "La catégorie est requise" }),
-  description: z.string().min(0, { message: "La description est requise" }),
-});
-
-const OrderSchema = z.object({
-  id: z.string().min(1),
-  name: z.string().min(1, { message: "Le nom est requis" }),
-  totalPrice: z.number().min(0, { message: "Le prix est requis" }),
-  dateOfPayment: z.date().optional().nullable(),
-  dateOfShipping: z.date().optional().nullable(),
-  userId: z.string().min(1, { message: "L'utilisateur est requis" }),
-  shopId: z.string().optional().nullable(),
-  datePickUp: z.date(),
-  orderItems: z.array(orderItemSchema),
-  // .nonempty("Veuillez ajouter au moins un produit"),
-});
-
-export type OrderFormValues = z.infer<typeof OrderSchema>;
 
 type ProductFormProps = {
   initialData: OrderFormValues | null;
   products: ProductWithMain[];
   shops: Shop[];
   users: UserWithAddress[];
+  referer: string;
 };
 
 export const OrderForm: React.FC<ProductFormProps> = ({
@@ -72,6 +46,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({
   products,
   users,
   shops,
+  referer,
 }) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
@@ -88,16 +63,16 @@ export const OrderForm: React.FC<ProductFormProps> = ({
     : "Crée le bon de livraison";
 
   const form = useForm<OrderFormValues>({
-    resolver: zodResolver(OrderSchema),
+    resolver: zodResolver(orderSchema),
     defaultValues: {
-      id: initialData?.id || `${nanoid()}`,
-      name: initialData?.name || "",
+      id: initialData?.id || generateOrderId(),
       totalPrice: initialData?.totalPrice,
       dateOfPayment: initialData?.dateOfPayment,
       dateOfShipping: initialData?.dateOfShipping,
+      dateOfEdition: initialData?.dateOfEdition ?? new Date(),
       userId: initialData?.userId || "",
       shopId: initialData?.shopId || "",
-      datePickUp: initialData?.datePickUp || new Date(),
+      datePickUp: initialData?.datePickUp,
 
       orderItems: initialData?.orderItems.map((product) => ({
         itemId: product.itemId,
@@ -127,7 +102,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({
       toast.error(del.message);
       setOpen(false);
     } else {
-      router.push(`/admin/orders`);
+      router.push(referer);
       router.refresh();
       toast.success("Commande supprimé");
     }
@@ -146,8 +121,6 @@ export const OrderForm: React.FC<ProductFormProps> = ({
       return;
     }
 
-    router.push("/admin/orders");
-    router.refresh();
     toast.success(toastMessage);
   };
 
@@ -175,7 +148,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-8 "
+          className="w-full space-y-8"
         >
           <div className="flex flex-wrap items-end gap-8">
             <SelectUser users={users} />
@@ -184,10 +157,11 @@ export const OrderForm: React.FC<ProductFormProps> = ({
               name="datePickUp"
               render={({ field }) => (
                 <FormDatePicker
+                  {...field}
                   date={field.value}
                   onSelectDate={field.onChange}
                   title="Date de retrait"
-                  reset={false}
+                  button={"none"}
                 />
               )}
             />
@@ -196,6 +170,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({
               name="dateOfShipping"
               render={({ field }) => (
                 <FormDatePicker
+                  {...field}
                   date={field.value}
                   onSelectDate={field.onChange}
                   title="Date de livraison"
@@ -207,10 +182,27 @@ export const OrderForm: React.FC<ProductFormProps> = ({
               name="dateOfPayment"
               render={({ field }) => (
                 <FormDatePicker
+                  {...field}
                   date={field.value}
                   onSelectDate={field.onChange}
                   title="Date de paiement"
                 />
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="dateOfEdition"
+              render={({ field }) => (
+                <div className="flex gap-2">
+                  <FormDatePicker
+                    {...field}
+                    date={field.value}
+                    onSelectDate={field.onChange}
+                    title="Date d'édition"
+                    button="uptade"
+                    disabled
+                  />
+                </div>
               )}
             />
             <SelectShop shops={shops} />
@@ -218,10 +210,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({
           <ShippingProducts products={products} />
 
           <TotalPrice />
-          <div className="flex flex-wrap gap-4">
-            <OrderButton users={users} />
-            <InvoiceButton users={users} />
-          </div>
+
           <LoadingButton
             disabled={form.formState.isSubmitting}
             className="ml-auto"
@@ -231,6 +220,22 @@ export const OrderForm: React.FC<ProductFormProps> = ({
           </LoadingButton>
         </form>
       </Form>
+      <div className="flex flex-wrap gap-4">
+        <div>
+          <Label>Bon de livraison</Label>
+          <DisplayShippingOrder orderId={form.getValues("id")} />
+        </div>
+        <div>
+          <Label>Facture</Label>
+          <DisplayInvoice orderId={form.getValues("id")} />
+        </div>
+      </div>
+      <ButtonBackward
+        onClick={() => {
+          router.push(referer);
+          router.refresh();
+        }}
+      />
     </>
   );
 };

@@ -1,5 +1,4 @@
 import {
-  createDataInvoice,
   createProduct,
   createProductList,
   createStatus,
@@ -7,10 +6,11 @@ import {
 import ButtonBackward from "@/components/ui/button-backward";
 import prismadb from "@/lib/prismadb";
 import { currencyFormatter } from "@/lib/utils";
-import MonthlyInvoice from "./_components/monthly-invoice";
 import { OrderColumn } from "./_components/order-column";
 import { OrderTable } from "./_components/order-table";
 import { UserForm } from "./_components/user-form";
+import MonthlyInvoice from "./_components/monthly-invoice";
+import { monthlyOrdersType } from "@/components/pdf/pdf-data";
 
 export const dynamic = "force-dynamic";
 
@@ -43,6 +43,17 @@ const UserPage = async ({ params }: { params: { userId: string } }) => {
     );
   }
 
+  const montlyOrders: (monthlyOrdersType | null)[] = user.orders.map(
+    (order) => {
+      if (!order.dateOfShipping) return null;
+      return {
+        orderId: order.id,
+        month: order.dateOfShipping.getMonth() + 1,
+        year: order.dateOfShipping.getFullYear(),
+      };
+    },
+  );
+
   const formatedUser = {
     ...user,
     orders: [],
@@ -59,15 +70,20 @@ const UserPage = async ({ params }: { params: { userId: string } }) => {
     createdAt: order.createdAt,
     shopName: order.shop?.name || "Livraison à domicile",
     shopId: order.shop?.id || "",
-    dataInvoice: createDataInvoice({ user, order }),
   }));
 
   return (
-    <div className=" space-y-6 p-8 pt-6 ">
-      <div className="mb-8 flex-1 space-y-4 ">
+    <div className="space-y-6 p-8 pt-6">
+      <div className="mb-8 flex-1 space-y-4">
         <UserForm initialData={formatedUser} />
       </div>
-      {user.role === "pro" && <MonthlyInvoice user={user} />}
+      {user.role === "pro" && (
+        <MonthlyInvoice
+          orders={
+            montlyOrders.filter((order) => !!order) as monthlyOrdersType[]
+          }
+        />
+      )}
       <div>
         <OrderTable data={formattedOrders} />
       </div>

@@ -13,7 +13,7 @@ const InfoContact = () => {
       description: "Envoyez-nous un message",
       link: (
         <Link
-          className="pt-4 text-sm "
+          className="pt-4 text-sm"
           href="mailto:laiteriedupontrobert@gmail.com"
         >
           laiteriedupontrobert@gmail.com
@@ -25,7 +25,7 @@ const InfoContact = () => {
       title: "Téléphone",
       description: "Appelez-nous",
       link: (
-        <Link className="pt-4 text-sm " href="tel:06 72 06 45 55">
+        <Link className="pt-4 text-sm" href="tel:06 72 06 45 55">
           06 72 06 45 55
         </Link>
       ),
@@ -75,13 +75,13 @@ const InfoContact = () => {
 
   return (
     <div className="grid-col-1 grid w-full gap-10 py-10 lg:grid-cols-2">
-      <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 ">
+      <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
         {features.map(({ Icone, title, description, link }) => (
           <div
             key={title}
             className="mx-auto flex flex-col items-center space-y-3 p-4 text-center sm:mr-auto sm:text-left"
           >
-            <Icone className="h-6 w-6 " />
+            <Icone className="h-6 w-6" />
             <h3 className="text-lg font-semibold">{title}</h3>
             <p className="text-center text-sm">{description}</p>
             {link}

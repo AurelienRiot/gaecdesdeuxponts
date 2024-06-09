@@ -22,11 +22,16 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import { OrderFormValues } from "./order-form";
+import { OrderFormValues } from "./order-shema";
 
 const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
   const form = useFormContext<OrderFormValues>();
   const [open, setOpen] = useState(false);
+  const userId = form.watch("userId");
+  const name = (() => {
+    const user = users.find((user) => user.id === userId);
+    return user?.company || user?.name || user?.email;
+  })();
 
   function onValueChange(value: string) {
     const user = users.find((user) => user.id === value);
@@ -35,7 +40,7 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
       return;
     }
     form.setValue("userId", value);
-    form.setValue("name", user.name ? user.name : user.email || "");
+    setOpen(false);
   }
 
   return (
@@ -56,9 +61,7 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
                   field.value ? "" : "text-muted-foreground",
                 )}
               >
-                {form.getValues("name")
-                  ? form.getValues("name")
-                  : "Nom du client"}
+                {name ?? "Nom du client"}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -70,7 +73,11 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
                     <CommandItem
                       key={user.id}
                       value={user.id}
-                      keywords={[user.name || "", user.email || ""]}
+                      keywords={[
+                        user.name || "",
+                        user.email || "",
+                        user.company || "",
+                      ]}
                       onSelect={onValueChange}
                     >
                       <Check
@@ -79,7 +86,7 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
                           field.value === user.id ? "opacity-100" : "opacity-0",
                         )}
                       />
-                      {user.name}
+                      {user.company || user.name || user.email}
                     </CommandItem>
                   ))}
                 </CommandList>

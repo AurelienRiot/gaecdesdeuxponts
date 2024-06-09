@@ -25,7 +25,8 @@ import { Check, ChevronsUpDown, Trash } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import { OrderFormValues } from "./order-form";
+import { OrderFormValues } from "./order-shema";
+import { Badge } from "@/components/ui/badge";
 
 export const ShippingProducts = ({
   products,
@@ -61,7 +62,7 @@ export const ShippingProducts = ({
                 <Button
                   type="button"
                   variant="outline"
-                  className=" whitespace-nowrap border-dashed"
+                  className="whitespace-nowrap border-dashed"
                   onClick={addProduct}
                 >
                   <PlusCircledIcon className="mr-2 size-4" />
@@ -71,7 +72,7 @@ export const ShippingProducts = ({
               {items.map((_, productIndex) => (
                 <div
                   key={productIndex}
-                  className="overflow-x-auto rounded-md p-4 pb-4    thin-scrollbar even:bg-secondary"
+                  className="overflow-x-auto rounded-md p-4 pb-4 thin-scrollbar even:bg-secondary"
                 >
                   <ProductName
                     products={products}
@@ -102,6 +103,9 @@ function ProductName({
 }) {
   const form = useFormContext<OrderFormValues>();
   const items = form.watch("orderItems");
+  const selectedProduct = products.find(
+    (product) => product.id === items[productIndex].itemId,
+  );
 
   const deleteProduct = () => {
     const newItems = items.filter((_, index) => index !== productIndex);
@@ -111,13 +115,28 @@ function ProductName({
   return (
     <>
       <div className="flex min-w-[800px] gap-4">
-        <SelectProductName products={products} productIndex={productIndex} />
+        <SelectProductName
+          selectedProduct={selectedProduct}
+          products={products}
+          productIndex={productIndex}
+        />
         <FormField
           control={form.control}
           name={`orderItems.${productIndex}.price`}
           render={({ field }) => (
             <FormItem className="w-48">
-              <FormLabel>Prix</FormLabel>
+              <FormLabel className="flex items-center justify-between gap-2">
+                <span>Prix</span>
+                <Button
+                  variant={"outline"}
+                  onClick={() => field.onChange(selectedProduct?.price)}
+                  type="button"
+                  size={"xs"}
+                  className="border-dashed text-xs"
+                >
+                  Réninitialiser
+                </Button>
+              </FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -136,7 +155,10 @@ function ProductName({
           name={`orderItems.${productIndex}.quantity`}
           render={({ field }) => (
             <FormItem className="w-48">
-              <FormLabel>Quantité</FormLabel>
+              <FormLabel className="flex h-8 items-center justify-between gap-2">
+                <span className="">Quantité</span>
+              </FormLabel>
+
               <FormControl>
                 <Input
                   type="number"
@@ -168,9 +190,11 @@ function ProductName({
 const SelectProductName = ({
   productIndex,
   products,
+  selectedProduct,
 }: {
   productIndex: number;
   products: ProductWithMain[];
+  selectedProduct?: ProductWithMain;
 }) => {
   const form = useFormContext<OrderFormValues>();
   const items = form.watch("orderItems");
@@ -183,6 +207,7 @@ const SelectProductName = ({
       toast.error("Produit introuvable");
       return;
     }
+
     form.setValue(`orderItems.${productIndex}.name`, product.name);
     form.setValue(
       `orderItems.${productIndex}.categoryName`,
@@ -205,7 +230,9 @@ const SelectProductName = ({
       name={`orderItems.${productIndex}.name`}
       render={({ field }) => (
         <FormItem className="relative w-56">
-          <FormLabel>{`Name du produit ${productIndex + 1}`}</FormLabel>
+          <FormLabel className="flex h-8 items-center justify-between gap-2">
+            <span className="">{`Name du produit ${productIndex + 1}`}</span>
+          </FormLabel>
           <FormControl>
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
@@ -218,6 +245,11 @@ const SelectProductName = ({
                     field.value ? "" : "text-muted-foreground",
                   )}
                 >
+                  {selectedProduct?.product.isPro && (
+                    <Badge variant="orange" className="mr-2">
+                      Pro
+                    </Badge>
+                  )}
                   {field.value ? field.value : "Nom du produit"}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
@@ -238,14 +270,11 @@ const SelectProductName = ({
                           keywords={[product.name]}
                           onSelect={onValueChange}
                         >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              field.value === product.id
-                                ? "opacity-100"
-                                : "opacity-0",
-                            )}
-                          />
+                          {product.product.isPro && (
+                            <Badge variant="orange" className="mr-2">
+                              Pro
+                            </Badge>
+                          )}
                           {product.name}
                         </CommandItem>
                       ))}

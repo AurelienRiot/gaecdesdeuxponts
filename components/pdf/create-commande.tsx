@@ -1,7 +1,6 @@
 import { Fragment } from "react";
 
 import { StyleSheet, Text, View } from "@react-pdf/renderer";
-import { DataOrderType } from "./data-order";
 import Details from "./details";
 import MainDocument, {
   borderColor,
@@ -9,17 +8,17 @@ import MainDocument, {
   mainColor,
   tableRowsCount,
 } from "./main-document";
+import { PDFData } from "./pdf-data";
 
 // Create Document Component
-const Order = ({ data }: { data: DataOrderType }) => (
+const Order = ({ data }: { data: PDFData }) => (
   <MainDocument
     customer={data.customer}
-    title={`Bon_de_commande-${data.order.id}`}
-    details={<Details invoice={data} title="Bon de commande" />}
+    title={`Bon de commande ${data.order.id}`}
+    details={<Details pdfData={data} title="Bon de commande" />}
   >
     <Fragment>
       <InvoiceItemsTable invoice={data} />
-      <InvoiceThankYouMsg />
     </Fragment>
   </MainDocument>
 );
@@ -36,7 +35,7 @@ const itemsTableStyles = StyleSheet.create({
   },
 });
 
-const InvoiceItemsTable = ({ invoice }: { invoice: DataOrderType }) => (
+const InvoiceItemsTable = ({ invoice }: { invoice: PDFData }) => (
   <View style={itemsTableStyles.tableContainer}>
     <InvoiceTableHeader />
     <InvoiceTableRow items={invoice.order.items} />
@@ -54,6 +53,7 @@ const tableHeaderStyles = StyleSheet.create({
     backgroundColor: mainColor,
     color: foregroundColor,
     borderBottomWidth: 1,
+    justifyContent: "center",
     alignItems: "center",
     height: 24,
     textAlign: "center",
@@ -61,27 +61,37 @@ const tableHeaderStyles = StyleSheet.create({
     flexGrow: 1,
   },
   description: {
+    height: "100%",
     width: "40%",
     borderRightColor: borderColor,
     borderRightWidth: 1,
+    paddingTop: 4,
   },
   unit: {
-    width: "20%",
+    height: "100%",
+    width: "24%",
     borderRightColor: borderColor,
     borderRightWidth: 1,
+    paddingTop: 4,
   },
   qty: {
-    width: "10%",
+    height: "100%",
+    width: "6%",
     borderRightColor: borderColor,
     borderRightWidth: 1,
+    paddingTop: 4,
   },
   totalHT: {
+    height: "100%",
     width: "15%",
     borderRightColor: borderColor,
     borderRightWidth: 1,
+    paddingTop: 4,
   },
   totalTTC: {
+    height: "100%",
     width: "15%",
+    paddingTop: 4,
   },
 });
 
@@ -134,11 +144,7 @@ const tableRowStyles = StyleSheet.create({
   },
 });
 
-const InvoiceTableRow = ({
-  items,
-}: {
-  items: DataOrderType["order"]["items"];
-}) => {
+const InvoiceTableRow = ({ items }: { items: PDFData["order"]["items"] }) => {
   const rows = items.map((item, i) => (
     <View style={tableRowStyles.row} key={i}>
       <Text style={tableRowStyles.description}>{item.desc}</Text>
@@ -219,7 +225,7 @@ const tableFooterStyles = StyleSheet.create({
 const InvoiceTableFooter = ({
   items,
 }: {
-  items: DataOrderType["order"]["items"];
+  items: PDFData["order"]["items"];
 }) => {
   const totalHT = items
     .map((item) => (item.qty * item.priceTTC) / 1.2)
@@ -247,25 +253,3 @@ const InvoiceTableFooter = ({
     </>
   );
 };
-
-const thankYouMsgStyles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "column",
-    marginTop: 10,
-  },
-  reportTitle: {
-    fontSize: 12,
-    textAlign: "left",
-    textTransform: "uppercase",
-  },
-  iban: {
-    fontSize: 10,
-    textAlign: "left",
-  },
-});
-
-const InvoiceThankYouMsg = () => (
-  <View style={thankYouMsgStyles.titleContainer}>
-    <Text style={thankYouMsgStyles.reportTitle}>Merci de votre confiance</Text>
-  </View>
-);

@@ -6,7 +6,7 @@ import {
   Text,
   Image,
 } from "@react-pdf/renderer";
-import { DataInvoiceType } from "./data-invoice";
+import { PDFData } from "./pdf-data";
 
 export const tableRowsCount = 10;
 export const mainColor = "#D3D3D3";
@@ -18,25 +18,24 @@ const MainStyles = StyleSheet.create({
   page: {
     fontFamily: "Helvetica",
     fontSize: 11,
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 40,
-    paddingRight: 40,
+    paddingTop: 20,
+    paddingBottom: 40,
+    paddingLeft: 20,
+    paddingRight: 20,
     lineHeight: 1.5,
     flexDirection: "column",
     position: "relative",
   },
   header: {
     flexDirection: "row",
+    marginTop: -10,
     justifyContent: "space-between",
   },
-  footer: {
+  pageNumbers: {
     position: "absolute",
-    bottom: 10,
-    left: 0,
-    right: 0,
+    bottom: 5,
+    right: 10,
     textAlign: "center",
-    fontSize: 12,
   },
 });
 
@@ -49,7 +48,7 @@ const MainDocument = ({
   title: string;
   children: JSX.Element;
   details: JSX.Element;
-  customer: DataInvoiceType["customer"];
+  customer: PDFData["customer"];
 }) => (
   <Document title={title}>
     <Page size="A4" style={MainStyles.page}>
@@ -60,12 +59,15 @@ const MainDocument = ({
 
       <BillTo customer={customer} />
       {children}
-      {/* <Text
-        style={MainStyles.footer}
+
+      <Text
+        style={MainStyles.pageNumbers}
         render={({ pageNumber, totalPages }) =>
           `Page ${pageNumber} / ${totalPages}`
         }
-      /> */}
+        fixed
+      />
+      <InvoiceThankYouMsg />
     </Page>
   </Document>
 );
@@ -80,25 +82,17 @@ const billStyles = StyleSheet.create({
   },
 });
 
-const BillTo = ({ customer }: { customer: DataInvoiceType["customer"] }) => (
+const BillTo = ({ customer }: { customer: PDFData["customer"] }) => (
   <View style={billStyles.headerContainer}>
     <Text style={billStyles.billTo}>À :</Text>
     {!!customer.name && <Text>{customer.name}</Text>}
-    {!!customer.address && <Text>{customer.address}</Text>}
+    {!!customer.facturationAddress && (
+      <Text>{customer.facturationAddress}</Text>
+    )}
     {!!customer.phone && <Text>{customer.phone}</Text>}
     {!!customer.email && <Text>{customer.email}</Text>}
   </View>
 );
-
-const itemsTableStyles = StyleSheet.create({
-  tableContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: 24,
-    borderWidth: 1,
-    borderColor: borderColor,
-  },
-});
 
 const CompanyStyles = StyleSheet.create({
   headerContainer: {
@@ -106,8 +100,14 @@ const CompanyStyles = StyleSheet.create({
   },
   logo: {
     marginBottom: 10,
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
+  },
+  contact: {
+    position: "absolute",
+    top: "100%",
+    left: 0,
+    width: 500,
   },
 });
 
@@ -117,7 +117,9 @@ const Company = () => (
     <Text>Gaec des deux ponts</Text>
     <Text>6 B le Pont Robert 44290 MASSERAC</Text>
     <Text>06 72 06 45 55</Text>
-    <Text>laiteriedupontrobert@gmail.com</Text>
+    <Text style={CompanyStyles.contact}>
+      laiteriedupontrobert@gmail.com - laiteriedupontrobert.fr
+    </Text>
   </View>
 );
 
@@ -128,6 +130,35 @@ const Logo = () => (
     src="https://www.laiteriedupontrobert.fr/logo-font-blanc.png"
     cache={false}
   />
+);
+
+const thankYouMsgStyles = StyleSheet.create({
+  titleContainer: {
+    flexDirection: "column",
+    marginTop: 10,
+  },
+  reportTitle: {
+    fontSize: 12,
+    textAlign: "left",
+    textTransform: "uppercase",
+  },
+  iban: {
+    fontSize: 10,
+    textAlign: "left",
+  },
+});
+
+const InvoiceThankYouMsg = () => (
+  <View style={thankYouMsgStyles.titleContainer}>
+    <Text style={thankYouMsgStyles.reportTitle}>Merci de votre confiance</Text>
+    <Text style={thankYouMsgStyles.iban}>
+      IBAN : FR76 1234 5678 9012 3456 7890 Code Bic : AGRIFRPP836
+    </Text>
+    <Text style={thankYouMsgStyles.iban}>
+      Siret : 844 554 147 00018 APE : ***** N° TVA intracom : ***** Capital :
+      *****€
+    </Text>
+  </View>
 );
 
 export default MainDocument;

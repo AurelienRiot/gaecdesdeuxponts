@@ -23,6 +23,9 @@ importers:
       '@prisma/client':
         specifier: 5.15.0
         version: 5.15.0(prisma@5.15.0)
+      '@prisma/extension-accelerate':
+        specifier: ^1.1.0
+        version: 1.1.0(@prisma/client@5.15.0(prisma@5.15.0))
       '@radix-ui/react-accordion':
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1042,6 +1045,12 @@ packages:
 
   '@prisma/engines@5.15.0':
     resolution: {integrity: sha512-hXL5Sn9hh/ZpRKWiyPA5GbvF3laqBHKt6Vo70hYqqOhh5e0ZXDzHcdmxNvOefEFeqxra2DMz2hNbFoPvqrVe1w==}
+
+  '@prisma/extension-accelerate@1.1.0':
+    resolution: {integrity: sha512-sESjhBZ4ywQjAVpKzsfhxyNu+9txIM5I6M1MPBaJBq/xDlqmniIAhlwIEt9KLtO80zqPxqbZYes18zrkgYqNiQ==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      '@prisma/client': '>=4.16.1'
 
   '@prisma/fetch-engine@5.15.0':
     resolution: {integrity: sha512-z6AY5yyXxc20Klj7wwnfGP0iIUkVKzybqapT02zLYR/nf9ynaeN8bq73WRmi1TkLYn+DJ5Qy+JGu7hBf1pE78A==}
@@ -5861,6 +5870,10 @@ snapshots:
       '@prisma/engines-version': 5.15.0-29.12e25d8d06f6ea5a0252864dd9a03b1bb51f3022
       '@prisma/fetch-engine': 5.15.0
       '@prisma/get-platform': 5.15.0
+
+  '@prisma/extension-accelerate@1.1.0(@prisma/client@5.15.0(prisma@5.15.0))':
+    dependencies:
+      '@prisma/client': 5.15.0(prisma@5.15.0)
 
   '@prisma/fetch-engine@5.15.0':
     dependencies:

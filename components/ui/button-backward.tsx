@@ -10,7 +10,7 @@ export interface ButtonProps
 }
 
 const ButtonBackward = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, disabled, type = "button", url, ...props }, ref) => {
+  ({ className, disabled, type = "button", url, onClick, ...props }, ref) => {
     const router = useRouter();
     const handleClick = () => {
       if (url) {
@@ -22,18 +22,18 @@ const ButtonBackward = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         className={cn(
-          "w-auto rounded-full  border-transparent px-8 py-3 disabled:cursor-not-allowed disabled:opacity-50 text-primary-foreground font-semibold   animate-shine bg-gradient-to-r from-primary via-primary/75 to-primary   bg-[length:400%_100%] ",
-          className
+          "w-auto animate-shine rounded-full border-transparent bg-gradient-to-r from-primary via-primary/75 to-primary bg-[length:400%_100%] px-8 py-3 font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50",
+          className,
         )}
-        onClick={handleClick}
+        onClick={onClick || handleClick}
         disabled={disabled}
         ref={ref}
         {...props}
       >
-        <HiArrowNarrowLeft className="w-6 h-6 " />
+        <HiArrowNarrowLeft className="h-6 w-6" />
       </button>
     );
-  }
+  },
 );
 
 ButtonBackward.displayName = "Button";

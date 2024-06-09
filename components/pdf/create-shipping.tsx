@@ -1,7 +1,6 @@
 import { Fragment } from "react";
 
 import { StyleSheet, Text, View } from "@react-pdf/renderer";
-import { DataShippingOrderType } from "./data-shipping";
 import Details from "./details";
 import MainDocument, {
   borderColor,
@@ -9,18 +8,18 @@ import MainDocument, {
   mainColor,
   tableRowsCount,
 } from "./main-document";
+import { PDFData } from "./pdf-data";
 
 // Create Document Component
-const ShippingOrder = ({ dataOrder }: { dataOrder: DataShippingOrderType }) => (
+const ShippingOrder = ({ pdfData }: { pdfData: PDFData }) => (
   <MainDocument
-    customer={dataOrder.customer}
-    title={`Bon_de_livraison-${dataOrder.order.id}`}
-    details={<Details invoice={dataOrder} title="Bon de livraison" />}
+    customer={pdfData.customer}
+    title={`Bon de livraison ${pdfData.order.id}`}
+    details={<Details pdfData={pdfData} title="Bon de livraison" />}
   >
     <Fragment>
-      <ShippingItemsTable invoice={dataOrder} />
+      <ShippingItemsTable pdfData={pdfData} />
       <Signature />
-      <InvoiceThankYouMsg />
     </Fragment>
   </MainDocument>
 );
@@ -37,16 +36,12 @@ const itemsTableStyles = StyleSheet.create({
   },
 });
 
-const ShippingItemsTable = ({
-  invoice,
-}: {
-  invoice: DataShippingOrderType;
-}) => (
+const ShippingItemsTable = ({ pdfData }: { pdfData: PDFData }) => (
   <View style={itemsTableStyles.tableContainer}>
     <ShippingTableHeader />
-    <ShippingTableRow items={invoice.order.items} />
+    <ShippingTableRow items={pdfData.order.items} />
     <ShippingTableBlankSpace
-      rowsCount={tableRowsCount - invoice.order.items.length}
+      rowsCount={tableRowsCount - pdfData.order.items.length}
     />
   </View>
 );
@@ -58,6 +53,7 @@ const tableHeaderStyles = StyleSheet.create({
     backgroundColor: mainColor,
     color: foregroundColor,
     borderBottomWidth: 1,
+    justifyContent: "center",
     alignItems: "center",
     height: 24,
     textAlign: "center",
@@ -124,11 +120,7 @@ const tableRowStyles = StyleSheet.create({
   },
 });
 
-const ShippingTableRow = ({
-  items,
-}: {
-  items: DataShippingOrderType["order"]["items"];
-}) => {
+const ShippingTableRow = ({ items }: { items: PDFData["order"]["items"] }) => {
   const rows = items.map((item, i) => (
     <View style={tableRowStyles.row} key={i}>
       <Text style={tableRowStyles.ref}>{item.id}</Text>
@@ -203,30 +195,4 @@ const Signature = () => (
       <Text>Signature :</Text>
     </View>
   </Fragment>
-);
-
-const thankYouMsgStyles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "column",
-    marginTop: 10,
-  },
-  reportTitle: {
-    fontSize: 12,
-    textAlign: "left",
-    textTransform: "uppercase",
-  },
-  iban: {
-    fontSize: 10,
-    textAlign: "left",
-  },
-});
-
-const InvoiceThankYouMsg = () => (
-  <View style={thankYouMsgStyles.titleContainer}>
-    <Text style={thankYouMsgStyles.reportTitle}>Merci de votre confiance</Text>
-    <Text style={thankYouMsgStyles.iban}>
-      IBAN : FR76 1234 5678 9012 3456 7890
-    </Text>
-    <Text style={thankYouMsgStyles.iban}>Code Bic : AGRIFRPP836</Text>
-  </View>
 );

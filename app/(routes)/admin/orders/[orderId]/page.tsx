@@ -1,17 +1,20 @@
 import prismadb from "@/lib/prismadb";
 import { OrderForm } from "./_components/order-form";
+import { headers } from "next/headers";
 
 const ProductPage = async ({ params }: { params: { orderId: string } }) => {
+  const headersList = headers();
+  const referer = headersList.get("referer") || "";
   const shippingOrders = await prismadb.order.findUnique({
     where: {
       id: params.orderId,
     },
     select: {
       id: true,
-      name: true,
       totalPrice: true,
       dateOfPayment: true,
       dateOfShipping: true,
+      dateOfEdition: true,
       orderItems: {
         select: {
           name: true,
@@ -60,6 +63,7 @@ const ProductPage = async ({ params }: { params: { orderId: string } }) => {
           initialData={shippingOrders}
           users={users}
           shops={shops}
+          referer={referer}
         />
       </div>
     </div>

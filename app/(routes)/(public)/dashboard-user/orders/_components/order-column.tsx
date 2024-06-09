@@ -1,9 +1,12 @@
 "use client";
 
 import { ShopCard } from "@/components/display-shops/shop-card";
-import { DataInvoiceType } from "@/components/pdf/data-invoice";
 import { DisplayInvoice } from "@/components/pdf/pdf-button";
-import { ProductCell } from "@/components/table-custom-fuction/cell-orders";
+import { PDFData } from "@/components/pdf/pdf-data";
+import {
+  ProductCell,
+  Status,
+} from "@/components/table-custom-fuction/cell-orders";
 import { DateCell } from "@/components/table-custom-fuction/common-cell";
 import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
 import { Button } from "@/components/ui/button";
@@ -22,12 +25,11 @@ export type OrderColumnType = {
   datePickUp: Date;
   totalPrice: string;
   products: string;
-  status: "En cours de validation" | "Validé" | "Payé";
+  status: Status;
   productsList: { name: string; quantity?: string; unit?: string }[];
   createdAt: Date;
   shopName: string;
   shop?: Shop;
-  dataInvoice: DataInvoiceType;
 };
 export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
   {
@@ -44,16 +46,13 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
     header: "Statut",
   },
   {
-    accessorKey: "dataInvoice",
+    accessorKey: "id",
     header: "Facture",
     cell: ({ row }) => {
       return row.original.status === "En cours de validation" ? (
         "Non disponible"
       ) : (
-        <DisplayInvoice
-          isPaid={row.original.status === "Payé"}
-          data={row.original.dataInvoice}
-        />
+        <DisplayInvoice orderId={row.original.id} />
       );
     },
   },
@@ -73,7 +72,7 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
               variant={"linkHover2"}
               className="justify-left flex flex-row items-center gap-2 whitespace-nowrap px-0 after:w-full hover:text-primary"
             >
-              <Search className=" h-4 w-4 flex-shrink-0" />
+              <Search className="h-4 w-4 flex-shrink-0" />
 
               {row.getValue("shopName")}
             </Button>
@@ -122,7 +121,7 @@ export const viewOptionsColumns: DataTableViewOptionsColumn<OrderColumnType>[] =
       title: "Statut",
     },
     {
-      id: "dataInvoice",
+      id: "id",
       title: "Facture",
     },
     {

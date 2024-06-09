@@ -16,14 +16,6 @@ export const UserProvider: React.FC<{
   data: UserWithOrdersAndAdress | null;
 }> = ({ children, data }) => {
   const [user, setUser] = useState<UserWithOrdersAndAdress | null>(data);
-  // useEffect(() => {
-  //   const fetchAndSetUser = async () => {
-  //     const data = await fetchUser();
-  //     setUser(data);
-  //   };
-
-  //   fetchAndSetUser();
-  // }, []);
   return (
     <UserContext.Provider value={{ user, setUser }}>
       {children}
