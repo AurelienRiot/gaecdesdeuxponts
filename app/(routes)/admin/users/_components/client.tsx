@@ -12,6 +12,9 @@ import {
 import { User } from "@prisma/client";
 import { useState } from "react";
 import CardUser from "./card-user";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { Plus } from "lucide-react";
 
 interface UserClientProps {
   users: User[];
@@ -20,6 +23,7 @@ interface UserClientProps {
 
 const UserClient: React.FC<UserClientProps> = ({ users, orderLengths }) => {
   const [search, setSearch] = useState("");
+  const router = useRouter();
 
   const searchKeys = ["email", "name", "phone", "addresse"];
   const displayKeys = ["email", "nom", "téléphone", "addresse"];
@@ -33,10 +37,19 @@ const UserClient: React.FC<UserClientProps> = ({ users, orderLengths }) => {
   return (
     <>
       <div className="m-4">
-        <Heading
-          title={`Clients (${filteredUsers.length})`}
-          description="Liste des clients"
-        />
+        <div className="flex flex-col items-center justify-between sm:flex-row">
+          <Heading
+            title={`Clients (${filteredUsers.length})`}
+            description="Liste des clients"
+          />
+          <Button
+            onClick={() => router.push(`/admin/users/new`)}
+            className="m-2 pb-6 pt-6 sm:ml-2 sm:pb-0 sm:pt-0"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Créer un client
+          </Button>
+        </div>
         <div className="justify-content-center mt-4 grid grid-cols-1 gap-4 md:grid-cols-6">
           <Input
             value={search}
@@ -62,7 +75,7 @@ const UserClient: React.FC<UserClientProps> = ({ users, orderLengths }) => {
             </SelectContent>
           </Select>
         </div>
-        <div className="grid grid-cols-1 items-center justify-items-center gap-3 p-6 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 ">
+        <div className="grid grid-cols-1 items-center justify-items-center gap-3 p-6 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
           {filteredUsers.map((user, index) => (
             <CardUser
               key={user.id}

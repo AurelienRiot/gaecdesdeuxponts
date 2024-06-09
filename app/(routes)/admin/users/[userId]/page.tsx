@@ -11,6 +11,7 @@ import MonthlyInvoice from "./_components/monthly-invoice";
 import { OrderColumn } from "./_components/order-column";
 import { OrderTable } from "./_components/order-table";
 import { UserForm } from "./_components/user-form";
+import { CreateUserForm } from "./_components/create-user-form";
 
 export const dynamic = "force-dynamic";
 
@@ -35,12 +36,7 @@ const UserPage = async ({ params }: { params: { userId: string } }) => {
   });
 
   if (!user) {
-    return (
-      <>
-        <div>Utilisateur introuvable </div>
-        <ButtonBackward />
-      </>
-    );
+    return <CreateUserForm />;
   }
 
   const montlyOrders: (monthlyOrdersType | null)[] = user.orders.map(

@@ -31,7 +31,7 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import * as z from "zod";
 import { deleteUser } from "../../_components/server-action";
-import { updateUser } from "./server-action";
+import { updateUser } from "../_actions/update-user";
 
 interface UserFormProps {
   initialData: UserWithOrdersAndAdress;
@@ -96,14 +96,15 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
 
   const onSubmit = async (data: UserFormValues) => {
     data.name = data.name.trim();
-    const result = await updateUser(data, initialData.id);
-    if (!result.success) {
-      toast.error(result.message);
-      return;
-    }
-    router.push(`/admin/users`);
-    router.refresh();
-    toast.success(toastMessage);
+    await updateUser(data, initialData.id)
+      .then(() => {
+        router.push(`/admin/users`);
+        router.refresh();
+        toast.success(toastMessage);
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
 
   const onDelete = async () => {
