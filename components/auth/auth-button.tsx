@@ -36,7 +36,7 @@ export const LoginButton = (
     >
       <Link href={"/login"} {...props}>
         {" "}
-        <LogIn className="h-6 w-6 transition-all " />{" "}
+        <LogIn className="h-6 w-6 transition-all" />{" "}
       </Link>
     </Button>
   );
@@ -81,14 +81,14 @@ export const GoogleButton = ({ callbackUrl }: { callbackUrl: string }) => {
         });
         setLoading(false);
       }}
-      className="relative flex w-[306px] items-center justify-between  gap-4 rounded-sm bg-[#4285F4] shadow-xl  duration-200 ease-linear  hover:bg-[#4285F4]/90 active:scale-95"
+      className="relative flex w-[306px] items-center justify-between gap-4 rounded-sm bg-[#4285F4] shadow-xl duration-200 ease-linear hover:bg-[#4285F4]/90 active:scale-95"
     >
       <Icons.google />
-      <span className="mx-auto  self-center font-medium text-white sm:text-lg">
+      <span className="mx-auto self-center font-medium text-white sm:text-lg">
         {loading ? (
           <Spinner
             size={40}
-            className=" absolute left-[135px] top-1 font-sans   text-white"
+            className="absolute left-[135px] top-1 font-sans text-white"
           />
         ) : (
           "Se connecter avec Google"
@@ -133,10 +133,10 @@ export const EmailButton = ({ callbackUrl }: { callbackUrl: string }) => {
 
   return (
     <>
-      {success ? null : (
+      {!success && (
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(() => onSubmit(form.getValues()))}>
-            <div className="grid w-full  items-center gap-1.5">
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="grid w-full items-center gap-1.5">
               <FormField
                 control={form.control}
                 name="email"
@@ -144,16 +144,14 @@ export const EmailButton = ({ callbackUrl }: { callbackUrl: string }) => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <div className="relative flex items-center gap-1 ">
-                        <Input
-                          type="email"
-                          autoCapitalize="off"
-                          disabled={form.formState.isSubmitting}
-                          autoComplete="email"
-                          placeholder="exemple@email.com"
-                          {...field}
-                        />
-                      </div>
+                      <Input
+                        type="email"
+                        autoCapitalize="off"
+                        disabled={form.formState.isSubmitting}
+                        autoComplete="email"
+                        placeholder="exemple@email.com"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

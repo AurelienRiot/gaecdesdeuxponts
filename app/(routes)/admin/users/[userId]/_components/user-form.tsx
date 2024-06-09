@@ -1,6 +1,10 @@
 "use client";
 
 import { AddressForm, addressSchema } from "@/components/address-form";
+import {
+  BillingAddressForm,
+  billingAddressSchema,
+} from "@/components/billing-address-form";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import { Button } from "@/components/ui/button";
 import ButtonBackward from "@/components/ui/button-backward";
@@ -28,10 +32,6 @@ import { toast } from "sonner";
 import * as z from "zod";
 import { deleteUser } from "../../_components/server-action";
 import { updateUser } from "./server-action";
-import {
-  BillingAddressForm,
-  billingAddressSchema,
-} from "@/components/billing-address-form";
 
 interface UserFormProps {
   initialData: UserWithOrdersAndAdress;

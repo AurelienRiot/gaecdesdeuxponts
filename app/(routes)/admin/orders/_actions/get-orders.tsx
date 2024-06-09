@@ -1,11 +1,11 @@
 "use server";
 
-import prismadb from "@/lib/prismadb";
-import { formatOrders } from "../_components/format-orders";
-import { ReturnTypeServerAction } from "@/types";
-import { OrderColumn } from "../_components/columns";
-import { DateRange } from "react-day-picker";
 import { checkAdmin } from "@/components/auth/checkAuth";
+import prismadb from "@/lib/prismadb";
+import { ReturnTypeServerAction } from "@/types";
+import { DateRange } from "react-day-picker";
+import { OrderColumn } from "../_components/columns";
+import { formatOrders } from "../_components/format-orders";
 
 const getOrders = async (
   dateRange: DateRange | undefined,

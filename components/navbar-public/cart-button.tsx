@@ -25,15 +25,15 @@ const CartIcon = forwardRef<HTMLButtonElement, { qty: number }>(
     return (
       <Button
         variant={"outline"}
-        className="group relative  border-0	px-3 hover:bg-background hover:text-foreground/80   "
+        className="group relative border-0 px-3 hover:bg-background hover:text-foreground/80"
         ref={ref}
         {...props}
       >
         <ShoppingCart size={20} className="group-hover:text-foreground/80" />
-        <span className="sr-only ">Ouvrir le panier</span>
+        <span className="sr-only">Ouvrir le panier</span>
         <span
           className={cn(
-            "absolute  -right-1 -top-1 flex aspect-square  min-w-5  items-center justify-center rounded-full bg-foreground px-1 font-sans text-xs tabular-nums text-background shadow-md group-hover:bg-foreground/80 group-hover:text-background/80",
+            "absolute -right-1 -top-1 flex aspect-square min-w-5 items-center justify-center rounded-full bg-foreground px-1 font-sans text-xs tabular-nums text-background shadow-md group-hover:bg-foreground/80 group-hover:text-background/80",
             qty > 99
               ? "-right-2 -top-2 scale-[0.6]"
               : qty > 9
@@ -77,7 +77,7 @@ export const CartButton = () => {
             <SheetTitle>
               <Link
                 href="/panier"
-                className="mt-6 flex h-10 items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                className="mt-6 flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {" "}
                 Passer commande{" "}
@@ -89,7 +89,7 @@ export const CartButton = () => {
 
           <div className="lg:col-span-7">
             {cart.items.length === 0 && (
-              <p className="text-secondary-foreground ">
+              <p className="text-secondary-foreground">
                 Aucun produit dans le panier
               </p>
             )}
