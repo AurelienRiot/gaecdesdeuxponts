@@ -19,6 +19,7 @@ const NavigationMenu = React.forwardRef<
     {...props}
   >
     {children}
+
     <NavigationMenuViewport orientation={props.orientation} />
   </NavigationMenuPrimitive.Root>
 ));
@@ -31,7 +32,7 @@ const NavigationMenuList = React.forwardRef<
   <NavigationMenuPrimitive.List
     ref={ref}
     className={cn(
-      "group flex flex-1 list-none items-center justify-center space-x-1 data-[orientation=vertical]:flex-col data-[orientation=vertical]:items-start data-[orientation=vertical]:space-x-0 ",
+      "group flex flex-1 list-none items-center justify-center space-x-1 data-[orientation=vertical]:flex-col data-[orientation=vertical]:items-start data-[orientation=vertical]:space-x-0",
       className,
     )}
     {...props}
@@ -51,7 +52,7 @@ const NavigationMenuTrigger = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <NavigationMenuPrimitive.Trigger
     ref={ref}
-    className={cn(navigationMenuTriggerStyle(), "group ", className)}
+    className={cn(navigationMenuTriggerStyle(), "group", className)}
     {...props}
   >
     {children}{" "}
@@ -66,19 +67,17 @@ NavigationMenuTrigger.displayName = NavigationMenuPrimitive.Trigger.displayName;
 const NavigationMenuContent = React.forwardRef<
   React.ElementRef<typeof NavigationMenuPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Content>
->(({ className, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
   <NavigationMenuPrimitive.Content
     ref={ref}
     className={cn(
-      `absolute left-0  top-0 w-auto  data-[motion^=from-]:animate-in data-[motion^=to-]:animate-out data-[motion^=from-]:fade-in
-      data-[motion^=to-]:fade-out data-[motion=from-end]:slide-in-from-right-52 
-      data-[motion=from-start]:slide-in-from-left-52 data-[motion=to-end]:slide-out-to-right-52
-  data-[motion=to-start]:slide-out-to-left-52
-      `,
+      `absolute left-0 top-0 max-h-[50dvh] w-auto overflow-y-auto pb-4 hide-scrollbar data-[motion^=from-]:animate-in data-[motion^=to-]:animate-out data-[motion^=from-]:fade-in data-[motion^=to-]:fade-out data-[motion=from-end]:slide-in-from-right-52 data-[motion=from-start]:slide-in-from-left-52 data-[motion=to-end]:slide-out-to-right-52 data-[motion=to-start]:slide-out-to-left-52 sm:max-h-none`,
       className,
     )}
     {...props}
-  />
+  >
+    {children}
+  </NavigationMenuPrimitive.Content>
 ));
 NavigationMenuContent.displayName = NavigationMenuPrimitive.Content.displayName;
 
@@ -104,18 +103,19 @@ const NavigationMenuViewport = React.forwardRef<
 >(({ className, orientation, ...props }, ref) => (
   <div
     className={cn(
-      `data-[orientation=vertical]:left absolute left-0 top-full flex justify-center    `,
+      `data-[orientation=vertical]:left absolute left-0 top-full flex justify-center`,
       orientation === "vertical" && "left-full top-0",
     )}
   >
     <NavigationMenuPrimitive.Viewport
       className={cn(
-        "origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-[var(--radix-navigation-menu-viewport-width)]  rounded-md border bg-popover text-popover-foreground  shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90",
+        "origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-[var(--radix-navigation-menu-viewport-width)] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90",
         className,
       )}
       ref={ref}
       {...props}
     />
+    <div className="pointer-events-none absolute inset-0 mt-1.5 rounded-md border bg-gradient-to-b from-transparent from-85% to-popover to-95%" />
   </div>
 ));
 NavigationMenuViewport.displayName =
@@ -150,7 +150,7 @@ const NavigationMenuListItem = React.forwardRef<
       <NavigationMenuPrimitive.Link
         ref={ref}
         className={cn(
-          "block select-none  space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
           className,
         )}
         aria-label={`aller à ${title}`}
@@ -159,7 +159,7 @@ const NavigationMenuListItem = React.forwardRef<
         <div className="justify-left flex items-center text-base font-medium leading-none">
           {Icone} {title}
         </div>
-        <p className="line-clamp-3 text-left   text-sm leading-snug text-muted-foreground">
+        <p className="line-clamp-3 text-left text-sm leading-snug text-muted-foreground">
           {children}
         </p>
       </NavigationMenuPrimitive.Link>

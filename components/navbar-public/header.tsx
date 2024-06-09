@@ -10,15 +10,15 @@ export const dynamic = "force-dynamic";
 
 const PublicHeader = () => {
   return (
-    <header className="fixed top-0   z-[1100] flex h-16 w-full items-center justify-between bg-background px-4 py-4  shadow-md  sm:px-6 ">
-      <div className="flex items-center justify-center gap-4 ">
+    <header className="fixed top-0 z-[1100] flex h-16 w-full items-center justify-between bg-background px-4 py-4 shadow-md sm:px-6">
+      <div className="flex items-center justify-center gap-4">
         <MobileNav>
           <MainNav orientation="vertical" className="mt-10" />
         </MobileNav>
-        <Link href="/" className="hidden xs:block">
+        <Link href="/" className="hidden min-[380px]:block">
           <Image
             alt="Logo"
-            className="h-16 w-auto rounded-md "
+            className="h-16 w-auto rounded-md"
             src="/logo-rect.webp"
             width={155.86}
             height={56}
@@ -33,7 +33,7 @@ const PublicHeader = () => {
         />
       </div>
 
-      <MainNav className="hidden lg:block " />
+      <MainNav className="hidden lg:block" />
       <div className={"flex items-center sm:gap-x-4 sm:pr-2"}>
         <AuthLink className="hidden sm:block" />
         <ThemeToggle />

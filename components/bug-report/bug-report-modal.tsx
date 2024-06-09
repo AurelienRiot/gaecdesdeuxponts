@@ -58,7 +58,7 @@ const BugReportModal = ({ isOpen, setIsOpen }: BugReportModalProps) => {
       description="Décrivez le bug que vous avez rencontré"
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
-      className="left-[50%] top-[50%] max-h-[90vh]  overflow-y-auto"
+      className="left-[50%] top-[50%] max-h-[90vh] overflow-y-auto"
     >
       <Form {...form}>
         <form
