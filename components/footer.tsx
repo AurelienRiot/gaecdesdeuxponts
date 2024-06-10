@@ -8,17 +8,17 @@ const Footer = ({ className }: { className?: string }) => {
     <>
       <footer
         className={cn(
-          "space-y-2 border-t bg-neutral-800 pb-6 text-neutral-50 print:hidden",
+          "space-y-2 border-t bg-neutral-800 pb-20 text-neutral-50 sm:pb-6 print:hidden",
           className,
         )}
       >
         <div className="mx-auto pb-2 pt-10">
-          <p className="text-center text-xs ">
+          <p className="text-center text-xs">
             &copy; {currentYear} Laiterie du Pont Robert. Tous droits réservés.
           </p>
         </div>
         <nav className="space-y-2">
-          <ul className="flex flex-col justify-center gap-6  text-center sm:flex-row ">
+          <ul className="flex flex-col justify-center gap-6 text-center sm:flex-row">
             <li>
               <Link
                 prefetch={false}
@@ -59,7 +59,7 @@ const Footer = ({ className }: { className?: string }) => {
             </li>
           </ul>
           <div className="flex items-center justify-center">
-            <BugReport className=" text-neutral-50" />
+            <BugReport className="text-neutral-50" />
           </div>
         </nav>
       </footer>

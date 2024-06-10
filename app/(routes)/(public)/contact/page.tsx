@@ -1,4 +1,4 @@
-import { getBasicUser } from "@/actions/get-user";
+import { getBasicUser, getSessionUser } from "@/actions/get-user";
 import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { LoadingButton } from "@/components/ui/button";
@@ -41,7 +41,7 @@ const ContactPage = () => {
 export default ContactPage;
 
 const Form = async () => {
-  const user = await getBasicUser();
+  const user = await getSessionUser();
   return <ContactForm name={user?.name} email={user?.email} />;
 };
 

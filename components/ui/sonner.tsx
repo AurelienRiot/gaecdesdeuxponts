@@ -1,11 +1,10 @@
 "use client";
 
 import { addDelay } from "@/lib/utils";
-import { ReturnTypeServerAction } from "@/types";
+import { Loader2 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Toaster as Sonner, toast } from "sonner";
 import { Button } from "./button";
-import { Loader2 } from "lucide-react";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
@@ -34,18 +33,18 @@ const Toaster = ({ ...props }: ToasterProps) => {
   );
 };
 
-type ToastPromiseProps<T> = {
-  serverAction: (data: T) => Promise<ReturnTypeServerAction<null>>;
+type ToastPromiseProps<T, R> = {
+  serverAction: (data: T) => Promise<R>;
   data: T;
   errorMessage?: string;
   successMessage?: string;
   message?: string;
   onFinally?: () => void;
   onError?: () => void;
-  onSuccess?: () => void;
+  onSuccess?: (result?: R) => void;
 };
 
-const toastPromise = <T,>({
+const toastPromise = <T, R>({
   serverAction,
   data,
   errorMessage = "Envoie du message annulé",
@@ -54,23 +53,28 @@ const toastPromise = <T,>({
   onFinally,
   onError,
   onSuccess,
-}: ToastPromiseProps<T>) => {
+}: ToastPromiseProps<T, R>) => {
   const abortController = new AbortController();
   const { signal } = abortController;
   const promise = async () => {
-    try {
-      await addDelay(2100, signal);
-
-      await serverAction(data);
-    } catch (e) {
+    await addDelay(2100, signal).catch((e) => {
       const error = e as Error;
       if (error?.name === "AbortError") {
         throw new Error(errorMessage);
       }
       throw e;
-    }
+    });
 
-    return signal;
+    const result = await serverAction(data)
+      .then((result) => result)
+      .catch((e) => {
+        const error = e as Error;
+        if (error?.name === "AbortError") {
+          throw new Error(errorMessage);
+        }
+        throw e;
+      });
+    return result;
   };
 
   toast.promise(promise, {
@@ -92,8 +96,8 @@ const toastPromise = <T,>({
         </Button>
       </div>
     ),
-    success: () => {
-      onSuccess?.();
+    success: (result) => {
+      onSuccess?.(result);
       return successMessage;
     },
     error: (e) => {

@@ -28,7 +28,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Category, Unit } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -39,6 +39,7 @@ import { ProductWithOptions } from "./product-with-options-form";
 import { updateProduct } from "../_actions/update-product";
 import { createProduct } from "../_actions/create-product";
 import { nanoid } from "nanoid";
+import useIsComponentMounted from "@/hooks/use-mounted";
 
 const OptionSchema = z.object({
   index: z.number(),
@@ -146,6 +147,10 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       ],
     },
   });
+
+  useEffect(() => {
+    setTimeout(() => form.setFocus("name"), 0);
+  }, [form]);
 
   const onSubmit = async (data: ProductFormValues) => {
     if (initialData) {

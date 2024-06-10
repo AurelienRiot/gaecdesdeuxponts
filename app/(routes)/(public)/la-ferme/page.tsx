@@ -4,6 +4,8 @@ import Vache from "@/public/vache.webp";
 import Photo from "@/public/photo.webp";
 import { Metadata } from "next";
 
+export const dynamic = "force-static";
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "À propos de nous",
@@ -19,16 +21,16 @@ const PageLaFerme = () => {
         <h1 className="mb-8 text-center text-5xl font-bold">
           À propos de nous
         </h1>
-        <div className="grid grid-cols-1 items-center justify-center gap-4 text-center sm:grid-cols-2 ">
+        <div className="grid grid-cols-1 items-center justify-center gap-4 text-center sm:grid-cols-2">
           <Image
             src={Photo}
             width={1106}
             height={984}
             placeholder="blur"
             alt="Photo Julie et Jean-Marc"
-            className=" mx-auto max-w-sm rounded-lg shadow-md sm:max-w-full md:max-w-sm"
+            className="mx-auto max-w-sm rounded-lg shadow-md sm:max-w-full md:max-w-sm"
           />
-          <div className="space-y-2 text-base lg:text-lg ">
+          <div className="space-y-2 text-base lg:text-lg">
             <p>
               Nous sommes Julie et Jean-Marc, les heureux propriétaires d’une
               jeune exploitation agricole située dans la vallée du Don, en plein
@@ -45,7 +47,7 @@ const PageLaFerme = () => {
             </p>
           </div>
 
-          <p className="space-y-2 text-base lg:text-lg ">
+          <p className="space-y-2 text-base lg:text-lg">
             Pour tirer le meilleur parti de ces prairies tout en respectant leur
             équilibre naturel, nous avons mis en place une gestion minutieuse
             basée sur une fauche de fin de printemps, destinée à nourrir nos
@@ -59,9 +61,9 @@ const PageLaFerme = () => {
             width={1200}
             height={1600}
             alt="Photo de la ferme"
-            className=" mx-auto max-h-[60vh] w-auto rounded-lg  shadow-md sm:row-span-2 "
+            className="mx-auto max-h-[60vh] w-auto rounded-lg shadow-md sm:row-span-2"
           />
-          <p className="space-y-2 text-base lg:text-lg ">
+          <p className="space-y-2 text-base lg:text-lg">
             Située dans le périmètre du site Natura 2000 Marais de Vilaine,
             notre parcelle est un véritable havre de biodiversité. La riche
             microfaune présente attire une multitude d’oiseaux au printemps, et
@@ -75,9 +77,9 @@ const PageLaFerme = () => {
             height={1168}
             placeholder="blur"
             alt="Ferme"
-            className=" mx-auto rounded-lg shadow-md "
+            className="mx-auto rounded-lg shadow-md"
           />
-          <div className="space-y-2 text-base lg:text-lg ">
+          <div className="space-y-2 text-base lg:text-lg">
             <p>
               La diversité floristique exceptionnelle de nos prairies, avec plus
               de 50 espèces différentes, nous garantit une excellente

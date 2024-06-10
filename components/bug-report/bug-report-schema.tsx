@@ -1,6 +1,7 @@
 import * as z from "zod";
 
 export const bugReportSchema = z.object({
+  subject: z.string(),
   page: z
     .string()
     .min(1, { message: "La page ne peut pas être vide" })

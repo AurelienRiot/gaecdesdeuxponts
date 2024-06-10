@@ -4,6 +4,8 @@ import BidonLait from "@/public/bidon-lait.jpg";
 import Veau from "@/public/veau.webp";
 import Image from "next/image";
 
+export const dynamic = "force-static";
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Lait Cru",
@@ -19,16 +21,16 @@ const LaitCruPage = () => {
         <h1 className="mb-8 text-center text-5xl font-bold">
           La Démarche du Lait Cru
         </h1>
-        <div className="grid grid-cols-1 items-center justify-center gap-4 text-center sm:grid-cols-2 ">
+        <div className="grid grid-cols-1 items-center justify-center gap-4 text-center sm:grid-cols-2">
           <Image
             src={VacheChamps}
             width={3175}
             height={1662}
             placeholder="blur"
             alt="Vache champs"
-            className=" mx-auto max-w-sm rounded-lg shadow-md sm:max-w-full md:max-w-sm"
+            className="mx-auto max-w-sm rounded-lg shadow-md sm:max-w-full md:max-w-sm"
           />
-          <div className="space-y-2 text-base lg:text-lg ">
+          <div className="space-y-2 text-base lg:text-lg">
             <p>
               Nous nous engageons à produire du lait cru bio de la plus haute
               qualité, en adoptant une approche respectueuse de l’environnement
@@ -46,7 +48,7 @@ const LaitCruPage = () => {
             </p>
           </div>
 
-          <div className="space-y-2 text-base lg:text-lg ">
+          <div className="space-y-2 text-base lg:text-lg">
             <p>
               La production de lait cru nécessite un soin particulier durant le
               processus de traite et de stockage pour prévenir toute
@@ -70,7 +72,7 @@ const LaitCruPage = () => {
             height={500}
             placeholder="blur"
             alt="Bidon lait"
-            className=" mx-auto max-w-sm rounded-lg shadow-md sm:max-w-full md:max-w-sm"
+            className="mx-auto max-w-sm rounded-lg shadow-md sm:max-w-full md:max-w-sm"
           />
           <Image
             src={Veau}
@@ -78,9 +80,9 @@ const LaitCruPage = () => {
             height={3456}
             placeholder="blur"
             alt="Veau"
-            className=" mx-auto hidden max-w-sm rounded-lg shadow-md sm:block sm:max-w-full md:max-w-sm"
+            className="mx-auto hidden max-w-sm rounded-lg shadow-md sm:block sm:max-w-full md:max-w-sm"
           />
-          <div className=" space-y-2 text-base  lg:text-lg ">
+          <div className="space-y-2 text-base lg:text-lg">
             <p>
               Notre démarche repose également sur une transparence totale et une
               relation de confiance avec nos clients. Nous invitons les
@@ -102,7 +104,7 @@ const LaitCruPage = () => {
             height={3456}
             placeholder="blur"
             alt="Veau"
-            className=" mx-auto max-w-sm rounded-lg shadow-md sm:hidden sm:max-w-full md:max-w-sm"
+            className="mx-auto max-w-sm rounded-lg shadow-md sm:hidden sm:max-w-full md:max-w-sm"
           />
         </div>
       </div>

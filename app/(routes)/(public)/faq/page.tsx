@@ -7,6 +7,8 @@ import {
 } from "./accordion";
 import { Metadata } from "next";
 
+export const dynamic = "force-static";
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "FAQ sur le Lait Cru",
@@ -97,7 +99,7 @@ const faqData = [
 
 const FAQPage = () => {
   return (
-    <Container className=" px-4 py-12 ">
+    <Container className="px-4 py-12">
       <div className="mx-auto max-w-4xl">
         <div className="mb-20 text-center">
           <h1 className="mb-4 text-3xl font-bold text-primary lg:text-5xl">
@@ -111,12 +113,12 @@ const FAQPage = () => {
         </div>
       </div>
 
-      <Accordion className=" relative mt-8 flex w-full flex-col gap-4 ">
+      <Accordion className="relative mt-8 flex w-full flex-col gap-4">
         {faqData.map((faq, index) => (
           <AccordionItem key={index} value={`item-${index}`}>
             <AccordionTrigger>{faq.question}</AccordionTrigger>
             <AccordionContent value={`item-${index}`}>
-              <ul className=" space-y-4 bg-gradient-to-r from-neutral-900 to-slate-900 bg-clip-text py-2 text-sm text-transparent list-check-green-600">
+              <ul className="space-y-4 bg-gradient-to-r from-neutral-900 to-slate-900 bg-clip-text py-2 text-sm text-transparent list-check-green-600">
                 {faq.answer.map((point, pointIndex) => (
                   <li className="mx-4" key={pointIndex}>
                     {point}
