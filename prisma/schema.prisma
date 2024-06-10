@@ -107,6 +107,7 @@ model MainProduct {
 
 model Product {
   id           String @unique @id @default(cuid())
+  index        Int @default(0)
   productName  String
   product      MainProduct @relation("MainProductToProduct", fields: [productName], references: [name],onDelete: Cascade)
   name         String 
@@ -135,11 +136,11 @@ Litre
 
 model Option {
   id             String   @unique @id @default(cuid())
+  index          Int @default(0)
   name           String
   value          String
   productId      String   
   product        Product  @relation("ProductToOption", fields: [productId], references: [id], onDelete: Cascade)
-
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 

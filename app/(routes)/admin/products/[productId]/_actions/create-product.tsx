@@ -14,14 +14,11 @@ export async function createProduct({
   isArchived,
   isPro,
   products,
-}: ProductFormValues): Promise<ReturnTypeServerAction<null>> {
+}: ProductFormValues): Promise<void> {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
-    return {
-      success: false,
-      message: "Vous devez être authentifier",
-    };
+    throw new Error("Vous devez être authentifier");
   }
 
   const sameProduct = await prismadb.mainProduct.findUnique({
@@ -30,10 +27,7 @@ export async function createProduct({
     },
   });
   if (sameProduct) {
-    return {
-      success: false,
-      message: "Un produit avec ce nom existe déja",
-    };
+    throw new Error("Un produit avec ce nom existe déja");
   }
 
   await prismadb.mainProduct.create({
@@ -71,9 +65,4 @@ export async function createProduct({
 
   revalidateTag("categories");
   revalidateTag("productfetch");
-
-  return {
-    success: true,
-    data: null,
-  };
 }

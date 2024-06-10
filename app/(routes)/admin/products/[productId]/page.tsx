@@ -12,7 +12,10 @@ const ProductPage = async ({ params }: { params: { productId: string } }) => {
       id: params.productId,
     },
     include: {
-      products: { include: { options: true } },
+      products: {
+        include: { options: { orderBy: { index: "asc" } } },
+        orderBy: { index: "asc" },
+      },
     },
   });
 
@@ -26,6 +29,12 @@ const ProductPage = async ({ params }: { params: { productId: string } }) => {
   });
 
   const mappedGroupedOptions = getAllOptions(options);
+  mappedGroupedOptions.forEach((option, index) => {
+    mappedGroupedOptions[index] = {
+      name: option.name,
+      values: [...option.values, "Personnalisé", "Aucun"],
+    };
+  });
 
   return (
     <div className="flex-col">
@@ -67,5 +76,6 @@ export const getAllOptions = (
       values: value,
     }),
   );
+
   return mappedGroupedOptions;
 };

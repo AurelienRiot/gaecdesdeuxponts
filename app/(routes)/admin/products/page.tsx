@@ -1,5 +1,4 @@
 import prismadb from "@/lib/prismadb";
-import { currencyFormatter } from "@/lib/utils";
 import { ProductClient } from "./_components/client";
 import { ProductColumn } from "./_components/columns";
 
@@ -10,8 +9,9 @@ const ProductPage = async () => {
     include: {
       products: {
         include: {
-          options: true,
+          options: { orderBy: { index: "asc" } },
         },
+        orderBy: { index: "asc" },
       },
     },
     orderBy: {

@@ -41,12 +41,14 @@ import { createProduct } from "../_actions/create-product";
 import { nanoid } from "nanoid";
 
 const OptionSchema = z.object({
+  index: z.number(),
   name: z.string().min(1, { message: "Le nom de l'option est requis" }),
   value: z.string().min(1, { message: "La valeur de l'option est requis" }),
 });
 
 const productSchema = z.object({
   id: z.string(),
+  index: z.number(),
   name: z.string().min(1, { message: "Le nom est requis" }),
   description: z.string(),
   price: z.coerce
@@ -116,6 +118,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       isPro: initialData?.isPro || false,
       products: initialData?.products.map((product) => ({
         id: product.id,
+        index: product.index,
         name: product.name,
         description: product.description,
         price: product.price,
@@ -124,12 +127,14 @@ export const ProductForm: React.FC<ProductFormProps> = ({
         isArchived: product.isArchived,
         imagesUrl: product.imagesUrl,
         options: product.options.map((option) => ({
+          index: option.index,
           name: option.name,
           value: option.value,
         })),
       })) || [
         {
           name: "",
+          index: 0,
           id: `PR_${nanoid()}`,
           description: "",
           price: undefined,
@@ -144,22 +149,26 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
   const onSubmit = async (data: ProductFormValues) => {
     if (initialData) {
-      const result = await updateProduct(data, initialData.id);
-      if (!result.success) {
-        toast.error(result.message);
-        return;
-      }
+      await updateProduct(data, initialData.id)
+        .then(() => {
+          router.push("/admin/products");
+          router.refresh();
+          toast.success(toastMessage);
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
     } else {
-      const result = await createProduct(data);
-      if (!result.success) {
-        toast.error(result.message);
-        return;
-      }
+      await createProduct(data)
+        .then(() => {
+          router.push("/admin/products");
+          router.refresh();
+          toast.success(toastMessage);
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
     }
-
-    router.push("/admin/products");
-    router.refresh();
-    toast.success(toastMessage);
   };
 
   const onDelete = async () => {
@@ -199,7 +208,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-8 "
+          className="w-full space-y-8"
         >
           <FormField
             control={form.control}
@@ -276,7 +285,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               control={form.control}
               name="isArchived"
               render={({ field }) => (
-                <FormItem className="flex  flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                   <label className="flex cursor-pointer flex-row items-start space-x-3 space-y-0">
                     <FormControl>
                       <Checkbox
@@ -299,7 +308,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               control={form.control}
               name="isPro"
               render={({ field }) => (
-                <FormItem className="flex  flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                   <label className="flex cursor-pointer flex-row items-start space-x-3 space-y-0">
                     <FormControl>
                       <Checkbox

@@ -10,7 +10,10 @@ export const getProducts = async () => {
         isPro: false,
       },
     },
-    include: { options: true, product: true },
+    include: { options: { orderBy: { index: "asc" } }, product: true },
+    orderBy: {
+      index: "asc",
+    },
   });
   return products;
 };
@@ -26,7 +29,10 @@ export const getProductsByCategoryName = unstable_cache(
           isPro: false,
         },
       },
-      include: { options: true, product: true },
+      include: { options: { orderBy: { index: "asc" } }, product: true },
+      orderBy: {
+        index: "asc",
+      },
     });
     return products;
   },
@@ -45,7 +51,10 @@ export const getProProductsByCategoryName = unstable_cache(
           isPro: true,
         },
       },
-      include: { options: true, product: true },
+      include: { options: { orderBy: { index: "asc" } }, product: true },
+      orderBy: {
+        index: "asc",
+      },
     });
     return products;
   },
@@ -101,8 +110,11 @@ export const getFeaturedProducts = unstable_cache(
         isFeatured: true,
       },
       include: {
-        options: true,
+        options: { orderBy: { index: "asc" } },
         product: true,
+      },
+      orderBy: {
+        index: "asc",
       },
     });
     return products;

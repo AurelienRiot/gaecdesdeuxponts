@@ -33,7 +33,7 @@ const Info: React.FC<InfoProps> = ({
         {product.name}
       </h2>
       <Separator className="w-48" />
-      <div className="mt-3 items-end justify-between ">
+      <div className="mt-3 items-end justify-between">
         <p className="text-2xl text-gray-900 dark:text-white">
           <Currency value={value} unit={product.unit} />
         </p>
@@ -72,7 +72,7 @@ const Info: React.FC<InfoProps> = ({
 
       <PlateVis
         value={product.product.productSpecs}
-        className={scroll ? "h-[500px] overflow-scroll  hide-scrollbar" : "p-0"}
+        className={scroll ? "h-[500px] overflow-scroll hide-scrollbar" : "p-0"}
       />
     </div>
   );
@@ -115,6 +115,10 @@ const OptionsDisplay = ({ optionsArray, product, sameProducts }: InfoProps) => {
                     ? (productUrl += `${option.name}=${encodeURIComponent(value)}&`)
                     : null;
               });
+
+              // if (value === "Aucun") {
+              //   return null;
+              // }
 
               return (
                 <Badge

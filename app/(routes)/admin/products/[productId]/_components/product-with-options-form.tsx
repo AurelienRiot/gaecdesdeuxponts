@@ -69,12 +69,14 @@ export const ProductWithOptions = ({
   const addProduct = () => {
     const newProduct = {
       id: `PR_${nanoid()}`,
+      index: products.length,
       name: "",
       description: "",
       isArchived: false,
       isFeatured: false,
       imagesUrl: [],
       options: products[0].options.map((option) => ({
+        index: option.index,
         name: option.name,
         value: "",
       })),
@@ -84,7 +86,7 @@ export const ProductWithOptions = ({
   };
 
   const addOptions = () => {
-    const newOption = { name: "", value: "" };
+    const newOption = { index: options.length, name: "", value: "" };
     products.map((product, productIndex) => {
       form.setValue(`products.${productIndex}.options`, [
         ...product.options,
@@ -106,7 +108,7 @@ export const ProductWithOptions = ({
                 <Button
                   type="button"
                   variant="outline"
-                  className=" whitespace-nowrap border-dashed"
+                  className="whitespace-nowrap border-dashed"
                   onClick={addProduct}
                 >
                   <PlusCircledIcon className="mr-2 size-4" />
@@ -115,7 +117,7 @@ export const ProductWithOptions = ({
                 <Button
                   type="button"
                   variant="outline"
-                  className=" whitespace-nowrap border-dashed"
+                  className="whitespace-nowrap border-dashed"
                   onClick={addOptions}
                 >
                   <PlusCircledIcon className="mr-2 size-4" />
@@ -136,7 +138,7 @@ export const ProductWithOptions = ({
               {products.map((_, productIndex) => (
                 <div
                   key={productIndex}
-                  className="overflow-x-auto rounded-md p-4 pb-4    thin-scrollbar even:bg-secondary"
+                  className="overflow-x-auto rounded-md p-4 pb-4 thin-scrollbar even:bg-secondary"
                 >
                   <ProductName
                     setListChanges={setListChanges}
@@ -180,8 +182,11 @@ function ProductName({
   const moveProductUp = () => {
     if (productIndex > 0) {
       const newProducts: ProductFormValues["products"] = [...products];
-      const temp = newProducts[productIndex - 1];
-      newProducts[productIndex - 1] = newProducts[productIndex];
+      const temp = { ...newProducts[productIndex - 1], index: productIndex };
+      newProducts[productIndex - 1] = {
+        ...newProducts[productIndex],
+        index: productIndex - 1,
+      };
       newProducts[productIndex] = temp;
       form.setValue("products", newProducts);
       setListChanges((prev) => prev + 1);
@@ -191,8 +196,11 @@ function ProductName({
   const moveProductDown = () => {
     if (productIndex < products.length - 1) {
       const newProducts: ProductFormValues["products"] = [...products];
-      const temp = newProducts[productIndex + 1];
-      newProducts[productIndex + 1] = newProducts[productIndex];
+      const temp = { ...newProducts[productIndex + 1], index: productIndex };
+      newProducts[productIndex + 1] = {
+        ...newProducts[productIndex],
+        index: productIndex + 1,
+      };
       newProducts[productIndex] = temp;
       form.setValue("products", newProducts);
       setListChanges((prev) => prev + 1);
@@ -211,7 +219,7 @@ function ProductName({
         <div className="flex h-full flex-col justify-between gap-4 py-2">
           <IconButton
             Icon={ChevronsUp}
-            className={productIndex === 0 ? " opacity-0 " : ""}
+            className={productIndex === 0 ? "opacity-0" : ""}
             iconClassName={"size-4"}
             onClick={moveProductUp}
             type="button"
@@ -283,7 +291,7 @@ function ProductName({
           control={form.control}
           name={`products.${productIndex}.isArchived`}
           render={({ field }) => (
-            <FormItem className="flex  flex-row items-start space-x-3 space-y-0 rounded-md border ">
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border">
               <label className="flex h-full w-full cursor-pointer flex-row items-start space-x-3 space-y-0 p-4">
                 <FormControl>
                   <Checkbox
@@ -306,7 +314,7 @@ function ProductName({
           control={form.control}
           name={`products.${productIndex}.isFeatured`}
           render={({ field }) => (
-            <FormItem className="flex  flex-row items-start space-x-3 space-y-0 rounded-md border ">
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border">
               <label className="flex h-full w-full cursor-pointer flex-row items-start space-x-3 space-y-0 p-4">
                 <FormControl>
                   <Checkbox
@@ -345,11 +353,10 @@ function ProductName({
                   <button
                     type="button"
                     onClick={() => setOpenImage(true)}
-                    className="relative flex aspect-square  cursor-pointer flex-col items-center justify-center  rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-10 py-6 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700 
-                    "
+                    className="relative flex aspect-square cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-10 py-6 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
                   >
-                    <div className=" text-center ">
-                      <div className=" mx-auto max-w-min rounded-md border bg-foreground p-2">
+                    <div className="text-center">
+                      <div className="mx-auto max-w-min rounded-md border bg-foreground p-2">
                         <UploadCloud
                           size={20}
                           className="text-primary-foreground"
@@ -432,7 +439,7 @@ const OptionsName = ({
   products: ProductFormValues["products"];
   optionIndex: number;
   setListChanges: React.Dispatch<React.SetStateAction<number>>;
-  options: { name: string; value: string }[];
+  options: ProductFormValues["products"][0]["options"];
 }) => {
   const form = useFormContext<ProductFormValues>();
   const [openName, setOpenName] = useState(false);
@@ -459,8 +466,11 @@ const OptionsName = ({
   const moveOptionLeft = () => {
     if (optionIndex > 0) {
       const newOptions = [...options];
-      const temp = newOptions[optionIndex - 1];
-      newOptions[optionIndex - 1] = newOptions[optionIndex];
+      const temp = { ...newOptions[optionIndex - 1], index: optionIndex };
+      newOptions[optionIndex - 1] = {
+        ...newOptions[optionIndex],
+        index: optionIndex - 1,
+      };
       newOptions[optionIndex] = temp;
       products.map((_, productIndex) => {
         form.setValue(`products.${productIndex}.options`, newOptions);
@@ -472,8 +482,11 @@ const OptionsName = ({
   const moveOptionRigth = () => {
     if (optionIndex < products.length - 1) {
       const newOptions = [...options];
-      const temp = newOptions[optionIndex + 1];
-      newOptions[optionIndex + 1] = newOptions[optionIndex];
+      const temp = { ...newOptions[optionIndex + 1], index: optionIndex };
+      newOptions[optionIndex + 1] = {
+        ...newOptions[optionIndex],
+        index: optionIndex + 1,
+      };
       newOptions[optionIndex] = temp;
       products.map((_, productIndex) => {
         form.setValue(`products.${productIndex}.options`, newOptions);
@@ -488,7 +501,7 @@ const OptionsName = ({
       name={`products.0.options.${optionIndex}.name`}
       render={({ field }) => (
         <FormItem className="relative w-48">
-          <FormLabel className="flex gap-2 ">
+          <FormLabel className="flex gap-2">
             <span className="flex items-center">{`Nom de l'option ${optionIndex + 1}`}</span>
             <IconButton
               Icon={ChevronLeft}
@@ -609,7 +622,7 @@ const ImageModal = ({
       description=""
       isOpen={isOpen}
       onClose={onClose}
-      className=" left-[50%] top-[50%] max-h-[90%] w-[90%] max-w-[90%] overflow-y-scroll hide-scrollbar"
+      className="left-[50%] top-[50%] max-h-[90%] w-[90%] max-w-[90%] overflow-y-scroll hide-scrollbar"
     >
       <UploadImage
         selectedFiles={selectedFiles}
