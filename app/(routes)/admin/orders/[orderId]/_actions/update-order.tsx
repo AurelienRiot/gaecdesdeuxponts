@@ -1,30 +1,23 @@
 "use server";
 
 import { checkAdmin } from "@/components/auth/checkAuth";
-import { ReturnTypeServerAction } from "@/types";
+import { createCustomer } from "@/components/pdf/pdf-data";
 import prismadb from "@/lib/prismadb";
 import { OrderFormValues, orderSchema } from "../_components/order-shema";
-import { createCustomer, createPDFData } from "@/components/pdf/pdf-data";
 
 export async function updateOrder(
   data: OrderFormValues,
   id: string,
-): Promise<ReturnTypeServerAction<null>> {
+): Promise<void> {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
-    return {
-      success: false,
-      message: "Vous devez être authentifier",
-    };
+    throw new Error(`Vous devez être authentifier`);
   }
 
   const validatedData = orderSchema.safeParse(data);
   if (!validatedData.success) {
-    return {
-      success: false,
-      message: "Erreur lors de la validation des informations",
-    };
+    throw new Error(`La requête n'est pas valide`);
   }
 
   await prismadb.orderItem.deleteMany({
@@ -80,10 +73,6 @@ export async function updateOrder(
       },
     });
   }
-  return {
-    success: true,
-    data: null,
-  };
 }
 
 export default updateOrder;

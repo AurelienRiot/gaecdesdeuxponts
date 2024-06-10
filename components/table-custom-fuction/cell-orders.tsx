@@ -18,8 +18,7 @@ function ProductCell<T>({ row }: { row: Row<ProductCellProps<T>> }) {
             </>
           ) : (
             <>
-              <strong>{product.name}</strong> {product.quantity}
-              {product.unit}
+              <strong>{product.name}</strong> {product.quantity} {product.unit}
             </>
           )}
         </span>

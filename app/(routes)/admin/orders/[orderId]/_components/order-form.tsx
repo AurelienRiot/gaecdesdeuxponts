@@ -32,6 +32,8 @@ import { ShippingProducts } from "./products";
 import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TotalPrice from "./total-price";
+import { divIcon } from "leaflet";
+import TimePicker from "./time-picker";
 
 type ProductFormProps = {
   initialData: OrderFormValues | null;
@@ -110,18 +112,23 @@ export const OrderForm: React.FC<ProductFormProps> = ({
   };
 
   const onSubmit = async (data: OrderFormValues) => {
-    let result: ReturnTypeServerAction<null>;
     if (initialData) {
-      result = await updateOrder(data, initialData.id);
+      await updateOrder(data, initialData.id)
+        .then(() => {
+          toast.success(toastMessage);
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        });
     } else {
-      result = await createOrder(data);
+      await createOrder(data)
+        .then(() => {
+          toast.success(toastMessage);
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        });
     }
-    if (!result.success) {
-      toast.error(result.message);
-      return;
-    }
-
-    toast.success(toastMessage);
   };
 
   return (
@@ -156,13 +163,18 @@ export const OrderForm: React.FC<ProductFormProps> = ({
               control={form.control}
               name="datePickUp"
               render={({ field }) => (
-                <FormDatePicker
-                  {...field}
-                  date={field.value}
-                  onSelectDate={field.onChange}
-                  title="Date de retrait"
-                  button={"none"}
-                />
+                <>
+                  <FormDatePicker
+                    {...field}
+                    date={field.value}
+                    onSelectDate={field.onChange}
+                    title="Date de retrait"
+                    button={"none"}
+                  />
+                  {field.value && (
+                    <TimePicker date={field.value} setDate={field.onChange} />
+                  )}
+                </>
               )}
             />
             <FormField

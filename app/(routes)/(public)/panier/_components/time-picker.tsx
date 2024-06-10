@@ -44,7 +44,6 @@ const TimePicker = ({ className, date, shopId }: HourPickerProps) => {
     router.push(makeCartUrl(shopId, selectedDate), {
       scroll: false,
     });
-    console.log(selectedDate.toISOString());
   };
 
   const timeOptions = generateTimeOptions(date);
@@ -52,7 +51,7 @@ const TimePicker = ({ className, date, shopId }: HourPickerProps) => {
     <>
       <div
         className={cn(
-          "relative  flex flex-wrap items-center justify-between gap-y-2",
+          "relative flex flex-wrap items-center justify-between gap-y-2",
           className,
         )}
       >
@@ -72,7 +71,6 @@ const TimePicker = ({ className, date, shopId }: HourPickerProps) => {
                 hour: "2-digit",
                 minute: "2-digit",
               })}
-              {/* <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" /> */}
               <Icons.Clock className="ml-auto h-4 w-4" />
             </Button>
           </PopoverTrigger>
@@ -123,7 +121,7 @@ const TimePicker = ({ className, date, shopId }: HourPickerProps) => {
 
 export default TimePicker;
 
-const generateTimeOptions = (date: Date) => {
+export const generateTimeOptions = (date: Date) => {
   const times = [];
   let start = new Date(new Date(date).setHours(8, 30, 0, 0));
 

@@ -6,7 +6,7 @@ const secret = process.env.NEXTAUTH_SECRET;
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
 export async function middleware(req: NextRequest) {
-  const token = (await getToken({ req, secret })) as JWT;
+  const token = await getToken({ req, secret });
   if (!token) {
     return redirectToLogin(req);
   }

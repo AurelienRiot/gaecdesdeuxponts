@@ -21,7 +21,7 @@ type FormDatePickerProps = Omit<CalendarProps, "disabled"> & {
   onSelectDate: (date: Date | undefined | null) => void;
 };
 
-const FormDatePicker = forwardRef<HTMLDivElement, FormDatePickerProps>(
+const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
   (
     {
       title,
@@ -76,6 +76,7 @@ const FormDatePicker = forwardRef<HTMLDivElement, FormDatePickerProps>(
                 "relative w-full pl-3 text-left font-normal",
                 !date && "text-muted-foreground",
               )}
+              ref={ref}
             >
               {date ? dateFormatter(date) : <span>Choisir une date</span>}
 
@@ -94,7 +95,19 @@ const FormDatePicker = forwardRef<HTMLDivElement, FormDatePickerProps>(
               // month={month}
               locale={fr}
               onSelect={(d) => {
-                onSelectDate(d);
+                if (d) {
+                  const selectedDate = new Date(d);
+                  if (date) {
+                    selectedDate.setHours(date.getHours());
+                    selectedDate.setMinutes(date.getMinutes());
+                  } else {
+                    selectedDate.setHours(8);
+                    selectedDate.setMinutes(30);
+                  }
+                  onSelectDate(selectedDate);
+                } else {
+                  onSelectDate(undefined);
+                }
                 setOpen(false);
               }}
               modifiers={{

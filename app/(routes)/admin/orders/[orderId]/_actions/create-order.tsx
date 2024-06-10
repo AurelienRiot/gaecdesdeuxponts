@@ -1,29 +1,20 @@
 "use server";
 
 import { checkAdmin } from "@/components/auth/checkAuth";
-import { OrderFormValues, orderSchema } from "../_components/order-shema";
-import { ReturnTypeServerAction } from "@/types";
-import prismadb from "@/lib/prismadb";
 import { createCustomer } from "@/components/pdf/pdf-data";
+import prismadb from "@/lib/prismadb";
+import { OrderFormValues, orderSchema } from "../_components/order-shema";
 
-export async function createOrder(
-  data: OrderFormValues,
-): Promise<ReturnTypeServerAction<null>> {
+export async function createOrder(data: OrderFormValues): Promise<void> {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
-    return {
-      success: false,
-      message: "Vous devez être authentifier",
-    };
+    throw new Error(`Vous devez être authentifier`);
   }
 
   const validatedData = orderSchema.safeParse(data);
   if (!validatedData.success) {
-    return {
-      success: false,
-      message: "Erreur lors de la validation des informations",
-    };
+    throw new Error(`La requête n'est pas valide`);
   }
 
   const order = await prismadb.order.create({
@@ -61,11 +52,6 @@ export async function createOrder(
       },
     },
   });
-
-  return {
-    success: true,
-    data: null,
-  };
 }
 
 export default createOrder;
