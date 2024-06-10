@@ -15,6 +15,7 @@ import CardUser from "./card-user";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
+import Link from "next/link";
 
 interface UserClientProps {
   users: User[];
@@ -42,12 +43,11 @@ const UserClient: React.FC<UserClientProps> = ({ users, orderLengths }) => {
             title={`Clients (${filteredUsers.length})`}
             description="Liste des clients"
           />
-          <Button
-            onClick={() => router.push(`/admin/users/new`)}
-            className="m-2 pb-6 pt-6 sm:ml-2 sm:pb-0 sm:pt-0"
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Créer un client
+          <Button className="m-2 pb-6 pt-6 sm:ml-2 sm:pb-0 sm:pt-0" asChild>
+            <Link href={`/admin/users/new`}>
+              <Plus className="mr-2 h-4 w-4" />
+              Créer un client
+            </Link>
           </Button>
         </div>
         <div className="justify-content-center mt-4 grid grid-cols-1 gap-4 md:grid-cols-6">

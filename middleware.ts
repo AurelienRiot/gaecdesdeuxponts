@@ -23,7 +23,6 @@ export async function middleware(req: NextRequest) {
     });
 
     if (!apiResponse.ok) {
-      console.log("BaseUrl", baseUrl);
       console.log("API call error:", apiResponse.statusText);
       return redirectToLogin(req);
     }
@@ -53,7 +52,6 @@ export async function middleware(req: NextRequest) {
 
     return NextResponse.next();
   } catch (error) {
-    console.log("path", req.nextUrl.pathname);
     console.log("API call failed:", error);
     return redirectToLogin(req);
   }

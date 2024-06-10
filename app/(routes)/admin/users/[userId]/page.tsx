@@ -15,7 +15,15 @@ import { CreateUserForm } from "./_components/create-user-form";
 
 export const dynamic = "force-dynamic";
 
-const UserPage = async ({ params }: { params: { userId: string } }) => {
+const UserPage = async ({
+  params,
+}: {
+  params: { userId: string | "new" | undefined };
+}) => {
+  if (params.userId === "new") {
+    return <CreateUserForm />;
+  }
+
   const user = await prismadb.user.findUnique({
     where: {
       id: params.userId,
@@ -36,7 +44,12 @@ const UserPage = async ({ params }: { params: { userId: string } }) => {
   });
 
   if (!user) {
-    return <CreateUserForm />;
+    return (
+      <>
+        <div>Utilisateur introuvable </div>
+        <ButtonBackward />
+      </>
+    );
   }
 
   const montlyOrders: (monthlyOrdersType | null)[] = user.orders.map(
