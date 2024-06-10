@@ -1,8 +1,8 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { TextArea } from "../text-area";
+import { AutosizeTextarea } from "../ui/autosize-textarea";
 import { Button } from "../ui/button";
 import {
   Form,
@@ -101,7 +101,7 @@ const BugReportModal = ({ isOpen, setIsOpen }: BugReportModalProps) => {
                 <FormLabel>Description du bug</FormLabel>
                 <FormControl>
                   <div className="flex items-start gap-x-4">
-                    <TextArea
+                    <AutosizeTextarea
                       placeholder="..."
                       disabled={form.formState.isSubmitting || loading}
                       {...field}
