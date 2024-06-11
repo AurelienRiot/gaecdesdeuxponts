@@ -22,7 +22,6 @@ const LoginPage = async (context: {
     context.searchParams.callbackUrl ?? `${baseUrl}/dashboard-user`,
   );
   const user = await getBasicUser();
-  console.log({ callbackUrl });
   if (user) {
     if (user.role !== "admin" && callbackUrl.includes("/admin")) {
       return (

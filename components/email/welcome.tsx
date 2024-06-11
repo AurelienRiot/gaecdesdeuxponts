@@ -1,4 +1,4 @@
-import { Button, Section, Text } from "@react-email/components";
+import { Section, Text } from "@react-email/components";
 import MainBody, { ButtonProfile } from "./common";
 
 export interface WelcomeEmailProps {
@@ -9,7 +9,7 @@ export interface WelcomeEmailProps {
 export const WelcomeEmail = ({ url, baseUrl }: WelcomeEmailProps) => (
   <MainBody
     baseUrl={baseUrl}
-    previewText="Bienvenue sur Laiterie du Pont Robert"
+    previewText="Bienvenue ! Cliquez ici pour vous connecter et passer commande"
   >
     <WelcomeBody url={url} />
   </MainBody>
@@ -24,8 +24,8 @@ WelcomeEmail.PreviewProps = {
 
 const WelcomeBody = ({ url }: { url: string }) => (
   <>
-    <Text className="text-center text-base ">Bonjour,</Text>
-    <Text className="text-center text-base ">
+    <Text className="text-center text-base">Bonjour,</Text>
+    <Text className="text-center text-base">
       Bienvenue sur Laiterie du Pont Robert
     </Text>
     <Section className="text-center">

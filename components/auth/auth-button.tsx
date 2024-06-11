@@ -81,7 +81,7 @@ export const GoogleButton = ({ callbackUrl }: { callbackUrl: string }) => {
         });
         setLoading(false);
       }}
-      className="relative flex w-[306px] items-center justify-between gap-4 rounded-sm bg-[#4285F4] shadow-xl duration-200 ease-linear hover:bg-[#4285F4]/90 active:scale-95"
+      className="relative mx-auto flex w-[306px] items-center justify-between gap-4 rounded-sm bg-[#4285F4] shadow-xl duration-200 ease-linear hover:bg-[#4285F4]/90 active:scale-95"
     >
       <Icons.google />
       <span className="mx-auto self-center font-medium text-white sm:text-lg">
@@ -118,17 +118,22 @@ export const EmailButton = ({ callbackUrl }: { callbackUrl: string }) => {
   });
 
   const onSubmit = async (data: EmailFormValues) => {
-    const authentifier = await signIn("email", {
+    await signIn("email", {
       email: data.email.trim().toLowerCase(),
       redirect: false,
       callbackUrl,
-    });
-    if (authentifier?.error) {
-      toast.error("Erreur veuillez réessayer");
-    } else {
-      toast.success("Vérifiez votre boite mail");
-      setSuccess(true);
-    }
+    })
+      .then((res) => {
+        if (res?.error) {
+          toast.error("Erreur veuillez réessayer");
+        } else {
+          toast.success("Vérifiez votre boite mail");
+          setSuccess(true);
+        }
+      })
+      .catch(() => {
+        toast.error("Erreur veuillez réessayer");
+      });
   };
 
   return (
@@ -142,7 +147,9 @@ export const EmailButton = ({ callbackUrl }: { callbackUrl: string }) => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="text-md">
+                      Entrer votre email pour recevoir le lien de connexion
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="email"
@@ -165,7 +172,7 @@ export const EmailButton = ({ callbackUrl }: { callbackUrl: string }) => {
               className="mt-4 w-full transition-transform duration-200 ease-linear active:scale-95"
               size="lg"
             >
-              {"   Se connecter avec l'email  "}
+              {"   Recevoir le lien  "}
             </LoadingButton>
           </form>
         </Form>

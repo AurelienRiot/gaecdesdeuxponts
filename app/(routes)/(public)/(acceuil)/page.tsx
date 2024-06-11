@@ -3,15 +3,8 @@ import { Suspense } from "react";
 import FeaturesWithHeading from "./_components/features";
 import ImageAccueil from "./_components/image-accueil";
 import NosProduits from "./_components/nos-produits";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 export const dynamic = "force-dynamic";
-
-const serverAction = async (data: FormData) => {
-  "use server";
-  console.log(data);
-};
 
 export default function Home() {
   return (

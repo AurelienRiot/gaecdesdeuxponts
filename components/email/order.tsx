@@ -4,7 +4,7 @@ import MainBody, { ButtonProfile } from "./common";
 export const OrderEmail = ({ date, baseUrl, price, id }: BillingEmailProps) => (
   <MainBody
     baseUrl={baseUrl}
-    previewText="Confirmation de votre commande - Laiterie du Pont Robert"
+    previewText={`Votre commande d'un montant de ${price}`}
   >
     <OrderBody price={price} baseUrl={baseUrl} date={date} id={id} />
   </MainBody>
@@ -27,18 +27,18 @@ export interface BillingEmailProps {
 
 export const OrderBody = ({ date, price, baseUrl, id }: BillingEmailProps) => (
   <>
-    <Text className="text-left text-base ">Bonjour,</Text>
+    <Text className="text-left text-base">Bonjour,</Text>
 
-    <Text className="text-left text-base ">{`Nous vous remercions d'avoir passé commande chez nous. Nous avons bien reçu votre commande numéro ${id} passée le ${date} pour un montant de ${price}.
+    <Text className="text-left text-base">{`Nous vous remercions d'avoir passé commande chez nous. Nous avons bien reçu votre commande numéro ${id} passée le ${date} pour un montant de ${price}.
 `}</Text>
 
-    <Text className="text-left text-base ">
+    <Text className="text-left text-base">
       {
         "Si vous avez des questions ou des préoccupations concernant votre commande, n'hésitez pas à nous contacter à laiteriedupontrobert@gmail.com ou au 06.72.06.45.55."
       }
     </Text>
     <Section className="text-center">
-      <Text className="text-center text-base ">
+      <Text className="text-center text-base">
         Retrouver les informations de votre commande dans votre espace client
       </Text>
 
@@ -48,7 +48,7 @@ export const OrderBody = ({ date, price, baseUrl, id }: BillingEmailProps) => (
       />
     </Section>
 
-    <Text className="text-center text-base ">Merci pour votre confiance.</Text>
+    <Text className="text-center text-base">Merci pour votre confiance.</Text>
   </>
 );
 
