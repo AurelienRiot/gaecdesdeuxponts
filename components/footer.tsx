@@ -59,7 +59,7 @@ const Footer = ({ className }: { className?: string }) => {
             </li>
           </ul>
           <div className="flex items-center justify-center">
-            <BugReport className="text-neutral-50" />
+            <BugReport className="text-neutral-50 transition-colors hover:text-green-500 hover:underline" />
           </div>
         </nav>
       </footer>

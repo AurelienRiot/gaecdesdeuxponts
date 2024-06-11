@@ -53,14 +53,6 @@ const BugReportModal = ({ isOpen, setIsOpen }: BugReportModalProps) => {
     form.setValue("page", url);
   }, [url, form]);
 
-  useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => {
-        form.setFocus("subject");
-      }, 100);
-    }
-  }, [isOpen, form]);
-
   return (
     <Modal
       title="Rapporter un bug"

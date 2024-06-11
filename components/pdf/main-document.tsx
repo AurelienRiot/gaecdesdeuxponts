@@ -10,7 +10,7 @@ import { PDFData } from "./pdf-data";
 
 export const tableRowsCount = 10;
 export const mainColor = "#D3D3D3";
-export const foregroundColor = "#FFFFFF";
+export const foregroundColor = "#000000";
 export const borderColor = "#000000";
 export const watermarkColor = "rgb(255, 0, 0)";
 
@@ -24,6 +24,7 @@ const MainStyles = StyleSheet.create({
     paddingRight: 20,
     lineHeight: 1.5,
     flexDirection: "column",
+    justifyContent: "space-between",
     position: "relative",
   },
   header: {

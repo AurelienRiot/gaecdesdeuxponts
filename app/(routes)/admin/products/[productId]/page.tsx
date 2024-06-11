@@ -32,7 +32,7 @@ const ProductPage = async ({ params }: { params: { productId: string } }) => {
   mappedGroupedOptions.forEach((option, index) => {
     mappedGroupedOptions[index] = {
       name: option.name,
-      values: [...option.values, "Personnalisé", "Aucun"],
+      values: [...option.values, "Personnalisé"],
     };
   });
 

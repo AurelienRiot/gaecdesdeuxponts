@@ -173,23 +173,31 @@ const FormButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
       formState: { isSubmitting },
     } = useFormContext();
     return (
-      <button
-        className={cn(buttonVariants({ variant, size, className }))}
-        disabled={isSubmitting || disabled}
-        ref={ref}
-        type="submit"
-        {...props}
-      >
-        <>
-          {isSubmitting ||
-            (disabled && (
-              <Loader2
-                className={cn("h-4 w-4 animate-spin", children ? "mr-2" : "")}
-              />
-            ))}
-          {children}
-        </>
-      </button>
+      <>
+        <button
+          type="submit"
+          disabled
+          className="hidden"
+          aria-hidden="true"
+        ></button>
+        <button
+          className={cn(buttonVariants({ variant, size, className }))}
+          disabled={isSubmitting || disabled}
+          ref={ref}
+          type="submit"
+          {...props}
+        >
+          <>
+            {isSubmitting ||
+              (disabled && (
+                <Loader2
+                  className={cn("h-4 w-4 animate-spin", children ? "mr-2" : "")}
+                />
+              ))}
+            {children}
+          </>
+        </button>
+      </>
     );
   },
 );
