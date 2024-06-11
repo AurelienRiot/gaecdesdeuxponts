@@ -48,10 +48,7 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
   const date: Date | undefined = getDateFromSearchParam(
     searchParams.get("date"),
   );
-  // const [time, setTime] = useState<{ hours: number; minutes: number }>({
-  //   hours: 8,
-  //   minutes: 30,
-  // });
+
   const shopId: string | undefined = process.env.NEXT_PUBLIC_FARM_ID;
   // searchParams.get("shopId")
   const isMounted = useIsComponentMounted();
@@ -149,7 +146,7 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
                 <ItemPriceSkeleton key={i} />
               ))}
         </ul>
-        <div className=" space-y-4">
+        <div className="space-y-4">
           <div className="flex items-center justify-between border-t border-gray-200 pt-4">
             <div className="text-base font-medium text-secondary-foreground">
               Total
@@ -173,7 +170,7 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
               disabled={loading || !!tooltipText}
               onClick={onCheckout}
               variant="rounded"
-              className=" w-full "
+              className="w-full"
             >
               {loading && <Loader2 className={"mr-2 h-4 w-4 animate-spin"} />}
               Passer la commande
@@ -190,7 +187,7 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
           <LoginCard
             date={date}
             shopId={shopId}
-            className="absolute left-1/2 top-full -translate-x-1/2  "
+            className="absolute left-1/2 top-full -translate-x-1/2"
           />
         )}
       </div>
@@ -202,7 +199,7 @@ export default Summary;
 const ItemsPrice = ({ item }: { item: ProductWithOptionsAndMain }) => {
   const cart = useCart();
   return (
-    <li className="flex justify-between tabular-nums	">
+    <li className="flex justify-between tabular-nums">
       {hasOptionWithValue(item.options, "Vrac") ? (
         <div>
           {`${cart.quantities[item.id]}${getUnitLabel(item.unit).quantity} `}
@@ -226,7 +223,7 @@ const ItemsPrice = ({ item }: { item: ProductWithOptionsAndMain }) => {
 
 const ItemPriceSkeleton = () => {
   return (
-    <li className="mb-2 flex justify-between	tabular-nums">
+    <li className="mb-2 flex justify-between tabular-nums">
       <Skeleton size={"lg"} className="h-4" />
       <Currency value={undefined} className="justify-self-end" />
     </li>

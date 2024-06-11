@@ -12,6 +12,7 @@ import {
   Form,
   FormButton,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -32,6 +33,7 @@ import { toast } from "sonner";
 import * as z from "zod";
 import { deleteUser } from "../../_components/server-action";
 import { updateUser } from "../_actions/update-user";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface UserFormProps {
   initialData: UserWithOrdersAndAdress;
@@ -50,6 +52,7 @@ const formSchema = z.object({
       message: "Le numéro de téléphone n'est pas valide",
     },
   ),
+  isPro: z.boolean().default(false).optional(),
   address: addressSchema,
   billingAddress: billingAddressSchema,
 });
@@ -71,6 +74,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
       name: initialData.name || "",
       company: initialData.company || "",
       phone: initialData.phone || "",
+      isPro: initialData.role === "pro" || false,
       address: {
         label: initialData.address?.label || "",
         city: initialData.address?.city || "",
@@ -106,6 +110,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
         toast.error(error.message);
       });
   };
+  const isPro = form.watch("isPro");
 
   const onDelete = async () => {
     const deleteU = await deleteUser({ id: initialData.id });
@@ -128,16 +133,14 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
       />
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
-        {initialData && (
-          <Button
-            disabled={form.formState.isSubmitting}
-            variant="destructive"
-            size="sm"
-            onClick={() => setOpen(true)}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
-        )}
+        <Button
+          disabled={form.formState.isSubmitting}
+          variant="destructive"
+          size="sm"
+          onClick={() => setOpen(true)}
+        >
+          <Trash className="h-4 w-4" />
+        </Button>
       </div>
       <Separator />
 
@@ -166,7 +169,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                 </FormItem>
               )}
             />
-            {initialData.role === "pro" && (
+            {isPro && (
               <FormField
                 control={form.control}
                 name="company"
@@ -201,6 +204,29 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                     />
                   </FormControl>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="isPro"
+              render={({ field }) => (
+                <FormItem className="flex h-20 cursor-pointer flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <label className="flex cursor-pointer flex-row items-start space-x-3 space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        disabled={form.formState.isSubmitting}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel>Professionnel</FormLabel>
+                      <FormDescription>
+                        {"Faire de cette utilisateur un professionnel"}
+                      </FormDescription>
+                    </div>
+                  </label>
                 </FormItem>
               )}
             />

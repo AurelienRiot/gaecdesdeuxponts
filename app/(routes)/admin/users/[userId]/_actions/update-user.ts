@@ -5,7 +5,7 @@ import prismadb from "@/lib/prismadb";
 import { defaultAddress } from "@/components/billing-address-form";
 
 export async function updateUser(
-  { name, phone, address, billingAddress, company }: UserFormValues,
+  { name, phone, address, billingAddress, company, isPro }: UserFormValues,
   id: string,
 ): Promise<void> {
   const isAuth = await checkAdmin();
@@ -25,9 +25,9 @@ export async function updateUser(
     },
     data: {
       name,
-      company,
+      company: isPro ? company : undefined,
       phone,
-
+      role: isPro ? "pro" : "user",
       address: {
         upsert: {
           create: address ?? defaultAddress,

@@ -30,7 +30,7 @@ const BugReportModal = ({ isOpen, setIsOpen }: BugReportModalProps) => {
 
   const form = useForm<BugReportValues>({
     resolver: zodResolver(bugReportSchema),
-    defaultValues: {
+    values: {
       subject: "RAPPORT DE BUG",
       page: url,
       message: "",
@@ -49,23 +49,32 @@ const BugReportModal = ({ isOpen, setIsOpen }: BugReportModalProps) => {
     });
   };
 
-  useEffect(() => {
-    form.setValue("page", url);
-  }, [url, form]);
-
   return (
     <Modal
       title="Rapporter un bug"
       description="Décrivez le bug que vous avez rencontré"
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
-      className="left-[50%] top-[50%] max-h-[90vh] overflow-y-auto"
+      className="left-[50%] top-5 max-h-[90vh] translate-y-0 overflow-y-auto sm:top-[50%] sm:-translate-y-1/2"
     >
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-8"
         >
+          <FormField
+            control={form.control}
+            name="subject"
+            render={({ field }) => (
+              <FormItem aria-hidden className="hidden">
+                <FormControl>
+                  <div className="flex items-start gap-x-4">
+                    <Input {...field} disabled />
+                  </div>
+                </FormControl>
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="page"
@@ -75,9 +84,10 @@ const BugReportModal = ({ isOpen, setIsOpen }: BugReportModalProps) => {
                 <FormControl>
                   <div className="flex items-start gap-x-4">
                     <Input
-                      {...field}
                       placeholder="..."
                       disabled={form.formState.isSubmitting || loading}
+                      autoFocus={false}
+                      {...field}
                     />
                   </div>
                 </FormControl>
@@ -96,6 +106,7 @@ const BugReportModal = ({ isOpen, setIsOpen }: BugReportModalProps) => {
                     <AutosizeTextarea
                       placeholder="..."
                       disabled={form.formState.isSubmitting || loading}
+                      autoFocus={true}
                       {...field}
                     />
                   </div>

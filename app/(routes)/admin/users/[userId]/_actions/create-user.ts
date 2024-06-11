@@ -31,7 +31,7 @@ export async function createUser({
     data: {
       name,
       email,
-      company,
+      company: isPro ? company : undefined,
       phone,
       role: isPro ? "pro" : "user",
       address: {

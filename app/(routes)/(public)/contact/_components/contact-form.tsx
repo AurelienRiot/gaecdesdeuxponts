@@ -17,12 +17,14 @@ import { Separator } from "@/components/ui/separator";
 import { toastPromise } from "@/components/ui/sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import * as z from "zod";
 import { createContact } from "../_actions/create-contact";
 import { formSchema } from "./shema";
+import { usePostHog } from "posthog-js/react";
+import { useSession } from "next-auth/react";
 
 const formSchemaWithPhone = formSchema.extend({
   phone: z
@@ -40,22 +42,18 @@ const formSchemaWithPhone = formSchema.extend({
 
 export type ContactFormValues = z.infer<typeof formSchemaWithPhone>;
 
-export const ContactForm = ({
-  name,
-  email,
-}: {
-  name?: string | null;
-  email?: string | null;
-}): React.ReactNode => {
+export const ContactForm = (): React.ReactNode => {
   const router = useRouter();
   const action = "Envoyer";
+  const session = useSession();
+  const posthog = usePostHog();
   const [loading, setLoading] = useState(false);
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: name || "",
-      email: email || "",
+      name: "",
+      email: "",
       phone: "",
       subject: "",
       message: "",
@@ -68,13 +66,24 @@ export const ContactForm = ({
       serverAction: createContact,
       data,
       onFinally: () => setLoading(false),
-      onSuccess: () => router.push("/"),
+      onSuccess: () => {
+        router.push("/");
+        posthog?.capture("Contact Crée");
+      },
     });
   };
 
+  useEffect(() => {
+    if (session.status === "authenticated") {
+      setTimeout(() => {
+        form.setValue("name", session.data.user?.name || "");
+        form.setValue("email", session.data.user?.email || "");
+      }, 0);
+    }
+  }, [session, form]);
   return (
     <>
-      <div id="contact" className="mt-8 flex  items-center justify-between">
+      <div id="contact" className="mt-8 flex items-center justify-between">
         <Heading
           title="Formulaire de Contact"
           description="Demande d'information"

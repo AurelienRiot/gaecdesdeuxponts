@@ -1,6 +1,6 @@
 "use server";
 
-import { checkUser } from "@/components/auth/checkAuth";
+import { getSessionUser } from "@/actions/get-user";
 import OrderEmail from "@/components/email/order";
 import Order from "@/components/pdf/create-commande";
 import {
@@ -17,6 +17,7 @@ import { FullOrder, ProductWithMain, UserWithAddress } from "@/types";
 import { render } from "@react-email/render";
 import { pdf } from "@react-pdf/renderer";
 import { revalidatePath } from "next/cache";
+import * as z from "zod";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 
@@ -30,28 +31,61 @@ type CheckOutReturnType =
       ids?: string[];
     };
 
-type CheckOutProps = {
-  itemsWithQuantities: {
-    id: string;
-    price: number;
-    quantity: number;
-  }[];
-  date: Date;
-  shopId: string;
-};
+// type CheckOutProps = {
+//   itemsWithQuantities: {
+//     id: string;
+//     price: number;
+//     quantity: number;
+//   }[];
+//   date: Date;
+//   shopId: string;
+// };
+
+const checkOutSchema = z.object({
+  date: z.date().refine((date) => !isDateDisabled(date), {
+    message:
+      "La date n'est pas valide, veuillez selectionner une date correcte",
+  }),
+  shopId: z.string({
+    required_error: "Veuillez selectionner un magasin",
+  }),
+  itemsWithQuantities: z.array(
+    z.object({
+      id: z.string({
+        required_error: "Produit introuvable",
+        invalid_type_error: "Produit introuvable",
+      }),
+      price: z.number({
+        required_error: "Produit introuvable",
+        invalid_type_error: "Prix invalide",
+      }),
+      quantity: z.number({
+        invalid_type_error: "Quantité invalide",
+        required_error: "Quantité invalide",
+      }),
+    }),
+  ),
+});
+
+type CheckOutProps = z.infer<typeof checkOutSchema>;
 
 export const checkOut = async ({
   itemsWithQuantities,
   date,
   shopId,
 }: CheckOutProps): Promise<CheckOutReturnType> => {
-  const isAuth = await checkUser();
+  const isAuth = await getSessionUser();
 
-  if (isDateDisabled(date)) {
+  const validated = checkOutSchema.safeParse({
+    date,
+    shopId,
+    itemsWithQuantities,
+  });
+
+  if (!validated.success) {
     return {
       success: false,
-      message:
-        "La date n'est pas valide, veuillez selectionner une date correcte",
+      message: validated.error.issues[0].message,
     };
   }
 
@@ -59,7 +93,7 @@ export const checkOut = async ({
     return {
       success: false,
       message:
-        "Erreur lors de la connexion, essaye de vous connecter à nouveau",
+        "Erreur lors de la connexion, reconnectez-vous pour valider votre commande",
     };
   }
 

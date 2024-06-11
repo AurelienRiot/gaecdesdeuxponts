@@ -1,15 +1,15 @@
 "use server";
 
-import { checkUser } from "@/components/auth/checkAuth";
+import { getSessionUser } from "@/actions/get-user";
 import prismadb from "@/lib/prismadb";
 import { ContactFormValues } from "../_components/contact-form";
 import { formSchema } from "../_components/shema";
 
 async function createContact(data: ContactFormValues): Promise<void> {
-  const isAuth = await checkUser();
+  const isAuth = await getSessionUser();
   const validatedData = formSchema.safeParse(data);
   if (!validatedData.success) {
-    throw new Error(`Erreur de validation`);
+    throw new Error(validatedData.error.message);
   }
 
   const contact = await prismadb.contact.create({
