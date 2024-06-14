@@ -31,6 +31,7 @@ const getOrders = async (
       orderItems: true,
       shop: true,
       customer: true,
+      user: true,
     },
     where: {
       createdAt: {
