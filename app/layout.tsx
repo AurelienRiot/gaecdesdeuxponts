@@ -16,19 +16,19 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.laiteriedupontrobert.fr"),
   keywords: [
-    "Lait",
-    "Local",
-    "Vente directe",
-    "Ferme",
-    "Vrac",
-    "Agriculture Biologique",
+    "Lait cru Massérac",
+    "Lait bio Massérac",
+    "Vente directe lait cru local",
+    "Ferme Massérac",
+    "Lait bio Loire-Atlantique",
+    "Lait cru Loire-Atlantique",
   ],
   title: {
     default: "Laiterie du Pont Robert",
     template: `%s | Laiterie du Pont Robert`,
   },
   description:
-    "Lait Cru Frais et Bio directement de la ferme. Venez chercher votre lait à la ferme. Aux heures de la traite 8h30-9h30/18h-19h du lundi au samedi",
+    "Venez chercher votre lait cru, frais et bio directement dans notre ferme à Massérac, aux heures de la traite 8h30-9h30/18h-19h du lundi au samedi",
   openGraph: {
     images: [
       "https://www.laiteriedupontrobert.fr/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fferme.77874bf1.webp&w=3840&q=75",
@@ -63,13 +63,13 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className=" scroll-p-16 scroll-smooth"
+      className="scroll-p-16 scroll-smooth"
       suppressHydrationWarning
     >
       <body
         id="root"
         className={cn(
-          "  relative min-h-dvh bg-background font-serif text-foreground antialiased",
+          "relative min-h-dvh bg-background font-serif text-foreground antialiased",
           fontMono.variable,
           fontDisplay.variable,
           fontSerif.variable,

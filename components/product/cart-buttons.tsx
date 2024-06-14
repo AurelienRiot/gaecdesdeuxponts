@@ -104,7 +104,7 @@ export const CustomQuantityAddToCart = ({
   };
 
   return (
-    <div className="flex items-center gap-2 tabular-nums	">
+    <div className="flex items-center gap-2 tabular-nums">
       {customQuantity ? (
         <CustomQuantity
           id={data.id}
@@ -126,25 +126,25 @@ export const CustomQuantityAddToCart = ({
           }}
         >
           <SelectTrigger
-            className="w-fit items-center justify-center  text-xs tabular-nums"
+            className="w-fit items-center justify-center text-xs tabular-nums"
             classNameIcon="size-3"
           >
             Quantité: {quantity}
           </SelectTrigger>
-          <SelectContent className="w-fit min-w-4 tabular-nums">
-            <SelectItem className=" py-0.5 text-xs " value={"0"}>
+          <SelectContent className="z-[1200] w-fit min-w-4 tabular-nums">
+            <SelectItem className="py-0.5 text-xs" value={"0"}>
               Supprimé
             </SelectItem>
             {[...Array(9)].map((_, i) => (
               <SelectItem
-                className=" py-0.5 text-xs "
+                className="py-0.5 text-xs"
                 key={i}
                 value={String(i + 1)}
               >
                 {i + 1}
               </SelectItem>
             ))}
-            <SelectItem className=" py-0.5 text-xs" value={"10"}>
+            <SelectItem className="py-0.5 text-xs" value={"10"}>
               {"Personnalisé"}
             </SelectItem>
           </SelectContent>
@@ -266,7 +266,7 @@ export const BulkQuantity = ({
           control={form.control}
           name="quantity"
           render={({ field }) => (
-            <FormItem className="justify-left relative flex w-auto items-center gap-1 space-y-0 ">
+            <FormItem className="justify-left relative flex w-auto items-center gap-1 space-y-0">
               <FormMessage className="absolute -top-7 left-0 whitespace-nowrap" />
 
               <FormControl>

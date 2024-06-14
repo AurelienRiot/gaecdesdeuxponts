@@ -49,8 +49,9 @@ const OrdersPage = async (context: {
         <OrderClient
           initialData={formattedOrders}
           initialDateRange={dateRange}
-        />
+          />
       </div>
+     
     </div>
   );
 };

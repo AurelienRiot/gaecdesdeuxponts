@@ -6,11 +6,14 @@ import {
 import { currencyFormatter } from "@/lib/utils";
 import { FullOrder } from "@/types";
 import { OrderColumn } from "./columns";
+import { User } from "@prisma/client";
 
-export function formatOrders(orders: FullOrder[]): OrderColumn[] {
+export function formatOrders(
+  orders: (FullOrder & { user: User })[],
+): OrderColumn[] {
   return orders.map((order) => ({
     id: order.id,
-    name: order.customer?.name || "",
+    name: order.user.name || order.user.email || "",
     userId: order.userId,
     isPaid: !!order.dateOfPayment,
     datePickUp: order.datePickUp,
