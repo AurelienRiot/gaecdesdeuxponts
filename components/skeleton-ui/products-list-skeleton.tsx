@@ -1,9 +1,9 @@
 import { ProductCart } from "./product-cart-skeleton";
 
-export const ProductList = ({ title }: { title: string }) => {
+export const ProductListSkeleton = ({ title }: { title: string }) => {
   return (
-    <div className="space-y-4 ">
-      <h2 className="text-center text-3xl font-bold text-primary lg:text-5xl ">
+    <div className="space-y-4">
+      <h2 className="text-center text-3xl font-bold text-primary lg:text-5xl">
         {title}
       </h2>
 

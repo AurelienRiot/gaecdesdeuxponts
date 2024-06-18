@@ -1,6 +1,6 @@
 import Gallery from "@/components/skeleton-ui/gallery-skeleton";
 import Info from "@/components/skeleton-ui/info-skeleton";
-import { ProductList } from "@/components/skeleton-ui/products-list-skeleton";
+import { ProductListSkeleton } from "@/components/skeleton-ui/products-list-skeleton";
 
 const Loading = () => (
   <div className="px-4 py-10 sm:px-6 lg:px-8">
@@ -11,7 +11,7 @@ const Loading = () => (
       </div>
     </div>
     <hr className="my-10" />
-    <ProductList title="Produits Similaires" />
+    <ProductListSkeleton title="Produits Similaires" />
   </div>
 );
 export default Loading;

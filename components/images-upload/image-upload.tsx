@@ -53,7 +53,11 @@ const UploadImage = ({
 
     const files: File[] = [];
     Array.from(event.target.files).forEach((file) => {
-      files.push(file);
+      if (file.size > 1048576) {
+        toast.error(`Le fichier ${file.name} fait plus de 1MB.`);
+      } else {
+        files.push(file);
+      }
     });
 
     await fileChange(files);
@@ -77,6 +81,8 @@ const UploadImage = ({
           `Le format du fichier n'est pas supporté : ${file.name}\nFormats supportés : png, jpeg, jpg, webp`,
           { duration: 5000 },
         );
+      } else if (file.size > 1048576) {
+        toast.error(`Le fichier ${file.name} fait plus de 1MB.`);
       } else {
         files.push(file);
       }
@@ -96,14 +102,14 @@ const UploadImage = ({
 
       const { signature, timestamp } = result.data;
 
-      const originalFileName = file.name;
-      const fileNameWithoutExtension =
-        originalFileName.substring(0, originalFileName.lastIndexOf(".")) ||
-        originalFileName;
-      const randomString = generateRandomString(10); // Generate a random string of 5 characters
+      // const originalFileName = file.name;
+      // const fileNameWithoutExtension =
+      //   originalFileName.substring(0, originalFileName.lastIndexOf(".")) ||
+      //   originalFileName;
+      // const randomString = generateRandomString(10); // Generate a random string of 5 characters
 
-      // Combine the file name with the random string and the extension to form a new unique file name
-      const uniqueFileName = `${randomString}-${fileNameWithoutExtension}`;
+      // // Combine the file name with the random string and the extension to form a new unique file name
+      // const uniqueFileName = `${randomString}-${fileNameWithoutExtension}`;
 
       const formdata = new FormData();
       formdata.append("timestamp", timestamp.toString());
@@ -173,22 +179,19 @@ const UploadImage = ({
           e.preventDefault();
         }}
       >
-        <label
-          className="relative flex w-fit cursor-pointer flex-col items-center justify-center  rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-6 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700 
-         "
-        >
+        <label className="relative flex w-fit cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-6 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700">
           <div
             data-state={loading}
-            className="absolute right-1/2 top-1/2 hidden -translate-y-1/2 translate-x-1/2 data-[state=true]:block "
+            className="absolute right-1/2 top-1/2 hidden -translate-y-1/2 translate-x-1/2 data-[state=true]:block"
           >
             <Loader2 className="animate-spin" />
           </div>
 
           <div
             data-state={loading}
-            className=" text-center data-[state=true]:blur-md"
+            className="text-center data-[state=true]:blur-md"
           >
-            <div className=" mx-auto max-w-min rounded-md border bg-foreground p-2">
+            <div className="mx-auto max-w-min rounded-md border bg-foreground p-2">
               <UploadCloud size={20} className="text-primary-foreground" />
             </div>
 
@@ -285,7 +288,7 @@ const DisplaySelectedImages = ({
                   animate={{ opacity: 1, width: "100px" }}
                   exit={{ opacity: 0, width: 0 }}
                   as="li"
-                  className="group relative aspect-square h-[100px] cursor-pointer   rounded-xl bg-transparent hover:ring-2"
+                  className="group relative aspect-square h-[100px] cursor-pointer rounded-xl bg-transparent hover:ring-2"
                 >
                   <Image
                     src={url}
@@ -302,7 +305,7 @@ const DisplaySelectedImages = ({
                         selectedFiles.filter((item) => item !== url),
                       );
                     }}
-                    className="absolute right-0 z-10 hidden items-center justify-center  rounded-tr-md bg-destructive px-2 text-destructive-foreground transition-all hover:bg-destructive/90 group-hover:flex"
+                    className="absolute right-0 z-10 hidden items-center justify-center rounded-tr-md bg-destructive px-2 text-destructive-foreground transition-all hover:bg-destructive/90 group-hover:flex"
                   >
                     <X size={20} />
                   </button>
@@ -368,10 +371,7 @@ const DisplayImages = ({
         checked={displayFiles}
       />
       <AnimateHeight display={displayFiles} className="space-y-4 p-1">
-        <div
-          className="flex max-w-[1000px] flex-row flex-wrap gap-4 whitespace-nowrap
-            p-2 "
-        >
+        <div className="flex max-w-[1000px] flex-row flex-wrap gap-4 whitespace-nowrap p-2">
           {allFiles.length > 0 ? (
             allFiles
               .filter((fileUrl) => !selectedFiles.includes(fileUrl))
@@ -382,9 +382,9 @@ const DisplayImages = ({
               .map((fileUrl) => (
                 <div
                   key={fileUrl}
-                  className="justify-left group relative flex gap-2 overflow-hidden rounded-lg  border border-slate-100 pr-2 transition-all hover:border-slate-300"
+                  className="justify-left group relative flex gap-2 overflow-hidden rounded-lg border border-slate-100 pr-2 transition-all hover:border-slate-300"
                 >
-                  <div className="flex  w-fit flex-1  items-center p-2">
+                  <div className="flex w-fit flex-1 items-center p-2">
                     <div className="relative aspect-square h-10 rounded-xl text-white">
                       <Image
                         src={fileUrl}
@@ -394,12 +394,9 @@ const DisplayImages = ({
                         className="object-cover"
                       />
                     </div>
-                    <div
-                      className="ml-2
-                     w-fit space-y-1"
-                    >
+                    <div className="ml-2 w-fit space-y-1">
                       <div className="flex justify-between text-sm">
-                        <p className="text-muted-foreground ">
+                        <p className="text-muted-foreground">
                           {getFileKey(fileUrl)}
                         </p>
                       </div>
@@ -412,7 +409,7 @@ const DisplayImages = ({
                       await onDelete(fileUrl);
                       setLoading(false);
                     }}
-                    className="absolute right-0 hidden items-center justify-center  rounded-tr-md bg-destructive px-2 py-1 text-destructive-foreground transition-all hover:bg-destructive/90 group-hover:flex"
+                    className="absolute right-0 hidden items-center justify-center rounded-tr-md bg-destructive px-2 py-1 text-destructive-foreground transition-all hover:bg-destructive/90 group-hover:flex"
                   >
                     <Trash size={15} />
                   </button>
@@ -425,7 +422,7 @@ const DisplayImages = ({
                         setSelectedFiles([fileUrl]);
                       }
                     }}
-                    className="absolute left-0 hidden items-center justify-center  rounded-tl-md bg-green-800 px-2 py-1 text-green-50 transition-all hover:bg-green-800/90 group-hover:flex"
+                    className="absolute left-0 hidden items-center justify-center rounded-tl-md bg-green-800 px-2 py-1 text-green-50 transition-all hover:bg-green-800/90 group-hover:flex"
                   >
                     <Plus size={15} />
                   </button>
@@ -435,7 +432,7 @@ const DisplayImages = ({
             <Loader2 className="m-4 h-8 w-8 animate-spin" />
           )}
         </div>
-        <div className="flex items-center justify-start space-x-2 ">
+        <div className="flex items-center justify-start space-x-2">
           <Button
             type="button"
             variant="outline"

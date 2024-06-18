@@ -1,8 +1,9 @@
-import { ProductList } from "@/components/skeleton-ui/products-list-skeleton";
+import { ProductListSkeleton } from "@/components/skeleton-ui/products-list-skeleton";
 import { Suspense } from "react";
 import FeaturesWithHeading from "./_components/features";
 import ImageAccueil from "./_components/image-accueil";
-import NosProduits from "./_components/nos-produits";
+import { getFeaturedProducts } from "@/actions/get-products";
+import ProductList from "@/components/products-list";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +16,9 @@ export default function Home() {
       /> */}
 
       <ImageAccueil />
-      <Suspense fallback={<ProductList title="Découvrer nos produits" />}>
+      <Suspense
+        fallback={<ProductListSkeleton title="Découvrer nos produits" />}
+      >
         <NosProduits title="Découvrer nos produits" />
       </Suspense>
       <FeaturesWithHeading />
@@ -37,3 +40,9 @@ const words = [
     className: "text-orange-500",
   },
 ];
+
+const NosProduits = async ({ title }: { title: string }) => {
+  const products = await getFeaturedProducts();
+
+  return <ProductList title={title} items={products} />;
+};
