@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useUserContext } from "@/context/user-context";
 import { UserForm } from "./_components/user-form";
+import { Metadata } from "next";
 
 const PageSettings = () => {
   const { user } = useUserContext();
@@ -43,8 +44,8 @@ const PageSettings = () => {
       : undefined,
   };
   return (
-    <div className="h-full w-full flex-col p-6  ">
-      <div className=" flex-1 space-y-4 ">
+    <div className="h-full w-full flex-col p-6">
+      <div className="flex-1 space-y-4">
         <UserForm initialData={formattedUser} />
       </div>
     </div>
@@ -54,10 +55,10 @@ const PageSettings = () => {
 export default PageSettings;
 
 const LoadingUserForm = () => (
-  <div className="h-full w-full flex-col p-6  ">
-    <div className=" flex-1 space-y-4 ">
-      <div className=" flex flex-col items-center justify-between gap-4 md:flex-row">
-        <h2 className="text-3xl font-bold ">
+  <div className="h-full w-full flex-col p-6">
+    <div className="flex-1 space-y-4">
+      <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+        <h2 className="text-3xl font-bold">
           {" "}
           <Skeleton className="h-4 w-32" />{" "}
         </h2>
@@ -72,7 +73,7 @@ const LoadingUserForm = () => (
         </TrashButton>
       </div>
       <Separator className="mt-4" />
-      <p className=" py-6  text-base font-bold sm:text-lg">
+      <p className="py-6 text-base font-bold sm:text-lg">
         <Skeleton className="h-4 w-32" />
       </p>
 
@@ -90,7 +91,7 @@ const LoadingUserForm = () => (
 
           <SkeletonAdressForm className="max-w-lg sm:col-span-2" />
         </div>
-        <Button disabled={true} className="ml-auto " type="submit">
+        <Button disabled={true} className="ml-auto" type="submit">
           Enregistrer les modifications
         </Button>
       </div>

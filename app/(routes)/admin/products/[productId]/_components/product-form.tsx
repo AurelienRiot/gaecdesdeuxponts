@@ -1,6 +1,7 @@
 "use client";
 
 import UploadImage from "@/components/images-upload/image-upload";
+import { OptionsArray } from "@/components/product/product-function";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import { Button, LoadingButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -25,21 +26,19 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { MainProductWithProducts } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Category, Unit } from "@prisma/client";
+import { Category } from "@prisma/client";
 import { Trash } from "lucide-react";
+import { nanoid } from "nanoid";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { deleteProduct } from "../../_components/server-action";
-import { OptionsArray } from "../page";
+import { createProduct } from "../_actions/create-product";
+import { updateProduct } from "../_actions/update-product";
 import { PlateEditor } from "./plate-editor";
 import { ProductWithOptions } from "./product-with-options-form";
-import { updateProduct } from "../_actions/update-product";
-import { createProduct } from "../_actions/create-product";
-import { nanoid } from "nanoid";
-import useIsComponentMounted from "@/hooks/use-mounted";
 
 const OptionSchema = z.object({
   index: z.number(),

@@ -1,15 +1,14 @@
 import { getProductsByCategoryName } from "@/actions/get-products";
-import {
-  OptionsArray,
-  getAllOptions,
-} from "@/app/(routes)/admin/products/[productId]/page";
 import Gallery from "@/components/gallery/gallery";
 import NotFound from "@/components/not-found";
 import Info from "@/components/product/info";
 import MainProductCart from "@/components/product/main-product-cart";
+import {
+  findProduct,
+  getAllOptions,
+} from "@/components/product/product-function";
 import { MainProduct } from "@prisma/client";
 import { Metadata } from "next";
-import { ProductWithOptionsAndMain } from "@/types";
 
 interface ProductPageProps {
   params: {
@@ -116,7 +115,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({
       <hr className="my-10" />
       {suggestedProducts.length > 0 && (
         <div className="space-y-10 py-20">
-          <h2 className="text-center text-3xl font-bold text-primary lg:text-5xl ">
+          <h2 className="text-center text-3xl font-bold text-primary lg:text-5xl">
             Autres produits de la categorie {product.product.categoryName}
           </h2>
           <div className="flex flex-wrap justify-center gap-12">
@@ -131,25 +130,3 @@ const ProductPage: React.FC<ProductPageProps> = async ({
 };
 
 export default ProductPage;
-
-function findProduct({
-  products,
-  optionsArray,
-  searchParams,
-}: {
-  products: ProductWithOptionsAndMain[];
-  optionsArray: OptionsArray;
-  searchParams: { [key: string]: string | undefined };
-}): ProductWithOptionsAndMain | undefined {
-  const optionsValue = optionsArray.map((option) => {
-    return { name: option.name, value: searchParams[option.name] };
-  });
-  return products.find((product) => {
-    return optionsValue.every(({ name, value }, index) => {
-      return (
-        !value ||
-        product.options.find((option) => option.name === name)?.value === value
-      );
-    });
-  });
-}

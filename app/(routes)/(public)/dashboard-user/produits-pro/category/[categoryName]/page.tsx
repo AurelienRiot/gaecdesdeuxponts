@@ -1,13 +1,13 @@
-import {
-  getCategoryByName,
-  getProCategoryByName,
-} from "@/actions/get-category";
+import { getProCategoryByName } from "@/actions/get-category";
 import { getProMainProductsByCategoryName } from "@/actions/get-products";
 import Billboard from "@/components/billboard/billboard";
 import NotFound from "@/components/not-found";
 import MainProductCart from "@/components/product/main-product-cart";
+import Container from "@/components/ui/container";
 import NoResults from "@/components/ui/no-results";
+import { addDelay } from "@/lib/utils";
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 interface CategoryPageProps {
   params: {
@@ -18,8 +18,15 @@ interface CategoryPageProps {
 export async function generateMetadata({
   params,
 }: CategoryPageProps): Promise<Metadata> {
+  const categoryName = decodeURIComponent(params.categoryName);
+  const category = await getProCategoryByName(categoryName);
+
   return {
-    title: `${decodeURIComponent(params.categoryName)}`,
+    title: categoryName,
+    description: category?.description || "",
+    openGraph: {
+      images: category?.imageUrl,
+    },
   };
 }
 
@@ -36,15 +43,16 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
     return <NoResults />;
   }
 
-  // if (products.length === 1) {
-  //   const url = products[0].isPro
-  //     ? `/dashboard-user/produits-pro/category/${products[0].categoryName}/product/${products[0].name}`
-  //     : `/category/${products[0].categoryName}/product/${products[0].name}`;
-  //   redirect(url);
-  // }
+  if (products.length === 1) {
+    redirect(
+      `/dashboard-user/produits-pro/category/${category.name}/product/${products[0].name}`,
+    );
+  }
+
+  await addDelay(2000);
 
   return (
-    <div className="w-full">
+    <Container>
       <Billboard category={category} />
       <div className="px-4 pb-24 sm:px-6 lg:px-8">
         <div className="justify-left mx-auto flex flex-wrap gap-12">
@@ -53,7 +61,7 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
           ))}
         </div>
       </div>
-    </div>
+    </Container>
   );
 };
 

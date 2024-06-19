@@ -1,4 +1,10 @@
+import { ProductWithOptionsAndMain } from "@/types";
 import { Option, Unit } from "@prisma/client";
+
+export type OptionsArray = {
+  name: string;
+  values: string[];
+}[];
 
 export function hasOptionWithValue<T extends { name: string; value: string }[]>(
   options: T,
@@ -60,3 +66,54 @@ export function getUnitLabel(value?: Unit | null) {
       return { price: value, quantity: value, type: value };
   }
 }
+
+export function findProduct({
+  products,
+  optionsArray,
+  searchParams,
+}: {
+  products: ProductWithOptionsAndMain[];
+  optionsArray: OptionsArray;
+  searchParams: { [key: string]: string | undefined };
+}): ProductWithOptionsAndMain | undefined {
+  const optionsValue = optionsArray.map((option) => {
+    return { name: option.name, value: searchParams[option.name] };
+  });
+  return products.find((product) => {
+    return optionsValue.every(({ name, value }, index) => {
+      return (
+        !value ||
+        product.options.find((option) => option.name === name)?.value === value
+      );
+    });
+  });
+}
+
+export const getAllOptions = (
+  options: {
+    name: string;
+    value: string;
+  }[],
+) => {
+  const groupedOptions = options.reduce<Record<string, string[]>>(
+    (acc, option) => {
+      if (!acc[option.name]) {
+        acc[option.name] = [];
+      }
+      if (!acc[option.name].includes(option.value)) {
+        acc[option.name].push(option.value);
+      }
+      return acc;
+    },
+    {},
+  );
+
+  const mappedGroupedOptions: OptionsArray = Object.entries(groupedOptions).map(
+    ([key, value]) => ({
+      name: key,
+      values: value,
+    }),
+  );
+
+  return mappedGroupedOptions;
+};

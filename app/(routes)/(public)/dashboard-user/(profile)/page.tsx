@@ -10,12 +10,18 @@ import {
   UserName,
   UserPhone,
 } from "./_components/user-data";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Profil utilisateur",
+  description: "Profil utilisateur Laiterie du Pont Robert",
+};
 
 const ProfilTab = () => {
   return (
-    <div className="w-full space-y-10  p-6 ">
-      <div className="flex flex-col items-center justify-between gap-y-6  pb-4 sm:flex-row">
-        <h1 className="text-2xl font-semibold capitalize ">
+    <div className="w-full space-y-10 p-6">
+      <div className="flex flex-col items-center justify-between gap-y-6 pb-4 sm:flex-row">
+        <h1 className="text-2xl font-semibold capitalize">
           <UserName />
         </h1>
 
@@ -23,7 +29,7 @@ const ProfilTab = () => {
         <LogoutButtonText />
       </div>
       <Separator />
-      <div className="mt-4 grid grid-cols-1  gap-x-4 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-4 grid grid-cols-1 gap-x-4 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
         <div>
           <p className="font-bold dark:text-white">Email:</p>
           <p className="dark:text-gray-300">

@@ -1,10 +1,6 @@
 import prismadb from "@/lib/prismadb";
 import { ProductForm } from "./_components/product-form";
-
-export type OptionsArray = {
-  name: string;
-  values: string[];
-}[];
+import { getAllOptions } from "@/components/product/product-function";
 
 const ProductPage = async ({ params }: { params: { productId: string } }) => {
   const mainProduct = await prismadb.mainProduct.findUnique({
@@ -50,32 +46,3 @@ const ProductPage = async ({ params }: { params: { productId: string } }) => {
 };
 
 export default ProductPage;
-
-export const getAllOptions = (
-  options: {
-    name: string;
-    value: string;
-  }[],
-) => {
-  const groupedOptions = options.reduce<Record<string, string[]>>(
-    (acc, option) => {
-      if (!acc[option.name]) {
-        acc[option.name] = [];
-      }
-      if (!acc[option.name].includes(option.value)) {
-        acc[option.name].push(option.value);
-      }
-      return acc;
-    },
-    {},
-  );
-
-  const mappedGroupedOptions: OptionsArray = Object.entries(groupedOptions).map(
-    ([key, value]) => ({
-      name: key,
-      values: value,
-    }),
-  );
-
-  return mappedGroupedOptions;
-};

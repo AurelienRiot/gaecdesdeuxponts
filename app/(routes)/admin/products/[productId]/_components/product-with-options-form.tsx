@@ -1,4 +1,9 @@
 import UploadImage from "@/components/images-upload/image-upload";
+import {
+  OptionsArray,
+  getUnitLabel,
+  hasOptionWithValue,
+} from "@/components/product/product-function";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button, IconButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -23,7 +28,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { Unit } from "@prisma/client";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import {
   Check,
@@ -36,24 +49,11 @@ import {
   UploadCloud,
   X,
 } from "lucide-react";
+import { nanoid } from "nanoid";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { OptionsArray } from "../page";
 import OptionValueForm from "./options-values-form";
 import { ProductFormValues } from "./product-form";
-import {
-  getUnitLabel,
-  hasOptionWithValue,
-} from "@/components/product/product-function";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Unit } from "@prisma/client";
-import { nanoid } from "nanoid";
 
 export const ProductWithOptions = ({
   optionsArray,

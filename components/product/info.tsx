@@ -1,5 +1,4 @@
 "use client";
-import { OptionsArray } from "@/app/(routes)/admin/products/[productId]/page";
 import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
 import { ProductWithOptionsAndMain } from "@/types";
@@ -11,6 +10,7 @@ import AddToCartButton, {
   BulkQuantity,
   CustomQuantityAddToCart,
 } from "./cart-buttons";
+import { OptionsArray } from "./product-function";
 
 interface InfoProps {
   product: ProductWithOptionsAndMain;

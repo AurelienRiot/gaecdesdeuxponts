@@ -11,13 +11,13 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { useUserContext } from "@/context/user-context";
 import { currencyFormatter } from "@/lib/utils";
+import { Metadata } from "next";
 import {
   OrderColumnType,
   OrdersColumn,
   searchableColumns,
   viewOptionsColumns,
 } from "./_components/order-column";
-import { createPDFData } from "@/components/pdf/pdf-data";
 
 const PageOrderTable = () => {
   const { user } = useUserContext();

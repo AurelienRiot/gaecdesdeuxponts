@@ -15,6 +15,10 @@ export interface SearchParams {
   [key: string]: string | string[] | undefined;
 }
 
+type Prettify<T> = {
+  [K in keyof T]: T[K];
+} & {};
+
 export type Option = {
   label: string;
   value: string;

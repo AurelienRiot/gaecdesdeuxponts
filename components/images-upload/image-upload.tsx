@@ -11,16 +11,6 @@ import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
 import { deleteObject, getSignature, listFiles } from "./server";
 
-const generateRandomString = (length: number) => {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let result = "";
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return result;
-};
-
 export const getFileKey = (url: string): string => {
   const parts = url.split("/");
   return `farm/${parts[parts.length - 1]}`;
@@ -29,6 +19,9 @@ export const getFileKey = (url: string): string => {
 export const makeURL = (key: string) => {
   return `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${key}`;
 };
+
+const MAX_FILE_SIZE = 1048576;
+const FILES_TYPES = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
 
 type UploadImageProps = {
   selectedFiles: string[];
@@ -53,7 +46,7 @@ const UploadImage = ({
 
     const files: File[] = [];
     Array.from(event.target.files).forEach((file) => {
-      if (file.size > 1048576) {
+      if (file.size > MAX_FILE_SIZE) {
         toast.error(`Le fichier ${file.name} fait plus de 1MB.`);
       } else {
         files.push(file);
@@ -71,17 +64,12 @@ const UploadImage = ({
     setLoading(true);
     const files: File[] = [];
     Array.from(event.dataTransfer.files).forEach((file) => {
-      if (
-        file.type !== "image/png" &&
-        file.type !== "image/jpeg" &&
-        file.type !== "image/jpg" &&
-        file.type !== "image/webp"
-      ) {
+      if (!FILES_TYPES.includes(file.type)) {
         toast.error(
           `Le format du fichier n'est pas supporté : ${file.name}\nFormats supportés : png, jpeg, jpg, webp`,
           { duration: 5000 },
         );
-      } else if (file.size > 1048576) {
+      } else if (file.size > MAX_FILE_SIZE) {
         toast.error(`Le fichier ${file.name} fait plus de 1MB.`);
       } else {
         files.push(file);
@@ -106,7 +94,7 @@ const UploadImage = ({
       // const fileNameWithoutExtension =
       //   originalFileName.substring(0, originalFileName.lastIndexOf(".")) ||
       //   originalFileName;
-      // const randomString = generateRandomString(10); // Generate a random string of 5 characters
+      // const randomString = nanoid(10); // Generate a random string of 5 characters
 
       // // Combine the file name with the random string and the extension to form a new unique file name
       // const uniqueFileName = `${randomString}-${fileNameWithoutExtension}`;
@@ -202,7 +190,7 @@ const UploadImage = ({
             </p>
           </div>
           <Input
-            accept="image/png, image/jpeg, image/jpg, image/webp"
+            accept={FILES_TYPES.join(", ")}
             type="file"
             className="hidden"
             onChange={handleFile}
