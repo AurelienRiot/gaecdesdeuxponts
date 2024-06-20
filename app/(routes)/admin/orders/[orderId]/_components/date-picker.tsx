@@ -110,9 +110,7 @@ const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
                 }
                 setOpen(false);
               }}
-              modifiers={{
-                disabled: (date) => isDateDisabled(date),
-              }}
+
               // modifiers={{
               //   full: fullDays,
               //   partiallyFull: partiallyFullDays,

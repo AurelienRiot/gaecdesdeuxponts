@@ -34,14 +34,16 @@ const TimePicker = ({ className, date, shopId }: HourPickerProps) => {
     date.getHours() > 18 ||
     (date.getHours() === 18 && date.getMinutes() > 30)
   ) {
-    router.replace(makeCartUrl(shopId, setMinutes(setHours(date, 8), 30)));
+    router.replace(makeCartUrl(shopId, setMinutes(setHours(date, 8), 30)), {
+      scroll: false,
+    });
     return null;
   }
 
   const onSelectTime = (dateValue: string) => {
     const selectedDate = new Date(dateValue);
 
-    router.push(makeCartUrl(shopId, selectedDate), {
+    router.replace(makeCartUrl(shopId, selectedDate), {
       scroll: false,
     });
   };

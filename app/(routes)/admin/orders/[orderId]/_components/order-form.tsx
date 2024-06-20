@@ -71,7 +71,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({
       totalPrice: initialData?.totalPrice,
       dateOfPayment: initialData?.dateOfPayment,
       dateOfShipping: initialData?.dateOfShipping,
-      dateOfEdition: initialData?.dateOfEdition ?? new Date(),
+      dateOfEdition: new Date(),
       userId: initialData?.userId || "",
       shopId: initialData?.shopId || "",
       datePickUp: initialData?.datePickUp,
@@ -201,7 +201,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({
                 />
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="dateOfEdition"
               render={({ field }) => (
@@ -216,7 +216,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({
                   />
                 </div>
               )}
-            />
+            /> */}
             <SelectShop shops={shops} />
           </div>
           <ShippingProducts products={products} />

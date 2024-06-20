@@ -41,7 +41,7 @@ const DatePicker = ({ className, date, shopId }: DatePickerProps) => {
     }
     console.log(dateFormatter(selectedDate, true));
 
-    router.push(makeCartUrl(shopId, selectedDate), {
+    router.replace(makeCartUrl(shopId, selectedDate), {
       scroll: false,
     });
 
@@ -51,7 +51,7 @@ const DatePicker = ({ className, date, shopId }: DatePickerProps) => {
   return (
     <div
       className={cn(
-        "relative  flex flex-wrap items-center justify-between gap-y-2",
+        "relative flex flex-wrap items-center justify-between gap-y-2",
         className,
       )}
     >
