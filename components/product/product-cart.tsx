@@ -1,5 +1,5 @@
 import Currency from "@/components/ui/currency";
-import { ProductWithOptionsAndMain } from "@/types";
+import type { ProductWithOptionsAndMain } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import { FaInfo } from "react-icons/fa";

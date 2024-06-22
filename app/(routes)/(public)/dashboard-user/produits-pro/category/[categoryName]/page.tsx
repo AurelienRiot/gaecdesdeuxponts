@@ -6,7 +6,7 @@ import MainProductCart from "@/components/product/main-product-cart";
 import Container from "@/components/ui/container";
 import NoResults from "@/components/ui/no-results";
 import { addDelay } from "@/lib/utils";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 interface CategoryPageProps {

@@ -1,8 +1,7 @@
-import { FullAdress } from "./../components/address-form";
-import { type ClassValue, clsx } from "clsx";
+import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-import { Address } from "@prisma/client";
+import type { Address } from "@prisma/client";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -22,7 +21,7 @@ export const currencyFormatter = (() => {
   };
 })();
 
-export const addressFormatter = (address: Address, full: boolean = true) => {
+export const addressFormatter = (address: Address, full= true) => {
   if (!address.line1) {
     return "";
   }

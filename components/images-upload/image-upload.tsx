@@ -45,13 +45,14 @@ const UploadImage = ({
     }
 
     const files: File[] = [];
-    Array.from(event.target.files).forEach((file) => {
-      if (file.size > MAX_FILE_SIZE) {
-        toast.error(`Le fichier ${file.name} fait plus de 1MB.`);
-      } else {
-        files.push(file);
-      }
-    });
+   
+for (const file of event.target.files) {
+  if (file.size > MAX_FILE_SIZE) {
+    toast.error(`Le fichier ${file.name} fait plus de 1MB.`);
+  }else {
+    files.push(file);
+  }
+}
 
     await fileChange(files);
   };
@@ -63,7 +64,8 @@ const UploadImage = ({
     }
     setLoading(true);
     const files: File[] = [];
-    Array.from(event.dataTransfer.files).forEach((file) => {
+  
+    for (const file of event.dataTransfer.files) {
       if (!FILES_TYPES.includes(file.type)) {
         toast.error(
           `Le format du fichier n'est pas supporté : ${file.name}\nFormats supportés : png, jpeg, jpg, webp`,
@@ -73,8 +75,7 @@ const UploadImage = ({
         toast.error(`Le fichier ${file.name} fait plus de 1MB.`);
       } else {
         files.push(file);
-      }
-    });
+      }}
 
     await fileChange(files);
   };
@@ -469,8 +470,6 @@ const checkUrls = async (
     // If there are still invalid URLs, wait for 250ms and check again
     await addDelay(250);
     return checkUrls(invalidUrls.filter((url) => url.secureUrl !== null));
-  } else {
-    // All URLs are valid
+  } 
     return;
-  }
 };

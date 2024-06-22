@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { Button, IconButton } from "@/components/ui/button";
 import {
   Command,
@@ -10,7 +11,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,14 +20,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { ProductWithMain } from "@/types";
+import type { ProductWithMain } from "@/types";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
-import { Check, ChevronsUpDown, Trash } from "lucide-react";
+import { ChevronsUpDown, Trash } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import { OrderFormValues } from "./order-shema";
-import { Badge } from "@/components/ui/badge";
+import type { OrderFormValues } from "./order-shema";
 
 export const ShippingProducts = ({
   products,
@@ -69,9 +69,9 @@ export const ShippingProducts = ({
                   {"Ajouter un produit"}
                 </Button>
               </div>
-              {items.map((_, productIndex) => (
+              {items.map((item, productIndex) => (
                 <div
-                  key={productIndex}
+                  key={`${item.itemId} productIndex`}
                   className="overflow-x-auto rounded-md p-4 pb-4 thin-scrollbar even:bg-secondary"
                 >
                   <ProductName

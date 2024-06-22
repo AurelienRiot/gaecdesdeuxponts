@@ -1,6 +1,6 @@
 import UploadImage from "@/components/images-upload/image-upload";
 import {
-  OptionsArray,
+ type OptionsArray,
   getUnitLabel,
   hasOptionWithValue,
 } from "@/components/product/product-function";
@@ -53,7 +53,7 @@ import { nanoid } from "nanoid";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import OptionValueForm from "./options-values-form";
-import { ProductFormValues } from "./product-form";
+import type { ProductFormValues } from "./product-form";
 
 export const ProductWithOptions = ({
   optionsArray,

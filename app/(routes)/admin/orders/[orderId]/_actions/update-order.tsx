@@ -3,7 +3,7 @@
 import { checkAdmin } from "@/components/auth/checkAuth";
 import { createCustomer } from "@/components/pdf/pdf-data";
 import prismadb from "@/lib/prismadb";
-import { OrderFormValues, orderSchema } from "../_components/order-shema";
+import { orderSchema, type OrderFormValues } from "../_components/order-shema";
 
 export async function updateOrder(
   data: OrderFormValues,

@@ -7,8 +7,8 @@ import {
   findProduct,
   getAllOptions,
 } from "@/components/product/product-function";
-import { MainProduct } from "@prisma/client";
-import { Metadata } from "next";
+import type { MainProduct } from "@prisma/client";
+import type { Metadata } from "next";
 
 interface ProductPageProps {
   params: {

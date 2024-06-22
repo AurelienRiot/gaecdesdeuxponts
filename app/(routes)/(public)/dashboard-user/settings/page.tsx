@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useUserContext } from "@/context/user-context";
 import { UserForm } from "./_components/user-form";
-import { Metadata } from "next";
 
 const PageSettings = () => {
   const { user } = useUserContext();

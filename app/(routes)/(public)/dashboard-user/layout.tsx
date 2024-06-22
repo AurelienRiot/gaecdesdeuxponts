@@ -1,7 +1,7 @@
 import { UserProvider } from "@/context/user-context";
 
 import GetUser from "@/actions/get-user";
-import React from "react";
+import type React from "react";
 import { ProfilNavBar } from "./nav-components";
 
 export default async function Layout({

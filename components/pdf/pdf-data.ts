@@ -1,7 +1,7 @@
 import { dateFormatter } from "@/lib/date-utils";
 import { addressFormatter } from "@/lib/utils";
-import { FullOrder, UserWithAddress } from "@/types";
-import { Customer } from "@prisma/client";
+import type {FullOrder, UserWithAddress } from "@/types";
+import type { Customer } from "@prisma/client";
 import { nanoid } from "nanoid";
 
 const formatFrenchPhoneNumber = (phoneNumber: string | null): string => {
@@ -26,7 +26,7 @@ export const createCustomer = (user: UserWithAddress) => {
     : shippingAddress;
   return {
     customerId: user.id,
-    name: user.company ? user.name + " - " + user.company : user.name || "",
+    name: user.company ? `${user.name} - ${user.company}` : user.name || "",
     email: user.email || "",
     phone: formatFrenchPhoneNumber(user.phone),
     shippingAddress,
@@ -121,7 +121,7 @@ export const createMonthlyPDFData = (
   }
   const date = getMonthlyDate(orders[0].dateOfShipping);
 
-  let customer = orders[orders.length - 1].customer;
+  const customer = orders[orders.length - 1].customer;
   if (!customer) {
     throw new Error("Customer not found");
   }

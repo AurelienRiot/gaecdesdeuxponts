@@ -18,8 +18,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import useIsComponentMounted from "@/hooks/use-mounted";
-import { ProductWithOptionsAndMain } from "@/types";
-import { Shop } from "@prisma/client";
+import type { ProductWithOptionsAndMain } from "@/types";
+import type { Shop } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
@@ -31,7 +31,7 @@ import TimePicker from "./time-picker";
 const getDateFromSearchParam = (param: string | null): Date | undefined => {
   if (param === null) return undefined;
   const date = new Date(decodeURIComponent(param));
-  return isNaN(date.getTime()) ? undefined : date;
+  return Number.isNaN(date.getTime()) ? undefined : date;
 };
 
 interface SummaryProps {

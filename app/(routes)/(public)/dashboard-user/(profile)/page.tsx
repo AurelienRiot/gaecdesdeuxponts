@@ -10,7 +10,7 @@ import {
   UserName,
   UserPhone,
 } from "./_components/user-data";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Profil utilisateur",

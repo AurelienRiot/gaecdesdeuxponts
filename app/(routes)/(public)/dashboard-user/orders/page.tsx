@@ -11,9 +11,8 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { useUserContext } from "@/context/user-context";
 import { currencyFormatter } from "@/lib/utils";
-import { Metadata } from "next";
 import {
-  OrderColumnType,
+  type OrderColumnType,
   OrdersColumn,
   searchableColumns,
   viewOptionsColumns,

@@ -6,6 +6,8 @@ import { Check, Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+type CheckedState = boolean | 'indeterminate';
+
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
@@ -35,4 +37,4 @@ const Checkbox = React.forwardRef<
 ));
 Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 
-export { Checkbox };
+export { Checkbox,type CheckedState };

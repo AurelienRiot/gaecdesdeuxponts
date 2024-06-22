@@ -56,7 +56,7 @@ const Footer = ({ baseUrl }: { baseUrl: string }) => (
       Laiterie du Pont Robert
     </Text>
     <Hr className="my-5 border-[#cccccc]" />
-    <a href={baseUrl} target="_blank">
+    <a href={baseUrl} target="_blank" rel="noreferrer">
       <Img
         src={`${baseUrl}/signature.webp`}
         width="230"

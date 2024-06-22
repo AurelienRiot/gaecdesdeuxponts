@@ -1,0 +1,24 @@
+{
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "tab",
+    "lineWidth": 120
+  },
+  "organizeImports":{
+    "enabled":false
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "suspicious": {
+"noArrayIndexKey":"off"
+
+      },
+      "style": {
+        "useTemplate": "off",
+        "noUnusedTemplateLiteral":"off", 
+        "useSelfClosingElements":"off"
+      }
+    }
+  }
+}

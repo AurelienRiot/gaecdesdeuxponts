@@ -1,7 +1,7 @@
 "use client";
 import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
-import { ProductWithOptionsAndMain } from "@/types";
+import type { ProductWithOptionsAndMain } from "@/types";
 import Link from "next/link";
 import { PlateVis } from "../plate-vis";
 import { Badge } from "../ui/badge";
@@ -10,7 +10,7 @@ import AddToCartButton, {
   BulkQuantity,
   CustomQuantityAddToCart,
 } from "./cart-buttons";
-import { OptionsArray } from "./product-function";
+import type { OptionsArray } from "./product-function";
 
 interface InfoProps {
   product: ProductWithOptionsAndMain;
@@ -109,11 +109,11 @@ const OptionsDisplay = ({ optionsArray, product, sameProducts }: InfoProps) => {
 
               let productUrl = "?";
               productOption.forEach((option, idx) => {
-                option.value
-                  ? (productUrl += `${option.name}=${encodeURIComponent(option.value)}&`)
-                  : idx === index
-                    ? (productUrl += `${option.name}=${encodeURIComponent(value)}&`)
-                    : null;
+                if (option.value) {
+                  productUrl += `${option.name}=${encodeURIComponent(option.value)}&`;
+                } else if (idx === index) {
+                  productUrl += `${option.name}=${encodeURIComponent(value)}&`;
+                }
               });
 
               // if (value === "Aucun") {

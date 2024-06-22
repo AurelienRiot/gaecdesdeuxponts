@@ -10,14 +10,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { deleteUser, updateProUser } from "./server-action";
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
-import { CheckedState } from "@radix-ui/react-checkbox";
+import  type { CheckedState } from "@/components/ui/checkbox";
+
 
 interface CardUserProps {
   user: User;

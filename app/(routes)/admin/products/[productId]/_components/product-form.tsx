@@ -1,7 +1,7 @@
 "use client";
 
 import UploadImage from "@/components/images-upload/image-upload";
-import { OptionsArray } from "@/components/product/product-function";
+import type { OptionsArray } from "@/components/product/product-function";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import { Button, LoadingButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -24,9 +24,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { MainProductWithProducts } from "@/types";
+import type { MainProductWithProducts } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Category } from "@prisma/client";
+import type { Category } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { nanoid } from "nanoid";
 import { useRouter } from "next/navigation";
