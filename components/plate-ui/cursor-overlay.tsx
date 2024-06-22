@@ -2,10 +2,10 @@ import React from 'react';
 import { cn } from '@udecode/cn';
 import { createZustandStore } from '@udecode/plate-common';
 import {
-  CursorData,
+  type  CursorData,
   CursorOverlay as CursorOverlayPrimitive,
-  CursorOverlayProps,
-  CursorProps,
+  type   CursorOverlayProps,
+  type  CursorProps,
 } from '@udecode/plate-cursor';
 
 export const cursorStore = createZustandStore('cursor')({

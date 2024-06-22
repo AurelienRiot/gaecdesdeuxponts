@@ -1,12 +1,12 @@
 "use client";
 import AddressAutocomplete, {
-  Suggestion,
+  type Suggestion,
 } from "@/actions/adress-autocompleteFR";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
-import { InputHTMLAttributes, useState } from "react";
+import { type InputHTMLAttributes, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import * as RPNInput from "react-phone-number-input";
+import type * as RPNInput from "react-phone-number-input";
 import * as z from "zod";
 import { AnimateHeight } from "./animations/animate-size";
 import { Button } from "./ui/button";
@@ -60,7 +60,7 @@ export const AddressForm = ({ className }: AdressFormProps) => {
   const [suggestions, setSuggestions] = useState([] as Suggestion[]);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState(
-    address.country?.toUpperCase() === "FR" ? true : false,
+    address.country?.toUpperCase() === "FR",
   );
 
   const setSearchTerm = async (value: string) => {

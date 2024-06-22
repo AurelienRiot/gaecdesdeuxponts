@@ -6,10 +6,12 @@ import {
   PortalBody,
   useComposedRef,
   useEditorReadOnly,
+  useEventEditorSelectors,
+  usePlateSelectors,
 } from "@udecode/plate-common";
 import {
   flip,
-  FloatingToolbarState,
+type  FloatingToolbarState,
   offset,
   useFloatingToolbar,
   useFloatingToolbarState,
@@ -23,7 +25,11 @@ export const FloatingToolbar = withRef<
     state?: FloatingToolbarState;
   }
 >(({ state, children, ...props }, componentRef) => {
+  const editorId = usePlateSelectors().id();
+  const focusedEditorId = useEventEditorSelectors.focus();
   const floatingToolbarState = useFloatingToolbarState({
+    editorId,
+    focusedEditorId,
     ...state,
     floatingOptions: {
       placement: "bottom",

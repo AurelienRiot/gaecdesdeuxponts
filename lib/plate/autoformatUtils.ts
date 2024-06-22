@@ -1,4 +1,4 @@
-import { AutoformatBlockRule } from '@udecode/plate-autoformat';
+import  type { AutoformatBlockRule } from '@udecode/plate-autoformat';
 import {
   ELEMENT_CODE_BLOCK,
   ELEMENT_CODE_LINE,
@@ -7,7 +7,7 @@ import {
   getParentNode,
   isElement,
   isType,
-  PlateEditor,
+  type PlateEditor,
 } from '@udecode/plate-common';
 import { toggleList, unwrapList } from '@udecode/plate-list';
 

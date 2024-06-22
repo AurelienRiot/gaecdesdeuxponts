@@ -4,16 +4,16 @@ import React, { useEffect } from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import { cn, withRef } from '@udecode/cn';
 import {
-  comboboxActions,
-  ComboboxContentItemProps,
-  ComboboxContentProps,
-  ComboboxProps,
+ type ComboboxContentItemProps,
+type  ComboboxContentProps,
+ type ComboboxProps,
   useActiveComboboxStore,
   useComboboxContent,
   useComboboxContentState,
   useComboboxControls,
   useComboboxItem,
   useComboboxSelectors,
+  comboboxActions,
 } from '@udecode/plate-combobox';
 import {
   useEditorRef,
@@ -54,7 +54,7 @@ export function ComboboxContent(props: ComboboxContentProps) {
   const editor = useEditorRef();
 
   const filteredItems = useComboboxSelectors.filteredItems();
-  const activeComboboxStore = useActiveComboboxStore()!;
+  const activeComboboxStore = useActiveComboboxStore();
 
   const state = useComboboxContentState({ items, combobox });
   const { menuProps, targetRange } = useComboboxContent(state);
@@ -76,7 +76,7 @@ export function ComboboxContent(props: ComboboxContentProps) {
           )}
           onOpenAutoFocus={(event) => event.preventDefault()}
         >
-          {Component ? Component({ store: activeComboboxStore }) : null}
+          {Component && activeComboboxStore ? Component({ store: activeComboboxStore }) : null}
 
           {filteredItems.map((item, index) => (
             <ComboboxItem

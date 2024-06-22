@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { AnchorHTMLAttributes, forwardRef } from "react";
+import { type AnchorHTMLAttributes, forwardRef } from "react";
 
 const AuthLink = forwardRef<
   HTMLAnchorElement,

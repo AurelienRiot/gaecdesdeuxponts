@@ -11,8 +11,8 @@
     "enabled": true,
     "rules": {
       "suspicious": {
-"noArrayIndexKey":"off"
-
+"noArrayIndexKey":"off",
+"noExplicitAny":"off"
       },
       "style": {
         "useTemplate": "off",

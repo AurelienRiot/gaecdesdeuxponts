@@ -35,17 +35,16 @@ import {
   isSelectionAtCodeBlockStart,
   unwrapCodeBlock,
 } from "@udecode/plate-code-block";
-import { createComboboxPlugin } from "@udecode/plate-combobox";
+import { createComboboxPlugin } from '@udecode/plate-combobox';
 import {
   createPlugins,
   isBlockAboveEmpty,
   isSelectionAtBlockStart,
   PlateElement,
   PlateLeaf,
-  RenderAfterEditable,
+ type RenderAfterEditable,
   someNode,
 } from "@udecode/plate-common";
-import { createDndPlugin } from "@udecode/plate-dnd";
 import { createEmojiPlugin } from "@udecode/plate-emoji";
 
 import {
@@ -145,7 +144,6 @@ import {
 import { TableElement } from "@/components/plate-ui/table-element";
 import { TableRowElement } from "@/components/plate-ui/table-row-element";
 import { TodoListElement } from "@/components/plate-ui/todo-list-element";
-import { withDraggables } from "@/components/plate-ui/with-draggables";
 import { autoformatPlugin } from "@/lib/plate/autoformatPlugin";
 import { dragOverCursorPlugin } from "@/lib/plate/dragOverCursorPlugin";
 

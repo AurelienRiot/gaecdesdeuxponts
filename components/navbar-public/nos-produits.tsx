@@ -6,7 +6,7 @@ import {
   NavigationMenuListItem,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Category } from "@prisma/client";
+import type  { Category } from "@prisma/client";
 import Image from "next/image";
 import { Suspense } from "react";
 
