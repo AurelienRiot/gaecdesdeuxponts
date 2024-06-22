@@ -54,25 +54,20 @@ export async function updateOrder(
     include: { user: { include: { address: true, billingAddress: true } } },
   });
 
-  if (
-    shippingOrder.dateOfEdition?.setHours(0, 0, 0, 0) ===
-    new Date().setHours(0, 0, 0, 0)
-  ) {
-    const customer = createCustomer(shippingOrder.user);
-    await prismadb.order.update({
-      where: {
-        id,
-      },
-      data: {
-        customer: {
-          upsert: {
-            create: customer,
-            update: customer,
-          },
+  const customer = createCustomer(shippingOrder.user);
+  await prismadb.order.update({
+    where: {
+      id,
+    },
+    data: {
+      customer: {
+        upsert: {
+          create: customer,
+          update: customer,
         },
       },
-    });
-  }
+    },
+  });
 }
 
 export default updateOrder;

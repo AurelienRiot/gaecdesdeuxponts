@@ -23,6 +23,9 @@ export const currencyFormatter = (() => {
 })();
 
 export const addressFormatter = (address: Address, full: boolean = true) => {
+  if (!address.line1) {
+    return "";
+  }
   if (full) {
     return `${address.line1}, ${address.postalCode}, ${address.city}, ${address.country}`;
   }

@@ -50,16 +50,16 @@ const MainBody = ({
 
 const Footer = ({ baseUrl }: { baseUrl: string }) => (
   <>
-    <Text className="text-left text-base ">
+    <Text className="text-left text-base">
       Cordialement,
       <br />
       Laiterie du Pont Robert
     </Text>
-    <Hr className="my-5 border-[#cccccc] " />
+    <Hr className="my-5 border-[#cccccc]" />
     <a href={baseUrl} target="_blank">
       <Img
         src={`${baseUrl}/signature.webp`}
-        width="187.5"
+        width="230"
         height="75"
         alt="Laiterie du Pont Robert Logo"
         className="mr-auto"
@@ -76,7 +76,7 @@ export const ButtonProfile = ({
   text: string;
 }) => (
   <Button
-    className=" rounded-lg bg-green-500 px-6 py-3 text-center text-base text-primary"
+    className="rounded-lg bg-green-500 px-6 py-3 text-center text-base text-primary"
     href={href}
     target="_blank"
   >

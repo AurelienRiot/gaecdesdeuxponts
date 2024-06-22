@@ -37,7 +37,7 @@ const MobileNav = ({ children }: { children: React.ReactNode }) => {
                   alt="Logo"
                   className="h-16 w-auto rounded-md"
                   src="/logo-rect.webp"
-                  width={155.86}
+                  width={186}
                   height={56}
                 />
               </Link>
