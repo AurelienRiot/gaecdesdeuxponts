@@ -1,13 +1,13 @@
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import { Calendar,type CalendarProps } from "@/components/ui/calendar";
+import { Calendar, type CalendarProps } from "@/components/ui/calendar";
 import { FormItem, FormLabel } from "@/components/ui/form";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { dateFormatter, isDateDisabled } from "@/lib/date-utils";
+import { dateFormatter } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
 import { fr } from "date-fns/locale";
 import { forwardRef, useState } from "react";

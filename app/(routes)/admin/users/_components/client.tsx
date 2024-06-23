@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { User } from "@prisma/client";
+import  type { User } from "@prisma/client";
 import { useState } from "react";
 import CardUser from "./card-user";
 import { Button } from "@/components/ui/button";

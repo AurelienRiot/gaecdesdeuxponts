@@ -1,8 +1,8 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { Category } from "@prisma/client";
+import type { Category } from "@prisma/client";
 import { motion, useMotionValue } from "framer-motion";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import {type Dispatch, type SetStateAction, useEffect, useRef, useState } from "react";
 import { ProductCard } from "./nos-produits";
 
 const ONE_SECOND = 1000;
@@ -159,6 +159,7 @@ const Dots = ({
       {categories.map((_, idx) => {
         return (
           <button
+          type="button"
             aria-label={`Image ${idx + 1} sur ${categories.length}`}
             key={idx}
             onClick={() => setImgIndex(idx)}

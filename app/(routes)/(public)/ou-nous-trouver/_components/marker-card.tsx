@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Shop } from "@prisma/client";
+import  type { Shop } from "@prisma/client";
 import Image from "next/image";
 
 const MarkerCard = ({ shop }: { shop: Shop }) => {

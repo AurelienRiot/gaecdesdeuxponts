@@ -1,6 +1,4 @@
 "use client";
-import ProductCart from "@/components/product/product-cart";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -12,8 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MainProductWithProducts, ProductWithOptionsAndMain } from "@/types";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import type { MainProductWithProducts, ProductWithOptionsAndMain } from "@/types";
+import { useState, type Dispatch, type SetStateAction } from "react";
 
 type FilterValue = {
   search: string;
@@ -218,14 +216,15 @@ function extractOptionNamesAndValues(
 ): Record<string, string[]> {
   const optionMap: Record<string, Set<string>> = {};
 
-  products.forEach((product) => {
-    product.options.forEach((option) => {
+  for (const product of products) {
+    for (const option of product.options) {
       if (!optionMap[option.name]) {
         optionMap[option.name] = new Set();
       }
       optionMap[option.name].add(option.value);
-    });
-  });
+    }
+  }
+ 
 
   const optionMapWithArrays: Record<string, string[]> = {};
   for (const [key, valueSet] of Object.entries(optionMap)) {

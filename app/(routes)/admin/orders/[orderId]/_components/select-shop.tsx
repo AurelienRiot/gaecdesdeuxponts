@@ -17,12 +17,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { Shop } from "@prisma/client";
+import  type { Shop } from "@prisma/client";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import { OrderFormValues } from "./order-shema";
+import  type { OrderFormValues } from "./order-shema";
 
 const SelectShop = ({ shops }: { shops: Shop[] }) => {
   const form = useFormContext<OrderFormValues>();

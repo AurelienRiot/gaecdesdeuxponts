@@ -35,7 +35,7 @@ const BlopSVG = ({ className, text }: { className?: string; text: string }) => {
             ],
           }}
           transition={{
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             repeatType: "reverse",
             ease: "easeInOut",
             duration: 20,

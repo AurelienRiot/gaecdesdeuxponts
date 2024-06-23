@@ -4,9 +4,9 @@ import {
   createStatus,
 } from "@/components/table-custom-fuction/cell-orders";
 import { currencyFormatter } from "@/lib/utils";
-import { FullOrder } from "@/types";
-import { OrderColumn } from "./columns";
-import { User } from "@prisma/client";
+import type { FullOrder } from "@/types";
+import  type { OrderColumn } from "./columns";
+import  type { User } from "@prisma/client";
 
 export function formatOrders(
   orders: (FullOrder & { user: User })[],

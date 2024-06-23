@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import  type { Metadata } from "next";
 import VacheChamps from "@/public/vache-champs2.webp";
 import BidonLait from "@/public/bidon-lait.jpg";
 import Veau from "@/public/veau.webp";

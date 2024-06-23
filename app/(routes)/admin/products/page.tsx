@@ -1,6 +1,6 @@
 import prismadb from "@/lib/prismadb";
 import { ProductClient } from "./_components/client";
-import { ProductColumn } from "./_components/columns";
+import  type {  ProductColumn } from "./_components/columns";
 
 export const dynamic = "force-dynamic";
 

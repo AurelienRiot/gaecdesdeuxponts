@@ -2,7 +2,7 @@ import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import Map from "@/public/map.webp";
+import MapImage from "@/public/map.webp";
 
 const MapDisplay = ({
   className,
@@ -20,7 +20,7 @@ const MapDisplay = ({
     >
       <PinContainer title="Laiterie du Pont Robert" href={href}>
         <Image
-          src={Map}
+          src={MapImage}
           placeholder="blur"
           alt="carte"
           sizes="(max-width: 400px) 90vw, 400px"

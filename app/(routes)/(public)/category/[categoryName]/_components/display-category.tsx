@@ -1,6 +1,6 @@
 import Billboard from "@/components/billboard/billboard";
-import { MainProductWithProducts } from "@/types";
-import { Category } from "@prisma/client";
+import  type { MainProductWithProducts } from "@/types";
+import  type { Category } from "@prisma/client";
 import DisplayProducts from "./display-products";
 
 const DisplayCategory = ({

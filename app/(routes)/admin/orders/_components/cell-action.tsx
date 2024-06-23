@@ -1,6 +1,6 @@
 "use client";
 
-import { OrderColumn } from "./columns";
+import type  { OrderColumn } from "./columns";
 import { Button } from "@/components/ui/button";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";

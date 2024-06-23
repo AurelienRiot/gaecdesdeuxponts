@@ -1,5 +1,5 @@
 import Container from "@/components/ui/container";
-import { Metadata } from "next";
+import type  { Metadata } from "next";
 import { ContactForm } from "./_components/contact-form";
 import InfoContact from "./_components/info-contact";
 

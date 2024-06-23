@@ -2,10 +2,9 @@
 
 import { ShopCard } from "@/components/display-shops/shop-card";
 import { DisplayInvoice } from "@/components/pdf/pdf-button";
-import { PDFData } from "@/components/pdf/pdf-data";
 import {
   ProductCell,
-  Status,
+  type Status,
 } from "@/components/table-custom-fuction/cell-orders";
 import { DateCell } from "@/components/table-custom-fuction/common-cell";
 import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
@@ -15,9 +14,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
-import { Shop } from "@prisma/client";
-import { ColumnDef } from "@tanstack/react-table";
+import type { DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
+import type { Shop } from "@prisma/client";
+import type { ColumnDef } from "@tanstack/react-table";
 import { Search } from "lucide-react";
 
 export type OrderColumnType = {

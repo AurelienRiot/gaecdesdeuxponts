@@ -4,7 +4,7 @@ import Billboard from "@/components/billboard/billboard";
 import NotFound from "@/components/not-found";
 import MainProductCart from "@/components/product/main-product-cart";
 import NoResults from "@/components/ui/no-results";
-import { Metadata } from "next";
+import  type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 interface CategoryPageProps {

@@ -4,7 +4,7 @@ import { DataTable } from "@/components/ui/data-table/data-table";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import {
-  OrderColumn,
+  type  OrderColumn,
   columns,
   filterableColumns,
   viewOptionsColumns,

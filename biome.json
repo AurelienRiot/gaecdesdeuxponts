@@ -18,7 +18,8 @@
 "noUselessFragments":"off"
       },
       "a11y":{
-"noSvgWithoutTitle":"off"
+"noSvgWithoutTitle":"off", 
+"noAriaHiddenOnFocusable":"off"
       },
       "suspicious": {
 "noArrayIndexKey":"off",

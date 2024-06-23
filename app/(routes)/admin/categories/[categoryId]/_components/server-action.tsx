@@ -1,11 +1,11 @@
 "use server";
 
 import { checkAdmin } from "@/components/auth/checkAuth";
-import { CategoryFormValues } from "./category-form";
 import prismadb from "@/lib/prismadb";
-import { Category } from "@prisma/client";
-import { ReturnTypeServerAction } from "@/types";
+import type { ReturnTypeServerAction } from "@/types";
+import type { Category } from "@prisma/client";
 import { revalidateTag } from "next/cache";
+import type { CategoryFormValues } from "./category-form";
 
 async function createCategory({
   imageUrl,

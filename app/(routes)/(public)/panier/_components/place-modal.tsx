@@ -3,9 +3,9 @@ import { AddressInput } from "@/components/display-shops/address-input";
 import NameInput from "@/components/display-shops/name-input";
 import { ShopCard } from "@/components/display-shops/shop-card";
 import { Modal } from "@/components/ui/modal";
-import { Shop } from "@prisma/client";
+import  type { Shop } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useState } from "react";
+import {  type Dispatch, type  SetStateAction, useState } from "react";
 import { makeCartUrl } from "./summary";
 import { toast } from "sonner";
 

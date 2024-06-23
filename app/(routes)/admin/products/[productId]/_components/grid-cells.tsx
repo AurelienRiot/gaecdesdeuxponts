@@ -29,14 +29,16 @@ const GridCells = ({
     >
       {grid.map((row, rowIndex) =>
         row.map((cellValue, colIndex) => (
-          <div
+          <button
+          type="button"
             key={`${rowIndex}-${colIndex}`}
             className={`h-4 w-4 cursor-pointer rounded-md  border-2 border-border transition-colors  ${
               cellValue === 1 ? "bg-foreground" : "bg-background"
             }`}
             onClick={() => handleCellClick(rowIndex + 1, colIndex + 1)}
             onMouseOver={() => handleOnMouseOver(rowIndex, colIndex)}
-          ></div>
+            onFocus={() => handleOnMouseOver(rowIndex, colIndex)}
+          ></button>
         )),
       )}
     </div>

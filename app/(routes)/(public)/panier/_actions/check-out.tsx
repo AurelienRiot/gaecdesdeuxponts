@@ -13,7 +13,7 @@ import { dateFormatter, isDateDisabled } from "@/lib/date-utils";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import { currencyFormatter } from "@/lib/utils";
-import { FullOrder, ProductWithMain, UserWithAddress } from "@/types";
+import  type { FullOrder, ProductWithMain, UserWithAddress } from "@/types";
 import { render } from "@react-email/render";
 import { pdf } from "@react-pdf/renderer";
 import { revalidatePath } from "next/cache";

@@ -5,7 +5,7 @@ import { IconButton } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { Locate } from "lucide-react";
 import { usePostHog } from "posthog-js/react";
-import { Dispatch, SetStateAction } from "react";
+import  type { Dispatch, SetStateAction } from "react";
 import { useMap } from "react-leaflet";
 import { toast } from "sonner";
 

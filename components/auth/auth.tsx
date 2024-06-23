@@ -1,7 +1,7 @@
 "use client";
 
-import { DefaultSession } from "next-auth";
-import { DefaultJWT } from "next-auth/jwt";
+import type{ DefaultSession } from "next-auth";
+import type{ DefaultJWT } from "next-auth/jwt";
 import { signOut } from "next-auth/react";
 
 declare module "next-auth" {

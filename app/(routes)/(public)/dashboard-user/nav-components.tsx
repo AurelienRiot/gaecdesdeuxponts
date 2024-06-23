@@ -40,6 +40,7 @@ const ProfilNavBar = () => {
         const active = isActiveRoute(href, pathname);
         return (
           <button
+          type="button"
             key={title}
             onClick={() => {
               router.push(href);
@@ -80,9 +81,9 @@ const ProfilNavBar = () => {
 const isActiveRoute = (href: string, pathname: string): boolean => {
   if (href === "/dashboard-user") {
     return pathname === href;
-  } else {
+  } 
     return pathname.startsWith(href);
-  }
+
 };
 
 export const ProfilRoutes = [

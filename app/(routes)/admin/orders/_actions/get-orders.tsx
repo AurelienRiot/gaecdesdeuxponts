@@ -2,9 +2,9 @@
 
 import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
-import { ReturnTypeServerAction } from "@/types";
-import { DateRange } from "react-day-picker";
-import { OrderColumn } from "../_components/columns";
+import type { ReturnTypeServerAction } from "@/types";
+import type { DateRange } from "react-day-picker";
+import type { OrderColumn } from "../_components/columns";
 import { formatOrders } from "../_components/format-orders";
 
 const getOrders = async (

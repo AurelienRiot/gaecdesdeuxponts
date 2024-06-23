@@ -17,12 +17,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { UserWithAddress } from "@/types";
+import type  { UserWithAddress } from "@/types";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import { OrderFormValues } from "./order-shema";
+import type  { OrderFormValues } from "./order-shema";
 
 const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
   const form = useFormContext<OrderFormValues>();

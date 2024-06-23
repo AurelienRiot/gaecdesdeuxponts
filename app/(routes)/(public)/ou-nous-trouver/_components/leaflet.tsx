@@ -1,6 +1,6 @@
 import { ShopCard } from "@/components/display-shops/shop-card";
-import { Shop } from "@prisma/client";
-import { Dispatch, SetStateAction } from "react";
+import  type { Shop } from "@prisma/client";
+import  type { Dispatch, SetStateAction } from "react";
 import { MapContainer, Marker, Popup, TileLayer, Tooltip } from "react-leaflet";
 import MapFocus from "./map-focus";
 import { MakePin } from "./marker-pin";

@@ -2,7 +2,7 @@
 
 import { getSessionUser } from "@/actions/get-user";
 import prismadb from "@/lib/prismadb";
-import { ContactFormValues } from "../_components/contact-form";
+import type { ContactFormValues } from "../_components/contact-form";
 import { formSchema } from "../_components/shema";
 
 async function createContact(data: ContactFormValues): Promise<void> {

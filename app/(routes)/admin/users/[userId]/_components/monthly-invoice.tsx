@@ -1,6 +1,6 @@
 "use client";
 import { DisplayMonthlyInvoice } from "@/components/pdf/pdf-button";
-import { monthlyOrdersType } from "@/components/pdf/pdf-data";
+import  type { monthlyOrdersType } from "@/components/pdf/pdf-data";
 import {
   Select,
   SelectContent,

@@ -26,16 +26,16 @@ function reducer(state: StateType, action: { type: keyof SwitchToogleProps }) {
     newCheckedOrder = newCheckedOrder.filter((s) => s !== switchName);
   } else {
     if (newCheckedOrder.length >= 2) {
-      const switchToUncheck = newCheckedOrder.shift();
+      const switchToUncheck = newCheckedOrder.shift() as keyof SwitchToogleProps;
       return {
         ...state,
-        [switchToUncheck!]: false,
+        [switchToUncheck]: false,
         [switchName]: true,
         checkedOrder: [...newCheckedOrder, switchName],
       };
-    } else {
+    } 
       newCheckedOrder.push(switchName);
-    }
+    
   }
 
   return {

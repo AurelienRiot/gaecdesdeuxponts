@@ -1,5 +1,5 @@
 "use client";
-import { Category } from "@prisma/client";
+import type{ Category } from "@prisma/client";
 import Image from "next/image";
 import BillboardSkeleton from "../skeleton-ui/billboard-skeleton";
 

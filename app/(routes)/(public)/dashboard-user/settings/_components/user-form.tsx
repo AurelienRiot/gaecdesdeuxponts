@@ -2,10 +2,15 @@
 
 import {
   AddressForm,
-  FullAdress,
   addressSchema,
+  type FullAdress,
 } from "@/components/address-form";
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import {
+  BillingAddressForm,
+  billingAddressSchema,
+  defaultAddress,
+} from "@/components/billing-address-form";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import {
   Form,
@@ -22,6 +27,7 @@ import { Separator } from "@/components/ui/separator";
 import { useUserContext } from "@/context/user-context";
 import { addDelay } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import  type { Address, BillingAddress } from "@prisma/client";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -30,12 +36,6 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import * as z from "zod";
 import { deleteUser, updateUser } from "./server-action";
-import { Address, BillingAddress } from "@prisma/client";
-import {
-  BillingAddressForm,
-  billingAddressSchema,
-  defaultAddress,
-} from "@/components/billing-address-form";
 
 interface UserFormProps {
   initialData: {

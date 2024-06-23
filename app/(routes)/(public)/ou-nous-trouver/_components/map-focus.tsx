@@ -1,6 +1,6 @@
 "use client";
 import AddressAutocomplete, {
-  Suggestion,
+  type  Suggestion,
 } from "@/actions/adress-autocompleteFR";
 import {
   Command,
@@ -10,7 +10,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { X } from "lucide-react";
-import { Dispatch, SetStateAction, useState } from "react";
+import {  type Dispatch, type  SetStateAction, useState } from "react";
 import { Marker, useMap } from "react-leaflet";
 import { MakePin } from "./marker-pin";
 import "./marker.css";
@@ -116,8 +116,8 @@ const MapFocus = ({
               Adresse introuvable
             </CommandEmpty>
           )}
-          {suggestions &&
-            suggestions.map((address, index) => (
+          {
+            suggestions?.map((address, index) => (
               <CommandItem
                 className="cursor-pointer   bg-popover text-popover-foreground"
                 value={index.toString()}

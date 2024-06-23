@@ -1,6 +1,6 @@
 import prismadb from "@/lib/prismadb";
 import { getToken } from "next-auth/jwt";
-import { NextRequest, NextResponse } from "next/server";
+import  {  type NextRequest, NextResponse } from "next/server";
 
 const secret = process.env.NEXTAUTH_SECRET;
 export const dynamic = "force-dynamic";

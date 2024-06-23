@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@udecode/cn";
-import { Plate, TElement } from "@udecode/plate-common";
+import { Plate,  type TElement } from "@udecode/plate-common";
 import { useRef } from "react";
 
 import { CursorOverlay } from "@/components/plate-ui/cursor-overlay";
@@ -21,7 +21,7 @@ import {
 import { MENTIONABLES } from "@/lib/plate/mentionables";
 import { plugins } from "@/lib/plate/plate-plugins";
 import { useFormContext } from "react-hook-form";
-import { ProductFormValues } from "./product-form";
+import type { ProductFormValues } from "./product-form";
 
 type PlateEditorProps = {
   loading: boolean;

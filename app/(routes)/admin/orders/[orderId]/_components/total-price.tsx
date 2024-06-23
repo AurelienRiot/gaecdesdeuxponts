@@ -8,7 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useFormContext } from "react-hook-form";
 import { useEffect } from "react";
-import { OrderFormValues } from "./order-shema";
+import type  { OrderFormValues } from "./order-shema";
 
 const TotalPrice = () => {
   const form = useFormContext<OrderFormValues>();

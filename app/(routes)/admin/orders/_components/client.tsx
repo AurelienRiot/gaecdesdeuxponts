@@ -7,10 +7,10 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { DateRange } from "react-day-picker";
+import  type { DateRange } from "react-day-picker";
 import { toast } from "sonner";
 import {
-  OrderColumn,
+  type  OrderColumn,
   columns,
   filterableColumns,
   searchableColumns,

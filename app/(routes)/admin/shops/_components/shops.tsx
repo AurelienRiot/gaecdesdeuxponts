@@ -2,12 +2,12 @@
 import { AddressInput } from "@/components/display-shops/address-input";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
-import { Shop } from "@prisma/client";
+import  type { Shop } from "@prisma/client";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import NameInput from "../../../../../components/display-shops/name-input";
-import { ShopCard } from "../../../../../components/display-shops/shop-card";
+import NameInput from "@/components/display-shops/name-input";
+import { ShopCard } from "@/components/display-shops/shop-card";
 import { Toggle } from "@/components/ui/toggle";
 
 const DisplayShop = ({ data }: { data: Shop[] }) => {

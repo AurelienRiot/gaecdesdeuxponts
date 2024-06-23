@@ -1,6 +1,6 @@
 "use client";
 import AddressAutocomplete, {
-  Suggestion,
+  type Suggestion,
 } from "@/actions/adress-autocompleteFR";
 import UploadImage from "@/components/images-upload/image-upload";
 import { AlertModal } from "@/components/ui/alert-modal-form";
@@ -34,16 +34,16 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Shop } from "@prisma/client";
+import type  { Shop } from "@prisma/client";
 import { ChevronDown, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { UseFormReturn, useForm } from "react-hook-form";
+import {  type UseFormReturn, useForm } from "react-hook-form";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import { z } from "zod";
 import {
-  ReturnType,
+  type ReturnType,
   createShop,
   deleteShop,
   updateShop,
@@ -58,7 +58,7 @@ const customNumberSchema = z
   })
   .transform((value) => {
     const num = Number(value);
-    if (isNaN(num)) {
+    if (Number.isNaN(num)) {
       throw new Error("Veuillez entrer un nombre");
     }
     return num;

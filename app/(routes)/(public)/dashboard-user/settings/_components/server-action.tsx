@@ -3,8 +3,8 @@
 import { checkUser } from "@/components/auth/checkAuth";
 import { defaultAddress } from "@/components/billing-address-form";
 import prismadb from "@/lib/prismadb";
-import { ReturnTypeServerAction } from "@/types";
-import { UserFormValues } from "./user-form";
+import  type { ReturnTypeServerAction } from "@/types";
+import  type { UserFormValues } from "./user-form";
 
 async function updateUser({
   name,

@@ -1,6 +1,6 @@
 "use server";
 import { checkAdmin } from "@/components/auth/checkAuth";
-import { ShopFormValues } from "./shop-form";
+import  type { ShopFormValues } from "./shop-form";
 import prismadb from "@/lib/prismadb";
 import { revalidateTag } from "next/cache";
 

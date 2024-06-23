@@ -74,6 +74,7 @@ export const GoogleButton = ({ callbackUrl }: { callbackUrl: string }) => {
   const [loading, setLoading] = useState(false);
   return (
     <button
+    type="button"
       onClick={async () => {
         setLoading(true);
         await signIn("google", {

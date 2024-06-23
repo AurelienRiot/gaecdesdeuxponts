@@ -1,5 +1,5 @@
 import prismadb from "@/lib/prismadb";
-import { DateRange } from "react-day-picker";
+import  type { DateRange } from "react-day-picker";
 import { OrderClient } from "./_components/client";
 import { formatOrders } from "./_components/format-orders";
 

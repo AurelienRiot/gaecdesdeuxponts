@@ -115,6 +115,7 @@ const AccordionContent = React.forwardRef<
         {children}
         <div className="mt-8 h-[40px] w-full"></div>
         <button
+          type="button"
           onClick={() => onValueChange(values?.filter((v) => v !== value))}
           className="group/button absolute bottom-0 left-0 flex w-full items-center justify-center gap-1 rounded-b-md bg-gradient-to-r from-neutral-900 to-slate-900 py-2 font-semibold text-white   opacity-0 transition-opacity  duration-200 group-data-[state=open]:opacity-100    "
         >
@@ -179,6 +180,7 @@ export const Accordion2 = ({
                 </ul>
                 <div className="mt-8 h-[40px] w-full"></div>
                 <button
+                  type="button"
                   // onClick={() => setQuestion("")}
                   className="group/button absolute bottom-0 left-0 flex w-full items-center justify-center gap-1 rounded-b-md bg-gradient-to-r from-neutral-900 to-slate-900 py-2 font-semibold text-white  opacity-0 transition-all group-data-[state=open]:opacity-100 "
                 >

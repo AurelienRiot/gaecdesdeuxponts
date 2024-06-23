@@ -2,7 +2,7 @@ import Image from "next/image";
 import Ferme from "@/public/ferme.webp";
 import Vache from "@/public/vache.webp";
 import Photo from "@/public/photo.webp";
-import { Metadata } from "next";
+import  type { Metadata } from "next";
 
 export const dynamic = "force-static";
 

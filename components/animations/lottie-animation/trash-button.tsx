@@ -1,10 +1,10 @@
 "use client";
-import Lottie, { LottieRefCurrentProps } from "lottie-react";
-import TrashV2 from "./trashV2.json";
-import { cn } from "@/lib/utils";
-import * as React from "react";
-import { VariantProps } from "class-variance-authority";
 import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import type { VariantProps } from "class-variance-authority";
+import Lottie, { type LottieRefCurrentProps } from "lottie-react";
+import * as React from "react";
+import TrashV2 from "./trashV2.json";
 
 interface TrashButtonProps
   extends Omit<
@@ -48,18 +48,19 @@ export const TrashButton = React.forwardRef<
 
     React.useEffect(() => {
       if (
-        lottieRef.current &&
-        lottieRef.current.animationContainerRef.current
+        
+        lottieRef?.current?.animationContainerRef.current
       ) {
         const svgElements =
           lottieRef.current.animationContainerRef.current.querySelectorAll(
             "path",
           );
-        svgElements.forEach((element: SVGPathElement) => {
-          if (element.getAttribute("stroke") === "rgb(0,0,0)") {
-            element.setAttribute("stroke", color);
+          for (const element of svgElements) {
+            if (element.getAttribute("stroke") === "rgb(0,0,0)") {
+              element.setAttribute("stroke", color);
+            }
           }
-        });
+       
       }
     }, [color]);
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { ContactColumn } from "./columns";
+import type  { ContactColumn } from "./columns";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 import { toast } from "sonner";

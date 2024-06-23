@@ -1,4 +1,4 @@
-import { MetadataRoute } from "next";
+import  type { MetadataRoute } from "next";
 import { getCategories } from "@/actions/get-category";
 import { getProducts } from "@/actions/get-products";
 import {

@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
-import { Shop } from "@prisma/client";
+import  type { Shop } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction } from "react";
+import type  { Dispatch, SetStateAction } from "react";
 import { makeCartUrl } from "./summary";
 
 const farmShopId = process.env.NEXT_PUBLIC_FARM_ID;

@@ -1,18 +1,17 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { DataTable } from "@/components/ui/data-table/data-table";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
-  ProductColumn,
   columns,
   filterableColumns,
-  searchableColumns,
   viewOptionsColumns,
+  type ProductColumn
 } from "./columns";
-import { DataTable } from "@/components/ui/data-table/data-table";
 
 interface ProductClientProps {
   data: ProductColumn[];

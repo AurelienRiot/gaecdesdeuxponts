@@ -2,7 +2,7 @@
 import { AddressInput } from "@/components/display-shops/address-input";
 import NameInput from "@/components/display-shops/name-input";
 import { ShopCard } from "@/components/display-shops/shop-card";
-import { Shop } from "@prisma/client";
+import  type { Shop } from "@prisma/client";
 import "leaflet/dist/leaflet.css";
 import dynamicImport from "next/dynamic";
 import { useState } from "react";

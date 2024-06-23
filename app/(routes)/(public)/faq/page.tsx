@@ -5,7 +5,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "./accordion";
-import { Metadata } from "next";
+import  type { Metadata } from "next";
 
 export const dynamic = "force-static";
 

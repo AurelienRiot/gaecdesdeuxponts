@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
-  CategoryColumnType,
+  type CategoryColumnType,
   CategoryColumn,
   searchableColumns,
   viewOptionsColumns,

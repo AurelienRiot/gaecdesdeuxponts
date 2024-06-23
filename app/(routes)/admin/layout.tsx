@@ -1,5 +1,5 @@
 import Navbar from "@/components/navbar-admin/navbar";
-import React from "react";
+import  type React from "react";
 
 export default async function AdminLayout({
   children,

@@ -292,7 +292,7 @@ module.exports = {
 
 function disappearTop(numberItems: number) {
   return {
-    ["0%"]: {
+    "0%": {
       transform: "translateY(25px)",
       opacity: 0,
     },
