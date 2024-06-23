@@ -262,9 +262,9 @@ export function MultiFilterRow<TData>({
                   ...item,
                   value,
                 };
-              } else {
+              } 
                 return item;
-              }
+              
             }),
           );
         }}

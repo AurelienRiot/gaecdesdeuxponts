@@ -1,11 +1,11 @@
 "use client";
 
 import { MixerHorizontalIcon } from "@radix-ui/react-icons";
-import { type Table } from "@tanstack/react-table";
+import type { Table } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { DataTableViewOptionsColumn } from "@/types";
+import type { DataTableViewOptionsColumn } from "@/types";
 import { CheckIcon } from "lucide-react";
 import {
   Command,
@@ -15,7 +15,6 @@ import {
   CommandList,
 } from "../command";
 import { Popover, PopoverContent, PopoverTrigger } from "../popover";
-import { Checkbox } from "@/components/plate-ui/checkbox";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;

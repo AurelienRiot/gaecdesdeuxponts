@@ -1,6 +1,6 @@
 import type { Option } from "@/types";
 import { CheckIcon } from "@radix-ui/react-icons";
-import { type Column } from "@tanstack/react-table";
+import type{ Column } from "@tanstack/react-table";
 
 import { cn } from "@/lib/utils";
 import {

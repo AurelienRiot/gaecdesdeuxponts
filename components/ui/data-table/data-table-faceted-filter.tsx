@@ -1,8 +1,7 @@
 import type { Option } from "@/types";
 import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons";
-import { type Column } from "@tanstack/react-table";
+import type { Column } from "@tanstack/react-table";
 
-import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +19,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
 interface DataTableFacetedFilter<TData, TValue> {
   column?: Column<TData, TValue>;
@@ -143,12 +143,4 @@ export function DataTableFacetedFilter<TData, TValue>({
   );
 }
 
-{
-  /* <Toggle
-aria-label="Toggle archivé"
-variant={"outline"}
-onPressedChange={onPressedChange}
->
-Archivé
-</Toggle> */
-}
+

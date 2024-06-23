@@ -80,9 +80,9 @@ export function DataTableAdvancedFilter<TData>({
                   setSelectedOptions((prev) => {
                     if (currentValue === value) {
                       return prev.filter((item) => item.value !== option.value);
-                    } else {
+                    } 
                       return [...prev, option];
-                    }
+                    
                   });
                 }}
               >

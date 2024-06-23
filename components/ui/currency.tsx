@@ -1,7 +1,7 @@
 import { cn, currencyFormatter } from "@/lib/utils";
 import { Skeleton } from "../skeleton-ui/skeleton";
 import { getUnitLabel } from "../product/product-function";
-import { Unit } from "@prisma/client";
+import type{ Unit } from "@prisma/client";
 
 interface CurrencyProps {
   value?: number | null;
