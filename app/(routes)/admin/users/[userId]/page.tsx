@@ -1,4 +1,4 @@
-import { monthlyOrdersType } from "@/components/pdf/pdf-data";
+import type { monthlyOrdersType } from "@/components/pdf/pdf-data";
 import {
   createProduct,
   createProductList,
@@ -8,7 +8,7 @@ import ButtonBackward from "@/components/ui/button-backward";
 import prismadb from "@/lib/prismadb";
 import { currencyFormatter } from "@/lib/utils";
 import MonthlyInvoice from "./_components/monthly-invoice";
-import { OrderColumn } from "./_components/order-column";
+import type{ OrderColumn } from "./_components/order-column";
 import { OrderTable } from "./_components/order-table";
 import { UserForm } from "./_components/user-form";
 import { CreateUserForm } from "./_components/create-user-form";
@@ -33,7 +33,7 @@ const UserPage = async ({
       billingAddress: true,
       orders: {
         orderBy: {
-          createdAt: "asc",
+          createdAt: "desc",
         },
         include: {
           orderItems: true,

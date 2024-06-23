@@ -141,7 +141,6 @@ export const CreateUserForm = () => {
                   </FormItem>
                 )}
               />
-              {isPro && (
                 <FormField
                   control={form.control}
                   name="company"
@@ -150,7 +149,7 @@ export const CreateUserForm = () => {
                       <FormLabel>Entreprise</FormLabel>
                       <FormControl>
                         <Input
-                          disabled={form.formState.isSubmitting}
+                          disabled={form.formState.isSubmitting || !isPro}
                           placeholder="entreprise"
                           {...field}
                         />
@@ -159,7 +158,6 @@ export const CreateUserForm = () => {
                     </FormItem>
                   )}
                 />
-              )}
               <FormField
                 control={form.control}
                 name="phone"

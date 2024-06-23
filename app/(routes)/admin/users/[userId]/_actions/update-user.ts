@@ -1,6 +1,6 @@
 "use server";
 import { checkAdmin } from "@/components/auth/checkAuth";
-import { UserFormValues } from "../_components/user-form";
+import type { UserFormValues } from "../_components/user-form";
 import prismadb from "@/lib/prismadb";
 import { defaultAddress } from "@/components/billing-address-form";
 

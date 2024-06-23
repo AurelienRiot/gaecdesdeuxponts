@@ -108,7 +108,7 @@ export type MonthlyPDFDataType = {
 };
 
 export const getMonthlyDate = (date: Date) => {
-  return `${date.toLocaleString("default", {
+  return `${date.toLocaleString("fr-FR", {
     month: "long",
   })} ${date.getFullYear()}`;
 };

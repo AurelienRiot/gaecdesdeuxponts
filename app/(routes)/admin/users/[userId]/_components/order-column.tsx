@@ -2,7 +2,7 @@
 
 import {
   ProductCell,
- type Status,
+  type Status,
 } from "@/components/table-custom-fuction/cell-orders";
 import {
   DateCell,
@@ -17,9 +17,8 @@ import { DatePickUpHeader } from "@/components/table-custom-fuction/header-order
 import { Button } from "@/components/ui/button";
 import type { DataTableFilterableColumn, DataTableViewOptionsColumn } from "@/types";
 import type { ColumnDef } from "@tanstack/react-table";
-import { OrderCellAction } from "./order-cell-action";
 import Link from "next/link";
-import { DisplayInvoice } from "@/components/pdf/pdf-button";
+import { OrderCellAction } from "./order-cell-action";
 
 export type OrderColumn = {
   id: string;
@@ -47,17 +46,13 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "id",
     header: "Facture",
-    cell: ({ row }) => {
-      return row.original.status === "En cours de validation" ? (
+    cell: ({ row }) => (
         <Button asChild variant={"link"} className="px-0">
           <Link href={`/admin/orders/${row.original.id}`}>
             Éditer le bon de livraison
           </Link>
         </Button>
-      ) : (
-        <DisplayInvoice orderId={row.original.id} />
-      );
-    },
+      )     ,
   },
   {
     accessorKey: "status",

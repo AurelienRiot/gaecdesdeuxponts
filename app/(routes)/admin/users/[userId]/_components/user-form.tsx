@@ -22,7 +22,7 @@ import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
-import { UserWithOrdersAndAdress } from "@/types";
+import type{ UserWithOrdersAndAdress } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -169,16 +169,16 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                 </FormItem>
               )}
             />
-            {isPro && (
+            
               <FormField
                 control={form.control}
                 name="company"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Entreprise</FormLabel>
+                    <FormLabel >Entreprise</FormLabel>
                     <FormControl>
                       <Input
-                        disabled={form.formState.isSubmitting}
+                        disabled={form.formState.isSubmitting || !isPro}
                         placeholder="entreprise"
                         {...field}
                       />
@@ -187,7 +187,6 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                   </FormItem>
                 )}
               />
-            )}
             <FormField
               control={form.control}
               name="phone"

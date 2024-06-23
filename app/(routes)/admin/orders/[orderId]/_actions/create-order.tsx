@@ -3,9 +3,9 @@
 import { checkAdmin } from "@/components/auth/checkAuth";
 import { createCustomer } from "@/components/pdf/pdf-data";
 import prismadb from "@/lib/prismadb";
-import { OrderFormValues, orderSchema } from "../_components/order-shema";
+import {type OrderFormValues, orderSchema } from "../_components/order-shema";
 
-export async function createOrder(data: OrderFormValues): Promise<void> {
+export async function createOrder(data: OrderFormValues): Promise<{id:string}> {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
@@ -52,6 +52,7 @@ export async function createOrder(data: OrderFormValues): Promise<void> {
       },
     },
   });
+  return { id: order.id };
 }
 
 export default createOrder;

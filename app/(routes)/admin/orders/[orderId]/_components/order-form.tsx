@@ -12,13 +12,12 @@ import { Form, FormField } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import {
+import type {
   ProductWithMain,
-  ReturnTypeServerAction,
-  UserWithAddress,
+  UserWithAddress
 } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Shop } from "@prisma/client";
+import type { Shop } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -27,13 +26,12 @@ import { toast } from "sonner";
 import createOrder from "../_actions/create-order";
 import updateOrder from "../_actions/update-order";
 import FormDatePicker from "./date-picker";
-import { OrderFormValues, orderSchema } from "./order-shema";
+import { orderSchema, type OrderFormValues } from "./order-shema";
 import { ShippingProducts } from "./products";
 import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
-import TotalPrice from "./total-price";
-import { divIcon } from "leaflet";
 import TimePicker from "./time-picker";
+import TotalPrice from "./total-price";
 
 type ProductFormProps = {
   initialData: OrderFormValues | null;
@@ -122,8 +120,10 @@ export const OrderForm: React.FC<ProductFormProps> = ({
         });
     } else {
       await createOrder(data)
-        .then(() => {
+        .then(({id}) => {
           toast.success(toastMessage);
+          router.replace(`/admin/orders/${id}`);
+          router.refresh();
         })
         .catch((err) => {
           toast.error(err.message);
@@ -232,7 +232,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({
           </LoadingButton>
         </form>
       </Form>
-      <div className="flex flex-wrap gap-4">
+    { !!initialData && <div className="flex flex-wrap gap-4">
         <div>
           <Label>Bon de livraison</Label>
           <DisplayShippingOrder orderId={form.getValues("id")} />
@@ -241,10 +241,10 @@ export const OrderForm: React.FC<ProductFormProps> = ({
           <Label>Facture</Label>
           <DisplayInvoice orderId={form.getValues("id")} />
         </div>
-      </div>
+      </div>}
       <ButtonBackward
         onClick={() => {
-          router.push(referer);
+          router.back();
           router.refresh();
         }}
       />

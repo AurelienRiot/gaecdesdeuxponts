@@ -1,6 +1,6 @@
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import { Calendar, CalendarProps } from "@/components/ui/calendar";
+import { Calendar,type CalendarProps } from "@/components/ui/calendar";
 import { FormItem, FormLabel } from "@/components/ui/form";
 import {
   Popover,

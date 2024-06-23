@@ -1,11 +1,11 @@
 import * as React from "react";
-import * as LabelPrimitive from "@radix-ui/react-label";
+import type * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
 import {
-  Controller,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
+   Controller,
+ type ControllerProps,
+ type  FieldPath,
+ type  FieldValues,
   FormProvider,
   useFormContext,
 } from "react-hook-form";
@@ -13,7 +13,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
-import { ButtonProps, buttonVariants } from "./button";
+import { type ButtonProps, buttonVariants } from "./button";
 
 const Form = FormProvider;
 

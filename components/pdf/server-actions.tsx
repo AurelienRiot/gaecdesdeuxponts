@@ -76,6 +76,9 @@ export async function createMonthlyPDF64String(
       shop: true,
       customer: true,
     },
+    orderBy: {
+      dateOfShipping: "asc",
+    },
   });
   if (orders.length === 0) {
     throw new Error(`Aucune commande pour ce mois`);
