@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { Shop } from "@prisma/client";
+import type { Shop } from "@prisma/client";
 import { ClipboardEdit } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

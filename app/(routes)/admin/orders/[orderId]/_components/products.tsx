@@ -46,7 +46,7 @@ export const ShippingProducts = ({
       categoryName: "",
       description: "",
     };
-    form.setValue("orderItems", [...items, newItems]);
+    form.setValue("orderItems", [...items,newItems]);
   };
 
   return (

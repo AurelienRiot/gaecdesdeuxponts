@@ -1,19 +1,17 @@
 "use server";
+import { getSessionUser } from "@/actions/get-user";
 import prismadb from "@/lib/prismadb";
-import { FullOrder, ReturnTypeServerAction } from "@/types";
+import type { FullOrder } from "@/types";
+import { pdf } from "@react-pdf/renderer";
 import * as z from "zod";
 import Invoice from "./create-invoice";
+import MonthlyInvoice from "./create-monthly-invoice";
+import ShippingOrder from "./create-shipping";
 import {
   createMonthlyPDFData,
   createPDFData,
   getMonthlyDate,
 } from "./pdf-data";
-import { pdf } from "@react-pdf/renderer";
-import ShippingOrder from "./create-shipping";
-import { Buffer } from "buffer";
-import MonthlyInvoice from "./create-monthly-invoice";
-import { getSessionUser } from "@/actions/get-user";
-import { PDFDocument, rgb } from "pdf-lib";
 
 const pdf64StringSchema = z.object({
   orderId: z.string(),
@@ -124,11 +122,11 @@ async function generatePdf({
       doc = <ShippingOrder pdfData={createPDFData(data)} />;
       break;
     case "monthly":
-      const isPaid = data.every((order) => !!order.dateOfPayment);
+    {  const isPaid = data.every((order) => !!order.dateOfPayment);
       doc = (
         <MonthlyInvoice data={createMonthlyPDFData(data)} isPaid={isPaid} />
       );
-      break;
+      break;}
   }
 
   const pdfBlob = await pdf(doc).toBlob();

@@ -18,9 +18,7 @@ const GalleryTab: React.FC<GalleryTabProps> = ({ index }) => {
         </span>
         <span
           className={cn(
-            "selected absolute inset-0 rounded-md ring-2 ring-offset-2"
-              ? "ring-black"
-              : "ring-transparent",
+            "selected absolute inset-0 rounded-md ring-2 ring-offset-2 ring-transparent "
           )}
         />
       </div>

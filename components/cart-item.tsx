@@ -2,7 +2,7 @@
 
 import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
-import { ProductWithOptionsAndMain } from "@/types";
+import type{ ProductWithOptionsAndMain } from "@/types";
 import { X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

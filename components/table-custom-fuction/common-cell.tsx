@@ -1,6 +1,6 @@
 "use client";
 import { dateFormatter } from "@/lib/date-utils";
-import { Row } from "@tanstack/react-table";
+import type { Row } from "@tanstack/react-table";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -34,11 +34,11 @@ function NameCell({ name, url }: NameCellProps) {
   );
 }
 
-type PhoneCellProps<T = {}> = T & {
+type PhoneCellProps =  {
   phone: string;
 };
 
-function PhoneCell<T>({ row }: { row: Row<PhoneCellProps<T>> }) {
+function PhoneCell<T>({ row }: { row: Row<T & PhoneCellProps> }) {
   return (
     <>
       {row.getValue("phone") ? (
@@ -50,11 +50,11 @@ function PhoneCell<T>({ row }: { row: Row<PhoneCellProps<T>> }) {
   );
 }
 
-type TextCellProps<T = {}> = T & {
+type TextCellProps = {
   text: string;
 };
 
-function TextCell<T>({ row }: { row: Row<TextCellProps<T>> }) {
+function TextCell<T>({ row }: { row: Row<T & TextCellProps> }) {
   return (
     <AutosizeTextarea
       className="flex resize-none items-center justify-center border-none bg-transparent pt-4 text-sm outline-none focus-visible:ring-0 disabled:cursor-default disabled:opacity-100"
@@ -101,14 +101,14 @@ function CheckboxCell({ isCheckbox, onChange }: CheckboxCellProps) {
   );
 }
 
-type OptionsCellProps<T = {}> = T & {
+type OptionsCellProps=  {
   productOptions: {
     price: number;
     options: { name: string; value: string }[];
   }[];
 };
 
-function OptionsCell<T>({ row }: { row: Row<OptionsCellProps<T>> }) {
+function OptionsCell<T>({ row }: { row: Row<T & OptionsCellProps> }) {
   return (
     <ul className="">
       {row.original.productOptions.map((product, index) => {
@@ -125,7 +125,7 @@ function OptionsCell<T>({ row }: { row: Row<OptionsCellProps<T>> }) {
   );
 }
 
-type NameWithImageCellProps<T = {}> = T & {
+type NameWithImageCellProps=  {
   imageUrl: string;
   id: string;
   name: string;
@@ -135,7 +135,7 @@ type NameWithImageCellProps<T = {}> = T & {
 function NameWithImageCell<T>({
   row,
 }: {
-  row: Row<NameWithImageCellProps<T>>;
+  row: Row<T & NameWithImageCellProps>;
 }) {
   return (
     <Button asChild variant={"link"}>

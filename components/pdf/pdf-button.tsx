@@ -5,13 +5,13 @@ import { Download, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import Spinner from "../animations/spinner";
-import { monthlyOrdersType } from "./pdf-data";
+import type { monthlyOrdersType } from "./pdf-data";
 import { createMonthlyPDF64String, createPDF64String } from "./server-actions";
 
 function base64ToBlob(
   base64: string,
-  contentType: string = "application/pdf",
-  sliceSize: number = 512,
+  contentType = "application/pdf",
+  sliceSize = 512,
 ): Blob {
   const byteCharacters = Buffer.from(base64, "base64").toString("binary");
   const byteArrays: Uint8Array[] = [];

@@ -1,5 +1,5 @@
 import AddressAutocomplete, {
-  Suggestion,
+  type Suggestion,
 } from "@/actions/adress-autocompleteFR";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,9 +16,9 @@ import {
 } from "@/components/ui/popover";
 import { haversine } from "@/lib/math";
 import { cn } from "@/lib/utils";
-import { Shop } from "@prisma/client";
+import type { Shop } from "@prisma/client";
 import { ChevronDown } from "lucide-react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { type Dispatch,type SetStateAction, useState } from "react";
 
 interface AddressInputProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -61,7 +61,7 @@ export const AddressInput = ({
 
       const sorted = shopsWithDistance
         .filter((shop) => shop.distance !== undefined)
-        .sort((a, b) => a.distance! - b.distance!);
+        .sort((a, b) => (a.distance as number) - (b.distance as number));
       setSortedShops(sorted);
     }
   };
@@ -92,13 +92,11 @@ export const AddressInput = ({
             value={query}
             onValueChange={async (e) => {
               await setSearchTerm(e);
-              const coordinates =
-                suggestions[0] && suggestions[0].coordinates
-                  ? {
-                      long: suggestions[0].coordinates[0],
-                      lat: suggestions[0].coordinates[1],
-                    }
-                  : { long: undefined, lat: undefined };
+              const coordinates = {
+                long: suggestions[0]?.coordinates?.[0],
+                lat: suggestions[0]?.coordinates?.[1]
+              };
+              
 
               sortShops(coordinates);
               setCoordinates(coordinates);

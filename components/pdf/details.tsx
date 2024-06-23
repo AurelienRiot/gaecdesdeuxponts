@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "@react-pdf/renderer";
 import { mainColor } from "./main-document";
-import { MonthlyPDFDataType, PDFData } from "./pdf-data";
+import  type { MonthlyPDFDataType, PDFData } from "./pdf-data";
 
 const detailsStyles = StyleSheet.create({
   container: {

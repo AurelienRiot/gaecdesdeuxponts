@@ -1,10 +1,9 @@
 "use server";
 
-import { ReturnTypeServerAction } from "@/types";
-import { ProductFormValues } from "../_components/product-form";
 import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import { revalidateTag } from "next/cache";
+import type { ProductFormValues } from "../_components/product-form";
 
 export async function createProduct({
   categoryName,

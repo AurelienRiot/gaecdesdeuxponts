@@ -1,7 +1,7 @@
 "use server";
 import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
-import { ReturnTypeServerAction } from "@/types";
+import type { ReturnTypeServerAction } from "@/types";
 
 async function deleteOrders({
   id,

@@ -16,7 +16,7 @@ import {
 import { Input } from "../ui/input";
 import { Modal } from "../ui/modal";
 import { toastPromise } from "../ui/sonner";
-import { BugReportValues, bugReportSchema } from "./bug-report-schema";
+import { type BugReportValues, bugReportSchema } from "./bug-report-schema";
 import { createBugReport } from "./create-bug-report";
 
 type BugReportModalProps = {

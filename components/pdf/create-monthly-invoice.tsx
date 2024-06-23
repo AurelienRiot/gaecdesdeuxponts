@@ -9,7 +9,7 @@ import MainDocument, {
   tableRowsCount,
 } from "./main-document";
 import PaidWatermark from "./paid-watermark";
-import { MonthlyPDFDataType } from "./pdf-data";
+import type { MonthlyPDFDataType } from "./pdf-data";
 
 // Create Document Component
 const MonthlyInvoice = ({

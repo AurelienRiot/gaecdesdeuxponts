@@ -32,7 +32,7 @@ import {
   Link2Off,
   List,
   ListOrdered,
-  LucideProps,
+  type LucideProps,
   MessageSquare,
   MessageSquarePlus,
   Minus,

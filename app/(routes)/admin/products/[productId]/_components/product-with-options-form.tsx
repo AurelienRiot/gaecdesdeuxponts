@@ -67,6 +67,7 @@ export const ProductWithOptions = ({
   const options = products[0].options;
 
   const addProduct = () => {
+
     const newProduct = {
       id: `PR_${nanoid()}`,
       index: products.length,

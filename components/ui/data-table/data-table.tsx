@@ -1,6 +1,6 @@
 "use client";
 
-import { ColumnDef, flexRender } from "@tanstack/react-table";
+import { type ColumnDef, flexRender } from "@tanstack/react-table";
 
 import { DataTableAdvancedToolbar } from "@/components/ui/data-table/advanced/data-table-advanced-toolbar";
 import { DataTableFloatingBar } from "@/components/ui/data-table/data-table-floating-bar";
@@ -15,7 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useDataTable } from "@/hooks/use-data-table";
-import {
+import type{
   DataTableFilterableColumn,
   DataTableSearchableColumn,
   DataTableViewOptionsColumn,

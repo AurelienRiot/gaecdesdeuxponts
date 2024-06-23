@@ -1,9 +1,9 @@
 "use client";
 
-import { Row } from "@tanstack/react-table";
+import type { Row } from "@tanstack/react-table";
 import { Badge } from "../ui/badge";
 
-type LinkProductsCellProps<T = {}> = T & {
+type LinkProductsCellProps =  {
   linkProducts: {
     id: string;
     name: string;
@@ -11,7 +11,7 @@ type LinkProductsCellProps<T = {}> = T & {
   id: string;
 };
 
-function LinkProductsCell<T>({ row }: { row: Row<LinkProductsCellProps<T>> }) {
+function LinkProductsCell<T>({ row }: { row: Row<T & LinkProductsCellProps> }) {
   return (
     <div className="flex flex-wrap gap-1 ">
       {row.original.linkProducts.map((product) => {

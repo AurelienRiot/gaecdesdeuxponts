@@ -7,9 +7,19 @@
   "organizeImports":{
     "enabled":false
   },
+  
   "linter": {
     "enabled": true,
     "rules": {
+      "correctness":{
+"useExhaustiveDependencies":"off"
+      },
+      "complexity": {
+"noUselessFragments":"off"
+      },
+      "a11y":{
+"noSvgWithoutTitle":"off"
+      },
       "suspicious": {
 "noArrayIndexKey":"off",
 "noExplicitAny":"off"

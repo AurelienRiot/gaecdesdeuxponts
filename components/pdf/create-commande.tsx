@@ -8,7 +8,7 @@ import MainDocument, {
   mainColor,
   tableRowsCount,
 } from "./main-document";
-import { PDFData } from "./pdf-data";
+import type { PDFData } from "./pdf-data";
 
 // Create Document Component
 const Order = ({ data }: { data: PDFData }) => (

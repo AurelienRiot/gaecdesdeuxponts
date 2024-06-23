@@ -2,7 +2,7 @@
 
 import {
   ProductCell,
-  Status,
+ type Status,
 } from "@/components/table-custom-fuction/cell-orders";
 import {
   DateCell,
@@ -15,8 +15,8 @@ import {
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
 import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
 import { Button } from "@/components/ui/button";
-import { DataTableFilterableColumn, DataTableViewOptionsColumn } from "@/types";
-import { ColumnDef } from "@tanstack/react-table";
+import type { DataTableFilterableColumn, DataTableViewOptionsColumn } from "@/types";
+import type { ColumnDef } from "@tanstack/react-table";
 import { OrderCellAction } from "./order-cell-action";
 import Link from "next/link";
 import { DisplayInvoice } from "@/components/pdf/pdf-button";
@@ -62,6 +62,8 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "status",
     header: "Statut",
+    filterFn: FilterOneInclude,
+
   },
   {
     accessorKey: "datePickUp",
@@ -111,12 +113,27 @@ export const filterableColumns = ({
     label: item,
     value: item,
   }));
+  const statutsArray: { label: Status; value: Status }[] = [
+    { label:"En cours de validation",
+     value:"En cours de validation",},
+     { label:"Commande valide",
+     value:"Commande valide",},
+     { label:"En cours de paiement",
+     value:"En cours de paiement",},
+     { label:"Payé",
+     value:"Payé",},
+   ]
 
   return [
     {
       id: "products",
       title: "Produits",
       options: prodArray,
+    },
+    {
+      id:"status",
+      title: "Statut",
+options:statutsArray
     },
     {
       id: "shopName",

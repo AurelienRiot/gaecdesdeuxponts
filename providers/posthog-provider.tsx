@@ -5,7 +5,7 @@ import { PostHogProvider } from "posthog-js/react";
 import { useEffect } from "react";
 
 if (typeof window !== "undefined" && process.env.NODE_ENV !== "development") {
-  posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
+  posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY as string, {
     api_host: "/ingest",
     ui_host: "https://eu.i.posthog.com",
   });

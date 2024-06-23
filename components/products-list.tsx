@@ -1,4 +1,4 @@
-import { ProductWithOptionsAndMain } from "@/types";
+import type{ ProductWithOptionsAndMain } from "@/types";
 import ProductCart from "./product/product-cart";
 
 import NoResults from "./ui/no-results";

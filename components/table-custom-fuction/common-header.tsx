@@ -1,15 +1,15 @@
 import { Button } from "@/components/ui/button";
-import { Column } from "@tanstack/react-table";
+import type { Column } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 
-type CreatedAtHeaderProps<T = {}> = T & {
+type CreatedAtHeaderProps= {
   createdAt: Date;
 };
 
 function CreatedAtHeader<T>({
   column,
 }: {
-  column: Column<CreatedAtHeaderProps<T>>;
+  column: Column<T & CreatedAtHeaderProps>;
 }) {
   return (
     <Button

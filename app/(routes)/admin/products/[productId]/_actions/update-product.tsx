@@ -3,7 +3,7 @@
 import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import { revalidateTag } from "next/cache";
-import { ProductFormValues } from "../_components/product-form";
+import type { ProductFormValues } from "../_components/product-form";
 
 export async function updateProduct(
   {

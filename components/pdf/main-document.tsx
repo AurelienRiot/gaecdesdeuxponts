@@ -6,7 +6,7 @@ import {
   Text,
   Image,
 } from "@react-pdf/renderer";
-import { PDFData } from "./pdf-data";
+import type { PDFData } from "./pdf-data";
 
 export const tableRowsCount = 10;
 export const mainColor = "#D3D3D3";

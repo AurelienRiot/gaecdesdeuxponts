@@ -2,7 +2,7 @@
 
 import prismadb from "@/lib/prismadb";
 import { checkUser } from "../auth/checkAuth";
-import { BugReportValues, bugReportSchema } from "./bug-report-schema";
+import { type BugReportValues, bugReportSchema } from "./bug-report-schema";
 
 async function createBugReport(data: BugReportValues): Promise<void> {
   const isAuth = await checkUser();

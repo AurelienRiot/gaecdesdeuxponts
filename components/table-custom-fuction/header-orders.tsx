@@ -1,17 +1,17 @@
 "use client";
 
-import { Column } from "@tanstack/react-table";
+import type { Column } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "../ui/button";
 
-type DatePickUpHeaderProps<T = {}> = T & {
+type DatePickUpHeaderProps = {
   datePickUp: Date;
 };
 
 function DatePickUpHeader<T>({
   column,
 }: {
-  column: Column<DatePickUpHeaderProps<T>>;
+  column: Column<T & DatePickUpHeaderProps>;
 }) {
   return (
     <Button

@@ -1,5 +1,5 @@
 "use client";
-import { UserWithOrdersAndAdress } from "@/types";
+import type{ UserWithOrdersAndAdress } from "@/types";
 import { createContext, useContext, useState } from "react";
 
 type UserContextType = {

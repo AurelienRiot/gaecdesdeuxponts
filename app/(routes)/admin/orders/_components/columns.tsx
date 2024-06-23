@@ -1,9 +1,8 @@
 "use client";
 
-import { DisplayInvoice } from "@/components/pdf/pdf-button";
 import {
   ProductCell,
-  Status,
+  type Status,
 } from "@/components/table-custom-fuction/cell-orders";
 import {
   DateCell,
@@ -16,12 +15,12 @@ import {
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
 import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
 import { Button } from "@/components/ui/button";
-import {
+import type {
   DataTableFilterableColumn,
   DataTableSearchableColumn,
   DataTableViewOptionsColumn,
 } from "@/types";
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { CellAction } from "./cell-action";
 
@@ -60,6 +59,8 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "status",
     header: "Statut",
+    filterFn: FilterOneInclude,
+
   },
   {
     accessorKey: "totalPrice",
@@ -68,17 +69,14 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "id",
     header: "Facture",
-    cell: ({ row }) => {
-      return row.original.status === "En cours de validation" ? (
-        <Button asChild variant={"link"} className="px-0">
+    cell: ({ row }) => (
+
+      <Button asChild variant={"link"} className="px-0">
           <Link href={`/admin/orders/${row.original.id}`}>
             Éditer le bon de livraison
           </Link>
         </Button>
-      ) : (
-        <DisplayInvoice orderId={row.original.id} />
-      );
-    },
+        )
   },
   {
     accessorKey: "datePickUp",
@@ -129,11 +127,26 @@ export const filterableColumns = ({
     value: item,
   }));
 
+  const statutsArray: { label: Status; value: Status }[] = [
+   { label:"En cours de validation",
+    value:"En cours de validation",},
+    { label:"Commande valide",
+    value:"Commande valide",},
+    { label:"En cours de paiement",
+    value:"En cours de paiement",},
+    { label:"Payé",
+    value:"Payé",},
+  ]
   return [
     {
       id: "products",
       title: "Produits",
       options: prodArray,
+    },
+    {
+      id:"status",
+      title: "Statut",
+options:statutsArray
     },
     {
       id: "shopName",

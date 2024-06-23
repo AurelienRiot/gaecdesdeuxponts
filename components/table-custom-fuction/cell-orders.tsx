@@ -1,12 +1,12 @@
-import { OrderWithItemsAndShop } from "@/types";
-import { Row } from "@tanstack/react-table";
+import type { OrderWithItemsAndShop } from "@/types";
+import type { Row } from "@tanstack/react-table";
 
-type ProductCellProps<T = {}> = T & {
+type ProductCellProps = {
   products: string;
   productsList: { name: string; quantity?: string; unit?: string }[];
 };
 
-function ProductCell<T>({ row }: { row: Row<ProductCellProps<T>> }) {
+function ProductCell<T>({ row }: { row: Row<T & ProductCellProps> }) {
   return (
     <div className="flex flex-col gap-[1px]">
       {row.original.productsList.map((product) => (
@@ -29,7 +29,7 @@ function ProductCell<T>({ row }: { row: Row<ProductCellProps<T>> }) {
 
 function createProductList(order: OrderWithItemsAndShop) {
   return order.orderItems.map((item) => {
-    let name = item.name;
+    const name = item.name;
     if (item.quantity > 0 && item.quantity !== 1) {
       return {
         name,

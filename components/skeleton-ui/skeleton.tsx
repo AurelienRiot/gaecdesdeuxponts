@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
-import { VariantProps, cva } from "class-variance-authority";
-import { HTMLAttributes } from "react";
+import { type VariantProps, cva } from "class-variance-authority";
+import type { HTMLAttributes } from "react";
 
 const skeletonVariants = cva(
   "block rounded-md animate-[pulse_1s_ease-in-out_infinite]  bg-muted-foreground/50 ",

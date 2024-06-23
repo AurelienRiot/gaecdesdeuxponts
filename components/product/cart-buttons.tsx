@@ -2,10 +2,10 @@
 
 import useCart from "@/hooks/use-cart";
 import { cn } from "@/lib/utils";
-import { ProductWithOptionsAndMain } from "@/types";
+import type { ProductWithOptionsAndMain } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ShoppingCart } from "lucide-react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";

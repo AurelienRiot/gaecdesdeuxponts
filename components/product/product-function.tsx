@@ -1,5 +1,5 @@
-import { ProductWithOptionsAndMain } from "@/types";
-import { Option, Unit } from "@prisma/client";
+import type { ProductWithOptionsAndMain } from "@/types";
+import type { Option, Unit } from "@prisma/client";
 
 export type OptionsArray = {
   name: string;
@@ -23,7 +23,7 @@ export function makeOptionsUrl(options: Option[], parsing?: boolean) {
   options.forEach((option, index) => {
     url += `${option.name}=${encodeURIComponent(option.value)}`;
     if (index < options.length - 1) {
-      parsing ? (url += "&amp;") : (url += "&");
+      url+=parsing ? "&amp;" : "&";
     }
   });
   if (url) {

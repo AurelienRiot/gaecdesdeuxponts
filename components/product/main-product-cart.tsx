@@ -1,4 +1,4 @@
-import { MainProduct } from "@prisma/client";
+import type { MainProduct } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { makeProductUrl } from "./product-function";

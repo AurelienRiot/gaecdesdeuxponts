@@ -1,4 +1,4 @@
-import { ProductWithOptionsAndMain } from "@/types";
+import type { ProductWithOptionsAndMain } from "@/types";
 import { toast } from "sonner";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";

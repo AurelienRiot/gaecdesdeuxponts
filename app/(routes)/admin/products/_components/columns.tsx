@@ -11,12 +11,12 @@ import {
   FilterOneInclude,
 } from "@/components/table-custom-fuction/common-filter";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
-import {
+import type {
   DataTableFilterableColumn,
   DataTableSearchableColumn,
   DataTableViewOptionsColumn,
 } from "@/types";
-import { ColumnDef } from "@tanstack/react-table";
+import type{ ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
 import { changeArchived, changePro } from "./server-action";
 

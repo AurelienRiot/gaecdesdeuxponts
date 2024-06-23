@@ -54,9 +54,9 @@ const productSchema = z.object({
   price: z.coerce
     .number()
     .optional()
-    .refine((val) => val !== undefined, {
+    .refine((val) => Number(val) > 0, {
       message: "Veuillez entrer un prix valide",
-    }),
+    }) ,
   unit: z.enum(["centgramme", "Kilogramme", "Litre"]).optional(),
   isFeatured: z.boolean().default(false),
   isArchived: z.boolean().default(false),

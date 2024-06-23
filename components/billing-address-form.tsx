@@ -1,13 +1,14 @@
 "use client";
 import AddressAutocomplete, {
-  Suggestion,
+  type Suggestion,
 } from "@/actions/adress-autocompleteFR";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
-import { InputHTMLAttributes, useState } from "react";
+import { useState, type InputHTMLAttributes } from "react";
 import { useFormContext } from "react-hook-form";
-import * as RPNInput from "react-phone-number-input";
+import type * as RPNInput from "react-phone-number-input";
 import * as z from "zod";
+import type { FullAdress, addressSchema } from "./address-form";
 import { AnimateHeight } from "./animations/animate-size";
 import { Button } from "./ui/button";
 import {
@@ -22,13 +23,11 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
-  FormMessage,
+  FormMessage
 } from "./ui/form";
 import { CountriesList, CountrySelect, isCountry } from "./ui/phone-input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Switch } from "./ui/switch";
-import { FullAdress, addressSchema } from "./address-form";
 
 interface AdressFormProps {
   className?: string;
@@ -65,11 +64,8 @@ export const BillingAddressForm = ({ className }: AdressFormProps) => {
   const [suggestions, setSuggestions] = useState([] as Suggestion[]);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState(
-    billingAddress
-      ? billingAddress.country?.toUpperCase() === "FR"
-        ? true
-        : false
-      : true,
+   billingAddress?.country?.toUpperCase() === "FR"
+       
   );
 
   const setSearchTerm = async (value: string) => {

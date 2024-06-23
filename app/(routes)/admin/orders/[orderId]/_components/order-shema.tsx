@@ -6,10 +6,9 @@ const orderItemSchema = z.object({
   price: z.coerce
     .number()
     .optional()
-    .refine((val) => val !== undefined, {
+    .refine((val) => Number(val) > 0, {
       message: "Veuillez entrer un prix valide",
-    }),
-
+    }) ,
   quantity: z.coerce.number().min(0, { message: "La quantité est requise" }),
   name: z.string().min(1, { message: "Le nom est requis" }),
   categoryName: z.string().min(0, { message: "La catégorie est requise" }),

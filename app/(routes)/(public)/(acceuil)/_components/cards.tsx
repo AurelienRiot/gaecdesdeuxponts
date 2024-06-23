@@ -5,7 +5,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 
-const CaracteristiqueCard = ({}) => {
+const CaracteristiqueCard = () => {
   return (
     <Card className="mt-6 max-w-[500px]">
       <CardHeader className="text-center text-2xl font-semibold ">

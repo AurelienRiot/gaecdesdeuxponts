@@ -14,18 +14,18 @@ cloudinary.v2.config({
 export type Ressources = {
   access_mode: string;
   asset_id: string;
-  bytes: Number;
+  bytes: number;
   created_at: Date;
   folder: string;
   format: string;
-  height: Number;
+  height: number;
   public_id: string;
   resource_type: string;
   secure_url: string;
   type: string;
   url: string;
-  version: Number;
-  width: Number;
+  version: number;
+  width: number;
 };
 
 type SignatureReturnType =
