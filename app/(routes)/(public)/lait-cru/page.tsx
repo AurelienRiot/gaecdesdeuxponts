@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
-import VacheChamps from "@/public/vache-champs2.webp";
 import BidonLait from "@/public/bidon-lait.jpg";
+import VacheChamps from "@/public/vache-champs2.webp";
 import Veau from "@/public/veau.webp";
-import Image from "next/image";
 import { nanoid } from "nanoid";
+import type { Metadata } from "next";
+import Image from "next/image";
 
 export const dynamic = "force-static";
 
@@ -42,7 +42,6 @@ const LaitCruPage = () => {
 							et leur bien-être, garantissant ainsi un produit final sain et nutritif.
 						</p>
 					</div>
-
 					<div className="space-y-2 text-base lg:text-lg">
 						<p>
 							La production de lait cru nécessite un soin particulier durant le processus de traite et de stockage pour
@@ -56,7 +55,6 @@ const LaitCruPage = () => {
 							la pasteurisation.
 						</p>
 					</div>
-
 					<Image
 						src={BidonLait}
 						width={500}
@@ -94,6 +92,7 @@ const LaitCruPage = () => {
 						alt="Veau"
 						className="mx-auto max-w-sm rounded-lg shadow-md sm:hidden sm:max-w-full md:max-w-sm"
 					/>
+					T
 				</div>
 			</div>
 		</section>

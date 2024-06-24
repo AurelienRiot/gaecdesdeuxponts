@@ -2,6 +2,7 @@
 
 import { getSessionUser } from "@/actions/get-user";
 import OrderEmail from "@/components/email/order";
+import OrderSendEmail from "@/components/email/order-send";
 import Order from "@/components/pdf/create-commande";
 import { createCustomer, createPDFData, generateOrderId } from "@/components/pdf/pdf-data";
 import { getUnitLabel } from "@/components/product/product-function";
@@ -151,7 +152,7 @@ export const checkOut = async ({ itemsWithQuantities, date, shopId }: CheckOutPr
 		});
 		const pdfBuffer = await generatePdf(order);
 
-		await transporter.sendMail({
+		transporter.sendMail({
 			from: "laiteriedupontrobert@gmail.com",
 			to: user.email || "",
 			subject: "Confirmation de votre commande - Laiterie du Pont Robert",
@@ -171,6 +172,23 @@ export const checkOut = async ({ itemsWithQuantities, date, shopId }: CheckOutPr
 				},
 			],
 		});
+
+		if (process.env.NODE_ENV === "production") {
+			transporter.sendMail({
+				from: "laiteriedupontrobert@gmail.com",
+				to: "laiteriedupontrobert@gmail.com",
+				subject: "[NOUVELLE COMMANDE] - Laiterie du Pont Robert",
+				html: render(
+					OrderSendEmail({
+						baseUrl,
+						id: order.id,
+						name: user.name || user.email || "Utilisateur inconnu",
+						price: currencyFormatter.format(totalPrice),
+						date: dateFormatter(order.createdAt),
+					}),
+				),
+			});
+		}
 
 		revalidatePath("/dashboard-user/orders");
 
