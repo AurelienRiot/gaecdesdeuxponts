@@ -77,7 +77,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params, searchParams })
 
 export default ProductPage;
 
-export const getProProduct = unstable_cache(
+const getProProduct = unstable_cache(
 	async ({ categoryName, productName }: { categoryName: string; productName: string }) => {
 		const allProducts = await getProProductsByCategoryName(categoryName);
 		const products = allProducts.filter((product) => product.productName === productName);
