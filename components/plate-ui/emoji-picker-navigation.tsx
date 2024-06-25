@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@udecode/cn';
-import {
+import type {
   EmojiCategoryList,
   IEmojiFloatingLibrary,
   UseEmojiPickerType,

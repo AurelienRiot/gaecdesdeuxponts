@@ -34,19 +34,13 @@ function NameCell({ name, url }: NameCellProps) {
   );
 }
 
-type PhoneCellProps =  {
+type PhoneCellProps = {
   phone: string;
 };
 
 function PhoneCell<T>({ row }: { row: Row<T & PhoneCellProps> }) {
   return (
-    <>
-      {row.getValue("phone") ? (
-        <span>{formatPhoneNumber(row.getValue("phone") as any)}</span>
-      ) : (
-        <span>Non renseigné</span>
-      )}
-    </>
+    <>{row.getValue("phone") ? <span>{formatPhoneNumber(row.getValue("phone"))}</span> : <span>Non renseigné</span>}</>
   );
 }
 
@@ -101,7 +95,7 @@ function CheckboxCell({ isCheckbox, onChange }: CheckboxCellProps) {
   );
 }
 
-type OptionsCellProps=  {
+type OptionsCellProps = {
   productOptions: {
     price: number;
     options: { name: string; value: string }[];
@@ -125,7 +119,7 @@ function OptionsCell<T>({ row }: { row: Row<T & OptionsCellProps> }) {
   );
 }
 
-type NameWithImageCellProps=  {
+type NameWithImageCellProps = {
   imageUrl: string;
   id: string;
   name: string;
@@ -160,12 +154,4 @@ function NameWithImageCell<T>({
   );
 }
 
-export {
-  CheckboxCell,
-  DateCell,
-  NameCell,
-  NameWithImageCell,
-  OptionsCell,
-  PhoneCell,
-  TextCell,
-};
+export { CheckboxCell, DateCell, NameCell, NameWithImageCell, OptionsCell, PhoneCell, TextCell };

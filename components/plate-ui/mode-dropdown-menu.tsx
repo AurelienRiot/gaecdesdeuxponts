@@ -1,11 +1,6 @@
 import React from "react";
-import { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-import {
-  focusEditor,
-  useEditorReadOnly,
-  useEditorRef,
-  usePlateStore,
-} from "@udecode/plate-common";
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
+import { focusEditor, useEditorReadOnly, useEditorRef, usePlateStore } from "@udecode/plate-common";
 
 import { Icons } from "@/components/icons";
 
@@ -25,10 +20,7 @@ export function ModeDropdownMenu(props: DropdownMenuProps) {
   const readOnly = useEditorReadOnly();
   const openState = useOpenState();
 
-  let value = "editing";
-  if (readOnly) value = "viewing";
-
-  const item: any = {
+  const item = {
     editing: (
       <>
         <Icons.editing className="mr-2 size-5" />
@@ -43,6 +35,8 @@ export function ModeDropdownMenu(props: DropdownMenuProps) {
     ),
   };
 
+  let value: "editing" | "viewing" = "editing";
+  if (readOnly) value = "viewing";
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
       <DropdownMenuTrigger asChild>
@@ -76,13 +70,9 @@ export function ModeDropdownMenu(props: DropdownMenuProps) {
             }
           }}
         >
-          <DropdownMenuRadioItem value="editing">
-            {item.editing}
-          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="editing">{item.editing}</DropdownMenuRadioItem>
 
-          <DropdownMenuRadioItem value="viewing">
-            {item.viewing}
-          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="viewing">{item.viewing}</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

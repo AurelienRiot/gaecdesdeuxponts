@@ -3,11 +3,11 @@
 import React from 'react';
 import { cn } from '@udecode/cn';
 import {
-  TCommentText,
+  type TCommentText,
   useCommentLeaf,
   useCommentLeafState,
 } from '@udecode/plate-comments';
-import { PlateLeaf, PlateLeafProps, Value } from '@udecode/plate-common';
+import { PlateLeaf, type PlateLeafProps, type Value } from '@udecode/plate-common';
 
 export function CommentLeaf({
   className,

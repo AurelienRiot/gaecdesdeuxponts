@@ -2,13 +2,9 @@
 
 import React from "react";
 import { cn, withRef } from "@udecode/cn";
-import { ClassNames, PlateElementProps, TEditor } from "@udecode/plate-common";
-import {
-  DragItemNode,
-  useDraggable,
-  useDraggableState,
-} from "@udecode/plate-dnd";
-import { DropTargetMonitor } from "react-dnd";
+import type { ClassNames, PlateElementProps, TEditor } from "@udecode/plate-common";
+import { type DragItemNode, useDraggable, useDraggableState } from "@udecode/plate-dnd";
+import type { DropTargetMonitor } from "react-dnd";
 
 import { Icons } from "@/components/icons";
 
@@ -71,9 +67,9 @@ export interface DraggableProps
     props: {
       monitor: DropTargetMonitor<DragItemNode, unknown>;
       dragItem: DragItemNode;
-      nodeRef: any;
+      nodeRef: HTMLDivElement;
       id: string;
-    }
+    },
   ) => boolean;
 }
 
@@ -92,39 +88,19 @@ export const Draggable = withRef<"div", DraggableProps>(
 
     const state = useDraggableState({ element, onDropHandler });
     const { dropLine, isDragging, isHovered } = state;
-    const {
-      groupProps,
-      droplineProps,
-      gutterLeftProps,
-      previewRef,
-      handleRef,
-    } = useDraggable(state);
+    const { groupProps, droplineProps, gutterLeftProps, previewRef, handleRef } = useDraggable(state);
 
     return (
-      <div
-        ref={ref}
-        className={cn(
-          "relative",
-          isDragging && "opacity-50",
-          "group",
-          className
-        )}
-        {...groupProps}
-      >
+      <div ref={ref} className={cn("relative", isDragging && "opacity-50", "group", className)} {...groupProps}>
         <div
           className={cn(
             "pointer-events-none absolute top-0 flex h-full -translate-x-full cursor-text opacity-0 group-hover:opacity-100",
-            classNames.gutterLeft
+            classNames.gutterLeft,
           )}
           {...gutterLeftProps}
         >
           <div className={cn("flex h-[1.5em]", classNames.blockToolbarWrapper)}>
-            <div
-              className={cn(
-                "pointer-events-auto mr-1 flex items-center",
-                classNames.blockToolbar
-              )}
-            >
+            <div className={cn("pointer-events-auto mr-1 flex items-center", classNames.blockToolbar)}>
               <div ref={handleRef} className="size-4">
                 {isHovered && dragHandle}
               </div>
@@ -142,7 +118,7 @@ export const Draggable = withRef<"div", DraggableProps>(
                 "bg-ring",
                 dropLine === "top" && "-top-px",
                 dropLine === "bottom" && "-bottom-px",
-                classNames.dropLine
+                classNames.dropLine,
               )}
               {...droplineProps}
             />
@@ -150,5 +126,5 @@ export const Draggable = withRef<"div", DraggableProps>(
         </div>
       </div>
     );
-  }
+  },
 );

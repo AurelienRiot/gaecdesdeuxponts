@@ -21,7 +21,7 @@ export const currencyFormatter = (() => {
   };
 })();
 
-export const addressFormatter = (address: Address, full= true) => {
+export const addressFormatter = (address: Address, full = true) => {
   if (!address.line1) {
     return "";
   }
@@ -57,14 +57,9 @@ export const checkIfUrlAccessible = async (url: string): Promise<boolean> => {
   return response;
 };
 
-export const mergeWithoutDuplicates = <T extends { id: string }>(
-  firstList: T[],
-  secondList: T[],
-): T[] => {
+export const mergeWithoutDuplicates = <T extends { id: string }>(firstList: T[], secondList: T[]): T[] => {
   const combined = [...firstList, ...secondList];
-  const unique = Array.from(
-    new Map(combined.map((item) => [item.id, item])).values(),
-  );
+  const unique = Array.from(new Map(combined.map((item) => [item.id, item])).values());
   return unique;
 };
 

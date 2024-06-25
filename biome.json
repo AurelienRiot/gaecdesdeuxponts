@@ -1,36 +1,35 @@
 {
-	"formatter": {
-		"enabled": true,
-		"indentStyle": "space",
-		"indentWidth": 2,
-		"lineWidth": 120
-	},
-	"organizeImports": {
-		"enabled": false
-	},
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 120
+  },
+  "organizeImports": {
+    "enabled": false
+  },
 
-	"linter": {
-		"enabled": true,
-		"rules": {
-			"correctness": {
-				"useExhaustiveDependencies": "off"
-			},
-			"complexity": {
-				"noUselessFragments": "off"
-			},
-			"a11y": {
-				"noSvgWithoutTitle": "off",
-				"noAriaHiddenOnFocusable": "off"
-			},
-			"suspicious": {
-				"noArrayIndexKey": "off",
-				"noExplicitAny": "off"
-			},
-			"style": {
-				"useTemplate": "off",
-				"noUnusedTemplateLiteral": "off",
-				"useSelfClosingElements": "off"
-			}
-		}
-	}
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "correctness": {
+        "useExhaustiveDependencies": "off"
+      },
+      "complexity": {
+        "noUselessFragments": "off"
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "off",
+        "noAriaHiddenOnFocusable": "off"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off"
+      },
+      "style": {
+        "useTemplate": "off",
+        "noUnusedTemplateLiteral": "off",
+        "useSelfClosingElements": "off"
+      }
+    }
+  }
 }

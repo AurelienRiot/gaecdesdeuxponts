@@ -3,8 +3,9 @@ import { getMainProductsByCategoryName } from "@/actions/get-products";
 import Billboard from "@/components/billboard/billboard";
 import NotFound from "@/components/not-found";
 import MainProductCart from "@/components/product/main-product-cart";
+import Container from "@/components/ui/container";
 import NoResults from "@/components/ui/no-results";
-import  type { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 interface CategoryPageProps {
@@ -13,9 +14,7 @@ interface CategoryPageProps {
   };
 }
 
-export async function generateMetadata({
-  params,
-}: CategoryPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const categoryName = decodeURIComponent(params.categoryName);
   const category = await getCategoryByName(categoryName);
 
@@ -46,7 +45,7 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
   }
 
   return (
-    <>
+    <Container>
       <Billboard category={category} />
       <div className="px-4 pb-24 sm:px-6 lg:px-8">
         <div className="justify-left mx-auto flex flex-wrap gap-12">
@@ -55,7 +54,7 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
           ))}
         </div>
       </div>
-    </>
+    </Container>
   );
 };
 

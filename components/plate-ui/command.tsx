@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { type DialogProps } from "@radix-ui/react-dialog";
+import type { DialogProps } from "@radix-ui/react-dialog";
 import { cn, createPrimitiveElement, withCn, withRef } from "@udecode/cn";
 import { Command as CommandPrimitive } from "cmdk";
 

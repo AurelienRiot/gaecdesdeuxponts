@@ -1,41 +1,21 @@
-import React from "react";
-import { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-import {
-  focusEditor,
-  someNode,
-  useEditorRef,
-  useEditorSelector,
-} from "@udecode/plate-common";
-import {
-  deleteColumn,
-  deleteRow,
-  deleteTable,
-  ELEMENT_TABLE,
-  insertTable,
-  insertTableColumn,
-  insertTableRow,
-} from "@udecode/plate-table";
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
+import { focusEditor, someNode, useEditorRef, useEditorSelector } from "@udecode/plate-common";
+import { ELEMENT_TABLE, insertTable } from "@udecode/plate-table";
 
 import { Icons, iconVariants } from "@/components/icons";
 
+import GridCells from "@/app/(routes)/admin/products/[productId]/_components/grid-cells";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
   useOpenState,
 } from "./dropdown-menu";
 import { ToolbarButton } from "./toolbar";
-import GridCells from "@/app/(routes)/admin/products/[productId]/_components/grid-cells";
 
 export function TableDropdownMenu(props: DropdownMenuProps) {
-  const tableSelected = useEditorSelector(
-    (editor) => someNode(editor, { match: { type: ELEMENT_TABLE } }),
-    [],
-  );
+  const tableSelected = useEditorSelector((editor) => someNode(editor, { match: { type: ELEMENT_TABLE } }), []);
 
   const editor = useEditorRef();
   const openState = useOpenState();
@@ -48,10 +28,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
         </ToolbarButton>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent
-        align="center"
-        className="flex w-[180px] min-w-0 flex-col gap-0.5"
-      >
+      <DropdownMenuContent align="center" className="flex w-[180px] min-w-0 flex-col gap-0.5">
         <DropdownMenuItem className="flex h-full min-w-[180px] flex-col ">
           <div className="flex">
             <Icons.add className={iconVariants({ variant: "menuItem" })} />

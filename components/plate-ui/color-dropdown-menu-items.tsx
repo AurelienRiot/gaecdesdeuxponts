@@ -1,13 +1,13 @@
 "use client";
 
-import React from "react";
-import { DropdownMenuItemProps } from "@radix-ui/react-dropdown-menu";
+import type React from "react";
+import type { DropdownMenuItemProps } from "@radix-ui/react-dropdown-menu";
 import { cn } from "@udecode/cn";
 
 import { Icons } from "@/components/icons";
 
 import { buttonVariants } from "./button";
-import { TColor } from "./color-dropdown-menu";
+import type { TColor } from "./color-dropdown-menu";
 import { DropdownMenuItem } from "./dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
 

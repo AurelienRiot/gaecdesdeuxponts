@@ -1,14 +1,7 @@
 "use client";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { Shop } from "@prisma/client";
 import { ClipboardEdit } from "lucide-react";
@@ -52,19 +45,10 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
 
     return (
       <>
-        {display === "admin" && (
-          <AlertModal
-            isOpen={open}
-            onClose={() => setOpen(false)}
-            onConfirm={onDelete}
-          />
-        )}
+        {display === "admin" && <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />}
         <Card
           data-state={display}
-          className={cn(
-            "relative flex h-full w-full min-w-[300px] max-w-[90vw] flex-col justify-between ",
-            className,
-          )}
+          className={cn("relative flex h-full w-full min-w-[300px] max-w-[90vw] flex-col justify-between ", className)}
           ref={ref}
           {...props}
         >
@@ -81,33 +65,25 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
                   />
                 </span>
               ) : null}
-              <span className="text-balance text-center text-lg sm:text-xl lg:text-2xl">
-                {shop.name}
-              </span>
+              <span className="text-balance text-center text-lg sm:text-xl lg:text-2xl">{shop.name}</span>
             </CardTitle>
             <CardInfo description={shop.description} />
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
             {!!shop.address && (
               <Button asChild variant={"link"} className="justify-start px-0">
-                <Link
-                  href={`https://maps.google.com/?q=${shop.address} ${shop.name} `}
-                  target="_blank"
-                >
+                <Link href={`https://maps.google.com/?q=${shop.address} ${shop.name} `} target="_blank">
                   {shop.address}
                 </Link>
               </Button>
             )}
             {!!shop.phone && (
               <Link href={`tel:${shop.phone}`} target="_blank">
-                {formatPhoneNumber(shop.phone as any)}
+                {formatPhoneNumber(shop.phone)}
               </Link>
             )}
             {!!shop.email && (
-              <Link
-                href={`mailto:${shop.email.toLocaleLowerCase()}`}
-                target="_blank"
-              >
+              <Link href={`mailto:${shop.email.toLocaleLowerCase()}`} target="_blank">
                 {shop.email.toLocaleLowerCase()}
               </Link>
             )}
@@ -120,27 +96,16 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
               <div>
                 {" "}
                 <span className="font-bold">Distance :</span>{" "}
-                <span className="underline underline-offset-2">
-                  {Math.round(distance)} kilometers
-                </span>
+                <span className="underline underline-offset-2">{Math.round(distance)} kilometers</span>
               </div>
             )}
           </CardContent>
           {display === "admin" && (
             <CardFooter className="flex flex-row items-end justify-between  gap-2">
-              <Button
-                variant="outline"
-                onClick={() => setOpen(true)}
-                className="hover:underline"
-              >
+              <Button variant="outline" onClick={() => setOpen(true)} className="hover:underline">
                 Supprimer
               </Button>
-              <Button
-                variant={"expandIcon"}
-                iconPlacement="right"
-                Icon={ClipboardEdit}
-                asChild
-              >
+              <Button variant={"expandIcon"} iconPlacement="right" Icon={ClipboardEdit} asChild>
                 <Link href={`/admin/shops/${shop.id}`}>Modifier</Link>
               </Button>
             </CardFooter>
@@ -177,8 +142,7 @@ const CardInfo = ({ description }: { description: string }) => {
     <Popover>
       <PopoverTrigger>
         <CardDescription className="overflow-hidden text-ellipsis whitespace-nowrap underline-offset-2 hover:underline">
-          <Icons.search className="mb-1 mr-1 inline h-4 w-4 self-center" />{" "}
-          {description}
+          <Icons.search className="mb-1 mr-1 inline h-4 w-4 self-center" /> {description}
         </CardDescription>
       </PopoverTrigger>
       <PopoverContent

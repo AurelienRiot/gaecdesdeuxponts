@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { cn, withRef } from "@udecode/cn";
 import {
   PortalBody,
@@ -11,10 +10,10 @@ import {
 } from "@udecode/plate-common";
 import {
   flip,
-type  FloatingToolbarState,
   offset,
   useFloatingToolbar,
   useFloatingToolbarState,
+  type FloatingToolbarState,
 } from "@udecode/plate-floating";
 
 import { Toolbar } from "./toolbar";
@@ -37,23 +36,14 @@ export const FloatingToolbar = withRef<
         offset(12),
         flip({
           padding: 12,
-          fallbackPlacements: [
-            "bottom-start",
-            "bottom-end",
-            "top-start",
-            "top-end",
-          ],
+          fallbackPlacements: ["bottom-start", "bottom-end", "top-start", "top-end"],
         }),
       ],
       ...state?.floatingOptions,
     },
   });
 
-  const {
-    ref: floatingRef,
-    props: rootProps,
-    hidden,
-  } = useFloatingToolbar(floatingToolbarState);
+  const { ref: floatingRef, props: rootProps, hidden } = useFloatingToolbar(floatingToolbarState);
 
   const ref = useComposedRef<HTMLDivElement>(componentRef, floatingRef);
   const readOnly = useEditorReadOnly();
@@ -64,9 +54,7 @@ export const FloatingToolbar = withRef<
     <PortalBody>
       <Toolbar
         ref={ref}
-        className={cn(
-          "absolute z-50 whitespace-nowrap border bg-popover px-1 opacity-100 shadow-md print:hidden",
-        )}
+        className={cn("absolute z-50 whitespace-nowrap border bg-popover px-1 opacity-100 shadow-md print:hidden")}
         {...rootProps}
         {...props}
       >

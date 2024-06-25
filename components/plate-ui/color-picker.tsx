@@ -4,7 +4,7 @@ import React from 'react';
 import { cn, withRef } from '@udecode/cn';
 
 import { buttonVariants } from './button';
-import { TColor } from './color-dropdown-menu';
+import type { TColor } from './color-dropdown-menu';
 import { ColorDropdownMenuItems } from './color-dropdown-menu-items';
 import { ColorsCustom } from './colors-custom';
 import { DropdownMenuItem } from './dropdown-menu';

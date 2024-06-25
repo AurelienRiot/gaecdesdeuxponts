@@ -1,29 +1,16 @@
-import  type { AutoformatBlockRule } from '@udecode/plate-autoformat';
-import {
-  ELEMENT_CODE_BLOCK,
-  ELEMENT_CODE_LINE,
-} from '@udecode/plate-code-block';
-import {
-  getParentNode,
-  isElement,
-  isType,
-  type PlateEditor,
-} from '@udecode/plate-common';
-import { toggleList, unwrapList } from '@udecode/plate-list';
+import type { AutoformatBlockRule } from "@udecode/plate-autoformat";
+import { ELEMENT_CODE_BLOCK, ELEMENT_CODE_LINE } from "@udecode/plate-code-block";
+import { getParentNode, isElement, isType, type PlateEditor } from "@udecode/plate-common";
+import { toggleList, unwrapList } from "@udecode/plate-list";
 
-export const preFormat: AutoformatBlockRule['preFormat'] = (editor) =>
-  unwrapList(editor);
+export const preFormat: AutoformatBlockRule["preFormat"] = (editor) => unwrapList(editor);
 
-export const format = (editor: PlateEditor, customFormatting: any) => {
+export const format = (editor: PlateEditor, customFormatting: () => void) => {
   if (editor.selection) {
     const parentEntry = getParentNode(editor, editor.selection);
     if (!parentEntry) return;
     const [node] = parentEntry;
-    if (
-      isElement(node) &&
-      !isType(editor, node, ELEMENT_CODE_BLOCK) &&
-      !isType(editor, node, ELEMENT_CODE_LINE)
-    ) {
+    if (isElement(node) && !isType(editor, node, ELEMENT_CODE_BLOCK) && !isType(editor, node, ELEMENT_CODE_LINE)) {
       customFormatting();
     }
   }
@@ -33,7 +20,7 @@ export const formatList = (editor: PlateEditor, elementType: string) => {
   format(editor, () =>
     toggleList(editor, {
       type: elementType,
-    })
+    }),
   );
 };
 

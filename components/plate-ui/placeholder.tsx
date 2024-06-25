@@ -1,11 +1,6 @@
 import React from "react";
 import { cn } from "@udecode/cn";
-import {
-  createNodeHOC,
-  createNodesHOC,
-  PlaceholderProps,
-  usePlaceholderState,
-} from "@udecode/plate-common";
+import { createNodeHOC, createNodesHOC, type PlaceholderProps, usePlaceholderState } from "@udecode/plate-common";
 import { ELEMENT_H1 } from "@udecode/plate-heading";
 import { ELEMENT_PARAGRAPH } from "@udecode/plate-paragraph";
 
@@ -20,8 +15,7 @@ export const Placeholder = (props: PlaceholderProps) => {
       nodeProps: {
         ...nodeProps,
         className: cn(
-          enabled &&
-            "before:absolute before:cursor-text before:opacity-30 before:content-[attr(placeholder)]"
+          enabled && "before:absolute before:cursor-text before:opacity-30 before:content-[attr(placeholder)]",
         ),
         placeholder,
       },
@@ -32,6 +26,7 @@ export const Placeholder = (props: PlaceholderProps) => {
 export const withPlaceholder = createNodeHOC(Placeholder);
 export const withPlaceholdersPrimitive = createNodesHOC(Placeholder);
 
+// biome-ignore lint/suspicious/noExplicitAny:
 export const withPlaceholders = (components: any) =>
   withPlaceholdersPrimitive(components, [
     {

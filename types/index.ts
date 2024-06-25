@@ -15,7 +15,7 @@ export interface SearchParams {
   [key: string]: string | string[] | undefined;
 }
 
-type Prettify<T> = {
+export type Prettify<T> = {
   [K in keyof T]: T[K];
 } & {};
 
@@ -38,8 +38,7 @@ export interface DataTableSearchableColumn<TData> {
   title: string;
 }
 
-export interface DataTableFilterableColumn<TData>
-  extends DataTableSearchableColumn<TData> {
+export interface DataTableFilterableColumn<TData> extends DataTableSearchableColumn<TData> {
   options: Option[];
 }
 

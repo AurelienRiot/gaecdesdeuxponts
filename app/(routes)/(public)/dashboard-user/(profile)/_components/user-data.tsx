@@ -14,9 +14,7 @@ export const UserName = () => {
   ) : (
     <>
       <span>{user.name || "Compléter votre profil"}</span>
-      {user?.role === "pro" && (
-        <span>{user.company ? ` - ${user.company}` : ""}</span>
-      )}
+      {user?.role === "pro" && <span>{user.company ? ` - ${user.company}` : ""}</span>}
     </>
   );
 };
@@ -30,13 +28,7 @@ export const UserEmail = () => {
 export const UserPhone = () => {
   const { user } = useUserContext();
 
-  return !user ? (
-    <Skeleton className="h-6 w-40" />
-  ) : user.phone ? (
-    formatPhoneNumber(user.phone as any)
-  ) : (
-    "Non renseigné"
-  );
+  return !user ? <Skeleton className="h-6 w-40" /> : user.phone ? formatPhoneNumber(user.phone) : "Non renseigné";
 };
 
 export const UserAddress = () => {
@@ -44,13 +36,7 @@ export const UserAddress = () => {
 
   const address = user?.address ? addressFormatter(user.address, false) : null;
 
-  return !user ? (
-    <Skeleton className="h-6 w-40" />
-  ) : address ? (
-    address
-  ) : (
-    "Non renseigné "
-  );
+  return !user ? <Skeleton className="h-6 w-40" /> : address ? address : "Non renseigné ";
 };
 
 export const ProButton = () => {

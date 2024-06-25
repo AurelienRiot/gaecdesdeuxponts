@@ -1,5 +1,5 @@
 import React from "react";
-import { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 import { ELEMENT_BLOCKQUOTE } from "@udecode/plate-block-quote";
 import {
   collapseSelection,
@@ -7,7 +7,7 @@ import {
   focusEditor,
   isBlock,
   isCollapsed,
-  TElement,
+  type TElement,
   toggleNodeType,
   useEditorRef,
   useEditorSelector,
@@ -73,7 +73,16 @@ const items = [
   // },
 ];
 
-const defaultItem = items.find((item) => item.value === ELEMENT_PARAGRAPH)!;
+const defaultItem = {
+  value: ELEMENT_PARAGRAPH,
+  label: "Paragraphe",
+  description: "Paragraphe",
+  icon: Icons.paragraph,
+};
+
+if (!defaultItem) {
+  throw new Error("Default item not found");
+}
 
 export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
   const value: string = useEditorSelector((editor) => {
@@ -83,10 +92,7 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
       });
 
       if (entry) {
-        return (
-          items.find((item) => item.value === entry[0].type)?.value ??
-          ELEMENT_PARAGRAPH
-        );
+        return items.find((item) => item.value === entry[0].type)?.value ?? ELEMENT_PARAGRAPH;
       }
     }
 
@@ -96,19 +102,13 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
   const editor = useEditorRef();
   const openState = useOpenState();
 
-  const selectedItem =
-    items.find((item) => item.value === value) ?? defaultItem;
+  const selectedItem = items.find((item) => item.value === value) ?? defaultItem;
   const { icon: SelectedItemIcon, label: selectedItemLabel } = selectedItem;
 
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
       <DropdownMenuTrigger asChild>
-        <ToolbarButton
-          pressed={openState.open}
-          tooltip="Créer"
-          isDropdown
-          className="lg:min-w-[130px]"
-        >
+        <ToolbarButton pressed={openState.open} tooltip="Créer" isDropdown className="lg:min-w-[130px]">
           <SelectedItemIcon className="size-5 lg:hidden" />
           <span className="max-lg:hidden">{selectedItemLabel}</span>
         </ToolbarButton>
@@ -139,11 +139,7 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
           }}
         >
           {items.map(({ value: itemValue, label, icon: Icon }) => (
-            <DropdownMenuRadioItem
-              key={itemValue}
-              value={itemValue}
-              className="min-w-[180px]"
-            >
+            <DropdownMenuRadioItem key={itemValue} value={itemValue} className="min-w-[180px]">
               <Icon className="mr-2 size-5" />
               {label}
             </DropdownMenuRadioItem>
