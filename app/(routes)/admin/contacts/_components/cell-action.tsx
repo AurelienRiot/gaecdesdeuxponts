@@ -1,6 +1,6 @@
 "use client";
 
-import type  { ContactColumn } from "./columns";
+import type { ContactColumn } from "./columns";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 import { toast } from "sonner";
@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import { deleteContact } from "./server-action";
+import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 
 interface CellActionProps {
   data: ContactColumn;
@@ -30,15 +31,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
   return (
     <>
-      <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onDelete}
-      />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
 
-      <Button variant="destructive" size="sm" onClick={() => setOpen(true)}>
-        <Trash className="h-4 w-4" />
-      </Button>
+      <TrashButton variant="destructive" size="sm" onClick={() => setOpen(true)} iconClassName="size-6" />
     </>
   );
 };

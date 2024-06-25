@@ -1,53 +1,29 @@
 "use client";
-import AddressAutocomplete, {
-  type Suggestion,
-} from "@/actions/adress-autocompleteFR";
+import AddressAutocomplete, { type Suggestion } from "@/actions/adress-autocompleteFR";
+import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import UploadImage from "@/components/images-upload/image-upload";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button, LoadingButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type  { Shop } from "@prisma/client";
-import { ChevronDown, Trash } from "lucide-react";
+import type { Shop } from "@prisma/client";
+import { ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import {  type UseFormReturn, useForm } from "react-hook-form";
+import { useForm, type UseFormReturn } from "react-hook-form";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import { z } from "zod";
-import {
-  type ReturnType,
-  createShop,
-  deleteShop,
-  updateShop,
-} from "./server-actions";
+import { createShop, deleteShop, updateShop, type ReturnType } from "./server-actions";
 
 const customNumberSchema = z
   .string({
@@ -110,16 +86,10 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
     },
   });
 
-  const title = initialData
-    ? "Modifier le magasin"
-    : "Créer un nouveau magasin";
-  const description = initialData
-    ? "Modifier le magasin"
-    : "Ajouter un nouveau magasin";
+  const title = initialData ? "Modifier le magasin" : "Créer un nouveau magasin";
+  const description = initialData ? "Modifier le magasin" : "Ajouter un nouveau magasin";
   const toastMessage = initialData ? "Magasin mis à jour" : "Magasin créé";
-  const action = initialData
-    ? "Sauvegarder les changements"
-    : "Créer le magasin";
+  const action = initialData ? "Sauvegarder les changements" : "Créer le magasin";
 
   const onSubmit = async (data: ShopFormValues) => {
     let result: ReturnType;
@@ -152,31 +122,23 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
 
   return (
     <>
-      <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onDelete}
-      />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
         {initialData && (
-          <Button
+          <TrashButton
             disabled={form.formState.isSubmitting}
             variant="destructive"
             size="sm"
             onClick={() => setOpen(true)}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
+            iconClassName="size-6"
+          />
         )}
       </div>
       <Separator />
 
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-8 p-4"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8 p-4">
           <FormField
             control={form.control}
             name="imageUrl"
@@ -207,12 +169,7 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
                 <FormItem className="w-[250px]">
                   <FormLabel>Nom</FormLabel>
                   <FormControl>
-                    <Input
-                      type="text"
-                      disabled={form.formState.isSubmitting}
-                      placeholder="Nom du magasin"
-                      {...field}
-                    />
+                    <Input type="text" disabled={form.formState.isSubmitting} placeholder="Nom du magasin" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -289,9 +246,7 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
                     </FormControl>
                     <div className="space-y-1 leading-none">
                       <FormLabel>Archivé</FormLabel>
-                      <FormDescription>
-                        {"Ce magasin n'apparaitra pas sur le site."}
-                      </FormDescription>
+                      <FormDescription>{"Ce magasin n'apparaitra pas sur le site."}</FormDescription>
                     </div>
                   </label>
                 </FormItem>
@@ -356,11 +311,7 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
               )}
             />
           </div>
-          <LoadingButton
-            disabled={form.formState.isSubmitting}
-            className="ml-auto"
-            type="submit"
-          >
+          <LoadingButton disabled={form.formState.isSubmitting} className="ml-auto" type="submit">
             {action}
           </LoadingButton>
         </form>
@@ -422,9 +373,7 @@ const AddressForm = ({ form }: { form: UseFormReturn<ShopFormValues> }) => {
                   }}
                 />
                 <CommandList>
-                  {query.length > 2 && (
-                    <CommandEmpty>Adresse introuvable</CommandEmpty>
-                  )}
+                  {query.length > 2 && <CommandEmpty>Adresse introuvable</CommandEmpty>}
                   {suggestions.map((address, index) => (
                     <CommandItem
                       className="cursor-pointer
@@ -445,12 +394,7 @@ const AddressForm = ({ form }: { form: UseFormReturn<ShopFormValues> }) => {
               </Command>
             </PopoverContent>
           </Popover>
-          <Input
-            type="text"
-            disabled={form.formState.isSubmitting}
-            placeholder="Adresse du magasin"
-            {...field}
-          />
+          <Input type="text" disabled={form.formState.isSubmitting} placeholder="Adresse du magasin" {...field} />
           <FormMessage />
         </FormItem>
       )}

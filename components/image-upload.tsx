@@ -6,6 +6,7 @@ import { ImagePlus, Trash } from "lucide-react";
 import Image from "next/image";
 import { CldUploadWidget } from "next-cloudinary";
 import useIsComponentMounted from "@/hooks/use-mounted";
+import { TrashButton } from "./animations/lottie-animation/trash-button";
 
 interface ImageUploadProps {
   disabled?: boolean;
@@ -14,12 +15,7 @@ interface ImageUploadProps {
   value: string[];
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({
-  disabled,
-  onChange,
-  onRemove,
-  value,
-}) => {
+const ImageUpload: React.FC<ImageUploadProps> = ({ disabled, onChange, onRemove, value }) => {
   const isMounted = useIsComponentMounted();
 
   const onUpload = (result: any) => {
@@ -34,26 +30,17 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     <div>
       <div className="mb-4 flex items-center gap-4 ">
         {value.map((url) => (
-          <div
-            key={url}
-            className="relative h-[100px] w-[100px] rounded-md sm:h-[200px] sm:w-[200px] "
-          >
+          <div key={url} className="relative h-[100px] w-[100px] rounded-md sm:h-[200px] sm:w-[200px] ">
             <div className="absolute right-2 top-2 z-10">
-              <Button
-                type="button"
-                onClick={() => onRemove(url)}
+              <TrashButton
+                disabled={disabled}
                 variant="destructive"
-                size="icon"
-              >
-                <Trash className="h-4 w-4" />
-              </Button>
+                size="sm"
+                onClick={() => onRemove(url)}
+                iconClassName="size-6"
+              />
             </div>
-            <Image
-              fill
-              className="object-cover"
-              alt="image importé"
-              src={url}
-            />
+            <Image fill className="object-cover" alt="image importé" src={url} />
           </div>
         ))}
       </div>
@@ -63,12 +50,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             open();
           };
           return (
-            <Button
-              type="button"
-              disabled={disabled}
-              variant="secondary"
-              onClick={onClick}
-            >
+            <Button type="button" disabled={disabled} variant="secondary" onClick={onClick}>
               <ImagePlus className="mr-2 h-4 w-4" />
               Ajouter une image
             </Button>

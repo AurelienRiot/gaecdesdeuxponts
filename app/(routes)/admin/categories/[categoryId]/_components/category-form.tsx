@@ -4,19 +4,12 @@ import UploadImage from "@/components/images-upload/image-upload";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button, LoadingButton } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type  { Category } from "@prisma/client";
+import type { Category } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -25,6 +18,7 @@ import { toast } from "sonner";
 import * as z from "zod";
 import { deleteCategorie } from "../../_components/server-action";
 import { createCategory, updateCategory } from "./server-action";
+import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 
 interface CategoryFormProps {
   initialData: Category | null;
@@ -42,18 +36,10 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
-  const title = initialData
-    ? "Modifier la categorie"
-    : "Créer une nouvelle categorie";
-  const description = initialData
-    ? "Modifier la categorie"
-    : "Ajouter une nouvelle categorie";
-  const toastMessage = initialData
-    ? "Categorie mise à jour"
-    : "Categorie créée";
-  const action = initialData
-    ? "Sauvegarder les changements"
-    : "Créer la categorie";
+  const title = initialData ? "Modifier la categorie" : "Créer une nouvelle categorie";
+  const description = initialData ? "Modifier la categorie" : "Ajouter une nouvelle categorie";
+  const toastMessage = initialData ? "Categorie mise à jour" : "Categorie créée";
+  const action = initialData ? "Sauvegarder les changements" : "Créer la categorie";
 
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(formSchema),
@@ -65,9 +51,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
   });
 
   const onSubmit = async (data: CategoryFormValues) => {
-    const result = initialData
-      ? await updateCategory(data, initialData.id)
-      : await createCategory(data);
+    const result = initialData ? await updateCategory(data, initialData.id) : await createCategory(data);
 
     if (!result.success) {
       toast.error(result.message);
@@ -94,30 +78,22 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
 
   return (
     <>
-      <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onDelete}
-      />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
         {initialData && (
-          <Button
+          <TrashButton
             disabled={form.formState.isSubmitting}
             variant="destructive"
             size="sm"
             onClick={() => setOpen(true)}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
+            iconClassName="size-6"
+          />
         )}
       </div>
       <Separator />
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-8"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
           <FormField
             control={form.control}
             name="imageUrl"
@@ -176,11 +152,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
             )}
           />
 
-          <LoadingButton
-            disabled={form.formState.isSubmitting}
-            className="ml-auto"
-            type="submit"
-          >
+          <LoadingButton disabled={form.formState.isSubmitting} className="ml-auto" type="submit">
             {action}
           </LoadingButton>
         </form>

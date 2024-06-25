@@ -1,10 +1,7 @@
 "use client";
 
 import { AddressForm, addressSchema } from "@/components/address-form";
-import {
-  BillingAddressForm,
-  billingAddressSchema,
-} from "@/components/billing-address-form";
+import { BillingAddressForm, billingAddressSchema } from "@/components/billing-address-form";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import { Button } from "@/components/ui/button";
 import ButtonBackward from "@/components/ui/button-backward";
@@ -22,7 +19,7 @@ import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
-import type{ UserWithOrdersAndAdress } from "@/types";
+import type { UserWithOrdersAndAdress } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -34,6 +31,7 @@ import * as z from "zod";
 import { deleteUser } from "../../_components/server-action";
 import { updateUser } from "../_actions/update-user";
 import { Checkbox } from "@/components/ui/checkbox";
+import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 
 interface UserFormProps {
   initialData: UserWithOrdersAndAdress;
@@ -126,31 +124,24 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
 
   return (
     <>
-      <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onDelete}
-      />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
-        <Button
+
+        <TrashButton
           disabled={form.formState.isSubmitting}
           variant="destructive"
           size="sm"
           onClick={() => setOpen(true)}
-        >
-          <Trash className="h-4 w-4" />
-        </Button>
+          iconClassName="size-6"
+        />
       </div>
       <Separator />
 
       <p>{initialData?.email}</p>
 
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-8"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
             <FormField
               control={form.control}
@@ -159,34 +150,26 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                 <FormItem>
                   <FormLabel>Nom</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={form.formState.isSubmitting}
-                      placeholder="Nom"
-                      {...field}
-                    />
+                    <Input disabled={form.formState.isSubmitting} placeholder="Nom" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
-              <FormField
-                control={form.control}
-                name="company"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel >Entreprise</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={form.formState.isSubmitting || !isPro}
-                        placeholder="entreprise"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+
+            <FormField
+              control={form.control}
+              name="company"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Entreprise</FormLabel>
+                  <FormControl>
+                    <Input disabled={form.formState.isSubmitting || !isPro} placeholder="entreprise" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="phone"
@@ -221,9 +204,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                     </FormControl>
                     <div className="space-y-1 leading-none">
                       <FormLabel>Professionnel</FormLabel>
-                      <FormDescription>
-                        {"Faire de cette utilisateur un professionnel"}
-                      </FormDescription>
+                      <FormDescription>{"Faire de cette utilisateur un professionnel"}</FormDescription>
                     </div>
                   </label>
                 </FormItem>

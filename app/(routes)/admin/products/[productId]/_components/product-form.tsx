@@ -1,33 +1,19 @@
 "use client";
 
+import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import UploadImage from "@/components/images-upload/image-upload";
 import type { OptionsArray } from "@/components/product/product-function";
 import { AlertModal } from "@/components/ui/alert-modal-form";
-import { Button, LoadingButton } from "@/components/ui/button";
+import { LoadingButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import type { MainProductWithProducts } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Category } from "@prisma/client";
-import { Trash } from "lucide-react";
 import { nanoid } from "nanoid";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -56,7 +42,7 @@ const productSchema = z.object({
     .optional()
     .refine((val) => Number(val) > 0, {
       message: "Veuillez entrer un prix valide",
-    }) ,
+    }),
   unit: z.enum(["centgramme", "Kilogramme", "Litre"]).optional(),
   isFeatured: z.boolean().default(false),
   isArchived: z.boolean().default(false),
@@ -67,17 +53,13 @@ const productSchema = z.object({
 const mainProductSchema = z.object({
   categoryName: z.string().min(1, { message: "La catégorie est requise" }),
   name: z.string().min(1, { message: "Le nom est requis" }),
-  productSpecs: z
-    .string()
-    .min(1, { message: "Les spécifications sont requises" }),
+  productSpecs: z.string().min(1, { message: "Les spécifications sont requises" }),
   isArchived: z.boolean().default(false),
   isPro: z.boolean().default(false),
   imagesUrl: z.array(z.string()).refine((data) => data.length > 0, {
     message: "Au moins une image est requise",
   }),
-  products: z
-    .array(productSchema)
-    .nonempty("Veuillez ajouter au moins un produit"),
+  products: z.array(productSchema).nonempty("Veuillez ajouter au moins un produit"),
 });
 
 export type ProductSchema = z.infer<typeof productSchema>;
@@ -90,22 +72,14 @@ type ProductFormProps = {
   optionsArray: OptionsArray;
 };
 
-export const ProductForm: React.FC<ProductFormProps> = ({
-  initialData,
-  categories,
-  optionsArray,
-}) => {
+export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categories, optionsArray }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
   const title = initialData ? "Modifier le produit" : "Crée un nouveau produit";
-  const description = initialData
-    ? "Modifier le produit"
-    : "Ajouter un nouveau produit";
+  const description = initialData ? "Modifier le produit" : "Ajouter un nouveau produit";
   const toastMessage = initialData ? "Produit mise à jour" : "Produit crée";
-  const action = initialData
-    ? "Sauvegarder les changements"
-    : "Crée le produit";
+  const action = initialData ? "Sauvegarder les changements" : "Crée le produit";
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(mainProductSchema),
@@ -190,30 +164,22 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
   return (
     <>
-      <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onDelete}
-      />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
         {initialData && (
-          <Button
+          <TrashButton
             disabled={form.formState.isSubmitting}
             variant="destructive"
             size="sm"
             onClick={() => setOpen(true)}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
+            iconClassName="size-6"
+          />
         )}
       </div>
       <Separator />
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-8"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
           <FormField
             control={form.control}
             name="imagesUrl"
@@ -241,11 +207,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 <FormItem className="w-48">
                   <FormLabel>Nom</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={form.formState.isSubmitting}
-                      placeholder="Nom du produit"
-                      {...field}
-                    />
+                    <Input disabled={form.formState.isSubmitting} placeholder="Nom du produit" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -266,10 +228,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue
-                          defaultValue={field.value}
-                          placeholder="Selectionner une categorie"
-                        />
+                        <SelectValue defaultValue={field.value} placeholder="Selectionner une categorie" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -300,9 +259,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     </FormControl>
                     <div className="space-y-1 leading-none">
                       <FormLabel className="cursor-pointer">Archivé</FormLabel>
-                      <FormDescription>
-                        {"Ce produit n'apparaitra pas sur le site."}
-                      </FormDescription>
+                      <FormDescription>{"Ce produit n'apparaitra pas sur le site."}</FormDescription>
                     </div>
                   </label>
                 </FormItem>
@@ -322,14 +279,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       />
                     </FormControl>
                     <div className="space-y-1 leading-none">
-                      <FormLabel className="cursor-pointer">
-                        Professionel
-                      </FormLabel>
-                      <FormDescription>
-                        {
-                          "Ce produit apparaitra sur la partie professionnel du site."
-                        }
-                      </FormDescription>
+                      <FormLabel className="cursor-pointer">Professionel</FormLabel>
+                      <FormDescription>{"Ce produit apparaitra sur la partie professionnel du site."}</FormDescription>
                     </div>
                   </label>
                 </FormItem>
@@ -351,11 +302,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             }
           />
 
-          <LoadingButton
-            disabled={form.formState.isSubmitting}
-            className="ml-auto"
-            type="submit"
-          >
+          <LoadingButton disabled={form.formState.isSubmitting} className="ml-auto" type="submit">
             {action}
           </LoadingButton>
         </form>
