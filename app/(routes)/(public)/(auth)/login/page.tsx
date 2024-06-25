@@ -18,27 +18,14 @@ export async function generateMetadata(): Promise<Metadata> {
 const LoginPage = async (context: {
   searchParams: { callbackUrl: string | undefined; error: string | undefined };
 }) => {
-  const callbackUrl = decodeURI(
-    context.searchParams.callbackUrl ?? `${baseUrl}/dashboard-user`,
-  );
+  const callbackUrl = decodeURI(context.searchParams.callbackUrl ?? `${baseUrl}/dashboard-user`);
   const user = await getBasicUser();
   if (user) {
     if (user.role !== "admin" && callbackUrl.includes("/admin")) {
-      return (
-        <Logout
-          callbackUrl={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}&error=admin`}
-        />
-      );
+      return <Logout callbackUrl={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}&error=admin`} />;
     }
-    if (
-      user.role !== "pro" &&
-      callbackUrl.includes("/dashboard-user/produits-pro")
-    ) {
-      return (
-        <Logout
-          callbackUrl={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}&error=pro`}
-        />
-      );
+    if (user.role !== "pro" && callbackUrl.includes("/dashboard-user/produits-pro")) {
+      return <Logout callbackUrl={`/login?callbackUrl=${encodeURIComponent("/dashboard-user")}&error=pro`} />;
     }
     return redirect(callbackUrl);
   }
@@ -48,10 +35,7 @@ const LoginPage = async (context: {
   return (
     <div className="flex w-full items-center justify-center bg-slate-100 dark:bg-slate-900">
       <div className="space-y-12 rounded-xl px-2 pb-8 pt-12 sm:bg-white sm:px-8 sm:shadow-xl sm:dark:bg-black">
-        <h2 className="text-3xl font-bold tracking-tight">
-          {" "}
-          Page de Connection
-        </h2>
+        <h2 className="text-3xl font-bold tracking-tight"> Page de Connection</h2>
         <ErrorDisplay error={error} />
         <GoogleButton callbackUrl={callbackUrl} />
         <div
@@ -71,22 +55,18 @@ function ErrorDisplay({ error }: { error: string | undefined }) {
   switch (error) {
     case "admin":
       return (
-        <p className="text-sm text-destructive">
-          Veuillez vous connecter avec un compte administrateur
-        </p>
+        <p className=" font-bold text-sm text-destructive">Veuillez vous connecter avec un compte administrateur.</p>
       );
     case "pro":
       return (
-        <p className="text-sm text-destructive">
-          Veuillez vous connecter avec un compte professionnel
-        </p>
+        <p className=" font-bold text-sm text-destructive">Veuillez vous connecter avec un compte professionnel.</p>
       );
     case "Verification":
       return (
-        <p className="text-sm text-destructive">
-          Le lien est expiré ou invalide, veuillez entrer votre addresse email
+        <p className=" font-bold text-sm text-destructive">
+          Le lien est expiré ou invalide, veuillez entrer votre addresse email.
           <br />
-          {"Vérifier qu'il s'agit du dernier email envoyé"}
+          {"Vérifier qu'il s'agit du dernier email envoyé."}
         </p>
       );
     default:

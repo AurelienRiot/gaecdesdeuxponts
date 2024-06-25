@@ -1,14 +1,7 @@
 "use client";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { User } from "@prisma/client";
 import Link from "next/link";
@@ -17,8 +10,7 @@ import { useState } from "react";
 import { deleteUser, updateProUser } from "./server-action";
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
-import  type { CheckedState } from "@/components/ui/checkbox";
-
+import type { CheckedState } from "@/components/ui/checkbox";
 
 interface CardUserProps {
   user: User;
@@ -26,11 +18,7 @@ interface CardUserProps {
   className?: string;
 }
 
-const CardUser: React.FC<CardUserProps> = ({
-  user,
-  orderLength,
-  className,
-}) => {
+const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [check, setCheck] = useState<CheckedState>(user.role === "pro");
@@ -54,34 +42,22 @@ const CardUser: React.FC<CardUserProps> = ({
       toast.error(updateU.message);
     } else {
       setCheck(e);
-      toast.success("Utilisateur mis à jour");
+      toast.success("Utilisateur mise à jour");
     }
   };
 
   return (
     <>
-      <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onDelete}
-      />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
 
-      <Card
-        className={cn(
-          "flex h-full w-full min-w-[300px] flex-col justify-between",
-          className,
-        )}
-      >
+      <Card className={cn("flex h-full w-full min-w-[300px] flex-col justify-between", className)}>
         <CardHeader>
           <CardTitle
             onClick={() => {
               router.refresh();
             }}
           >
-            <Link
-              href={`/admin/users/${user.id}`}
-              className="capitalize hover:underline"
-            >
+            <Link href={`/admin/users/${user.id}`} className="capitalize hover:underline">
               <span>{user.name ? user.name : "Non renseigné"}</span>
               <span>{user.company ? ` - ${user.company}` : ""}</span>
             </Link>
@@ -100,11 +76,7 @@ const CardUser: React.FC<CardUserProps> = ({
           </div>
         </CardContent>
         <CardFooter className="flex flex-row items-end justify-between  gap-2">
-          <Button
-            variant="outline"
-            onClick={() => setOpen(true)}
-            className="hover:underline"
-          >
+          <Button variant="outline" onClick={() => setOpen(true)} className="hover:underline">
             Supprimer
           </Button>
           <Button className="hover:underline">

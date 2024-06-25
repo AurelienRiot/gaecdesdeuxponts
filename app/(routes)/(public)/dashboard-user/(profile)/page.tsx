@@ -2,22 +2,16 @@ import { LogoutButtonText } from "@/components/auth/auth-button";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { PencilLine } from "lucide-react";
-import Link from "next/link";
-import {
-  ProButton,
-  UserAddress,
-  UserEmail,
-  UserName,
-  UserPhone,
-} from "./_components/user-data";
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ProButton, UserAddress, UserEmail, UserName, UserPhone } from "./_components/user-data";
 
 export const metadata: Metadata = {
   title: "Profil utilisateur",
   description: "Profil utilisateur Laiterie du Pont Robert",
 };
 
-const ProfilTab = () => {
+const ProfilTab = async () => {
   return (
     <div className="w-full space-y-10 p-6">
       <div className="flex flex-col items-center justify-between gap-y-6 pb-4 sm:flex-row">
@@ -53,12 +47,7 @@ const ProfilTab = () => {
         </div>
       </div>
 
-      <Button
-        asChild
-        variant={"expandIcon"}
-        iconPlacement="right"
-        Icon={PencilLine}
-      >
+      <Button asChild variant={"expandIcon"} iconPlacement="right" Icon={PencilLine}>
         <Link href="/dashboard-user/settings">Modifier le profil</Link>
       </Button>
     </div>

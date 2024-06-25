@@ -4,9 +4,9 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { render } from "@react-email/render";
 import type { NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
-import GoogleProvider, {type GoogleProfile } from "next-auth/providers/google";
+import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
 import WelcomeEmail from "../email/welcome";
-import type{ User } from "@prisma/client";
+import type { User } from "@prisma/client";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 
@@ -44,10 +44,18 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    jwt: async ({ token, user, trigger, session }) => {
-      if (trigger === "update") {
-        for (const key in session) {
-          token[key] = session[key];
+    jwt: async ({ token, user, trigger }) => {
+      if (!trigger) {
+        if (!token.tokenExpires || new Date(token.tokenExpires) < new Date()) {
+          const dbUser = await prismadb.user.findUnique({
+            where: { id: token.id },
+          });
+          if (dbUser) {
+            token.id = dbUser.id;
+            token.name = dbUser.name;
+            token.role = dbUser.role;
+            token.tokenExpires = new Date(Date.now() + 15 * 60 * 1000);
+          }
         }
       }
       if (user) {
@@ -59,6 +67,7 @@ export const authOptions: NextAuthOptions = {
           token.id = dbUser.id;
           token.name = dbUser.name;
           token.role = dbUser.role;
+          token.tokenExpires = new Date(Date.now() + 15 * 60 * 1000);
         }
       }
       return token;
@@ -72,6 +81,7 @@ export const authOptions: NextAuthOptions = {
             name: token.name,
             id: token.id,
             role: token.role,
+            tokenExpires: token.tokenExpires,
           },
         };
       }
