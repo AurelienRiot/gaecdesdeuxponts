@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",
-    "build": "npx @biomejs/biome lint --write ./app && npx @biomejs/biome lint --write ./components && npx @biomejs/biome lint --write ./lib && next build",
+    "build": " next build",
     "start": "next start",
-    "lint": "npx @biomejs/biome lint --write ./app",
+    "lint": "npx @biomejs/biome lint --write ./app && npx @biomejs/biome lint --write ./components && npx @biomejs/biome lint --write ./lib",
     "postinstall": "prisma generate",
     "email": "email dev --dir components/email -p 3001"
   },
