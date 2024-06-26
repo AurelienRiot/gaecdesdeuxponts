@@ -1,12 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/skeleton-ui/skeleton";
@@ -32,13 +25,13 @@ const SeverUserClient = async () => {
   const allUsers = await prismadb.user.findMany({
     where: {
       NOT: {
-        role: "admin",
+        role: "admin" || "deleted",
       },
     },
     orderBy: {
       createdAt: "desc",
     },
-    
+
     include: {
       orders: true,
     },
@@ -95,8 +88,7 @@ const SeverUserClientLoading = () => {
                   <Skeleton className="h-4 w-24 rounded-full" />
                 </div>
                 <div className="flex items-center justify-center p-2">
-                  {`Nombre de commandes : `}{" "}
-                  <Skeleton className="ml-2 h-4 w-5 rounded-full" />
+                  {`Nombre de commandes : `} <Skeleton className="ml-2 h-4 w-5 rounded-full" />
                 </div>
                 <div className="flex items-center justify-center p-2">
                   {`Nombre d'abonnements : `}

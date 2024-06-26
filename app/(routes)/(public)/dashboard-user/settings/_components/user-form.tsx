@@ -1,33 +1,17 @@
 "use client";
 
-import {
-  AddressForm,
-  addressSchema,
-  type FullAdress,
-} from "@/components/address-form";
+import { AddressForm, addressSchema, type FullAdress } from "@/components/address-form";
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
-import {
-  BillingAddressForm,
-  billingAddressSchema,
-  defaultAddress,
-} from "@/components/billing-address-form";
+import { BillingAddressForm, billingAddressSchema, defaultAddress } from "@/components/billing-address-form";
 import { AlertModal } from "@/components/ui/alert-modal-form";
-import {
-  Form,
-  FormButton,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
 import { useUserContext } from "@/context/user-context";
 import { addDelay } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import  type { Address, BillingAddress } from "@prisma/client";
+import type { Address, BillingAddress } from "@prisma/client";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -68,14 +52,10 @@ const formSchema = z.object({
 
 export type UserFormValues = z.infer<typeof formSchema>;
 
-export const UserForm: React.FC<UserFormProps> = ({
-  initialData,
-}: UserFormProps) => {
+export const UserForm: React.FC<UserFormProps> = ({ initialData }: UserFormProps) => {
   const [open, setOpen] = useState(false);
 
-  const title = initialData.name
-    ? "Modifier votre profil"
-    : "Completer votre  profil";
+  const title = initialData.name ? "Modifier votre profil" : "Completer votre  profil";
   const toastMessage = "Profil mise à jour";
   const action = "Enregistrer les modifications";
 
@@ -118,25 +98,23 @@ export const UserForm: React.FC<UserFormProps> = ({
   };
 
   const onDelete = async () => {
-    const deleteU = await deleteUser();
-    if (!deleteU.success) {
-      toast.error(deleteU.message);
-    } else {
-      signOut({ callbackUrl: "/" });
-      await addDelay(1000);
-      toast.success("Compte supprimé", { position: "top-center" });
-    }
-
-    setOpen(false);
+    await deleteUser()
+      .then(async () => {
+        signOut({ callbackUrl: "/" });
+        await addDelay(1000);
+        toast.success("Compte supprimé", { position: "top-center" });
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      })
+      .finally(() => {
+        setOpen(false);
+      });
   };
 
   return (
     <>
-      <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onDelete}
-      />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
       <div className=" flex flex-col items-center justify-between gap-4 md:flex-row">
         <h2 className="text-center text-3xl font-bold "> {title} </h2>
 
@@ -152,15 +130,10 @@ export const UserForm: React.FC<UserFormProps> = ({
         </TrashButton>
       </div>
       <Separator className="mt-4" />
-      <p className=" py-6  text-base font-bold sm:text-lg">
-        {initialData.email}
-      </p>
+      <p className=" py-6  text-base font-bold sm:text-lg">{initialData.email}</p>
 
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-8 pb-4"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8 pb-4">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 ">
             <FormField
               control={form.control}
@@ -169,11 +142,7 @@ export const UserForm: React.FC<UserFormProps> = ({
                 <FormItem>
                   <FormLabel>Nom</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={form.formState.isSubmitting}
-                      placeholder="Nom"
-                      {...field}
-                    />
+                    <Input disabled={form.formState.isSubmitting} placeholder="Nom" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -187,11 +156,7 @@ export const UserForm: React.FC<UserFormProps> = ({
                   <FormItem>
                     <FormLabel>Entreprise</FormLabel>
                     <FormControl>
-                      <Input
-                        disabled={form.formState.isSubmitting}
-                        placeholder="entreprise"
-                        {...field}
-                      />
+                      <Input disabled={form.formState.isSubmitting} placeholder="entreprise" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

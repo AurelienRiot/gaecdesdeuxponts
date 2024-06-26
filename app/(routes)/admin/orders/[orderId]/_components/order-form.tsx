@@ -43,7 +43,11 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
   const title = initialData ? "Modifier le bon de livraison" : "Crée un bon de livraison";
   const description = initialData ? "" : "";
   const toastMessage = initialData ? "Bon de livraison mise à jour" : "Bon de livraison crée";
-  const action = initialData ? "Sauvegarder les changements" : "Crée le bon de livraison";
+  const action = initialData
+    ? initialData.dateOfEdition
+      ? "Sauvegarder les changements"
+      : "Valider la commande"
+    : "Crée le bon de livraison";
 
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(orderSchema),
@@ -96,6 +100,9 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
     if (initialData) {
       await updateOrder(data, initialData.id)
         .then(() => {
+          if (!initialData.dateOfEdition) {
+            router.refresh();
+          }
           toast.success(toastMessage);
         })
         .catch((err) => {
@@ -191,7 +198,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
           </LoadingButton>
         </form>
       </Form>
-      {!!initialData && (
+      {!!initialData && !!initialData.dateOfEdition && (
         <div className="flex flex-wrap gap-4">
           <div>
             <Label>Bon de livraison</Label>

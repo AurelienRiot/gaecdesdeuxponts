@@ -65,6 +65,7 @@ enum Role {
   user
   admin
   pro
+  deleted
 }
 
 model VerificationToken {
@@ -181,7 +182,7 @@ model Customer {
   email String
 
   orderId String @unique
-  order Order @relation(fields: [orderId], references: [id])
+  order Order @relation(fields: [orderId], references: [id],onDelete: Cascade)
 
   @@index([orderId])
 }

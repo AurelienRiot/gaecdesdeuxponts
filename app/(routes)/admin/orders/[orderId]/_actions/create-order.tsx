@@ -3,9 +3,9 @@
 import { checkAdmin } from "@/components/auth/checkAuth";
 import { createCustomer } from "@/components/pdf/pdf-data";
 import prismadb from "@/lib/prismadb";
-import {type OrderFormValues, orderSchema } from "../_components/order-shema";
+import { type OrderFormValues, orderSchema } from "../_components/order-shema";
 
-export async function createOrder(data: OrderFormValues): Promise<{id:string}> {
+export async function createOrder(data: OrderFormValues): Promise<{ id: string }> {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
@@ -24,6 +24,7 @@ export async function createOrder(data: OrderFormValues): Promise<{id:string}> {
       userId: data.userId,
       dateOfShipping: data.dateOfShipping,
       dateOfPayment: data.dateOfPayment,
+      dateOfEdition: data.dateOfEdition,
       datePickUp: data.datePickUp,
       orderItems: {
         create: data.orderItems.map((product) => {
