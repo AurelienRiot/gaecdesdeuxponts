@@ -26,8 +26,8 @@ async function createBugReport(data: BugReportValues): Promise<void> {
   });
 
   if (process.env.NODE_ENV === "production") {
-    try {
-      transporter.sendMail({
+    await transporter
+      .sendMail({
         from: "laiteriedupontrobert@gmail.com",
         to: "pub.demystify390@passmail.net",
         subject: "[BUG REPORT] - Laiterie du Pont Robert",
@@ -39,10 +39,8 @@ async function createBugReport(data: BugReportValues): Promise<void> {
             message: contact.message,
           }),
         ),
-      });
-    } catch (error) {
-      console.error(error);
-    }
+      })
+      .catch((error) => console.error(error));
   }
 }
 

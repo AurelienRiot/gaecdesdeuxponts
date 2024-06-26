@@ -25,8 +25,8 @@ async function createContact(data: ContactFormValues): Promise<void> {
   });
 
   if (process.env.NODE_ENV === "production") {
-    try {
-      transporter.sendMail({
+    await transporter
+      .sendMail({
         from: "laiteriedupontrobert@gmail.com",
         to: "laiteriedupontrobert@gmail.com",
         subject: "[NOUVEAU MESSAGE] - Laiterie du Pont Robert",
@@ -38,10 +38,8 @@ async function createContact(data: ContactFormValues): Promise<void> {
             message: contact.message,
           }),
         ),
-      });
-    } catch (error) {
-      console.error(error);
-    }
+      })
+      .catch((error) => console.error(error));
   }
 }
 
