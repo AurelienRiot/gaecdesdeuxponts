@@ -58,13 +58,7 @@ const ProductPage = async ({ params }: { params: { orderId: string } }) => {
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <OrderForm
-          products={products}
-          initialData={shippingOrders}
-          users={users}
-          shops={shops}
-          referer={referer}
-        />
+        <OrderForm products={products} initialData={shippingOrders} users={users} shops={shops} referer={referer} />
       </div>
     </div>
   );

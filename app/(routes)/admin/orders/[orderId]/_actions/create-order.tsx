@@ -26,6 +26,7 @@ export async function createOrder(data: OrderFormValues): Promise<{ id: string }
       dateOfPayment: data.dateOfPayment,
       dateOfEdition: data.dateOfEdition,
       datePickUp: data.datePickUp,
+      shopId: data.shopId,
       orderItems: {
         create: data.orderItems.map((product) => {
           return {

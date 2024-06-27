@@ -66,7 +66,9 @@ const toastPromise = <T, R>({
     const result = await serverAction(data)
       .then((result) => result)
       .catch((e) => {
-        throw new Error(e.message);
+        console.log(e);
+        const message = e.message;
+        throw new Error(message);
       });
     return result;
   };

@@ -5,10 +5,7 @@ import { createCustomer } from "@/components/pdf/pdf-data";
 import prismadb from "@/lib/prismadb";
 import { orderSchema, type OrderFormValues } from "../_components/order-shema";
 
-export async function updateOrder(
-  data: OrderFormValues,
-  id: string,
-): Promise<void> {
+export async function updateOrder(data: OrderFormValues, id: string): Promise<void> {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
@@ -37,6 +34,7 @@ export async function updateOrder(
       dateOfPayment: data.dateOfPayment,
       dateOfEdition: data.dateOfEdition || new Date(),
       datePickUp: data.datePickUp,
+      shopId: data.shopId,
       orderItems: {
         create: data.orderItems.map((product) => {
           return {
