@@ -1,18 +1,15 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { saveAs } from "file-saver";
-import { Download, ExternalLink } from "lucide-react";
+import { Download, ExternalLink, Send } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import Spinner from "../animations/spinner";
 import type { monthlyOrdersType } from "./pdf-data";
-import { createMonthlyPDF64String, createPDF64String } from "./server-actions";
+import { SendBL, SendFacture, createMonthlyPDF64String, createPDF64String } from "./server-actions";
+import { toastPromise } from "../ui/sonner";
 
-function base64ToBlob(
-  base64: string,
-  contentType = "application/pdf",
-  sliceSize = 512,
-): Blob {
+function base64ToBlob(base64: string, contentType = "application/pdf", sliceSize = 512): Blob {
   const byteCharacters = Buffer.from(base64, "base64").toString("binary");
   const byteArrays: Uint8Array[] = [];
 
@@ -66,13 +63,16 @@ export const DisplayInvoice = ({ orderId }: { orderId: string }) => {
         setLoading(false);
       });
   };
-  return (
-    <PdfButton
-      disabled={loading}
-      onViewFile={onViewFile}
-      onSaveFile={onSaveFile}
-    />
-  );
+
+  const onSendFile = async () => {
+    setLoading(true);
+    toastPromise({
+      serverAction: SendFacture,
+      data: { orderId },
+      onFinally: () => setLoading(false),
+    });
+  };
+  return <PdfButton disabled={loading} onViewFile={onViewFile} onSaveFile={onSaveFile} onSendFile={onSendFile} />;
 };
 
 export const DisplayMonthlyInvoice = ({
@@ -117,13 +117,11 @@ export const DisplayMonthlyInvoice = ({
       });
   };
 
-  return (
-    <PdfButton
-      disabled={loading}
-      onViewFile={onViewFile}
-      onSaveFile={onSaveFile}
-    />
-  );
+  const onSendFile = async () => {
+    toast.error("En cours de développement");
+  };
+
+  return <PdfButton disabled={loading} onViewFile={onViewFile} onSaveFile={onSaveFile} onSendFile={onSendFile} />;
 };
 
 export const DisplayShippingOrder = ({ orderId }: { orderId: string }) => {
@@ -162,22 +160,27 @@ export const DisplayShippingOrder = ({ orderId }: { orderId: string }) => {
       });
   };
 
-  return (
-    <PdfButton
-      disabled={loading}
-      onViewFile={onViewFile}
-      onSaveFile={onSaveFile}
-    />
-  );
+  const onSendFile = async () => {
+    setLoading(true);
+    toastPromise({
+      serverAction: SendBL,
+      data: { orderId },
+      onFinally: () => setLoading(false),
+    });
+  };
+
+  return <PdfButton disabled={loading} onViewFile={onViewFile} onSaveFile={onSaveFile} onSendFile={onSendFile} />;
 };
 
 function PdfButton({
   onViewFile,
   onSaveFile,
+  onSendFile,
   disabled,
 }: {
   onViewFile: () => void;
   onSaveFile: () => void;
+  onSendFile: () => void;
   disabled?: boolean;
 }) {
   return (
@@ -204,6 +207,18 @@ function PdfButton({
         {disabled && <Spinner className="h-5 w-5" />}
 
         {"Télecharger"}
+      </Button>
+      <Button
+        variant={"expandIcon"}
+        Icon={Send}
+        iconPlacement="right"
+        onClick={onSendFile}
+        type="button"
+        disabled={disabled}
+      >
+        {disabled && <Spinner className="h-5 w-5" />}
+
+        {"Envoyer par mail"}
       </Button>
     </div>
   );

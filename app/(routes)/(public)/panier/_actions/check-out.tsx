@@ -190,6 +190,8 @@ export const checkOut = async ({ itemsWithQuantities, date, shopId }: CheckOutPr
       });
     }
 
+    revalidatePath("/dashboard-user/orders");
+
     return {
       success: true,
     };

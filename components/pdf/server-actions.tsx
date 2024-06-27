@@ -7,19 +7,22 @@ import * as z from "zod";
 import Invoice from "./create-invoice";
 import MonthlyInvoice from "./create-monthly-invoice";
 import ShippingOrder from "./create-shipping";
-import {
-  createMonthlyPDFData,
-  createPDFData,
-  getMonthlyDate,
-} from "./pdf-data";
+import { createMonthlyPDFData, createPDFData, getMonthlyDate } from "./pdf-data";
+import { checkAdmin } from "../auth/checkAuth";
+import { transporter } from "@/lib/nodemailer";
+import { render } from "@react-email/render";
+import SendBLEmail from "../email/send-bl";
+import { dateFormatter } from "@/lib/date-utils";
+import SendFactureEmail from "../email/send-facture";
+import { currencyFormatter } from "@/lib/utils";
+
+const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 
 const pdf64StringSchema = z.object({
   orderId: z.string(),
   type: z.union([z.literal("invoice"), z.literal("shipping")]),
 });
-export async function createPDF64String(
-  data: z.infer<typeof pdf64StringSchema>,
-): Promise<string> {
+export async function createPDF64String(data: z.infer<typeof pdf64StringSchema>): Promise<string> {
   const user = await getSessionUser();
 
   if (!user) {
@@ -114,22 +117,16 @@ async function generatePdf({
   let doc: JSX.Element;
   switch (type) {
     case "invoice":
-      doc = (
-        <Invoice
-          dataInvoice={createPDFData(data)}
-          isPaid={!!data.dateOfPayment}
-        />
-      );
+      doc = <Invoice dataInvoice={createPDFData(data)} isPaid={!!data.dateOfPayment} />;
       break;
     case "shipping":
       doc = <ShippingOrder pdfData={createPDFData(data)} />;
       break;
-    case "monthly":
-    {  const isPaid = data.every((order) => !!order.dateOfPayment);
-      doc = (
-        <MonthlyInvoice data={createMonthlyPDFData(data)} isPaid={isPaid} />
-      );
-      break;}
+    case "monthly": {
+      const isPaid = data.every((order) => !!order.dateOfPayment);
+      doc = <MonthlyInvoice data={createMonthlyPDFData(data)} isPaid={isPaid} />;
+      break;
+    }
   }
 
   const pdfBlob = await pdf(doc).toBlob();
@@ -140,4 +137,115 @@ async function blobToBase64(blob: Blob): Promise<string> {
   const arrayBuffer = await blob.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   return buffer.toString("base64");
+}
+
+export async function SendBL({ orderId }: { orderId: string }) {
+  const isAuth = await checkAdmin();
+  if (!isAuth) {
+    throw new Error(`Vous devez etre connecté`);
+  }
+
+  const order = await prismadb.order.findUnique({
+    where: {
+      id: orderId,
+    },
+    include: {
+      orderItems: true,
+      shop: true,
+      customer: true,
+    },
+  });
+  if (!order) {
+    throw new Error(`La commande n'existe pas`);
+  }
+
+  if (!order.customer) {
+    throw new Error(`Le client n'existe pas, revalider la commande`);
+  }
+
+  if (!order.dateOfShipping) {
+    throw new Error(`Veuillez valider la date de livraison et revalider la commande`);
+  }
+
+  const doc = <ShippingOrder pdfData={createPDFData(order)} />;
+  const pdfBlob = await pdf(doc).toBlob();
+  const arrayBuffer = await pdfBlob.arrayBuffer();
+  const pdfBuffer = await Buffer.from(arrayBuffer);
+
+  await transporter.sendMail({
+    from: "laiteriedupontrobert@gmail.com",
+    to: order.customer.email,
+    subject: "Bon de livraison - Laiterie du Pont Robert",
+    html: render(
+      SendBLEmail({
+        date: dateFormatter(order.dateOfShipping),
+        baseUrl,
+        id: order.id,
+        email: order.customer.email,
+      }),
+    ),
+    attachments: [
+      {
+        filename: `Bon_de_livraison-${order.id}.pdf`,
+        content: pdfBuffer,
+        contentType: "application/pdf",
+      },
+    ],
+  });
+}
+
+export async function SendFacture({ orderId }: { orderId: string }) {
+  const isAuth = await checkAdmin();
+  if (!isAuth) {
+    throw new Error(`Vous devez etre connecté`);
+  }
+
+  const order = await prismadb.order.findUnique({
+    where: {
+      id: orderId,
+    },
+    include: {
+      orderItems: true,
+      shop: true,
+      customer: true,
+    },
+  });
+  if (!order) {
+    throw new Error(`La commande n'existe pas`);
+  }
+
+  if (!order.customer) {
+    throw new Error(`Le client n'existe pas, revalider la commande`);
+  }
+
+  if (!order.dateOfShipping) {
+    throw new Error(`Veuillez valider la date de livraison et revalider la commande`);
+  }
+
+  const doc = <Invoice dataInvoice={createPDFData(order)} isPaid={!!order.dateOfPayment} />;
+  const pdfBlob = await pdf(doc).toBlob();
+  const arrayBuffer = await pdfBlob.arrayBuffer();
+  const pdfBuffer = await Buffer.from(arrayBuffer);
+
+  await transporter.sendMail({
+    from: "laiteriedupontrobert@gmail.com",
+    to: order.customer.email,
+    subject: "Facture - Laiterie du Pont Robert",
+    html: render(
+      SendFactureEmail({
+        date: dateFormatter(order.dateOfShipping),
+        baseUrl,
+        id: order.id,
+        price: currencyFormatter.format(order.totalPrice),
+        email: order.customer.email,
+      }),
+    ),
+    attachments: [
+      {
+        filename: `Facture-${order.id}.pdf`,
+        content: pdfBuffer,
+        contentType: "application/pdf",
+      },
+    ],
+  });
 }
