@@ -1,40 +1,14 @@
 import UploadImage from "@/components/images-upload/image-upload";
-import {
- type OptionsArray,
-  getUnitLabel,
-  hasOptionWithValue,
-} from "@/components/product/product-function";
+import { type OptionsArray, getUnitLabel, hasOptionWithValue } from "@/components/product/product-function";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button, IconButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Command,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { Unit } from "@prisma/client";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
@@ -49,7 +23,7 @@ import {
   UploadCloud,
   X,
 } from "lucide-react";
-import { nanoid } from "nanoid";
+import { nanoid } from "@/lib/utils";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import OptionValueForm from "./options-values-form";
@@ -67,9 +41,8 @@ export const ProductWithOptions = ({
   const options = products[0].options;
 
   const addProduct = () => {
-
     const newProduct = {
-      id: `PR_${nanoid()}`,
+      id: `PR_${nanoid(7)}`,
       index: products.length,
       name: "",
       description: "",
@@ -89,10 +62,7 @@ export const ProductWithOptions = ({
   const addOptions = () => {
     const newOption = { index: options.length, name: "", value: "" };
     products.map((product, productIndex) => {
-      form.setValue(`products.${productIndex}.options`, [
-        ...product.options,
-        newOption,
-      ]);
+      form.setValue(`products.${productIndex}.options`, [...product.options, newOption]);
     });
   };
 
@@ -154,8 +124,7 @@ export const ProductWithOptions = ({
           </FormControl>
           {form.formState.errors.products && (
             <p className={"text-sm font-medium text-destructive"}>
-              {form.formState.errors.products?.message ||
-                "Veuillez completer tous les champs"}
+              {form.formState.errors.products?.message || "Veuillez completer tous les champs"}
             </p>
           )}
         </FormItem>
@@ -241,11 +210,7 @@ function ProductName({
             <FormItem className="relative w-48">
               <FormLabel>{`Name du produit ${productIndex + 1}`}</FormLabel>
               <FormControl>
-                <Input
-                  disabled={form.formState.isSubmitting}
-                  placeholder="Nom du produit"
-                  {...field}
-                />
+                <Input disabled={form.formState.isSubmitting} placeholder="Nom du produit" {...field} />
               </FormControl>
 
               <FormMessage />
@@ -303,9 +268,7 @@ function ProductName({
                 </FormControl>
                 <div className="space-y-1 leading-none">
                   <FormLabel className="cursor-pointer">Archivé</FormLabel>
-                  <FormDescription>
-                    {"Ce produit n'apparaitra pas sur le site."}
-                  </FormDescription>
+                  <FormDescription>{"Ce produit n'apparaitra pas sur le site."}</FormDescription>
                 </div>
               </label>
             </FormItem>
@@ -325,12 +288,8 @@ function ProductName({
                   />
                 </FormControl>
                 <div className="space-y-1 leading-none">
-                  <FormLabel className="cursor-pointer">
-                    Mise en avant
-                  </FormLabel>
-                  <FormDescription>
-                    {"Ce produit apparaitra sur la page d'accueil."}
-                  </FormDescription>
+                  <FormLabel className="cursor-pointer">Mise en avant</FormLabel>
+                  <FormDescription>{"Ce produit apparaitra sur la page d'accueil."}</FormDescription>
                 </div>
               </label>
             </FormItem>
@@ -358,15 +317,10 @@ function ProductName({
                   >
                     <div className="text-center">
                       <div className="mx-auto max-w-min rounded-md border bg-foreground p-2">
-                        <UploadCloud
-                          size={20}
-                          className="text-primary-foreground"
-                        />
+                        <UploadCloud size={20} className="text-primary-foreground" />
                       </div>
 
-                      <FormLabel className="mt-2 text-sm font-semibold text-primary">
-                        Images
-                      </FormLabel>
+                      <FormLabel className="mt-2 text-sm font-semibold text-primary">Images</FormLabel>
                     </div>
                   </button>
                 </>
@@ -402,11 +356,7 @@ function ProductName({
             render={({ field }) => (
               <FormItem className="w-48">
                 <FormLabel>Unité</FormLabel>
-                <Select
-                  disabled={form.formState.isSubmitting}
-                  onValueChange={field.onChange}
-                  value={field.value}
-                >
+                <Select disabled={form.formState.isSubmitting} onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Selectionner l'unité" />
@@ -457,10 +407,7 @@ const OptionsName = ({
 
   const changeOptionName = (newName: string) => {
     products.map((_, productIndex) => {
-      form.setValue(
-        `products.${productIndex}.options.${optionIndex}.name`,
-        newName,
-      );
+      form.setValue(`products.${productIndex}.options.${optionIndex}.name`, newName);
     });
   };
 
@@ -526,24 +473,15 @@ const OptionsName = ({
                   variant="outline"
                   role="combobox"
                   disabled={form.formState.isSubmitting}
-                  className={cn(
-                    "min-w-48 justify-between",
-                    options[optionIndex].name ? "" : "text-muted-foreground",
-                  )}
+                  className={cn("min-w-48 justify-between", options[optionIndex].name ? "" : "text-muted-foreground")}
                 >
-                  {options[optionIndex].name
-                    ? options[optionIndex].name
-                    : "Nom de l'option"}
+                  {options[optionIndex].name ? options[optionIndex].name : "Nom de l'option"}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-[200px] p-0">
                 <Command>
-                  <CommandInput
-                    value={search}
-                    onValueChange={setSearch}
-                    placeholder="Nom de l'option"
-                  />
+                  <CommandInput value={search} onValueChange={setSearch} placeholder="Nom de l'option" />
                   <CommandList>
                     {optionsArray.map(({ name }) => (
                       <CommandItem
@@ -558,9 +496,7 @@ const OptionsName = ({
                         <Check
                           className={cn(
                             "mr-2 h-4 w-4",
-                            options[optionIndex].name === name
-                              ? "opacity-100"
-                              : "opacity-0",
+                            options[optionIndex].name === name ? "opacity-100" : "opacity-0",
                           )}
                         />
                         {name}
@@ -611,12 +547,7 @@ interface ImageModalProps {
   setSelectedFiles: (files: string[]) => void;
 }
 
-const ImageModal = ({
-  isOpen,
-  onClose,
-  selectedFiles,
-  setSelectedFiles,
-}: ImageModalProps) => {
+const ImageModal = ({ isOpen, onClose, selectedFiles, setSelectedFiles }: ImageModalProps) => {
   return (
     <Modal
       title="Ajouter des images"
@@ -625,11 +556,7 @@ const ImageModal = ({
       onClose={onClose}
       className="left-[50%] top-[50%] max-h-[90%] w-[90%] max-w-[90%] overflow-y-scroll hide-scrollbar"
     >
-      <UploadImage
-        selectedFiles={selectedFiles}
-        setSelectedFiles={setSelectedFiles}
-        multipleImages
-      />
+      <UploadImage selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} multipleImages />
     </Modal>
   );
 };

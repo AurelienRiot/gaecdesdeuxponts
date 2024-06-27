@@ -7,6 +7,7 @@ import EmailProvider from "next-auth/providers/email";
 import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
 import WelcomeEmail from "../email/welcome";
 import type { User } from "@prisma/client";
+import { nanoid } from "@/lib/utils";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 
@@ -60,6 +61,14 @@ export const authOptions: NextAuthOptions = {
       }
       if (user) {
         const u = user as User;
+        if (trigger === "signUp") {
+          await prismadb.user.update({
+            where: { email: u.email as string },
+            data: {
+              id: `CS-${nanoid(7)}`,
+            },
+          });
+        }
         const dbUser = await prismadb.user.findUnique({
           where: { email: u.email as string },
         });

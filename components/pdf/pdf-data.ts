@@ -1,8 +1,8 @@
 import { dateFormatter } from "@/lib/date-utils";
 import { addressFormatter } from "@/lib/utils";
-import type {FullOrder, UserWithAddress } from "@/types";
+import type { FullOrder, UserWithAddress } from "@/types";
 import type { Customer } from "@prisma/client";
-import { nanoid } from "nanoid";
+import { nanoid } from "@/lib/utils";
 
 const formatFrenchPhoneNumber = (phoneNumber: string | null): string => {
   if (!phoneNumber) return "";
@@ -18,12 +18,8 @@ const formatFrenchPhoneNumber = (phoneNumber: string | null): string => {
 };
 
 export const createCustomer = (user: UserWithAddress) => {
-  const shippingAddress = user.address
-    ? addressFormatter(user.address, true)
-    : "";
-  const facturationAddress = user.billingAddress
-    ? addressFormatter(user.billingAddress, true)
-    : shippingAddress;
+  const shippingAddress = user.address ? addressFormatter(user.address, true) : "";
+  const facturationAddress = user.billingAddress ? addressFormatter(user.billingAddress, true) : shippingAddress;
   return {
     customerId: user.id,
     name: user.company ? `${user.name} - ${user.company}` : user.name || "",
@@ -38,12 +34,8 @@ export const createDataOrder = (order: FullOrder): DataOrder => {
   return {
     id: order.id,
     dateOfEdition: dateFormatter(order.dateOfEdition || new Date()),
-    dateOfPayment: order.dateOfPayment
-      ? dateFormatter(order.dateOfPayment)
-      : null,
-    dateOfShipping: order.dateOfShipping
-      ? dateFormatter(order.dateOfShipping)
-      : null,
+    dateOfPayment: order.dateOfPayment ? dateFormatter(order.dateOfPayment) : null,
+    dateOfShipping: order.dateOfShipping ? dateFormatter(order.dateOfShipping) : null,
     items: order.orderItems.map((item) => ({
       id: item.id,
       desc: item.name,
@@ -55,7 +47,7 @@ export const createDataOrder = (order: FullOrder): DataOrder => {
 };
 
 export const generateOrderId = () =>
-  `${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear()}-${nanoid(7)}`;
+  `${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear()}-${nanoid(5)}`;
 
 export type DataOrder = {
   id: string;
@@ -113,9 +105,7 @@ export const getMonthlyDate = (date: Date) => {
   })} ${date.getFullYear()}`;
 };
 
-export const createMonthlyPDFData = (
-  orders: FullOrder[],
-): MonthlyPDFDataType => {
+export const createMonthlyPDFData = (orders: FullOrder[]): MonthlyPDFDataType => {
   if (!orders[0].dateOfShipping) {
     throw new Error("Date invalide");
   }

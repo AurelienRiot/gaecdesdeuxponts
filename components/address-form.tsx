@@ -1,7 +1,5 @@
 "use client";
-import AddressAutocomplete, {
-  type Suggestion,
-} from "@/actions/adress-autocompleteFR";
+import AddressAutocomplete, { type Suggestion } from "@/actions/adress-autocompleteFR";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import { type InputHTMLAttributes, useState } from "react";
@@ -10,21 +8,9 @@ import type * as RPNInput from "react-phone-number-input";
 import * as z from "zod";
 import { AnimateHeight } from "./animations/animate-size";
 import { Button } from "./ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "./ui/command";
+import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "./ui/command";
 import { FloatingInput, FloatingLabel } from "./ui/floating-label-input";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "./ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { CountriesList, CountrySelect, isCountry } from "./ui/phone-input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Switch } from "./ui/switch";
@@ -59,9 +45,7 @@ export const AddressForm = ({ className }: AdressFormProps) => {
   const [open, setOpen] = useState(false);
   const [suggestions, setSuggestions] = useState([] as Suggestion[]);
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState(
-    address.country?.toUpperCase() === "FR",
-  );
+  const [filter, setFilter] = useState(address.country?.toUpperCase() === "FR");
 
   const setSearchTerm = async (value: string) => {
     setQuery(value);
@@ -76,22 +60,33 @@ export const AddressForm = ({ className }: AdressFormProps) => {
         name={"address"}
         render={({ field }) => (
           <FormItem className="flex flex-col">
-            <FormLabel className="my-auto h-6 leading-normal">
-              Adresse
-            </FormLabel>
+            <FormLabel className="my-auto h-6 leading-normal">Adresse</FormLabel>
             <Popover open={open} onOpenChange={setOpen}>
               <FormControl>
                 <div className="relative items-start space-y-2 text-sm">
                   <div className="flex items-center gap-2">
-                    <p>Autres</p>
-                    <Switch
-                      onCheckedChange={() => {
-                        setFilter(!filter);
+                    <Button
+                      type="button"
+                      variant={"outline"}
+                      className={filter ? "hover:bg-green-500/50" : "bg-green-500 hover:bg-green-500"}
+                      onClick={() => {
+                        setFilter(false);
                         form.setValue("address.country", "FR");
                       }}
-                      checked={filter}
-                    />
-                    <p>France</p>
+                    >
+                      Autres
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={"outline"}
+                      className={!filter ? "hover:bg-green-500/50" : "bg-green-500 hover:bg-green-500"}
+                      onClick={() => {
+                        setFilter(true);
+                        form.setValue("address.country", "FR");
+                      }}
+                    >
+                      France
+                    </Button>
                   </div>
                   <AnimateHeight display={filter} className="p-1">
                     <PopoverTrigger asChild>
@@ -101,9 +96,8 @@ export const AddressForm = ({ className }: AdressFormProps) => {
                         onClick={() => setOpen((open) => !open)}
                         disabled={!filter || form.formState.isSubmitting}
                         className={cn(
-                          " justify-between active:scale-100 ",
-                          field.value.label &&
-                            "font-normal text-muted-foreground ",
+                          " justify-between active:scale-100 w-full",
+                          field.value.label && "font-normal text-muted-foreground ",
                         )}
                       >
                         Rechercher votre adresse
@@ -113,11 +107,11 @@ export const AddressForm = ({ className }: AdressFormProps) => {
                   </AnimateHeight>
                 </div>
               </FormControl>
-              <PopoverContent className="w-fit p-0" side="bottom" align="start">
-                <Command loop shouldFilter={false}>
+              <PopoverContent className="w-full p-0" side="bottom" align="start">
+                <Command loop shouldFilter={false} className="w-full">
                   <CommandInput
                     placeholder="Entrer l'adresse..."
-                    className="h-9 "
+                    className="h-9 w-full"
                     value={query}
                     onValueChange={(e) => {
                       setSearchTerm(e);
@@ -127,14 +121,12 @@ export const AddressForm = ({ className }: AdressFormProps) => {
                       setOpen(true);
                     }}
                   />
-                  <CommandList>
-                    {query.length > 3 && (
-                      <CommandEmpty>Adresse introuvable</CommandEmpty>
-                    )}
+                  <CommandList className="w-full">
+                    {query.length > 3 && <CommandEmpty>Adresse introuvable</CommandEmpty>}
                     {suggestions.map((suggestion, index) => (
                       <CommandItem
                         className="cursor-pointer
-                          bg-popover  text-popover-foreground"
+                          bg-popover  text-popover-foreground w-full"
                         value={suggestion.label + index}
                         key={suggestion.label}
                         onSelect={() => {
@@ -163,27 +155,11 @@ export const AddressForm = ({ className }: AdressFormProps) => {
         )}
       />
       <div className="flex flex-col gap-4">
-        <AddressInput
-          label="Adresse"
-          addressKey="line1"
-          autoComplete="street-address"
-        />
+        <AddressInput label="Adresse" addressKey="line1" autoComplete="street-address" />
         <AddressInput label="Complément d'adresse" addressKey="line2" />
-        <AddressInput
-          label="Ville"
-          addressKey="city"
-          autoComplete="address-level2"
-        />
-        <AddressInput
-          label="Code postal"
-          addressKey="postalCode"
-          autoComplete="postal-code"
-        />
-        <AddressInput
-          label="Région"
-          addressKey="state"
-          autoComplete="address-level1"
-        />
+        <AddressInput label="Ville" addressKey="city" autoComplete="address-level2" />
+        <AddressInput label="Code postal" addressKey="postalCode" autoComplete="postal-code" />
+        <AddressInput label="Région" addressKey="state" autoComplete="address-level1" />
 
         <AnimateHeight display={!filter} className="mb-4 p-1">
           <CountrySelect
@@ -207,14 +183,7 @@ type AddressInputProps = InputHTMLAttributes<HTMLInputElement> & {
   addressKey: keyof z.infer<typeof addressSchema>;
 };
 
-const AddressInput = ({
-  label,
-  addressKey,
-  disabled,
-  className,
-  type = "text",
-  ...props
-}: AddressInputProps) => {
+const AddressInput = ({ label, addressKey, disabled, className, type = "text", ...props }: AddressInputProps) => {
   const form = useFormContext<{ address: z.infer<typeof addressSchema> }>();
   const addressValue = form.watch(`address.${addressKey}`);
   const id = "address-" + addressKey;

@@ -1,11 +1,4 @@
-import {
-  Document,
-  Page,
-  StyleSheet,
-  View,
-  Text,
-  Image,
-} from "@react-pdf/renderer";
+import { Document, Page, StyleSheet, View, Text, Image } from "@react-pdf/renderer";
 import type { PDFData } from "./pdf-data";
 
 export const tableRowsCount = 10;
@@ -63,9 +56,7 @@ const MainDocument = ({
 
       <Text
         style={MainStyles.pageNumbers}
-        render={({ pageNumber, totalPages }) =>
-          `Page ${pageNumber} / ${totalPages}`
-        }
+        render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`}
         fixed
       />
       <InvoiceThankYouMsg />
@@ -87,9 +78,7 @@ const BillTo = ({ customer }: { customer: PDFData["customer"] }) => (
   <View style={billStyles.headerContainer}>
     <Text style={billStyles.billTo}>À :</Text>
     {!!customer.name && <Text>{customer.name}</Text>}
-    {!!customer.facturationAddress && (
-      <Text>{customer.facturationAddress}</Text>
-    )}
+    {!!customer.facturationAddress && <Text>{customer.facturationAddress}</Text>}
     {!!customer.phone && <Text>{customer.phone}</Text>}
     {!!customer.email && <Text>{customer.email}</Text>}
   </View>
@@ -118,19 +107,13 @@ const Company = () => (
     <Text>Gaec des deux ponts</Text>
     <Text>6 B le Pont Robert 44290 MASSERAC</Text>
     <Text>06 72 06 45 55</Text>
-    <Text style={CompanyStyles.contact}>
-      laiteriedupontrobert@gmail.com - laiteriedupontrobert.fr
-    </Text>
+    <Text style={CompanyStyles.contact}>laiteriedupontrobert@gmail.com - laiteriedupontrobert.fr</Text>
   </View>
 );
 
 const Logo = () => (
   // eslint-disable-next-line jsx-a11y/alt-text
-  <Image
-    style={CompanyStyles.logo}
-    src="https://www.laiteriedupontrobert.fr/logo-font-blanc.png"
-    cache={false}
-  />
+  <Image style={CompanyStyles.logo} src="https://www.laiteriedupontrobert.fr/logo-font-blanc.png" cache={false} />
 );
 
 const thankYouMsgStyles = StyleSheet.create({
@@ -152,13 +135,8 @@ const thankYouMsgStyles = StyleSheet.create({
 const InvoiceThankYouMsg = () => (
   <View style={thankYouMsgStyles.titleContainer}>
     <Text style={thankYouMsgStyles.reportTitle}>Merci de votre confiance</Text>
-    <Text style={thankYouMsgStyles.iban}>
-      IBAN : FR76 1234 5678 9012 3456 7890 Code Bic : AGRIFRPP836
-    </Text>
-    <Text style={thankYouMsgStyles.iban}>
-      Siret : 844 554 147 00018 APE : ***** N° TVA intracom : ***** Capital :
-      *****€
-    </Text>
+    <Text style={thankYouMsgStyles.iban}>IBAN : FR76 1234 5678 9012 3456 7890, Code Bic : AGRIFRPP836</Text>
+    <Text style={thankYouMsgStyles.iban}>Siret : 844 554 147 00018 ,N° TVA intracom : FR46844554147</Text>
   </View>
 );
 

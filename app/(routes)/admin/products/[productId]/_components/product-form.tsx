@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import type { MainProductWithProducts } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Category } from "@prisma/client";
-import { nanoid } from "nanoid";
+import { nanoid } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -109,7 +109,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
         {
           name: "",
           index: 0,
-          id: `PR_${nanoid()}`,
+          id: `PR_${nanoid(7)}`,
           description: "",
           price: undefined,
           isFeatured: false,

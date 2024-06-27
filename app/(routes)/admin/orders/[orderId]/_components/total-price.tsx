@@ -1,14 +1,8 @@
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useFormContext } from "react-hook-form";
 import { useEffect } from "react";
-import type  { OrderFormValues } from "./order-shema";
+import type { OrderFormValues } from "./order-shema";
 
 const TotalPrice = () => {
   const form = useFormContext<OrderFormValues>();
@@ -19,7 +13,7 @@ const TotalPrice = () => {
     const totalPrice = products.reduce((acc, { price, quantity }) => {
       return acc + (price || 0) * (quantity || 1);
     }, 0);
-    form.setValue("totalPrice", totalPrice);
+    form.setValue("totalPrice", Number(totalPrice.toFixed(2)));
   }, [products, form]);
 
   return (

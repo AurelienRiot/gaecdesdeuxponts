@@ -73,8 +73,14 @@ async function deleteUser(): Promise<void> {
       id: isAuth.id,
     },
     data: {
-      email: `${isAuth.email}-deleted-${dateFormatter(new Date())}`,
+      email: `${isAuth.email}-deleted-${new Date().toISOString()}`,
       role: "deleted",
+      accounts: {
+        deleteMany: {},
+      },
+      sessions: {
+        deleteMany: {},
+      },
     },
   });
 
@@ -85,14 +91,5 @@ async function deleteUser(): Promise<void> {
   //   };
   // }
 }
-
-type ReturnTypeUserObject =
-  | {
-      success: true;
-    }
-  | {
-      success: false;
-      message: string;
-    };
 
 export { deleteUser, updateUser };
