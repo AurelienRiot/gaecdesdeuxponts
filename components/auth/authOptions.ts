@@ -65,7 +65,7 @@ export const authOptions: NextAuthOptions = {
           await prismadb.user.update({
             where: { email: u.email as string },
             data: {
-              id: `CS-${nanoid(7)}`,
+              id: `CS_${nanoid(7)}`,
             },
           });
         }

@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { nanoid } from "@/lib/utils";
 import dynamic from "next/dynamic";
 
 const DisplayInvoice = dynamic(() => import("./display-invoice"), {
@@ -13,12 +14,9 @@ const DisplayShippingOrder = dynamic(() => import("./display-shipping-order"), {
   ssr: false,
 });
 
-const DisplayMonthlyInvoice = dynamic(
-  () => import("./display-monthly-invoice"),
-  {
-    ssr: false,
-  },
-);
+const DisplayMonthlyInvoice = dynamic(() => import("./display-monthly-invoice"), {
+  ssr: false,
+});
 
 const TestPage = () => {
   return (
@@ -31,10 +29,8 @@ const TestPage = () => {
       >
         Recharger la page
       </Button>
-      <Tabs
-        defaultValue="monthlyInvoice"
-        className="h-full w-full max-w-[1000px]"
-      >
+      <Button onClick={() => console.log(`PR_${nanoid(7)}`)}>créer id</Button>
+      <Tabs defaultValue="monthlyInvoice" className="h-full w-full max-w-[1000px]">
         <TabsList className="flex w-full gap-2">
           <TabsTrigger value="invoice">Facture</TabsTrigger>
           <TabsTrigger value="monthlyInvoice">Facture mensuelle</TabsTrigger>
