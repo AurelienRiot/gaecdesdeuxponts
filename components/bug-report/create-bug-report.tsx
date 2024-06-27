@@ -6,13 +6,17 @@ import { type BugReportValues, bugReportSchema } from "./bug-report-schema";
 import { transporter } from "@/lib/nodemailer";
 import { render } from "@react-email/render";
 import ContactSend from "../email/contact-send";
+import type { ReturnTypeServerAction } from "@/types";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
-async function createBugReport(data: BugReportValues): Promise<void> {
+async function createBugReport(data: BugReportValues): Promise<ReturnTypeServerAction<null>> {
   const isAuth = await checkUser();
   const validatedData = bugReportSchema.safeParse(data);
   if (!validatedData.success) {
-    throw new Error(`Erreur de validation`);
+    return {
+      success: false,
+      message: validatedData.error.message,
+    };
   }
 
   const contact = await prismadb.contact.create({
@@ -42,6 +46,8 @@ async function createBugReport(data: BugReportValues): Promise<void> {
       })
       .catch((error) => console.error(error));
   }
+
+  return { success: true, data: null };
 }
 
 export { createBugReport };

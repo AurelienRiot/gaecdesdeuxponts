@@ -5,6 +5,7 @@ import { Loader2 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Toaster as Sonner, toast } from "sonner";
 import { Button } from "./button";
+import type { ReturnTypeServerAction } from "@/types";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
@@ -32,7 +33,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
 };
 
 type ToastPromiseProps<T, R> = {
-  serverAction: (data: T) => Promise<R>;
+  serverAction: (data: T) => Promise<ReturnTypeServerAction<R>>;
   data: T;
   errorMessage?: string;
   successMessage?: string;
@@ -64,11 +65,14 @@ const toastPromise = <T, R>({
     });
 
     const result = await serverAction(data)
-      .then((result) => result)
-      .catch((e) => {
-        console.log(e);
-        const message = e.message;
-        throw new Error(message);
+      .then((result) => {
+        if (!result.success) {
+          throw new Error(result.message);
+        }
+        return result.data;
+      })
+      .catch(() => {
+        throw new Error(errorMessage);
       });
     return result;
   };

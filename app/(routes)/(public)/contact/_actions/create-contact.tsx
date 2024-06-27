@@ -7,14 +7,18 @@ import prismadb from "@/lib/prismadb";
 import { render } from "@react-email/render";
 import type { ContactFormValues } from "../_components/contact-form";
 import { formSchema } from "../_components/shema";
+import type { ReturnTypeServerAction } from "@/types";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 
-async function createContact(data: ContactFormValues): Promise<void> {
+async function createContact(data: ContactFormValues): Promise<ReturnTypeServerAction<null>> {
   const isAuth = await getSessionUser();
   const validatedData = formSchema.safeParse(data);
   if (!validatedData.success) {
-    throw new Error(validatedData.error.message);
+    return {
+      success: false,
+      message: validatedData.error.message,
+    };
   }
 
   const contact = await prismadb.contact.create({
@@ -41,6 +45,8 @@ async function createContact(data: ContactFormValues): Promise<void> {
       })
       .catch((error) => console.error(error));
   }
+
+  return { success: true, data: null };
 }
 
 export { createContact };

@@ -1,7 +1,7 @@
 "use server";
 import { getSessionUser } from "@/actions/get-user";
 import prismadb from "@/lib/prismadb";
-import type { FullOrder } from "@/types";
+import type { FullOrder, ReturnTypeServerAction } from "@/types";
 import { pdf } from "@react-pdf/renderer";
 import * as z from "zod";
 import Invoice from "./create-invoice";
@@ -139,10 +139,13 @@ async function blobToBase64(blob: Blob): Promise<string> {
   return buffer.toString("base64");
 }
 
-export async function SendBL({ orderId }: { orderId: string }) {
+export async function SendBL({ orderId }: { orderId: string }): Promise<ReturnTypeServerAction<null>> {
   const isAuth = await checkAdmin();
   if (!isAuth) {
-    throw new Error(`Vous devez etre connecté`);
+    return {
+      success: false,
+      message: "Vous devez etre connecté",
+    };
   }
 
   const order = await prismadb.order.findUnique({
@@ -156,15 +159,24 @@ export async function SendBL({ orderId }: { orderId: string }) {
     },
   });
   if (!order) {
-    throw new Error(`La commande n'existe pas`);
+    return {
+      success: false,
+      message: "La commande n'existe pas",
+    };
   }
 
   if (!order.customer) {
-    throw new Error(`Le client n'existe pas, revalider la commande`);
+    return {
+      success: false,
+      message: "Le client n'existe pas, revalider la commande",
+    };
   }
 
   if (!order.dateOfShipping) {
-    throw new Error(`Veuillez valider la date de livraison et revalider la commande`);
+    return {
+      success: false,
+      message: "Veuillez valider la date de livraison et revalider la commande",
+    };
   }
 
   const doc = <ShippingOrder pdfData={createPDFData(order)} />;
@@ -192,12 +204,19 @@ export async function SendBL({ orderId }: { orderId: string }) {
       },
     ],
   });
+  return {
+    success: true,
+    data: null,
+  };
 }
 
-export async function SendFacture({ orderId }: { orderId: string }) {
+export async function SendFacture({ orderId }: { orderId: string }): Promise<ReturnTypeServerAction<null>> {
   const isAuth = await checkAdmin();
   if (!isAuth) {
-    throw new Error(`Vous devez etre connecté`);
+    return {
+      success: false,
+      message: "Vous devez etre connecté",
+    };
   }
 
   const order = await prismadb.order.findUnique({
@@ -211,15 +230,24 @@ export async function SendFacture({ orderId }: { orderId: string }) {
     },
   });
   if (!order) {
-    throw new Error(`La commande n'existe pas`);
+    return {
+      success: false,
+      message: "La commande n'existe pas",
+    };
   }
 
   if (!order.customer) {
-    throw new Error(`Le client n'existe pas, revalider la commande`);
+    return {
+      success: false,
+      message: "Le client n'existe pas, revalider la commande",
+    };
   }
 
   if (!order.dateOfShipping) {
-    throw new Error(`Veuillez valider la date de livraison et revalider la commande`);
+    return {
+      success: false,
+      message: "Veuillez valider la date de livraison et revalider la commande",
+    };
   }
 
   const doc = <Invoice dataInvoice={createPDFData(order)} isPaid={!!order.dateOfPayment} />;
@@ -248,4 +276,9 @@ export async function SendFacture({ orderId }: { orderId: string }) {
       },
     ],
   });
+
+  return {
+    success: true,
+    data: null,
+  };
 }
