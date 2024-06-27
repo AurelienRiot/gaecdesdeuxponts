@@ -37,7 +37,7 @@ export const createDataOrder = (order: FullOrder): DataOrder => {
     dateOfPayment: order.dateOfPayment ? dateFormatter(order.dateOfPayment) : null,
     dateOfShipping: order.dateOfShipping ? dateFormatter(order.dateOfShipping) : null,
     items: order.orderItems.map((item) => ({
-      id: item.id,
+      id: item.itemId,
       desc: item.name,
       priceTTC: item.price,
       qty: item.quantity,

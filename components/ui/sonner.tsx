@@ -22,10 +22,8 @@ const Toaster = ({ ...props }: ToasterProps) => {
           toast:
             "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
           description: "group-[.toast]:text-muted-foreground",
-          actionButton:
-            "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
-          cancelButton:
-            "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
+          actionButton: "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
+          cancelButton: "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
         },
       }}
       {...props}
@@ -68,11 +66,7 @@ const toastPromise = <T, R>({
     const result = await serverAction(data)
       .then((result) => result)
       .catch((e) => {
-        const error = e as Error;
-        if (error?.name === "AbortError") {
-          throw new Error(errorMessage);
-        }
-        throw e;
+        throw new Error(e.message);
       });
     return result;
   };
@@ -82,8 +76,7 @@ const toastPromise = <T, R>({
     loading: (
       <div className="flex w-full items-center justify-between">
         <span className="align-middle">
-          <Loader2 className="my-auto mr-2 inline size-4 animate-spin" />{" "}
-          {message}{" "}
+          <Loader2 className="my-auto mr-2 inline size-4 animate-spin" /> {message}{" "}
         </span>
         <Button
           size={"xs"}

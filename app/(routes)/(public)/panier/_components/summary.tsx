@@ -7,16 +7,9 @@ import { addDelay } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-import {
-  getUnitLabel,
-  hasOptionWithValue,
-} from "@/components/product/product-function";
+import { getUnitLabel, hasOptionWithValue } from "@/components/product/product-function";
 import { Skeleton } from "@/components/skeleton-ui/skeleton";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import useIsComponentMounted from "@/hooks/use-mounted";
 import type { ProductWithOptionsAndMain } from "@/types";
 import type { Shop } from "@prisma/client";
@@ -45,11 +38,9 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
   const cart = useCart();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const date: Date | undefined = getDateFromSearchParam(
-    searchParams.get("date"),
-  );
+  const date: Date | undefined = getDateFromSearchParam(searchParams.get("date"));
 
-  const shopId: string | undefined = process.env.NEXT_PUBLIC_FARM_ID;
+  const shopId: string | undefined = session.data?.user?.role === "pro" ? "domicile" : process.env.NEXT_PUBLIC_FARM_ID;
   // searchParams.get("shopId")
   const isMounted = useIsComponentMounted();
 
@@ -116,9 +107,7 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
       cart.removeAll();
     } else {
       if (result.ids) {
-        const changedProducts = result.ids.map(
-          (id) => cart.items.find((item) => item.id === id)?.name || "",
-        );
+        const changedProducts = result.ids.map((id) => cart.items.find((item) => item.id === id)?.name || "");
         toast.error(
           `Les produits suivants ont été modifiés depuis votre dernière visite veuillez les réajouter : ${changedProducts.join(", ")}`,
           { position: "top-left", duration: 10000 },
@@ -136,26 +125,19 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
     <>
       {/* <PlaceModal isOpen={open} setIsOpen={setOpen} shops={shops} date={date} /> */}
       <div className="relative mb-[450px] mt-16 space-y-6 rounded-lg border-2 bg-gray-100 px-4 py-6 dark:bg-black sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
-        <h2 className="text-xl font-medium text-secondary-foreground">
-          Votre Commmande
-        </h2>
+        <h2 className="text-xl font-medium text-secondary-foreground">Votre Commmande</h2>
         <ul className="pt-4">
           {isMounted
             ? cart.items.map((item) => <ItemsPrice key={item.id} item={item} />)
-            : Array.from({ length: 4 }, (_, i) => (
-                <ItemPriceSkeleton key={i} />
-              ))}
+            : Array.from({ length: 4 }, (_, i) => <ItemPriceSkeleton key={i} />)}
         </ul>
         <div className="space-y-4">
           <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-            <div className="text-base font-medium text-secondary-foreground">
-              Total
-            </div>
+            <div className="text-base font-medium text-secondary-foreground">Total</div>
             <Currency value={totalPrice} />
           </div>
         </div>
-        <DatePicker date={date} shopId={shopId} />{" "}
-        {isMounted && date && <TimePicker date={date} shopId={shopId} />}
+        <DatePicker date={date} shopId={shopId} /> {isMounted && date && <TimePicker date={date} shopId={shopId} />}
         {/* 
         <PickUpPlace
           date={date}
@@ -166,30 +148,16 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
         /> */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              disabled={loading || !!tooltipText}
-              onClick={onCheckout}
-              variant="rounded"
-              className="w-full"
-            >
+            <Button disabled={loading || !!tooltipText} onClick={onCheckout} variant="rounded" className="w-full">
               {loading && <Loader2 className={"mr-2 h-4 w-4 animate-spin"} />}
               Passer la commande
             </Button>
           </TooltipTrigger>
-          <TooltipContent
-            data-state={!!tooltipText}
-            className="data-[state=false]:hidden"
-          >
+          <TooltipContent data-state={!!tooltipText} className="data-[state=false]:hidden">
             <p>{tooltipText}</p>
           </TooltipContent>
         </Tooltip>
-        {!role && (
-          <LoginCard
-            date={date}
-            shopId={shopId}
-            className="absolute left-1/2 top-full -translate-x-1/2"
-          />
-        )}
+        {!role && <LoginCard date={date} shopId={shopId} className="absolute left-1/2 top-full -translate-x-1/2" />}
       </div>
     </>
   );
@@ -207,16 +175,11 @@ const ItemsPrice = ({ item }: { item: ProductWithOptionsAndMain }) => {
         </div>
       ) : (
         <div>
-          {cart.quantities[item.id] > 0 && cart.quantities[item.id] !== 1 && (
-            <span> {cart.quantities[item.id]}x </span>
-          )}
+          {cart.quantities[item.id] > 0 && cart.quantities[item.id] !== 1 && <span> {cart.quantities[item.id]}x </span>}
           <strong>{item.name} </strong>{" "}
         </div>
       )}
-      <Currency
-        value={Number(item.price) * cart.quantities[item.id]}
-        className="justify-self-end"
-      />
+      <Currency value={Number(item.price) * cart.quantities[item.id]} className="justify-self-end" />
     </li>
   );
 };
@@ -230,10 +193,7 @@ const ItemPriceSkeleton = () => {
   );
 };
 
-export const makeCartUrl = (
-  shopId: string | undefined,
-  date: Date | undefined,
-) => {
+export const makeCartUrl = (shopId: string | undefined, date: Date | undefined) => {
   let queryParams: string | undefined;
   if (date && shopId) {
     queryParams = new URLSearchParams({

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "@react-pdf/renderer";
 import { mainColor } from "./main-document";
-import  type { MonthlyPDFDataType, PDFData } from "./pdf-data";
+import type { MonthlyPDFDataType, PDFData } from "./pdf-data";
 
 const detailsStyles = StyleSheet.create({
   container: {
@@ -47,7 +47,7 @@ const Details = ({ title, pdfData }: DetailsProps) => (
     )}
     <View style={noStyles.invoiceDateContainer}>
       <Text style={noStyles.label}>N° de client : </Text>
-      <Text style={noStyles.invoiceDate}>{pdfData.customer.id}</Text>
+      <Text style={noStyles.invoiceDate}>{pdfData.customer.customerId}</Text>
     </View>
     {title === "Facture" && pdfData.order.dateOfPayment && (
       <View style={noStyles.invoiceDateContainer}>
@@ -63,9 +63,7 @@ const Details = ({ title, pdfData }: DetailsProps) => (
     ) : (
       <View style={noStyles.invoiceDateContainer}>
         <Text style={noStyles.label}>{"Date d'édition :"} </Text>
-        <Text style={noStyles.invoiceDate}>
-          {pdfData.orders.length > 0 && pdfData.orders[0].dateOfEdition}
-        </Text>
+        <Text style={noStyles.invoiceDate}>{pdfData.orders.length > 0 && pdfData.orders[0].dateOfEdition}</Text>
       </View>
     )}
   </View>
