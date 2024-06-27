@@ -28,6 +28,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import OptionValueForm from "./options-values-form";
 import type { ProductFormValues } from "./product-form";
+import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 
 export const ProductWithOptions = ({
   optionsArray,
@@ -330,13 +331,21 @@ function ProductName({
           )}
         />
         {productIndex > 0 || products.length > 1 ? (
-          <IconButton
-            type="button"
+          <TrashButton
+            disabled={form.formState.isSubmitting}
+            variant="destructive"
+            size="sm"
             onClick={deleteProduct}
-            className="my-auto h-fit rounded-md bg-destructive p-1 text-destructive-foreground"
-            iconClassName="size-6 "
-            Icon={Trash}
+            className="my-auto"
+            iconClassName="size-6"
           />
+          // <IconButton
+          //   type="button"
+          //   onClick={deleteProduct}
+          //   className="my-auto h-fit rounded-md bg-destructive p-1 text-destructive-foreground"
+          //   iconClassName="size-6 "
+          //   Icon={Trash}
+          // />
         ) : null}
       </div>
       <div className="flex gap-4 pl-4">

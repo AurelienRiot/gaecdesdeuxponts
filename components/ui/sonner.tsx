@@ -64,17 +64,13 @@ const toastPromise = <T, R>({
       throw e;
     });
 
-    const result = await serverAction(data)
-      .then((result) => {
-        if (!result.success) {
-          throw new Error(result.message);
-        }
-        return result.data;
-      })
-      .catch(() => {
-        throw new Error(errorMessage);
-      });
-    return result;
+    const result = await serverAction(data).catch((e) => {
+      throw new Error(errorMessage);
+    });
+    if (!result.success) {
+      throw new Error(result.message);
+    }
+    return result.data;
   };
 
   toast.promise(promise, {

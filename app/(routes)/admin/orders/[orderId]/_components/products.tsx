@@ -1,24 +1,9 @@
 import { Badge } from "@/components/ui/badge";
 import { Button, IconButton } from "@/components/ui/button";
-import {
-  Command,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from "@/components/ui/form";
+import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import type { ProductWithMain } from "@/types";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
@@ -37,16 +22,20 @@ export const ShippingProducts = ({
   const items = form.watch("orderItems");
 
   const addProduct = () => {
-    const newItems = {
-      itemId: "",
-      unit: "",
-      price: undefined,
-      quantity: 1,
-      name: "",
-      categoryName: "",
-      description: "",
-    };
-    form.setValue("orderItems", [...items,newItems]);
+    if (items.every((item) => item.itemId)) {
+      const newItems = {
+        itemId: "",
+        unit: "",
+        price: undefined,
+        quantity: 1,
+        name: "",
+        categoryName: "",
+        description: "",
+      };
+      form.setValue("orderItems", [...items, newItems]);
+    } else {
+      toast.error("Remplissez tous les produits déjà existant");
+    }
   };
 
   return (
@@ -74,18 +63,14 @@ export const ShippingProducts = ({
                   key={`${item.itemId} productIndex`}
                   className="overflow-x-auto rounded-md p-4 pb-4 thin-scrollbar even:bg-secondary"
                 >
-                  <ProductName
-                    products={products}
-                    productIndex={productIndex}
-                  />
+                  <ProductName products={products} productIndex={productIndex} />
                 </div>
               ))}
             </div>
           </FormControl>
           {form.formState.errors.orderItems && (
             <p className={"text-sm font-medium text-destructive"}>
-              {form.formState.errors.orderItems?.message ||
-                "Veuillez completer tous les champs"}
+              {form.formState.errors.orderItems?.message || "Veuillez completer tous les champs"}
             </p>
           )}
         </FormItem>
@@ -103,9 +88,7 @@ function ProductName({
 }) {
   const form = useFormContext<OrderFormValues>();
   const items = form.watch("orderItems");
-  const selectedProduct = products.find(
-    (product) => product.id === items[productIndex].itemId,
-  );
+  const selectedProduct = products.find((product) => product.id === items[productIndex].itemId);
 
   const deleteProduct = () => {
     const newItems = items.filter((_, index) => index !== productIndex);
@@ -115,11 +98,7 @@ function ProductName({
   return (
     <>
       <div className="flex min-w-[800px] gap-4">
-        <SelectProductName
-          selectedProduct={selectedProduct}
-          products={products}
-          productIndex={productIndex}
-        />
+        <SelectProductName selectedProduct={selectedProduct} products={products} productIndex={productIndex} />
         <FormField
           control={form.control}
           name={`orderItems.${productIndex}.price`}
@@ -209,16 +188,10 @@ const SelectProductName = ({
     }
 
     form.setValue(`orderItems.${productIndex}.name`, product.name);
-    form.setValue(
-      `orderItems.${productIndex}.categoryName`,
-      product.product.categoryName,
-    );
+    form.setValue(`orderItems.${productIndex}.categoryName`, product.product.categoryName);
     form.setValue(`orderItems.${productIndex}.itemId`, product.id);
     form.setValue(`orderItems.${productIndex}.unit`, product.unit);
-    form.setValue(
-      `orderItems.${productIndex}.description`,
-      product.description,
-    );
+    form.setValue(`orderItems.${productIndex}.description`, product.description);
     form.setValue(`orderItems.${productIndex}.price`, product.price);
 
     setOpen(false);
@@ -240,10 +213,7 @@ const SelectProductName = ({
                   variant="outline"
                   role="combobox"
                   disabled={form.formState.isSubmitting}
-                  className={cn(
-                    "w-full justify-between",
-                    field.value ? "" : "text-muted-foreground",
-                  )}
+                  className={cn("w-full justify-between", field.value ? "" : "text-muted-foreground")}
                 >
                   {selectedProduct?.product.isPro && (
                     <Badge variant="orange" className="mr-2">
@@ -259,10 +229,7 @@ const SelectProductName = ({
                   <CommandInput placeholder="Nom du produit" />
                   <CommandList>
                     {products
-                      .filter(
-                        (product) =>
-                          !items.some((item) => item.itemId === product.id),
-                      )
+                      .filter((product) => !items.some((item) => item.itemId === product.id))
                       .map((product) => (
                         <CommandItem
                           key={product.id}
