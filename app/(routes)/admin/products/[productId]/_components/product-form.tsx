@@ -128,23 +128,31 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
   const onSubmit = async (data: ProductFormValues) => {
     if (initialData) {
       await updateProduct(data, initialData.id)
-        .then(() => {
+        .then((result) => {
+          if (!result.success) {
+            toast.error(result.message);
+            return;
+          }
           router.push("/admin/products");
           router.refresh();
           toast.success(toastMessage);
         })
-        .catch((error) => {
-          toast.error(error.message);
+        .catch(() => {
+          toast.error("Erreur");
         });
     } else {
       await createProduct(data)
-        .then(() => {
+        .then((result) => {
+          if (!result.success) {
+            toast.error(result.message);
+            return;
+          }
           router.push("/admin/products");
           router.refresh();
           toast.success(toastMessage);
         })
-        .catch((error) => {
-          toast.error(error.message);
+        .catch(() => {
+          toast.error("Erreur");
         });
     }
   };

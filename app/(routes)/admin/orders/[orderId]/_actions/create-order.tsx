@@ -4,17 +4,24 @@ import { checkAdmin } from "@/components/auth/checkAuth";
 import { createCustomer } from "@/components/pdf/pdf-data";
 import prismadb from "@/lib/prismadb";
 import { type OrderFormValues, orderSchema } from "../_components/order-shema";
+import type { ReturnTypeServerAction } from "@/types";
 
-export async function createOrder(data: OrderFormValues): Promise<{ id: string }> {
+export async function createOrder(data: OrderFormValues): Promise<ReturnTypeServerAction<{ id: string }>> {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
-    throw new Error(`Vous devez être authentifier`);
+    return {
+      success: false,
+      message: "Vous devez être authentifier",
+    };
   }
 
   const validatedData = orderSchema.safeParse(data);
   if (!validatedData.success) {
-    throw new Error(`La requête n'est pas valide`);
+    return {
+      success: false,
+      message: "La requête n'est pas valide",
+    };
   }
 
   const order = await prismadb.order.create({
@@ -54,7 +61,12 @@ export async function createOrder(data: OrderFormValues): Promise<{ id: string }
       },
     },
   });
-  return { id: order.id };
+  return {
+    success: true,
+    data: {
+      id: order.id,
+    },
+  };
 }
 
 export default createOrder;

@@ -24,14 +24,21 @@ const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => 
   const [check, setCheck] = useState<CheckedState>(user.role === "pro");
 
   const onDelete = async () => {
-    const deleteU = await deleteUser({ id: user.id });
-    if (!deleteU.success) {
-      toast.error(deleteU.message);
-    } else {
-      router.refresh();
-      toast.success("Utilisateur supprimée");
-    }
-    setOpen(false);
+    await deleteUser({ id: user.id })
+      .then((result) => {
+        if (!result.success) {
+          toast.error(result.message);
+          return;
+        }
+        router.refresh();
+        toast.success("Utilisateur supprimée");
+      })
+      .catch(() => {
+        toast.error("Erreur");
+      })
+      .finally(() => {
+        setOpen(false);
+      });
   };
 
   const onChange = async (e: CheckedState) => {

@@ -2,12 +2,13 @@
 
 import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
+import type { ReturnTypeServerAction } from "@/types";
 
 async function deleteUser({
   id,
 }: {
   id: string | undefined;
-}): Promise<ReturnType> {
+}): Promise<ReturnTypeServerAction<null>> {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
@@ -31,6 +32,7 @@ async function deleteUser({
 
   return {
     success: true,
+    data: null,
   };
 }
 
@@ -40,7 +42,7 @@ const updateProUser = async ({
 }: {
   id: string;
   check: boolean | "indeterminate";
-}): Promise<ReturnType> => {
+}): Promise<ReturnTypeServerAction<null>> => {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
@@ -67,16 +69,8 @@ const updateProUser = async ({
   });
   return {
     success: true,
+    data: null,
   };
 };
-
-type ReturnType =
-  | {
-      success: true;
-    }
-  | {
-      success: false;
-      message: string;
-    };
 
 export { deleteUser, updateProUser };

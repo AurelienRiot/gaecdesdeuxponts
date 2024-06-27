@@ -4,23 +4,19 @@ import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import { revalidateTag } from "next/cache";
 import type { ProductFormValues } from "../_components/product-form";
+import type { ReturnTypeServerAction } from "@/types";
 
 export async function updateProduct(
-  {
-    categoryName,
-    name,
-    imagesUrl,
-    productSpecs,
-    isArchived,
-    isPro,
-    products,
-  }: ProductFormValues,
+  { categoryName, name, imagesUrl, productSpecs, isArchived, isPro, products }: ProductFormValues,
   id: string,
-): Promise<void> {
+): Promise<ReturnTypeServerAction<null>> {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
-    throw new Error("Vous devez être authentifier");
+    return {
+      success: false,
+      message: "Vous devez être authentifier",
+    };
   }
 
   const sameProduct = await prismadb.mainProduct.findUnique({
@@ -30,7 +26,10 @@ export async function updateProduct(
     },
   });
   if (sameProduct) {
-    throw new Error("Un produit avec ce nom existe déja");
+    return {
+      success: false,
+      message: "Un produit avec ce nom existe déja",
+    };
   }
 
   await prismadb.product.deleteMany({
@@ -80,4 +79,9 @@ export async function updateProduct(
   });
   revalidateTag("productfetch");
   revalidateTag("categories");
+
+  return {
+    success: true,
+    data: null,
+  };
 }

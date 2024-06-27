@@ -22,16 +22,24 @@ const pdf64StringSchema = z.object({
   orderId: z.string(),
   type: z.union([z.literal("invoice"), z.literal("shipping")]),
 });
-export async function createPDF64String(data: z.infer<typeof pdf64StringSchema>): Promise<string> {
+export async function createPDF64String(
+  data: z.infer<typeof pdf64StringSchema>,
+): Promise<ReturnTypeServerAction<string>> {
   const user = await getSessionUser();
 
   if (!user) {
-    throw new Error(`Vous devez etre connecté`);
+    return {
+      success: false,
+      message: "Vous devez etre connecté",
+    };
   }
 
   const isValide = pdf64StringSchema.safeParse(data);
   if (!isValide.success) {
-    throw new Error(`La requête n'est pas valide`);
+    return {
+      success: false,
+      message: "La requête n'est pas valide",
+    };
   }
   const order = await prismadb.order.findUnique({
     where: {
@@ -44,31 +52,46 @@ export async function createPDF64String(data: z.infer<typeof pdf64StringSchema>)
     },
   });
   if (!order) {
-    throw new Error(`La commande n'existe pas`);
+    return {
+      success: false,
+      message: "La commande n'existe pas",
+    };
   }
   if (user.role !== "admin" && user.id !== order.userId) {
-    throw new Error(`Vous ne pouvez pas voir cette commande`);
+    return {
+      success: false,
+      message: "Vous ne pouvez pas voir cette commande",
+    };
   }
 
   const blob = await generatePdf({ data: order, type: data.type });
   const base64String = await blobToBase64(blob);
-  return base64String;
+  return {
+    success: true,
+    data: base64String,
+  };
 }
 
 const monthlyPdf64StringSchema = z.array(z.string());
 
 export async function createMonthlyPDF64String(
   data: z.infer<typeof monthlyPdf64StringSchema>,
-): Promise<{ base64String: string; date: string }> {
+): Promise<ReturnTypeServerAction<{ base64String: string; date: string }>> {
   const user = await getSessionUser();
 
   if (!user) {
-    throw new Error(`Vous devez etre connecté`);
+    return {
+      success: false,
+      message: "Vous devez etre connecté",
+    };
   }
 
   const isValide = monthlyPdf64StringSchema.safeParse(data);
   if (!isValide.success) {
-    throw new Error(`La requête n'est pas valide`);
+    return {
+      success: false,
+      message: "La requête n'est pas valide",
+    };
   }
   const orders = await prismadb.order.findMany({
     where: {
@@ -84,25 +107,37 @@ export async function createMonthlyPDF64String(
     },
   });
   if (orders.length === 0) {
-    throw new Error(`Aucune commande pour ce mois`);
+    return {
+      success: false,
+      message: "Aucune commande pour ce mois",
+    };
   }
 
   if (user.role !== "admin") {
     const userOrder = orders.every((order) => order.userId === user.id);
     if (!userOrder) {
-      throw new Error(`Aucune commande pour ce mois`);
+      return {
+        success: false,
+        message: "Aucune commande pour ce mois",
+      };
     }
   }
 
   if (!orders[0].dateOfShipping) {
-    throw new Error(`Aucune commande pour ce mois`);
+    return {
+      success: false,
+      message: "Aucune commande pour ce mois",
+    };
   }
 
   const date = getMonthlyDate(orders[0].dateOfShipping);
 
   const blob = await generatePdf({ data: orders, type: "monthly" });
   const base64String = await blobToBase64(blob);
-  return { base64String, date };
+  return {
+    success: true,
+    data: { base64String, date },
+  };
 }
 
 async function generatePdf({
@@ -129,8 +164,7 @@ async function generatePdf({
     }
   }
 
-  const pdfBlob = await pdf(doc).toBlob();
-  return pdfBlob;
+  return pdf(doc).toBlob();
 }
 
 async function blobToBase64(blob: Blob): Promise<string> {

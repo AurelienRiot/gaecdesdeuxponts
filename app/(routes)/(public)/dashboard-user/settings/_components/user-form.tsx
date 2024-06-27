@@ -99,13 +99,17 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }: UserFormProps
 
   const onDelete = async () => {
     await deleteUser()
-      .then(async () => {
+      .then(async (result) => {
+        if (!result.success) {
+          toast.error(result.message);
+          return;
+        }
         signOut({ callbackUrl: "/" });
         await addDelay(1000);
         toast.success("Compte supprimé", { position: "top-center" });
       })
-      .catch((error) => {
-        toast.error(error.message);
+      .catch(() => {
+        toast.error("Erreur");
       })
       .finally(() => {
         setOpen(false);

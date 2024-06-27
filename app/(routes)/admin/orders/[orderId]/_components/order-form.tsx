@@ -1,9 +1,10 @@
 "use client";
+import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import { DisplayInvoice, DisplayShippingOrder } from "@/components/pdf/pdf-button";
 import { generateOrderId } from "@/components/pdf/pdf-data";
 import { deleteOrders } from "@/components/table-custom-fuction/orders-server-actions";
 import { AlertModal } from "@/components/ui/alert-modal-form";
-import { Button, LoadingButton } from "@/components/ui/button";
+import { LoadingButton } from "@/components/ui/button";
 import ButtonBackward from "@/components/ui/button-backward";
 import { Form, FormField } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
@@ -12,12 +13,10 @@ import { Separator } from "@/components/ui/separator";
 import type { ProductWithMain, UserWithAddress } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Shop } from "@prisma/client";
-import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import createOrder from "../_actions/create-order";
 import updateOrder from "../_actions/update-order";
 import FormDatePicker from "./date-picker";
 import { orderSchema, type OrderFormValues } from "./order-shema";
@@ -26,7 +25,7 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import createOrder from "../_actions/create-order";
 
 type ProductFormProps = {
   initialData: OrderFormValues | null;
@@ -99,24 +98,34 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
   const onSubmit = async (data: OrderFormValues) => {
     if (initialData) {
       await updateOrder(data, initialData.id)
-        .then(() => {
+        .then((result) => {
+          if (!result.success) {
+            toast.error(result.message);
+            return;
+          }
+          toast.success(toastMessage);
           if (!initialData.dateOfEdition) {
             router.refresh();
           }
-          toast.success(toastMessage);
         })
-        .catch((err) => {
-          toast.error(err.message);
+        .catch(() => {
+          toast.error("Erreur");
         });
     } else {
       await createOrder(data)
-        .then(({ id }) => {
+        .then((result) => {
+          if (!result.success) {
+            toast.error(result.message);
+            return;
+          }
           toast.success(toastMessage);
-          router.replace(`/admin/orders/${id}`);
+
+          router.replace(`/admin/orders/${result.data.id}`);
+
           router.refresh();
         })
-        .catch((err) => {
-          toast.error(err.message);
+        .catch(() => {
+          toast.error("Erreur");
         });
     }
   };

@@ -2,7 +2,8 @@
 import { checkAdmin } from "@/components/auth/checkAuth";
 import { defaultAddress } from "@/components/billing-address-form";
 import prismadb from "@/lib/prismadb";
-import type{ CreateUserFormValues } from "../_components/create-user-form";
+import type { CreateUserFormValues } from "../_components/create-user-form";
+import type { ReturnTypeServerAction } from "@/types";
 
 export async function createUser({
   name,
@@ -12,11 +13,14 @@ export async function createUser({
   company,
   email,
   isPro,
-}: CreateUserFormValues): Promise<void> {
+}: CreateUserFormValues): Promise<ReturnTypeServerAction<null>> {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
-    throw new Error("Vous devez être authentifier");
+    return {
+      success: false,
+      message: "Vous devez être authentifier",
+    };
   }
 
   const user = await prismadb.user.findUnique({
@@ -24,7 +28,10 @@ export async function createUser({
   });
 
   if (user) {
-    throw new Error("L'utilisateur existe déja");
+    return {
+      success: false,
+      message: "L'utilisateur existe déja",
+    };
   }
 
   await prismadb.user.create({
@@ -41,4 +48,9 @@ export async function createUser({
       billingAddress: billingAddress ? { create: billingAddress } : undefined,
     },
   });
+
+  return {
+    success: true,
+    data: null,
+  };
 }

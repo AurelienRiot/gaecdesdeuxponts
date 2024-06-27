@@ -3,15 +3,19 @@ import { checkAdmin } from "@/components/auth/checkAuth";
 import type { UserFormValues } from "../_components/user-form";
 import prismadb from "@/lib/prismadb";
 import { defaultAddress } from "@/components/billing-address-form";
+import type { ReturnTypeServerAction } from "@/types";
 
 export async function updateUser(
   { name, phone, address, billingAddress, company, isPro }: UserFormValues,
   id: string,
-): Promise<void> {
+): Promise<ReturnTypeServerAction<null>> {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
-    throw new Error("Vous devez être authentifier");
+    return {
+      success: false,
+      message: "Vous devez être authentifier",
+    };
   }
 
   const user = await prismadb.user.findUnique({
@@ -46,4 +50,9 @@ export async function updateUser(
           : undefined,
     },
   });
+
+  return {
+    success: true,
+    data: null,
+  };
 }

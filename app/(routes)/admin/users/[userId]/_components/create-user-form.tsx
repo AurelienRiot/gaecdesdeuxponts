@@ -1,10 +1,7 @@
 "use client";
 
 import { AddressForm, addressSchema } from "@/components/address-form";
-import {
-  BillingAddressForm,
-  billingAddressSchema,
-} from "@/components/billing-address-form";
+import { BillingAddressForm, billingAddressSchema } from "@/components/billing-address-form";
 import ButtonBackward from "@/components/ui/button-backward";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -83,13 +80,17 @@ export const CreateUserForm = () => {
   const onSubmit = async (data: CreateUserFormValues) => {
     data.name = data.name.trim();
     await createUser(data)
-      .then(() => {
+      .then((result) => {
+        if (!result.success) {
+          toast.error(result.message);
+          return;
+        }
         router.push(`/admin/users`);
         router.refresh();
         toast.success(toastMessage);
       })
-      .catch((error) => {
-        toast.error(error.message);
+      .catch(() => {
+        toast.error("Erreur");
       });
   };
 
@@ -102,10 +103,7 @@ export const CreateUserForm = () => {
         <Separator />
 
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="w-full space-y-8"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
               <FormField
                 control={form.control}
@@ -114,11 +112,7 @@ export const CreateUserForm = () => {
                   <FormItem>
                     <FormLabel>Nom</FormLabel>
                     <FormControl>
-                      <Input
-                        disabled={form.formState.isSubmitting}
-                        placeholder="Nom"
-                        {...field}
-                      />
+                      <Input disabled={form.formState.isSubmitting} placeholder="Nom" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -131,33 +125,25 @@ export const CreateUserForm = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input
-                        disabled={form.formState.isSubmitting}
-                        placeholder="email"
-                        {...field}
-                      />
+                      <Input disabled={form.formState.isSubmitting} placeholder="email" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-                <FormField
-                  control={form.control}
-                  name="company"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Entreprise</FormLabel>
-                      <FormControl>
-                        <Input
-                          disabled={form.formState.isSubmitting || !isPro}
-                          placeholder="entreprise"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                control={form.control}
+                name="company"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Entreprise</FormLabel>
+                    <FormControl>
+                      <Input disabled={form.formState.isSubmitting || !isPro} placeholder="entreprise" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="phone"
@@ -192,9 +178,7 @@ export const CreateUserForm = () => {
                       </FormControl>
                       <div className="space-y-1 leading-none">
                         <FormLabel>Professionnel</FormLabel>
-                        <FormDescription>
-                          {"Faire de cette utilisateur un professionnel"}
-                        </FormDescription>
+                        <FormDescription>{"Faire de cette utilisateur un professionnel"}</FormDescription>
                       </div>
                     </label>
                   </FormItem>

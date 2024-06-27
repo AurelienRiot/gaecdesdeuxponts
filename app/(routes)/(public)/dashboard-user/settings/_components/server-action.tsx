@@ -62,11 +62,14 @@ async function updateUser({
   };
 }
 
-async function deleteUser(): Promise<void> {
+async function deleteUser(): Promise<ReturnTypeServerAction<null>> {
   const isAuth = await checkUser();
 
   if (!isAuth) {
-    throw new Error(`Vous devez être authentifier`);
+    return {
+      success: false,
+      message: "Erreur d'authentification, déconnectez-vous et reconnectez-vous.",
+    };
   }
   await prismadb.user.update({
     where: {
@@ -90,6 +93,11 @@ async function deleteUser(): Promise<void> {
   //     message: "Une erreur est survenue",
   //   };
   // }
+
+  return {
+    success: true,
+    data: null,
+  };
 }
 
 export { deleteUser, updateUser };

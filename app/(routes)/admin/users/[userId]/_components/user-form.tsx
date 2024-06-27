@@ -99,27 +99,38 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
   const onSubmit = async (data: UserFormValues) => {
     data.name = data.name.trim();
     await updateUser(data, initialData.id)
-      .then(() => {
+      .then((result) => {
+        if (!result.success) {
+          toast.error(result.message);
+          return;
+        }
         router.push(`/admin/users`);
         router.refresh();
         toast.success(toastMessage);
       })
-      .catch((error) => {
-        toast.error(error.message);
+      .catch(() => {
+        toast.error("Erreur");
       });
   };
   const isPro = form.watch("isPro");
 
   const onDelete = async () => {
-    const deleteU = await deleteUser({ id: initialData.id });
-    if (!deleteU.success) {
-      toast.error(deleteU.message);
-    } else {
-      router.push(`/admin/users`);
-      router.refresh();
-      toast.success("Utilisateur supprimée");
-    }
-    setOpen(false);
+    await deleteUser({ id: initialData.id })
+      .then((result) => {
+        if (!result.success) {
+          toast.error(result.message);
+          return;
+        }
+        router.push(`/admin/users`);
+        router.refresh();
+        toast.success("Utilisateur supprimée");
+      })
+      .catch(() => {
+        toast.error("Erreur");
+      })
+      .finally(() => {
+        setOpen(false);
+      });
   };
 
   return (

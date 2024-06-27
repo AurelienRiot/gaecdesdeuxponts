@@ -34,14 +34,17 @@ export const DisplayInvoice = ({ orderId }: { orderId: string }) => {
   const onViewFile = async () => {
     setLoading(true);
     createPDF64String({ orderId, type: "invoice" })
-      .then((pdfString64) => {
-        const blob = base64ToBlob(pdfString64);
+      .then((result) => {
+        if (!result.success) {
+          toast.error(result.message);
+          return;
+        }
+        const blob = base64ToBlob(result.data);
         const url = URL.createObjectURL(blob);
         window.open(url, "_blank");
       })
-      .catch((error) => {
-        console.log(error);
-        toast.error(error.message);
+      .catch(() => {
+        toast.error("Erreur");
       })
       .finally(() => {
         setLoading(false);
@@ -51,13 +54,16 @@ export const DisplayInvoice = ({ orderId }: { orderId: string }) => {
   const onSaveFile = async () => {
     setLoading(true);
     createPDF64String({ orderId, type: "invoice" })
-      .then((pdfString64) => {
-        const blob = base64ToBlob(pdfString64);
+      .then((result) => {
+        if (!result.success) {
+          toast.error(result.message);
+          return;
+        }
+        const blob = base64ToBlob(result.data);
         saveAs(blob, `Facture ${orderId}.pdf`);
       })
-      .catch((error) => {
-        console.log(error);
-        toast.error(error.message);
+      .catch(() => {
+        toast.error("Erreur");
       })
       .finally(() => {
         setLoading(false);
@@ -87,14 +93,17 @@ export const DisplayMonthlyInvoice = ({
   const onViewFile = async () => {
     setLoading(true);
     createMonthlyPDF64String(ordersId)
-      .then(({ base64String }) => {
-        const blob = base64ToBlob(base64String);
+      .then((result) => {
+        if (!result.success) {
+          toast.error(result.message);
+          return;
+        }
+        const blob = base64ToBlob(result.data.base64String);
         const url = URL.createObjectURL(blob);
         window.open(url, "_blank");
       })
-      .catch((error) => {
-        console.log(error);
-        toast.error(error.message);
+      .catch(() => {
+        toast.error("Erreur");
       })
       .finally(() => {
         setLoading(false);
@@ -104,13 +113,16 @@ export const DisplayMonthlyInvoice = ({
   const onSaveFile = async () => {
     setLoading(true);
     createMonthlyPDF64String(ordersId)
-      .then(({ base64String, date }) => {
-        const blob = base64ToBlob(base64String);
-        saveAs(blob, `Facture mensuelle ${date}.pdf`);
+      .then((resul) => {
+        if (!resul.success) {
+          toast.error(resul.message);
+          return;
+        }
+        const blob = base64ToBlob(resul.data.base64String);
+        saveAs(blob, `Facture mensuelle ${resul.data.date}.pdf`);
       })
-      .catch((error) => {
-        console.log(error);
-        toast.error(error.message);
+      .catch(() => {
+        toast.error("Erreur");
       })
       .finally(() => {
         setLoading(false);
@@ -130,14 +142,17 @@ export const DisplayShippingOrder = ({ orderId }: { orderId: string }) => {
   const onViewFile = async () => {
     setLoading(true);
     createPDF64String({ orderId, type: "shipping" })
-      .then((pdfString64) => {
-        const blob = base64ToBlob(pdfString64);
+      .then((result) => {
+        if (!result.success) {
+          toast.error(result.message);
+          return;
+        }
+        const blob = base64ToBlob(result.data);
         const url = URL.createObjectURL(blob);
         window.open(url, "_blank");
       })
-      .catch((error) => {
-        console.log(error);
-        toast.error(error.message);
+      .catch(() => {
+        toast.error("Erreur");
       })
       .finally(() => {
         setLoading(false);
@@ -147,8 +162,12 @@ export const DisplayShippingOrder = ({ orderId }: { orderId: string }) => {
   const onSaveFile = async () => {
     setLoading(true);
     createPDF64String({ orderId, type: "shipping" })
-      .then((pdfString64) => {
-        const blob = base64ToBlob(pdfString64);
+      .then((result) => {
+        if (!result.success) {
+          toast.error(result.message);
+          return;
+        }
+        const blob = base64ToBlob(result.data);
         saveAs(blob, `Bon de livraison ${orderId}.pdf`);
       })
       .catch((error) => {

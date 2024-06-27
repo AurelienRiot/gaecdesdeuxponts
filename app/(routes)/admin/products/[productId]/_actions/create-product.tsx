@@ -4,6 +4,7 @@ import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import { revalidateTag } from "next/cache";
 import type { ProductFormValues } from "../_components/product-form";
+import type { ReturnTypeServerAction } from "@/types";
 
 export async function createProduct({
   categoryName,
@@ -13,11 +14,14 @@ export async function createProduct({
   isArchived,
   isPro,
   products,
-}: ProductFormValues): Promise<void> {
+}: ProductFormValues): Promise<ReturnTypeServerAction<null>> {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
-    throw new Error("Vous devez être authentifier");
+    return {
+      success: false,
+      message: "Vous devez être authentifier",
+    };
   }
 
   const sameProduct = await prismadb.mainProduct.findUnique({
@@ -26,7 +30,10 @@ export async function createProduct({
     },
   });
   if (sameProduct) {
-    throw new Error("Un produit avec ce nom existe déja");
+    return {
+      success: false,
+      message: "Un produit avec ce nom existe déja",
+    };
   }
 
   await prismadb.mainProduct.create({
@@ -64,4 +71,9 @@ export async function createProduct({
 
   revalidateTag("categories");
   revalidateTag("productfetch");
+
+  return {
+    success: true,
+    data: null,
+  };
 }
