@@ -24,11 +24,7 @@ const Gallery: React.FC<GalleryProps> = ({ images }) => {
       <div className="mx-auto mt-6  block w-full  lg:max-w-none">
         <TabsList className="grid h-fit grid-cols-4 gap-6 ">
           {images.map((image) => (
-            <GalleryTab
-              key={image}
-              selected={image === currentImage}
-              image={image}
-            />
+            <GalleryTab key={image} selected={image === currentImage} image={image} />
           ))}
         </TabsList>
       </div>

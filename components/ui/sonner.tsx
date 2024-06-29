@@ -18,6 +18,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       className="toaster group"
       position="bottom-right"
       richColors
+      closeButton
       toastOptions={{
         classNames: {
           toast:

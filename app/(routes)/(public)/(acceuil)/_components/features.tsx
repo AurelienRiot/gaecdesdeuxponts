@@ -1,15 +1,7 @@
 import { ConicGradientBorder } from "@/components/animations/conic-gradient-border";
 import BackgroundGrid from "@/components/grid";
 import { Button } from "@/components/ui/button";
-import {
-  ArrowRightIcon,
-  Handshake,
-  Heart,
-  Leaf,
-  Palette,
-  Recycle,
-  Truck,
-} from "lucide-react";
+import { ArrowRightIcon, Handshake, Heart, Leaf, Palette, Recycle, Truck } from "lucide-react";
 import Link from "next/link";
 
 interface Feature {
@@ -32,8 +24,7 @@ const FeaturesData: Feature[] = [
   {
     id: 2,
     name: "Qualité Biologique",
-    description:
-      "Savourez le goût naturel de nos produits laitiers 100% biologiques, sans additifs ni conservateurs.",
+    description: "Savourez le goût naturel de nos produits laitiers 100% biologiques, sans additifs ni conservateurs.",
     icon: <Leaf size={iconSize} />,
   },
   {
@@ -73,15 +64,9 @@ const FeaturesGrid = () => {
         {FeaturesData.map((feature) => {
           return (
             <div key={feature.id} className="width-fit space-y-2 text-left">
-              <div className=" w-fit rounded-lg bg-green-500 p-1 text-center ">
-                {feature.icon}
-              </div>
-              <h3 className="md:text-md font-semibold  sm:text-base lg:text-lg">
-                {feature.name}
-              </h3>
-              <p className="font-regular lg:text-md max-w-sm text-xs sm:text-sm md:text-base ">
-                {feature.description}
-              </p>
+              <div className=" w-fit rounded-lg bg-green-500 p-1 text-center ">{feature.icon}</div>
+              <h3 className="md:text-md font-semibold  sm:text-base lg:text-lg">{feature.name}</h3>
+              <p className="font-regular lg:text-md max-w-sm text-xs sm:text-sm md:text-base ">{feature.description}</p>
             </div>
           );
         })}
@@ -98,9 +83,8 @@ const FeaturesWithHeading = () => {
         Découvrez la Pureté du Lait Directement de la Ferme
       </h2>
       <p className="max-w-md text-center  text-secondary-foreground">
-        Nos produits laitiers sont issus de fermes locales, garantissant une
-        fraîcheur et une qualité inégalées. Profitez de la richesse naturelle du
-        lait cru et des produits faits maison, sans conservateurs ni additifs.
+        Nos produits laitiers sont issus de notre ferme, garantissant une fraîcheur et une qualité inégalées. Profitez
+        de la richesse naturelle du lait cru et des produits faits maison, sans conservateurs ni additifs.
       </p>
       <FeaturesGrid />
       <Button

@@ -1,25 +1,12 @@
 "use client";
 
-import {
-  ProductCell,
-  type Status,
-} from "@/components/table-custom-fuction/cell-orders";
-import {
-  DateCell,
-  NameCell,
-} from "@/components/table-custom-fuction/common-cell";
-import {
-  FilterAllInclude,
-  FilterOneInclude,
-} from "@/components/table-custom-fuction/common-filter";
+import { ProductCell, type Status } from "@/components/table-custom-fuction/cell-orders";
+import { DateCell, NameCell } from "@/components/table-custom-fuction/common-cell";
+import { FilterAllInclude, FilterOneInclude } from "@/components/table-custom-fuction/common-filter";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
 import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
 import { Button } from "@/components/ui/button";
-import type {
-  DataTableFilterableColumn,
-  DataTableSearchableColumn,
-  DataTableViewOptionsColumn,
-} from "@/types";
+import type { DataTableFilterableColumn, DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
 import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { CellAction } from "./cell-action";
@@ -49,18 +36,12 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "name",
     header: "Nom",
-    cell: ({ row }) => (
-      <NameCell
-        name={row.original.name}
-        url={`/admin/users/${row.original.userId}`}
-      />
-    ),
+    cell: ({ row }) => <NameCell name={row.original.name} url={`/admin/users/${row.original.userId}`} />,
   },
   {
     accessorKey: "status",
     header: "Statut",
     filterFn: FilterOneInclude,
-
   },
   {
     accessorKey: "totalPrice",
@@ -70,13 +51,10 @@ export const columns: ColumnDef<OrderColumn>[] = [
     accessorKey: "id",
     header: "Facture",
     cell: ({ row }) => (
-
-      <Button asChild variant={"link"} className="px-0">
-          <Link href={`/admin/orders/${row.original.id}`}>
-            Éditer le bon de livraison
-          </Link>
-        </Button>
-        )
+      <Button asChild variant={"link"} className="px-0 font-bold text-green-500">
+        <Link href={`/admin/orders/${row.original.id}`}>Éditer le bon de livraison</Link>
+      </Button>
+    ),
   },
   {
     accessorKey: "datePickUp",
@@ -88,10 +66,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
     header: "Lieu de retrait",
     cell: ({ row }) =>
       row.original.shopName !== "Livraison à domicile" ? (
-        <NameCell
-          name={row.original.shopName}
-          url={`/admin/shops/${row.original.shopId}`}
-        />
+        <NameCell name={row.original.shopName} url={`/admin/shops/${row.original.shopId}`} />
       ) : (
         <Button variant={"ghost"} className="cursor-default px-0">
           {row.original.shopName}
@@ -128,15 +103,11 @@ export const filterableColumns = ({
   }));
 
   const statutsArray: { label: Status; value: Status }[] = [
-   { label:"En cours de validation",
-    value:"En cours de validation",},
-    { label:"Commande valide",
-    value:"Commande valide",},
-    { label:"En cours de paiement",
-    value:"En cours de paiement",},
-    { label:"Payé",
-    value:"Payé",},
-  ]
+    { label: "En cours de validation", value: "En cours de validation" },
+    { label: "Commande valide", value: "Commande valide" },
+    { label: "En cours de paiement", value: "En cours de paiement" },
+    { label: "Payé", value: "Payé" },
+  ];
   return [
     {
       id: "products",
@@ -144,9 +115,9 @@ export const filterableColumns = ({
       options: prodArray,
     },
     {
-      id:"status",
+      id: "status",
       title: "Statut",
-options:statutsArray
+      options: statutsArray,
     },
     {
       id: "shopName",
@@ -162,8 +133,8 @@ export const searchableColumns: DataTableSearchableColumn<OrderColumn>[] = [
     title: "Nom",
   },
   {
-    id: "totalPrice",
-    title: "Prix",
+    id: "id",
+    title: "numéro de commande",
   },
 ];
 
