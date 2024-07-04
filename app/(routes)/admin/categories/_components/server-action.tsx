@@ -2,7 +2,7 @@
 
 import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
-import  type { ReturnTypeServerAction } from "@/types";
+import type { ReturnTypeServerAction } from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
 
 async function deleteCategorie({
@@ -28,8 +28,7 @@ async function deleteCategorie({
   if (products.length > 0) {
     return {
       success: false,
-      message:
-        "Des produits sont associés à  cette categorie, vous devez les supprimer",
+      message: "Des produits sont associés à  cette categorie, vous devez les supprimer",
     };
   }
 
