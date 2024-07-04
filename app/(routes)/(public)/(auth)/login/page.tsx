@@ -39,7 +39,7 @@ const LoginPage = async (context: {
   return (
     <div className="flex w-full items-center justify-center bg-slate-100 dark:bg-slate-900">
       <div className="space-y-12 rounded-xl px-2 pb-8 pt-12 sm:bg-white sm:px-8 sm:shadow-xl sm:dark:bg-black">
-        <h2 className="text-3xl font-bold tracking-tight"> Page de Connection</h2>
+        <h1 className="text-3xl font-bold tracking-tight"> Page de Connection</h1>
         <ErrorDisplay error={error} />
         <GoogleButton callbackUrl={callbackUrl} />
         <div

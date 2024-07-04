@@ -3,7 +3,7 @@ import { checkAdmin } from "@/components/auth/checkAuth";
 import { defaultAddress } from "@/components/billing-address-form";
 import prismadb from "@/lib/prismadb";
 import type { CreateUserFormValues } from "../_components/create-user-form";
-import type { ReturnTypeServerAction } from "@/types";
+import type { ReturnTypeServerAction } from "@/lib/server-action";
 
 export async function createUser({
   name,

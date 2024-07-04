@@ -4,7 +4,7 @@ import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import { revalidateTag } from "next/cache";
 import type { ProductFormValues } from "../_components/product-form";
-import type { ReturnTypeServerAction } from "@/types";
+import type { ReturnTypeServerAction } from "@/lib/server-action";
 
 export async function updateProduct(
   { categoryName, name, imagesUrl, productSpecs, isArchived, isPro, products }: ProductFormValues,

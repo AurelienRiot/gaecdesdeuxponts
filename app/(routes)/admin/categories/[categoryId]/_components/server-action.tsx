@@ -2,7 +2,7 @@
 
 import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
-import type { ReturnTypeServerAction } from "@/types";
+import type { ReturnTypeServerAction } from "@/lib/server-action";
 import type { Category } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import type { CategoryFormValues } from "./category-form";

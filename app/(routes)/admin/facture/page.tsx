@@ -30,7 +30,7 @@ const TestPage = () => {
         Recharger la page
       </Button>
       <Button onClick={() => console.log(`CS_${nanoid(7)}`)}>créer id</Button>
-      <Tabs defaultValue="monthlyInvoice" className="h-full w-full max-w-[1000px]">
+      <Tabs defaultValue="shippingOrder" className="h-full w-full max-w-[1000px]">
         <TabsList className="flex w-full gap-2">
           <TabsTrigger value="invoice">Facture</TabsTrigger>
           <TabsTrigger value="monthlyInvoice">Facture mensuelle</TabsTrigger>

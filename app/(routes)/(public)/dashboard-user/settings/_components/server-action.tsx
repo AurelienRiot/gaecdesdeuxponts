@@ -3,10 +3,8 @@
 import { checkUser } from "@/components/auth/checkAuth";
 import { defaultAddress } from "@/components/billing-address-form";
 import prismadb from "@/lib/prismadb";
-import type { ReturnTypeServerAction } from "@/types";
+import type { ReturnTypeServerAction } from "@/lib/server-action";
 import type { UserFormValues } from "./user-form";
-import { formatDate } from "date-fns";
-import { dateFormatter } from "@/lib/date-utils";
 
 async function updateUser({
   name,

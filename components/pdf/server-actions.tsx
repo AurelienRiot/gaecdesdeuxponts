@@ -1,7 +1,7 @@
 "use server";
 import { getSessionUser } from "@/actions/get-user";
 import prismadb from "@/lib/prismadb";
-import type { FullOrder, ReturnTypeServerAction } from "@/types";
+import type { FullOrder } from "@/types";
 import { pdf } from "@react-pdf/renderer";
 import * as z from "zod";
 import Invoice from "./create-invoice";
@@ -15,6 +15,7 @@ import SendBLEmail from "../email/send-bl";
 import { dateFormatter } from "@/lib/date-utils";
 import SendFactureEmail from "../email/send-facture";
 import { currencyFormatter } from "@/lib/utils";
+import type { ReturnTypeServerAction } from "@/lib/server-action";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 

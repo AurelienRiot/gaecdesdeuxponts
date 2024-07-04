@@ -3,7 +3,7 @@ import { checkAdmin } from "@/components/auth/checkAuth";
 import type { UserFormValues } from "../_components/user-form";
 import prismadb from "@/lib/prismadb";
 import { defaultAddress } from "@/components/billing-address-form";
-import type { ReturnTypeServerAction } from "@/types";
+import type { ReturnTypeServerAction } from "@/lib/server-action";
 
 export async function updateUser(
   { name, phone, address, billingAddress, company, isPro }: UserFormValues,

@@ -4,7 +4,7 @@ import { checkAdmin } from "@/components/auth/checkAuth";
 import { createCustomer } from "@/components/pdf/pdf-data";
 import prismadb from "@/lib/prismadb";
 import { type OrderFormValues, orderSchema } from "../_components/order-shema";
-import type { ReturnTypeServerAction } from "@/types";
+import type { ReturnTypeServerAction } from "@/lib/server-action";
 
 export async function createOrder(data: OrderFormValues): Promise<ReturnTypeServerAction<{ id: string }>> {
   const isAuth = await checkAdmin();

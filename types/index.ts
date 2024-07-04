@@ -88,13 +88,3 @@ export interface OrderWithItemsAndUserAndShop extends OrderWithItemsAndShop {
 export interface MainProductWithProducts extends MainProduct {
   products: ProductWithOptions[];
 }
-
-export type ReturnTypeServerAction<T> =
-  | {
-      success: true;
-      data: T;
-    }
-  | {
-      success: false;
-      message: string;
-    };

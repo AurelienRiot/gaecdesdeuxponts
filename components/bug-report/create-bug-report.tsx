@@ -6,7 +6,7 @@ import { type BugReportValues, bugReportSchema } from "./bug-report-schema";
 import { transporter } from "@/lib/nodemailer";
 import { render } from "@react-email/render";
 import ContactSend from "../email/contact-send";
-import type { ReturnTypeServerAction } from "@/types";
+import type { ReturnTypeServerAction } from "@/lib/server-action";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 async function createBugReport(data: BugReportValues): Promise<ReturnTypeServerAction<null>> {

@@ -9,11 +9,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown, Menu } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
@@ -21,9 +17,7 @@ import { Suspense, useState } from "react";
 import { adminRoutes } from "./main-nav";
 import AutoCloseSheet from "../auto-close-sheet";
 
-type PopoverTriggerProps = React.ComponentPropsWithoutRef<
-  typeof PopoverTrigger
->;
+type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
 interface MobileNavProps extends PopoverTriggerProps {}
 
@@ -58,8 +52,8 @@ export default function MobileNav({ className }: MobileNavProps) {
         <PopoverContent className="h-auto w-[200px] p-0">
           <Command>
             <CommandList>
-              <CommandInput placeholder="recherche" />
-              <CommandEmpty> Aucun résultat</CommandEmpty>
+              {/* <CommandInput placeholder="recherche" /> */}
+              {/* <CommandEmpty> Aucun résultat</CommandEmpty> */}
               <CommandGroup>
                 {routes.map((route) => (
                   <CommandItem
@@ -72,12 +66,7 @@ export default function MobileNav({ className }: MobileNavProps) {
                   >
                     <route.Icone className="mr-2 h-4 w-4" />
                     {route.label}
-                    <Check
-                      className={cn(
-                        "ml-auto h-4 w-4",
-                        route.active ? "opacity-100" : "opacity-0",
-                      )}
-                    />
+                    <Check className={cn("ml-auto h-4 w-4", route.active ? "opacity-100" : "opacity-0")} />
                   </CommandItem>
                 ))}
               </CommandGroup>

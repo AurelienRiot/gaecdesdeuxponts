@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Toaster as Sonner, toast } from "sonner";
 import { Button } from "./button";
-import type { ReturnTypeServerAction } from "@/types";
+import type { ReturnTypeServerAction } from "@/lib/server-action";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 

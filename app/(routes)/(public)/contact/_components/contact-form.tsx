@@ -1,15 +1,7 @@
 "use client";
 
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
-import {
-  Form,
-  FormButton,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
@@ -25,6 +17,7 @@ import { createContact } from "../_actions/create-contact";
 import { formSchema } from "./shema";
 import { usePostHog } from "posthog-js/react";
 import { useSession } from "next-auth/react";
+import { toast } from "sonner";
 
 const formSchemaWithPhone = formSchema.extend({
   phone: z
@@ -84,17 +77,11 @@ export const ContactForm = (): React.ReactNode => {
   return (
     <>
       <div id="contact" className="mt-8 flex items-center justify-between">
-        <Heading
-          title="Formulaire de Contact"
-          description="Demande d'information"
-        />
+        <Heading title="Formulaire de Contact" description="Demande d'information" />
       </div>
       <Separator className="my-2" />
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-8"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             <FormField
               control={form.control}
@@ -103,12 +90,7 @@ export const ContactForm = (): React.ReactNode => {
                 <FormItem>
                   <FormLabel>{"Nom/Prénom ou nom d'entreprise"}</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={form.formState.isSubmitting}
-                      placeholder="Nom"
-                      {...field}
-                      autoComplete="name"
-                    />
+                    <Input disabled={form.formState.isSubmitting} placeholder="Nom" {...field} autoComplete="name" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -163,11 +145,7 @@ export const ContactForm = (): React.ReactNode => {
                   <FormLabel>Sujet</FormLabel>
                   <FormControl>
                     <div className="flex items-start gap-x-4">
-                      <Input
-                        disabled={form.formState.isSubmitting}
-                        placeholder="Renseignement"
-                        {...field}
-                      />
+                      <Input disabled={form.formState.isSubmitting} placeholder="Renseignement" {...field} />
                     </div>
                   </FormControl>
                   <FormMessage />
@@ -182,11 +160,7 @@ export const ContactForm = (): React.ReactNode => {
                   <FormLabel>Message</FormLabel>
                   <FormControl>
                     <div className="flex items-start gap-x-4">
-                      <AutosizeTextarea
-                        {...field}
-                        placeholder="..."
-                        disabled={form.formState.isSubmitting}
-                      />
+                      <AutosizeTextarea {...field} placeholder="..." disabled={form.formState.isSubmitting} />
                     </div>
                   </FormControl>
                   <FormMessage />

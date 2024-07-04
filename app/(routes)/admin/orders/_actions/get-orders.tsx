@@ -2,14 +2,12 @@
 
 import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
-import type { ReturnTypeServerAction } from "@/types";
+import type { ReturnTypeServerAction } from "@/lib/server-action";
 import type { DateRange } from "react-day-picker";
 import type { OrderColumn } from "../_components/columns";
 import { formatOrders } from "../_components/format-orders";
 
-const getOrders = async (
-  dateRange: DateRange | undefined,
-): Promise<ReturnTypeServerAction<OrderColumn[]>> => {
+const getOrders = async (dateRange: DateRange | undefined): Promise<ReturnTypeServerAction<OrderColumn[]>> => {
   const isAuth = await checkAdmin();
 
   if (!isAuth) {
