@@ -28,16 +28,26 @@ export type OrderColumn = {
 
 export const columns: ColumnDef<OrderColumn>[] = [
   {
-    accessorKey: "products",
-    header: "Produits",
-    cell: ProductCell,
-    filterFn: FilterAllInclude,
+    accessorKey: "id",
+    header: "Facture",
+    cell: ({ row }) => (
+      <Button asChild variant={"link"} className="px-0 font-bold text-green-500">
+        <Link href={`/admin/orders/${row.original.id}`}>Éditer le bon de livraison</Link>
+      </Button>
+    ),
   },
   {
     accessorKey: "name",
     header: "Nom",
     cell: ({ row }) => <NameCell name={row.original.name} url={`/admin/users/${row.original.userId}`} />,
   },
+  {
+    accessorKey: "products",
+    header: "Produits",
+    cell: ProductCell,
+    filterFn: FilterAllInclude,
+  },
+
   {
     accessorKey: "status",
     header: "Statut",
@@ -47,15 +57,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
     accessorKey: "totalPrice",
     header: "Prix Total",
   },
-  {
-    accessorKey: "id",
-    header: "Facture",
-    cell: ({ row }) => (
-      <Button asChild variant={"link"} className="px-0 font-bold text-green-500">
-        <Link href={`/admin/orders/${row.original.id}`}>Éditer le bon de livraison</Link>
-      </Button>
-    ),
-  },
+
   {
     accessorKey: "datePickUp",
     header: DatePickUpHeader,

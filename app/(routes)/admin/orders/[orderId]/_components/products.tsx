@@ -1,5 +1,6 @@
+import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import { Badge } from "@/components/ui/badge";
-import { Button, IconButton } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -7,12 +8,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import type { ProductWithMain } from "@/types";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
-import { ChevronsUpDown, Trash } from "lucide-react";
+import { ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-shema";
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 
 export const ShippingProducts = ({
   products,

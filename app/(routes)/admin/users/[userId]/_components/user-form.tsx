@@ -1,10 +1,11 @@
 "use client";
 
 import { AddressForm, addressSchema } from "@/components/address-form";
+import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import { BillingAddressForm, billingAddressSchema } from "@/components/billing-address-form";
 import { AlertModal } from "@/components/ui/alert-modal-form";
-import { Button } from "@/components/ui/button";
 import ButtonBackward from "@/components/ui/button-backward";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormButton,
@@ -21,7 +22,6 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
 import type { UserWithOrdersAndAdress } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -30,8 +30,7 @@ import { toast } from "sonner";
 import * as z from "zod";
 import { deleteUser } from "../../_components/server-action";
 import { updateUser } from "../_actions/update-user";
-import { Checkbox } from "@/components/ui/checkbox";
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import MailForm from "./mail-form";
 
 interface UserFormProps {
   initialData: UserWithOrdersAndAdress;
@@ -149,7 +148,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
       </div>
       <Separator />
 
-      <p>{initialData?.email}</p>
+      {<MailForm email={initialData.email} id={initialData.id} />}
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
