@@ -12,6 +12,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-shema";
+import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 
 export const ShippingProducts = ({
   products,
@@ -103,7 +104,7 @@ function ProductName({
           control={form.control}
           name={`orderItems.${productIndex}.price`}
           render={({ field }) => (
-            <FormItem className="w-48">
+            <FormItem className="w-40">
               <FormLabel className="flex items-center justify-between gap-2">
                 <span>Prix</span>
                 <Button
@@ -133,7 +134,7 @@ function ProductName({
           control={form.control}
           name={`orderItems.${productIndex}.quantity`}
           render={({ field }) => (
-            <FormItem className="w-48">
+            <FormItem className="w-16">
               <FormLabel className="flex h-8 items-center justify-between gap-2">
                 <span className="">Quantité</span>
               </FormLabel>
@@ -153,12 +154,14 @@ function ProductName({
         />
 
         {productIndex > 0 || items.length > 1 ? (
-          <IconButton
+          <TrashButton
             type="button"
+            disabled={form.formState.isSubmitting}
+            variant="destructive"
+            size="sm"
+            className="mt-auto"
             onClick={deleteProduct}
-            className="mt-auto h-9 rounded-md bg-destructive px-3 text-destructive-foreground"
-            iconClassName="size-4 "
-            Icon={Trash}
+            iconClassName="size-6"
           />
         ) : null}
       </div>
