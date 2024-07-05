@@ -1,37 +1,37 @@
 "use server";
 import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
-import type { ReturnTypeServerAction } from "@/lib/server-action";
+import safeServerAction from "@/lib/server-action";
+import { z } from "zod";
 
-async function deleteOrders({
-  id,
-}: {
-  id: string | undefined;
-}): Promise<ReturnTypeServerAction<null>> {
-  const isAuth = await checkAdmin();
+const deleteSchema = z.object({
+  id: z.string().optional(),
+});
 
-  if (!isAuth) {
-    return {
-      success: false,
-      message: "Vous devez être authentifier",
-    };
-  }
+async function deleteOrder(data: z.infer<typeof deleteSchema>) {
+  return await safeServerAction({
+    data,
+    schema: deleteSchema,
+    getUser: checkAdmin,
+    serverAction: async (data) => {
+      const { id } = data;
+      await prismadb.order
+        .delete({
+          where: { id: id },
+        })
+        .catch((e) => {
+          console.log(e);
+          return {
+            success: false,
+            message: "Une erreur est survenue",
+          };
+        });
 
-  try {
-    await prismadb.order.delete({
-      where: { id: id },
-    });
-  } catch (e) {
-    console.log(e);
-    return {
-      success: false,
-      message: "Une erreur est survenue",
-    };
-  }
-
-  return {
-    success: true,
-    data: null,
-  };
+      return {
+        success: true,
+        message: "Commande supprimé",
+      };
+    },
+  });
 }
-export { deleteOrders };
+export { deleteOrder };

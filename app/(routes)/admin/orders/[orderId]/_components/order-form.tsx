@@ -2,7 +2,7 @@
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import { DisplayInvoice, DisplayShippingOrder } from "@/components/pdf/pdf-button";
 import { generateOrderId } from "@/components/pdf/pdf-data";
-import { deleteOrders } from "@/components/table-custom-fuction/orders-server-actions";
+import { deleteOrder } from "@/components/table-custom-fuction/orders-server-actions";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import { LoadingButton } from "@/components/ui/button";
 import ButtonBackward from "@/components/ui/button-backward";
@@ -10,6 +10,7 @@ import { Form, FormField } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import useSeverAction from "@/hooks/use-server-action";
 import type { ProductWithMain, UserWithAddress } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Shop } from "@prisma/client";
@@ -17,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import createOrder from "../_actions/create-order";
 import updateOrder from "../_actions/update-order";
 import FormDatePicker from "./date-picker";
 import { orderSchema, type OrderFormValues } from "./order-shema";
@@ -25,7 +27,6 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
-import createOrder from "../_actions/create-order";
 
 type ProductFormProps = {
   initialData: OrderFormValues | null;
@@ -36,7 +37,6 @@ type ProductFormProps = {
 };
 
 export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, users, shops, referer }) => {
-  const [open, setOpen] = useState(false);
   const router = useRouter();
 
   const title = initialData ? "Modifier le bon de livraison" : "Crée un bon de livraison";
@@ -82,19 +82,6 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
     },
   });
 
-  const onDelete = async () => {
-    const del = await deleteOrders({ id: initialData?.id });
-    if (!del.success) {
-      toast.error(del.message);
-      setOpen(false);
-    } else {
-      router.push(referer);
-      router.refresh();
-      toast.success("Commande supprimé");
-    }
-    setOpen(false);
-  };
-
   const onSubmit = async (data: OrderFormValues) => {
     if (initialData) {
       await updateOrder(data, initialData.id)
@@ -132,17 +119,10 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
         {initialData && (
-          <TrashButton
-            disabled={form.formState.isSubmitting}
-            variant="destructive"
-            size="sm"
-            onClick={() => setOpen(true)}
-            iconClassName="size-6"
-          />
+          <DeleteOrder orderId={initialData.id} isSubmitting={form.formState.isSubmitting} referer={referer} />
         )}
       </div>
       <Separator />
@@ -228,3 +208,30 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
     </>
   );
 };
+
+function DeleteOrder({ orderId, isSubmitting, referer }: { orderId: string; isSubmitting: boolean; referer: string }) {
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
+  const { serverAction, loading } = useSeverAction(deleteOrder);
+
+  const onDelete = async () => {
+    function onSuccess() {
+      router.push(referer);
+      router.refresh();
+    }
+    await serverAction({ data: { id: orderId }, onSuccess, onFinally: () => setOpen(false) });
+  };
+  return (
+    <>
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
+
+      <TrashButton
+        disabled={isSubmitting || loading}
+        variant="destructive"
+        size="sm"
+        onClick={() => setOpen(true)}
+        iconClassName="size-6"
+      />
+    </>
+  );
+}

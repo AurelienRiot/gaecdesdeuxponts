@@ -7,14 +7,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import  type { OrderColumn } from "./order-column";
+import type { OrderColumn } from "./order-column";
 import { Button } from "@/components/ui/button";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AlertModal } from "@/components/ui/alert-modal-form";
-import { deleteOrders } from "@/components/table-custom-fuction/orders-server-actions";
+import { deleteOrder } from "@/components/table-custom-fuction/orders-server-actions";
+import useSeverAction from "@/hooks/use-server-action";
 
 interface OrderCellActionProps {
   data: OrderColumn;
@@ -22,6 +23,7 @@ interface OrderCellActionProps {
 
 export const OrderCellAction: React.FC<OrderCellActionProps> = ({ data }) => {
   const router = useRouter();
+  const { serverAction, loading } = useSeverAction(deleteOrder);
   const [open, setOpen] = useState(false);
 
   const onCopy = (id: string) => {
@@ -30,22 +32,14 @@ export const OrderCellAction: React.FC<OrderCellActionProps> = ({ data }) => {
   };
 
   const onDelete = async () => {
-    const deleteCat = await deleteOrders({ id: data.id });
-    if (!deleteCat.success) {
-      toast.error(deleteCat.message);
-    } else {
+    function onSuccess() {
       router.refresh();
-      toast.success("Commande supprimée");
     }
-    setOpen(false);
+    await serverAction({ data: { id: data.id }, onSuccess, onFinally: () => setOpen(false) });
   };
   return (
     <>
-      <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onDelete}
-      />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -55,20 +49,15 @@ export const OrderCellAction: React.FC<OrderCellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Action</DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={() => onCopy(data.id)}
-            className="cursor-copy"
-          >
+          <DropdownMenuItem onClick={() => onCopy(data.id)} className="cursor-copy">
             <Copy className="mr-2 h-4 w-4" />
             Copier Id
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => router.push(`/admin/orders/${data.id}`)}
-          >
+          <DropdownMenuItem onClick={() => router.push(`/admin/orders/${data.id}`)}>
             <Edit className="mr-2 h-4 w-4" />
             Éditer
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
+          <DropdownMenuItem onClick={() => setOpen(true)} disabled={loading}>
             <Trash className="mr-2 h-4 w-4" />
             Supprimer
           </DropdownMenuItem>
