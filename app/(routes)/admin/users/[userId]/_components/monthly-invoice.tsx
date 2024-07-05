@@ -1,22 +1,12 @@
 "use client";
 import { DisplayMonthlyInvoice } from "@/components/pdf/pdf-button";
-import  type { monthlyOrdersType } from "@/components/pdf/pdf-data";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import type { monthlyOrdersType } from "@/components/pdf/pdf-data";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
 
 const MonthlyInvoice = ({ orders }: { orders: monthlyOrdersType[] }) => {
-  const [selectedMonth, setSelectedMonth] = useState<number>(
-    new Date().getMonth() + 1,
-  );
-  const [selectedYear, setSelectedYear] = useState<number>(
-    new Date().getFullYear(),
-  );
+  const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
   const selectedOrders = orders.filter((order) => {
     return order?.month === selectedMonth && order.year === selectedYear;
   });
@@ -39,7 +29,7 @@ const MonthlyInvoice = ({ orders }: { orders: monthlyOrdersType[] }) => {
         <SelectContent>
           {months.map((month) => (
             <SelectItem key={month} value={month.toString()}>
-              {new Date(2022, month - 1, 1).toLocaleString("default", {
+              {new Date(2022, month - 1, 1).toLocaleString("fr", {
                 month: "long",
               })}
             </SelectItem>

@@ -1,49 +1,54 @@
-import { getBasicUser, getSessionUser } from "@/actions/get-user";
-import { checkAdmin } from "@/components/auth/checkAuth";
-import type { User } from "@prisma/client";
-import type { Session } from "next-auth";
 import type { z } from "zod";
 
-export type ReturnTypeServerAction<T> =
+export type ReturnTypeServerAction<T, E = undefined> =
   | {
       success: true;
       data: T;
+      message?: string;
     }
   | {
       success: false;
       message: string;
+      errorData?: E;
     };
 
-type SafeServerActionType<D extends z.ZodTypeAny, T> =
+export type ReturnTypeServerAction2<T = undefined, E = undefined> =
   | {
-      type: "sessionUser";
-      schema: D;
-      serverAction: (data: z.infer<D>, user: Session["user"] | null) => Promise<ReturnTypeServerAction<T>>;
-      checkUser: boolean;
-      data: z.infer<D>;
+      success: true;
+      message: string;
+      data?: T;
     }
   | {
-      type: "dbUser";
-      schema: D;
-      serverAction: (data: z.infer<D>, user: User | null) => Promise<ReturnTypeServerAction<T>>;
-      checkUser: boolean;
-      data: z.infer<D>;
-    }
-  | {
-      type: "admin";
-      schema: D;
-      serverAction: (data: z.infer<D>) => Promise<ReturnTypeServerAction<T>>;
-      checkUser: true;
-      data: z.infer<D>;
+      success: false;
+      message: string;
+      errorData?: E;
     };
 
-async function safeServerAction<D extends z.ZodTypeAny, T>({
-  type,
+type BaseServerActionType<D extends z.ZodTypeAny, U> = {
+  schema: D;
+  data: z.infer<D>;
+  getUser: () => Promise<U | null>;
+};
+
+type SafeServerActionType<D extends z.ZodTypeAny, T, E, U> = BaseServerActionType<D, U> &
+  (
+    | {
+        ignoreCheckUser?: false;
+        serverAction: (data: z.infer<D>, user: U) => Promise<ReturnTypeServerAction2<T, E>>;
+      }
+    | {
+        ignoreCheckUser: true;
+        serverAction: (data: z.infer<D>, user: U | null) => Promise<ReturnTypeServerAction2<T, E>>;
+      }
+  );
+
+async function safeServerAction<D extends z.ZodTypeAny, T, E, U>({
   schema,
   serverAction,
-  checkUser = true,
+  ignoreCheckUser,
   data,
-}: SafeServerActionType<D, T>): Promise<ReturnTypeServerAction<T>> {
+  getUser,
+}: SafeServerActionType<D, T, E, U>): Promise<ReturnTypeServerAction2<T, E>> {
   const validatedData = schema.safeParse(data);
   if (!validatedData.success) {
     return {
@@ -52,39 +57,18 @@ async function safeServerAction<D extends z.ZodTypeAny, T>({
     };
   }
 
-  switch (type) {
-    case "sessionUser": {
-      const user = await getSessionUser();
-      if (checkUser && !user) {
-        return {
-          success: false,
-          message: "Vous devez être authentifier",
-        };
-      }
-      return await serverAction(data, user);
-    }
-    case "dbUser": {
-      const user = await getBasicUser();
-      if (checkUser && !user) {
-        return {
-          success: false,
-          message: "Vous devez être authentifier",
-        };
-      }
-      return await serverAction(data, user);
-    }
-    case "admin": {
-      const isAuth = await checkAdmin();
-
-      if (!isAuth) {
-        return {
-          success: false,
-          message: "Vous devez être authentifier",
-        };
-      }
-      return await serverAction(data);
-    }
+  const user = await getUser();
+  if (ignoreCheckUser) {
+    return await serverAction(data, user);
   }
+
+  if (!user) {
+    return {
+      success: false,
+      message: "Vous devez être authentifier",
+    };
+  }
+  return await serverAction(data, user);
 }
 
 export default safeServerAction;

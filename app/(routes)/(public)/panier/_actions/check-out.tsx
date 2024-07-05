@@ -9,8 +9,10 @@ import { getUnitLabel } from "@/components/product/product-function";
 import { dateFormatter, isDateDisabled } from "@/lib/date-utils";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
+import safeServerAction from "@/lib/server-action";
 import { currencyFormatter } from "@/lib/utils";
 import type { FullOrder, ProductWithMain, UserWithAddress } from "@/types";
+import { User } from "@prisma/client";
 import { render } from "@react-email/render";
 import { pdf } from "@react-pdf/renderer";
 import { revalidatePath } from "next/cache";
@@ -54,6 +56,139 @@ const checkOutSchema = z.object({
 });
 
 type CheckOutProps = z.infer<typeof checkOutSchema>;
+
+async function getUser() {
+  const isAuth = await getSessionUser();
+  if (!isAuth) return null;
+  const user = await prismadb.user.findUnique({
+    where: {
+      id: isAuth.id,
+    },
+    include: {
+      address: true,
+      billingAddress: true,
+    },
+  });
+  return user;
+}
+
+export const createCheckOut = async (data: CheckOutProps) =>
+  await safeServerAction({
+    data,
+    getUser,
+    schema: checkOutSchema,
+    serverAction: async (data, user) => {
+      const { itemsWithQuantities, date, shopId } = data;
+      const productIds = itemsWithQuantities.map((item) => item.id);
+      const products = await prismadb.product.findMany({
+        where: {
+          id: {
+            in: productIds,
+          },
+        },
+        include: {
+          product: true,
+        },
+      });
+
+      const productsWithQuantity = products.map((product) => {
+        return {
+          item: product,
+          quantity: itemsWithQuantities.find((item) => item.id === product.id)?.quantity,
+        };
+      });
+
+      const mismatchedProducts = itemsWithQuantities.filter((item) => {
+        const matchingProduct = products.find((product) => product.id === item.id);
+        if (!matchingProduct) {
+          return true;
+        }
+        if (matchingProduct.price !== item.price) {
+          return true;
+        }
+
+        if (matchingProduct.product.isPro && user.role !== "pro") {
+          return true;
+        }
+        return false;
+      });
+
+      const totalPrice = itemsWithQuantities.reduce((acc, { price, quantity }) => {
+        return acc + (price || 0) * (quantity || 1);
+      }, 0);
+
+      if (mismatchedProducts.length > 0) {
+        console.log("Mismatched IDs:", mismatchedProducts);
+        return {
+          success: false,
+          message: `Produits modifiés`,
+          errorData: mismatchedProducts.map((product) => product.id),
+        };
+      }
+
+      try {
+        const order = await createOrder({
+          productsWithQuantity,
+          totalPrice,
+          user,
+          datePickUp: date,
+          shopId,
+        });
+        const pdfBuffer = await generatePdf(order);
+
+        await transporter.sendMail({
+          from: "laiteriedupontrobert@gmail.com",
+          to: user.email || "",
+          subject: "Confirmation de votre commande - Laiterie du Pont Robert",
+          html: render(
+            OrderEmail({
+              date: dateFormatter(order.createdAt),
+              baseUrl,
+              id: order.id,
+              price: currencyFormatter.format(totalPrice),
+            }),
+          ),
+          attachments: [
+            {
+              filename: `Bon_de_commande-${order.id}.pdf`,
+              content: pdfBuffer,
+              contentType: "application/pdf",
+            },
+          ],
+        });
+
+        if (process.env.NODE_ENV === "production") {
+          await transporter.sendMail({
+            from: "laiteriedupontrobert@gmail.com",
+            to: "laiteriedupontrobert@gmail.com",
+            subject: "[NOUVELLE COMMANDE] - Laiterie du Pont Robert",
+            html: render(
+              OrderSendEmail({
+                baseUrl,
+                id: order.id,
+                name: user.name || user.email || "Utilisateur inconnu",
+                price: currencyFormatter.format(totalPrice),
+                date: dateFormatter(order.createdAt),
+              }),
+            ),
+          });
+        }
+
+        revalidatePath("/dashboard-user/orders");
+
+        return {
+          success: true,
+          message: "Commande effectuée avec succès",
+        };
+      } catch (error) {
+        console.log(error);
+        return {
+          success: false,
+          message: "Erreur lors de la commande.",
+        };
+      }
+    },
+  });
 
 export const checkOut = async ({ itemsWithQuantities, date, shopId }: CheckOutProps): Promise<CheckOutReturnType> => {
   const isAuth = await getSessionUser();

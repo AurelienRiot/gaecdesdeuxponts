@@ -1,22 +1,13 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { AutosizeTextarea } from "../ui/autosize-textarea";
 import { Button } from "../ui/button";
-import {
-  Form,
-  FormButton,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
+import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { Modal } from "../ui/modal";
-import { toastPromise } from "../ui/sonner";
-import { type BugReportValues, bugReportSchema } from "./bug-report-schema";
+import { useToastPromise } from "../ui/sonner";
+import { bugReportSchema, type BugReportValues } from "./bug-report-schema";
 import { createBugReport } from "./create-bug-report";
 
 type BugReportModalProps = {
@@ -25,7 +16,9 @@ type BugReportModalProps = {
 };
 
 const BugReportModal = ({ isOpen, setIsOpen }: BugReportModalProps) => {
-  const [loading, setLoading] = useState(false);
+  const { loading, toastServerAction } = useToastPromise({
+    serverAction: createBugReport,
+  });
   const url = decodeURI(window.location.href);
 
   const form = useForm<BugReportValues>({
@@ -38,14 +31,11 @@ const BugReportModal = ({ isOpen, setIsOpen }: BugReportModalProps) => {
   });
 
   const onSubmit = async (data: BugReportValues) => {
-    setLoading(true);
     setIsOpen(false);
-    toastPromise({
-      serverAction: createBugReport,
+    toastServerAction({
       data,
-      onFinally: () => setLoading(false),
-      onError: () => setIsOpen(true),
       onSuccess: () => form.reset({ page: url, subject: "RAPPORT DE BUG" }),
+      onError: () => setIsOpen(true),
     });
   };
 
@@ -58,10 +48,7 @@ const BugReportModal = ({ isOpen, setIsOpen }: BugReportModalProps) => {
       className="left-[50%] top-5 max-h-[90vh] translate-y-0 overflow-y-auto sm:top-[50%] sm:-translate-y-1/2"
     >
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-8"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
           <FormField
             control={form.control}
             name="subject"

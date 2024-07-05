@@ -16,10 +16,11 @@ import type { Shop } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { checkOut } from "../_actions/check-out";
+import { checkOut, createCheckOut } from "../_actions/check-out";
 import DatePicker from "./date-picker";
 import LoginCard from "./login-card";
 import TimePicker from "./time-picker";
+import useSeverAction from "@/hooks/use-server-action";
 
 const getDateFromSearchParam = (param: string | null): Date | undefined => {
   if (param === null) return undefined;
@@ -32,7 +33,8 @@ interface SummaryProps {
 }
 
 const Summary: React.FC<SummaryProps> = ({ shops }) => {
-  const [loading, setLoading] = useState(false);
+  const { serverAction, loading } = useSeverAction(createCheckOut);
+  // const [loading, setLoading] = useState(false);
   const session = useSession();
   const role = session.data?.user?.role;
   const cart = useCart();
@@ -72,8 +74,8 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
           return total + (item.price || 0) * cart.quantities[item.id];
         }, 0)
       : 0;
+
   const onCheckout = async () => {
-    setLoading(true);
     if (!role) {
       toast.error("Veuillez vous connecter pour valider votre commande");
       return;
@@ -94,31 +96,49 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
       };
     });
 
-    const result = await checkOut({
-      itemsWithQuantities,
-      date,
-      shopId,
-    });
-
-    if (result.success) {
+    async function onSuccess() {
       router.push("/dashboard-user/orders");
       await addDelay(500);
-      toast.success("Commande effectuée avec succès");
       cart.removeAll();
-    } else {
-      if (result.ids) {
-        const changedProducts = result.ids.map((id) => cart.items.find((item) => item.id === id)?.name || "");
+    }
+    function onError(error: string[] | undefined) {
+      if (error) {
+        const changedProducts = error.map((id) => cart.items.find((item) => item.id === id)?.name || "");
         toast.error(
           `Les produits suivants ont été modifiés depuis votre dernière visite veuillez les réajouter : ${changedProducts.join(", ")}`,
           { position: "top-left", duration: 10000 },
         );
-        result.ids.map((id) => cart.removeItem(id));
-      } else {
-        toast.error(result.message);
+        error.map((id) => cart.removeItem(id));
       }
     }
 
-    setLoading(false);
+    await serverAction({ data: { itemsWithQuantities, date, shopId }, onSuccess, onError });
+
+    // const result = await checkOut({
+    //   itemsWithQuantities,
+    //   date,
+    //   shopId,
+    // });
+
+    // if (result.success) {
+    //   router.push("/dashboard-user/orders");
+    //   await addDelay(500);
+    //   toast.success("Commande effectuée avec succès");
+    //   cart.removeAll();
+    // } else {
+    //   if (result.ids) {
+    //     const changedProducts = result.ids.map((id) => cart.items.find((item) => item.id === id)?.name || "");
+    //     toast.error(
+    //       `Les produits suivants ont été modifiés depuis votre dernière visite veuillez les réajouter : ${changedProducts.join(", ")}`,
+    //       { position: "top-left", duration: 10000 },
+    //     );
+    //     result.ids.map((id) => cart.removeItem(id));
+    //   } else {
+    //     toast.error(result.message);
+    //   }
+    // }
+
+    // setLoading(false);
   };
 
   return (

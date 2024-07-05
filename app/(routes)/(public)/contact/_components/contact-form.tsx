@@ -6,18 +6,17 @@ import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
-import { toastPromise } from "@/components/ui/sonner";
+import { useToastPromise } from "@/components/ui/sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePostHog } from "posthog-js/react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import * as z from "zod";
 import { createContact } from "../_actions/create-contact";
 import { formSchema } from "./shema";
-import { usePostHog } from "posthog-js/react";
-import { useSession } from "next-auth/react";
-import { toast } from "sonner";
 
 const formSchemaWithPhone = formSchema.extend({
   phone: z
@@ -40,7 +39,9 @@ export const ContactForm = (): React.ReactNode => {
   const action = "Envoyer";
   const session = useSession();
   const posthog = usePostHog();
-  const [loading, setLoading] = useState(false);
+  const { loading, toastServerAction } = useToastPromise({
+    serverAction: createContact,
+  });
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(formSchema),
@@ -54,16 +55,11 @@ export const ContactForm = (): React.ReactNode => {
   });
 
   const onSubmit = async (data: ContactFormValues) => {
-    setLoading(true);
-    toastPromise({
-      serverAction: createContact,
-      data,
-      onFinally: () => setLoading(false),
-      onSuccess: () => {
-        router.push("/");
-        posthog?.capture("Contact Crée");
-      },
-    });
+    function onSuccess() {
+      router.push("/");
+      posthog?.capture("Contact Crée");
+    }
+    toastServerAction({ data, onSuccess });
   };
 
   useEffect(() => {
