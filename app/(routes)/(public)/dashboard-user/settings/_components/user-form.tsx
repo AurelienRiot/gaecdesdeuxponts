@@ -1,25 +1,26 @@
 "use client";
 
-import { AddressForm, addressSchema, type FullAdress } from "@/components/address-form";
+import { AddressForm } from "@/components/address-form";
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
-import { BillingAddressForm, billingAddressSchema, defaultAddress } from "@/components/billing-address-form";
+import { BillingAddressForm } from "@/components/billing-address-form";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
+import { defaultAddress, type FullAdress } from "@/components/zod-schema/address-schema";
 import { useUserContext } from "@/context/user-context";
-import { addDelay } from "@/lib/utils";
+import useSeverAction from "@/hooks/use-server-action";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Address, BillingAddress } from "@prisma/client";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
-import * as z from "zod";
-import { deleteUser, updateUser } from "./server-action";
+import deleteUser from "../_actions/delete-user";
+import updateUser from "../_actions/update-user";
+import { formSchema, type UserFormValues } from "./form-schema";
 
 interface UserFormProps {
   initialData: {
@@ -33,30 +34,9 @@ interface UserFormProps {
   };
 }
 
-const formSchema = z.object({
-  name: z.string().min(1, {
-    message: "Le nom est obligatoire",
-  }),
-  company: z.string().optional(),
-  phone: z.string().refine(
-    (value) => {
-      return value === "" || isValidPhoneNumber(value);
-    },
-    {
-      message: "Le numéro de téléphone n'est pas valide",
-    },
-  ),
-  address: addressSchema,
-  billingAddress: billingAddressSchema,
-});
-
-export type UserFormValues = z.infer<typeof formSchema>;
-
 export const UserForm: React.FC<UserFormProps> = ({ initialData }: UserFormProps) => {
-  const [open, setOpen] = useState(false);
-
+  const { serverAction } = useSeverAction(updateUser);
   const title = initialData.name ? "Modifier votre profil" : "Completer votre  profil";
-  const toastMessage = "Profil mise à jour";
   const action = "Enregistrer les modifications";
 
   const form = useForm<UserFormValues>({
@@ -75,63 +55,30 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }: UserFormProps
 
   const onSubmit = async (data: UserFormValues) => {
     data.name = data.name.trim();
-
-    const result = await updateUser(data);
-    if (!result.success) {
-      toast.error(result.message);
-      return;
+    function onSuccess() {
+      setUser((prev) =>
+        prev
+          ? {
+              ...prev,
+              name: data.name,
+              phone: data.phone,
+              company: data.company || null,
+              address: (data.address as Address) ?? null,
+              billingAddress: (data.billingAddress as BillingAddress) ?? null,
+            }
+          : null,
+      );
+      router.push("/dashboard-user");
     }
-    setUser((prev) =>
-      prev
-        ? {
-            ...prev,
-            name: data.name,
-            phone: data.phone,
-            company: data.company || null,
-            address: (data.address as Address) ?? null,
-            billingAddress: (data.billingAddress as BillingAddress) ?? null,
-          }
-        : null,
-    );
-    router.push("/dashboard-user");
-    toast.success(toastMessage);
-  };
-
-  const onDelete = async () => {
-    await deleteUser()
-      .then(async (result) => {
-        if (!result.success) {
-          toast.error(result.message);
-          return;
-        }
-        signOut({ callbackUrl: "/" });
-        await addDelay(1000);
-        toast.success("Compte supprimé", { position: "top-center" });
-      })
-      .catch(() => {
-        toast.error("Erreur");
-      })
-      .finally(() => {
-        setOpen(false);
-      });
+    await serverAction({ data, onSuccess });
   };
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
       <div className=" flex flex-col items-center justify-between gap-4 md:flex-row">
         <h2 className="text-center text-3xl font-bold "> {title} </h2>
 
-        <TrashButton
-          disabled={form.formState.isSubmitting}
-          variant="destructive"
-          size="sm"
-          onClick={() => setOpen(true)}
-          className="ml-3"
-          iconClassName="ml-2 size-6"
-        >
-          Supprimer le compte
-        </TrashButton>
+        <DeleteUserButton isSubmitting={form.formState.isSubmitting} />
       </div>
       <Separator className="mt-4" />
       <p className=" py-6  text-base font-bold sm:text-lg">{initialData.email}</p>
@@ -198,3 +145,33 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }: UserFormProps
     </>
   );
 };
+
+function DeleteUserButton({ isSubmitting }: { isSubmitting: boolean }) {
+  const { serverAction, loading } = useSeverAction(deleteUser);
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const onDelete = async () => {
+    async function onSuccess() {
+      signOut({ redirect: false });
+      router.push("/");
+      toast.success("Compte supprimé", { position: "top-center" });
+    }
+    await serverAction({ data: {}, onSuccess, onFinally: () => setOpen(false) });
+  };
+
+  return (
+    <>
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
+      <TrashButton
+        disabled={isSubmitting || loading}
+        variant="destructive"
+        size="sm"
+        onClick={() => setOpen(true)}
+        className="ml-3"
+        iconClassName="ml-2 size-6"
+      >
+        Supprimer le compte
+      </TrashButton>
+    </>
+  );
+}

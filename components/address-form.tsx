@@ -2,10 +2,10 @@
 import AddressAutocomplete, { type Suggestion } from "@/actions/adress-autocompleteFR";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
-import { type InputHTMLAttributes, useState } from "react";
+import { useState, type InputHTMLAttributes } from "react";
 import { useFormContext } from "react-hook-form";
 import type * as RPNInput from "react-phone-number-input";
-import * as z from "zod";
+import type * as z from "zod";
 import { AnimateHeight } from "./animations/animate-size";
 import { Button } from "./ui/button";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "./ui/command";
@@ -13,27 +13,7 @@ import { FloatingInput, FloatingLabel } from "./ui/floating-label-input";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { CountriesList, CountrySelect, isCountry } from "./ui/phone-input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Switch } from "./ui/switch";
-
-export type FullAdress = {
-  label: string;
-  city: string;
-  country: string;
-  line1: string;
-  line2: string;
-  postalCode: string;
-  state: string;
-};
-
-export const addressSchema = z.object({
-  label: z.string().optional(),
-  city: z.string().optional(),
-  country: z.string().optional(),
-  line1: z.string().optional(),
-  line2: z.string().optional(),
-  postalCode: z.string().optional(),
-  state: z.string().optional(),
-});
+import type { addressSchema } from "./zod-schema/address-schema";
 
 interface AdressFormProps {
   className?: string;

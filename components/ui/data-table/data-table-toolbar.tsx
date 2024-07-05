@@ -40,7 +40,7 @@ export function DataTableToolbar<TData>({
         {searchableColumns.length > 0 && (
           <>
             <Input
-              placeholder={`Filter ${searchableColumns.find((column) => column.id === searchValue)?.title}...`}
+              placeholder={`Filter par ${searchableColumns.find((column) => column.id === searchValue)?.title}`}
               value={
                 (table
                   .getColumn(String(searchableColumns.find((column) => column.id === searchValue)?.id))
@@ -62,8 +62,8 @@ export function DataTableToolbar<TData>({
                     setSearchValue(newValue as keyof TData);
                   }}
                 >
-                  <SelectTrigger className="w-[150px]">
-                    <SelectValue placeholder="Select a value" />
+                  <SelectTrigger className="min-w-[150px]">
+                    <SelectValue placeholder="Select a value" className="whitespace-nowrap" />
                   </SelectTrigger>
                   <SelectContent>
                     {searchableColumns.map((column) => (

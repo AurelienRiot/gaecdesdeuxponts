@@ -5,8 +5,7 @@ import { ChevronDown } from "lucide-react";
 import { useState, type InputHTMLAttributes } from "react";
 import { useFormContext } from "react-hook-form";
 import type * as RPNInput from "react-phone-number-input";
-import * as z from "zod";
-import type { FullAdress, addressSchema } from "./address-form";
+import type * as z from "zod";
 import { AnimateHeight } from "./animations/animate-size";
 import { Button } from "./ui/button";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "./ui/command";
@@ -15,32 +14,12 @@ import { FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { CountriesList, CountrySelect, isCountry } from "./ui/phone-input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Switch } from "./ui/switch";
+import { defaultAddress, type addressSchema } from "./zod-schema/address-schema";
+import type { billingAddressSchema } from "./zod-schema/billing-address-schema";
 
 interface AdressFormProps {
   className?: string;
 }
-
-export const billingAddressSchema = z
-  .object({
-    label: z.string().optional(),
-    city: z.string().min(1, {
-      message: "Veuillez entrer la ville",
-    }),
-    country: z.string().min(1, {
-      message: "Veuillez entrer le pays",
-    }),
-    line1: z.string().min(1, {
-      message: "Veuillez entrer l'adresse",
-    }),
-    line2: z.string().optional(),
-    postalCode: z.string().min(1, {
-      message: "Veuillez entrer le code postal",
-    }),
-    state: z.string().min(1, {
-      message: "Veuillez entrer la région",
-    }),
-  })
-  .optional();
 
 export const BillingAddressForm = ({ className }: AdressFormProps) => {
   const form = useFormContext<{
@@ -200,7 +179,6 @@ type AddressInputProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   addressKey: keyof z.infer<typeof addressSchema>;
 };
-
 const AddressInput = ({ label, addressKey, disabled, className, type = "text", ...props }: AddressInputProps) => {
   const form = useFormContext<{
     billingAddress: z.infer<typeof billingAddressSchema>;
@@ -234,14 +212,4 @@ const AddressInput = ({ label, addressKey, disabled, className, type = "text", .
       )}
     />
   );
-};
-
-export const defaultAddress: FullAdress = {
-  label: "",
-  city: "",
-  country: "FR",
-  line1: "",
-  line2: "",
-  postalCode: "",
-  state: "",
 };

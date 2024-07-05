@@ -5,22 +5,21 @@ import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
 import { addDelay } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
 
 import { getUnitLabel, hasOptionWithValue } from "@/components/product/product-function";
 import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import useIsComponentMounted from "@/hooks/use-mounted";
+import useSeverAction from "@/hooks/use-server-action";
 import type { ProductWithOptionsAndMain } from "@/types";
 import type { Shop } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { checkOut, createCheckOut } from "../_actions/check-out";
+import { createCheckOut } from "../_actions/check-out";
 import DatePicker from "./date-picker";
 import LoginCard from "./login-card";
 import TimePicker from "./time-picker";
-import useSeverAction from "@/hooks/use-server-action";
 
 const getDateFromSearchParam = (param: string | null): Date | undefined => {
   if (param === null) return undefined;
@@ -34,7 +33,6 @@ interface SummaryProps {
 
 const Summary: React.FC<SummaryProps> = ({ shops }) => {
   const { serverAction, loading } = useSeverAction(createCheckOut);
-  // const [loading, setLoading] = useState(false);
   const session = useSession();
   const role = session.data?.user?.role;
   const cart = useCart();
@@ -113,32 +111,6 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
     }
 
     await serverAction({ data: { itemsWithQuantities, date, shopId }, onSuccess, onError });
-
-    // const result = await checkOut({
-    //   itemsWithQuantities,
-    //   date,
-    //   shopId,
-    // });
-
-    // if (result.success) {
-    //   router.push("/dashboard-user/orders");
-    //   await addDelay(500);
-    //   toast.success("Commande effectuée avec succès");
-    //   cart.removeAll();
-    // } else {
-    //   if (result.ids) {
-    //     const changedProducts = result.ids.map((id) => cart.items.find((item) => item.id === id)?.name || "");
-    //     toast.error(
-    //       `Les produits suivants ont été modifiés depuis votre dernière visite veuillez les réajouter : ${changedProducts.join(", ")}`,
-    //       { position: "top-left", duration: 10000 },
-    //     );
-    //     result.ids.map((id) => cart.removeItem(id));
-    //   } else {
-    //     toast.error(result.message);
-    //   }
-    // }
-
-    // setLoading(false);
   };
 
   return (

@@ -10,19 +10,20 @@ function useSeverAction<D, R, E = undefined>(action: (data: D) => Promise<Return
     onSuccess,
     onError,
     onFinally,
-  }: { data: D; onFinally?: () => void; onError?: (e: E | undefined) => void; onSuccess?: (result?: R) => void }) {
+  }: { data: D; onFinally?: () => void; onError?: (e?: E | undefined) => void; onSuccess?: (result?: R) => void }) {
     setLoading(true);
     return await action(data)
       .then(async (result) => {
         if (!result.success) {
-          toast.error(result.message);
+          result.message ? toast.error(result.message) : null;
           await onError?.(result.errorData);
           return;
         }
-        await onSuccess?.(result.data);
         result.message ? toast.success(result.message) : null;
+        await onSuccess?.(result.data);
       })
-      .catch((e) => {
+      .catch(async (e) => {
+        await onError?.();
         toast.error(e.message);
       })
       .finally(async () => {
