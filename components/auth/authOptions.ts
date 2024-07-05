@@ -1,13 +1,13 @@
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
+import { createId } from "@/lib/utils";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import type { User } from "@prisma/client";
 import { render } from "@react-email/render";
 import type { NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
 import WelcomeEmail from "../email/welcome";
-import type { User } from "@prisma/client";
-import { nanoid } from "@/lib/utils";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 
@@ -65,7 +65,7 @@ export const authOptions: NextAuthOptions = {
           await prismadb.user.update({
             where: { email: u.email as string },
             data: {
-              id: `CS_${nanoid(7)}`,
+              id: createId("user"),
             },
           });
         }

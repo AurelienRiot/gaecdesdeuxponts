@@ -11,10 +11,10 @@ import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { createId } from "@/lib/utils";
 import type { MainProductWithProducts } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Category } from "@prisma/client";
-import { nanoid } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -109,7 +109,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
         {
           name: "",
           index: 0,
-          id: `PR_${nanoid(7)}`,
+          id: createId("product"),
           description: "",
           price: undefined,
           isFeatured: false,

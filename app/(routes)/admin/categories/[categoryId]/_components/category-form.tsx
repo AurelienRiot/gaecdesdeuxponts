@@ -10,6 +10,7 @@ import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import useSeverAction from "@/hooks/use-server-action";
+import { createId } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Category } from "@prisma/client";
 import { useRouter } from "next/navigation";
@@ -36,6 +37,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
+      id: initialData?.id || createId("category"),
       name: initialData?.name || "",
       imageUrl: initialData?.imageUrl || "",
       description: initialData?.description || "",
@@ -47,9 +49,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
       router.push(`/admin/categories`);
       router.refresh();
     }
-    initialData
-      ? await updateCategoryAction({ data: { ...data, id: initialData.id }, onSuccess })
-      : await createCategoryAction({ data, onSuccess });
+    initialData ? await updateCategoryAction({ data, onSuccess }) : await createCategoryAction({ data, onSuccess });
   };
 
   return (
@@ -128,7 +128,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
   );
 };
 
-function DeleteCategory({ name, isSubmitting }: { name: string; isSubmitting: boolean }) {
+function DeleteCategory({ name, isSubmitting }: { name: string; isSubmitting?: boolean }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const { serverAction, loading } = useSeverAction(deleteCategorie);

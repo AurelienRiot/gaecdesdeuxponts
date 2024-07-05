@@ -4,15 +4,12 @@ import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
-import { z } from "zod";
-import { schema } from "../_components/category-schema";
+import { type CategoryFormValues, schema } from "../_components/category-schema";
 
-const schemaWithId = schema.extend({ id: z.string() });
-
-async function updateCategory(data: z.infer<typeof schemaWithId>) {
+async function updateCategory(data: CategoryFormValues) {
   return await safeServerAction({
     data,
-    schema: schemaWithId,
+    schema,
     getUser: checkAdmin,
     serverAction: async (data) => {
       const { imageUrl, name, description, id } = data;

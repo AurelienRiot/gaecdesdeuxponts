@@ -69,3 +69,14 @@ export function svgToDataUri(svg: string) {
 }
 
 export const nanoid = customAlphabet("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", 5);
+
+export function createId(type: "category" | "product" | "user") {
+  switch (type) {
+    case "category":
+      return `CT_${nanoid(7)}`;
+    case "product":
+      return `PR_${nanoid(7)}`;
+    case "user":
+      return `CS_${nanoid(7)}`;
+  }
+}

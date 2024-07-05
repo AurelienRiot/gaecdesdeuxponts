@@ -1,5 +1,6 @@
+import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import UploadImage from "@/components/images-upload/image-upload";
-import { type OptionsArray, getUnitLabel, hasOptionWithValue } from "@/components/product/product-function";
+import { getUnitLabel, hasOptionWithValue, type OptionsArray } from "@/components/product/product-function";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button, IconButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -9,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
+import { cn, createId } from "@/lib/utils";
 import { Unit } from "@prisma/client";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import {
@@ -19,16 +20,13 @@ import {
   ChevronsDown,
   ChevronsUp,
   ChevronsUpDown,
-  Trash,
   UploadCloud,
   X,
 } from "lucide-react";
-import { nanoid } from "@/lib/utils";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import OptionValueForm from "./options-values-form";
 import type { ProductFormValues } from "./product-form";
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 
 export const ProductWithOptions = ({
   optionsArray,
@@ -43,7 +41,7 @@ export const ProductWithOptions = ({
 
   const addProduct = () => {
     const newProduct = {
-      id: `PR_${nanoid(7)}`,
+      id: createId("product"),
       index: products.length,
       name: "",
       description: "",

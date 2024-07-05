@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { nanoid } from "@/lib/utils";
+import { createId } from "@/lib/utils";
 import dynamic from "next/dynamic";
 
 const DisplayInvoice = dynamic(() => import("./display-invoice"), {
@@ -29,7 +29,7 @@ const TestPage = () => {
       >
         Recharger la page
       </Button>
-      <Button onClick={() => console.log(`CS_${nanoid(7)}`)}>créer id</Button>
+      <Button onClick={() => console.log(createId("category"))}>créer id</Button>
       <Tabs defaultValue="shippingOrder" className="h-full w-full max-w-[1000px]">
         <TabsList className="flex w-full gap-2">
           <TabsTrigger value="invoice">Facture</TabsTrigger>
