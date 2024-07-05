@@ -2,8 +2,8 @@
 import { checkAdmin } from "@/components/auth/checkAuth";
 import type { UserFormValues } from "../_components/user-form";
 import prismadb from "@/lib/prismadb";
-import { defaultAddress } from "@/components/billing-address-form";
 import type { ReturnTypeServerAction } from "@/lib/server-action";
+import { defaultAddress } from "@/components/zod-schema/address-schema";
 
 export async function updateUser(
   { name, phone, address, billingAddress, company, isPro }: UserFormValues,

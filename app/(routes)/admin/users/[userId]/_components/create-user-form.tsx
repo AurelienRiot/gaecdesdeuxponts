@@ -1,7 +1,5 @@
 "use client";
 
-import { AddressForm, addressSchema } from "@/components/address-form";
-import { BillingAddressForm, billingAddressSchema } from "@/components/billing-address-form";
 import ButtonBackward from "@/components/ui/button-backward";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -25,6 +23,10 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import * as z from "zod";
 import { createUser } from "../_actions/create-user";
+import { addressSchema } from "@/components/zod-schema/address-schema";
+import { billingAddressSchema } from "@/components/zod-schema/billing-address-schema";
+import { AddressForm } from "@/components/address-form";
+import { BillingAddressForm } from "@/components/billing-address-form";
 
 const createUserFormSchema = z.object({
   name: z.string().min(1, {

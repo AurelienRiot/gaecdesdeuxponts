@@ -1,8 +1,8 @@
 "use client";
 
-import { AddressForm, addressSchema } from "@/components/address-form";
+import { AddressForm } from "@/components/address-form";
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
-import { BillingAddressForm, billingAddressSchema } from "@/components/billing-address-form";
+import { BillingAddressForm } from "@/components/billing-address-form";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import ButtonBackward from "@/components/ui/button-backward";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -31,6 +31,8 @@ import * as z from "zod";
 import { deleteUser } from "../../_components/server-action";
 import { updateUser } from "../_actions/update-user";
 import MailForm from "./mail-form";
+import { addressSchema } from "@/components/zod-schema/address-schema";
+import { billingAddressSchema } from "@/components/zod-schema/billing-address-schema";
 
 interface UserFormProps {
   initialData: UserWithOrdersAndAdress;
