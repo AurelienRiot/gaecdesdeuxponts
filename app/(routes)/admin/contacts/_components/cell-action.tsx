@@ -1,14 +1,12 @@
 "use client";
 
-import type { ContactColumn } from "./columns";
-import { Button } from "@/components/ui/button";
-import { Trash } from "lucide-react";
-import { toast } from "sonner";
+import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import { AlertModal } from "@/components/ui/alert-modal-form";
+import useSeverAction from "@/hooks/use-server-action";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { AlertModal } from "@/components/ui/alert-modal-form";
-import { deleteContact } from "./server-action";
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import deleteContact from "../_actions/delete-contact";
+import type { ContactColumn } from "./columns";
 
 interface CellActionProps {
   data: ContactColumn;
@@ -17,23 +15,31 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const { serverAction, loading } = useSeverAction(deleteContact);
 
   const onDelete = async () => {
-    const deleteCat = await deleteContact({ id: data.id });
-    if (!deleteCat.success) {
-      toast.error(deleteCat.message);
-    } else {
-      router.refresh();
-      toast.success("Contact supprimé");
-    }
-    setOpen(false);
+    await serverAction({
+      data: { id: data.id },
+      onSuccess: () => {
+        router.refresh();
+      },
+      onFinally: () => {
+        setOpen(false);
+      },
+    });
   };
 
   return (
     <>
       <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
 
-      <TrashButton variant="destructive" size="sm" onClick={() => setOpen(true)} iconClassName="size-6" />
+      <TrashButton
+        disabled={loading}
+        variant="destructive"
+        size="sm"
+        onClick={() => setOpen(true)}
+        iconClassName="size-6"
+      />
     </>
   );
 };
