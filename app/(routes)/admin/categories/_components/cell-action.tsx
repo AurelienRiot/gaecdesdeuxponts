@@ -7,14 +7,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type  { CategoryColumnType } from "./columns";
+import type { CategoryColumnType } from "./columns";
 import { Button } from "@/components/ui/button";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AlertModal } from "@/components/ui/alert-modal-form";
-import { deleteCategorie } from "./server-action";
+import useSeverAction from "@/hooks/use-server-action";
+import deleteCategorie from "../_actions/delete-categorie";
 
 interface CellActionProps {
   data: CategoryColumnType;
@@ -22,6 +23,7 @@ interface CellActionProps {
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
+  const { serverAction, loading } = useSeverAction(deleteCategorie);
   const [open, setOpen] = useState(false);
 
   const onCopy = (id: string) => {
@@ -30,23 +32,16 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   };
 
   const onDelete = async () => {
-    const deleteCat = await deleteCategorie({ name: data.name });
-    if (!deleteCat.success) {
-      toast.error(deleteCat.message);
-    } else {
-      router.refresh();
-      toast.success("Categorie supprimée");
-    }
-    setOpen(false);
+    await serverAction({
+      data: { name: data.name },
+      onSuccess: () => router.refresh(),
+      onFinally: () => setOpen(false),
+    });
   };
 
   return (
     <>
-      <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onDelete}
-      />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -56,20 +51,15 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Action</DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={() => onCopy(data.id)}
-            className="cursor-copy"
-          >
+          <DropdownMenuItem onClick={() => onCopy(data.id)} className="cursor-copy">
             <Copy className="mr-2 h-4 w-4" />
             Copier Id
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => router.push(`/admin/categories/${data.id}`)}
-          >
+          <DropdownMenuItem onClick={() => router.push(`/admin/categories/${data.id}`)}>
             <Edit className="mr-2 h-4 w-4" />
             Modifier
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
+          <DropdownMenuItem onClick={() => setOpen(true)} disabled={loading}>
             <Trash className="mr-2 h-4 w-4" />
             Supprimer
           </DropdownMenuItem>

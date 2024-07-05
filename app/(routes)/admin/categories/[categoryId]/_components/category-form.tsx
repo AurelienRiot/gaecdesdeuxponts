@@ -1,48 +1,40 @@
 "use client";
 
+import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import UploadImage from "@/components/images-upload/image-upload";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
-import { Button, LoadingButton } from "@/components/ui/button";
+import { LoadingButton } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import useSeverAction from "@/hooks/use-server-action";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Category } from "@prisma/client";
-import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import * as z from "zod";
-import { deleteCategorie } from "../../_components/server-action";
-import { createCategory, updateCategory } from "./server-action";
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import deleteCategorie from "../../_actions/delete-categorie";
+import createCategory from "../_actions/create-category";
+import updateCategory from "../_actions/update-category";
+import { schema, type CategoryFormValues } from "./category-schema";
 
 interface CategoryFormProps {
   initialData: Category | null;
 }
 
-const formSchema = z.object({
-  name: z.string().min(1, { message: "Le nom est obligatoire" }),
-  imageUrl: z.string().min(1, { message: "L'image est obligatoire" }),
-  description: z.string().min(1, { message: "La description est obligatoire" }),
-});
-
-export type CategoryFormValues = z.infer<typeof formSchema>;
-
 export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const { serverAction: createCategoryAction } = useSeverAction(createCategory);
+  const { serverAction: updateCategoryAction } = useSeverAction(updateCategory);
 
   const title = initialData ? "Modifier la categorie" : "Créer une nouvelle categorie";
   const description = initialData ? "Modifier la categorie" : "Ajouter une nouvelle categorie";
-  const toastMessage = initialData ? "Categorie mise à jour" : "Categorie créée";
   const action = initialData ? "Sauvegarder les changements" : "Créer la categorie";
 
   const form = useForm<CategoryFormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       name: initialData?.name || "",
       imageUrl: initialData?.imageUrl || "",
@@ -51,45 +43,20 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
   });
 
   const onSubmit = async (data: CategoryFormValues) => {
-    const result = initialData ? await updateCategory(data, initialData.id) : await createCategory(data);
-
-    if (!result.success) {
-      toast.error(result.message);
-      return;
-    }
-    router.push(`/admin/categories`);
-    router.refresh();
-
-    toast.success(toastMessage);
-  };
-
-  const onDelete = async () => {
-    const deleteCat = await deleteCategorie({ name: initialData?.name });
-    if (!deleteCat.success) {
-      toast.error(deleteCat.message);
-      setOpen(false);
-    } else {
+    function onSuccess() {
       router.push(`/admin/categories`);
       router.refresh();
-      toast.success("Categorie supprimée");
     }
-    setOpen(false);
+    initialData
+      ? await updateCategoryAction({ data: { ...data, id: initialData.id }, onSuccess })
+      : await createCategoryAction({ data, onSuccess });
   };
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
-        {initialData && (
-          <TrashButton
-            disabled={form.formState.isSubmitting}
-            variant="destructive"
-            size="sm"
-            onClick={() => setOpen(true)}
-            iconClassName="size-6"
-          />
-        )}
+        {initialData && <DeleteCategory name={initialData.name} isSubmitting={form.formState.isSubmitting} />}
       </div>
       <Separator />
       <Form {...form}>
@@ -160,3 +127,30 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
     </>
   );
 };
+
+function DeleteCategory({ name, isSubmitting }: { name: string; isSubmitting: boolean }) {
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
+  const { serverAction, loading } = useSeverAction(deleteCategorie);
+
+  const onDelete = async () => {
+    function onSuccess() {
+      router.push(`/admin/categories`);
+      router.refresh();
+    }
+    await serverAction({ data: { name }, onSuccess, onFinally: () => setOpen(false) });
+  };
+  return (
+    <>
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
+
+      <TrashButton
+        disabled={isSubmitting || loading}
+        variant="destructive"
+        size="sm"
+        onClick={() => setOpen(true)}
+        iconClassName="size-6"
+      />
+    </>
+  );
+}

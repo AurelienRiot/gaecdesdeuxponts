@@ -1,18 +1,9 @@
 import { generateTimeOptions } from "@/app/(routes)/(public)/panier/_components/time-picker";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
 import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
 import { useState } from "react";
@@ -33,12 +24,7 @@ const TimePicker = ({ className, date, setDate }: HourPickerProps) => {
 
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="flex w-[200px] justify-between"
-          >
+          <Button variant="outline" role="combobox" aria-expanded={open} className="flex w-[200px] justify-between">
             <span>
               {date.toLocaleTimeString([], {
                 hour: "2-digit",
@@ -54,7 +40,7 @@ const TimePicker = ({ className, date, setDate }: HourPickerProps) => {
               <CommandGroup>
                 {timeOptions.map((time) => {
                   const dateValue = time.toISOString();
-                  const displayDate = time.toLocaleTimeString([], {
+                  const displayDate = time.toLocaleTimeString("fr-FR", {
                     hour: "2-digit",
                     minute: "2-digit",
                   });
@@ -69,12 +55,7 @@ const TimePicker = ({ className, date, setDate }: HourPickerProps) => {
                       }}
                     >
                       <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          date.toISOString() === dateValue
-                            ? "opacity-100"
-                            : "opacity-0",
-                        )}
+                        className={cn("mr-2 h-4 w-4", date.toISOString() === dateValue ? "opacity-100" : "opacity-0")}
                       />
                       {displayDate}
                     </CommandItem>
