@@ -17,7 +17,6 @@ interface UserClientProps {
 
 const UserClient: React.FC<UserClientProps> = ({ users, orderLengths }) => {
   const [search, setSearch] = useState("");
-
   const searchKeys = ["email", "name", "phone", "addresse"];
   const displayKeys = ["email", "nom", "téléphone", "addresse"];
   const [selectValue, setSelectValue] = useState(searchKeys[1]);

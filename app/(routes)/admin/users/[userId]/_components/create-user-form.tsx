@@ -1,5 +1,7 @@
 "use client";
 
+import { AddressForm } from "@/components/address-form";
+import { BillingAddressForm } from "@/components/billing-address-form";
 import ButtonBackward from "@/components/ui/button-backward";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -16,50 +18,26 @@ import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
+import useServerAction from "@/hooks/use-server-action";
+import { createId } from "@/lib/id";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { isValidPhoneNumber } from "react-phone-number-input";
-import { toast } from "sonner";
-import * as z from "zod";
-import { createUser } from "../_actions/create-user";
-import { addressSchema } from "@/components/zod-schema/address-schema";
-import { billingAddressSchema } from "@/components/zod-schema/billing-address-schema";
-import { AddressForm } from "@/components/address-form";
-import { BillingAddressForm } from "@/components/billing-address-form";
-
-const createUserFormSchema = z.object({
-  name: z.string().min(1, {
-    message: "Le nom est obligatoire",
-  }),
-  company: z.string().optional(),
-  email: z.string().email({ message: "L'email est invalide" }),
-  phone: z.string().refine(
-    (value) => {
-      return value === "" || isValidPhoneNumber(value);
-    },
-    {
-      message: "Le numéro de téléphone n'est pas valide",
-    },
-  ),
-  address: addressSchema,
-  billingAddress: billingAddressSchema,
-  isPro: z.boolean().default(false).optional(),
-});
-
-export type CreateUserFormValues = z.infer<typeof createUserFormSchema>;
+import createUser from "../_actions/create-user";
+import { schema, type UserFormValues } from "./user-schema";
 
 export const CreateUserForm = () => {
+  const { serverAction } = useServerAction(createUser);
   const router = useRouter();
 
   const title = "Créer l'utilisateur";
   const description = "Créer un utilisateur";
-  const toastMessage = "Utilisateur créer";
   const action = "Créer l'utilisateur";
 
-  const form = useForm<CreateUserFormValues>({
-    resolver: zodResolver(createUserFormSchema),
+  const form = useForm<UserFormValues>({
+    resolver: zodResolver(schema),
     defaultValues: {
+      id: createId("user"),
       name: "",
       email: "",
       company: "",
@@ -79,21 +57,13 @@ export const CreateUserForm = () => {
 
   const isPro = form.watch("isPro");
 
-  const onSubmit = async (data: CreateUserFormValues) => {
+  const onSubmit = async (data: UserFormValues) => {
     data.name = data.name.trim();
-    await createUser(data)
-      .then((result) => {
-        if (!result.success) {
-          toast.error(result.message);
-          return;
-        }
-        router.push(`/admin/users`);
-        router.refresh();
-        toast.success(toastMessage);
-      })
-      .catch(() => {
-        toast.error("Erreur");
-      });
+    function onSuccess() {
+      router.push(`/admin/users`);
+      router.refresh();
+    }
+    await serverAction({ data, onSuccess });
   };
 
   return (

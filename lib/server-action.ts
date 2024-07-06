@@ -12,11 +12,11 @@ export type ReturnTypeServerAction<T, E = undefined> =
       errorData?: E;
     };
 
-export type ReturnTypeServerAction2<T = undefined, E = undefined> =
+export type ReturnTypeServerAction2<R = undefined, E = undefined> =
   | {
       success: true;
       message: string;
-      data?: T;
+      data?: R;
     }
   | {
       success: false;
@@ -30,25 +30,25 @@ type BaseServerActionType<D extends z.ZodTypeAny, U> = {
   getUser: () => Promise<U | null>;
 };
 
-type SafeServerActionType<D extends z.ZodTypeAny, T, E, U> = BaseServerActionType<D, U> &
+type SafeServerActionType<D extends z.ZodTypeAny, R, E, U> = BaseServerActionType<D, U> &
   (
     | {
         ignoreCheckUser?: false;
-        serverAction: (data: z.infer<D>, user: U) => Promise<ReturnTypeServerAction2<T, E>>;
+        serverAction: (data: z.infer<D>, user: U) => Promise<ReturnTypeServerAction2<R, E>>;
       }
     | {
         ignoreCheckUser: true;
-        serverAction: (data: z.infer<D>, user: U | null) => Promise<ReturnTypeServerAction2<T, E>>;
+        serverAction: (data: z.infer<D>, user: U | null) => Promise<ReturnTypeServerAction2<R, E>>;
       }
   );
 
-async function safeServerAction<D extends z.ZodTypeAny, T, E, U>({
+async function safeServerAction<D extends z.ZodTypeAny, R, E, U>({
   schema,
   serverAction,
   ignoreCheckUser,
   data,
   getUser,
-}: SafeServerActionType<D, T, E, U>): Promise<ReturnTypeServerAction2<T, E>> {
+}: SafeServerActionType<D, R, E, U>): Promise<ReturnTypeServerAction2<R, E>> {
   const validatedData = schema.safeParse(data);
   if (!validatedData.success) {
     return {

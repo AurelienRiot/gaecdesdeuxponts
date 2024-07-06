@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { cn, createId } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Unit } from "@prisma/client";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import {
@@ -26,7 +26,8 @@ import {
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import OptionValueForm from "./options-values-form";
-import type { ProductFormValues } from "./product-form";
+import { createId } from "@/lib/id";
+import type { ProductFormValues } from "./product-schema";
 
 export const ProductWithOptions = ({
   optionsArray,

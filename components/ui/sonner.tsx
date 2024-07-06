@@ -34,9 +34,9 @@ const Toaster = ({ ...props }: ToasterProps) => {
   );
 };
 
-type ToastPromiseProps<T, R, E> = {
-  serverAction: (data: T) => Promise<ReturnTypeServerAction<R, E>>;
-  data: T;
+type ToastPromiseProps<D, R, E> = {
+  serverAction: (data: D) => Promise<ReturnTypeServerAction<R, E>>;
+  data: D;
   errorMessage?: string;
   successMessage?: string;
   message?: string;
@@ -45,7 +45,7 @@ type ToastPromiseProps<T, R, E> = {
   onSuccess?: (result?: R) => void;
 };
 
-const toastPromise = <T, R, E>({
+const toastPromise = <D, R, E>({
   serverAction,
   data,
   errorMessage = "Envoie du message annulé",
@@ -54,7 +54,7 @@ const toastPromise = <T, R, E>({
   onFinally,
   onError,
   onSuccess,
-}: ToastPromiseProps<T, R, E>) => {
+}: ToastPromiseProps<D, R, E>) => {
   const abortController = new AbortController();
   const { signal } = abortController;
   const promise = async () => {
@@ -108,17 +108,17 @@ const toastPromise = <T, R, E>({
   });
 };
 
-type UseToastPromiseProps<T, R, E> = {
-  serverAction: (data: T) => Promise<ReturnTypeServerAction2<R, E>>;
+type UseToastPromiseProps<D, R, E> = {
+  serverAction: (data: D) => Promise<ReturnTypeServerAction2<R, E>>;
   errorMessage?: string;
   message?: string;
 };
 
-const useToastPromise = <T, R, E>({
+const useToastPromise = <D, R, E = undefined>({
   serverAction,
   errorMessage = "Envoie du message annulé",
   message = "Envoie du message",
-}: UseToastPromiseProps<T, R, E>) => {
+}: UseToastPromiseProps<D, R, E>) => {
   const [loading, setLoading] = useState(false);
 
   function toastServerAction({
@@ -126,7 +126,7 @@ const useToastPromise = <T, R, E>({
     onFinally,
     onError,
     onSuccess,
-  }: { data: T; onFinally?: () => void; onError?: (error?: E) => void; onSuccess?: (result?: R) => void }) {
+  }: { data: D; onFinally?: () => void; onError?: (error?: E) => void; onSuccess?: (result?: R) => void }) {
     setLoading(true);
     const abortController = new AbortController();
     const { signal } = abortController;

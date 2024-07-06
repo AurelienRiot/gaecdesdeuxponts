@@ -2,7 +2,7 @@ import type { ReturnTypeServerAction2 } from "@/lib/server-action";
 import { useState } from "react";
 import { toast } from "sonner";
 
-function useSeverAction<D, R, E = undefined>(action: (data: D) => Promise<ReturnTypeServerAction2<R, E>>) {
+function useServerAction<D, R, E = undefined>(action: (data: D) => Promise<ReturnTypeServerAction2<R, E>>) {
   const [loading, setLoading] = useState(false);
 
   async function serverAction({
@@ -15,24 +15,24 @@ function useSeverAction<D, R, E = undefined>(action: (data: D) => Promise<Return
     return await action(data)
       .then(async (result) => {
         if (!result.success) {
-          result.message ? toast.error(result.message) : null;
           await onError?.(result.errorData);
+          result.message ? toast.error(result.message) : null;
           return;
         }
-        result.message ? toast.success(result.message) : null;
         await onSuccess?.(result.data);
+        result.message ? toast.success(result.message) : null;
       })
-      .catch(async (e) => {
+      .catch(async () => {
         await onError?.();
-        toast.error(e.message);
+        toast.error("Une erreur est survenue");
       })
       .finally(async () => {
-        setLoading(false);
         await onFinally?.();
+        setLoading(false);
       });
   }
 
   return { serverAction, loading, setLoading };
 }
 
-export default useSeverAction;
+export default useServerAction;

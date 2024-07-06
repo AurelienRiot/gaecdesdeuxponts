@@ -1,15 +1,16 @@
 "use client";
+import useServerAction from "@/hooks/use-server-action";
 import { dateFormatter } from "@/lib/date-utils";
+import type { ReturnTypeServerAction2 } from "@/lib/server-action";
 import type { Row } from "@tanstack/react-table";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { formatPhoneNumber } from "react-phone-number-input";
-import { toast } from "sonner";
 import { AutosizeTextarea } from "../ui/autosize-textarea";
 import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
+import { Checkbox, type CheckedState } from "../ui/checkbox";
 import Currency from "../ui/currency";
 
 type DateCellProps = {
@@ -59,37 +60,31 @@ function TextCell<T>({ row }: { row: Row<T & TextCellProps> }) {
   );
 }
 
-type CheckboxCellProps = {
+type CheckboxCellProps<R, E> = {
   isCheckbox: boolean;
-  onChange: (e: boolean | "indeterminate") => Promise<
-    | {
-        success: true;
-      }
-    | {
-        success: false;
-        message: string;
-      }
-  >;
+  id: string;
+  action: (data: { checkState: CheckedState; id: string }) => Promise<ReturnTypeServerAction2<R, E>>;
 };
 
-function CheckboxCell({ isCheckbox, onChange }: CheckboxCellProps) {
+function CheckboxCell<R, E>({ isCheckbox, action, id }: CheckboxCellProps<R, E>) {
   const [status, setStatus] = useState<boolean | "indeterminate">(isCheckbox);
+  const { serverAction, loading } = useServerAction(action);
   const router = useRouter();
   return (
     <Checkbox
       className="self-center"
       checked={status}
+      disabled={loading}
       onCheckedChange={async (e) => {
         setStatus("indeterminate");
-        const result = await onChange(e);
-        if (!result.success) {
-          toast.error(result.message);
-          setStatus(!e);
-        } else {
-          setStatus(e);
-          router.refresh();
-          toast.success("Statut mis à jouer");
-        }
+        await serverAction({
+          data: { id, checkState: e },
+          onError: () => setStatus(!e),
+          onSuccess: () => {
+            setStatus(e);
+            router.refresh();
+          },
+        });
       }}
     />
   );

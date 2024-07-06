@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AlertModal } from "@/components/ui/alert-modal-form";
-import useSeverAction from "@/hooks/use-server-action";
+import useServerAction from "@/hooks/use-server-action";
 import deleteCategorie from "../_actions/delete-categorie";
 
 interface CellActionProps {
@@ -23,7 +23,7 @@ interface CellActionProps {
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
-  const { serverAction, loading } = useSeverAction(deleteCategorie);
+  const { serverAction, loading } = useServerAction(deleteCategorie);
   const [open, setOpen] = useState(false);
 
   const onCopy = (id: string) => {

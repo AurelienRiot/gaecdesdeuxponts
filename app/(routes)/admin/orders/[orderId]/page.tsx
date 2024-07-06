@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 
 const ProductPage = async ({ params }: { params: { orderId: string } }) => {
   const headersList = headers();
-  const referer = headersList.get("referer") || "";
+  const referer = headersList.get("referer") || "/admin/orders";
   const shippingOrders = await prismadb.order.findUnique({
     where: {
       id: params.orderId,
@@ -33,7 +33,9 @@ const ProductPage = async ({ params }: { params: { orderId: string } }) => {
   });
   const users = await prismadb.user.findMany({
     where: {
-      role: { not: "admin" },
+      NOT: {
+        role: { in: ["admin", "deleted"] },
+      },
     },
     include: {
       address: true,

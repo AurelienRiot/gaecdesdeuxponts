@@ -10,7 +10,7 @@ import { getUnitLabel, hasOptionWithValue } from "@/components/product/product-f
 import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import useIsComponentMounted from "@/hooks/use-mounted";
-import useSeverAction from "@/hooks/use-server-action";
+import useServerAction from "@/hooks/use-server-action";
 import type { ProductWithOptionsAndMain } from "@/types";
 import type { Shop } from "@prisma/client";
 import { Loader2 } from "lucide-react";
@@ -32,7 +32,7 @@ interface SummaryProps {
 }
 
 const Summary: React.FC<SummaryProps> = ({ shops }) => {
-  const { serverAction, loading } = useSeverAction(createCheckOut);
+  const { serverAction, loading } = useServerAction(createCheckOut);
   const session = useSession();
   const role = session.data?.user?.role;
   const cart = useCart();

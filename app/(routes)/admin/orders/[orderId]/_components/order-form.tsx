@@ -1,23 +1,19 @@
 "use client";
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import DeleteButton from "@/components/delete-button";
 import { DisplayInvoice, DisplayShippingOrder } from "@/components/pdf/pdf-button";
 import { generateOrderId } from "@/components/pdf/pdf-data";
-import { deleteOrder } from "@/components/table-custom-fuction/orders-server-actions";
-import { AlertModal } from "@/components/ui/alert-modal-form";
 import { LoadingButton } from "@/components/ui/button";
 import ButtonBackward from "@/components/ui/button-backward";
 import { Form, FormField } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import useSeverAction from "@/hooks/use-server-action";
+import useServerAction from "@/hooks/use-server-action";
 import type { ProductWithMain, UserWithAddress } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Shop } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import createOrder from "../_actions/create-order";
 import updateOrder from "../_actions/update-order";
 import FormDatePicker from "./date-picker";
@@ -27,6 +23,7 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
+import { deleteOrder } from "../../_actions/delete-orders";
 
 type ProductFormProps = {
   initialData: OrderFormValues | null;
@@ -39,9 +36,10 @@ type ProductFormProps = {
 export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, users, shops, referer }) => {
   const router = useRouter();
 
+  const { serverAction: createOrderAction } = useServerAction(createOrder);
+  const { serverAction: updateOrderAction } = useServerAction(updateOrder);
+
   const title = initialData ? "Modifier le bon de livraison" : "Crée un bon de livraison";
-  const description = initialData ? "" : "";
-  const toastMessage = initialData ? "Bon de livraison mise à jour" : "Bon de livraison crée";
   const action = initialData
     ? initialData.dateOfEdition
       ? "Sauvegarder les changements"
@@ -83,46 +81,36 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
   });
 
   const onSubmit = async (data: OrderFormValues) => {
-    if (initialData) {
-      await updateOrder(data, initialData.id)
-        .then((result) => {
-          if (!result.success) {
-            toast.error(result.message);
-            return;
-          }
-          toast.success(toastMessage);
-          if (!initialData.dateOfEdition) {
-            router.refresh();
-          }
-        })
-        .catch(() => {
-          toast.error("Erreur");
-        });
-    } else {
-      await createOrder(data)
-        .then((result) => {
-          if (!result.success) {
-            toast.error(result.message);
-            return;
-          }
-          toast.success(toastMessage);
-
-          router.replace(`/admin/orders/${result.data.id}`);
-
-          router.refresh();
-        })
-        .catch(() => {
-          toast.error("Erreur");
-        });
+    function onSuccessUpdate() {
+      if (!initialData?.dateOfEdition) {
+        router.refresh();
+      }
     }
+    function onSuccessCreate(result?: { id: string }) {
+      if (result) {
+        router.replace(`/admin/orders/${result.id}`);
+        router.refresh();
+      }
+    }
+    initialData
+      ? await updateOrderAction({ data, onSuccess: onSuccessUpdate })
+      : await createOrderAction({ data, onSuccess: onSuccessCreate });
   };
 
   return (
     <>
       <div className="flex items-center justify-between">
-        <Heading title={title} description={description} />
+        <Heading title={title} description={""} />
         {initialData && (
-          <DeleteOrder orderId={initialData.id} isSubmitting={form.formState.isSubmitting} referer={referer} />
+          <DeleteButton
+            action={deleteOrder}
+            data={{ id: initialData.id }}
+            isSubmitting={form.formState.isSubmitting}
+            onSuccess={() => {
+              router.push(referer);
+              router.refresh();
+            }}
+          />
         )}
       </div>
       <Separator />
@@ -208,30 +196,3 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
     </>
   );
 };
-
-function DeleteOrder({ orderId, isSubmitting, referer }: { orderId: string; isSubmitting: boolean; referer: string }) {
-  const [open, setOpen] = useState(false);
-  const router = useRouter();
-  const { serverAction, loading } = useSeverAction(deleteOrder);
-
-  const onDelete = async () => {
-    function onSuccess() {
-      router.push(referer);
-      router.refresh();
-    }
-    await serverAction({ data: { id: orderId }, onSuccess, onFinally: () => setOpen(false) });
-  };
-  return (
-    <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
-
-      <TrashButton
-        disabled={isSubmitting || loading}
-        variant="destructive"
-        size="sm"
-        onClick={() => setOpen(true)}
-        iconClassName="size-6"
-      />
-    </>
-  );
-}

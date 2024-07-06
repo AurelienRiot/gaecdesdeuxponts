@@ -1,8 +1,7 @@
 "use client";
 import AddressAutocomplete, { type Suggestion } from "@/actions/adress-autocompleteFR";
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import DeleteButton from "@/components/delete-button";
 import UploadImage from "@/components/images-upload/image-upload";
-import { AlertModal } from "@/components/ui/alert-modal-form";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button, LoadingButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -13,6 +12,8 @@ import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
+import useServerAction from "@/hooks/use-server-action";
+import { createId } from "@/lib/id";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Shop } from "@prisma/client";
@@ -20,59 +21,21 @@ import { ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm, type UseFormReturn } from "react-hook-form";
-import { isValidPhoneNumber } from "react-phone-number-input";
-import { toast } from "sonner";
-import { z } from "zod";
-import { createShop, deleteShop, updateShop, type ReturnType } from "./server-actions";
-
-const customNumberSchema = z
-  .string({
-    required_error: "Veuillez entrer un nombre",
-  })
-  .refine((value) => value !== "", {
-    message: "Veuillez entrer un nombre",
-  })
-  .transform((value) => {
-    const num = Number(value);
-    if (Number.isNaN(num)) {
-      throw new Error("Veuillez entrer un nombre");
-    }
-    return num;
-  })
-  .refine((value) => typeof value === "number", {
-    message: "Veuillez entrer un nombre",
-  });
-
-const formSchema = z.object({
-  name: z.string().min(1, { message: "Le nom est requis" }),
-  imageUrl: z.string().optional(),
-  lat: customNumberSchema,
-  long: customNumberSchema,
-
-  address: z.string().min(1, { message: "L'adresse est requise" }),
-  phone: z.string().refine(
-    (value) => {
-      return value === "" || isValidPhoneNumber(value);
-    },
-    {
-      message: "Le numéro de téléphone n'est pas valide",
-    },
-  ),
-  email: z.string().email({ message: "L'email est invalide" }).optional(),
-  website: z.string().optional(),
-  description: z.string(),
-  isArchived: z.boolean().default(false).optional(),
-});
-
-export type ShopFormValues = z.infer<typeof formSchema>;
+import createShop from "../_actions/create-shop";
+import deleteShop from "../_actions/delete-shop";
+import updateShop from "../_actions/update-shop";
+import { schema, type ShopFormValues } from "./shop-schema";
 
 const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
-  const [open, setOpen] = useState(false);
   const router = useRouter();
 
+  const { serverAction: createShopAction } = useServerAction(createShop);
+  const { serverAction: updateShopAction } = useServerAction(updateShop);
+
   const form = useForm<ShopFormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
+      id: initialData?.id || createId("shop"),
       name: initialData?.name || "",
       imageUrl: initialData?.imageUrl || "",
       description: initialData?.description || "",
@@ -88,50 +51,29 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
 
   const title = initialData ? "Modifier le magasin" : "Créer un nouveau magasin";
   const description = initialData ? "Modifier le magasin" : "Ajouter un nouveau magasin";
-  const toastMessage = initialData ? "Magasin mis à jour" : "Magasin créé";
   const action = initialData ? "Sauvegarder les changements" : "Créer le magasin";
 
   const onSubmit = async (data: ShopFormValues) => {
-    let result: ReturnType;
-    if (initialData) {
-      result = await updateShop({ data, id: initialData.id });
-    } else {
-      result = await createShop(data);
-    }
-    if (!result.success) {
-      toast.error(result.message);
-      return;
-    }
-    router.push(`/admin/shops`);
-    router.refresh();
-    toast.success(toastMessage);
-  };
-
-  const onDelete = async () => {
-    const deletesh = await deleteShop({ id: initialData?.id });
-    if (!deletesh.success) {
-      toast.error(deletesh.message);
-      setOpen(false);
-    } else {
+    function onSuccess() {
       router.push(`/admin/shops`);
       router.refresh();
-      toast.success("Magasin supprimé");
     }
-    setOpen(false);
+    initialData ? await updateShopAction({ data, onSuccess }) : await createShopAction({ data, onSuccess });
   };
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
         {initialData && (
-          <TrashButton
-            disabled={form.formState.isSubmitting}
-            variant="destructive"
-            size="sm"
-            onClick={() => setOpen(true)}
-            iconClassName="size-6"
+          <DeleteButton
+            action={deleteShop}
+            data={{ id: initialData.id }}
+            isSubmitting={form.formState.isSubmitting}
+            onSuccess={() => {
+              router.push(`/admin/shops`);
+              router.refresh();
+            }}
           />
         )}
       </div>

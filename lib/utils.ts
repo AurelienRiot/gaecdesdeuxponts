@@ -2,7 +2,6 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 import type { Address } from "@prisma/client";
-import { customAlphabet } from "nanoid";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -66,17 +65,4 @@ export const mergeWithoutDuplicates = <T extends { id: string }>(firstList: T[],
 
 export function svgToDataUri(svg: string) {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-}
-
-export const nanoid = customAlphabet("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", 5);
-
-export function createId(type: "category" | "product" | "user") {
-  switch (type) {
-    case "category":
-      return `CT_${nanoid(7)}`;
-    case "product":
-      return `PR_${nanoid(7)}`;
-    case "user":
-      return `CS_${nanoid(7)}`;
-  }
 }

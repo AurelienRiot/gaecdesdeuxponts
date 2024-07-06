@@ -5,9 +5,10 @@ import { Download, ExternalLink, Send } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import Spinner from "../animations/spinner";
+import { toastPromise, useToastPromise } from "../ui/sonner";
 import type { monthlyOrdersType } from "./pdf-data";
-import { SendBL, SendFacture, createMonthlyPDF64String, createPDF64String } from "./server-actions";
-import { toastPromise } from "../ui/sonner";
+import { SendBL, createMonthlyPDF64String, createPDF64String, sendFacture } from "./server-actions";
+import useServerAction from "@/hooks/use-server-action";
 
 function base64ToBlob(base64: string, contentType = "application/pdf", sliceSize = 512): Blob {
   const byteCharacters = Buffer.from(base64, "base64").toString("binary");
@@ -30,55 +31,48 @@ function base64ToBlob(base64: string, contentType = "application/pdf", sliceSize
 }
 
 export const DisplayInvoice = ({ orderId }: { orderId: string }) => {
-  const [loading, setLoading] = useState(false);
+  const { toastServerAction, loading: sendFactureLoading } = useToastPromise({
+    serverAction: sendFacture,
+    message: "Envoi de la facture",
+    errorMessage: "Envoi de la facture annulé",
+  });
+  const { serverAction, loading: createPDF64StringLoading } = useServerAction(createPDF64String);
   const onViewFile = async () => {
-    setLoading(true);
-    createPDF64String({ orderId, type: "invoice" })
-      .then((result) => {
-        if (!result.success) {
-          toast.error(result.message);
-          return;
-        }
-        const blob = base64ToBlob(result.data);
-        const url = URL.createObjectURL(blob);
-        window.open(url, "_blank");
-      })
-      .catch(() => {
+    function onSuccess(result?: string) {
+      if (!result) {
         toast.error("Erreur");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+        return;
+      }
+      const blob = base64ToBlob(result);
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
+    }
+    await serverAction({ data: { orderId, type: "invoice" }, onSuccess });
   };
 
   const onSaveFile = async () => {
-    setLoading(true);
-    createPDF64String({ orderId, type: "invoice" })
-      .then((result) => {
-        if (!result.success) {
-          toast.error(result.message);
-          return;
-        }
-        const blob = base64ToBlob(result.data);
-        saveAs(blob, `Facture ${orderId}.pdf`);
-      })
-      .catch(() => {
+    function onSuccess(result?: string) {
+      if (!result) {
         toast.error("Erreur");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+        return;
+      }
+      const blob = base64ToBlob(result);
+      saveAs(blob, `Facture ${orderId}.pdf`);
+    }
+    await serverAction({ data: { orderId, type: "invoice" }, onSuccess });
   };
 
   const onSendFile = async () => {
-    setLoading(true);
-    toastPromise({
-      serverAction: SendFacture,
-      data: { orderId },
-      onFinally: () => setLoading(false),
-    });
+    toastServerAction({ data: { orderId } });
   };
-  return <PdfButton disabled={loading} onViewFile={onViewFile} onSaveFile={onSaveFile} onSendFile={onSendFile} />;
+  return (
+    <PdfButton
+      disabled={sendFactureLoading || createPDF64StringLoading}
+      onViewFile={onViewFile}
+      onSaveFile={onSaveFile}
+      onSendFile={onSendFile}
+    />
+  );
 };
 
 export const DisplayMonthlyInvoice = ({
@@ -86,109 +80,94 @@ export const DisplayMonthlyInvoice = ({
 }: {
   orders: monthlyOrdersType[];
 }) => {
-  const [loading, setLoading] = useState(false);
+  const { serverAction, loading: createMonthlyPDF64StringLoading } = useServerAction(createMonthlyPDF64String);
 
-  const ordersId = orders.map((order) => order.orderId);
+  const orderIds = orders.map((order) => order.orderId);
 
   const onViewFile = async () => {
-    setLoading(true);
-    createMonthlyPDF64String(ordersId)
-      .then((result) => {
-        if (!result.success) {
-          toast.error(result.message);
-          return;
-        }
-        const blob = base64ToBlob(result.data.base64String);
-        const url = URL.createObjectURL(blob);
-        window.open(url, "_blank");
-      })
-      .catch(() => {
+    function onSuccess(result?: { base64String: string; date: string }) {
+      if (!result) {
         toast.error("Erreur");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+        return;
+      }
+      const blob = base64ToBlob(result.base64String);
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
+    }
+    await serverAction({ data: { orderIds }, onSuccess });
   };
 
   const onSaveFile = async () => {
-    setLoading(true);
-    createMonthlyPDF64String(ordersId)
-      .then((resul) => {
-        if (!resul.success) {
-          toast.error(resul.message);
-          return;
-        }
-        const blob = base64ToBlob(resul.data.base64String);
-        saveAs(blob, `Facture mensuelle ${resul.data.date}.pdf`);
-      })
-      .catch(() => {
+    function onSuccess(result?: { base64String: string; date: string }) {
+      if (!result) {
         toast.error("Erreur");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+        return;
+      }
+      const blob = base64ToBlob(result.base64String);
+      saveAs(blob, `Facture mensuelle ${result.date}.pdf`);
+    }
+    await serverAction({ data: { orderIds }, onSuccess });
   };
 
   const onSendFile = async () => {
     toast.error("En cours de développement");
   };
 
-  return <PdfButton disabled={loading} onViewFile={onViewFile} onSaveFile={onSaveFile} onSendFile={onSendFile} />;
+  return (
+    <PdfButton
+      disabled={createMonthlyPDF64StringLoading}
+      onViewFile={onViewFile}
+      onSaveFile={onSaveFile}
+      onSendFile={onSendFile}
+    />
+  );
 };
 
 export const DisplayShippingOrder = ({ orderId }: { orderId: string }) => {
-  const [loading, setLoading] = useState(false);
+  const { toastServerAction, loading: sendBLLoading } = useToastPromise({
+    serverAction: SendBL,
+    message: "Envoi du BL",
+    errorMessage: "Envoi du BL annulé",
+  });
+  const { serverAction, loading: createPDF64StringLoading } = useServerAction(createPDF64String);
 
   const onViewFile = async () => {
-    setLoading(true);
-    createPDF64String({ orderId, type: "shipping" })
-      .then((result) => {
-        if (!result.success) {
-          toast.error(result.message);
-          return;
-        }
-        const blob = base64ToBlob(result.data);
-        const url = URL.createObjectURL(blob);
-        window.open(url, "_blank");
-      })
-      .catch(() => {
+    function onSuccess(result?: string) {
+      if (!result) {
         toast.error("Erreur");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+        return;
+      }
+      const blob = base64ToBlob(result);
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
+    }
+    await serverAction({ data: { orderId, type: "shipping" }, onSuccess });
   };
 
   const onSaveFile = async () => {
-    setLoading(true);
-    createPDF64String({ orderId, type: "shipping" })
-      .then((result) => {
-        if (!result.success) {
-          toast.error(result.message);
-          return;
-        }
-        const blob = base64ToBlob(result.data);
-        saveAs(blob, `Bon de livraison ${orderId}.pdf`);
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error(error.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    function onSuccess(result?: string) {
+      if (!result) {
+        toast.error("Erreur");
+        return;
+      }
+      const blob = base64ToBlob(result);
+      saveAs(blob, `Bon de livraison ${orderId}.pdf`);
+    }
+    await serverAction({ data: { orderId, type: "shipping" }, onSuccess });
   };
 
   const onSendFile = async () => {
-    setLoading(true);
-    toastPromise({
-      serverAction: SendBL,
-      data: { orderId },
-      onFinally: () => setLoading(false),
-    });
+    toastServerAction({ data: { orderId } });
   };
 
-  return <PdfButton disabled={loading} onViewFile={onViewFile} onSaveFile={onSaveFile} onSendFile={onSendFile} />;
+  return (
+    <PdfButton
+      disabled={sendBLLoading || createPDF64StringLoading}
+      onViewFile={onViewFile}
+      onSaveFile={onSaveFile}
+      onSendFile={onSendFile}
+    />
+  );
 };
 
 function PdfButton({

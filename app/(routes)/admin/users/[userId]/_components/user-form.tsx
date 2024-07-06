@@ -1,9 +1,8 @@
 "use client";
 
 import { AddressForm } from "@/components/address-form";
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import { BillingAddressForm } from "@/components/billing-address-form";
-import { AlertModal } from "@/components/ui/alert-modal-form";
+import DeleteButton from "@/components/delete-button";
 import ButtonBackward from "@/components/ui/button-backward";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -23,53 +22,31 @@ import { Separator } from "@/components/ui/separator";
 import type { UserWithOrdersAndAdress } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
-import * as z from "zod";
-import { deleteUser } from "../../_components/server-action";
-import { updateUser } from "../_actions/update-user";
+import deleteUser from "../../_actions/delete-user";
 import MailForm from "./mail-form";
-import { addressSchema } from "@/components/zod-schema/address-schema";
-import { billingAddressSchema } from "@/components/zod-schema/billing-address-schema";
+import { schema, type UserFormValues } from "./user-schema";
+import updateUser from "../_actions/update-user";
+import useServerAction from "@/hooks/use-server-action";
 
 interface UserFormProps {
   initialData: UserWithOrdersAndAdress;
 }
 
-const formSchema = z.object({
-  name: z.string().min(1, {
-    message: "Le nom est obligatoire",
-  }),
-  company: z.string().optional(),
-  phone: z.string().refine(
-    (value) => {
-      return value === "" || isValidPhoneNumber(value);
-    },
-    {
-      message: "Le numéro de téléphone n'est pas valide",
-    },
-  ),
-  isPro: z.boolean().default(false).optional(),
-  address: addressSchema,
-  billingAddress: billingAddressSchema,
-});
-
-export type UserFormValues = z.infer<typeof formSchema>;
-
 export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const { serverAction } = useServerAction(updateUser);
 
   const title = "Modifier l'utilisateur";
   const description = "Modifier un utilisateur";
-  const toastMessage = "Utilisateur mise à jour.";
   const action = "Enregistrer les modifications";
 
   const form = useForm<UserFormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
+      id: initialData.id,
+      email: initialData.email || "",
       name: initialData.name || "",
       company: initialData.company || "",
       phone: initialData.phone || "",
@@ -99,53 +76,27 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
 
   const onSubmit = async (data: UserFormValues) => {
     data.name = data.name.trim();
-    await updateUser(data, initialData.id)
-      .then((result) => {
-        if (!result.success) {
-          toast.error(result.message);
-          return;
-        }
-        router.push(`/admin/users`);
-        router.refresh();
-        toast.success(toastMessage);
-      })
-      .catch(() => {
-        toast.error("Erreur");
-      });
+    function onSuccess() {
+      router.push(`/admin/users`);
+      router.refresh();
+    }
+    await serverAction({ data, onSuccess });
   };
   const isPro = form.watch("isPro");
 
-  const onDelete = async () => {
-    await deleteUser({ id: initialData.id })
-      .then((result) => {
-        if (!result.success) {
-          toast.error(result.message);
-          return;
-        }
-        router.push(`/admin/users`);
-        router.refresh();
-        toast.success("Utilisateur supprimée");
-      })
-      .catch(() => {
-        toast.error("Erreur");
-      })
-      .finally(() => {
-        setOpen(false);
-      });
-  };
-
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
 
-        <TrashButton
-          disabled={form.formState.isSubmitting}
-          variant="destructive"
-          size="sm"
-          onClick={() => setOpen(true)}
-          iconClassName="size-6"
+        <DeleteButton
+          action={deleteUser}
+          data={{ email: initialData.email }}
+          isSubmitting={form.formState.isSubmitting}
+          onSuccess={() => {
+            router.push(`/admin/users`);
+            router.refresh();
+          }}
         />
       </div>
       <Separator />

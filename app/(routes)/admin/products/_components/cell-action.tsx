@@ -7,14 +7,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import  type {  ProductColumn } from "./columns";
+import type { ProductColumn } from "./columns";
 import { Button } from "@/components/ui/button";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AlertModal } from "@/components/ui/alert-modal-form";
-import { deleteProduct } from "./server-action";
+import useServerAction from "@/hooks/use-server-action";
+import deleteProduct from "../_actions/delete-product";
 
 interface CellActionProps {
   data: ProductColumn;
@@ -23,6 +24,7 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const { serverAction, loading } = useServerAction(deleteProduct);
 
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
@@ -30,23 +32,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   };
 
   const onDelete = async () => {
-    const deletePro = await deleteProduct({ id: data.id });
-    if (!deletePro.success) {
-      toast.error(deletePro.message);
-    } else {
-      router.refresh();
-      toast.success("Produit supprimée");
-    }
-    setOpen(false);
+    await serverAction({ data: { id: data.id }, onSuccess: () => router.refresh(), onFinally: () => setOpen(false) });
   };
 
   return (
     <>
-      <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onDelete}
-      />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="p-0">
@@ -56,20 +47,15 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Action</DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={() => onCopy(data.id)}
-            className="cursor-copy"
-          >
+          <DropdownMenuItem onClick={() => onCopy(data.id)} className="cursor-copy">
             <Copy className="mr-2 h-4 w-4" />
             Copier Id
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => router.push(`/admin/products/${data.id}`)}
-          >
+          <DropdownMenuItem onClick={() => router.push(`/admin/products/${data.id}`)}>
             <Edit className="mr-2 h-4 w-4" />
             Modifier
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
+          <DropdownMenuItem disabled={loading} onClick={() => setOpen(true)}>
             <Trash className="mr-2 h-4 w-4" />
             Supprimer
           </DropdownMenuItem>

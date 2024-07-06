@@ -10,7 +10,7 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
 import { defaultAddress, type FullAdress } from "@/components/zod-schema/address-schema";
 import { useUserContext } from "@/context/user-context";
-import useSeverAction from "@/hooks/use-server-action";
+import useServerAction from "@/hooks/use-server-action";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Address, BillingAddress } from "@prisma/client";
 import { signOut } from "next-auth/react";
@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import deleteUser from "../_actions/delete-user";
 import updateUser from "../_actions/update-user";
 import { formSchema, type UserFormValues } from "./form-schema";
+import DeleteButton from "@/components/delete-button";
 
 interface UserFormProps {
   initialData: {
@@ -35,7 +36,7 @@ interface UserFormProps {
 }
 
 export const UserForm: React.FC<UserFormProps> = ({ initialData }: UserFormProps) => {
-  const { serverAction } = useSeverAction(updateUser);
+  const { serverAction } = useServerAction(updateUser);
   const title = initialData.name ? "Modifier votre profil" : "Completer votre  profil";
   const action = "Enregistrer les modifications";
 
@@ -78,7 +79,16 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }: UserFormProps
       <div className=" flex flex-col items-center justify-between gap-4 md:flex-row">
         <h2 className="text-center text-3xl font-bold "> {title} </h2>
 
-        <DeleteUserButton isSubmitting={form.formState.isSubmitting} />
+        <DeleteButton
+          action={deleteUser}
+          data={{}}
+          isSubmitting={form.formState.isSubmitting}
+          onSuccess={() => {
+            signOut({ redirect: false });
+            router.push("/");
+            toast.success("Compte supprimé", { position: "top-center" });
+          }}
+        />
       </div>
       <Separator className="mt-4" />
       <p className=" py-6  text-base font-bold sm:text-lg">{initialData.email}</p>
@@ -145,33 +155,3 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }: UserFormProps
     </>
   );
 };
-
-function DeleteUserButton({ isSubmitting }: { isSubmitting: boolean }) {
-  const { serverAction, loading } = useSeverAction(deleteUser);
-  const router = useRouter();
-  const [open, setOpen] = useState(false);
-  const onDelete = async () => {
-    async function onSuccess() {
-      signOut({ redirect: false });
-      router.push("/");
-      toast.success("Compte supprimé", { position: "top-center" });
-    }
-    await serverAction({ data: {}, onSuccess, onFinally: () => setOpen(false) });
-  };
-
-  return (
-    <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
-      <TrashButton
-        disabled={isSubmitting || loading}
-        variant="destructive"
-        size="sm"
-        onClick={() => setOpen(true)}
-        className="ml-3"
-        iconClassName="ml-2 size-6"
-      >
-        Supprimer le compte
-      </TrashButton>
-    </>
-  );
-}

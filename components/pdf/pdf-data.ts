@@ -2,7 +2,7 @@ import { dateFormatter } from "@/lib/date-utils";
 import { addressFormatter } from "@/lib/utils";
 import type { FullOrder, UserWithAddress } from "@/types";
 import type { Customer } from "@prisma/client";
-import { nanoid } from "@/lib/utils";
+import { nanoid } from "@/lib/id";
 
 const formatFrenchPhoneNumber = (phoneNumber: string | null): string => {
   if (!phoneNumber) return "";

@@ -1,20 +1,18 @@
 "use client";
 
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import DeleteButton from "@/components/delete-button";
 import UploadImage from "@/components/images-upload/image-upload";
-import { AlertModal } from "@/components/ui/alert-modal-form";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { LoadingButton } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import useSeverAction from "@/hooks/use-server-action";
-import { createId } from "@/lib/utils";
+import useServerAction from "@/hooks/use-server-action";
+import { createId } from "@/lib/id";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Category } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import deleteCategorie from "../../_actions/delete-categorie";
 import createCategory from "../_actions/create-category";
@@ -27,8 +25,8 @@ interface CategoryFormProps {
 
 export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
   const router = useRouter();
-  const { serverAction: createCategoryAction } = useSeverAction(createCategory);
-  const { serverAction: updateCategoryAction } = useSeverAction(updateCategory);
+  const { serverAction: createCategoryAction } = useServerAction(createCategory);
+  const { serverAction: updateCategoryAction } = useServerAction(updateCategory);
 
   const title = initialData ? "Modifier la categorie" : "Créer une nouvelle categorie";
   const description = initialData ? "Modifier la categorie" : "Ajouter une nouvelle categorie";
@@ -56,7 +54,17 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
     <>
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
-        {initialData && <DeleteCategory name={initialData.name} isSubmitting={form.formState.isSubmitting} />}
+        {initialData && (
+          <DeleteButton
+            action={deleteCategorie}
+            data={{ name: initialData.name }}
+            isSubmitting={form.formState.isSubmitting}
+            onSuccess={() => {
+              router.push(`/admin/categories`);
+              router.refresh();
+            }}
+          />
+        )}
       </div>
       <Separator />
       <Form {...form}>
@@ -127,30 +135,3 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
     </>
   );
 };
-
-function DeleteCategory({ name, isSubmitting }: { name: string; isSubmitting?: boolean }) {
-  const [open, setOpen] = useState(false);
-  const router = useRouter();
-  const { serverAction, loading } = useSeverAction(deleteCategorie);
-
-  const onDelete = async () => {
-    function onSuccess() {
-      router.push(`/admin/categories`);
-      router.refresh();
-    }
-    await serverAction({ data: { name }, onSuccess, onFinally: () => setOpen(false) });
-  };
-  return (
-    <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
-
-      <TrashButton
-        disabled={isSubmitting || loading}
-        variant="destructive"
-        size="sm"
-        onClick={() => setOpen(true)}
-        iconClassName="size-6"
-      />
-    </>
-  );
-}

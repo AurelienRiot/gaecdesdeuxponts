@@ -1,56 +1,47 @@
 "use server";
 import { checkAdmin } from "@/components/auth/checkAuth";
-import prismadb from "@/lib/prismadb";
-import type { CreateUserFormValues } from "../_components/create-user-form";
-import type { ReturnTypeServerAction } from "@/lib/server-action";
 import { defaultAddress } from "@/components/zod-schema/address-schema";
+import prismadb from "@/lib/prismadb";
+import safeServerAction from "@/lib/server-action";
+import { schema, type UserFormValues } from "../_components/user-schema";
 
-export async function createUser({
-  name,
-  phone,
-  address,
-  billingAddress,
-  company,
-  email,
-  isPro,
-}: CreateUserFormValues): Promise<ReturnTypeServerAction<null>> {
-  const isAuth = await checkAdmin();
+async function createUser(data: UserFormValues) {
+  return await safeServerAction({
+    data,
+    schema,
+    getUser: checkAdmin,
+    serverAction: async (data) => {
+      const { email, name, company, phone, isPro, address, billingAddress } = data;
+      const user = await prismadb.user.findUnique({
+        where: { email },
+      });
 
-  if (!isAuth) {
-    return {
-      success: false,
-      message: "Vous devez être authentifier",
-    };
-  }
+      if (user) {
+        return {
+          success: false,
+          message: "L'utilisateur existe déja",
+        };
+      }
+      await prismadb.user.create({
+        data: {
+          name,
+          email,
+          company: isPro ? company : undefined,
+          phone,
+          role: isPro ? "pro" : "user",
+          address: {
+            create: address ?? defaultAddress,
+          },
 
-  const user = await prismadb.user.findUnique({
-    where: { email: email },
-  });
-
-  if (user) {
-    return {
-      success: false,
-      message: "L'utilisateur existe déja",
-    };
-  }
-
-  await prismadb.user.create({
-    data: {
-      name,
-      email,
-      company: isPro ? company : undefined,
-      phone,
-      role: isPro ? "pro" : "user",
-      address: {
-        create: address ?? defaultAddress,
-      },
-
-      billingAddress: billingAddress ? { create: billingAddress } : undefined,
+          billingAddress: billingAddress ? { create: billingAddress } : undefined,
+        },
+      });
+      return {
+        success: true,
+        message: "Utilisateur creé",
+      };
     },
   });
-
-  return {
-    success: true,
-    data: null,
-  };
 }
+
+export default createUser;

@@ -1,28 +1,13 @@
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import type { ProductFormValues } from "./product-form";
 import type { OptionsArray } from "@/components/product/product-function";
+import type { ProductFormValues } from "./product-schema";
 
 const OptionValueForm = ({
   productIndex,
@@ -46,8 +31,7 @@ const OptionValueForm = ({
       render={({ field }) => (
         <FormItem className="w-48">
           <FormLabel>
-            {form.getValues().products[productIndex].options[optionIndex]
-              .name || "Nom de l'option"}
+            {form.getValues().products[productIndex].options[optionIndex].name || "Nom de l'option"}
           </FormLabel>
           <FormControl>
             <Popover open={openValue} onOpenChange={setOpenValue}>
@@ -56,10 +40,7 @@ const OptionValueForm = ({
                   variant="outline"
                   role="combobox"
                   disabled={form.formState.isSubmitting}
-                  className={cn(
-                    "min-w-48 justify-between",
-                    field.value ? "" : "text-muted-foreground",
-                  )}
+                  className={cn("min-w-48 justify-between", field.value ? "" : "text-muted-foreground")}
                 >
                   {field.value ? field.value : "Valeur de l'option"}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -67,11 +48,7 @@ const OptionValueForm = ({
               </PopoverTrigger>
               <PopoverContent className="w-[200px] p-0">
                 <Command>
-                  <CommandInput
-                    value={search}
-                    onValueChange={setSearch}
-                    placeholder="Nom de la valeur"
-                  />
+                  <CommandInput value={search} onValueChange={setSearch} placeholder="Nom de la valeur" />
                   <CommandList>
                     {optionsArray.map(
                       ({ name, values }) =>
@@ -87,12 +64,7 @@ const OptionValueForm = ({
                             }}
                           >
                             <Check
-                              className={cn(
-                                "mr-2 h-4 w-4",
-                                field.value === value
-                                  ? "opacity-100"
-                                  : "opacity-0",
-                              )}
+                              className={cn("mr-2 h-4 w-4", field.value === value ? "opacity-100" : "opacity-0")}
                             />
                             {value}
                           </CommandItem>

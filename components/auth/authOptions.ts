@@ -1,6 +1,6 @@
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
-import { createId } from "@/lib/utils";
+import { createId } from "@/lib/id";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import type { User } from "@prisma/client";
 import { render } from "@react-email/render";
@@ -61,7 +61,7 @@ export const authOptions: NextAuthOptions = {
       }
       if (user) {
         const u = user as User;
-        if (trigger === "signUp") {
+        if (!u.id.startsWith("CS_")) {
           await prismadb.user.update({
             where: { email: u.email as string },
             data: {

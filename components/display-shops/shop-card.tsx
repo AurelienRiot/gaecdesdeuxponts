@@ -10,12 +10,13 @@ import { useRouter } from "next/navigation";
 import { forwardRef, useState } from "react";
 import { formatPhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
-import { deleteShop } from "../../app/(routes)/admin/shops/[shopId]/_components/server-actions";
 import { Icons } from "../icons";
 import { AutosizeTextarea } from "../ui/autosize-textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import Image from "next/image";
 import { haversine } from "@/lib/math";
+import useServerAction from "@/hooks/use-server-action";
+import deleteShop from "@/app/(routes)/admin/shops/[shopId]/_actions/delete-shop";
 
 type ShopCardProps = Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> & {
   shop: Shop;
@@ -29,18 +30,14 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
     const distance = haversine(coordinates, { lat: shop.lat, long: shop.long });
     const router = useRouter();
     const [open, setOpen] = useState(false);
+    const { serverAction, loading } = useServerAction(deleteShop);
 
     const onDelete = async () => {
-      const deletesh = await deleteShop({ id: shop.id });
-      if (!deletesh.success) {
-        toast.error(deletesh.message);
-        setOpen(false);
-      } else {
+      function onSuccess() {
         router.push(`/admin/categories`);
         router.refresh();
-        toast.success("Magasin supprimé");
       }
-      setOpen(false);
+      serverAction({ data: { id: shop.id }, onSuccess, onFinally: () => setOpen(false) });
     };
 
     return (
@@ -102,10 +99,10 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
           </CardContent>
           {display === "admin" && (
             <CardFooter className="flex flex-row items-end justify-between  gap-2">
-              <Button variant="outline" onClick={() => setOpen(true)} className="hover:underline">
+              <Button variant="outline" disabled={loading} onClick={() => setOpen(true)} className="hover:underline">
                 Supprimer
               </Button>
-              <Button variant={"expandIcon"} iconPlacement="right" Icon={ClipboardEdit} asChild>
+              <Button variant={"expandIcon"} disabled={loading} iconPlacement="right" Icon={ClipboardEdit} asChild>
                 <Link href={`/admin/shops/${shop.id}`}>Modifier</Link>
               </Button>
             </CardFooter>

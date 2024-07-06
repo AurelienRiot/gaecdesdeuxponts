@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@udecode/cn";
-import { Plate,  type TElement } from "@udecode/plate-common";
+import { Plate, type TElement } from "@udecode/plate-common";
 import { useRef } from "react";
 
 import { CursorOverlay } from "@/components/plate-ui/cursor-overlay";
@@ -11,17 +11,11 @@ import { FixedToolbarButtons } from "@/components/plate-ui/fixed-toolbar-buttons
 import { FloatingToolbar } from "@/components/plate-ui/floating-toolbar";
 import { FloatingToolbarButtons } from "@/components/plate-ui/floating-toolbar-buttons";
 import { MentionCombobox } from "@/components/plate-ui/mention-combobox";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { MENTIONABLES } from "@/lib/plate/mentionables";
 import { plugins } from "@/lib/plate/plate-plugins";
 import { useFormContext } from "react-hook-form";
-import type { ProductFormValues } from "./product-form";
+import type { ProductFormValues } from "./product-schema";
 
 type PlateEditorProps = {
   loading: boolean;

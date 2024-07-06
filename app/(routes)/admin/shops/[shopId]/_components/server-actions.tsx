@@ -1,8 +1,8 @@
 "use server";
 import { checkAdmin } from "@/components/auth/checkAuth";
-import  type { ShopFormValues } from "./shop-form";
 import prismadb from "@/lib/prismadb";
 import { revalidateTag } from "next/cache";
+import type { ShopFormValues } from "./shop-schema";
 
 export type ReturnType =
   | {
@@ -85,8 +85,7 @@ async function deleteShop({
   if (orders.length > 0) {
     return {
       success: false,
-      message:
-        "Des commandes sont associés à  ce magasin, supprimer les commandes où archiver ce magasin",
+      message: "Des commandes sont associés à  ce magasin, supprimer les commandes où archiver ce magasin",
     };
   }
 

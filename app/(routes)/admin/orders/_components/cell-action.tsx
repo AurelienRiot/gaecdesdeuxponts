@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import { useRouter } from "next/navigation";
-import { deleteOrder } from "@/components/table-custom-fuction/orders-server-actions";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +14,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import useSeverAction from "@/hooks/use-server-action";
+import useServerAction from "@/hooks/use-server-action";
+import { deleteOrder } from "../_actions/delete-orders";
 
 interface CellActionProps {
   data: OrderColumn;
@@ -23,7 +23,7 @@ interface CellActionProps {
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
-  const { serverAction, loading } = useSeverAction(deleteOrder);
+  const { serverAction, loading } = useServerAction(deleteOrder);
   const router = useRouter();
 
   const onCopy = (id: string) => {

@@ -7,10 +7,12 @@ import type { User } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { deleteUser, updateProUser } from "./server-action";
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { CheckedState } from "@/components/ui/checkbox";
+import useServerAction from "@/hooks/use-server-action";
+import deleteUser from "../_actions/delete-user";
+import updateProStatus from "../_actions/update-pro-status";
 
 interface CardUserProps {
   user: User;
@@ -22,35 +24,24 @@ const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => 
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [check, setCheck] = useState<CheckedState>(user.role === "pro");
+  const { serverAction: deleteUserAction, loading: deleteUserLoading } = useServerAction(deleteUser);
+  const { serverAction: updateProUserAction, loading: updateProUserLoading } = useServerAction(updateProStatus);
 
   const onDelete = async () => {
-    await deleteUser({ id: user.id })
-      .then((result) => {
-        if (!result.success) {
-          toast.error(result.message);
-          return;
-        }
-        router.refresh();
-        toast.success("Utilisateur supprimée");
-      })
-      .catch(() => {
-        toast.error("Erreur");
-      })
-      .finally(() => {
-        setOpen(false);
-      });
+    await deleteUserAction({
+      data: { email: user.email },
+      onSuccess: () => router.refresh(),
+      onFinally: () => setOpen(false),
+    });
   };
 
   const onChange = async (e: CheckedState) => {
     setCheck("indeterminate");
-    const updateU = await updateProUser({ id: user.id, check: e });
-    if (!updateU.success) {
-      setCheck(!e);
-      toast.error(updateU.message);
-    } else {
-      setCheck(e);
-      toast.success("Utilisateur mise à jour");
-    }
+    await updateProUserAction({
+      data: { id: user.id, check: e },
+      onSuccess: () => setCheck(e),
+      onError: () => setCheck(!e),
+    });
   };
 
   return (
@@ -83,10 +74,15 @@ const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => 
           </div>
         </CardContent>
         <CardFooter className="flex flex-row items-end justify-between  gap-2">
-          <Button variant="outline" onClick={() => setOpen(true)} className="hover:underline">
+          <Button
+            disabled={updateProUserLoading || deleteUserLoading}
+            variant="outline"
+            onClick={() => setOpen(true)}
+            className="hover:underline"
+          >
             Supprimer
           </Button>
-          <Button className="hover:underline">
+          <Button asChild disabled={updateProUserLoading || deleteUserLoading} className="hover:underline">
             <Link href={`/admin/users/${user.id}`}>Modifier</Link>
           </Button>
         </CardFooter>

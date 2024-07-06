@@ -51,7 +51,7 @@ async function updateUser(data: UserFormValues) {
 
       return {
         success: true,
-        message: "Profil mis à jour",
+        message: "Profil mise à jour",
       };
     },
   });

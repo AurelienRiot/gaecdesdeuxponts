@@ -1,24 +1,13 @@
 "use client";
 
-import {
-  CheckboxCell,
-  DateCell,
-  NameWithImageCell,
-  OptionsCell,
-} from "@/components/table-custom-fuction/common-cell";
-import {
-  FilterAllInclude,
-  FilterOneInclude,
-} from "@/components/table-custom-fuction/common-filter";
+import { CheckboxCell, DateCell, NameWithImageCell, OptionsCell } from "@/components/table-custom-fuction/common-cell";
+import { FilterAllInclude, FilterOneInclude } from "@/components/table-custom-fuction/common-filter";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
-import type {
-  DataTableFilterableColumn,
-  DataTableSearchableColumn,
-  DataTableViewOptionsColumn,
-} from "@/types";
-import type{ ColumnDef } from "@tanstack/react-table";
+import type { DataTableFilterableColumn, DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
+import type { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
-import { changeArchived, changePro } from "./server-action";
+import changeArchived from "../_actions/change-archived";
+import changePro from "../_actions/change-pro";
 
 export type ProductColumn = {
   id: string;
@@ -58,12 +47,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
     accessorKey: "isArchived",
     header: "Archivé",
     cell: ({ row }) => (
-      <CheckboxCell
-        isCheckbox={row.original.isArchived}
-        onChange={(e: boolean | "indeterminate") =>
-          changeArchived({ id: row.original.id, isArchived: e })
-        }
-      />
+      <CheckboxCell isCheckbox={row.original.isArchived} id={row.original.id} action={changeArchived} />
     ),
     filterFn: FilterOneInclude,
   },
@@ -71,14 +55,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "isPro",
     header: "Professionnel",
-    cell: ({ row }) => (
-      <CheckboxCell
-        isCheckbox={row.original.isPro}
-        onChange={(e: boolean | "indeterminate") =>
-          changePro({ id: row.original.id, isPro: e })
-        }
-      />
-    ),
+    cell: ({ row }) => <CheckboxCell isCheckbox={row.original.isPro} id={row.original.id} action={changePro} />,
     filterFn: FilterOneInclude,
   },
 

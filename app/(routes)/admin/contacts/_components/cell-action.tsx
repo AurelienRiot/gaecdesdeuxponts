@@ -2,7 +2,7 @@
 
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import { AlertModal } from "@/components/ui/alert-modal-form";
-import useSeverAction from "@/hooks/use-server-action";
+import useServerAction from "@/hooks/use-server-action";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import deleteContact from "../_actions/delete-contact";
@@ -15,7 +15,7 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const { serverAction, loading } = useSeverAction(deleteContact);
+  const { serverAction, loading } = useServerAction(deleteContact);
 
   const onDelete = async () => {
     await serverAction({

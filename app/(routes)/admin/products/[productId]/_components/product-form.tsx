@@ -1,9 +1,8 @@
 "use client";
 
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import DeleteButton from "@/components/delete-button";
 import UploadImage from "@/components/images-upload/image-upload";
 import type { OptionsArray } from "@/components/product/product-function";
-import { AlertModal } from "@/components/ui/alert-modal-form";
 import { LoadingButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -11,60 +10,20 @@ import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { createId } from "@/lib/utils";
+import useServerAction from "@/hooks/use-server-action";
+import { createId } from "@/lib/id";
 import type { MainProductWithProducts } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Category } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import * as z from "zod";
-import { deleteProduct } from "../../_components/server-action";
+import deleteProduct from "../../_actions/delete-product";
 import { createProduct } from "../_actions/create-product";
 import { updateProduct } from "../_actions/update-product";
 import { PlateEditor } from "./plate-editor";
+import { mainProductSchema, type ProductFormValues } from "./product-schema";
 import { ProductWithOptions } from "./product-with-options-form";
-
-const OptionSchema = z.object({
-  index: z.number(),
-  name: z.string().min(1, { message: "Le nom de l'option est requis" }),
-  value: z.string().min(1, { message: "La valeur de l'option est requis" }),
-});
-
-const productSchema = z.object({
-  id: z.string(),
-  index: z.number(),
-  name: z.string().min(1, { message: "Le nom est requis" }),
-  description: z.string(),
-  price: z.coerce
-    .number()
-    .optional()
-    .refine((val) => Number(val) > 0, {
-      message: "Veuillez entrer un prix valide",
-    }),
-  unit: z.enum(["centgramme", "Kilogramme", "Litre"]).optional(),
-  isFeatured: z.boolean().default(false),
-  isArchived: z.boolean().default(false),
-  imagesUrl: z.array(z.string()),
-  options: z.array(OptionSchema),
-});
-
-const mainProductSchema = z.object({
-  categoryName: z.string().min(1, { message: "La catégorie est requise" }),
-  name: z.string().min(1, { message: "Le nom est requis" }),
-  productSpecs: z.string().min(1, { message: "Les spécifications sont requises" }),
-  isArchived: z.boolean().default(false),
-  isPro: z.boolean().default(false),
-  imagesUrl: z.array(z.string()).refine((data) => data.length > 0, {
-    message: "Au moins une image est requise",
-  }),
-  products: z.array(productSchema).nonempty("Veuillez ajouter au moins un produit"),
-});
-
-export type ProductSchema = z.infer<typeof productSchema>;
-
-export type ProductFormValues = z.infer<typeof mainProductSchema>;
 
 type ProductFormProps = {
   initialData: MainProductWithProducts | null;
@@ -74,7 +33,8 @@ type ProductFormProps = {
 
 export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categories, optionsArray }) => {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const { serverAction: createProductAction, loading: createProductLoading } = useServerAction(createProduct);
+  const { serverAction: updateProductAction, loading: updateProductLoading } = useServerAction(updateProduct);
 
   const title = initialData ? "Modifier le produit" : "Crée un nouveau produit";
   const description = initialData ? "Modifier le produit" : "Ajouter un nouveau produit";
@@ -84,6 +44,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(mainProductSchema),
     defaultValues: {
+      id: initialData?.id || createId("mainProduct"),
       name: initialData?.name || "",
       imagesUrl: initialData?.imagesUrl || [],
       categoryName: initialData?.categoryName || "",
@@ -126,62 +87,26 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
   }, [form]);
 
   const onSubmit = async (data: ProductFormValues) => {
-    if (initialData) {
-      await updateProduct(data, initialData.id)
-        .then((result) => {
-          if (!result.success) {
-            toast.error(result.message);
-            return;
-          }
-          router.push("/admin/products");
-          router.refresh();
-          toast.success(toastMessage);
-        })
-        .catch(() => {
-          toast.error("Erreur");
-        });
-    } else {
-      await createProduct(data)
-        .then((result) => {
-          if (!result.success) {
-            toast.error(result.message);
-            return;
-          }
-          router.push("/admin/products");
-          router.refresh();
-          toast.success(toastMessage);
-        })
-        .catch(() => {
-          toast.error("Erreur");
-        });
-    }
-  };
-
-  const onDelete = async () => {
-    const deletePro = await deleteProduct({ id: initialData?.id });
-    if (!deletePro.success) {
-      toast.error(deletePro.message);
-      setOpen(false);
-    } else {
-      router.push(`/admin/products`);
+    function onSuccess() {
+      router.push("/admin/products");
       router.refresh();
-      toast.success("Produit supprimé");
     }
-    setOpen(false);
+    initialData ? await updateProductAction({ data, onSuccess }) : await createProductAction({ data, onSuccess });
   };
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
         {initialData && (
-          <TrashButton
-            disabled={form.formState.isSubmitting}
-            variant="destructive"
-            size="sm"
-            onClick={() => setOpen(true)}
-            iconClassName="size-6"
+          <DeleteButton
+            action={deleteProduct}
+            data={{ id: initialData.id }}
+            isSubmitting={form.formState.isSubmitting}
+            onSuccess={() => {
+              router.push(`/admin/products`);
+              router.refresh();
+            }}
           />
         )}
       </div>

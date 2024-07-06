@@ -14,8 +14,8 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AlertModal } from "@/components/ui/alert-modal-form";
-import { deleteOrder } from "@/components/table-custom-fuction/orders-server-actions";
-import useSeverAction from "@/hooks/use-server-action";
+import useServerAction from "@/hooks/use-server-action";
+import { deleteOrder } from "../../../orders/_actions/delete-orders";
 
 interface OrderCellActionProps {
   data: OrderColumn;
@@ -23,7 +23,7 @@ interface OrderCellActionProps {
 
 export const OrderCellAction: React.FC<OrderCellActionProps> = ({ data }) => {
   const router = useRouter();
-  const { serverAction, loading } = useSeverAction(deleteOrder);
+  const { serverAction, loading } = useServerAction(deleteOrder);
   const [open, setOpen] = useState(false);
 
   const onCopy = (id: string) => {

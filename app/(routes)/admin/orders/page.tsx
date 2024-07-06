@@ -1,7 +1,8 @@
+import { createProduct, createProductList, createStatus } from "@/components/table-custom-fuction/cell-orders";
 import prismadb from "@/lib/prismadb";
-import  type { DateRange } from "react-day-picker";
+import { currencyFormatter } from "@/lib/utils";
+import type { DateRange } from "react-day-picker";
 import { OrderClient } from "./_components/client";
-import { formatOrders } from "./_components/format-orders";
 
 export const dynamic = "force-dynamic";
 
@@ -41,17 +42,26 @@ const OrdersPage = async (context: {
     },
   });
 
-  const formattedOrders = formatOrders(orders);
+  const formattedOrders = orders.map((order) => ({
+    id: order.id,
+    name: order.user.company || order.user.name || order.user.email || "",
+    userId: order.userId,
+    isPaid: !!order.dateOfPayment,
+    datePickUp: order.datePickUp,
+    productsList: createProductList(order),
+    products: createProduct(order),
+    status: createStatus(order),
+    totalPrice: currencyFormatter.format(order.totalPrice),
+    createdAt: order.createdAt,
+    shopName: order.shop?.name || "Livraison à domicile",
+    shopId: order.shop?.id || "",
+  }));
 
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <OrderClient
-          initialData={formattedOrders}
-          initialDateRange={dateRange}
-          />
+        <OrderClient initialData={formattedOrders} initialDateRange={dateRange} />
       </div>
-     
     </div>
   );
 };
