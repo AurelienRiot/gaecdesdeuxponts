@@ -10,10 +10,8 @@ import { DateCell, NameCell } from "@/components/table-custom-fuction/common-cel
 import { FilterAllInclude, FilterOneInclude } from "@/components/table-custom-fuction/common-filter";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
 import { DatePickUpHeader, ShopNameHeader } from "@/components/table-custom-fuction/header-orders";
-import { Button } from "@/components/ui/button";
 import type { DataTableFilterableColumn, DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
 import type { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
 import { CellAction } from "./cell-action";
 
 export type OrderColumn = {
@@ -62,7 +60,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "datePickUp",
     header: DatePickUpHeader,
-    cell: ({ row }) => <DateCell date={row.original.datePickUp} hours />,
+    cell: ({ row }) => <DateCell date={row.original.datePickUp} />,
   },
   {
     accessorKey: "shopName",

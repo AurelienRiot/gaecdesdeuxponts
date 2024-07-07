@@ -3,19 +3,16 @@ import { LocateIcon, MailboxIcon, Network, PhoneIcon } from "lucide-react";
 import Link from "next/link";
 import MapDisplay from "./map";
 
+export const href =
+  "    https://www.google.com/maps/place/Laiterie+du+Pont+Robert/@47.6600571,-1.9121281,17z/data=!3m1!4b1!4m6!3m5!1s0x480f71090cddeeb3:0x3d5bf2c6c171230f!8m2!3d47.6600535!4d-1.9095532!16s%2Fg%2F11v_0vq263?entry=ttu";
 const InfoContact = () => {
-  const href =
-    "    https://www.google.com/maps/place/Laiterie+du+Pont+Robert/@47.6600571,-1.9121281,17z/data=!3m1!4b1!4m6!3m5!1s0x480f71090cddeeb3:0x3d5bf2c6c171230f!8m2!3d47.6600535!4d-1.9095532!16s%2Fg%2F11v_0vq263?entry=ttu";
   const features = [
     {
       Icone: MailboxIcon,
       title: "Email",
       description: "Envoyez-nous un message",
       link: (
-        <Link
-          className="pt-4 text-sm"
-          href="mailto:laiteriedupontrobert@gmail.com"
-        >
+        <Link className="pt-4 text-sm" href="mailto:laiteriedupontrobert@gmail.com">
           laiteriedupontrobert@gmail.com
         </Link>
       ),
@@ -35,11 +32,7 @@ const InfoContact = () => {
       title: "Adresse",
       description: "6 bis le Pont Robert 44290 MASSERAC",
       link: (
-        <Link
-          className="pt-4 text-base text-blue-600"
-          target="_blank"
-          href={href}
-        >
+        <Link className="pt-4 text-base text-blue-600" target="_blank" href={href}>
           {"Obtenir l'itinéraire"}
         </Link>
       ),
@@ -50,22 +43,13 @@ const InfoContact = () => {
       description: "Retrouvez nous sur les reseaux sociaux",
       link: (
         <div className="justify-left flex items-center gap-4 sm:gap-8">
-          <Link
-            target="_blank"
-            href={"https://www.facebook.com/profile.php?id=61559928455527"}
-          >
+          <Link target="_blank" href={"https://www.facebook.com/profile.php?id=61559928455527"}>
             <Icons.Facebook className="size-6" />
           </Link>
-          <Link
-            target="_blank"
-            href={"https://www.instagram.com/julie_jeanmarc"}
-          >
+          <Link target="_blank" href={"https://www.instagram.com/julie_jeanmarc"}>
             <Icons.Instagram className="size-7" />
           </Link>
-          <Link
-            target="_blank"
-            href={"https://www.leboncoin.fr/ad/autres_services/2711381825"}
-          >
+          <Link target="_blank" href={"https://www.leboncoin.fr/ad/autres_services/2711381825"}>
             <Icons.LeBonCoin className="size-14" />
           </Link>
         </div>

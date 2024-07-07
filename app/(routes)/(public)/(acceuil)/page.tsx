@@ -1,11 +1,10 @@
-import { ProductListSkeleton } from "@/components/skeleton-ui/products-list-skeleton";
-import { Suspense } from "react";
-import FeaturesWithHeading from "./_components/features";
-import ImageAccueil from "./_components/image-accueil";
 import { getFeaturedProducts } from "@/actions/get-products";
 import ProductList from "@/components/products-list";
+import FeaturesWithHeading from "./_components/features";
+import ImageAccueil from "./_components/image-accueil";
+import PorteOuverte from "./_components/porte-ouverte";
 
-export const dynamic = "force-dynamic";
+export const dynamic = "force-static";
 
 export default function Home() {
   return (
@@ -16,11 +15,10 @@ export default function Home() {
       /> */}
 
       <ImageAccueil />
-      <Suspense
-        fallback={<ProductListSkeleton title="Découvrer nos produits" />}
-      >
+      <PorteOuverte />
+      {/* <Suspense fallback={<ProductListSkeleton title="Découvrer nos produits" />}>
         <NosProduits title="Découvrer nos produits" />
-      </Suspense>
+      </Suspense> */}
       <FeaturesWithHeading />
 
       {/* <PartenaireCards /> */}
