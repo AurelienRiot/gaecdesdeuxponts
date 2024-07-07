@@ -1,16 +1,12 @@
 "use client";
 
-import { ShopCard } from "@/components/display-shops/shop-card";
-import { ProductCell, type Status } from "@/components/table-custom-fuction/cell-orders";
+import { ProductCell, ShopNameCell, type Status } from "@/components/table-custom-fuction/cell-orders";
 import { DateCell } from "@/components/table-custom-fuction/common-cell";
 import { FilterOneInclude } from "@/components/table-custom-fuction/common-filter";
-import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
-import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { DatePickUpHeader, ShopNameHeader } from "@/components/table-custom-fuction/header-orders";
 import type { DataTableFilterableColumn, DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
 import type { Shop } from "@prisma/client";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Search } from "lucide-react";
 
 export type OrderColumnType = {
   id: string;
@@ -53,38 +49,12 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
   {
     accessorKey: "datePickUp",
     header: DatePickUpHeader,
-    cell: ({ row }) => <DateCell date={row.original.datePickUp} hours />,
+    cell: ({ row }) => <DateCell date={row.original.datePickUp} />,
   },
   {
     accessorKey: "shopName",
-    header: "Lieu de retrait",
-    cell: ({ row }) =>
-      row.original.shop ? (
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant={"linkHover2"}
-              className="justify-left flex flex-row items-center gap-2 whitespace-nowrap px-0 after:w-full hover:text-primary"
-            >
-              <Search className="h-4 w-4 flex-shrink-0" />
-
-              {row.getValue("shopName")}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent asChild align="center" side="top">
-            <ShopCard
-              className="min-w-[500px]"
-              display="profile"
-              shop={row.original.shop}
-              coordinates={{ lat: undefined, long: undefined }}
-            />
-          </PopoverContent>
-        </Popover>
-      ) : (
-        <Button variant={"ghost"} className="cursor-default px-0">
-          {"Livraison à domicile"}
-        </Button>
-      ),
+    header: ShopNameHeader,
+    cell: ({ row }) => <ShopNameCell shopName={row.original.shopName} shop={row.original.shop} />,
   },
 ];
 

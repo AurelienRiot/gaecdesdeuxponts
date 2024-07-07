@@ -14,14 +14,22 @@ function DatePickUpHeader<T>({
   column: Column<T & DatePickUpHeaderProps>;
 }) {
   return (
-    <Button
-      variant="ghost"
-      onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-    >
-      Date de retrait
+    <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+      Date de retrait/livraison
       <ArrowUpDown className="ml-2 h-4 w-4 flex-shrink-0" />
     </Button>
   );
 }
 
-export { DatePickUpHeader };
+type ShopNameHeaderProps = {
+  shopName: string;
+};
+
+function ShopNameHeader<T>({
+  column,
+}: {
+  column: Column<T & ShopNameHeaderProps>;
+}) {
+  return "Lieu de retrait/livraison";
+}
+export { DatePickUpHeader, ShopNameHeader };

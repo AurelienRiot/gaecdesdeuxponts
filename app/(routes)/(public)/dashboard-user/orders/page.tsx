@@ -1,7 +1,12 @@
 "use client";
 
 import { DataTableSkeleton } from "@/components/skeleton-ui/data-table-skeleton";
-import { createProduct, createProductList, createStatus } from "@/components/table-custom-fuction/cell-orders";
+import {
+  createDatePickUp,
+  createProduct,
+  createProductList,
+  createStatus,
+} from "@/components/table-custom-fuction/cell-orders";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
@@ -34,7 +39,7 @@ const PageOrderTable = () => {
     products: createProduct(order),
     totalPrice: currencyFormatter.format(order.totalPrice),
     status: createStatus(order),
-    datePickUp: order.datePickUp,
+    datePickUp: createDatePickUp({ dateOfShipping: order.dateOfShipping, datePickUp: order.datePickUp }),
     shopName: order.shop?.name || "Livraison à domicile",
     shop: order.shop || undefined,
     createdAt: order.createdAt,

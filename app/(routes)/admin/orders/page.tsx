@@ -1,4 +1,9 @@
-import { createProduct, createProductList, createStatus } from "@/components/table-custom-fuction/cell-orders";
+import {
+  createDatePickUp,
+  createProduct,
+  createProductList,
+  createStatus,
+} from "@/components/table-custom-fuction/cell-orders";
 import prismadb from "@/lib/prismadb";
 import { currencyFormatter } from "@/lib/utils";
 import type { DateRange } from "react-day-picker";
@@ -47,7 +52,7 @@ const OrdersPage = async (context: {
     name: order.user.company || order.user.name || order.user.email || "",
     userId: order.userId,
     isPaid: !!order.dateOfPayment,
-    datePickUp: order.datePickUp,
+    datePickUp: createDatePickUp({ dateOfShipping: order.dateOfShipping, datePickUp: order.datePickUp }),
     productsList: createProductList(order),
     products: createProduct(order),
     status: createStatus(order),

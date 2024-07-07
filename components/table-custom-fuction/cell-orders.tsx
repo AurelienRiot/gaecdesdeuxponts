@@ -1,5 +1,12 @@
 import type { OrderWithItemsAndShop } from "@/types";
 import type { Row } from "@tanstack/react-table";
+import { Button } from "../ui/button";
+import Link from "next/link";
+import { NameCell } from "./common-cell";
+import type { Shop } from "@prisma/client";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Search } from "lucide-react";
+import { ShopCard } from "../display-shops/shop-card";
 
 type ProductCellProps = {
   products: string;
@@ -24,6 +31,64 @@ function ProductCell<T>({ row }: { row: Row<T & ProductCellProps> }) {
         </span>
       ))}
     </div>
+  );
+}
+
+type OrderIdCellProps = {
+  id: string;
+};
+function OrderIdCell({ id }: OrderIdCellProps) {
+  return (
+    <Button asChild variant={"link"} className="px-0 font-bold text-green-500">
+      <Link href={`/admin/orders/${id}`}>Éditer le bon de livraison</Link>
+    </Button>
+  );
+}
+
+type AdminShopNameCellProps = {
+  shopName: string;
+  shopId: string;
+};
+function AdminShopNameCell({ shopName, shopId }: AdminShopNameCellProps) {
+  return shopName !== "Livraison à domicile" ? (
+    <NameCell name={shopName} url={`/admin/shops/${shopId}`} />
+  ) : (
+    <Button variant={"ghost"} className="cursor-default px-0">
+      {shopName}
+    </Button>
+  );
+}
+
+type ShopNameCellProps = {
+  shopName: string;
+  shop?: Shop;
+};
+function ShopNameCell({ shopName, shop }: ShopNameCellProps) {
+  return shop ? (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant={"linkHover2"}
+          className="justify-left flex flex-row items-center gap-2 whitespace-nowrap px-0 after:w-full hover:text-primary"
+        >
+          <Search className="h-4 w-4 flex-shrink-0" />
+
+          {shopName}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent asChild align="center" side="top">
+        <ShopCard
+          className="min-w-[500px]"
+          display="profile"
+          shop={shop}
+          coordinates={{ lat: undefined, long: undefined }}
+        />
+      </PopoverContent>
+    </Popover>
+  ) : (
+    <Button variant={"ghost"} className="cursor-default px-0">
+      {"Livraison à domicile"}
+    </Button>
   );
 }
 
@@ -53,11 +118,7 @@ function createProduct(order: OrderWithItemsAndShop) {
     .join(", ");
 }
 
-export type Status =
-  | "En cours de validation"
-  | "Commande valide"
-  | "En cours de paiement"
-  | "Payé";
+export type Status = "En cours de validation" | "Commande valide" | "En cours de paiement" | "Payé";
 
 function createStatus(order: OrderWithItemsAndShop): Status {
   return !order.dateOfEdition
@@ -68,4 +129,17 @@ function createStatus(order: OrderWithItemsAndShop): Status {
         ? "En cours de paiement"
         : "Payé";
 }
-export { ProductCell, createProduct, createProductList, createStatus };
+
+function createDatePickUp({ dateOfShipping, datePickUp }: { datePickUp: Date; dateOfShipping: Date | null }) {
+  return dateOfShipping ? dateOfShipping : datePickUp;
+}
+export {
+  ProductCell,
+  createProduct,
+  createProductList,
+  createStatus,
+  createDatePickUp,
+  OrderIdCell,
+  AdminShopNameCell,
+  ShopNameCell,
+};

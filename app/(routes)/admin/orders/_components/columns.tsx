@@ -1,10 +1,15 @@
 "use client";
 
-import { ProductCell, type Status } from "@/components/table-custom-fuction/cell-orders";
+import {
+  AdminShopNameCell,
+  OrderIdCell,
+  ProductCell,
+  type Status,
+} from "@/components/table-custom-fuction/cell-orders";
 import { DateCell, NameCell } from "@/components/table-custom-fuction/common-cell";
 import { FilterAllInclude, FilterOneInclude } from "@/components/table-custom-fuction/common-filter";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
-import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
+import { DatePickUpHeader, ShopNameHeader } from "@/components/table-custom-fuction/header-orders";
 import { Button } from "@/components/ui/button";
 import type { DataTableFilterableColumn, DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -30,11 +35,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "id",
     header: "Facture",
-    cell: ({ row }) => (
-      <Button asChild variant={"link"} className="px-0 font-bold text-green-500">
-        <Link href={`/admin/orders/${row.original.id}`}>Éditer le bon de livraison</Link>
-      </Button>
-    ),
+    cell: ({ row }) => <OrderIdCell id={row.original.id} />,
   },
   {
     accessorKey: "name",
@@ -65,15 +66,8 @@ export const columns: ColumnDef<OrderColumn>[] = [
   },
   {
     accessorKey: "shopName",
-    header: "Lieu de retrait",
-    cell: ({ row }) =>
-      row.original.shopName !== "Livraison à domicile" ? (
-        <NameCell name={row.original.shopName} url={`/admin/shops/${row.original.shopId}`} />
-      ) : (
-        <Button variant={"ghost"} className="cursor-default px-0">
-          {row.original.shopName}
-        </Button>
-      ),
+    header: ShopNameHeader,
+    cell: ({ row }) => <AdminShopNameCell shopName={row.original.shopName} shopId={row.original.shopId} />,
     filterFn: FilterOneInclude,
   },
   {

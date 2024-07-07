@@ -1,5 +1,6 @@
 import type { monthlyOrdersType } from "@/components/pdf/pdf-data";
 import {
+  createDatePickUp,
   createProduct,
   createProductList,
   createStatus,
@@ -8,7 +9,7 @@ import ButtonBackward from "@/components/ui/button-backward";
 import prismadb from "@/lib/prismadb";
 import { currencyFormatter } from "@/lib/utils";
 import MonthlyInvoice from "./_components/monthly-invoice";
-import type{ OrderColumn } from "./_components/order-column";
+import type { OrderColumn } from "./_components/order-column";
 import { OrderTable } from "./_components/order-table";
 import { UserForm } from "./_components/user-form";
 import { CreateUserForm } from "./_components/create-user-form";
@@ -52,16 +53,14 @@ const UserPage = async ({
     );
   }
 
-  const montlyOrders: (monthlyOrdersType | null)[] = user.orders.map(
-    (order) => {
-      if (!order.dateOfShipping) return null;
-      return {
-        orderId: order.id,
-        month: order.dateOfShipping.getMonth() + 1,
-        year: order.dateOfShipping.getFullYear(),
-      };
-    },
-  );
+  const montlyOrders: (monthlyOrdersType | null)[] = user.orders.map((order) => {
+    if (!order.dateOfShipping) return null;
+    return {
+      orderId: order.id,
+      month: order.dateOfShipping.getMonth() + 1,
+      year: order.dateOfShipping.getFullYear(),
+    };
+  });
 
   const formatedUser = {
     ...user,
@@ -72,7 +71,7 @@ const UserPage = async ({
     id: order.id,
     products: createProduct(order),
     productsList: createProductList(order),
-    datePickUp: order.datePickUp,
+    datePickUp: createDatePickUp({ dateOfShipping: order.dateOfShipping, datePickUp: order.datePickUp }),
     status: createStatus(order),
     isPaid: !!order.dateOfPayment,
     totalPrice: currencyFormatter.format(order.totalPrice),
@@ -87,11 +86,7 @@ const UserPage = async ({
         <UserForm initialData={formatedUser} />
       </div>
       {user.role === "pro" && (
-        <MonthlyInvoice
-          orders={
-            montlyOrders.filter((order) => !!order) as monthlyOrdersType[]
-          }
-        />
+        <MonthlyInvoice orders={montlyOrders.filter((order) => !!order) as monthlyOrdersType[]} />
       )}
       <div>
         <OrderTable data={formattedOrders} />

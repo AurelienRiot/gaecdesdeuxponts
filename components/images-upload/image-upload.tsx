@@ -44,7 +44,7 @@ const UploadImage = ({ selectedFiles, setSelectedFiles, multipleImages = false }
 
     for (const file of event.target.files) {
       if (file.size > MAX_FILE_SIZE) {
-        toast.error(`Le fichier ${file.name} fait plus de 1MB.`);
+        toast.error(`Le fichier ${file.name} fait plus de 2MB.`);
       } else {
         files.push(file);
       }
@@ -68,7 +68,7 @@ const UploadImage = ({ selectedFiles, setSelectedFiles, multipleImages = false }
           { duration: 5000 },
         );
       } else if (file.size > MAX_FILE_SIZE) {
-        toast.error(`Le fichier ${file.name} fait plus de 1MB.`);
+        toast.error(`Le fichier ${file.name} fait plus de 2MB.`);
       } else {
         files.push(file);
       }
