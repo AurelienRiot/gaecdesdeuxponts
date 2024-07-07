@@ -3,6 +3,7 @@
 import prismadb from "@/lib/prismadb";
 import cloudinary from "cloudinary";
 import { checkAdmin } from "../auth/checkAuth";
+import type { ReturnTypeServerAction } from "@/lib/server-action";
 
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -28,19 +29,12 @@ export type Ressources = {
   width: number;
 };
 
-type SignatureReturnType =
-  | {
-      success: true;
-      data: {
-        timestamp: number;
-        signature: string;
-      };
-    }
-  | {
-      success: false;
-      message: string;
-    };
-async function getSignature(): Promise<SignatureReturnType> {
+type SignatureType = {
+  timestamp: number;
+  signature: string;
+};
+
+async function getSignature(): Promise<ReturnTypeServerAction<SignatureType, undefined>> {
   const isAuth = await checkAdmin();
   if (!isAuth) {
     return {
@@ -57,21 +51,12 @@ async function getSignature(): Promise<SignatureReturnType> {
 
   return {
     success: true,
+    message: "Signature du fichier",
     data: { timestamp, signature },
   };
 }
 
-type listFilesReturnType =
-  | {
-      success: true;
-      data: Ressources[];
-    }
-  | {
-      success: false;
-      message: string;
-    };
-
-async function listFiles(): Promise<listFilesReturnType> {
+async function listFiles(): Promise<ReturnTypeServerAction<Ressources[], undefined>> {
   const isAuth = await checkAdmin();
   if (!isAuth) {
     return {
@@ -88,38 +73,27 @@ async function listFiles(): Promise<listFilesReturnType> {
     });
 
     const images = files.resources?.sort(
-      (a: Ressources, b: Ressources) =>
-        new Date(b.created_at ?? 0).getTime() -
-        new Date(a.created_at ?? 0).getTime(),
+      (a: Ressources, b: Ressources) => new Date(b.created_at ?? 0).getTime() - new Date(a.created_at ?? 0).getTime(),
     ) as Ressources[];
     return {
       success: true,
+      message: "Chargement des fichiers",
       data: images,
     };
   } catch (error) {
     console.error(`An error occurred: ${error}`);
     return {
       success: false,
-      message:
-        "Erreur dans le chargement des fichiers, veuillez rafraichir la page",
+      message: "Erreur dans le chargement des fichiers, veuillez rafraichir la page",
     };
   }
 }
-
-type ReturnTypeDeleteObject =
-  | {
-      success: true;
-    }
-  | {
-      success: false;
-      message: string;
-    };
 
 async function deleteObject({
   publicID,
 }: {
   publicID: string;
-}): Promise<ReturnTypeDeleteObject> {
+}): Promise<ReturnTypeServerAction<undefined, undefined>> {
   const isAuth = await checkAdmin();
   if (!isAuth) {
     return { success: false, message: "Vous devez être authentifier" };
@@ -138,9 +112,7 @@ async function deleteObject({
   });
 
   if (productsWithImage.length > 0) {
-    const productNames = productsWithImage
-      .map((category) => category.name)
-      .join(", ");
+    const productNames = productsWithImage.map((category) => category.name).join(", ");
     return {
       success: false,
       message: `L'image est utilisée par les produits : ${productNames}`,
@@ -157,9 +129,7 @@ async function deleteObject({
   });
 
   if (imagesCategories.length > 0) {
-    const categoryNames = imagesCategories
-      .map((category) => category.name)
-      .join(", ");
+    const categoryNames = imagesCategories.map((category) => category.name).join(", ");
     return {
       success: false,
       message: `L'image est utilisée par la categorie : ${categoryNames}`,
@@ -186,7 +156,7 @@ async function deleteObject({
   try {
     await cloudinary.v2.uploader.destroy(publicID);
     console.log(`Image supprimé`);
-    return { success: true };
+    return { success: true, message: "Image supprimé" };
   } catch (error) {
     console.error(`Error deleting object: ${publicID}`, error);
     return { success: false, message: "Erreur dans le suppression de l'image" };

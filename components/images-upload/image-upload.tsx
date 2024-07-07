@@ -20,7 +20,7 @@ export const makeURL = (key: string) => {
   return `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${key}`;
 };
 
-const MAX_FILE_SIZE = 1048576;
+const MAX_FILE_SIZE = 2000000;
 const FILES_TYPES = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
 
 type UploadImageProps = {
@@ -29,11 +29,7 @@ type UploadImageProps = {
   multipleImages?: boolean;
 };
 
-const UploadImage = ({
-  selectedFiles,
-  setSelectedFiles,
-  multipleImages = false,
-}: UploadImageProps) => {
+const UploadImage = ({ selectedFiles, setSelectedFiles, multipleImages = false }: UploadImageProps) => {
   const [allFiles, setAllFiles] = useState<string[]>([]);
 
   const [loading, setLoading] = useState(false);
@@ -45,14 +41,14 @@ const UploadImage = ({
     }
 
     const files: File[] = [];
-   
-for (const file of event.target.files) {
-  if (file.size > MAX_FILE_SIZE) {
-    toast.error(`Le fichier ${file.name} fait plus de 1MB.`);
-  }else {
-    files.push(file);
-  }
-}
+
+    for (const file of event.target.files) {
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error(`Le fichier ${file.name} fait plus de 1MB.`);
+      } else {
+        files.push(file);
+      }
+    }
 
     await fileChange(files);
   };
@@ -64,7 +60,7 @@ for (const file of event.target.files) {
     }
     setLoading(true);
     const files: File[] = [];
-  
+
     for (const file of event.dataTransfer.files) {
       if (!FILES_TYPES.includes(file.type)) {
         toast.error(
@@ -75,7 +71,8 @@ for (const file of event.target.files) {
         toast.error(`Le fichier ${file.name} fait plus de 1MB.`);
       } else {
         files.push(file);
-      }}
+      }
+    }
 
     await fileChange(files);
   };
@@ -85,6 +82,12 @@ for (const file of event.target.files) {
       const result = await getSignature();
       if (!result.success) {
         toast.error(result.message);
+        setLoading(false);
+        return;
+      }
+
+      if (!result.data) {
+        toast.error("Impossible de charger le fichier. Veuillez reessayer plus tard.");
         setLoading(false);
         return;
       }
@@ -103,10 +106,7 @@ for (const file of event.target.files) {
       const formdata = new FormData();
       formdata.append("timestamp", timestamp.toString());
       formdata.append("signature", signature);
-      formdata.append(
-        "api_key",
-        process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY as string,
-      );
+      formdata.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY as string);
       formdata.append("file", file);
       formdata.append("folder", "farm");
 
@@ -121,10 +121,7 @@ for (const file of event.target.files) {
     });
 
     const results = await Promise.all(uploadPromises);
-    const validUrls = results.filter(
-      (result): result is { secureUrl: string; publicId: string } =>
-        result !== null,
-    );
+    const validUrls = results.filter((result): result is { secureUrl: string; publicId: string } => result !== null);
 
     await checkUrls(validUrls);
 
@@ -134,13 +131,15 @@ for (const file of event.target.files) {
       setLoading(false);
       return;
     }
+    if (!updatedFiles.data) {
+      toast.error("Impossible de charger le fichier. Veuillez reessayer plus tard.");
+      setLoading(false);
+      return;
+    }
 
     setAllFiles(updatedFiles.data.map((item) => makeURL(item.public_id)));
     if (multipleImages) {
-      setSelectedFiles([
-        ...selectedFiles,
-        ...validUrls.map((item) => makeURL(item.publicId)),
-      ]);
+      setSelectedFiles([...selectedFiles, ...validUrls.map((item) => makeURL(item.publicId))]);
     } else {
       setSelectedFiles([makeURL(validUrls[0].publicId)]);
     }
@@ -152,6 +151,10 @@ for (const file of event.target.files) {
       const files = await listFiles();
       if (!files.success) {
         toast.error(files.message);
+        return;
+      }
+      if (!files.data) {
+        toast.error("Impossible de charger le fichier. Veuillez reessayer plus tard.");
         return;
       }
       setAllFiles(files.data.map((item) => makeURL(item.public_id)));
@@ -176,18 +179,13 @@ for (const file of event.target.files) {
             <Loader2 className="animate-spin" />
           </div>
 
-          <div
-            data-state={loading}
-            className="text-center data-[state=true]:blur-md"
-          >
+          <div data-state={loading} className="text-center data-[state=true]:blur-md">
             <div className="mx-auto max-w-min rounded-md border bg-foreground p-2">
               <UploadCloud size={20} className="text-primary-foreground" />
             </div>
 
             <p className="mt-2 text-sm text-primary">
-              <span className="font-semibold">
-                {multipleImages ? "Ajouter des images" : "Ajouter une image"}
-              </span>
+              <span className="font-semibold">{multipleImages ? "Ajouter des images" : "Ajouter une image"}</span>
             </p>
           </div>
           <Input
@@ -245,19 +243,13 @@ type DisplaySelectedImagesProps = {
   multipleImages: boolean;
 };
 
-const DisplaySelectedImages = ({
-  selectedFiles,
-  setSelectedFiles,
-  multipleImages,
-}: DisplaySelectedImagesProps) => {
+const DisplaySelectedImages = ({ selectedFiles, setSelectedFiles, multipleImages }: DisplaySelectedImagesProps) => {
   return (
     <>
       <div>
         <h1 className="text-primary">
           {" "}
-          {multipleImages && selectedFiles.length > 1
-            ? "Images selectionnées"
-            : "Image selectionnée"}
+          {multipleImages && selectedFiles.length > 1 ? "Images selectionnées" : "Image selectionnée"}
         </h1>
         {selectedFiles.length !== 0 ? (
           <Reorder.Group
@@ -290,9 +282,7 @@ const DisplaySelectedImages = ({
                     type="button"
                     onClick={(e) => {
                       console.log(selectedFiles.filter((item) => item !== url));
-                      setSelectedFiles(
-                        selectedFiles.filter((item) => item !== url),
-                      );
+                      setSelectedFiles(selectedFiles.filter((item) => item !== url));
                     }}
                     className="absolute right-0 z-10 hidden items-center justify-center rounded-tr-md bg-destructive px-2 text-destructive-foreground transition-all hover:bg-destructive/90 group-hover:flex"
                   >
@@ -350,9 +340,7 @@ const DisplayImages = ({
 
   return (
     <div className="space-y-4">
-      <p className="my-2 mt-6 text-sm font-medium text-primary">
-        Images disponibles
-      </p>
+      <p className="my-2 mt-6 text-sm font-medium text-primary">Images disponibles</p>
       <Switch
         onCheckedChange={() => {
           setDisplayFiles(!displayFiles);
@@ -364,10 +352,7 @@ const DisplayImages = ({
           {allFiles.length > 0 ? (
             allFiles
               .filter((fileUrl) => !selectedFiles.includes(fileUrl))
-              .slice(
-                (currentPage - 1) * imagesPerPage,
-                currentPage * imagesPerPage,
-              )
+              .slice((currentPage - 1) * imagesPerPage, currentPage * imagesPerPage)
               .map((fileUrl) => (
                 <div
                   key={fileUrl}
@@ -385,9 +370,7 @@ const DisplayImages = ({
                     </div>
                     <div className="ml-2 w-fit space-y-1">
                       <div className="flex justify-between text-sm">
-                        <p className="text-muted-foreground">
-                          {getFileKey(fileUrl)}
-                        </p>
+                        <p className="text-muted-foreground">{getFileKey(fileUrl)}</p>
                       </div>
                     </div>
                   </div>
@@ -440,10 +423,7 @@ const DisplayImages = ({
             onClick={(e) => {
               setCurrentPage((prev) => prev + 1);
             }}
-            disabled={
-              currentPage * imagesPerPage >=
-              allFiles.length - selectedFiles.length
-            }
+            disabled={currentPage * imagesPerPage >= allFiles.length - selectedFiles.length}
           >
             Suivant
           </Button>
@@ -453,9 +433,7 @@ const DisplayImages = ({
   );
 };
 
-const checkUrls = async (
-  urls: { secureUrl: string | null; publicId: string }[],
-): Promise<void> => {
+const checkUrls = async (urls: { secureUrl: string | null; publicId: string }[]): Promise<void> => {
   const invalidUrls = await Promise.all(
     urls.map(async (url) => {
       if (!url.secureUrl) {
@@ -470,6 +448,6 @@ const checkUrls = async (
     // If there are still invalid URLs, wait for 250ms and check again
     await addDelay(250);
     return checkUrls(invalidUrls.filter((url) => url.secureUrl !== null));
-  } 
-    return;
+  }
+  return;
 };

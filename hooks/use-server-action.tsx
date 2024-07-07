@@ -1,8 +1,8 @@
-import type { ReturnTypeServerAction2 } from "@/lib/server-action";
+import type { ReturnTypeServerAction } from "@/lib/server-action";
 import { useState } from "react";
 import { toast } from "sonner";
 
-function useServerAction<D, R, E = undefined>(action: (data: D) => Promise<ReturnTypeServerAction2<R, E>>) {
+function useServerAction<D, R, E = undefined>(action: (data: D) => Promise<ReturnTypeServerAction<R, E>>) {
   const [loading, setLoading] = useState(false);
 
   async function serverAction({

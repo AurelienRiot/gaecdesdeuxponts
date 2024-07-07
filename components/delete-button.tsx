@@ -3,11 +3,11 @@ import useServerAction from "@/hooks/use-server-action";
 import { TrashButton } from "./animations/lottie-animation/trash-button";
 import { AlertModal } from "./ui/alert-modal-form";
 import { useState } from "react";
-import type { ReturnTypeServerAction2 } from "@/lib/server-action";
+import type { ReturnTypeServerAction } from "@/lib/server-action";
 
 type DeleteButtonProps<D, R, E = undefined> = {
   data: D;
-  action: (data: D) => Promise<ReturnTypeServerAction2<R, E>>;
+  action: (data: D) => Promise<ReturnTypeServerAction<R, E>>;
   isSubmitting?: boolean;
   onSuccess?: () => void;
   children?: React.ReactNode;

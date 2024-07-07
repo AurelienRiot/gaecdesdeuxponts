@@ -1,7 +1,7 @@
 "use client";
 import useServerAction from "@/hooks/use-server-action";
 import { dateFormatter } from "@/lib/date-utils";
-import type { ReturnTypeServerAction2 } from "@/lib/server-action";
+import type { ReturnTypeServerAction } from "@/lib/server-action";
 import type { Row } from "@tanstack/react-table";
 import Image from "next/image";
 import Link from "next/link";
@@ -63,7 +63,7 @@ function TextCell<T>({ row }: { row: Row<T & TextCellProps> }) {
 type CheckboxCellProps<R, E> = {
   isCheckbox: boolean;
   id: string;
-  action: (data: { checkState: CheckedState; id: string }) => Promise<ReturnTypeServerAction2<R, E>>;
+  action: (data: { checkState: CheckedState; id: string }) => Promise<ReturnTypeServerAction<R, E>>;
 };
 
 function CheckboxCell<R, E>({ isCheckbox, action, id }: CheckboxCellProps<R, E>) {

@@ -2,9 +2,9 @@
 
 import { getSessionUser } from "@/actions/get-user";
 import prismadb from "@/lib/prismadb";
-import type { ReturnTypeServerAction2 } from "@/lib/server-action";
+import type { ReturnTypeServerAction } from "@/lib/server-action";
 
-async function deleteUser(): Promise<ReturnTypeServerAction2> {
+async function deleteUser(): Promise<ReturnTypeServerAction> {
   const user = await getSessionUser();
 
   if (!user) {

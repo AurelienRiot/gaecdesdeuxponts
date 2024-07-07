@@ -1,18 +1,6 @@
 import type { z } from "zod";
 
-export type ReturnTypeServerAction<T, E = undefined> =
-  | {
-      success: true;
-      data: T;
-      message?: string;
-    }
-  | {
-      success: false;
-      message: string;
-      errorData?: E;
-    };
-
-export type ReturnTypeServerAction2<R = undefined, E = undefined> =
+export type ReturnTypeServerAction<R = undefined, E = undefined> =
   | {
       success: true;
       message: string;
@@ -34,11 +22,11 @@ type SafeServerActionType<D extends z.ZodTypeAny, R, E, U> = BaseServerActionTyp
   (
     | {
         ignoreCheckUser?: false;
-        serverAction: (data: z.infer<D>, user: U) => Promise<ReturnTypeServerAction2<R, E>>;
+        serverAction: (data: z.infer<D>, user: U) => Promise<ReturnTypeServerAction<R, E>>;
       }
     | {
         ignoreCheckUser: true;
-        serverAction: (data: z.infer<D>, user: U | null) => Promise<ReturnTypeServerAction2<R, E>>;
+        serverAction: (data: z.infer<D>, user: U | null) => Promise<ReturnTypeServerAction<R, E>>;
       }
   );
 
@@ -48,12 +36,12 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E, U>({
   ignoreCheckUser,
   data,
   getUser,
-}: SafeServerActionType<D, R, E, U>): Promise<ReturnTypeServerAction2<R, E>> {
+}: SafeServerActionType<D, R, E, U>): Promise<ReturnTypeServerAction<R, E>> {
   const validatedData = schema.safeParse(data);
   if (!validatedData.success) {
     return {
       success: false,
-      message: validatedData.error.message,
+      message: validatedData.error.issues[0].message,
     };
   }
 

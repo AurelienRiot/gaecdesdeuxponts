@@ -1,12 +1,12 @@
 "use client";
 
+import type { ReturnTypeServerAction } from "@/lib/server-action";
 import { addDelay } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useState } from "react";
 import { Toaster as Sonner, toast } from "sonner";
 import { Button } from "./button";
-import type { ReturnTypeServerAction, ReturnTypeServerAction2 } from "@/lib/server-action";
-import { useState } from "react";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
@@ -34,82 +34,8 @@ const Toaster = ({ ...props }: ToasterProps) => {
   );
 };
 
-type ToastPromiseProps<D, R, E> = {
-  serverAction: (data: D) => Promise<ReturnTypeServerAction<R, E>>;
-  data: D;
-  errorMessage?: string;
-  successMessage?: string;
-  message?: string;
-  onFinally?: () => void;
-  onError?: () => void;
-  onSuccess?: (result?: R) => void;
-};
-
-const toastPromise = <D, R, E>({
-  serverAction,
-  data,
-  errorMessage = "Envoie du message annulé",
-  message = "Envoie du message",
-  successMessage = "Message envoyé",
-  onFinally,
-  onError,
-  onSuccess,
-}: ToastPromiseProps<D, R, E>) => {
-  const abortController = new AbortController();
-  const { signal } = abortController;
-  const promise = async () => {
-    await addDelay(2100, signal).catch((e) => {
-      const error = e as Error;
-      if (error?.name === "AbortError") {
-        throw new Error(errorMessage);
-      }
-      throw e;
-    });
-
-    const result = await serverAction(data).catch((e) => {
-      throw new Error(errorMessage);
-    });
-    if (!result.success) {
-      throw new Error(result.message);
-    }
-    return result.data;
-  };
-
-  toast.promise(promise, {
-    position: "top-center",
-    loading: (
-      <div className="flex w-full items-center justify-between">
-        <span className="align-middle">
-          <Loader2 className="my-auto mr-2 inline size-4 animate-spin" /> {message}{" "}
-        </span>
-        <Button
-          size={"xs"}
-          className="animate-[hide-element_2s_forwards] text-xs"
-          onClick={() => {
-            abortController.abort();
-          }}
-        >
-          Annuler
-        </Button>
-      </div>
-    ),
-    success: (result) => {
-      onSuccess?.(result);
-      return successMessage;
-    },
-    error: (e) => {
-      const error = e as Error;
-      onError?.();
-      return error?.message || "Erreur";
-    },
-    finally: () => {
-      onFinally?.();
-    },
-  });
-};
-
 type UseToastPromiseProps<D, R, E> = {
-  serverAction: (data: D) => Promise<ReturnTypeServerAction2<R, E>>;
+  serverAction: (data: D) => Promise<ReturnTypeServerAction<R, E>>;
   errorMessage?: string;
   message?: string;
 };
@@ -186,4 +112,4 @@ const useToastPromise = <D, R, E = undefined>({
 
   return { loading, setLoading, toastServerAction };
 };
-export { Toaster, toastPromise, useToastPromise };
+export { Toaster, useToastPromise };
