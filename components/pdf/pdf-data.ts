@@ -46,9 +46,6 @@ export const createDataOrder = (order: FullOrder): DataOrder => {
   };
 };
 
-export const generateOrderId = () =>
-  `CM-${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear() % 100}_${nanoid(5)}`;
-
 export type DataOrder = {
   id: string;
   dateOfEdition: string;

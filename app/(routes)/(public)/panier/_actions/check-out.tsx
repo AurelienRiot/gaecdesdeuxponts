@@ -4,9 +4,10 @@ import { GetUserWithAdress, getSessionUser } from "@/actions/get-user";
 import OrderEmail from "@/components/email/order";
 import OrderSendEmail from "@/components/email/order-send";
 import Order from "@/components/pdf/create-commande";
-import { createCustomer, createPDFData, generateOrderId } from "@/components/pdf/pdf-data";
+import { createCustomer, createPDFData } from "@/components/pdf/pdf-data";
 import { getUnitLabel } from "@/components/product/product-function";
 import { dateFormatter, isDateDisabled } from "@/lib/date-utils";
+import { createId } from "@/lib/id";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
@@ -213,7 +214,7 @@ type CreateOrderType = {
 async function createOrder({ totalPrice, productsWithQuantity, shopId, user, datePickUp }: CreateOrderType) {
   const order = await prismadb.order.create({
     data: {
-      id: generateOrderId(),
+      id: createId("order"),
       totalPrice,
       orderItems: {
         create: productsWithQuantity.map((product) => ({

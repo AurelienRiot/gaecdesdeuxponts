@@ -1,7 +1,6 @@
 "use client";
 import DeleteButton from "@/components/delete-button";
 import { DisplayInvoice, DisplayShippingOrder } from "@/components/pdf/pdf-button";
-import { generateOrderId } from "@/components/pdf/pdf-data";
 import { LoadingButton } from "@/components/ui/button";
 import ButtonBackward from "@/components/ui/button-backward";
 import { Form, FormField } from "@/components/ui/form";
@@ -9,11 +8,13 @@ import { Heading } from "@/components/ui/heading";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import useServerAction from "@/hooks/use-server-action";
+import { createId } from "@/lib/id";
 import type { ProductWithMain, UserWithAddress } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Shop } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { deleteOrder } from "../../_actions/delete-orders";
 import createOrder from "../_actions/create-order";
 import updateOrder from "../_actions/update-order";
 import FormDatePicker from "./date-picker";
@@ -23,7 +24,6 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
-import { deleteOrder } from "../../_actions/delete-orders";
 
 type ProductFormProps = {
   initialData: OrderFormValues | null;
@@ -49,7 +49,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(orderSchema),
     defaultValues: {
-      id: initialData?.id || generateOrderId(),
+      id: initialData?.id || createId("order"),
       totalPrice: initialData?.totalPrice,
       dateOfPayment: initialData?.dateOfPayment,
       dateOfShipping: initialData?.dateOfShipping,

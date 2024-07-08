@@ -2,7 +2,7 @@ import { customAlphabet } from "nanoid";
 
 export const nanoid = customAlphabet("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", 5);
 
-export const IdType = ["category", "product", "user", "shop", "mainProduct"] as const;
+export const IdType = ["category", "product", "user", "shop", "mainProduct", "order"] as const;
 
 export function createId(type: (typeof IdType)[number]) {
   switch (type) {
@@ -16,5 +16,7 @@ export function createId(type: (typeof IdType)[number]) {
       return `SH_${nanoid(7)}`;
     case "mainProduct":
       return `MP_${nanoid(7)}`;
+    case "order":
+      return `CM-${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear() % 100}_${nanoid(5)}`;
   }
 }
