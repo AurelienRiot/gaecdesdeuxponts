@@ -1,6 +1,6 @@
 "use server";
 
-import { getSessionUser } from "@/actions/get-user";
+import { GetUserWithAdress, getSessionUser } from "@/actions/get-user";
 import OrderEmail from "@/components/email/order";
 import OrderSendEmail from "@/components/email/order-send";
 import Order from "@/components/pdf/create-commande";
@@ -65,7 +65,7 @@ async function getUser() {
 export const createCheckOut = async (data: CheckOutProps) =>
   await safeServerAction({
     data,
-    getUser,
+    getUser: GetUserWithAdress,
     schema: checkOutSchema,
     serverAction: async (data, user) => {
       const { itemsWithQuantities, date, shopId } = data;

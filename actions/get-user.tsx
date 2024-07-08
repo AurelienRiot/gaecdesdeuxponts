@@ -27,6 +27,26 @@ export const getBasicUser = async () => {
   return user;
 };
 
+export const GetUserWithAdress = async () => {
+  const sessionUser = await getSessionUser();
+
+  if (!sessionUser) {
+    return null;
+  }
+
+  const user = await prismadb.user.findUnique({
+    where: {
+      id: sessionUser.id,
+    },
+    include: {
+      address: true,
+      billingAddress: true,
+    },
+  });
+
+  return user;
+};
+
 const GetUser = async () => {
   const sessionUser = await getSessionUser();
 
@@ -120,8 +140,7 @@ const testUser = {
         phone: "+33633458289",
         email: "amap.dominelais@gmail.com",
         description: "Shop 2 description",
-        imageUrl:
-          "https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/farm/ldqit2yhtqdzj0csdsp4",
+        imageUrl: "https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/farm/ldqit2yhtqdzj0csdsp4",
         website: null,
         isArchived: false,
         createdAt: new Date("2024-03-10T23:09:14.169Z"),
