@@ -37,6 +37,9 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E, U>({
   data,
   getUser,
 }: SafeServerActionType<D, R, E, U>): Promise<ReturnTypeServerAction<R, E>> {
+  console.time("Total Execution Time");
+
+  console.time("Validate Data");
   const validatedData = schema.safeParse(data);
   if (!validatedData.success) {
     return {
@@ -44,7 +47,9 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E, U>({
       message: validatedData.error.issues[0].message,
     };
   }
+  console.timeEnd("Validate Data");
 
+  console.time("Get User");
   const user = await getUser();
   if (ignoreCheckUser) {
     return await serverAction(data, user);
@@ -56,7 +61,13 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E, U>({
       message: "Vous devez être authentifier",
     };
   }
-  return await serverAction(data, user);
+
+  console.timeEnd("Get User");
+  console.time("Server Action");
+  const result = await serverAction(data, user);
+  console.timeEnd("Server Action");
+  console.timeEnd("Total Execution Time");
+  return result;
 }
 
 export default safeServerAction;

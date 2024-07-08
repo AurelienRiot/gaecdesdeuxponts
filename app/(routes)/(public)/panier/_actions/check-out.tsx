@@ -70,7 +70,6 @@ export const createCheckOut = async (data: CheckOutProps) =>
     serverAction: async (data, user) => {
       const { itemsWithQuantities, date, shopId } = data;
       const productIds = itemsWithQuantities.map((item) => item.id);
-      console.time("Total Execution Time");
 
       console.time("Fetch Products");
       try {
@@ -152,7 +151,7 @@ export const createCheckOut = async (data: CheckOutProps) =>
               }),
             ),
             attachments: [
-              { filename: `Bon_de_commande-${order.id}.pdf`, content: pdfBuffer, contentType: "application/pdf" },
+              { filename: `Bon de commande ${order.id}.pdf`, content: pdfBuffer, contentType: "application/pdf" },
             ],
           }),
         ];
@@ -182,7 +181,6 @@ export const createCheckOut = async (data: CheckOutProps) =>
 
         revalidatePath("/dashboard-user/orders");
 
-        console.timeEnd("Total Execution Time");
         return {
           success: true,
           message: "Commande effectuée avec succès",
