@@ -1,25 +1,15 @@
 "use server";
 
-import { GetUserWithAdress, getSessionUser } from "@/actions/get-user";
-import OrderEmail from "@/components/email/order";
-import OrderSendEmail from "@/components/email/order-send";
-import Order from "@/components/pdf/create-commande";
-import { createCustomer, createPDFData } from "@/components/pdf/pdf-data";
+import { getUserWithAdress } from "@/actions/get-user";
+import { createCustomer } from "@/components/pdf/pdf-data";
 import { getUnitLabel } from "@/components/product/product-function";
-import { dateFormatter, isDateDisabled } from "@/lib/date-utils";
+import { isDateDisabled } from "@/lib/date-utils";
 import { createId } from "@/lib/id";
-import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
-import { currencyFormatter } from "@/lib/utils";
-import type { FullOrder, ProductWithMain, UserWithAddress } from "@/types";
-import { render } from "@react-email/render";
-import { pdf } from "@react-pdf/renderer";
+import type { ProductWithMain, UserWithAddress } from "@/types";
 import { revalidatePath } from "next/cache";
 import * as z from "zod";
-
-const baseUrl = process.env.NEXT_PUBLIC_URL as string;
-const ExcludeEmail = ["yoyololo1235@gmail.com", "pub.demystify390@passmail.net"];
 
 const checkOutSchema = z.object({
   date: z.date().refine((date) => !isDateDisabled(date), {
@@ -51,7 +41,7 @@ type CheckOutProps = z.infer<typeof checkOutSchema>;
 export const createCheckOut = async (data: CheckOutProps) =>
   await safeServerAction({
     data,
-    getUser: GetUserWithAdress,
+    getUser: getUserWithAdress,
     schema: checkOutSchema,
     serverAction: async (data, user) => {
       const { itemsWithQuantities, date, shopId } = data;
@@ -103,59 +93,13 @@ export const createCheckOut = async (data: CheckOutProps) =>
           datePickUp: date,
           shopId,
         });
-        console.time("Generate PDF");
-        const pdfBuffer = await generatePdf(order);
-        console.timeEnd("Generate PDF");
-
-        console.time("Generate email");
-        // Send emails in parallel
-        const emailPromises = [
-          transporter.sendMail({
-            from: "laiteriedupontrobert@gmail.com",
-            to: user.email || "",
-            subject: "Confirmation de votre commande - Laiterie du Pont Robert",
-            html: render(
-              OrderEmail({
-                date: dateFormatter(order.createdAt),
-                baseUrl,
-                id: order.id,
-                price: currencyFormatter.format(totalPrice),
-              }),
-            ),
-            attachments: [
-              { filename: `Bon de commande ${order.id}.pdf`, content: pdfBuffer, contentType: "application/pdf" },
-            ],
-          }),
-        ];
-
-        if (process.env.NODE_ENV === "production" && user.email && !ExcludeEmail.includes(user.email)) {
-          emailPromises.push(
-            transporter.sendMail({
-              from: "laiteriedupontrobert@gmail.com",
-              to: "laiteriedupontrobert@gmail.com",
-              subject: "[NOUVELLE COMMANDE] - Laiterie du Pont Robert",
-              html: render(
-                OrderSendEmail({
-                  baseUrl,
-                  id: order.id,
-                  name: user.name || user.email || "Utilisateur inconnu",
-                  price: currencyFormatter.format(totalPrice),
-                  date: dateFormatter(order.createdAt),
-                }),
-              ),
-            }),
-          );
-        }
-        console.timeEnd("Generate email");
-        console.time("Send Emails");
-        await Promise.all(emailPromises);
-        console.timeEnd("Send Emails");
 
         revalidatePath("/dashboard-user/orders");
 
         return {
           success: true,
-          message: "Commande effectuée avec succès",
+          message: "",
+          data: { orderId: order.id },
         };
       } catch (error) {
         console.log(error);
@@ -166,15 +110,6 @@ export const createCheckOut = async (data: CheckOutProps) =>
       }
     },
   });
-
-async function generatePdf(order: FullOrder) {
-  const pdfData = createPDFData(order);
-  const doc = <Order data={pdfData} />;
-  const pdfBlob = await pdf(doc).toBlob();
-  const arrayBuffer = await pdfBlob.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
-  return buffer;
-}
 
 type CreateOrderType = {
   totalPrice: number;
@@ -207,11 +142,11 @@ async function createOrder({ totalPrice, productsWithQuantity, shopId, user, dat
         create: createCustomer(user),
       },
     },
-    include: {
-      shop: true,
-      orderItems: true,
-      customer: true,
-    },
+    // include: {
+    //   shop: true,
+    //   orderItems: true,
+    //   customer: true,
+    // },
   });
   return order;
 }

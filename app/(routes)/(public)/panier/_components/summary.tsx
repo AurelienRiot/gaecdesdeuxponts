@@ -20,6 +20,7 @@ import { createCheckOut } from "../_actions/check-out";
 import DatePicker from "./date-picker";
 import LoginCard from "./login-card";
 import TimePicker from "./time-picker";
+import sendCheckoutEmail from "../_actions/send-chekout-email";
 
 const getDateFromSearchParam = (param: string | null): Date | undefined => {
   if (param === null) return undefined;
@@ -33,6 +34,7 @@ interface SummaryProps {
 
 const Summary: React.FC<SummaryProps> = ({ shops }) => {
   const { serverAction, loading } = useServerAction(createCheckOut);
+  const { serverAction: sendEmail, loading: sendEmailLoading } = useServerAction(sendCheckoutEmail);
   const session = useSession();
   const role = session.data?.user?.role;
   const cart = useCart();
@@ -94,7 +96,12 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
       };
     });
 
-    async function onSuccess() {
+    async function onSuccess(result?: { orderId: string }) {
+      if (!result) {
+        toast.error("Erreur");
+        return;
+      }
+      await sendEmail({ data: { orderId: result.orderId } });
       router.push("/dashboard-user/orders");
       await addDelay(500);
       cart.removeAll();
@@ -140,8 +147,13 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
         /> */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button disabled={loading || !!tooltipText} onClick={onCheckout} variant="rounded" className="w-full">
-              {loading && <Loader2 className={"mr-2 h-4 w-4 animate-spin"} />}
+            <Button
+              disabled={loading || !!tooltipText || sendEmailLoading}
+              onClick={onCheckout}
+              variant="rounded"
+              className="w-full"
+            >
+              {loading && sendEmailLoading && <Loader2 className={"mr-2 h-4 w-4 animate-spin"} />}
               Passer la commande
             </Button>
           </TooltipTrigger>

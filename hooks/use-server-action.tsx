@@ -21,6 +21,7 @@ function useServerAction<D, R, E = undefined>(action: (data: D) => Promise<Retur
         }
         await onSuccess?.(result.data);
         result.message ? toast.success(result.message) : null;
+        return result.data;
       })
       .catch(async () => {
         await onError?.();

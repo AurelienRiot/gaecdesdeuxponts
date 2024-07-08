@@ -27,7 +27,7 @@ export const getBasicUser = async () => {
   return user;
 };
 
-export const GetUserWithAdress = async () => {
+export const getUserWithAdress = async () => {
   const sessionUser = await getSessionUser();
 
   if (!sessionUser) {
