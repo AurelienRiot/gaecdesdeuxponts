@@ -136,7 +136,7 @@ export const createCheckOut = async (data: CheckOutProps) =>
         const pdfBuffer = await generatePdf(order);
         console.timeEnd("Generate PDF");
 
-        console.time("Send Emails");
+        console.time("Generate email");
         // Send emails in parallel
         const emailPromises = [
           transporter.sendMail({
@@ -175,7 +175,8 @@ export const createCheckOut = async (data: CheckOutProps) =>
             }),
           );
         }
-
+        console.timeEnd("Generate email");
+        console.time("Send Emails");
         await Promise.all(emailPromises);
         console.timeEnd("Send Emails");
 
