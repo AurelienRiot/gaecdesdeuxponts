@@ -10,7 +10,7 @@ function PorteOuverte() {
           <div className="space-y-4">
             <h2 className=" tracking-tighter flex flex-col text-3xl font-bold sm:text-4xl md:text-5xl lg:text-6xl">
               <span>Portes Ouvertes</span>
-              <span className="text-green-500">LAIT CRU</span>
+              <span className="text-green-500">Lait Cru</span>
             </h2>
             <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               Rejoignez-nous tous les mercredis de Juillet.

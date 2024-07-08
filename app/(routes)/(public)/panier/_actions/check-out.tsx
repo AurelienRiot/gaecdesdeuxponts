@@ -69,53 +69,60 @@ export const createCheckOut = async (data: CheckOutProps) =>
     serverAction: async (data, user) => {
       const { itemsWithQuantities, date, shopId } = data;
       const productIds = itemsWithQuantities.map((item) => item.id);
-      const products = await prismadb.product.findMany({
-        where: {
-          id: {
-            in: productIds,
-          },
-        },
-        include: {
-          product: true,
-        },
-      });
+      console.time("Total Execution Time");
 
-      const productsWithQuantity = products.map((product) => {
-        return {
-          item: product,
-          quantity: itemsWithQuantities.find((item) => item.id === product.id)?.quantity,
-        };
-      });
-
-      const mismatchedProducts = itemsWithQuantities.filter((item) => {
-        const matchingProduct = products.find((product) => product.id === item.id);
-        if (!matchingProduct) {
-          return true;
-        }
-        if (matchingProduct.price !== item.price) {
-          return true;
-        }
-
-        if (matchingProduct.product.isPro && user.role !== "pro") {
-          return true;
-        }
-        return false;
-      });
-
-      const totalPrice = itemsWithQuantities.reduce((acc, { price, quantity }) => {
-        return acc + (price || 0) * (quantity || 1);
-      }, 0);
-
-      if (mismatchedProducts.length > 0) {
-        console.log("Mismatched IDs:", mismatchedProducts);
-        return {
-          success: false,
-          message: `Produits modifiés`,
-          errorData: mismatchedProducts.map((product) => product.id),
-        };
-      }
-
+      console.time("Fetch Products");
       try {
+        const products = await prismadb.product.findMany({
+          where: {
+            id: {
+              in: productIds,
+            },
+          },
+          include: {
+            product: true,
+          },
+        });
+        console.timeEnd("Fetch Products");
+
+        console.time("Map Products with Quantity");
+        const productsWithQuantity = products.map((product) => {
+          return {
+            item: product,
+            quantity: itemsWithQuantities.find((item) => item.id === product.id)?.quantity,
+          };
+        });
+        console.timeEnd("Map Products with Quantity");
+
+        console.time("Find Mismatched Products");
+        // Find mismatched products
+        const mismatchedProducts = itemsWithQuantities.filter((item) => {
+          const matchingProduct = products.find((product) => product.id === item.id);
+          return (
+            !matchingProduct ||
+            matchingProduct.price !== item.price ||
+            (matchingProduct.product.isPro && user.role !== "pro")
+          );
+        });
+
+        if (mismatchedProducts.length > 0) {
+          console.log("Mismatched IDs:", mismatchedProducts);
+          return {
+            success: false,
+            message: `Produits modifiés`,
+            errorData: mismatchedProducts.map((product) => product.id),
+          };
+        }
+
+        console.timeEnd("Find Mismatched Products");
+
+        console.time("Calculate Total Price");
+        const totalPrice = itemsWithQuantities.reduce((acc, { price, quantity }) => {
+          return acc + (price || 0) * (quantity || 1);
+        }, 0);
+        console.timeEnd("Calculate Total Price");
+
+        console.time("Create Order");
         const order = await createOrder({
           productsWithQuantity,
           totalPrice,
@@ -123,48 +130,57 @@ export const createCheckOut = async (data: CheckOutProps) =>
           datePickUp: date,
           shopId,
         });
+        console.timeEnd("Create Order");
+        console.time("Generate PDF");
         const pdfBuffer = await generatePdf(order);
+        console.timeEnd("Generate PDF");
 
-        await transporter.sendMail({
-          from: "laiteriedupontrobert@gmail.com",
-          to: user.email || "",
-          subject: "Confirmation de votre commande - Laiterie du Pont Robert",
-          html: render(
-            OrderEmail({
-              date: dateFormatter(order.createdAt),
-              baseUrl,
-              id: order.id,
-              price: currencyFormatter.format(totalPrice),
-            }),
-          ),
-          attachments: [
-            {
-              filename: `Bon_de_commande-${order.id}.pdf`,
-              content: pdfBuffer,
-              contentType: "application/pdf",
-            },
-          ],
-        });
-
-        if (process.env.NODE_ENV === "production") {
-          await transporter.sendMail({
+        console.time("Send Emails");
+        // Send emails in parallel
+        const emailPromises = [
+          transporter.sendMail({
             from: "laiteriedupontrobert@gmail.com",
-            to: "laiteriedupontrobert@gmail.com",
-            subject: "[NOUVELLE COMMANDE] - Laiterie du Pont Robert",
+            to: user.email || "",
+            subject: "Confirmation de votre commande - Laiterie du Pont Robert",
             html: render(
-              OrderSendEmail({
+              OrderEmail({
+                date: dateFormatter(order.createdAt),
                 baseUrl,
                 id: order.id,
-                name: user.name || user.email || "Utilisateur inconnu",
                 price: currencyFormatter.format(totalPrice),
-                date: dateFormatter(order.createdAt),
               }),
             ),
-          });
+            attachments: [
+              { filename: `Bon_de_commande-${order.id}.pdf`, content: pdfBuffer, contentType: "application/pdf" },
+            ],
+          }),
+        ];
+
+        if (process.env.NODE_ENV === "production") {
+          emailPromises.push(
+            transporter.sendMail({
+              from: "laiteriedupontrobert@gmail.com",
+              to: "laiteriedupontrobert@gmail.com",
+              subject: "[NOUVELLE COMMANDE] - Laiterie du Pont Robert",
+              html: render(
+                OrderSendEmail({
+                  baseUrl,
+                  id: order.id,
+                  name: user.name || user.email || "Utilisateur inconnu",
+                  price: currencyFormatter.format(totalPrice),
+                  date: dateFormatter(order.createdAt),
+                }),
+              ),
+            }),
+          );
         }
+
+        await Promise.all(emailPromises);
+        console.timeEnd("Send Emails");
 
         revalidatePath("/dashboard-user/orders");
 
+        console.timeEnd("Total Execution Time");
         return {
           success: true,
           message: "Commande effectuée avec succès",
