@@ -34,7 +34,7 @@ interface SummaryProps {
 
 const Summary: React.FC<SummaryProps> = ({ shops }) => {
   const { serverAction, loading } = useServerAction(createCheckOut);
-  const { serverAction: sendEmail, loading: sendEmailLoading } = useServerAction(sendCheckoutEmail);
+  const { serverAction: sendEmail } = useServerAction(sendCheckoutEmail);
   const session = useSession();
   const role = session.data?.user?.role;
   const cart = useCart();
@@ -147,13 +147,8 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
         /> */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              disabled={loading || !!tooltipText || sendEmailLoading}
-              onClick={onCheckout}
-              variant="rounded"
-              className="w-full"
-            >
-              {loading && sendEmailLoading && <Loader2 className={"mr-2 h-4 w-4 animate-spin"} />}
+            <Button disabled={loading || !!tooltipText} onClick={onCheckout} variant="rounded" className="w-full">
+              {loading && <Loader2 className={"mr-2 h-4 w-4 animate-spin"} />}
               Passer la commande
             </Button>
           </TooltipTrigger>

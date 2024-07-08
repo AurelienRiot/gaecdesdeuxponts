@@ -97,7 +97,7 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
 
       return {
         success: true,
-        message: "Commande effectuée avec succès",
+        message: "",
       };
     },
   });

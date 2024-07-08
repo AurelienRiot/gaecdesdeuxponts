@@ -98,7 +98,7 @@ export const createCheckOut = async (data: CheckOutProps) =>
 
         return {
           success: true,
-          message: "",
+          message: "Commande effectuée avec succès",
           data: { orderId: order.id },
         };
       } catch (error) {
