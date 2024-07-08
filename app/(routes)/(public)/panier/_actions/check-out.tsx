@@ -18,6 +18,7 @@ import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
+const ExcludeEmail = ["yoyololo1235@gmail.com", "pub.demystify390@passmail.net"];
 
 const checkOutSchema = z.object({
   date: z.date().refine((date) => !isDateDisabled(date), {
@@ -156,7 +157,7 @@ export const createCheckOut = async (data: CheckOutProps) =>
           }),
         ];
 
-        if (process.env.NODE_ENV === "production") {
+        if (process.env.NODE_ENV === "production" && user.email && !ExcludeEmail.includes(user.email)) {
           emailPromises.push(
             transporter.sendMail({
               from: "laiteriedupontrobert@gmail.com",
