@@ -51,49 +51,55 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
       const pdfBuffer = await generatePdf(order);
       console.timeEnd("Generate PDF");
 
-      console.time("Generate email");
-      // Send emails in parallel
-      const emailPromises = [
-        transporter.sendMail({
-          from: "laiteriedupontrobert@gmail.com",
-          to: user.email || "",
-          subject: "Confirmation de votre commande - Laiterie du Pont Robert",
-          html: render(
-            OrderEmail({
-              date: dateFormatter(order.createdAt),
-              baseUrl,
-              id: order.id,
-              price: currencyFormatter.format(order.totalPrice),
-            }),
-          ),
-          attachments: [
-            { filename: `Bon de commande ${order.id}.pdf`, content: pdfBuffer, contentType: "application/pdf" },
-          ],
-        }),
-      ];
-
-      if (process.env.NODE_ENV === "production" && user.email && !ExcludeEmail.includes(user.email)) {
-        emailPromises.push(
+      try {
+        // Send emails in parallel
+        const emailPromises = [
           transporter.sendMail({
             from: "laiteriedupontrobert@gmail.com",
-            to: "laiteriedupontrobert@gmail.com",
-            subject: "[NOUVELLE COMMANDE] - Laiterie du Pont Robert",
+            to: user.email || "",
+            subject: "Confirmation de votre commande - Laiterie du Pont Robert",
             html: render(
-              OrderSendEmail({
+              OrderEmail({
+                date: dateFormatter(order.createdAt),
                 baseUrl,
                 id: order.id,
-                name: user.name || user.email || "Utilisateur inconnu",
                 price: currencyFormatter.format(order.totalPrice),
-                date: dateFormatter(order.createdAt),
               }),
             ),
+            attachments: [
+              { filename: `Bon de commande ${order.id}.pdf`, content: pdfBuffer, contentType: "application/pdf" },
+            ],
           }),
-        );
+        ];
+
+        if (process.env.NODE_ENV === "production" && user.email && !ExcludeEmail.includes(user.email)) {
+          emailPromises.push(
+            transporter.sendMail({
+              from: "laiteriedupontrobert@gmail.com",
+              to: "laiteriedupontrobert@gmail.com",
+              subject: "[NOUVELLE COMMANDE] - Laiterie du Pont Robert",
+              html: render(
+                OrderSendEmail({
+                  baseUrl,
+                  id: order.id,
+                  name: user.name || user.email || "Utilisateur inconnu",
+                  price: currencyFormatter.format(order.totalPrice),
+                  date: dateFormatter(order.createdAt),
+                }),
+              ),
+            }),
+          );
+        }
+        console.timeEnd("Generate email");
+        console.time("Send Emails");
+        await Promise.all(emailPromises);
+        console.timeEnd("Send Emails");
+      } catch (error) {
+        return {
+          success: false,
+          message: "Erreur lors de l'envoi de l'email",
+        };
       }
-      console.timeEnd("Generate email");
-      console.time("Send Emails");
-      await Promise.all(emailPromises);
-      console.timeEnd("Send Emails");
 
       return {
         success: true,
