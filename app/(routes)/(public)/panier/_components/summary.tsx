@@ -101,10 +101,9 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
         toast.error("Erreur");
         return;
       }
-      sendEmail({ data: { orderId: result.orderId } });
       router.push("/dashboard-user/orders");
-      await addDelay(500);
       cart.removeAll();
+      await sendEmail({ data: { orderId: result.orderId } });
     }
     function onError(error: string[] | undefined) {
       if (error) {
