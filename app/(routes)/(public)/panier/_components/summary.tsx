@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
-import { addDelay } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { getUnitLabel, hasOptionWithValue } from "@/components/product/product-function";
@@ -20,7 +19,7 @@ import { createCheckOut } from "../_actions/check-out";
 import DatePicker from "./date-picker";
 import LoginCard from "./login-card";
 import TimePicker from "./time-picker";
-import sendCheckoutEmail from "../_actions/send-chekout-email";
+import { addDelay } from "@/lib/utils";
 
 const getDateFromSearchParam = (param: string | null): Date | undefined => {
   if (param === null) return undefined;
@@ -34,7 +33,6 @@ interface SummaryProps {
 
 const Summary: React.FC<SummaryProps> = ({ shops }) => {
   const { serverAction, loading } = useServerAction(createCheckOut);
-  const { serverAction: sendEmail } = useServerAction(sendCheckoutEmail);
   const session = useSession();
   const role = session.data?.user?.role;
   const cart = useCart();
@@ -101,9 +99,10 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
         toast.error("Erreur");
         return;
       }
-      router.push("/dashboard-user/orders");
+      router.push(`/dashboard-user/orders?orderId=${result.orderId}`);
+      await addDelay(500);
       cart.removeAll();
-      await sendEmail({ data: { orderId: result.orderId } });
+      // await sendEmail({ data: { orderId: result.orderId } });
     }
     function onError(error: string[] | undefined) {
       if (error) {

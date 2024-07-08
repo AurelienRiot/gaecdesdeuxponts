@@ -47,10 +47,18 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
         };
       }
 
+      if (order.orderEmail) {
+        return {
+          success: true,
+          message: "",
+        };
+      }
+
       console.time("Generate PDF");
       const pdfBuffer = await generatePdf(order);
       console.timeEnd("Generate PDF");
 
+      console.time("Generate email");
       try {
         // Send emails in parallel
         const emailPromises = [
@@ -93,6 +101,14 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
         console.timeEnd("Generate email");
         console.time("Send Emails");
         await Promise.all(emailPromises);
+        await prismadb.order.update({
+          where: {
+            id: order.id,
+          },
+          data: {
+            orderEmail: true,
+          },
+        });
         console.timeEnd("Send Emails");
       } catch (error) {
         return {
@@ -103,7 +119,7 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
 
       return {
         success: true,
-        message: "",
+        message: "Bon de commande envoyé par email",
       };
     },
   });

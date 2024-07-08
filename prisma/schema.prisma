@@ -157,6 +157,9 @@ model Order {
   dateOfPayment       DateTime?
   dateOfShipping      DateTime?
   dateOfEdition       DateTime?
+  orderEmail           Boolean @default(false)
+  shippingEmail           Boolean @default(false)
+  invoiceEmail           Boolean @default(false)
   customerId     String?  @unique
   customer       Customer? 
   userId     String  

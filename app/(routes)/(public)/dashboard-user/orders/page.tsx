@@ -19,9 +19,16 @@ import {
   viewOptionsColumns,
   type OrderColumnType,
 } from "./_components/order-column";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import useServerAction from "@/hooks/use-server-action";
+import sendCheckoutEmail from "./_actions/send-chekout-email";
 
 const PageOrderTable = () => {
   const { user } = useUserContext();
+  const { serverAction } = useServerAction(sendCheckoutEmail);
+
+  const searchParams = useSearchParams();
 
   if (!user) {
     return (
@@ -44,6 +51,20 @@ const PageOrderTable = () => {
     shop: order.shop || undefined,
     createdAt: order.createdAt,
   }));
+
+  useEffect(() => {
+    async function sendCheckoutEmail() {
+      const orderId = searchParams.get("orderId");
+      if (orderId) {
+        const order = user?.orders.find((order) => order.id === searchParams.get("orderId"));
+        if (order && !order.orderEmail) {
+          await serverAction({ data: { orderId } });
+        }
+      }
+    }
+
+    sendCheckoutEmail();
+  }, []);
 
   return (
     <>
