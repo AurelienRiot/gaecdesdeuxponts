@@ -48,21 +48,6 @@ const checkOutSchema = z.object({
 
 type CheckOutProps = z.infer<typeof checkOutSchema>;
 
-async function getUser() {
-  const isAuth = await getSessionUser();
-  if (!isAuth) return null;
-  const user = await prismadb.user.findUnique({
-    where: {
-      id: isAuth.id,
-    },
-    include: {
-      address: true,
-      billingAddress: true,
-    },
-  });
-  return user;
-}
-
 export const createCheckOut = async (data: CheckOutProps) =>
   await safeServerAction({
     data,
@@ -183,26 +168,11 @@ export const createCheckOut = async (data: CheckOutProps) =>
   });
 
 async function generatePdf(order: FullOrder) {
-  console.time("generatePdf");
-
-  console.time("createPDFData");
   const pdfData = createPDFData(order);
-  console.timeEnd("createPDFData");
-
-  console.time("Render PDF to Blob");
   const doc = <Order data={pdfData} />;
   const pdfBlob = await pdf(doc).toBlob();
-  console.timeEnd("Render PDF to Blob");
-
-  console.time("Convert Blob to ArrayBuffer");
   const arrayBuffer = await pdfBlob.arrayBuffer();
-  console.timeEnd("Convert Blob to ArrayBuffer");
-
-  console.time("Convert ArrayBuffer to Buffer");
   const buffer = Buffer.from(arrayBuffer);
-  console.timeEnd("Convert ArrayBuffer to Buffer");
-
-  console.timeEnd("generatePdf");
   return buffer;
 }
 
