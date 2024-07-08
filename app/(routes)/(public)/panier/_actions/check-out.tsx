@@ -72,7 +72,6 @@ export const createCheckOut = async (data: CheckOutProps) =>
       const { itemsWithQuantities, date, shopId } = data;
       const productIds = itemsWithQuantities.map((item) => item.id);
 
-      console.time("Fetch Products");
       try {
         const products = await prismadb.product.findMany({
           where: {
@@ -84,18 +83,12 @@ export const createCheckOut = async (data: CheckOutProps) =>
             product: true,
           },
         });
-        console.timeEnd("Fetch Products");
-
-        console.time("Map Products with Quantity");
         const productsWithQuantity = products.map((product) => {
           return {
             item: product,
             quantity: itemsWithQuantities.find((item) => item.id === product.id)?.quantity,
           };
         });
-        console.timeEnd("Map Products with Quantity");
-
-        console.time("Find Mismatched Products");
         // Find mismatched products
         const mismatchedProducts = itemsWithQuantities.filter((item) => {
           const matchingProduct = products.find((product) => product.id === item.id);
@@ -115,15 +108,9 @@ export const createCheckOut = async (data: CheckOutProps) =>
           };
         }
 
-        console.timeEnd("Find Mismatched Products");
-
-        console.time("Calculate Total Price");
         const totalPrice = itemsWithQuantities.reduce((acc, { price, quantity }) => {
           return acc + (price || 0) * (quantity || 1);
         }, 0);
-        console.timeEnd("Calculate Total Price");
-
-        console.time("Create Order");
         const order = await createOrder({
           productsWithQuantity,
           totalPrice,
@@ -131,7 +118,6 @@ export const createCheckOut = async (data: CheckOutProps) =>
           datePickUp: date,
           shopId,
         });
-        console.timeEnd("Create Order");
         console.time("Generate PDF");
         const pdfBuffer = await generatePdf(order);
         console.timeEnd("Generate PDF");
@@ -197,10 +183,27 @@ export const createCheckOut = async (data: CheckOutProps) =>
   });
 
 async function generatePdf(order: FullOrder) {
-  const doc = <Order data={createPDFData(order)} />;
+  console.time("generatePdf");
+
+  console.time("createPDFData");
+  const pdfData = createPDFData(order);
+  console.timeEnd("createPDFData");
+
+  console.time("Render PDF to Blob");
+  const doc = <Order data={pdfData} />;
   const pdfBlob = await pdf(doc).toBlob();
+  console.timeEnd("Render PDF to Blob");
+
+  console.time("Convert Blob to ArrayBuffer");
   const arrayBuffer = await pdfBlob.arrayBuffer();
-  return Buffer.from(arrayBuffer);
+  console.timeEnd("Convert Blob to ArrayBuffer");
+
+  console.time("Convert ArrayBuffer to Buffer");
+  const buffer = Buffer.from(arrayBuffer);
+  console.timeEnd("Convert ArrayBuffer to Buffer");
+
+  console.timeEnd("generatePdf");
+  return buffer;
 }
 
 type CreateOrderType = {
