@@ -2,13 +2,7 @@
 
 import { buttonVariants } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
@@ -16,12 +10,7 @@ import { DayPicker, type DropdownProps } from "react-day-picker";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
-function Calendar({
-  className,
-  classNames,
-  showOutsideDays = true,
-  ...props
-}: CalendarProps) {
+function Calendar({ className, classNames, showOutsideDays = true, ...props }: CalendarProps) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -41,8 +30,7 @@ function Calendar({
         nav_button_next: "absolute right-1",
         table: "w-full border-collapse space-y-1",
         head_row: "flex",
-        head_cell:
-          "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
+        head_cell: "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
         row: "flex w-full mt-2",
         cell: cn(
           "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected].day-range-end)]:rounded-r-md",
@@ -50,10 +38,7 @@ function Calendar({
             ? "[&:has(>.day-range-end)]:rounded-r-md [&:has(>.day-range-start)]:rounded-l-md first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md"
             : "[&:has([aria-selected])]:rounded-md",
         ),
-        day: cn(
-          buttonVariants({ variant: "ghost" }),
-          "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
-        ),
+        day: cn(buttonVariants({ variant: "ghost" }), "h-9 w-9 p-0 font-normal aria-selected:opacity-100"),
         day_range_start: "day-range-start",
         day_range_end: "day-range-end",
         day_selected:
@@ -61,20 +46,15 @@ function Calendar({
         day_today: "bg-accent/50 text-accent-foreground",
         day_outside: "text-muted-foreground opacity-50",
         day_disabled: "bg-gray-300 opacity-50 text-muted-foreground",
-        day_range_middle:
-          "aria-selected:bg-accent aria-selected:text-accent-foreground",
+        day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
         day_hidden: "invisible",
 
         ...classNames,
       }}
       components={{
         Dropdown: ({ value, onChange, children, ...props }: DropdownProps) => {
-          const options = React.Children.toArray(
-            children,
-          ) as React.ReactElement<React.HTMLProps<HTMLOptionElement>>[];
-          const selected = options.find(
-            (child) => `${child.props.value}` === `${value}`,
-          );
+          const options = React.Children.toArray(children) as React.ReactElement<React.HTMLProps<HTMLOptionElement>>[];
+          const selected = options.find((child) => `${child.props.value}` === `${value}`);
           const handleChange = (newValue: string) => {
             const changeEvent = {
               target: { value: newValue },
@@ -83,23 +63,16 @@ function Calendar({
           };
 
           return (
-            <Select
-              value={value != null ? value.toString() : ""}
-              onValueChange={handleChange}
-            >
+            <Select value={value != null ? value.toString() : ""} onValueChange={handleChange}>
               <SelectTrigger className="pr-1.5 ring-0 focus:ring-0">
                 <SelectValue>{selected?.props?.children}</SelectValue>
               </SelectTrigger>
-              <SelectContent position="popper">
+              <SelectContent position="popper" className="z-[1200]">
                 <ScrollArea className="h-80">
                   {options.map((option, id) => (
                     <SelectItem
                       key={`${option.props.value}-${id}`}
-                      value={
-                        option.props.value != null
-                          ? option.props.value.toString()
-                          : `default-value-${id}`
-                      }
+                      value={option.props.value != null ? option.props.value.toString() : `default-value-${id}`}
                     >
                       {option.props.children}
                     </SelectItem>

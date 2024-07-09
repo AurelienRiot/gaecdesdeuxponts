@@ -20,8 +20,8 @@ function ProductCell<T>({ row }: { row: Row<T & ProductCellProps> }) {
         <span className="whitespace-nowrap" key={product.name}>
           {!product.unit ? (
             <>
+              {!!product.quantity && `${product.quantity}x `}
               <strong>{product.name}</strong>
-              {product.quantity ? ` x${product.quantity}` : ""}
             </>
           ) : (
             <>
@@ -95,7 +95,7 @@ function ShopNameCell({ shopName, shop }: ShopNameCellProps) {
 function createProductList(order: OrderWithItemsAndShop) {
   return order.orderItems.map((item) => {
     const name = item.name;
-    if (item.quantity > 0 && item.quantity !== 1) {
+    if (item.quantity !== 1) {
       return {
         name,
         quantity: `${item.quantity}`,
