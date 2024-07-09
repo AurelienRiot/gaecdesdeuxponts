@@ -231,23 +231,21 @@ const SelectProductName = ({
                 <Command>
                   <CommandInput placeholder="Nom du produit" />
                   <CommandList>
-                    {products
-                      .filter((product) => !items.some((item) => item.itemId === product.id))
-                      .map((product) => (
-                        <CommandItem
-                          key={product.id}
-                          value={product.id}
-                          keywords={[product.name]}
-                          onSelect={onValueChange}
-                        >
-                          {product.product.isPro && (
-                            <Badge variant="orange" className="mr-2">
-                              Pro
-                            </Badge>
-                          )}
-                          {product.name}
-                        </CommandItem>
-                      ))}
+                    {products.map((product) => (
+                      <CommandItem
+                        key={product.id}
+                        value={product.id}
+                        keywords={[product.name]}
+                        onSelect={onValueChange}
+                      >
+                        {product.product.isPro && (
+                          <Badge variant="orange" className="mr-2">
+                            Pro
+                          </Badge>
+                        )}
+                        {product.name}
+                      </CommandItem>
+                    ))}
                   </CommandList>
                 </Command>
               </PopoverContent>

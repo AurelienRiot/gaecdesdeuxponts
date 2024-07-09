@@ -8,8 +8,8 @@ const orderItemSchema = z.object({
     .optional()
     .refine((val) => Number(val) > 0, {
       message: "Veuillez entrer un prix valide",
-    }) ,
-  quantity: z.coerce.number().min(0, { message: "La quantité est requise" }),
+    }),
+  quantity: z.coerce.number(),
   name: z.string().min(1, { message: "Le nom est requis" }),
   categoryName: z.string().min(0, { message: "La catégorie est requise" }),
   description: z.string().min(0, { message: "La description est requise" }),
