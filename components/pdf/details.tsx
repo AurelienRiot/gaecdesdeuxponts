@@ -27,7 +27,7 @@ const noStyles = StyleSheet.create({
   },
   invoiceDate: {
     fontSize: 12,
-    fontStyle: "bold",
+    // fontStyle: "bold",
   },
   label: {},
 });
