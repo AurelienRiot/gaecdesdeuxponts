@@ -44,12 +44,6 @@ const ProductPage = async ({ params }: { params: { orderId: string } }) => {
   });
 
   const products = await prismadb.product.findMany({
-    where: {
-      isArchived: false,
-      product: {
-        isArchived: false,
-      },
-    },
     include: {
       product: true,
     },
