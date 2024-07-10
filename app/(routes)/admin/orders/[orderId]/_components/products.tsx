@@ -27,7 +27,7 @@ export const ShippingProducts = ({
       const newItems = {
         itemId: "",
         unit: "",
-        price: undefined,
+        price: 0,
         quantity: 1,
         name: "",
         categoryName: "",

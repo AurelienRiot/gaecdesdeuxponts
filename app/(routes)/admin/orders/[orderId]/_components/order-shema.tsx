@@ -3,12 +3,7 @@ import * as z from "zod";
 const orderItemSchema = z.object({
   itemId: z.string(),
   unit: z.string().optional().nullable(),
-  price: z.coerce
-    .number()
-    .optional()
-    .refine((val) => Number(val) > 0, {
-      message: "Veuillez entrer un prix valide",
-    }),
+  price: z.coerce.number(),
   quantity: z.coerce.number(),
   name: z.string().min(1, { message: "Le nom est requis" }),
   categoryName: z.string().min(0, { message: "La catégorie est requise" }),
