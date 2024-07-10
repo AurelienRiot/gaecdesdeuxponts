@@ -50,7 +50,7 @@ const tableHeaderStyles = StyleSheet.create({
     alignItems: "center",
     height: 24,
     textAlign: "center",
-    fontStyle: "bold",
+    fontWeight: "bold",
     flexGrow: 1,
   },
   ref: {
@@ -89,7 +89,7 @@ const tableRowStyles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingVertical: 2,
     alignItems: "center",
-    fontStyle: "bold",
+    // fontStyle: "bold",
   },
   ref: {
     width: "40%",
@@ -131,7 +131,7 @@ const tableBlankSpaceStyles = StyleSheet.create({
     borderBottomWidth: 1,
     alignItems: "center",
     height: 24,
-    fontStyle: "bold",
+    // fontStyle: "bold",
     color: "white",
   },
   description: {

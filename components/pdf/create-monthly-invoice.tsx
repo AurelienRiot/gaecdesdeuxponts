@@ -60,7 +60,7 @@ const tableHeaderStyles = StyleSheet.create({
     justifyContent: "center",
     height: 24,
     textAlign: "center",
-    // fontStyle: "bold",
+    fontWeight: "bold",
     flexGrow: 1,
   },
   description: {
