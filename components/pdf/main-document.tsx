@@ -18,8 +18,8 @@ export const watermarkColor = "rgb(255, 0, 0)";
 Font.register({
   family: "Inter",
   fonts: [
-    { src: "localhost:3000/fonts/inter.ttf", fontWeight: 400 },
-    { src: "localhost:3000/fonts/inter-bold.ttf", fontWeight: 600 },
+    { src: "https://www.laiteriedupontrobert.fr/fonts/inter.ttf", fontWeight: 400 },
+    { src: "https://www.laiteriedupontrobert.fr/fonts/inter-bold.ttf", fontWeight: 600 },
   ],
 });
 
