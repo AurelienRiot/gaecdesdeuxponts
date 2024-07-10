@@ -11,8 +11,8 @@ const MonthlyInvoice = ({ orders }: { orders: monthlyOrdersType[] }) => {
     return order?.month === selectedMonth && order.year === selectedYear;
   });
 
-  const years = Array.from(new Set(orders.map((order) => order.year)));
-  const months = Array.from(new Set(orders.map((order) => order.month)));
+  const years = Array.from(new Set(orders.map((order) => order.year))).sort((a, b) => a - b);
+  const months = Array.from(new Set(orders.map((order) => order.month))).sort((a, b) => a - b);
 
   return (
     <div className="justify-left flex items-center gap-4">

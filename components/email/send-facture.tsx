@@ -41,7 +41,7 @@ export const SendFactureBody = ({ date, price, baseUrl, id, email }: BillingEmai
         email : {email}
       </Text>
 
-      <ButtonRedirect href={`${baseUrl}/dashboard-user/sendFactures`} text="Voir ma commande" />
+      <ButtonRedirect href={`${baseUrl}/dashboard-user/orders`} text="Voir ma commande" />
     </Section>
 
     <Text className="text-center text-base">Merci pour votre confiance.</Text>

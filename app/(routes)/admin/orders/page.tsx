@@ -43,6 +43,7 @@ const OrdersPage = async (context: {
       },
     },
     orderBy: {
+      // dateOfShipping: {sort:"asc",nulls:"first"},
       createdAt: "desc",
     },
   });

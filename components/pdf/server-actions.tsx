@@ -15,6 +15,7 @@ import Invoice from "./create-invoice";
 import MonthlyInvoice from "./create-monthly-invoice";
 import ShippingOrder from "./create-shipping";
 import { createMonthlyPDFData, createPDFData, getMonthlyDate } from "./pdf-data";
+import SendMonthlyInvoiceEmail from "../email/send-monthly-invoice";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 
@@ -69,6 +70,7 @@ export async function createMonthlyPDF64String(data: z.infer<typeof monthlyPdf64
       const orders = await prismadb.order.findMany({
         where: {
           id: { in: data.orderIds },
+          dateOfShipping: { not: null },
         },
         include: {
           orderItems: true,
@@ -85,7 +87,6 @@ export async function createMonthlyPDF64String(data: z.infer<typeof monthlyPdf64
           message: "Aucune commande pour ce mois",
         };
       }
-
       if (!orders[0].dateOfShipping) {
         return {
           success: false,
@@ -277,6 +278,81 @@ export async function sendFacture(data: z.infer<typeof factureSchema>) {
         attachments: [
           {
             filename: `Facture-${order.id}.pdf`,
+            content: pdfBuffer,
+            contentType: "application/pdf",
+          },
+        ],
+      });
+
+      return {
+        success: true,
+        message: "Facture envoyée",
+      };
+    },
+  });
+}
+
+export async function sendMonthlyInvoice(data: z.infer<typeof monthlyPdf64StringSchema>) {
+  return await safeServerAction({
+    data,
+    schema: monthlyPdf64StringSchema,
+    getUser: checkAdmin,
+    serverAction: async (data) => {
+      const orders = await prismadb.order.findMany({
+        where: {
+          id: { in: data.orderIds },
+          dateOfShipping: { not: null },
+        },
+        include: {
+          orderItems: true,
+          shop: true,
+          customer: true,
+        },
+        orderBy: {
+          dateOfShipping: "asc",
+        },
+      });
+      if (orders.length === 0) {
+        return {
+          success: false,
+          message: "Aucune commande pour ce mois",
+        };
+      }
+      if (!orders[0].dateOfShipping) {
+        return {
+          success: false,
+          message: "Aucune commande pour ce mois",
+        };
+      }
+
+      if (!orders[0].customer) {
+        return {
+          success: false,
+          message: "Le client n'existe pas, revalider la commande",
+        };
+      }
+
+      const date = getMonthlyDate(orders[0].dateOfShipping);
+
+      const doc = <MonthlyInvoice data={createMonthlyPDFData(orders)} isPaid={false} />;
+      const pdfBlob = await pdf(doc).toBlob();
+      const arrayBuffer = await pdfBlob.arrayBuffer();
+      const pdfBuffer = await Buffer.from(arrayBuffer);
+
+      await transporter.sendMail({
+        from: "laiteriedupontrobert@gmail.com",
+        to: orders[0].customer.email,
+        subject: `Facture Mensuelle ${date}  - Laiterie du Pont Robert`,
+        html: render(
+          SendMonthlyInvoiceEmail({
+            date,
+            baseUrl,
+            email: orders[0].customer.email,
+          }),
+        ),
+        attachments: [
+          {
+            filename: `Facture mensuelle ${date}.pdf`,
             content: pdfBuffer,
             contentType: "application/pdf",
           },

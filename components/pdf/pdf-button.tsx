@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import Spinner from "../animations/spinner";
 import { useToastPromise } from "../ui/sonner";
 import type { monthlyOrdersType } from "./pdf-data";
-import { SendBL, createMonthlyPDF64String, createPDF64String, sendFacture } from "./server-actions";
+import { SendBL, createMonthlyPDF64String, createPDF64String, sendFacture, sendMonthlyInvoice } from "./server-actions";
 
 function base64ToBlob(base64: string, contentType = "application/pdf", sliceSize = 512): Blob {
   const byteCharacters = Buffer.from(base64, "base64").toString("binary");
@@ -80,6 +80,11 @@ export const DisplayMonthlyInvoice = ({
   orders: monthlyOrdersType[];
 }) => {
   const { serverAction, loading: createMonthlyPDF64StringLoading } = useServerAction(createMonthlyPDF64String);
+  const { toastServerAction, loading: sendFactureLoading } = useToastPromise({
+    serverAction: sendMonthlyInvoice,
+    message: "Envoi de la facture mensuelle",
+    errorMessage: "Envoi de la facture mensuelle annulé",
+  });
 
   const orderIds = orders.map((order) => order.orderId);
 
@@ -109,12 +114,12 @@ export const DisplayMonthlyInvoice = ({
   };
 
   const onSendFile = async () => {
-    toast.error("En cours de développement");
+    toastServerAction({ data: { orderIds } });
   };
 
   return (
     <PdfButton
-      disabled={createMonthlyPDF64StringLoading}
+      disabled={createMonthlyPDF64StringLoading || sendFactureLoading}
       onViewFile={onViewFile}
       onSaveFile={onSaveFile}
       onSendFile={onSendFile}

@@ -1,13 +1,8 @@
 import { Fragment } from "react";
 
-import { StyleSheet, Text, View } from "@react-pdf/renderer";
+import { Font, StyleSheet, Text, View } from "@react-pdf/renderer";
 import Details from "./details";
-import MainDocument, {
-  borderColor,
-  foregroundColor,
-  mainColor,
-  tableRowsCount,
-} from "./main-document";
+import MainDocument, { borderColor, foregroundColor, mainColor, tableRowsCount } from "./main-document";
 import PaidWatermark from "./paid-watermark";
 import type { MonthlyPDFDataType } from "./pdf-data";
 
@@ -48,10 +43,7 @@ const ShippingItemsTable = ({ data }: { data: MonthlyPDFDataType }) => (
     <ShippingTableHeader />
     <ShippingTableRow orders={data.orders} />
     <ShippingTableBlankSpace
-      rowsCount={
-        tableRowsCount -
-        data.orders.reduce((acc, order) => acc + order.items.length + 1, 0)
-      }
+      rowsCount={tableRowsCount - data.orders.reduce((acc, order) => acc + order.items.length + 1, 0)}
     />
     <InvoiceTableFooter orders={data.orders} />
   </View>
@@ -68,7 +60,7 @@ const tableHeaderStyles = StyleSheet.create({
     justifyContent: "center",
     height: 24,
     textAlign: "center",
-    fontStyle: "bold",
+    // fontStyle: "bold",
     flexGrow: 1,
   },
   description: {
@@ -122,7 +114,7 @@ const tableRowStyles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingVertical: 2,
     alignItems: "center",
-    fontStyle: "bold",
+    // fontStyle: "bold",
   },
   order: {
     width: "100%",
@@ -130,6 +122,7 @@ const tableRowStyles = StyleSheet.create({
     paddingLeft: 4,
     paddingRight: 4,
     flexWrap: "wrap",
+    fontWeight: "bold",
   },
   description: {
     width: "40%",
@@ -170,24 +163,16 @@ const ShippingTableRow = ({
     {orders.map((order, i) => (
       <Fragment key={i}>
         <View style={tableRowStyles.row}>
-          <Text
-            style={tableRowStyles.order}
-          >{`Commande n° ${order.id} du ${order.dateOfShipping} `}</Text>
+          <Text style={tableRowStyles.order}>{`Commande n° ${order.id} du ${order.dateOfShipping} `}</Text>
         </View>
         {order.items.map((item, i) => (
           <View style={tableRowStyles.row} key={i}>
             <Text style={tableRowStyles.description}>{item.desc}</Text>
-            <Text style={tableRowStyles.unit}>
-              {(item.priceTTC / 1.2).toFixed(2)}
-            </Text>
+            <Text style={tableRowStyles.unit}>{(item.priceTTC / 1.2).toFixed(2)}</Text>
             <Text style={tableRowStyles.qty}>{item.qty}</Text>
-            <Text style={tableRowStyles.totalHT}>
-              {((item.priceTTC / 1.2) * item.qty).toFixed(2)}
-            </Text>
+            <Text style={tableRowStyles.totalHT}>{((item.priceTTC / 1.2) * item.qty).toFixed(2)}</Text>
 
-            <Text style={tableRowStyles.totalTTC}>
-              {(item.priceTTC * item.qty).toFixed(2)}
-            </Text>
+            <Text style={tableRowStyles.totalTTC}>{(item.priceTTC * item.qty).toFixed(2)}</Text>
           </View>
         ))}
       </Fragment>
@@ -202,7 +187,7 @@ const tableBlankSpaceStyles = StyleSheet.create({
     borderBottomWidth: 1,
     alignItems: "center",
     height: 24,
-    fontStyle: "bold",
+    // fontStyle: "bold",
     color: "white",
   },
   description: {
@@ -238,7 +223,7 @@ const tableFooterStyles = StyleSheet.create({
     alignItems: "center",
     height: 24,
     fontSize: 12,
-    fontStyle: "bold",
+    // fontStyle: "bold",
   },
   description: {
     width: "85%",
@@ -271,10 +256,7 @@ const InvoiceTableFooter = ({
       </View>
       <View style={tableFooterStyles.row}>
         <Text style={tableFooterStyles.description}>TVA 20% ( € )</Text>
-        <Text style={tableFooterStyles.total}>
-          {" "}
-          {(totalTTC - totalHT).toFixed(2)}
-        </Text>
+        <Text style={tableFooterStyles.total}> {(totalTTC - totalHT).toFixed(2)}</Text>
       </View>
       <View style={tableFooterStyles.row}>
         <Text style={tableFooterStyles.description}>TOTAL TTC ( € )</Text>

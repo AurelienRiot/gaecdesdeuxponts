@@ -1,4 +1,4 @@
-import { Document, Page, StyleSheet, View, Text, Image } from "@react-pdf/renderer";
+import { Document, Image, Page, StyleSheet, Text, View, Font } from "@react-pdf/renderer";
 import type { PDFData } from "./pdf-data";
 
 export const tableRowsCount = 10;
@@ -7,9 +7,25 @@ export const foregroundColor = "#000000";
 export const borderColor = "#000000";
 export const watermarkColor = "rgb(255, 0, 0)";
 
+// Font.register({
+//   family: "Open Sans",
+//   fonts: [
+//     { src: "https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-regular.ttf", fontWeight: 400 },
+//     { src: "https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-600.ttf", fontWeight: 600 },
+//   ],
+// });
+
+Font.register({
+  family: "Inter",
+  fonts: [
+    { src: "localhost:3000/fonts/inter.ttf", fontWeight: 400 },
+    { src: "localhost:3000/fonts/inter-bold.ttf", fontWeight: 600 },
+  ],
+});
+
 const MainStyles = StyleSheet.create({
   page: {
-    fontFamily: "Helvetica",
+    fontFamily: "Inter",
     fontSize: 11,
     paddingTop: 20,
     paddingBottom: 40,
