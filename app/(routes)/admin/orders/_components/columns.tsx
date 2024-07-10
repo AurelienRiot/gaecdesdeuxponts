@@ -48,11 +48,6 @@ export const columns: ColumnDef<OrderColumn>[] = [
   },
 
   {
-    accessorKey: "status",
-    header: "Statut",
-    filterFn: FilterOneInclude,
-  },
-  {
     accessorKey: "totalPrice",
     header: "Prix Total",
   },
@@ -61,6 +56,11 @@ export const columns: ColumnDef<OrderColumn>[] = [
     accessorKey: "datePickUp",
     header: DatePickUpHeader,
     cell: ({ row }) => <DateCell date={row.original.datePickUp} />,
+  },
+  {
+    accessorKey: "status",
+    header: "Statut",
+    filterFn: FilterOneInclude,
   },
   {
     accessorKey: "shopName",

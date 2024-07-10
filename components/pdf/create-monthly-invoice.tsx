@@ -168,9 +168,9 @@ const ShippingTableRow = ({
         {order.items.map((item, i) => (
           <View style={tableRowStyles.row} key={i}>
             <Text style={tableRowStyles.description}>{item.desc}</Text>
-            <Text style={tableRowStyles.unit}>{(item.priceTTC / 1.2).toFixed(2)}</Text>
+            <Text style={tableRowStyles.unit}>{(item.priceTTC / 1.055).toFixed(2)}</Text>
             <Text style={tableRowStyles.qty}>{item.qty}</Text>
-            <Text style={tableRowStyles.totalHT}>{((item.priceTTC / 1.2) * item.qty).toFixed(2)}</Text>
+            <Text style={tableRowStyles.totalHT}>{((item.priceTTC / 1.055) * item.qty).toFixed(2)}</Text>
 
             <Text style={tableRowStyles.totalTTC}>{(item.priceTTC * item.qty).toFixed(2)}</Text>
           </View>
@@ -243,7 +243,7 @@ const InvoiceTableFooter = ({
   orders: MonthlyPDFDataType["orders"];
 }) => {
   const totalHT = orders
-    .map((order) => (order.totalPrice || 0) / 1.2)
+    .map((order) => (order.totalPrice || 0) / 1.055)
     .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
   const totalTTC = orders
     .map((order) => order.totalPrice || 0)

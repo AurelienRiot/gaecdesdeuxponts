@@ -149,9 +149,9 @@ const InvoiceTableRow = ({ items }: { items: PDFData["order"]["items"] }) => {
   const rows = items.map((item, i) => (
     <View style={tableRowStyles.row} key={i}>
       <Text style={tableRowStyles.description}>{item.desc}</Text>
-      <Text style={tableRowStyles.unit}>{(item.priceTTC / 1.2).toFixed(2)}</Text>
+      <Text style={tableRowStyles.unit}>{(item.priceTTC / 1.055).toFixed(2)}</Text>
       <Text style={tableRowStyles.qty}>{item.qty}</Text>
-      <Text style={tableRowStyles.totalHT}>{((item.priceTTC / 1.2) * item.qty).toFixed(2)}</Text>
+      <Text style={tableRowStyles.totalHT}>{((item.priceTTC / 1.055) * item.qty).toFixed(2)}</Text>
 
       <Text style={tableRowStyles.totalTTC}>{(item.priceTTC * item.qty).toFixed(2)}</Text>
     </View>
@@ -222,7 +222,7 @@ const InvoiceTableFooter = ({
   items: PDFData["order"]["items"];
 }) => {
   const totalHT = items
-    .map((item) => (item.qty * item.priceTTC) / 1.2)
+    .map((item) => (item.qty * item.priceTTC) / 1.055)
     .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
   const totalTTC = items
     .map((item) => item.qty * item.priceTTC)
