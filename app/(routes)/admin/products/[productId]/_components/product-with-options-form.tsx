@@ -54,7 +54,7 @@ export const ProductWithOptions = ({
         name: option.name,
         value: "",
       })),
-      price: undefined,
+      price: 0,
     };
     form.setValue("products", [...products, newProduct]);
   };

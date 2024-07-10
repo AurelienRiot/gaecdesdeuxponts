@@ -59,6 +59,7 @@ const UserPage = async ({
       orderId: order.id,
       month: order.dateOfShipping.getMonth() + 1,
       year: order.dateOfShipping.getFullYear(),
+      isPaid: !!order.dateOfPayment,
     };
   });
 

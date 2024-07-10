@@ -12,12 +12,7 @@ const productSchema = z.object({
   index: z.number(),
   name: z.string().min(1, { message: "Le nom est requis" }),
   description: z.string(),
-  price: z.coerce
-    .number()
-    .optional()
-    .refine((val) => Number(val) > 0, {
-      message: "Veuillez entrer un prix valide",
-    }),
+  price: z.coerce.number(),
   unit: z.enum(["centgramme", "Kilogramme", "Litre"]).optional(),
   isFeatured: z.boolean().default(false),
   isArchived: z.boolean().default(false),

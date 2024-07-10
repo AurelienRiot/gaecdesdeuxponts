@@ -88,6 +88,7 @@ export type monthlyOrdersType = {
   orderId: string;
   month: number;
   year: number;
+  isPaid: boolean;
 };
 
 export type MonthlyPDFDataType = {
