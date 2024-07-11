@@ -227,7 +227,7 @@ const InvoiceTableFooter = ({
         <Text style={tableFooterStyles.total}> {totalHT.toFixed(2)}</Text>
       </View>
       <View style={tableFooterStyles.row}>
-        <Text style={tableFooterStyles.description}>TVA 20% ( € )</Text>
+        <Text style={tableFooterStyles.description}>TVA 5,5% ( € )</Text>
         <Text style={tableFooterStyles.total}> {(totalTTC - totalHT).toFixed(2)}</Text>
       </View>
       <View style={tableFooterStyles.row}>
