@@ -59,6 +59,7 @@ const UserPage = async ({
       orderId: order.id,
       month: order.dateOfShipping.getMonth() + 1,
       year: order.dateOfShipping.getFullYear(),
+      invoiceEmail: order.invoiceEmail,
       isPaid: !!order.dateOfPayment,
     };
   });
@@ -70,6 +71,8 @@ const UserPage = async ({
 
   const formattedOrders: OrderColumn[] = (user?.orders || []).map((order) => ({
     id: order.id,
+    shippingEmail: order.shippingEmail,
+    invoiceEmail: order.invoiceEmail,
     products: createProduct(order),
     productsList: createProductList(order),
     datePickUp: createDatePickUp({ dateOfShipping: order.dateOfShipping, datePickUp: order.datePickUp }),

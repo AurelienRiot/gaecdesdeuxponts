@@ -207,6 +207,14 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
           },
         ],
       });
+      await prismadb.order.update({
+        where: {
+          id: order.id,
+        },
+        data: {
+          shippingEmail: new Date(),
+        },
+      });
       return {
         success: true,
         message: "BL envoyé",
@@ -284,6 +292,15 @@ export async function sendFacture(data: z.infer<typeof factureSchema>) {
         ],
       });
 
+      await prismadb.order.update({
+        where: {
+          id: order.id,
+        },
+        data: {
+          invoiceEmail: new Date(),
+        },
+      });
+
       return {
         success: true,
         message: "Facture envoyée",
@@ -357,6 +374,15 @@ export async function sendMonthlyInvoice(data: z.infer<typeof monthlyPdf64String
             contentType: "application/pdf",
           },
         ],
+      });
+
+      await prismadb.order.updateMany({
+        where: {
+          id: { in: data.orderIds },
+        },
+        data: {
+          invoiceEmail: new Date(),
+        },
       });
 
       return {

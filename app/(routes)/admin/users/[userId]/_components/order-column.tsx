@@ -25,13 +25,21 @@ export type OrderColumn = {
   productsList: { name: string; quantity?: string; unit?: string }[];
   createdAt: Date;
   shopName: string;
+  shippingEmail: Date | null;
+  invoiceEmail: Date | null;
   shopId: string;
 };
 export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "id",
     header: "Facture",
-    cell: ({ row }) => <OrderIdCell id={row.original.id} />,
+    cell: ({ row }) => (
+      <OrderIdCell
+        id={row.original.id}
+        shippingEmail={row.original.shippingEmail}
+        invoiceEmail={row.original.invoiceEmail}
+      />
+    ),
   },
   {
     accessorKey: "products",

@@ -36,11 +36,31 @@ function ProductCell<T>({ row }: { row: Row<T & ProductCellProps> }) {
 
 type OrderIdCellProps = {
   id: string;
+  shippingEmail: Date | null;
+  invoiceEmail: Date | null;
 };
-function OrderIdCell({ id }: OrderIdCellProps) {
+function OrderIdCell({ id, shippingEmail, invoiceEmail }: OrderIdCellProps) {
   return (
-    <Button asChild variant={"link"} className="px-0 font-bold text-green-500">
-      <Link href={`/admin/orders/${id}`}>Éditer le bon de livraison</Link>
+    <Button asChild variant={"link"} className="px-0 font-bold flex flex-col justify-start h-auto">
+      <Link href={`/admin/orders/${id}`}>
+        <p>Éditer le bon de livraison</p>
+        {shippingEmail && (
+          <p className="text-sm font-normal text-green-500">
+            BL envoyé le {shippingEmail.toDateString().split(" ")[2]}{" "}
+            {new Date(2022, shippingEmail.getMonth(), 1).toLocaleString("fr", {
+              month: "long",
+            })}
+          </p>
+        )}
+        {invoiceEmail && (
+          <p className="text-sm font-normal text-green-500">
+            Facture envoyé le {invoiceEmail.toDateString().split(" ")[2]}{" "}
+            {new Date(2022, invoiceEmail.getMonth(), 1).toLocaleString("fr", {
+              month: "long",
+            })}
+          </p>
+        )}
+      </Link>
     </Button>
   );
 }

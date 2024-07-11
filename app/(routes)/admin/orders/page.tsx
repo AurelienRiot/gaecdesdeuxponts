@@ -50,6 +50,8 @@ const OrdersPage = async (context: {
 
   const formattedOrders = orders.map((order) => ({
     id: order.id,
+    shippingEmail: order.shippingEmail,
+    invoiceEmail: order.invoiceEmail,
     name: order.user.company || order.user.name || order.user.email || "",
     userId: order.userId,
     isPaid: !!order.dateOfPayment,

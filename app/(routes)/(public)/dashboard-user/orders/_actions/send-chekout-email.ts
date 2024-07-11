@@ -101,14 +101,7 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
         console.timeEnd("Generate email");
         console.time("Send Emails");
         await Promise.all(emailPromises);
-        await prismadb.order.update({
-          where: {
-            id: order.id,
-          },
-          data: {
-            orderEmail: true,
-          },
-        });
+
         console.timeEnd("Send Emails");
       } catch (error) {
         return {
@@ -116,6 +109,14 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
           message: "Erreur lors de l'envoi de l'email",
         };
       }
+      await prismadb.order.update({
+        where: {
+          id: order.id,
+        },
+        data: {
+          orderEmail: new Date(),
+        },
+      });
 
       return {
         success: true,
