@@ -23,7 +23,7 @@ const LocationMarker = ({
   const handleLocationFound = async (e: GeolocationPosition) => {
     const { latitude, longitude } = e.coords;
 
-    map.setView([latitude, longitude], 10);
+    map.setView([latitude, longitude], 12);
     const { accept } = getValue();
 
     setPin({
@@ -55,7 +55,6 @@ const LocationMarker = ({
       return;
     }
     navigator.geolocation.getCurrentPosition(handleLocationFound, (e) => {
-      toast.error(e.message);
       toast.error("Veuillez autoriser la localisation.", {
         position: "top-center",
       });
