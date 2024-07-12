@@ -19,7 +19,7 @@ type DateCellProps = {
 };
 
 function DateCell({ date, hours }: DateCellProps) {
-  return <div className="flex md:pl-10">{dateFormatter(date, hours)}</div>;
+  return <div className="text-left">{dateFormatter(date, hours)}</div>;
 }
 
 type NameCellProps = {

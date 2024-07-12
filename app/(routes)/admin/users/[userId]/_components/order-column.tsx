@@ -4,13 +4,13 @@ import {
   AdminShopNameCell,
   OrderIdCell,
   ProductCell,
+  StatusCell,
   type Status,
 } from "@/components/table-custom-fuction/cell-orders";
-import { DateCell, NameCell } from "@/components/table-custom-fuction/common-cell";
+import { DateCell } from "@/components/table-custom-fuction/common-cell";
 import { FilterAllInclude, FilterOneInclude } from "@/components/table-custom-fuction/common-filter";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
 import { DatePickUpHeader, ShopNameHeader } from "@/components/table-custom-fuction/header-orders";
-import { Button } from "@/components/ui/button";
 import type { DataTableFilterableColumn, DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
 import type { ColumnDef } from "@tanstack/react-table";
 import { OrderCellAction } from "./order-cell-action";
@@ -32,7 +32,7 @@ export type OrderColumn = {
 export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "id",
-    header: "Facture",
+    header: "Commande",
     cell: ({ row }) => (
       <OrderIdCell
         id={row.original.id}
@@ -55,6 +55,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "status",
     header: "Statut",
+    cell: StatusCell,
     filterFn: FilterOneInclude,
   },
   {

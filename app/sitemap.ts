@@ -52,6 +52,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${baseUrl}/lait-cru`,
       lastModified: new Date(),
     },
+    {
+      url: `${baseUrl}/ou-nous-trouver`,
+      lastModified: new Date(),
+    },
     ...categoriesSitemap,
     ...productsSitemap,
   ];

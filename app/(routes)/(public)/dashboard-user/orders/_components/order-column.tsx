@@ -1,6 +1,6 @@
 "use client";
 
-import { ProductCell, ShopNameCell, type Status } from "@/components/table-custom-fuction/cell-orders";
+import { ProductCell, ShopNameCell, StatusCell, type Status } from "@/components/table-custom-fuction/cell-orders";
 import { DateCell } from "@/components/table-custom-fuction/common-cell";
 import { FilterOneInclude } from "@/components/table-custom-fuction/common-filter";
 import { DatePickUpHeader, ShopNameHeader } from "@/components/table-custom-fuction/header-orders";
@@ -33,6 +33,7 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
   {
     accessorKey: "status",
     header: "Statut",
+    cell: StatusCell,
     filterFn: FilterOneInclude,
   },
   // {

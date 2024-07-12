@@ -1,13 +1,9 @@
+import { Icons } from "@/components/icons";
 import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import {
-  CalendarSearch,
-  CreditCardIcon,
-  EuroIcon,
-  Package,
-} from "lucide-react";
+import { CalendarSearch, CreditCardIcon, EuroIcon, Package } from "lucide-react";
 
 const DashboardPage: React.FC = () => {
   return (
@@ -18,9 +14,7 @@ const DashboardPage: React.FC = () => {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Revenue Totaux
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">Revenue Totaux</CardTitle>
               <EuroIcon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -42,9 +36,7 @@ const DashboardPage: React.FC = () => {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Produits en stock
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">Produits en stock</CardTitle>
               <Package className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -56,9 +48,7 @@ const DashboardPage: React.FC = () => {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Abonnements en stock
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">Abonnements en stock</CardTitle>
               <CalendarSearch className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>

@@ -7,6 +7,11 @@ import type { Shop } from "@prisma/client";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Search } from "lucide-react";
 import { ShopCard } from "../display-shops/shop-card";
+import { PiHourglassLowFill } from "react-icons/pi";
+import type { IconType } from "react-icons/lib";
+import { FaCheckCircle, FaFileInvoiceDollar, FaShippingFast } from "react-icons/fa";
+import { Icons } from "../icons";
+import { formDateDayMonth } from "@/lib/date-utils";
 
 type ProductCellProps = {
   products: string;
@@ -43,23 +48,31 @@ function OrderIdCell({ id, shippingEmail, invoiceEmail }: OrderIdCellProps) {
   return (
     <Button asChild variant={"link"} className="px-0 font-bold flex flex-col justify-start h-auto">
       <Link href={`/admin/orders/${id}`}>
-        <p className="whitespace-nowrap">Éditer le bon de livraison</p>
-        {shippingEmail && (
-          <p className="text-sm font-normal text-green-500 whitespace-nowrap">
-            BL envoyé le {shippingEmail.toDateString().split(" ")[2]}{" "}
-            {new Date(2022, shippingEmail.getMonth(), 1).toLocaleString("fr", {
-              month: "long",
-            })}
-          </p>
-        )}
-        {invoiceEmail && (
-          <p className="text-sm font-normal text-green-500 whitespace-nowrap">
-            Facture envoyé le {invoiceEmail.getDay()}{" "}
-            {new Date(2022, invoiceEmail.getMonth(), 1).toLocaleString("fr", {
-              month: "long",
-            })}
-          </p>
-        )}
+        <p className="whitespace-nowrap mr-auto">Éditer le bon de livraison</p>
+        <div className="flex gap-2 justify-left items-center mr-auto">
+          {shippingEmail && (
+            <div className="relative">
+              <p className="text-sm  text-green-500 whitespace-nowrap absolute font-bold left-3 top-5">
+                {formDateDayMonth(shippingEmail)}
+              </p>
+              <Icons.Delivery className="size-16" />
+            </div>
+          )}
+          {invoiceEmail && (
+            <div className="relative">
+              <p className="text-sm  text-green-500 whitespace-nowrap absolute font-bold left-2 top-[18px]">
+                {formDateDayMonth(invoiceEmail)}
+              </p>
+              <Icons.Invoice className="size-12 rotate-90" />
+            </div>
+            // <p className="text-sm font-normal text-green-500 whitespace-nowrap">
+            //   Facture envoyé le {invoiceEmail.getDay()}{" "}
+            //   {new Date(2022, invoiceEmail.getMonth(), 1).toLocaleString("fr", {
+            //     month: "long",
+            //   })}
+            // </p>
+          )}
+        </div>
       </Link>
     </Button>
   );
@@ -150,6 +163,45 @@ function createStatus(order: OrderWithItemsAndShop): Status {
         : "Payé";
 }
 
+type StatusCellProps = {
+  status: Status;
+};
+
+function StatusCell<T>({ row }: { row: Row<T & StatusCellProps> }) {
+  const icons: IconType[] = [];
+  if (row.original.status === "En cours de validation") {
+    return <PiHourglassLowFill className="text-orange-500 size-6" />;
+  }
+  icons.push(FaCheckCircle);
+  if (row.original.status === "Commande valide") {
+    return (
+      <div className="flex  gap-2">
+        {icons.map((Icon, index) => (
+          <Icon key={index} className="text-green-500 size-6" />
+        ))}
+      </div>
+    );
+  }
+  icons.push(FaShippingFast);
+  if (row.original.status === "En cours de paiement") {
+    return (
+      <div className="flex  gap-2">
+        {icons.map((Icon, index) => (
+          <Icon key={index} className="text-green-500 size-6" />
+        ))}
+      </div>
+    );
+  }
+  icons.push(FaFileInvoiceDollar);
+  return (
+    <div className="flex  gap-2">
+      {icons.map((Icon, index) => (
+        <Icon key={index} className="text-green-500 size-6" />
+      ))}
+    </div>
+  );
+}
+
 function createDatePickUp({ dateOfShipping, datePickUp }: { datePickUp: Date; dateOfShipping: Date | null }) {
   return dateOfShipping ? dateOfShipping : datePickUp;
 }
@@ -162,4 +214,5 @@ export {
   OrderIdCell,
   AdminShopNameCell,
   ShopNameCell,
+  StatusCell,
 };

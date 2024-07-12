@@ -8,9 +8,17 @@ import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { Suspense } from "react";
 import PlacePicker from "./_components/place";
+import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400;
 const farmShopId = process.env.NEXT_PUBLIC_FARM_ID;
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Points de vente",
+    description: "Trouvez le points de vente le plus proche de chez vous",
+  };
+}
 
 const OuNousTrouver = async () => {
   return (

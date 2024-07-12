@@ -11,3 +11,9 @@ export const MIN_DAYS = 3;
 export const isDateDisabled = (date: Date) => {
   return date.getDay() === 0 || date < addDays(new Date(), MIN_DAYS);
 };
+
+export function formDateDayMonth(date: Date) {
+  return `${date.getDay()} ${new Date(2024, date.getMonth(), 1).toLocaleString("fr", {
+    month: "short",
+  })}`;
+}
