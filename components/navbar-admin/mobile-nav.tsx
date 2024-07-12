@@ -42,11 +42,11 @@ export default function MobileNav({ className }: MobileNavProps) {
             role="combobox"
             aria-expanded={open}
             aria-label="Selectionner"
-            className={cn("w-[75px] justify-between ", className)}
+            className={cn(className)}
           >
-            <Menu className="mr-2 h-4 w-4" />
+            <Menu className=" h-4 w-4" />
 
-            <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
+            {/* <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" /> */}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="h-auto w-[200px] p-0">

@@ -15,9 +15,9 @@ type ProductCellProps = {
 
 function ProductCell<T>({ row }: { row: Row<T & ProductCellProps> }) {
   return (
-    <div className="flex flex-col gap-[1px]">
+    <div className="flex flex-col gap-1">
       {row.original.productsList.map((product) => (
-        <span className="whitespace-nowrap" key={product.name}>
+        <span className="w-[150px]" key={product.name}>
           {!product.unit ? (
             <>
               {!!product.quantity && `${product.quantity}x `}
@@ -43,9 +43,9 @@ function OrderIdCell({ id, shippingEmail, invoiceEmail }: OrderIdCellProps) {
   return (
     <Button asChild variant={"link"} className="px-0 font-bold flex flex-col justify-start h-auto">
       <Link href={`/admin/orders/${id}`}>
-        <p>Éditer le bon de livraison</p>
+        <p className="whitespace-nowrap">Éditer le bon de livraison</p>
         {shippingEmail && (
-          <p className="text-sm font-normal text-green-500">
+          <p className="text-sm font-normal text-green-500 whitespace-nowrap">
             BL envoyé le {shippingEmail.toDateString().split(" ")[2]}{" "}
             {new Date(2022, shippingEmail.getMonth(), 1).toLocaleString("fr", {
               month: "long",
@@ -53,8 +53,8 @@ function OrderIdCell({ id, shippingEmail, invoiceEmail }: OrderIdCellProps) {
           </p>
         )}
         {invoiceEmail && (
-          <p className="text-sm font-normal text-green-500">
-            Facture envoyé le {invoiceEmail.toDateString().split(" ")[2]}{" "}
+          <p className="text-sm font-normal text-green-500 whitespace-nowrap">
+            Facture envoyé le {invoiceEmail.getDay()}{" "}
             {new Date(2022, invoiceEmail.getMonth(), 1).toLocaleString("fr", {
               month: "long",
             })}

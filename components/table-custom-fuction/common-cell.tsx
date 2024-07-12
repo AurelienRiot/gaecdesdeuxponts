@@ -104,7 +104,7 @@ function OptionsCell<T>({ row }: { row: Row<T & OptionsCellProps> }) {
         const optionsValue = product.options.map((option) => option.value);
 
         return (
-          <li key={index}>
+          <li key={index} className=" whitespace-nowrap">
             {optionsValue.length > 0 ? `${optionsValue.join(", ")} : ` : null}
             <Currency value={product.price} />
           </li>

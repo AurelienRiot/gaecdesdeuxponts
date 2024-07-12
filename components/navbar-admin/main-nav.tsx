@@ -38,7 +38,7 @@ export function MainNav({ className }: React.HTMLAttributes<HTMLElement>) {
   );
 }
 
-export const adminRoutes = (pathname: string) => [
+export const MainAdminRoutes = (pathname: string) => [
   {
     href: `/`,
     label: "Accueil",
@@ -46,10 +46,31 @@ export const adminRoutes = (pathname: string) => [
     Icone: PresentationIcon,
   },
   {
-    href: `/admin`,
-    label: "Résumé",
-    active: pathname === `/admin`,
-    Icone: LayoutDashboardIcon,
+    href: `/admin/users`,
+    label: "Clients",
+    active: pathname.startsWith(`/admin/users`),
+    Icone: Users,
+  },
+  {
+    href: `/admin/orders`,
+    label: "Commandes",
+    active: pathname.startsWith(`/admin/orders`),
+    Icone: ListOrderedIcon,
+  },
+  {
+    href: `/admin/products`,
+    label: "Produits",
+    active: pathname.startsWith(`/admin/products`),
+    Icone: PackageIcon,
+  },
+];
+
+export const SecondaryAdminRoutes = (pathname: string) => [
+  {
+    href: `/admin/contacts`,
+    label: "Contacts",
+    active: pathname.startsWith(`/admin/contacts`),
+    Icone: PhoneCallIcon,
   },
   {
     href: `/admin/shops`,
@@ -63,29 +84,13 @@ export const adminRoutes = (pathname: string) => [
     active: pathname.startsWith(`/admin/categories`),
     Icone: RowsIcon,
   },
-  {
-    href: `/admin/products`,
-    label: "Produits",
-    active: pathname.startsWith(`/admin/products`),
-    Icone: PackageIcon,
-  },
 
   {
-    href: `/admin/orders`,
-    label: "Commandes",
-    active: pathname.startsWith(`/admin/orders`),
-    Icone: ListOrderedIcon,
-  },
-  {
-    href: `/admin/users`,
-    label: "Clients",
-    active: pathname.startsWith(`/admin/users`),
-    Icone: Users,
-  },
-  {
-    href: `/admin/contacts`,
-    label: "Contacts",
-    active: pathname.startsWith(`/admin/contacts`),
-    Icone: PhoneCallIcon,
+    href: `/admin`,
+    label: "Résumé",
+    active: pathname === `/admin`,
+    Icone: LayoutDashboardIcon,
   },
 ];
+
+export const adminRoutes = (pathname: string) => [...MainAdminRoutes(pathname), ...SecondaryAdminRoutes(pathname)];
