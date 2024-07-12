@@ -66,3 +66,16 @@ export const mergeWithoutDuplicates = <T extends { id: string }>(firstList: T[],
 export function svgToDataUri(svg: string) {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
+
+export const formatFrenchPhoneNumber = (phoneNumber: string | null): string => {
+  if (!phoneNumber) return "";
+  if (phoneNumber.startsWith("+33")) {
+    return (
+      phoneNumber
+        .replace("+33", "0")
+        .match(/.{1,2}/g)
+        ?.join(" ") || ""
+    );
+  }
+  return phoneNumber;
+};

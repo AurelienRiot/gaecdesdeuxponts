@@ -1,21 +1,7 @@
 import { dateFormatter } from "@/lib/date-utils";
-import { addressFormatter } from "@/lib/utils";
+import { addressFormatter, formatFrenchPhoneNumber } from "@/lib/utils";
 import type { FullOrder, UserWithAddress } from "@/types";
 import type { Customer } from "@prisma/client";
-import { nanoid } from "@/lib/id";
-
-const formatFrenchPhoneNumber = (phoneNumber: string | null): string => {
-  if (!phoneNumber) return "";
-  if (phoneNumber.startsWith("+33")) {
-    return (
-      phoneNumber
-        .replace("+33", "0")
-        .match(/.{1,2}/g)
-        ?.join(" ") || ""
-    );
-  }
-  return phoneNumber;
-};
 
 export const createCustomer = (user: UserWithAddress) => {
   const shippingAddress = user.address ? addressFormatter(user.address, true) : "";

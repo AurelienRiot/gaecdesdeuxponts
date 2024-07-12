@@ -23,12 +23,7 @@ export function MainNav({
   orientation?: "horizontal" | "vertical";
 }) {
   return (
-    <NavigationMenu
-      delayDuration={100}
-      skipDelayDuration={500}
-      orientation={orientation}
-      className={className}
-    >
+    <NavigationMenu delayDuration={100} skipDelayDuration={500} orientation={orientation} className={className}>
       <NavigationMenuList>
         <NosProduits />
 
@@ -48,17 +43,15 @@ export function MainNav({
                 />
               </li>
               {aProposRoutes.map(({ href, title, descripton, Icone }) => (
-                <NavigationMenuListItem
-                  key={href}
-                  href={href}
-                  title={title}
-                  Icone={<Icone className="mr-2 size-4" />}
-                >
+                <NavigationMenuListItem key={href} href={href} title={title} Icone={<Icone className="mr-2 size-4" />}>
                   {descripton}
                 </NavigationMenuListItem>
               ))}
             </ul>
           </NavigationMenuContent>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink href={"/ou-nous-trouver"}>Où nous trouver</NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink href={"/contact"}>Contact</NavigationMenuLink>
@@ -95,8 +88,7 @@ export const aProposRoutes = [
   {
     href: "/faq",
     title: "FAQ",
-    descripton:
-      "Trouvez les réponses aux questions fréquemment posées sur notre lait cru",
+    descripton: "Trouvez les réponses aux questions fréquemment posées sur notre lait cru",
     Icone: QuestionMarkIcon,
   },
   {

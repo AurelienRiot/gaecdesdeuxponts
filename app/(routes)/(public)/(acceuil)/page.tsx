@@ -3,6 +3,8 @@ import ProductList from "@/components/products-list";
 import FeaturesWithHeading from "./_components/features";
 import ImageAccueil from "./_components/image-accueil";
 import PorteOuverte from "./_components/porte-ouverte";
+import { PartenaireCards } from "./_components/partenaires";
+import { Suspense } from "react";
 
 export const dynamic = "force-static";
 
@@ -21,7 +23,9 @@ export default function Home() {
       </Suspense> */}
       <FeaturesWithHeading />
 
-      {/* <PartenaireCards /> */}
+      <Suspense fallback={null}>
+        <PartenaireCards />
+      </Suspense>
     </>
   );
 }

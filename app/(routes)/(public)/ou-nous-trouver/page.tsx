@@ -17,9 +17,7 @@ const OuNousTrouver = async () => {
     <Container className="my-8 space-y-8 p-2">
       <div className="text-center xl:text-left">
         <h1 className="text-4xl font-bold">Points de vente</h1>
-        <p className="text-lg">
-          Trouvez le points de vente le plus proche de chez vous
-        </p>
+        <p className="text-lg">Trouvez le points de vente le plus proche de chez vous</p>
       </div>
       <Suspense fallback={<PlaceLoading />}>
         <ServerPlace />
@@ -49,12 +47,7 @@ const PlaceLoading = () => (
       height={1067}
     />
     <div className="flex flex-wrap items-center justify-start gap-2">
-      <Button
-        disabled
-        variant="outline"
-        role="combobox"
-        className={"justify-between active:scale-100"}
-      >
+      <Button disabled variant="outline" role="combobox" className={"justify-between active:scale-100"}>
         Rechercher votre adresse
         <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
       </Button>
