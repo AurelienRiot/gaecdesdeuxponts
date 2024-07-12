@@ -1,11 +1,9 @@
-import AddressAutocomplete, {
-  LocationAutocomplete,
-} from "@/actions/adress-autocompleteFR";
+import AddressAutocomplete, { LocationAutocomplete } from "@/actions/adress-autocompleteFR";
 import { IconButton } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { Locate } from "lucide-react";
 import { usePostHog } from "posthog-js/react";
-import  type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { useMap } from "react-leaflet";
 import { toast } from "sonner";
 
@@ -15,12 +13,8 @@ const LocationMarker = ({
   setPin,
 }: {
   className?: string;
-  setCoordinates: Dispatch<
-    SetStateAction<{ long: number | undefined; lat: number | undefined }>
-  >;
-  setPin: Dispatch<
-    SetStateAction<{ label: string; lat: number; long: number } | undefined>
-  >;
+  setCoordinates: Dispatch<SetStateAction<{ long: number | undefined; lat: number | undefined }>>;
+  setPin: Dispatch<SetStateAction<{ label: string; lat: number; long: number } | undefined>>;
 }) => {
   const map = useMap();
   const { getValue } = useLocalStorage("cookies-banner");
@@ -54,11 +48,18 @@ const LocationMarker = ({
   };
 
   const handleClick = () => {
-    navigator.geolocation.getCurrentPosition(handleLocationFound, () =>
+    if (!navigator.geolocation) {
+      toast.error("Votre navigateur ne supporte pas la localisation.", {
+        position: "top-center",
+      });
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(handleLocationFound, (e) => {
+      toast.error(e.message);
       toast.error("Veuillez autoriser la localisation.", {
         position: "top-center",
-      }),
-    );
+      });
+    });
   };
 
   return (
