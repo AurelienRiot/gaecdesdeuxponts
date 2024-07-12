@@ -17,6 +17,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.laiteriedupontrobert.fr"),
   keywords: [
     "Lait cru Massérac",
+    "Lait cru Avessac",
     "Lait bio Massérac",
     "Vente directe lait cru local",
     "Ferme Massérac",
@@ -61,11 +62,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="fr"
-      className="scroll-p-16 scroll-smooth"
-      suppressHydrationWarning
-    >
+    <html lang="fr" className="scroll-p-16 scroll-smooth" suppressHydrationWarning>
       <body
         id="root"
         className={cn(

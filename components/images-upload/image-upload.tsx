@@ -37,6 +37,7 @@ const UploadImage = ({ selectedFiles, setSelectedFiles, multipleImages = false }
   const handleFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setLoading(true);
     if (!event.target.files || event.target.files.length === 0) {
+      setLoading(false);
       return;
     }
 
@@ -56,6 +57,7 @@ const UploadImage = ({ selectedFiles, setSelectedFiles, multipleImages = false }
   const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     if (loading) {
+      setLoading(false);
       return;
     }
     setLoading(true);
