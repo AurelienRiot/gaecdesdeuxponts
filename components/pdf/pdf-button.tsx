@@ -2,7 +2,6 @@
 import { Button } from "@/components/ui/button";
 import useServerAction from "@/hooks/use-server-action";
 import { saveAs } from "file-saver";
-import { Download, ExternalLink, Send } from "lucide-react";
 import { toast } from "sonner";
 import Spinner from "../animations/spinner";
 import { useToastPromise } from "../ui/sonner";
@@ -186,39 +185,18 @@ function PdfButton({
   disabled?: boolean;
 }) {
   return (
-    <div className="flex flex-row gap-1">
-      <Button
-        variant={"expandIcon"}
-        Icon={ExternalLink}
-        iconPlacement="right"
-        onClick={onViewFile}
-        type="button"
-        disabled={disabled}
-      >
+    <div className="flex flex-wrap gap-1">
+      <Button onClick={onViewFile} type="button" disabled={disabled}>
         {disabled && <Spinner className="h-5 w-5" />}
         {"Afficher"}
       </Button>
-      <Button
-        variant={"expandIcon"}
-        Icon={Download}
-        iconPlacement="right"
-        onClick={onSaveFile}
-        type="button"
-        disabled={disabled}
-      >
+      <Button onClick={onSaveFile} type="button" disabled={disabled}>
         {disabled && <Spinner className="h-5 w-5" />}
 
         {"Télecharger"}
       </Button>
-      <Button
-        variant={"expandIcon"}
-        Icon={Send}
-        iconPlacement="right"
-        onClick={onSendFile}
-        type="button"
-        disabled={disabled}
-      >
-        {disabled && <Spinner className="h-5 w-5" />}
+      <Button onClick={onSendFile} type="button" disabled={disabled}>
+        {disabled && <Spinner className="h-5 w-5 mr-2" />}
 
         {"Envoyer par mail"}
       </Button>

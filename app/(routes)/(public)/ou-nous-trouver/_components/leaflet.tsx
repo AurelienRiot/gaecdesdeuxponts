@@ -27,7 +27,7 @@ const Leaflet = ({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
-      <ClickHandler />
+      {/* <ClickHandler /> */}
       <MapFocus className="absolute left-12 top-3  w-fit items-center bg-transparent" setCoordinates={setCoordinates} />
       {shops.map((shop) => (
         <Marker key={shop.id} position={[shop.lat, shop.long]} icon={MakePin("blue", shop.name, shop.imageUrl)}>

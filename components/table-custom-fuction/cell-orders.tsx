@@ -16,8 +16,8 @@ type ProductCellProps = {
 function ProductCell<T>({ row }: { row: Row<T & ProductCellProps> }) {
   return (
     <div className="flex flex-col gap-1">
-      {row.original.productsList.map((product) => (
-        <span className="w-[150px]" key={product.name}>
+      {row.original.productsList.map((product, index) => (
+        <span className="w-[150px]" key={`${product.name}-${index}`}>
           {!product.unit ? (
             <>
               {!!product.quantity && `${product.quantity}x `}

@@ -28,7 +28,7 @@ const MonthlyInvoice = ({ orders }: { orders: monthlyOrdersType[] }) => {
 
   return (
     <>
-      <div className="justify-left flex items-center gap-4">
+      <div className="justify-left flex flex-wrap items-center gap-4 whitespace-nowrap">
         Facture de
         <Select
           onValueChange={(newValue) => {
@@ -36,7 +36,7 @@ const MonthlyInvoice = ({ orders }: { orders: monthlyOrdersType[] }) => {
           }}
           value={selectedMonth.toString()}
         >
-          <SelectTrigger className="w-32">
+          <SelectTrigger className="w-24">
             <SelectValue placeholder="Mois" />
           </SelectTrigger>
           <SelectContent>
@@ -55,10 +55,10 @@ const MonthlyInvoice = ({ orders }: { orders: monthlyOrdersType[] }) => {
           }}
           value={selectedYear.toString()}
         >
-          <SelectTrigger className="w-32">
+          <SelectTrigger className="w-16">
             <SelectValue placeholder="Année" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent side="top">
             {years.map((year) => (
               <SelectItem key={year} value={year.toString()}>
                 {year}
@@ -69,7 +69,10 @@ const MonthlyInvoice = ({ orders }: { orders: monthlyOrdersType[] }) => {
         <DisplayMonthlyInvoice orders={selectedOrders} />
         <Button
           disabled={loading}
-          className={cn(isPaid ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600")}
+          className={cn(
+            "whitespace-nowrap",
+            isPaid ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600",
+          )}
           onClick={async () => {
             await toastServerAction({
               data: { orderIds: selectedOrders.map((order) => order.orderId), isPaid: !isPaid },
