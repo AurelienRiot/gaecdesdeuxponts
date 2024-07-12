@@ -44,7 +44,7 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
         {display === "admin" && <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />}
         <Card
           data-state={display}
-          className={cn("relative flex h-full w-full min-w-[300px] max-w-[90vw] flex-col justify-between ", className)}
+          className={cn("relative flex h-full w-full min-w-[300px]  max-w-[90vw] flex-col justify-between ", className)}
           ref={ref}
           {...props}
         >

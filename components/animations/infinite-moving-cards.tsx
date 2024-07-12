@@ -118,7 +118,7 @@ const StarRating = ({ rating }: { rating: number }) => {
 function ShopCard({ shop }: { shop: Shop }) {
   return (
     <Card className="max-w-sm flex flex-col justify-between">
-      <CardTitle className="flex  cursor-pointer items-center justify-center gap-2">
+      <CardTitle className="flex  cursor-pointer items-center justify-center gap-2 pt-2">
         {shop.imageUrl ? (
           <span className=" relative size-16 rounded-sm bg-transparent transition-transform hover:scale-150">
             <Image
