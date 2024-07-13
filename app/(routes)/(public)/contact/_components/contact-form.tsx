@@ -59,7 +59,7 @@ export const ContactForm = (): React.ReactNode => {
       router.push("/");
       posthog?.capture("Contact Crée");
     }
-    toastServerAction({ data, onSuccess });
+    await toastServerAction({ data, onSuccess });
   };
 
   useEffect(() => {

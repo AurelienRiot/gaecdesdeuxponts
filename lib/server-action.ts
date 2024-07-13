@@ -58,9 +58,7 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E, U>({
     };
   }
 
-  console.time("Server Action");
   const result = await serverAction(data, user);
-  console.timeEnd("Server Action");
   console.timeEnd("Total Execution Time");
   return result;
 }
