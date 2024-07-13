@@ -12,7 +12,7 @@ const orderItemSchema = z.object({
 
 export const orderSchema = z.object({
   id: z.string().min(1),
-  totalPrice: z.number().min(0, { message: "Le prix est requis" }),
+  totalPrice: z.number(),
   dateOfPayment: z.date().optional().nullable(),
   dateOfShipping: z.date().optional().nullable(),
   dateOfEdition: z.date().optional().nullable(),
