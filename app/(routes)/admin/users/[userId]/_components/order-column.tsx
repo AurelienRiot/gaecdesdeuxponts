@@ -5,6 +5,7 @@ import {
   OrderIdCell,
   ProductCell,
   StatusCell,
+  statutsArray,
   type Status,
 } from "@/components/table-custom-fuction/cell-orders";
 import { DateCell } from "@/components/table-custom-fuction/common-cell";
@@ -103,12 +104,6 @@ export const filterableColumns = ({
     label: item,
     value: item,
   }));
-  const statutsArray: { label: Status; value: Status }[] = [
-    { label: "En cours de validation", value: "En cours de validation" },
-    { label: "Commande valide", value: "Commande valide" },
-    { label: "En cours de paiement", value: "En cours de paiement" },
-    { label: "Payé", value: "Payé" },
-  ];
 
   return [
     {

@@ -1,6 +1,12 @@
 "use client";
 
-import { ProductCell, ShopNameCell, StatusCell, type Status } from "@/components/table-custom-fuction/cell-orders";
+import {
+  ProductCell,
+  ShopNameCell,
+  StatusCell,
+  statutsArray,
+  type Status,
+} from "@/components/table-custom-fuction/cell-orders";
 import { DateCell } from "@/components/table-custom-fuction/common-cell";
 import { FilterOneInclude } from "@/components/table-custom-fuction/common-filter";
 import { DatePickUpHeader, ShopNameHeader } from "@/components/table-custom-fuction/header-orders";
@@ -60,12 +66,6 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
 ];
 
 export const filterableColumns = (): DataTableFilterableColumn<OrderColumnType>[] => {
-  const statutsArray: { label: Status; value: Status }[] = [
-    { label: "En cours de validation", value: "En cours de validation" },
-    { label: "Commande valide", value: "Commande valide" },
-    { label: "En cours de paiement", value: "En cours de paiement" },
-    { label: "Payé", value: "Payé" },
-  ];
   return [
     {
       id: "status",
@@ -78,11 +78,7 @@ export const filterableColumns = (): DataTableFilterableColumn<OrderColumnType>[
 export const searchableColumns: DataTableSearchableColumn<OrderColumnType>[] = [
   {
     id: "id",
-    title: "Numéro de commande",
-  },
-  {
-    id: "products",
-    title: "Produits",
+    title: "numéro de commande",
   },
 ];
 

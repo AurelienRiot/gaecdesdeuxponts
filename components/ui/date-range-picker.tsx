@@ -8,17 +8,10 @@ import type { DateRange, DayPicker } from "react-day-picker";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
-type DatePickerWithRangeProps = Omit<
-  React.ComponentProps<typeof DayPicker>,
-  "selected" | "onSelect" | "mode"
-> & {
+type DatePickerWithRangeProps = Omit<React.ComponentProps<typeof DayPicker>, "selected" | "onSelect" | "mode"> & {
   date: DateRange | undefined;
   setDate: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
   popoverClassName?: string;
@@ -39,17 +32,13 @@ export function DatePickerWithRange({
         <PopoverTrigger asChild>
           <Button
             variant={"outline"}
-            className={cn(
-              "w-[300px] justify-start text-left font-normal",
-              !date && "text-muted-foreground",
-            )}
+            className={cn("max-w-[300px] justify-start text-left font-normal", !date && "text-muted-foreground")}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
             {date?.from ? (
               date.to ? (
                 <>
-                  {format(date.from, "d MMMM yyyy", { locale: fr })} -{" "}
-                  {format(date.to, "d MMMM yyyy", { locale: fr })}
+                  {format(date.from, "d MMMM yyyy", { locale: fr })} - {format(date.to, "d MMMM yyyy", { locale: fr })}
                 </>
               ) : (
                 format(date.from, "d MMMM yyyy", { locale: fr })

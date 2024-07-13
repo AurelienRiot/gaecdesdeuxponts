@@ -12,8 +12,10 @@ import { OrderClient } from "./_components/client";
 export const dynamic = "force-dynamic";
 
 const OrdersPage = async (context: {
-  searchParams: { from: string | undefined; to: string | undefined };
+  searchParams: { from: string | undefined; to: string | undefined; id: string | undefined };
 }) => {
+  const id = context.searchParams.id;
+
   let from: Date;
   let to: Date;
   if (context.searchParams.from && context.searchParams.to) {
@@ -36,12 +38,18 @@ const OrdersPage = async (context: {
       user: { include: { address: true, billingAddress: true } },
       customer: true,
     },
-    where: {
-      createdAt: {
-        gte: dateRange.from,
-        lte: dateRange.to,
-      },
-    },
+    where: !id
+      ? {
+          createdAt: {
+            gte: dateRange.from,
+            lte: dateRange.to,
+          },
+        }
+      : {
+          id: {
+            contains: id,
+          },
+        },
     orderBy: {
       // dateOfShipping: {sort:"asc",nulls:"first"},
       createdAt: "desc",

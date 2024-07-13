@@ -60,17 +60,11 @@ function OrderIdCell({ id, shippingEmail, invoiceEmail }: OrderIdCellProps) {
           )}
           {invoiceEmail && (
             <div className="relative">
-              <p className="text-xs  text-green-500 whitespace-nowrap absolute font-bold left-[6px] top-[20px]">
+              <p className="text-xs  text-green-500 whitespace-nowrap absolute font-bold left-[6px] top-[19px]">
                 {formDateDayMonth(invoiceEmail)}
               </p>
               <Icons.Invoice className="size-12 rotate-90" />
             </div>
-            // <p className="text-sm font-normal text-green-500 whitespace-nowrap">
-            //   Facture envoyé le {invoiceEmail.getDay()}{" "}
-            //   {new Date(2022, invoiceEmail.getMonth(), 1).toLocaleString("fr", {
-            //     month: "long",
-            //   })}
-            // </p>
           )}
         </div>
       </Link>
@@ -163,6 +157,13 @@ function createStatus(order: OrderWithItemsAndShop): Status {
         : "Payé";
 }
 
+const statutsArray: { label: string; value: Status }[] = [
+  { label: "En cours de validation", value: "En cours de validation" },
+  { label: "Commande validé", value: "Commande valide" },
+  { label: "En attente de paiement", value: "En cours de paiement" },
+  { label: "Payé", value: "Payé" },
+];
+
 type StatusCellProps = {
   status: Status;
 };
@@ -215,4 +216,5 @@ export {
   AdminShopNameCell,
   ShopNameCell,
   StatusCell,
+  statutsArray,
 };

@@ -5,6 +5,7 @@ import {
   OrderIdCell,
   ProductCell,
   StatusCell,
+  statutsArray,
   type Status,
 } from "@/components/table-custom-fuction/cell-orders";
 import { DateCell, NameCell } from "@/components/table-custom-fuction/common-cell";
@@ -48,6 +49,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
     accessorKey: "name",
     header: "Client",
     cell: ({ row }) => <NameCell name={row.original.name} url={`/admin/users/${row.original.userId}`} />,
+    filterFn: FilterOneInclude,
   },
   {
     accessorKey: "products",
@@ -93,9 +95,11 @@ export const columns: ColumnDef<OrderColumn>[] = [
 export const filterableColumns = ({
   products,
   shopsName,
+  userNames,
 }: {
   products: string[];
   shopsName: string[];
+  userNames: string[];
 }): DataTableFilterableColumn<OrderColumn>[] => {
   const prodArray = products.map((item) => ({
     label: item,
@@ -106,13 +110,17 @@ export const filterableColumns = ({
     value: item,
   }));
 
-  const statutsArray: { label: Status; value: Status }[] = [
-    { label: "En cours de validation", value: "En cours de validation" },
-    { label: "Commande valide", value: "Commande valide" },
-    { label: "En cours de paiement", value: "En cours de paiement" },
-    { label: "Payé", value: "Payé" },
-  ];
+  const userArray = userNames.map((item) => ({
+    label: item,
+    value: item,
+  }));
+
   return [
+    {
+      id: "name",
+      title: "Client",
+      options: userArray,
+    },
     {
       id: "products",
       title: "Produits",
@@ -130,17 +138,6 @@ export const filterableColumns = ({
     },
   ];
 };
-
-export const searchableColumns: DataTableSearchableColumn<OrderColumn>[] = [
-  {
-    id: "name",
-    title: "Nom",
-  },
-  {
-    id: "id",
-    title: "numéro de commande",
-  },
-];
 
 export const viewOptionsColumns: DataTableViewOptionsColumn<OrderColumn>[] = [
   {
