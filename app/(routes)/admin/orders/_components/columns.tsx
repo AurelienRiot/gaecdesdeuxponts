@@ -48,7 +48,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
   },
   {
     accessorKey: "name",
-    header: "Nom",
+    header: "Client",
     cell: ({ row }) => <NameCell name={row.original.name} url={`/admin/users/${row.original.userId}`} />,
   },
   {
