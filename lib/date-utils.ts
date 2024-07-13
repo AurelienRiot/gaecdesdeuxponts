@@ -13,7 +13,7 @@ export const isDateDisabled = (date: Date) => {
 };
 
 export function formDateDayMonth(date: Date) {
-  return `${date.getDay()} ${new Date(2024, date.getMonth(), 1).toLocaleString("fr", {
+  return `${date.getDate()} ${new Date(2024, date.getMonth(), 1).toLocaleString("fr", {
     month: "short",
   })}`;
 }

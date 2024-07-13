@@ -52,7 +52,7 @@ function OrderIdCell({ id, shippingEmail, invoiceEmail }: OrderIdCellProps) {
         <div className="flex gap-2 justify-left items-center mr-auto">
           {shippingEmail && (
             <div className="relative">
-              <p className="text-sm  text-green-500 whitespace-nowrap absolute font-bold left-3 top-5">
+              <p className="text-xs  text-green-500 whitespace-nowrap absolute font-bold left-[10px] top-6">
                 {formDateDayMonth(shippingEmail)}
               </p>
               <Icons.Delivery className="size-16" />
@@ -60,7 +60,7 @@ function OrderIdCell({ id, shippingEmail, invoiceEmail }: OrderIdCellProps) {
           )}
           {invoiceEmail && (
             <div className="relative">
-              <p className="text-sm  text-green-500 whitespace-nowrap absolute font-bold left-2 top-[18px]">
+              <p className="text-xs  text-green-500 whitespace-nowrap absolute font-bold left-[6px] top-[20px]">
                 {formDateDayMonth(invoiceEmail)}
               </p>
               <Icons.Invoice className="size-12 rotate-90" />

@@ -14,8 +14,6 @@ import { DatePickUpHeader, ShopNameHeader } from "@/components/table-custom-fuct
 import type { DataTableFilterableColumn, DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
 import type { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
-import { Icons } from "@/components/icons";
-import { FaFileInvoice } from "react-icons/fa";
 
 export type OrderColumn = {
   id: string;
