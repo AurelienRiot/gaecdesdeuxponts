@@ -18,7 +18,7 @@ const LaitCruPage = () => {
   return (
     <section id="about" className="py-16">
       <div className="container mx-auto px-4">
-        <h1 className="mb-8 text-center text-5xl font-bold">La Démarche du Lait Cru </h1>
+        <h1 className="mb-8 text-center text-3xl xs:text-4xl sm:text-5xl font-bold">La Démarche du Lait Cru </h1>
         <div className="grid grid-cols-1 items-center justify-center gap-4 text-center sm:grid-cols-2">
           <Image
             src={VacheChamps}
@@ -26,7 +26,7 @@ const LaitCruPage = () => {
             height={1662}
             placeholder="blur"
             alt="Vache champs"
-            className="mx-auto max-w-sm rounded-lg shadow-md sm:max-w-full md:max-w-sm"
+            className="mx-auto rounded-lg shadow-md max-w-full md:max-w-sm"
           />
           <div className="space-y-2 text-base lg:text-lg">
             <p>
@@ -60,7 +60,7 @@ const LaitCruPage = () => {
             height={500}
             placeholder="blur"
             alt="Bidon lait"
-            className="mx-auto max-w-sm rounded-lg shadow-md sm:max-w-full md:max-w-sm"
+            className="mx-auto  rounded-lg shadow-md max-w-full md:max-w-sm"
           />
           <Image
             src={Veau}
@@ -68,7 +68,7 @@ const LaitCruPage = () => {
             height={3456}
             placeholder="blur"
             alt="Veau"
-            className="mx-auto hidden max-w-sm rounded-lg shadow-md sm:block sm:max-w-full md:max-w-sm"
+            className="mx-auto hidden  rounded-lg shadow-md sm:block max-w-full md:max-w-sm"
           />
           <div className="space-y-2 text-base lg:text-lg">
             <p>
@@ -89,9 +89,8 @@ const LaitCruPage = () => {
             height={3456}
             placeholder="blur"
             alt="Veau"
-            className="mx-auto max-w-sm rounded-lg shadow-md sm:hidden sm:max-w-full md:max-w-sm"
+            className="mx-auto rounded-lg shadow-md sm:hidden max-w-full md:max-w-sm"
           />
-          T
         </div>
       </div>
     </section>

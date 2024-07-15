@@ -26,7 +26,7 @@ const PageLaFerme = () => {
             height={984}
             placeholder="blur"
             alt="Photo Julie et Jean-Marc"
-            className="mx-auto max-w-sm rounded-lg shadow-md sm:max-w-full md:max-w-sm"
+            className="mx-auto rounded-lg shadow-md max-w-full md:max-w-sm"
           />
           <div className="space-y-2 text-base lg:text-lg">
             <p>
