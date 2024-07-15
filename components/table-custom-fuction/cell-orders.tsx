@@ -1,17 +1,17 @@
-import type { OrderWithItemsAndShop } from "@/types";
-import type { Row } from "@tanstack/react-table";
-import { Button } from "../ui/button";
-import Link from "next/link";
-import { NameCell } from "./common-cell";
-import type { Shop } from "@prisma/client";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Search } from "lucide-react";
-import { ShopCard } from "../display-shops/shop-card";
-import { PiHourglassLowFill } from "react-icons/pi";
-import type { IconType } from "react-icons/lib";
-import { FaCheckCircle, FaFileInvoiceDollar, FaShippingFast } from "react-icons/fa";
-import { Icons } from "../icons";
 import { formDateDayMonth } from "@/lib/date-utils";
+import type { OrderWithItemsAndShop } from "@/types";
+import type { Shop } from "@prisma/client";
+import type { Row } from "@tanstack/react-table";
+import { Search } from "lucide-react";
+import Link from "next/link";
+import { FaCheckCircle, FaFileInvoiceDollar, FaShippingFast } from "react-icons/fa";
+import { PiHourglassLowFill } from "react-icons/pi";
+import { ShopCard } from "../display-shops/shop-card";
+import { Icons } from "../icons";
+import { Button } from "../ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { NameCell } from "./common-cell";
 
 type ProductCellProps = {
   products: string;
@@ -22,7 +22,7 @@ function ProductCell<T>({ row }: { row: Row<T & ProductCellProps> }) {
   return (
     <div className="flex flex-col gap-1">
       {row.original.productsList.map((product, index) => (
-        <span className="w-[150px]" key={`${product.name}-${index}`}>
+        <span className="w-[150px]  xl:w-auto" key={`${product.name}-${index}`}>
           {!product.unit ? (
             <>
               {!!product.quantity && `${product.quantity}x `}
@@ -145,76 +145,127 @@ function createProduct(order: OrderWithItemsAndShop) {
     .join(", ");
 }
 
-export type Status = "En cours de validation" | "Commande valide" | "En cours de paiement" | "Payé";
+// export type Status = "En cours de validation" | "Commande validée" | "Commande livrée" | "Commande Payée";
+
+const statuses = ["En cours de validation", "Commande validée", "Commande livrée", "Commande Payée"] as const;
+
+type Status = (typeof statuses)[number];
 
 function createStatus(order: OrderWithItemsAndShop): Status {
-  return !order.dateOfEdition
-    ? "En cours de validation"
-    : !order.dateOfShipping
-      ? "Commande valide"
-      : !order.dateOfPayment
-        ? "En cours de paiement"
-        : "Payé";
+  if (!order.dateOfEdition) return "En cours de validation";
+  if (!order.dateOfShipping) return "Commande validée";
+  if (!order.dateOfPayment) return "Commande livrée";
+  return "Commande Payée";
 }
 
-const statutsArray: { label: string; value: Status }[] = [
-  { label: "En cours de validation", value: "En cours de validation" },
-  { label: "Commande validé", value: "Commande valide" },
-  { label: "En attente de paiement", value: "En cours de paiement" },
-  { label: "Payé", value: "Payé" },
-];
+const createStatusArray = (statuses: Status[]): { label: string; value: Status }[] => {
+  return statuses.map((status) => ({
+    label: status,
+    value: status,
+  }));
+};
+
+const statusArray = createStatusArray([...statuses]);
 
 type StatusCellProps = {
   status: Status;
 };
 
 function StatusCell<T>({ row }: { row: Row<T & StatusCellProps> }) {
-  const icons: IconType[] = [];
-  if (row.original.status === "En cours de validation") {
-    return <PiHourglassLowFill className="text-orange-500 size-6" />;
-  }
-  icons.push(FaCheckCircle);
-  if (row.original.status === "Commande valide") {
-    return (
-      <div className="flex  gap-2">
-        {icons.map((Icon, index) => (
-          <Icon key={index} className="text-green-500 size-6" />
-        ))}
-      </div>
-    );
-  }
-  icons.push(FaShippingFast);
-  if (row.original.status === "En cours de paiement") {
-    return (
-      <div className="flex  gap-2">
-        {icons.map((Icon, index) => (
-          <Icon key={index} className="text-green-500 size-6" />
-        ))}
-      </div>
-    );
-  }
-  icons.push(FaFileInvoiceDollar);
-  return (
-    <div className="flex  gap-2">
-      {icons.map((Icon, index) => (
-        <Icon key={index} className="text-green-500 size-6" />
-      ))}
-    </div>
-  );
+  const { status } = row.original;
+  const getStatusIcon = (status: Status) => {
+    switch (status) {
+      case "En cours de validation":
+        return (
+          <Tooltip>
+            <TooltipTrigger>
+              <PiHourglassLowFill className="text-orange-500 size-6" />
+            </TooltipTrigger>
+            <TooltipContent side="top" sideOffset={4} align="start">
+              <p>En cours de validation</p>
+            </TooltipContent>
+          </Tooltip>
+        );
+
+      case "Commande validée":
+        return (
+          <Tooltip>
+            <TooltipTrigger>
+              <FaCheckCircle className="text-green-500 size-6" />
+            </TooltipTrigger>
+            <TooltipContent side="top" sideOffset={4} align="start">
+              <p>Commande validée</p>
+            </TooltipContent>
+          </Tooltip>
+        );
+      case "Commande livrée":
+        return (
+          <>
+            <Tooltip>
+              <TooltipTrigger>
+                <FaCheckCircle className="text-green-500 size-6" />
+              </TooltipTrigger>
+              <TooltipContent side="top" sideOffset={4} align="start">
+                <p>Commande validée</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger>
+                <FaShippingFast className="text-green-500 size-6" />
+              </TooltipTrigger>
+              <TooltipContent side="top" sideOffset={4} align="start">
+                <p>Commande livrée</p>
+              </TooltipContent>
+            </Tooltip>
+          </>
+        );
+      case "Commande Payée":
+        return (
+          <>
+            <Tooltip>
+              <TooltipTrigger>
+                <FaCheckCircle className="text-green-500 size-6" />
+              </TooltipTrigger>
+              <TooltipContent side="top" sideOffset={4} align="start">
+                <p>Commande validée</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger>
+                <FaShippingFast className="text-green-500 size-6" />
+              </TooltipTrigger>
+              <TooltipContent side="top" sideOffset={4} align="start">
+                <p>Commande livrée</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger>
+                <FaFileInvoiceDollar className="text-green-500 size-6" />
+              </TooltipTrigger>
+              <TooltipContent side="top" sideOffset={4} align="start">
+                <p>Commande Payée</p>
+              </TooltipContent>
+            </Tooltip>
+          </>
+        );
+    }
+  };
+  return <div className="flex gap-2 sm:gap-4">{getStatusIcon(status)}</div>;
 }
 
 function createDatePickUp({ dateOfShipping, datePickUp }: { datePickUp: Date; dateOfShipping: Date | null }) {
   return dateOfShipping ? dateOfShipping : datePickUp;
 }
 export {
+  AdminShopNameCell,
+  OrderIdCell,
   ProductCell,
+  ShopNameCell,
+  StatusCell,
+  createDatePickUp,
   createProduct,
   createProductList,
   createStatus,
-  createDatePickUp,
-  OrderIdCell,
-  AdminShopNameCell,
-  ShopNameCell,
-  StatusCell,
-  statutsArray,
+  statusArray,
+  type Status,
 };

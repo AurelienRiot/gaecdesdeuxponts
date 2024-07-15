@@ -23,7 +23,7 @@ export function MainNav({
   orientation?: "horizontal" | "vertical";
 }) {
   return (
-    <NavigationMenu delayDuration={100} skipDelayDuration={500} orientation={orientation} className={className}>
+    <NavigationMenu delayDuration={10000} skipDelayDuration={500} orientation={orientation} className={className}>
       <NavigationMenuList>
         <NosProduits />
 

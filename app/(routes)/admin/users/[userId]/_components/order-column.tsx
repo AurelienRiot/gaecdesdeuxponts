@@ -5,7 +5,7 @@ import {
   OrderIdCell,
   ProductCell,
   StatusCell,
-  statutsArray,
+  statusArray,
   type Status,
 } from "@/components/table-custom-fuction/cell-orders";
 import { DateCell } from "@/components/table-custom-fuction/common-cell";
@@ -114,7 +114,7 @@ export const filterableColumns = ({
     {
       id: "status",
       title: "Statut",
-      options: statutsArray,
+      options: statusArray,
     },
     {
       id: "shopName",

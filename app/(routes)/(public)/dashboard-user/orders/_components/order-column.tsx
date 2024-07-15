@@ -4,7 +4,7 @@ import {
   ProductCell,
   ShopNameCell,
   StatusCell,
-  statutsArray,
+  statusArray,
   type Status,
 } from "@/components/table-custom-fuction/cell-orders";
 import { DateCell } from "@/components/table-custom-fuction/common-cell";
@@ -70,7 +70,7 @@ export const filterableColumns = (): DataTableFilterableColumn<OrderColumnType>[
     {
       id: "status",
       title: "Statut",
-      options: statutsArray,
+      options: statusArray,
     },
   ];
 };
