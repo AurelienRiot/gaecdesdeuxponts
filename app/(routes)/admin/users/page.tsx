@@ -13,10 +13,9 @@ const UserPage = async () => {
     orderBy: {
       createdAt: "desc",
     },
-
     include: {
-      orders: true,
-    },
+      orders:{select:{id:true}}
+    } 
   });
 
   const orderLengths = allUsers.map((user) => {

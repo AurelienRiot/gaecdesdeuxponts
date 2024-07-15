@@ -2,17 +2,17 @@
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import type { CheckedState } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/checkbox";
+import useServerAction from "@/hooks/use-server-action";
 import { cn } from "@/lib/utils";
 import type { User } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { toast } from "sonner";
-import { Checkbox } from "@/components/ui/checkbox";
-import type { CheckedState } from "@/components/ui/checkbox";
-import useServerAction from "@/hooks/use-server-action";
 import deleteUser from "../_actions/delete-user";
 import updateProStatus from "../_actions/update-pro-status";
+import { ListOrdered } from "lucide-react";
 
 interface CardUserProps {
   user: User;
@@ -48,7 +48,7 @@ const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => 
     <>
       <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
 
-      <Card className={cn("flex h-full w-full min-w-[300px] flex-col justify-between", className)}>
+      {/* <Card className={cn("flex h-full w-full min-w-[300px] flex-col justify-between", className)}>
         <CardHeader>
           <CardTitle
             onClick={() => {
@@ -84,6 +84,36 @@ const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => 
           </Button>
           <Button asChild disabled={updateProUserLoading || deleteUserLoading} className="hover:underline">
             <Link href={`/admin/users/${user.id}`}>Modifier</Link>
+          </Button>
+        </CardFooter>
+      </Card> */}
+      <Card className={cn("flex h-full w-[100px] sm:w-[150px] flex-col justify-between", className)}>
+        <CardHeader className="p-4">
+          <CardTitle className="overflow-hidden  font-semibold">
+            <Link
+              href={`/admin/users/${user.id}`}
+              className="capitalize hover:underline sm:text-sm md:text-base text-xs whitespace-nowrap  "
+            >
+              {user.company ? user.company : user.name ? user.name : user.email}
+            </Link>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="text-center p-2">
+          <p className="gap-4 flex justify-center items-center">
+            {" "}
+            <ListOrdered className="size-6" /> {orderLength}
+          </p>
+          <div className="flex flex-row items-center justify-center gap-1">
+            {check === true ? (
+              <p className="text-green-500">Professionnel</p>
+            ) : (
+              <p className="text-blue-500">Particulier</p>
+            )}
+          </div>
+        </CardContent>
+        <CardFooter className="flex flex-row items-end justify-between  gap-1">
+          <Button asChild disabled={updateProUserLoading || deleteUserLoading} className="text-xs sm:text-sm w-full">
+            <Link href={`/admin/users/${user.id}`}>Consulter</Link>
           </Button>
         </CardFooter>
       </Card>

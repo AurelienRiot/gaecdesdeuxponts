@@ -59,9 +59,9 @@ const UserClient: React.FC<UserClientProps> = ({ users, orderLengths }) => {
             </SelectContent>
           </Select>
         </div>
-        <div className="grid grid-cols-1 items-center justify-items-center gap-3 p-6 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+        <div className="flex flex-wrap justify-center items-center gap-2 p-6 ">
           {filteredUsers.map((user, index) => (
-            <CardUser key={user.id} className="m-4" user={user} orderLength={orderLengths[index]} />
+            <CardUser key={user.id} user={user} orderLength={orderLengths[index]} />
           ))}
         </div>
       </div>
