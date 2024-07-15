@@ -87,12 +87,12 @@ const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => 
           </Button>
         </CardFooter>
       </Card> */}
-      <Card className={cn("flex h-full w-[100px] sm:w-[150px] flex-col justify-between", className)}>
+      <Card className={cn("flex h-full w-[150px] sm:w-[200px] flex-col justify-between", className)}>
         <CardHeader className="p-4">
           <CardTitle className="overflow-hidden  font-semibold">
             <Link
               href={`/admin/users/${user.id}`}
-              className="capitalize hover:underline sm:text-sm md:text-base text-xs whitespace-nowrap  "
+              className="capitalize hover:underline sm:text-sm md:text-base text-xs whitespace-nowrap"
             >
               {user.company ? user.company : user.name ? user.name : user.email}
             </Link>

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ListOrdered } from "lucide-react";
 import Link from "next/link";
 
 function Loading() {
@@ -18,51 +18,31 @@ function Loading() {
             "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           }
         >
-          <p>nom</p>
+          <p>Nom</p>
           <ChevronDown className="h-4 w-4 opacity-50" />
         </div>
       </div>
-      <div className="grid grid-cols-1 space-y-4 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
-        {Array.from({ length: 4 }, (_, index) => (
-          <div key={index} className="m-4">
-            <Card>
-              <CardHeader>
-                <CardTitle
-                  className="justify-left flex
-             cursor-pointer items-center gap-3 hover:underline"
-                >
-                  <Skeleton className="h-4 w-20 rounded-full " />
-                  <Skeleton className="h-4 w-16 rounded-full" />
-                </CardTitle>
-                <CardDescription className="justify-left flex items-center">
-                  <Skeleton className="h-4 w-24 rounded-full" />
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex flex-col items-center justify-center">
-                <div className="flex justify-center p-2">
-                  <Skeleton className="h-4 w-24 rounded-full" />
-                </div>
-                <div className="flex items-center justify-center p-2">
-                  {`Nombre de commandes : `} <Skeleton className="ml-2 h-4 w-5 rounded-full" />
-                </div>
-                <div className="flex items-center justify-center p-2">
-                  {`Nombre d'abonnements : `}
-                  <Skeleton
-                    className="ml-2 h-4 w-5
-              rounded-full"
-                  />
-                </div>
-              </CardContent>
-              <CardFooter className="flex flex-col justify-between gap-y-3 lg:flex-row lg:gap-x-2">
-                <Button variant="destructive" className="hover:underline">
-                  Supprimer
-                </Button>
-                <Button className="hover:underline">
-                  <Link href={`#`}>Modifier</Link>
-                </Button>
-              </CardFooter>
-            </Card>
-          </div>
+      <div className="flex flex-wrap justify-center items-center gap-2 p-6 ">
+        {Array.from({ length: 10 }, (_, index) => (
+          <Card key={index} className={"flex h-full w-[100px] sm:w-[150px] flex-col justify-between"}>
+            <CardHeader className="p-4">
+              <CardTitle className="overflow-hidden  font-semibold">
+                <Skeleton size={"lg"} />
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-center p-2">
+              <p className="gap-4 flex justify-center items-center">
+                {" "}
+                <ListOrdered className="size-6" /> <Skeleton size={"xs"} />
+              </p>
+              <div className="flex flex-row items-center justify-center gap-1">
+                <Skeleton size={"lg"} />
+              </div>
+            </CardContent>
+            <CardFooter className="flex flex-row items-end justify-between  gap-1">
+              <Button className="text-xs sm:text-sm w-full">Consulter</Button>
+            </CardFooter>
+          </Card>
         ))}
       </div>
     </div>

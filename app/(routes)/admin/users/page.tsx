@@ -1,5 +1,6 @@
 import prismadb from "@/lib/prismadb";
 import UserClient from "./_components/client";
+import { addDelay } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -14,8 +15,8 @@ const UserPage = async () => {
       createdAt: "desc",
     },
     include: {
-      orders:{select:{id:true}}
-    } 
+      orders: { select: { id: true } },
+    },
   });
 
   const orderLengths = allUsers.map((user) => {
