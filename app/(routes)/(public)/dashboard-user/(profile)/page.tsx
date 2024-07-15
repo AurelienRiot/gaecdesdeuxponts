@@ -19,7 +19,7 @@ const ProfilTab = async () => {
           <UserName />
         </h1>
 
-        <ProButton />
+        {/* <ProButton /> */}
         <LogoutButtonText />
       </div>
       <Separator />
