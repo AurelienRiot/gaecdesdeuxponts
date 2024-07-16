@@ -4,6 +4,8 @@ import prismadb from "@/lib/prismadb";
 import cloudinary from "cloudinary";
 import { checkAdmin } from "../auth/checkAuth";
 import type { ReturnTypeServerAction } from "@/lib/server-action";
+import { z } from "zod";
+import safeServerAction from "@/lib/server-action";
 
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -89,78 +91,81 @@ async function listFiles(): Promise<ReturnTypeServerAction<Ressources[], undefin
   }
 }
 
-async function deleteObject({
-  publicID,
-}: {
-  publicID: string;
-}): Promise<ReturnTypeServerAction<undefined, undefined>> {
-  const isAuth = await checkAdmin();
-  if (!isAuth) {
-    return { success: false, message: "Vous devez être authentifier" };
-  }
+const deleteObjectSchema = z.object({
+  publicID: z.string(),
+});
 
-  const imageUrl = `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${publicID}`;
-  const productsWithImage = await prismadb.product.findMany({
-    where: {
-      imagesUrl: {
-        has: imageUrl,
-      },
-    },
-    select: {
-      name: true,
+async function deleteObject(data: z.infer<typeof deleteObjectSchema>) {
+  return await safeServerAction({
+    schema: deleteObjectSchema,
+    getUser: checkAdmin,
+    data,
+    serverAction: async (data) => {
+      const { publicID } = data;
+      const imageUrl = `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${publicID}`;
+      const productsWithImage = await prismadb.product.findMany({
+        where: {
+          imagesUrl: {
+            has: imageUrl,
+          },
+        },
+        select: {
+          name: true,
+        },
+      });
+
+      if (productsWithImage.length > 0) {
+        const productNames = productsWithImage.map((category) => category.name).join(", ");
+        return {
+          success: false,
+          message: `L'image est utilisée par les produits : ${productNames}`,
+        };
+      }
+
+      const imagesCategories = await prismadb.category.findMany({
+        where: {
+          imageUrl: imageUrl,
+        },
+        select: {
+          name: true,
+        },
+      });
+
+      if (imagesCategories.length > 0) {
+        const categoryNames = imagesCategories.map((category) => category.name).join(", ");
+        return {
+          success: false,
+          message: `L'image est utilisée par la categorie : ${categoryNames}`,
+        };
+      }
+
+      const imagesShop = await prismadb.shop.findMany({
+        where: {
+          imageUrl: imageUrl,
+        },
+        select: {
+          name: true,
+        },
+      });
+
+      if (imagesShop.length > 0) {
+        const shoptNames = imagesShop.map((category) => category.name).join(", ");
+        return {
+          success: false,
+          message: `L'image est utilisée par le magasin : ${shoptNames}`,
+        };
+      }
+
+      try {
+        await cloudinary.v2.uploader.destroy(publicID);
+        console.log(`Image supprimé`);
+        return { success: true, message: "Image supprimé" };
+      } catch (error) {
+        console.error(`Error deleting object: ${publicID}`, error);
+        return { success: false, message: "Erreur dans le suppression de l'image" };
+      }
     },
   });
-
-  if (productsWithImage.length > 0) {
-    const productNames = productsWithImage.map((category) => category.name).join(", ");
-    return {
-      success: false,
-      message: `L'image est utilisée par les produits : ${productNames}`,
-    };
-  }
-
-  const imagesCategories = await prismadb.category.findMany({
-    where: {
-      imageUrl: imageUrl,
-    },
-    select: {
-      name: true,
-    },
-  });
-
-  if (imagesCategories.length > 0) {
-    const categoryNames = imagesCategories.map((category) => category.name).join(", ");
-    return {
-      success: false,
-      message: `L'image est utilisée par la categorie : ${categoryNames}`,
-    };
-  }
-
-  const imagesShop = await prismadb.shop.findMany({
-    where: {
-      imageUrl: imageUrl,
-    },
-    select: {
-      name: true,
-    },
-  });
-
-  if (imagesShop.length > 0) {
-    const shoptNames = imagesShop.map((category) => category.name).join(", ");
-    return {
-      success: false,
-      message: `L'image est utilisée par le magasin : ${shoptNames}`,
-    };
-  }
-
-  try {
-    await cloudinary.v2.uploader.destroy(publicID);
-    console.log(`Image supprimé`);
-    return { success: true, message: "Image supprimé" };
-  } catch (error) {
-    console.error(`Error deleting object: ${publicID}`, error);
-    return { success: false, message: "Erreur dans le suppression de l'image" };
-  }
 }
 
 export { deleteObject, getSignature, listFiles };

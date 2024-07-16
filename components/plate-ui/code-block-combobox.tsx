@@ -12,13 +12,7 @@ import {
 import { Icons } from "@/components/icons";
 
 import { Button } from "./button";
-import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "./command";
+import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "./command";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 const languages: { value: string; label: string }[] = [
@@ -50,10 +44,7 @@ export function CodeBlockCombobox() {
           className="h-5 justify-between px-1 text-xs"
           size="xs"
         >
-          {state.value
-            ? languages.find((language) => language.value === state.value)
-                ?.label
-            : "Plain Text"}
+          {state.value ? languages.find((language) => language.value === state.value)?.label : "Plain Text"}
           <Icons.chevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -74,12 +65,7 @@ export function CodeBlockCombobox() {
                 }}
               >
                 <Icons.check
-                  className={cn(
-                    "mr-2 size-4",
-                    state.value === language.value
-                      ? "opacity-100"
-                      : "opacity-0",
-                  )}
+                  className={cn("mr-2 size-4", state.value === language.value ? "opacity-100" : "opacity-0")}
                 />
                 {language.label}
               </CommandItem>
