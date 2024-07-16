@@ -132,7 +132,7 @@ export const ProfilRoutes = [
     href: "/dashboard-user/orders",
   },
   {
-    title: "Modifier le profil",
+    title: "Modifier votre profil",
     Icon: Settings,
     href: "/dashboard-user/settings",
   },

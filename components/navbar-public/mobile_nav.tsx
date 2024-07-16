@@ -1,11 +1,5 @@
 "use client";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,20 +20,11 @@ const MobileNav = ({ children }: { children: React.ReactNode }) => {
           <HamburgerMenuIcon className="h-6 w-6 lg:hidden" />
           <span className="sr-only">Ouvrir le menu de navigation</span>
         </SheetTrigger>
-        <SheetContent
-          side={"left"}
-          className="min-w-[30vw] max-w-[90vw] overflow-x-visible px-2 py-8 xs:px-6"
-        >
+        <SheetContent side={"left"} className=" w-[90vw] overflow-x-visible px-2 py-8 xs:px-6">
           <SheetHeader>
             <SheetTitle className="flex flex-wrap items-center justify-center gap-4">
               <Link href="/">
-                <Image
-                  alt="Logo"
-                  className="h-16 w-auto rounded-md"
-                  src="/logo-rect.webp"
-                  width={186}
-                  height={56}
-                />
+                <Image alt="Logo" className="h-16 w-auto rounded-md" src="/logo-rect.webp" width={186} height={56} />
               </Link>
               <Image
                 alt="Logo Agriculture-biologique"
