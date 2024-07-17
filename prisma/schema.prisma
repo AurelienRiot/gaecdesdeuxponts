@@ -269,6 +269,7 @@ model Shop {
   long          Float
   address       String
   phone         String
+  tags          String[]
   email         String?
   description   String
   imageUrl      String?

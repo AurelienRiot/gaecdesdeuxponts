@@ -41,6 +41,7 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
       description: initialData?.description || "",
       lat: initialData?.lat || undefined,
       long: initialData?.long || undefined,
+      tags: initialData?.tags || [],
       address: initialData?.address || "",
       phone: initialData?.phone || "",
       website: initialData?.website || "",
