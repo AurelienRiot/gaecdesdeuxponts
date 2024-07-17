@@ -19,14 +19,14 @@ const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => 
       <Card
         className={cn("flex h-full relative w-[150px] sm:w-[200px] flex-col justify-between bg-transparent", className)}
       >
-        {user.image ? (
+        {/* {user.image ? (
           <div className=" abosolute inset-0 rounded-md overflow-hidden -z-10 opacity-70">
             <Image src={user.image} alt="logo" fill className="object-contain" sizes="150px" />
           </div>
-        ) : null}
+        ) : null} */}
         {/* <CardHeaderUser user={user} /> */}
         <CardHeader className=" w-full overflow-hidden">
-          <CardTitle className="overflow-hidden text-center font-extrabold p-4 bg-white/10 rounded-md backdrop-blur-sm">
+          <CardTitle className="overflow-hidden text-center font-extrabold  bg-white/10 rounded-md backdrop-blur-sm">
             <Link
               href={`/admin/users/${user.id}`}
               className="capitalize hover:underline  sm:text-lg md:text-xl text-base whitespace-nowrap"
@@ -36,19 +36,19 @@ const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => 
           </CardTitle>
         </CardHeader>
         <CardContent
-          className="text-center p-2 bg-white/10 rounded-md w-fit mx-auto mb-1  backdrop-blur-sm
+          className="text-center p-2 bg-white/10 rounded-md w-fit mx-auto   backdrop-blur-sm
         
         "
         >
-          <div className="gap-4 flex justify-center items-center">
-            {/* {user.image ? (
-              <div className="size-6 relative rounded-md overflow-hidden">
-                <Image src={user.image} alt="logo" fill className="object-contain" sizes="24px" />
+          <div className=" flex justify-center items-center">
+            {user.image ? (
+              <div className="size-10 relative rounded-md overflow-hidden">
+                <Image src={user.image} alt="logo" fill className="object-contain" sizes="200px" />
               </div>
-            ) : null} */}
-            <p className="flex gap-2">
+            ) : null}
+            {/* <p className="flex gap-2">
               <ListOrdered className="size-6" /> {orderLength}
-            </p>
+            </p> */}
           </div>
           <div className="flex flex-row items-center justify-center gap-1 font-bold rounded-md">
             {user.role === "pro" ? (
