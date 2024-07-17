@@ -14,6 +14,7 @@ interface CardUserProps {
 }
 
 const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => {
+  const name = user.company || user.name || user.email;
   return (
     <>
       <Card
@@ -25,27 +26,24 @@ const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => 
           </div>
         ) : null} */}
         {/* <CardHeaderUser user={user} /> */}
-        {/* <CardHeader className=" w-full overflow-hidden">
-          <CardTitle className="overflow-hidden text-center font-extrabold  bg-white/10 rounded-md backdrop-blur-sm">
-            <Link
-              href={`/admin/users/${user.id}`}
-              className="capitalize hover:underline  sm:text-lg md:text-xl text-base whitespace-nowrap"
-            >
-              {user.company ? user.company : user.name ? user.name : user.email}
-            </Link>
-          </CardTitle>
-        </CardHeader> */}
-        <CardContent
-          className="text-center p-2 bg-white/10 rounded-md w-fit mx-auto   backdrop-blur-sm
-        
-        "
-        >
+        <CardHeader className=" w-full overflow-hidden">
+          {user.image ? (
+            <div className="lg:size-32 md:size-28 sm:size-24 size-20 relative rounded-md overflow-hidden">
+              <Image src={user.image} alt={`logo ${name}`} fill className="object-contain" sizes="200px" />
+            </div>
+          ) : (
+            <CardTitle className="overflow-hidden text-center font-extrabold  rounded-md ">
+              <Link
+                href={`/admin/users/${user.id}`}
+                className="capitalize hover:underline  sm:text-lg md:text-xl text-base whitespace-nowrap"
+              >
+                {user.company ? user.company : user.name ? user.name : user.email}
+              </Link>
+            </CardTitle>
+          )}
+        </CardHeader>
+        <CardContent className="text-center p-2  rounded-md w-fit mx-auto         ">
           <div className=" flex justify-center items-center">
-            {user.image ? (
-              <div className="lg:size-32 md:size-28 sm:size-24 size-20 relative rounded-md overflow-hidden">
-                <Image src={user.image} alt="logo" fill className="object-contain" sizes="200px" />
-              </div>
-            ) : null}
             {/* <p className="flex gap-2">
               <ListOrdered className="size-6" /> {orderLength}
             </p> */}
