@@ -1,22 +1,24 @@
 "use client";
 
 import * as React from "react";
-import { X } from "lucide-react";
+import { type LucideIcon, X } from "lucide-react";
 
 import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
 import { Command as CommandPrimitive, useCommandState } from "cmdk";
 import { useEffect, forwardRef } from "react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import type { IconType } from "react-icons/lib";
 
 export interface Option {
   value: string;
   label: string;
+  Icon?: IconType;
   disable?: boolean;
   /** fixed option that can't be removed. */
   fixed?: boolean;
   /** Group the options by providing key. */
-  [key: string]: string | boolean | undefined;
+  [key: string]: string | boolean | undefined | IconType;
 }
 interface GroupOption {
   [key: string]: Option[];
@@ -347,6 +349,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
         >
           <div className="flex flex-wrap gap-1">
             {selected.map((option) => {
+              const Icon = option.Icon;
               return (
                 <Badge
                   key={option.value}
@@ -359,6 +362,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
                   data-fixed={option.fixed}
                   data-disabled={disabled}
                 >
+                  {Icon ? <Icon className="size-4 mr-1" /> : null}
                   {option.label}
                   <button
                     type="button"

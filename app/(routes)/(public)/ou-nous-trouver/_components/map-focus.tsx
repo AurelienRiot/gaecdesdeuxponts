@@ -1,16 +1,8 @@
 "use client";
-import AddressAutocomplete, {
-  type  Suggestion,
-} from "@/actions/adress-autocompleteFR";
-import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import AddressAutocomplete, { type Suggestion } from "@/actions/adress-autocompleteFR";
+import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { X } from "lucide-react";
-import {  type Dispatch, type  SetStateAction, useState } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import { Marker, useMap } from "react-leaflet";
 import { MakePin } from "./marker-pin";
 import "./marker.css";
@@ -25,18 +17,12 @@ const MapFocus = ({
   setCoordinates,
 }: {
   className?: string;
-  setCoordinates: Dispatch<
-    SetStateAction<{ long: number | undefined; lat: number | undefined }>
-  >;
+  setCoordinates: Dispatch<SetStateAction<{ long: number | undefined; lat: number | undefined }>>;
 }) => {
   const { getValue } = useLocalStorage("cookies-banner");
-  const [suggestions, setSuggestions] = useState<Suggestion[] | undefined>(
-    undefined,
-  );
+  const [suggestions, setSuggestions] = useState<Suggestion[] | undefined>(undefined);
   const [query, setQuery] = useState("");
-  const [pin, setPin] = useState<
-    { label: string; lat: number; long: number } | undefined
-  >(undefined);
+  const [pin, setPin] = useState<{ label: string; lat: number; long: number } | undefined>(undefined);
   const map = useMap();
   const posthog = usePostHog();
 
@@ -75,17 +61,13 @@ const MapFocus = ({
 
   return (
     <>
-      <LocationMarker
-        setPin={setPin}
-        setCoordinates={setCoordinates}
-        className="absolute right-3 top-3 z-[1000]"
-      />
+      <LocationMarker setPin={setPin} setCoordinates={setCoordinates} className="absolute right-3 top-3 z-[1000]" />
 
       <Command loop shouldFilter={false} className={className}>
         <CommandInput
           title="Entrer votre adresse"
           placeholder="Entrer votre adresse..."
-          className="z-[400] mb-1 h-9 min-w-48 bg-neutral-50 p-4 shadow-md"
+          className="z-[400] focus:text-base mb-1 h-9 min-w-48 bg-neutral-50 p-4 shadow-md"
           value={query}
           showIcon={false}
           onValueChange={(e) => {
@@ -105,36 +87,25 @@ const MapFocus = ({
           title="Fermer la recherche"
         />
 
-        <CommandList
-          className={cn(
-            "z-[400] space-y-2 rounded-md bg-popover",
-            suggestions ? "p-2" : "",
-          )}
-        >
+        <CommandList className={cn("z-[400] space-y-2 rounded-md bg-popover", suggestions ? "p-2" : "")}>
           {query.length > 3 && suggestions && (
             <CommandEmpty className="flex w-full cursor-default select-none items-center rounded-sm bg-popover px-2 py-1 text-left text-sm text-popover-foreground">
               Adresse introuvable
             </CommandEmpty>
           )}
-          {
-            suggestions?.map((address, index) => (
-              <CommandItem
-                className="cursor-pointer   bg-popover text-popover-foreground"
-                value={index.toString()}
-                key={address.label}
-                onSelect={() => onSelectAddress(address)}
-              >
-                {address.label}
-              </CommandItem>
-            ))}
+          {suggestions?.map((address, index) => (
+            <CommandItem
+              className="cursor-pointer   bg-popover text-popover-foreground"
+              value={index.toString()}
+              key={address.label}
+              onSelect={() => onSelectAddress(address)}
+            >
+              {address.label}
+            </CommandItem>
+          ))}
         </CommandList>
       </Command>
-      {!!pin && (
-        <Marker
-          position={[pin.lat, pin.long]}
-          icon={MakePin("green", pin.label, null)}
-        ></Marker>
-      )}
+      {!!pin && <Marker position={[pin.lat, pin.long]} icon={MakePin("green", pin.label, null)}></Marker>}
     </>
   );
 };
