@@ -9,7 +9,8 @@ import { AnimateHeight } from "../animations/animate-size";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
-import { deleteObject, getSignature, listFiles } from "./server";
+import { type Ressources, deleteObject, getSignature, listFiles } from "./server";
+import useServerAction from "@/hooks/use-server-action";
 
 export const getFileKey = (url: string): string => {
   const parts = url.split("/");
@@ -31,194 +32,33 @@ type UploadImageProps = {
 
 const UploadImage = ({ selectedFiles, setSelectedFiles, multipleImages = false }: UploadImageProps) => {
   const [allFiles, setAllFiles] = useState<string[]>([]);
-
+  const { serverAction: listFilesAction } = useServerAction(listFiles);
   const [loading, setLoading] = useState(false);
-
-  const handleFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLoading(true);
-    if (!event.target.files || event.target.files.length === 0) {
-      setLoading(false);
-      return;
-    }
-
-    const files: File[] = [];
-
-    for (const file of event.target.files) {
-      if (file.size > MAX_FILE_SIZE) {
-        toast.error(`Le fichier ${file.name} fait plus de 2MB.`);
-      } else {
-        files.push(file);
-      }
-    }
-
-    await fileChange(files);
-  };
-
-  const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    if (loading) {
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    const files: File[] = [];
-
-    for (const file of event.dataTransfer.files) {
-      if (!FILES_TYPES.includes(file.type)) {
-        toast.error(
-          `Le format du fichier n'est pas supporté : ${file.name}\nFormats supportés : png, jpeg, jpg, webp`,
-          { duration: 5000 },
-        );
-      } else if (file.size > MAX_FILE_SIZE) {
-        toast.error(`Le fichier ${file.name} fait plus de 2MB.`);
-      } else {
-        files.push(file);
-      }
-    }
-
-    await fileChange(files);
-  };
-
-  const fileChange = async (files: File[]) => {
-    const uploadPromises = files.map(async (file) => {
-      const result = await getSignature();
-      if (!result.success) {
-        toast.error(result.message);
-        setLoading(false);
-        return;
-      }
-
-      if (!result.data) {
-        toast.error("Impossible de charger le fichier. Veuillez reessayer plus tard.");
-        setLoading(false);
-        return;
-      }
-
-      const { signature, timestamp } = result.data;
-
-      // const originalFileName = file.name;
-      // const fileNameWithoutExtension =
-      //   originalFileName.substring(0, originalFileName.lastIndexOf(".")) ||
-      //   originalFileName;
-      // const randomString = nanoid(10); // Generate a random string of 5 characters
-
-      // // Combine the file name with the random string and the extension to form a new unique file name
-      // const uniqueFileName = `${randomString}-${fileNameWithoutExtension}`;
-
-      const formdata = new FormData();
-      formdata.append("timestamp", timestamp.toString());
-      formdata.append("signature", signature);
-      formdata.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY as string);
-      formdata.append("file", file);
-      formdata.append("folder", "farm");
-
-      const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`;
-      const response = await fetch(url, {
-        method: "POST",
-        body: formdata,
-        cache: "no-store",
-      });
-      const data = await response.json();
-      return { publicId: data.public_id, secureUrl: data.secure_url }; // Return the successful upload's data
-    });
-
-    const results = await Promise.all(uploadPromises);
-    const validUrls = results.filter((result): result is { secureUrl: string; publicId: string } => result !== null);
-
-    await checkUrls(validUrls);
-
-    const updatedFiles = await listFiles();
-    if (!updatedFiles.success) {
-      toast.error(updatedFiles.message);
-      setLoading(false);
-      return;
-    }
-    if (!updatedFiles.data) {
-      toast.error("Impossible de charger le fichier. Veuillez reessayer plus tard.");
-      setLoading(false);
-      return;
-    }
-
-    setAllFiles(updatedFiles.data.map((item) => makeURL(item.public_id)));
-    if (multipleImages) {
-      setSelectedFiles([...selectedFiles, ...validUrls.map((item) => makeURL(item.publicId))]);
-    } else {
-      setSelectedFiles([makeURL(validUrls[0].publicId)]);
-    }
-    setLoading(false);
-  };
 
   useEffect(() => {
     const fetchFiles = async () => {
-      const files = await listFiles();
-      if (!files.success) {
-        toast.error(files.message);
-        return;
+      function onSuccess(data?: Ressources[]) {
+        if (!data) {
+          toast.error("Impossible de charger le fichier. Veuillez reessayer plus tard.");
+          return;
+        }
+        setAllFiles(data.map((item) => makeURL(item.public_id)));
       }
-      if (!files.data) {
-        toast.error("Impossible de charger le fichier. Veuillez reessayer plus tard.");
-        return;
-      }
-      setAllFiles(files.data.map((item) => makeURL(item.public_id)));
+      await listFilesAction({ data: {}, onSuccess });
     };
     fetchFiles();
   }, []);
 
   return (
     <div className="justify-left flex flex-col gap-4 p-4">
-      <div
-        className="justify-left flex items-center gap-4"
-        onDrop={handleDrop}
-        onDragOver={(e) => {
-          e.preventDefault();
-        }}
-      >
-        <label className="relative flex w-fit cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-6 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700">
-          <div
-            data-state={loading}
-            className="absolute right-1/2 top-1/2 hidden -translate-y-1/2 translate-x-1/2 data-[state=true]:block"
-          >
-            <Loader2 className="animate-spin" />
-          </div>
-
-          <div data-state={loading} className="text-center data-[state=true]:blur-md">
-            <div className="mx-auto max-w-min rounded-md border bg-foreground p-2">
-              <UploadCloud size={20} className="text-primary-foreground" />
-            </div>
-
-            <p className="mt-2 text-sm text-primary">
-              <span className="font-semibold">{multipleImages ? "Ajouter des images" : "Ajouter une image"}</span>
-            </p>
-          </div>
-          <Input
-            accept={FILES_TYPES.join(", ")}
-            type="file"
-            className="hidden"
-            onChange={handleFile}
-            disabled={loading}
-            multiple={multipleImages}
-          />
-        </label>
-        {/* <LoadingButton
-          className=" w-fit "
-          disabled={loading}
-          onClick={async (e) => {
-            e.preventDefault();
-            setLoading(true);
-            const files = await listFiles(bucketName);
-            console.log(bucketName);
-            if (!files) {
-              return;
-            }
-
-            setFiles(files);
-            setLoading(false);
-          }}
-        >
-          Rechercher les images
-        </LoadingButton> */}
-      </div>
-
+      <InputImage
+        loading={loading}
+        setLoading={setLoading}
+        selectedFiles={selectedFiles}
+        setSelectedFiles={setSelectedFiles}
+        multipleImages={multipleImages}
+        setAllFiles={setAllFiles}
+      />
       <DisplaySelectedImages
         selectedFiles={selectedFiles}
         setSelectedFiles={setSelectedFiles}
@@ -238,6 +78,174 @@ const UploadImage = ({ selectedFiles, setSelectedFiles, multipleImages = false }
 };
 
 export default UploadImage;
+
+type InputImageProps = {
+  selectedFiles: string[];
+  setSelectedFiles: (files: string[]) => void;
+  multipleImages: boolean;
+  loading: boolean;
+  setAllFiles: React.Dispatch<React.SetStateAction<string[]>>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+function InputImage({
+  selectedFiles,
+  setSelectedFiles,
+  multipleImages,
+  loading,
+  setLoading,
+  setAllFiles,
+}: InputImageProps) {
+  const { serverAction: getSignatureAction } = useServerAction(getSignature);
+  const { serverAction: listFilesAction } = useServerAction(listFiles);
+
+  const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setLoading(true);
+    const files = checkFile(event.dataTransfer.files);
+    if (files.length === 0) {
+      setLoading(false);
+      return;
+    }
+
+    await uploadFiles(files);
+  };
+
+  const handleInputFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLoading(true);
+    if (!event.target.files || event.target.files.length === 0) {
+      setLoading(false);
+      return;
+    }
+
+    const files = checkFile(event.target.files);
+    if (files.length === 0) {
+      setLoading(false);
+      return;
+    }
+
+    await uploadFiles(files);
+  };
+
+  async function uploadFiles(files: File[]) {
+    const uploadPromises = await generateUploadPromises(files);
+
+    const results = await Promise.all(uploadPromises);
+    const validUrls = results.filter((url) => url !== undefined) as { secureUrl: string; publicId: string }[];
+
+    if (validUrls.length === 0) {
+      setLoading(false);
+      return;
+    }
+
+    await checkUrls(validUrls);
+
+    const allFiles = await listFilesAction({ data: {} });
+    if (!allFiles) {
+      setLoading(false);
+      return;
+    }
+    setAllFiles(allFiles.map((item) => makeURL(item.public_id)));
+    if (multipleImages) {
+      setSelectedFiles([...selectedFiles, ...validUrls.map((item) => makeURL(item.publicId))]);
+    } else {
+      setSelectedFiles([makeURL(validUrls[0].publicId)]);
+    }
+    setLoading(false);
+  }
+
+  async function generateUploadPromises(files: File[]) {
+    return files.map(async (file) => {
+      const result = await getSignatureAction({ data: {} });
+      if (!result) {
+        setLoading(false);
+        return;
+      }
+
+      const { signature, timestamp } = result;
+
+      // const originalFileName = file.name;
+      // const fileNameWithoutExtension =
+      //   originalFileName.substring(0, originalFileName.lastIndexOf(".")) ||
+      //   originalFileName;
+      // const randomString = nanoid(10); // Generate a random string of 5 characters
+
+      // // Combine the file name with the random string and the extension to form a new unique file name
+      // const uniqueFileName = `${randomString}-${fileNameWithoutExtension}`;
+
+      const formdata = new FormData();
+      formdata.append("timestamp", timestamp.toString());
+      formdata.append("signature", signature);
+      formdata.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY);
+      formdata.append("file", file);
+      formdata.append("folder", "farm");
+
+      const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`;
+      const response = await fetch(url, {
+        method: "POST",
+        body: formdata,
+        cache: "no-store",
+      });
+      const data = (await response.json()) as { public_id: string; secure_url: string };
+      return { publicId: data.public_id, secureUrl: data.secure_url };
+    });
+  }
+
+  return (
+    <div
+      className="justify-left flex items-center gap-4"
+      onDrop={handleDrop}
+      onDragOver={(e) => {
+        e.preventDefault();
+      }}
+    >
+      <label className="relative flex w-fit cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-6 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700">
+        <div
+          data-state={loading}
+          className="absolute right-1/2 top-1/2 hidden -translate-y-1/2 translate-x-1/2 data-[state=true]:block"
+        >
+          <Loader2 className="animate-spin" />
+        </div>
+
+        <div data-state={loading} className="text-center data-[state=true]:blur-md">
+          <div className="mx-auto max-w-min rounded-md border bg-foreground p-2">
+            <UploadCloud size={20} className="text-primary-foreground" />
+          </div>
+
+          <p className="mt-2 text-sm text-primary">
+            <span className="font-semibold">{multipleImages ? "Ajouter des images" : "Ajouter une image"}</span>
+          </p>
+        </div>
+        <Input
+          accept={FILES_TYPES.join(", ")}
+          type="file"
+          className="hidden"
+          onChange={handleInputFile}
+          disabled={loading}
+          multiple={multipleImages}
+        />
+      </label>
+      {/* <LoadingButton
+      className=" w-fit "
+      disabled={loading}
+      onClick={async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        const files = await listFiles(bucketName);
+        console.log(bucketName);
+        if (!files) {
+          return;
+        }
+
+        setFiles(files);
+        setLoading(false);
+      }}
+    >
+      Rechercher les images
+    </LoadingButton> */}
+    </div>
+  );
+}
 
 type DisplaySelectedImagesProps = {
   selectedFiles: string[];
@@ -322,22 +330,20 @@ const DisplayImages = ({
   const [currentPage, setCurrentPage] = useState(1);
   const imagesPerPage = 10;
   const [displayFiles, setDisplayFiles] = useState(false);
+  const { serverAction } = useServerAction(deleteObject);
 
   const onDelete = async (url: string | undefined) => {
     if (!url) {
       toast.error("Erreur.");
       return;
     }
-    const deleted = await deleteObject({
-      publicID: getFileKey(url),
-    });
-
-    if (deleted.success) {
+    function onSuccess() {
       setFiles(allFiles.filter((fileUrl) => fileUrl !== url));
-      toast.success("Image supprimée");
-    } else {
-      toast.error(deleted.message);
     }
+    await serverAction({
+      data: { publicID: getFileKey(url) },
+      onSuccess,
+    });
   };
 
   return (
@@ -453,3 +459,20 @@ const checkUrls = async (urls: { secureUrl: string | null; publicId: string }[])
   }
   return;
 };
+
+function checkFile(filesList: FileList) {
+  const files: File[] = [];
+
+  for (const file of filesList) {
+    if (!FILES_TYPES.includes(file.type)) {
+      toast.error(`Le format du fichier n'est pas supporté : ${file.name}\nFormats supportés : png, jpeg, jpg, webp`, {
+        duration: 5000,
+      });
+    } else if (file.size > MAX_FILE_SIZE) {
+      toast.error(`Le fichier ${file.name} fait plus de 2MB.`);
+    } else {
+      files.push(file);
+    }
+  }
+  return files;
+}

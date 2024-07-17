@@ -53,7 +53,7 @@ async function getSignature(): Promise<ReturnTypeServerAction<SignatureType, und
 
   return {
     success: true,
-    message: "Signature du fichier",
+    message: "",
     data: { timestamp, signature },
   };
 }
@@ -79,7 +79,7 @@ async function listFiles(): Promise<ReturnTypeServerAction<Ressources[], undefin
     ) as Ressources[];
     return {
       success: true,
-      message: "Chargement des fichiers",
+      message: "",
       data: images,
     };
   } catch (error) {
@@ -159,7 +159,7 @@ async function deleteObject(data: z.infer<typeof deleteObjectSchema>) {
       try {
         await cloudinary.v2.uploader.destroy(publicID);
         console.log(`Image supprimé`);
-        return { success: true, message: "Image supprimé" };
+        return { success: true, message: "Image supprimée" };
       } catch (error) {
         console.error(`Error deleting object: ${publicID}`, error);
         return { success: false, message: "Erreur dans le suppression de l'image" };
