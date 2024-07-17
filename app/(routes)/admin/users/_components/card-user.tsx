@@ -5,6 +5,7 @@ import type { User } from "@prisma/client";
 import { ListOrdered } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import CardHeaderUser from "./card-header-user";
 
 interface CardUserProps {
   user: User;
@@ -23,11 +24,12 @@ const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => 
             <Image src={user.image} alt="logo" fill className="object-contain" sizes="150px" />
           </div>
         ) : null}
+        {/* <CardHeaderUser user={user} /> */}
         <CardHeader className="p-4">
-          <CardTitle className="overflow-hidden  font-semibold">
+          <CardTitle className="overflow-hidden text-center font-semibold">
             <Link
               href={`/admin/users/${user.id}`}
-              className="capitalize hover:underline sm:text-sm md:text-base lg:text-xl text-xs whitespace-nowrap"
+              className="capitalize hover:underline  sm:text-sm md:text-base lg:text-xl text-xs whitespace-nowrap"
             >
               {user.company ? user.company : user.name ? user.name : user.email}
             </Link>
