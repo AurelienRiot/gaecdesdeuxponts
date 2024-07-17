@@ -26,10 +26,10 @@ const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => 
         ) : null}
         {/* <CardHeaderUser user={user} /> */}
         <CardHeader className=" w-full overflow-hidden">
-          <CardTitle className="overflow-hidden text-center font-semibold p-4 bg-white/10 rounded-md backdrop-blur-sm">
+          <CardTitle className="overflow-hidden text-center font-extrabold p-4 bg-white/10 rounded-md backdrop-blur-sm">
             <Link
               href={`/admin/users/${user.id}`}
-              className="capitalize hover:underline  sm:text-sm md:text-base lg:text-xl text-xs whitespace-nowrap"
+              className="capitalize hover:underline  sm:text-lg md:text-xl text-base whitespace-nowrap"
             >
               {user.company ? user.company : user.name ? user.name : user.email}
             </Link>

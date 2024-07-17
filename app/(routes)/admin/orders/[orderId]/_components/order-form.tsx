@@ -52,23 +52,11 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
       id: initialData?.id || createId("order"),
       totalPrice: initialData?.totalPrice,
       dateOfPayment: initialData?.dateOfPayment,
-      dateOfShipping: initialData?.dateOfShipping,
+      dateOfShipping: initialData?.dateOfShipping || new Date(new Date().setHours(10, 0, 0, 0)),
       dateOfEdition: new Date(),
       userId: initialData?.userId || "",
       shopId: initialData?.shopId || "",
-      datePickUp:
-        initialData?.datePickUp ||
-        (() => {
-          const date = new Date(new Date().setHours(10, 0, 0, 0));
-          const day = date.getDay();
-          if (day === 6) {
-            date.setDate(date.getDate() + 2);
-          } else {
-            date.setDate(date.getDate() + 1);
-          }
-          return date;
-        })(),
-
+      datePickUp: initialData?.datePickUp || new Date(new Date().setHours(10, 0, 0, 0)),
       orderItems: initialData?.orderItems.map((product) => ({
         itemId: product.itemId,
         unit: product.unit,
