@@ -18,6 +18,7 @@ export const schema = z.object({
       message: "Le numéro de téléphone n'est pas valide",
     },
   ),
+  image: z.string().optional().nullable(),
   isPro: z.boolean().default(false).optional(),
   address: addressSchema,
   billingAddress: billingAddressSchema,

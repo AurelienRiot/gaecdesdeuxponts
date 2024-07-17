@@ -29,6 +29,7 @@ import MailForm from "./mail-form";
 import { schema, type UserFormValues } from "./user-schema";
 import updateUser from "../_actions/update-user";
 import useServerAction from "@/hooks/use-server-action";
+import InputImageModal from "@/components/images-upload/image-modal";
 
 interface UserFormProps {
   initialData: UserWithOrdersAndAdress;
@@ -48,6 +49,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
       id: initialData.id,
       email: initialData.email || "",
       name: initialData.name || "",
+      image: initialData.image || "",
       company: initialData.company || "",
       phone: initialData.phone || "",
       isPro: initialData.role === "pro" || false,
@@ -105,6 +107,23 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
+          <FormField
+            control={form.control}
+            name="image"
+            render={({ field }) => (
+              <FormItem className="my-auto">
+                <FormControl>
+                  <InputImageModal
+                    selectedFiles={field.value ? [field.value] : []}
+                    setSelectedFiles={(files: string[]) => {
+                      files.length > 0 ? field.onChange(files[0]) : field.onChange(null);
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
             <FormField
               control={form.control}

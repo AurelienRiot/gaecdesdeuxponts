@@ -33,7 +33,6 @@ type UploadImageProps = {
 const UploadImage = ({ selectedFiles, setSelectedFiles, multipleImages = false }: UploadImageProps) => {
   const [allFiles, setAllFiles] = useState<string[]>([]);
   const { serverAction: listFilesAction } = useServerAction(listFiles);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -52,8 +51,6 @@ const UploadImage = ({ selectedFiles, setSelectedFiles, multipleImages = false }
   return (
     <div className="justify-left flex flex-col gap-4 p-4">
       <InputImage
-        loading={loading}
-        setLoading={setLoading}
         selectedFiles={selectedFiles}
         setSelectedFiles={setSelectedFiles}
         multipleImages={multipleImages}
@@ -71,7 +68,6 @@ const UploadImage = ({ selectedFiles, setSelectedFiles, multipleImages = false }
         selectedFiles={selectedFiles}
         setSelectedFiles={setSelectedFiles}
         multipleImages={multipleImages}
-        setLoading={setLoading}
       />
     </div>
   );
@@ -83,21 +79,13 @@ type InputImageProps = {
   selectedFiles: string[];
   setSelectedFiles: (files: string[]) => void;
   multipleImages: boolean;
-  loading: boolean;
   setAllFiles: React.Dispatch<React.SetStateAction<string[]>>;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function InputImage({
-  selectedFiles,
-  setSelectedFiles,
-  multipleImages,
-  loading,
-  setLoading,
-  setAllFiles,
-}: InputImageProps) {
+function InputImage({ selectedFiles, setSelectedFiles, multipleImages, setAllFiles }: InputImageProps) {
   const { serverAction: getSignatureAction } = useServerAction(getSignature);
   const { serverAction: listFilesAction } = useServerAction(listFiles);
+  const [loading, setLoading] = useState(false);
 
   const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -255,58 +243,56 @@ type DisplaySelectedImagesProps = {
 
 const DisplaySelectedImages = ({ selectedFiles, setSelectedFiles, multipleImages }: DisplaySelectedImagesProps) => {
   return (
-    <>
-      <div>
-        <h1 className="text-primary">
-          {" "}
-          {multipleImages && selectedFiles.length > 1 ? "Images selectionnées" : "Image selectionnée"}
-        </h1>
-        {selectedFiles.length !== 0 ? (
-          <Reorder.Group
-            as="ul"
-            values={selectedFiles}
-            onReorder={setSelectedFiles}
-            layoutScroll
-            className="flex max-w-[1000px] flex-row gap-4 overflow-x-scroll p-2 hide-scrollbar"
-            axis="x"
-          >
-            <AnimatePresence>
-              {selectedFiles.map((url) => (
-                <Reorder.Item
-                  key={url}
-                  value={url}
-                  initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: "100px" }}
-                  exit={{ opacity: 0, width: 0 }}
-                  as="li"
-                  className="group relative aspect-square h-[100px] cursor-pointer rounded-xl bg-transparent hover:ring-2"
+    <div>
+      <h1 className="text-primary">
+        {" "}
+        {multipleImages && selectedFiles.length > 1 ? "Images selectionnées" : "Image selectionnée"}
+      </h1>
+      {selectedFiles.length !== 0 ? (
+        <Reorder.Group
+          as="ul"
+          values={selectedFiles}
+          onReorder={setSelectedFiles}
+          layoutScroll
+          className="flex max-w-[1000px] flex-row gap-4 overflow-x-scroll p-2 hide-scrollbar"
+          axis="x"
+        >
+          <AnimatePresence>
+            {selectedFiles.map((url) => (
+              <Reorder.Item
+                key={url}
+                value={url}
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: "100px" }}
+                exit={{ opacity: 0, width: 0 }}
+                as="li"
+                className="group relative aspect-square h-[100px] cursor-pointer rounded-xl bg-transparent hover:ring-2"
+              >
+                <Image
+                  src={url}
+                  alt=""
+                  fill
+                  sizes="(max-width: 768px) 100px, (max-width: 1200px) 100px, 100px"
+                  className="pointer-events-none rounded-xl object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    console.log(selectedFiles.filter((item) => item !== url));
+                    setSelectedFiles(selectedFiles.filter((item) => item !== url));
+                  }}
+                  className="absolute right-0 z-10 hidden items-center justify-center rounded-tr-md bg-destructive px-2 text-destructive-foreground transition-all hover:bg-destructive/90 group-hover:flex"
                 >
-                  <Image
-                    src={url}
-                    alt=""
-                    fill
-                    sizes="(max-width: 768px) 100px, (max-width: 1200px) 100px, 100px"
-                    className="pointer-events-none rounded-xl object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      console.log(selectedFiles.filter((item) => item !== url));
-                      setSelectedFiles(selectedFiles.filter((item) => item !== url));
-                    }}
-                    className="absolute right-0 z-10 hidden items-center justify-center rounded-tr-md bg-destructive px-2 text-destructive-foreground transition-all hover:bg-destructive/90 group-hover:flex"
-                  >
-                    <X size={20} />
-                  </button>
-                </Reorder.Item>
-              ))}
-            </AnimatePresence>
-          </Reorder.Group>
-        ) : (
-          "Aucune image selectionnée"
-        )}
-      </div>
-    </>
+                  <X size={20} />
+                </button>
+              </Reorder.Item>
+            ))}
+          </AnimatePresence>
+        </Reorder.Group>
+      ) : (
+        "Aucune image selectionnée"
+      )}
+    </div>
   );
 };
 
@@ -316,17 +302,9 @@ type DisplayImagesProps = {
   selectedFiles: string[];
   setSelectedFiles: (files: string[]) => void;
   multipleImages: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const DisplayImages = ({
-  allFiles,
-  setFiles,
-  selectedFiles,
-  setSelectedFiles,
-  multipleImages,
-  setLoading,
-}: DisplayImagesProps) => {
+const DisplayImages = ({ allFiles, setFiles, selectedFiles, setSelectedFiles, multipleImages }: DisplayImagesProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const imagesPerPage = 10;
   const [displayFiles, setDisplayFiles] = useState(false);
@@ -385,9 +363,7 @@ const DisplayImages = ({
                   <button
                     type="button"
                     onClick={async (e) => {
-                      setLoading(true);
                       await onDelete(fileUrl);
-                      setLoading(false);
                     }}
                     className="absolute right-0 hidden items-center justify-center rounded-tr-md bg-destructive px-2 py-1 text-destructive-foreground transition-all hover:bg-destructive/90 group-hover:flex"
                   >

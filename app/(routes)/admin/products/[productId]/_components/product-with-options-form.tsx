@@ -28,6 +28,7 @@ import { useFormContext } from "react-hook-form";
 import OptionValueForm from "./options-values-form";
 import { createId } from "@/lib/id";
 import type { ProductFormValues } from "./product-schema";
+import InputImageModal from "@/components/images-upload/image-modal";
 
 export const ProductWithOptions = ({
   optionsArray,
@@ -299,31 +300,15 @@ function ProductName({
           control={form.control}
           name={`products.${productIndex}.imagesUrl`}
           render={({ field }) => (
-            <FormItem className="">
+            <FormItem className="my-auto">
               <FormControl>
-                <>
-                  <ImageModal
-                    isOpen={openImage}
-                    onClose={() => setOpenImage(false)}
-                    selectedFiles={field.value}
-                    setSelectedFiles={(files: string[]) => {
-                      field.onChange(files);
-                    }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setOpenImage(true)}
-                    className="relative flex aspect-square cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-10 py-6 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
-                  >
-                    <div className="text-center">
-                      <div className="mx-auto max-w-min rounded-md border bg-foreground p-2">
-                        <UploadCloud size={20} className="text-primary-foreground" />
-                      </div>
-
-                      <FormLabel className="mt-2 text-sm font-semibold text-primary">Images</FormLabel>
-                    </div>
-                  </button>
-                </>
+                <InputImageModal
+                  multipleImages
+                  selectedFiles={field.value}
+                  setSelectedFiles={(files: string[]) => {
+                    field.onChange(files);
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -545,26 +530,5 @@ const OptionsName = ({
         </FormItem>
       )}
     />
-  );
-};
-
-interface ImageModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  selectedFiles: string[];
-  setSelectedFiles: (files: string[]) => void;
-}
-
-const ImageModal = ({ isOpen, onClose, selectedFiles, setSelectedFiles }: ImageModalProps) => {
-  return (
-    <Modal
-      title="Ajouter des images"
-      description=""
-      isOpen={isOpen}
-      onClose={onClose}
-      className="left-[50%] top-[50%] max-h-[90%] w-[90%] max-w-[90%] overflow-y-scroll hide-scrollbar"
-    >
-      <UploadImage selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} multipleImages />
-    </Modal>
   );
 };

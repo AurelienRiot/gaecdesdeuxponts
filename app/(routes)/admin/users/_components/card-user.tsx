@@ -1,18 +1,10 @@
-"use client";
-import { AlertModal } from "@/components/ui/alert-modal-form";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import type { CheckedState } from "@/components/ui/checkbox";
-import { Checkbox } from "@/components/ui/checkbox";
-import useServerAction from "@/hooks/use-server-action";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { User } from "@prisma/client";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import deleteUser from "../_actions/delete-user";
-import updateProStatus from "../_actions/update-pro-status";
 import { ListOrdered } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 interface CardUserProps {
   user: User;
@@ -21,72 +13,8 @@ interface CardUserProps {
 }
 
 const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => {
-  const router = useRouter();
-  const [open, setOpen] = useState(false);
-  const [check, setCheck] = useState<CheckedState>(user.role === "pro");
-  const { serverAction: deleteUserAction, loading: deleteUserLoading } = useServerAction(deleteUser);
-  const { serverAction: updateProUserAction, loading: updateProUserLoading } = useServerAction(updateProStatus);
-
-  const onDelete = async () => {
-    await deleteUserAction({
-      data: { email: user.email },
-      onSuccess: () => router.refresh(),
-      onFinally: () => setOpen(false),
-    });
-  };
-
-  const onChange = async (e: CheckedState) => {
-    setCheck("indeterminate");
-    await updateProUserAction({
-      data: { id: user.id, check: e },
-      onSuccess: () => setCheck(e),
-      onError: () => setCheck(!e),
-    });
-  };
-
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
-
-      {/* <Card className={cn("flex h-full w-full min-w-[300px] flex-col justify-between", className)}>
-        <CardHeader>
-          <CardTitle
-            onClick={() => {
-              router.refresh();
-            }}
-          >
-            <Link href={`/admin/users/${user.id}`} className="capitalize hover:underline">
-              <span>{user.name ? user.name : "Non renseigné"}</span>
-              <span>{user.company ? ` - ${user.company}` : ""}</span>
-            </Link>
-          </CardTitle>
-          <CardDescription>
-            <Link href={`/admin/users/${user.id}`} className="hover:underline">
-              {user.email}
-            </Link>
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="text-center">
-          <p className="p-2">{`Nombre de commandes : ${orderLength}`}</p>
-          <div className="flex flex-row items-center justify-center gap-2">
-            <p>{check === true ? "Professionnel " : "Particulier"}</p>
-            <Checkbox checked={check} onCheckedChange={onChange} />
-          </div>
-        </CardContent>
-        <CardFooter className="flex flex-row items-end justify-between  gap-2">
-          <Button
-            disabled={updateProUserLoading || deleteUserLoading}
-            variant="outline"
-            onClick={() => setOpen(true)}
-            className="hover:underline"
-          >
-            Supprimer
-          </Button>
-          <Button asChild disabled={updateProUserLoading || deleteUserLoading} className="hover:underline">
-            <Link href={`/admin/users/${user.id}`}>Modifier</Link>
-          </Button>
-        </CardFooter>
-      </Card> */}
       <Card className={cn("flex h-full w-[150px] sm:w-[200px] flex-col justify-between", className)}>
         <CardHeader className="p-4">
           <CardTitle className="overflow-hidden  font-semibold">
@@ -99,12 +27,18 @@ const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => 
           </CardTitle>
         </CardHeader>
         <CardContent className="text-center p-2">
-          <p className="gap-4 flex justify-center items-center">
-            {" "}
-            <ListOrdered className="size-6" /> {orderLength}
-          </p>
+          <div className="gap-4 flex justify-center items-center">
+            {user.image ? (
+              <div className="size-6 relative rounded-md overflow-hidden">
+                <Image src={user.image} alt="logo" fill className="object-contain" sizes="24px" />
+              </div>
+            ) : null}
+            <p className="flex gap-2">
+              <ListOrdered className="size-6" /> {orderLength}
+            </p>
+          </div>
           <div className="flex flex-row items-center justify-center gap-1">
-            {check === true ? (
+            {user.role === "pro" ? (
               <p className="text-green-500">Professionnel</p>
             ) : (
               <p className="text-blue-500">Particulier</p>
@@ -112,7 +46,7 @@ const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => 
           </div>
         </CardContent>
         <CardFooter className="flex flex-row items-end justify-between  gap-1">
-          <Button asChild disabled={updateProUserLoading || deleteUserLoading} className="text-xs sm:text-sm w-full">
+          <Button asChild className="text-xs sm:text-sm w-full">
             <Link href={`/admin/users/${user.id}`}>Consulter</Link>
           </Button>
         </CardFooter>
