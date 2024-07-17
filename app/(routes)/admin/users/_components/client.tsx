@@ -12,10 +12,10 @@ import CardUser from "./card-user";
 
 interface UserClientProps {
   users: User[];
-  orderLengths: number[];
+  // orderLengths: number[];
 }
 
-const UserClient: React.FC<UserClientProps> = ({ users, orderLengths }) => {
+const UserClient: React.FC<UserClientProps> = ({ users }) => {
   const [search, setSearch] = useState("");
   const searchKeys = ["email", "name", "phone", "addresse"];
   const displayKeys = ["email", "nom", "téléphone", "addresse"];
@@ -61,7 +61,7 @@ const UserClient: React.FC<UserClientProps> = ({ users, orderLengths }) => {
         </div>
         <div className="flex flex-wrap justify-center items-center gap-2 p-2 pt-4 ">
           {filteredUsers.map((user, index) => (
-            <CardUser key={user.id} user={user} orderLength={orderLengths[index]} />
+            <CardUser key={user.id} user={user} />
           ))}
         </div>
       </div>

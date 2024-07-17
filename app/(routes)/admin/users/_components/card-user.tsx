@@ -2,18 +2,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { User } from "@prisma/client";
-import { ListOrdered } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import CardHeaderUser from "./card-header-user";
 
 interface CardUserProps {
   user: User;
-  orderLength: number;
+  // orderLength: number;
   className?: string;
 }
 
-const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => {
+const CardUser: React.FC<CardUserProps> = ({ user, className }) => {
   const name = user.company || user.name || user.email;
   return (
     <>

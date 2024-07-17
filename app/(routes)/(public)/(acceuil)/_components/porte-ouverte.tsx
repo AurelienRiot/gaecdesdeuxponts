@@ -13,7 +13,7 @@ function PorteOuverte() {
               <span className="text-green-500">Lait Cru</span>
             </h2>
             <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Rejoignez-nous tous les mercredis de Juillet.
+              Rejoignez-nous tous les mercredis de Juillet et Août.
             </p>
             <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               Aux heures de la traite 17h30-19h.

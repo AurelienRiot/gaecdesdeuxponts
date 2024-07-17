@@ -14,14 +14,14 @@ const UserPage = async () => {
     orderBy: {
       createdAt: "desc",
     },
-    include: {
-      orders: { select: { id: true } },
-    },
+    // include: {
+    //   orders: { select: { id: true } },
+    // },
   });
 
-  const orderLengths = allUsers.map((user) => {
-    return user.orders.length;
-  });
+  // const orderLengths = allUsers.map((user) => {
+  //   return user.orders.length;
+  // });
 
   const formatedUsers = allUsers.map((user) => {
     return {
@@ -30,7 +30,12 @@ const UserPage = async () => {
     };
   });
 
-  return <UserClient users={formatedUsers} orderLengths={orderLengths} />;
+  return (
+    <UserClient
+      users={formatedUsers}
+      // orderLengths={orderLengths}
+    />
+  );
 };
 
 export default UserPage;
