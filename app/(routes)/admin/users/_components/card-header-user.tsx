@@ -29,7 +29,7 @@ function CardHeaderUser({ user }: { user: User }) {
 
     const containerWidth = container.offsetWidth;
     let min = 1;
-    let max = 2500;
+    let max = 40;
 
     while (min <= max) {
       const mid = Math.floor((min + max) / 2);
@@ -47,11 +47,14 @@ function CardHeaderUser({ user }: { user: User }) {
 
   return (
     <CardHeader className="p-2">
-      <CardTitle ref={containerRef} className="w-full items-center overflow-hidden relative h-10 justify-center">
+      <CardTitle
+        ref={containerRef}
+        className="w-full flex items-center text-center  leading-8 relative h-10 justify-center"
+      >
         <Link
           ref={textRef}
           href={`/admin/users/${user.id}`}
-          className="capitalize  hover:underline absolute bottom-0 left-0 mx-auto whitespace-nowrap text-center font-bold"
+          className="capitalize  hover:underline absolute bottom-0 left-0 mx-auto whitespace-nowrap font-bold text-center"
         >
           {user.company ? user.company : user.name ? user.name : user.email}
         </Link>

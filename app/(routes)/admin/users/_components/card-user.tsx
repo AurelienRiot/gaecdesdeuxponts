@@ -20,13 +20,13 @@ const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => 
         className={cn("flex h-full relative w-[150px] sm:w-[200px] flex-col justify-between bg-transparent", className)}
       >
         {user.image ? (
-          <div className=" abosolute inset-0 rounded-md overflow-hidden -z-10 opacity-50">
+          <div className=" abosolute inset-0 rounded-md overflow-hidden -z-10 opacity-70">
             <Image src={user.image} alt="logo" fill className="object-contain" sizes="150px" />
           </div>
         ) : null}
         {/* <CardHeaderUser user={user} /> */}
-        <CardHeader className="p-4">
-          <CardTitle className="overflow-hidden text-center font-semibold">
+        <CardHeader className=" w-full overflow-hidden">
+          <CardTitle className="overflow-hidden text-center font-semibold p-4 bg-white/10 rounded-md backdrop-blur-sm">
             <Link
               href={`/admin/users/${user.id}`}
               className="capitalize hover:underline  sm:text-sm md:text-base lg:text-xl text-xs whitespace-nowrap"
@@ -36,7 +36,7 @@ const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => 
           </CardTitle>
         </CardHeader>
         <CardContent
-          className="text-center p-2 bg-white/10 rounded-md w-fit mx-auto mb-1  backdrop-blur-[4px]
+          className="text-center p-2 bg-white/10 rounded-md w-fit mx-auto mb-1  backdrop-blur-sm
         
         "
         >
