@@ -15,7 +15,14 @@ interface CardUserProps {
 const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => {
   return (
     <>
-      <Card className={cn("flex h-full w-[150px] sm:w-[200px] flex-col justify-between", className)}>
+      <Card
+        className={cn("flex h-full relative w-[150px] sm:w-[200px] flex-col justify-between bg-transparent", className)}
+      >
+        {user.image ? (
+          <div className=" abosolute inset-0 rounded-md overflow-hidden -z-10 opacity-30">
+            <Image src={user.image} alt="logo" fill className="object-contain" sizes="150px" />
+          </div>
+        ) : null}
         <CardHeader className="p-4">
           <CardTitle className="overflow-hidden  font-semibold">
             <Link
@@ -28,11 +35,11 @@ const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => 
         </CardHeader>
         <CardContent className="text-center p-2">
           <div className="gap-4 flex justify-center items-center">
-            {user.image ? (
+            {/* {user.image ? (
               <div className="size-6 relative rounded-md overflow-hidden">
                 <Image src={user.image} alt="logo" fill className="object-contain" sizes="24px" />
               </div>
-            ) : null}
+            ) : null} */}
             <p className="flex gap-2">
               <ListOrdered className="size-6" /> {orderLength}
             </p>

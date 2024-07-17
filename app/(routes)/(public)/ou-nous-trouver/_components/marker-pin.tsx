@@ -276,16 +276,12 @@ function Pin(color: keyof typeof colors) {
   }
 }
 
-export function MakePin(
-  color: "red" | "green" | "blue",
-  label: string,
-  imagesUrl: string | null,
-) {
+export function MakePin(color: "red" | "green" | "blue", label: string, imagesUrl: string | null) {
   return L.divIcon({
     html: `
         <div class="custom-marker">
             <div class="marker-label ${color === "red" ? "marker-label-red" : ""}">
-            ${imagesUrl ? `<img width="20" height="20" src="${`/_next/image?url=${imagesUrl}`}&w=48&q=75" alt="Logo ${label}" class="marker-icon" />` : ""}
+            ${imagesUrl ? `<img width="20" height="20" src="${`/_next/image?url=${imagesUrl}`}&w=256&q=75" alt="Logo ${label}" class="marker-icon" />` : ""}
             ${label}
             </div>
             ${Pin(color)}

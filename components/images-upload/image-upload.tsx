@@ -360,7 +360,7 @@ const DisplayImages = ({ allFiles, setFiles, selectedFiles, setSelectedFiles, mu
                       </div>
                     </div>
                   </div>
-                  <button
+                  {/* <button
                     type="button"
                     onClick={async (e) => {
                       await onDelete(fileUrl);
@@ -368,7 +368,7 @@ const DisplayImages = ({ allFiles, setFiles, selectedFiles, setSelectedFiles, mu
                     className="absolute right-0 hidden items-center justify-center rounded-tr-md bg-destructive px-2 py-1 text-destructive-foreground transition-all hover:bg-destructive/90 group-hover:flex"
                   >
                     <Trash size={15} />
-                  </button>
+                  </button> */}
                   <button
                     type="button"
                     onClick={(e) => {
