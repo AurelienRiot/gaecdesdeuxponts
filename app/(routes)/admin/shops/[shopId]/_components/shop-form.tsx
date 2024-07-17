@@ -25,6 +25,7 @@ import createShop from "../_actions/create-shop";
 import deleteShop from "../_actions/delete-shop";
 import updateShop from "../_actions/update-shop";
 import { schema, type ShopFormValues } from "./shop-schema";
+import TagsMultipleSelector from "@/components/display-shops/tags";
 
 const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
   const router = useRouter();
@@ -205,6 +206,23 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
                     <AutosizeTextarea
                       {...field}
                       placeholder="Description du magasin"
+                      disabled={form.formState.isSubmitting}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="tags"
+              render={({ field }) => (
+                <FormItem className="w-[500px]">
+                  <FormLabel>Tags</FormLabel>
+                  <FormControl>
+                    <TagsMultipleSelector
+                      selectedTags={field.value}
+                      setSelectedTags={field.onChange}
                       disabled={form.formState.isSubmitting}
                     />
                   </FormControl>
