@@ -25,7 +25,7 @@ const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => 
           </div>
         ) : null} */}
         {/* <CardHeaderUser user={user} /> */}
-        <CardHeader className=" w-full overflow-hidden">
+        {/* <CardHeader className=" w-full overflow-hidden">
           <CardTitle className="overflow-hidden text-center font-extrabold  bg-white/10 rounded-md backdrop-blur-sm">
             <Link
               href={`/admin/users/${user.id}`}
@@ -34,7 +34,7 @@ const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => 
               {user.company ? user.company : user.name ? user.name : user.email}
             </Link>
           </CardTitle>
-        </CardHeader>
+        </CardHeader> */}
         <CardContent
           className="text-center p-2 bg-white/10 rounded-md w-fit mx-auto   backdrop-blur-sm
         
@@ -42,7 +42,7 @@ const CardUser: React.FC<CardUserProps> = ({ user, orderLength, className }) => 
         >
           <div className=" flex justify-center items-center">
             {user.image ? (
-              <div className="size-10 relative rounded-md overflow-hidden">
+              <div className="lg:size-32 md:size-28 sm:size-24 size-20 relative rounded-md overflow-hidden">
                 <Image src={user.image} alt="logo" fill className="object-contain" sizes="200px" />
               </div>
             ) : null}
