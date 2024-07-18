@@ -17,9 +17,9 @@ interface UserClientProps {
 
 const UserClient: React.FC<UserClientProps> = ({ users }) => {
   const [search, setSearch] = useState("");
-  const searchKeys = ["email", "name", "phone", "addresse"];
-  const displayKeys = ["email", "nom", "téléphone", "addresse"];
-  const [selectValue, setSelectValue] = useState(searchKeys[1]);
+  const searchKeys = ["email", "name", "phone", "addresse", "company"];
+  const displayKeys = ["Email", "Nom", "Téléphone", "Addresse", "Entreprise"];
+  const [selectValue, setSelectValue] = useState(searchKeys[4]);
 
   const filteredUsers = users.filter((user) => {
     const value = String(user[selectValue as keyof User]);
@@ -42,7 +42,7 @@ const UserClient: React.FC<UserClientProps> = ({ users }) => {
           <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Recherche" />
 
           <Select
-            defaultValue={selectValue}
+            value={selectValue}
             onValueChange={(newValue) => {
               setSelectValue(newValue);
             }}

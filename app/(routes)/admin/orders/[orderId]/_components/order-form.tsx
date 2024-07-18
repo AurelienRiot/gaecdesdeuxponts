@@ -52,7 +52,8 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
       id: initialData?.id || createId("order"),
       totalPrice: initialData?.totalPrice,
       dateOfPayment: initialData?.dateOfPayment,
-      dateOfShipping: initialData?.dateOfShipping || new Date(new Date().setHours(10, 0, 0, 0)),
+      dateOfShipping:
+        initialData?.dateOfShipping || initialData?.datePickUp || new Date(new Date().setHours(10, 0, 0, 0)),
       dateOfEdition: new Date(),
       userId: initialData?.userId || "",
       shopId: initialData?.shopId || "",

@@ -1,6 +1,5 @@
 import prismadb from "@/lib/prismadb";
 import UserClient from "./_components/client";
-import { addDelay } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -23,16 +22,16 @@ const UserPage = async () => {
   //   return user.orders.length;
   // });
 
-  const formatedUsers = allUsers.map((user) => {
-    return {
-      ...user,
-      orders: [],
-    };
-  });
+  // const formatedUsers = allUsers.map((user) => {
+  //   return {
+  //     ...user,
+  //     orders: [],
+  //   };
+  // });
 
   return (
     <UserClient
-      users={formatedUsers}
+      users={allUsers}
       // orderLengths={orderLengths}
     />
   );
