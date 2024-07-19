@@ -35,7 +35,7 @@ export function Component({
             <YAxis dataKey="name" type="category" tickLine={false} tickMargin={10} axisLine={false} hide />
             <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel hideIndicator />} />
             <Bar dataKey="quantity">
-              <LabelList position="left" dataKey="name" fillOpacity={1} width={200} />
+              <LabelList position="left" dataKey="name" fillOpacity={1} width={160} />
               <LabelList
                 position="center"
                 dataKey="quantity"

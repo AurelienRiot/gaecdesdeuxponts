@@ -17,7 +17,7 @@ const DashboardPage = (context: { searchParams: { month: string | undefined; yea
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <Heading title="Résumé" description="Présentation " />
+        <Heading title={`Résumé de ${dateMonthYear(startDate)}`} description="Présentation " />
         <Separator />
         <div className="flex flex-wrap gap-4">
           <Card className="max-w-xs min-w-52 w-full">
