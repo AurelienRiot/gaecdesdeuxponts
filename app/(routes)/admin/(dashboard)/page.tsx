@@ -2,34 +2,47 @@ import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
+import prismadb from "@/lib/prismadb";
 import { CalendarSearch, CreditCardIcon, EuroIcon, Package } from "lucide-react";
+import { Suspense } from "react";
+import { Component } from "./_components/product-chart";
+import { dateMonthYear } from "@/lib/date-utils";
+import { UserChart } from "./_components/user-chart";
 
-const DashboardPage: React.FC = () => {
+const DashboardPage = (context: { searchParams: { month: string | undefined; year: string | undefined } }) => {
+  const month = Number(context.searchParams.month || new Date().getMonth());
+  const year = Number(context.searchParams.year || new Date().getFullYear());
+  const startDate = new Date(year, month, 1);
+  const endDate = new Date(year, month + 1, 0);
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
         <Heading title="Résumé" description="Présentation " />
         <Separator />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
-          <Card>
+        <div className="flex flex-wrap gap-4">
+          <Card className="max-w-xs min-w-52 w-full">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Revenue Totaux</CardTitle>
               <EuroIcon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                <Skeleton className="h-6 w-40 rounded-full" />
+                <Suspense fallback={<Skeleton className="h-6 w-40 rounded-full" />}>
+                  <TotalRevenue startDate={startDate} endDate={endDate} />
+                </Suspense>
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="max-w-xs min-w-52 w-full">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Ventes</CardTitle>
+              <CardTitle className="text-sm font-medium">Nomber de commandes</CardTitle>
               <CreditCardIcon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                <Skeleton className="h-6 w-40 rounded-full" />
+                <Suspense fallback={<Skeleton className="h-6 w-40 rounded-full" />}>
+                  <OrderNumber startDate={startDate} endDate={endDate} />
+                </Suspense>
               </div>
             </CardContent>
           </Card>
@@ -57,6 +70,8 @@ const DashboardPage: React.FC = () => {
             </CardContent>
           </Card>
         </div>
+        <ProductsType startDate={startDate} endDate={endDate} />
+        <ClientCount startDate={startDate} endDate={endDate} />
         {/* <ToogleChose /> */}
       </div>
     </div>
@@ -65,20 +80,111 @@ const DashboardPage: React.FC = () => {
 
 export default DashboardPage;
 
-// const SalesCount = async () => {
-//   const salesCount = await GetSalesCount();
-//   return String(salesCount);
-// };
+const TotalRevenue = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
+  const total = await prismadb.order.findMany({
+    where: {
+      dateOfShipping: {
+        gte: startDate,
+        lte: endDate,
+      },
+    },
+    select: {
+      totalPrice: true,
+    },
+  });
+  return total.reduce((acc, cur) => acc + cur.totalPrice, 0);
+};
 
-// const StockOrderCount = async () => {
-//   const stockOrderCount = await GetStockOrderCount();
-//   return String(stockOrderCount);
-// };
+const OrderNumber = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
+  const total = await prismadb.order.count({
+    where: {
+      dateOfShipping: {
+        gte: startDate,
+        lte: endDate,
+      },
+    },
+  });
+  return total;
+};
 
-// const StockSubscriptionCount = async () => {
-//   const stockSubscriptionCount = await GetStockSubscriptionCount();
-//   return String(stockSubscriptionCount);
-// };
+const ProductsType = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
+  const orderItems = await prismadb.orderItem.findMany({
+    where: {
+      order: {
+        dateOfShipping: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+    },
+    select: {
+      name: true,
+      quantity: true,
+    },
+  });
+
+  // Group order items by name and sum their positive and negative quantities
+  const groupedItems = orderItems.reduce(
+    (acc, item) => {
+      if (!acc[item.name]) {
+        acc[item.name] = { name: item.name, positiveQuantity: 0, negativeQuantity: 0 };
+      }
+      if (item.quantity > 0) {
+        acc[item.name].positiveQuantity += item.quantity;
+      } else {
+        acc[item.name].negativeQuantity += item.quantity;
+      }
+      return acc;
+    },
+    {} as Record<string, { name: string; positiveQuantity: number; negativeQuantity: number }>,
+  );
+
+  const chartData = Object.values(groupedItems).flatMap((item) => {
+    const data = [];
+    if (item.positiveQuantity !== 0) {
+      data.push({ name: item.name, quantity: item.positiveQuantity });
+    }
+    if (item.negativeQuantity !== 0) {
+      data.push({ name: item.name, quantity: item.negativeQuantity });
+    }
+    return data;
+  });
+
+  return <Component chartData={chartData} monthYear={dateMonthYear(startDate)} />;
+};
+
+const ClientCount = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
+  const users = await prismadb.user.findMany({
+    where: {
+      orders: {
+        some: {
+          dateOfShipping: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+      },
+    },
+    select: {
+      orders: { where: { dateOfShipping: { gte: startDate, lte: endDate } }, select: { totalPrice: true } },
+      name: true,
+      company: true,
+      email: true,
+    },
+  });
+  const usersWithTotalSpent = users.map((user, index) => ({
+    name: user.company || user.name || user.email || "Anonyme",
+    totalSpent: user.orders.reduce((acc, order) => acc + order.totalPrice, 0),
+  }));
+  const topUsers = usersWithTotalSpent.sort((a, b) => b.totalSpent - a.totalSpent).slice(0, 4);
+  const otherTotalSpent = usersWithTotalSpent.slice(4).reduce((acc, user) => acc + user.totalSpent, 0);
+
+  const finalUsers = otherTotalSpent ? [...topUsers, { name: "Other", totalSpent: otherTotalSpent }] : topUsers;
+
+  console.log(finalUsers);
+
+  return <UserChart pieData={finalUsers} monthYear={dateMonthYear(startDate)} />;
+};
 
 // const GraphRevenue = async () => {
 //   const graphRevenue = await GetGraphRevenue();

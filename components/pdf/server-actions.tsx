@@ -1,5 +1,5 @@
 "use server";
-import { dateFormatter } from "@/lib/date-utils";
+import { dateFormatter, dateMonthYear } from "@/lib/date-utils";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
@@ -14,7 +14,7 @@ import SendFactureEmail from "../email/send-facture";
 import Invoice from "./create-invoice";
 import MonthlyInvoice from "./create-monthly-invoice";
 import ShippingOrder from "./create-shipping";
-import { createMonthlyPDFData, createPDFData, getMonthlyDate } from "./pdf-data";
+import { createMonthlyPDFData, createPDFData } from "./pdf-data";
 import SendMonthlyInvoiceEmail from "../email/send-monthly-invoice";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
@@ -94,7 +94,7 @@ export async function createMonthlyPDF64String(data: z.infer<typeof monthlyPdf64
         };
       }
 
-      const date = getMonthlyDate(orders[0].dateOfShipping);
+      const date = dateMonthYear(orders[0].dateOfShipping);
 
       const blob = await generatePdf({ data: orders, type: "monthly" });
       const base64String = await blobToBase64(blob);
@@ -349,7 +349,7 @@ export async function sendMonthlyInvoice(data: z.infer<typeof monthlyPdf64String
         };
       }
 
-      const date = getMonthlyDate(orders[0].dateOfShipping);
+      const date = dateMonthYear(orders[0].dateOfShipping);
 
       const doc = <MonthlyInvoice data={createMonthlyPDFData(orders)} isPaid={false} />;
       const pdfBlob = await pdf(doc).toBlob();

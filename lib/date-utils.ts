@@ -17,3 +17,9 @@ export function formDateDayMonth(date: Date) {
     month: "short",
   })}`;
 }
+
+export const dateMonthYear = (date: Date) => {
+  return `${date.toLocaleString("fr-FR", {
+    month: "long",
+  })} ${date.getFullYear()}`;
+};

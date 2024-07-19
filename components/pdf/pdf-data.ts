@@ -1,4 +1,4 @@
-import { dateFormatter } from "@/lib/date-utils";
+import { dateFormatter, dateMonthYear } from "@/lib/date-utils";
 import { addressFormatter, formatFrenchPhoneNumber } from "@/lib/utils";
 import type { FullOrder, UserWithAddress } from "@/types";
 import type { Customer } from "@prisma/client";
@@ -84,17 +84,11 @@ export type MonthlyPDFDataType = {
   orders: DataOrder[];
 };
 
-export const getMonthlyDate = (date: Date) => {
-  return `${date.toLocaleString("fr-FR", {
-    month: "long",
-  })} ${date.getFullYear()}`;
-};
-
 export const createMonthlyPDFData = (orders: FullOrder[]): MonthlyPDFDataType => {
   if (!orders[0].dateOfShipping) {
     throw new Error("Date invalide");
   }
-  const date = getMonthlyDate(orders[0].dateOfShipping);
+  const date = dateMonthYear(orders[0].dateOfShipping);
 
   const customer = orders[orders.length - 1].customer;
   if (!customer) {
