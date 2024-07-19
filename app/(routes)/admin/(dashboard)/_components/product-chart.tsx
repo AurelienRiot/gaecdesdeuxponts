@@ -1,6 +1,6 @@
 "use client";
 
-import { Bar, BarChart, CartesianGrid, Cell, LabelList } from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis, YAxis } from "recharts";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
@@ -29,11 +29,13 @@ export function Component({
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
+          <BarChart accessibilityLayer data={chartData} layout="vertical">
+            <CartesianGrid vertical={false} horizontal={false} />
+            <XAxis type="number" dataKey="quantity" hide />
+            <YAxis dataKey="name" type="category" tickLine={false} tickMargin={10} axisLine={false} hide />
             <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel hideIndicator />} />
             <Bar dataKey="quantity">
-              <LabelList position="bottom" dataKey="name" fillOpacity={1} />
+              <LabelList position="left" dataKey="name" fillOpacity={1} width={200} />
               <LabelList
                 position="center"
                 dataKey="quantity"
