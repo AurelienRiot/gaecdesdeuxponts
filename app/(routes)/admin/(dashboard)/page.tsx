@@ -181,8 +181,6 @@ const ClientCount = async ({ startDate, endDate }: { startDate: Date; endDate: D
 
   const finalUsers = otherTotalSpent ? [...topUsers, { name: "Other", totalSpent: otherTotalSpent }] : topUsers;
 
-  console.log(finalUsers);
-
   return <UserChart pieData={finalUsers} monthYear={dateMonthYear(startDate)} />;
 };
 
