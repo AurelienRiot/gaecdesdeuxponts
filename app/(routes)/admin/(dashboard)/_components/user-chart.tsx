@@ -47,9 +47,22 @@ export function UserChart({
               <Pie
                 data={pieData.map((data, index) => ({ ...data, fill: `hsl(var(--chart-${index + 1}))` }))}
                 dataKey="totalSpent"
-                label
+                label={({ payload, ...props }) => {
+                  return (
+                    <text
+                      cx={props.cx}
+                      cy={props.cy}
+                      x={props.x}
+                      y={props.y}
+                      textAnchor={props.textAnchor}
+                      dominantBaseline={props.dominantBaseline}
+                      fill="hsla(var(--foreground))"
+                    >
+                      {`${payload.totalSpent} €`}
+                    </text>
+                  );
+                }}
                 nameKey="name"
-                // labelFormatter={(value) => `${value}€`}
               >
                 <LabelList
                   dataKey="name"

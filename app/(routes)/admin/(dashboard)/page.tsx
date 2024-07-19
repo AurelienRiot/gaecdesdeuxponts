@@ -19,7 +19,7 @@ const DashboardPage = (context: { searchParams: { month: string | undefined; yea
       <div className="flex-1 space-y-4 p-8 pt-6">
         <Heading title={`Résumé de ${dateMonthYear(startDate)}`} description="Présentation " />
         <Separator />
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-4 justify-center">
           <Card className="max-w-xs min-w-52 w-full">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Revenue Totaux</CardTitle>
