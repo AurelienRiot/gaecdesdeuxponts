@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import prismadb from "@/lib/prismadb";
-import { CalendarSearch, CreditCardIcon, EuroIcon, Package } from "lucide-react";
+import { CalendarSearch, CreditCardIcon, EuroIcon, Package, User } from "lucide-react";
 import { Suspense } from "react";
 import { Component } from "./_components/product-chart";
 import { dateMonthYear } from "@/lib/date-utils";
@@ -26,9 +26,10 @@ const DashboardPage = (context: { searchParams: { month: string | undefined; yea
               <EuroIcon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-2xl font-bold flex gap-2 items-center ">
                 <Suspense fallback={<Skeleton className="h-6 w-40 rounded-full" />}>
                   <TotalRevenue startDate={startDate} endDate={endDate} />
+                  <EuroIcon className="size-6" />
                 </Suspense>
               </div>
             </CardContent>
@@ -36,7 +37,7 @@ const DashboardPage = (context: { searchParams: { month: string | undefined; yea
           <Card className="max-w-xs min-w-52 w-full">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Nomber de commandes</CardTitle>
-              <CreditCardIcon className="h-4 w-4 text-muted-foreground" />
+              <Package className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -46,26 +47,29 @@ const DashboardPage = (context: { searchParams: { month: string | undefined; yea
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="max-w-xs min-w-52 w-full">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Produits en stock</CardTitle>
-              <Package className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Nombre de clients</CardTitle>
+              <User className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {" "}
-                <Skeleton className="h-6 w-40 rounded-full" />
+                <Suspense fallback={<Skeleton className="h-6 w-40 rounded-full" />}>
+                  <ClientNumber startDate={startDate} endDate={endDate} />
+                </Suspense>
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="max-w-xs min-w-52 w-full">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Abonnements en stock</CardTitle>
+              <CardTitle className="text-sm font-medium">Commandes en attente</CardTitle>
               <CalendarSearch className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                <Skeleton className="h-6 w-40 rounded-full" />
+                <Suspense fallback={<Skeleton className="h-6 w-40 rounded-full" />}>
+                  <PendingOrders />
+                </Suspense>
               </div>
             </CardContent>
           </Card>
@@ -92,7 +96,7 @@ const TotalRevenue = async ({ startDate, endDate }: { startDate: Date; endDate: 
       totalPrice: true,
     },
   });
-  return Number(total.reduce((acc, cur) => acc + cur.totalPrice, 0).toFixed(2));
+  return total.reduce((acc, cur) => acc + cur.totalPrice, 0).toFixed(2);
 };
 
 const OrderNumber = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
@@ -184,7 +188,25 @@ const ClientCount = async ({ startDate, endDate }: { startDate: Date; endDate: D
   return <UserChart pieData={finalUsers} monthYear={dateMonthYear(startDate)} />;
 };
 
-// const GraphRevenue = async () => {
-//   const graphRevenue = await GetGraphRevenue();
-//   return <DynamicOverview data={graphRevenue} />;
-// };
+const ClientNumber = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
+  const users = await prismadb.user.count({
+    where: {
+      orders: {
+        some: {
+          dateOfShipping: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+      },
+    },
+  });
+  return users;
+};
+
+async function PendingOrders() {
+  const orders = await prismadb.order.count({
+    where: { dateOfEdition: { equals: null } },
+  });
+  return orders;
+}
