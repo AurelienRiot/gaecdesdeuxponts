@@ -92,7 +92,7 @@ const TotalRevenue = async ({ startDate, endDate }: { startDate: Date; endDate: 
       totalPrice: true,
     },
   });
-  return total.reduce((acc, cur) => acc + cur.totalPrice, 0);
+  return Number(total.reduce((acc, cur) => acc + cur.totalPrice, 0).toFixed(2));
 };
 
 const OrderNumber = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
@@ -172,14 +172,14 @@ const ClientCount = async ({ startDate, endDate }: { startDate: Date; endDate: D
       email: true,
     },
   });
-  const usersWithTotalSpent = users.map((user, index) => ({
+  const usersWithTotalSpent = users.map((user) => ({
     name: user.company || user.name || user.email || "Anonyme",
-    totalSpent: user.orders.reduce((acc, order) => acc + order.totalPrice, 0),
+    totalSpent: Number(user.orders.reduce((acc, order) => acc + order.totalPrice, 0).toFixed(2)),
   }));
   const topUsers = usersWithTotalSpent.sort((a, b) => b.totalSpent - a.totalSpent).slice(0, 4);
   const otherTotalSpent = usersWithTotalSpent.slice(4).reduce((acc, user) => acc + user.totalSpent, 0);
 
-  const finalUsers = otherTotalSpent ? [...topUsers, { name: "Other", totalSpent: otherTotalSpent }] : topUsers;
+  const finalUsers = otherTotalSpent ? [...topUsers, { name: "Autres", totalSpent: otherTotalSpent }] : topUsers;
 
   return <UserChart pieData={finalUsers} monthYear={dateMonthYear(startDate)} />;
 };
