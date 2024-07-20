@@ -33,20 +33,19 @@ export function Component({
         <CardDescription>{monthYear}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="w-full aspect-[2/4] sm:aspect-video  pb-0">
+        <ChartContainer config={chartConfig} className="w-full aspect-[3/4] sm:aspect-video  pb-0">
           <BarChart
             accessibilityLayer
             data={chartData}
             layout="vertical"
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-            height={300}
           >
             <CartesianGrid vertical={false} horizontal={false} />
             <XAxis type="number" dataKey="quantity" hide />
             <YAxis dataKey="name" type="category" tickLine={false} tickMargin={10} axisLine={false} hide />
             <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel hideIndicator />} />
-            <Bar dataKey="quantity" barSize={15}>
-              <LabelList position="top" dataKey="name" fill="black" width={150} />
+            <Bar dataKey="quantity" barSize={25}>
+              <LabelList position="top" dataKey="name" fill="black" width={300} />
               <LabelList
                 position="center"
                 dataKey="quantity"

@@ -43,7 +43,7 @@ export function UserChart({
             className="w-full aspect-square sm:aspect-video  pb-0 [&_.recharts-pie-label-text]:fill-foreground "
           >
             <PieChart>
-              <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+              <ChartTooltip content={<ChartTooltipContent formatter={(value, name) => `${name} : ${value} €`} />} />
               <Pie
                 data={pieData.map((data, index) => ({ ...data, fill: `hsl(var(--chart-${index + 1}))` }))}
                 dataKey="totalSpent"
@@ -58,20 +58,18 @@ export function UserChart({
                       dominantBaseline={props.dominantBaseline}
                       fill="hsla(var(--foreground))"
                     >
-                      {`${payload.totalSpent} €`}
+                      {payload.name}
                     </text>
                   );
                 }}
                 nameKey="name"
               >
                 <LabelList
-                  dataKey="name"
+                  dataKey="totalSpent"
                   className="fill-background "
                   stroke="none"
                   fontSize={12}
-                  // formatter={(value: keyof typeof chartConfig) =>
-                  //   chartConfig[value]?.label
-                  // }
+                  formatter={(value: number) => `${value} €`}
                 />
               </Pie>
             </PieChart>
