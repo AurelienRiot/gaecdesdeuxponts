@@ -1,18 +1,19 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, LabelList, XAxis, YAxis } from "recharts";
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  type ChartConfig,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-  ChartLegendContent,
-  ChartLegend,
+  type ChartConfig,
 } from "@/components/ui/chart";
+import DownloadChart from "./dowload-chart";
 
+const ID = "produits-clients";
 export function UserProducts({
   chartData,
   productName,
@@ -43,13 +44,17 @@ export function UserProducts({
   }));
 
   return (
-    <Card className=" w-full max-w-xl">
+    <Card id={ID} className=" w-full max-w-xl">
       <CardHeader>
-        <CardTitle>Produits achetés par clients</CardTitle>
+        <CardTitle className="flex justify-between">
+          Produits achetés par clients
+          <DownloadChart id={ID} />
+        </CardTitle>
+
         <CardDescription>{monthYear}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ChartContainer className="w-full aspect-square sm:aspect-video  pb-0" config={chartConfig}>
           <BarChart
             accessibilityLayer
             data={data}

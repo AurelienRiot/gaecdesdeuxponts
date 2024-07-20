@@ -88,6 +88,7 @@
     "file-saver": "^2.0.5",
     "flubber": "^0.4.2",
     "framer-motion": "^11.3.7",
+    "html2canvas": "^1.4.1",
     "leaflet": "^1.9.4",
     "libphonenumber-js": "^1.11.4",
     "lottie-react": "^2.4.0",

@@ -4,7 +4,9 @@ import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis, YAxis } from "rec
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
+import DownloadChart from "./dowload-chart";
 
+const ID = "quantite-produits";
 const chartConfig = {
   quantity: {
     label: "Quantité",
@@ -22,20 +24,29 @@ export function Component({
   monthYear: string;
 }) {
   return (
-    <Card className=" w-full max-w-xl">
+    <Card id={ID} className=" w-full max-w-xl">
       <CardHeader>
-        <CardTitle>Quantité des produits</CardTitle>
+        <CardTitle className="flex justify-between">
+          Quantité des produits
+          <DownloadChart id={ID} />
+        </CardTitle>
         <CardDescription>{monthYear}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData} layout="vertical">
+        <ChartContainer config={chartConfig} className="w-full aspect-[2/4] sm:aspect-video  pb-0">
+          <BarChart
+            accessibilityLayer
+            data={chartData}
+            layout="vertical"
+            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            height={300}
+          >
             <CartesianGrid vertical={false} horizontal={false} />
             <XAxis type="number" dataKey="quantity" hide />
             <YAxis dataKey="name" type="category" tickLine={false} tickMargin={10} axisLine={false} hide />
             <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel hideIndicator />} />
-            <Bar dataKey="quantity">
-              <LabelList position="left" dataKey="name" fillOpacity={1} width={160} />
+            <Bar dataKey="quantity" barSize={15}>
+              <LabelList position="top" dataKey="name" fill="black" width={150} />
               <LabelList
                 position="center"
                 dataKey="quantity"

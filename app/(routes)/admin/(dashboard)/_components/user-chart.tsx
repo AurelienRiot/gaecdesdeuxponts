@@ -4,6 +4,9 @@ import { LabelList, Pie, PieChart } from "recharts";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
+import DownloadChart from "./dowload-chart";
+
+const ID = "camember-clients";
 
 export function UserChart({
   pieData,
@@ -23,24 +26,21 @@ export function UserChart({
       label: "Client",
     },
   } satisfies ChartConfig;
+
   return (
     <>
-      <style jsx global>
-        {`
-     .recharts-surface {
-       overflow: visible;
-     }
-     `}
-      </style>
-      <Card className=" w-full max-w-xl">
+      <Card id={ID} className=" w-full max-w-xl">
         <CardHeader>
-          <CardTitle>Clients</CardTitle>
+          <CardTitle className="flex justify-between">
+            Clients
+            <DownloadChart id={ID} />
+          </CardTitle>
           <CardDescription>{monthYear}</CardDescription>
         </CardHeader>
-        <CardContent className="w-full ">
+        <CardContent className="w-full  ">
           <ChartContainer
             config={chartConfig}
-            className="w-full aspect-square max-h-[250px] pb-0 [&_.recharts-pie-label-text]:fill-foreground "
+            className="w-full aspect-square sm:aspect-video  pb-0 [&_.recharts-pie-label-text]:fill-foreground "
           >
             <PieChart>
               <ChartTooltip content={<ChartTooltipContent hideLabel />} />

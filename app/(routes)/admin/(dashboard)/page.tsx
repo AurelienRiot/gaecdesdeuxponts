@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import { Component } from "./_components/product-chart";
 import { UserChart } from "./_components/user-chart";
 import { UserProducts } from "./_components/user-products";
+import SelectDate from "./_components/select-date";
 
 const DashboardPage = (context: { searchParams: { month: string | undefined; year: string | undefined } }) => {
   const month = Number(context.searchParams.month || new Date().getMonth());
@@ -20,6 +21,7 @@ const DashboardPage = (context: { searchParams: { month: string | undefined; yea
       <div className="flex-1 space-y-4 p-8 pt-6">
         <Heading title={`Résumé de ${dateMonthYear(startDate)}`} description="Présentation " />
         <Separator />
+        <SelectDate month={month} year={year} />
         <div className="flex flex-wrap gap-4 justify-center">
           <Card className="max-w-xs min-w-52 w-full">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -131,7 +133,6 @@ const ProductsType = async ({ startDate, endDate }: { startDate: Date; endDate: 
     },
   });
 
-  // Group order items by name and sum their positive and negative quantities
   const groupedItems = orderItems.reduce(
     (acc, item) => {
       if (!acc[item.name]) {
@@ -225,11 +226,6 @@ const ClientProducts = async ({ startDate, endDate }: { startDate: Date; endDate
       .flatMap((order) => order.orderItems)
       .reduce(
         (acc, item) => {
-          // for (const product of topProducts) {
-          //   acc[product] = acc[product] || 0;
-          // }
-          // acc["Autres"] = acc["Autres"] || 0;
-
           if (topProducts.includes(item.name)) {
             acc[item.name] = (acc[item.name] || 0) + item.quantity;
           } else {
@@ -267,11 +263,11 @@ function getTopProducts(users: Awaited<ReturnType<typeof getUserOrders>>) {
     {} as Record<string, number>,
   );
   const topProducts = Object.entries(groupedProducts)
-    .sort(([, quantityA], [, quantityB]) => quantityB - quantityA) // Sort by quantity descending
-    .slice(0, 3) // Get top 3
+    .sort(([, quantityA], [, quantityB]) => quantityB - quantityA)
+    .slice(0, 3)
     .map(([name]) => name);
 
-  return groupedProducts.length > 3 ? topProducts.concat("Autres") : topProducts;
+  return Object.keys(groupedProducts).length ? topProducts.concat("Autres") : topProducts;
 }
 
 async function getUserOrders({ startDate, endDate }: { startDate: Date; endDate: Date }) {
