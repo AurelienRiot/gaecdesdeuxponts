@@ -267,7 +267,7 @@ function getTopProducts(users: Awaited<ReturnType<typeof getUserOrders>>) {
     .slice(0, 3)
     .map(([name]) => name);
 
-  return Object.keys(groupedProducts).length ? topProducts.concat("Autres") : topProducts;
+  return Object.keys(groupedProducts).length > 3 ? topProducts.concat("Autres") : topProducts;
 }
 
 async function getUserOrders({ startDate, endDate }: { startDate: Date; endDate: Date }) {

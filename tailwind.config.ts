@@ -1,10 +1,5 @@
 import { fontFamily } from "tailwindcss/defaultTheme";
-import {
-  ListStyleCheck,
-  addBackgroundGrid,
-  addGlobalUtilities,
-  addVariablesForColors,
-} from "./lib/tailwind";
+import { ListStyleCheck, addBackgroundGrid, addGlobalUtilities, addVariablesForColors } from "./lib/tailwind";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -32,8 +27,7 @@ module.exports = {
         display: ["var(--font-display)", ...fontFamily.sans],
       },
       boxShadow: {
-        "2xl":
-          "0 25px 50px -12px rgb(0 0 0 / 0.25), 0 20px 25px -10px rgb(0 0 0 / 0.25)",
+        "2xl": "0 25px 50px -12px rgb(0 0 0 / 0.25), 0 20px 25px -10px rgb(0 0 0 / 0.25)",
       },
       transitionDuration: {
         2000: "2000ms",
@@ -50,6 +44,11 @@ module.exports = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
+        chart1: "hsl(var(--chart-1))",
+        chart2: "hsl(var(--chart-2))",
+        chart3: "hsl(var(--chart-3))",
+        chart4: "hsl(var(--chart-4))",
+        chart5: "hsl(var(--chart-5))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
@@ -273,8 +272,7 @@ module.exports = {
 
         shine: "shine 10s ease-out infinite",
         aurora: "aurora 60s linear infinite",
-        scroll:
-          "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
+        scroll: "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
         heartbeat: "heartbeat 2s infinite ease-in-out",
       },
     },
