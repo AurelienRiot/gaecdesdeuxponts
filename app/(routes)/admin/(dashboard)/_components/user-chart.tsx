@@ -43,22 +43,52 @@ export function UserChart({
             className="w-full aspect-square sm:aspect-video  pb-0 [&_.recharts-pie-label-text]:fill-foreground "
           >
             <PieChart>
-              <ChartTooltip content={<ChartTooltipContent formatter={(value, name) => `${name} : ${value} €`} />} />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    formatter={(value, name, item) => (
+                      <p className="flex items-center gap-1">
+                        <span
+                          className={"shrink-0 rounded-[2px] border-[--color-border] bg-[--color-bg] h-2.5 w-2.5"}
+                          style={
+                            {
+                              "--color-bg": item.payload.fill,
+                              "--color-border": item.payload.fill,
+                            } as React.CSSProperties
+                          }
+                        />{" "}
+                        {name} : <span className="font-bold">{value} €</span>
+                      </p>
+                    )}
+                  />
+                }
+              />
               <Pie
                 data={pieData.map((data, index) => ({ ...data, fill: `hsl(var(--chart-${index + 1}))` }))}
                 dataKey="totalSpent"
+                labelLine={false}
+                dominantBaseline={"central"}
                 label={({ payload, ...props }) => {
+                  const left = props.x < 0;
+                  const right = props.x > props.cx;
                   return (
                     <text
                       cx={props.cx}
                       cy={props.cy}
                       x={props.x}
                       y={props.y}
+                      className="relative"
                       textAnchor={props.textAnchor}
                       dominantBaseline={props.dominantBaseline}
                       fill="hsla(var(--foreground))"
                     >
-                      {payload.name}
+                      {left || right
+                        ? (payload.name as string).split(" ").map((word, index) => (
+                            <tspan x={right ? props.x - 10 : props.x} y={`${index * 20 + props.y}`} key={index}>
+                              {word}
+                            </tspan>
+                          ))
+                        : payload.name}
                     </text>
                   );
                 }}

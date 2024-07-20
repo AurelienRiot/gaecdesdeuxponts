@@ -43,9 +43,9 @@ export function Component({
             <CartesianGrid vertical={false} horizontal={false} />
             <XAxis type="number" dataKey="quantity" hide />
             <YAxis dataKey="name" type="category" tickLine={false} tickMargin={10} axisLine={false} hide />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel hideIndicator />} />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent hideIndicator />} />
             <Bar dataKey="quantity" barSize={25}>
-              <LabelList position="top" dataKey="name" fill="black" width={300} />
+              <LabelList position="top" dataKey="name" fill="hsla(var(--foreground))" width={300} />
               <LabelList
                 position="center"
                 dataKey="quantity"
