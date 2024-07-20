@@ -16,7 +16,8 @@
         "useExhaustiveDependencies": "off"
       },
       "complexity": {
-        "noUselessFragments": "off"
+        "noUselessFragments": "off",
+        "useLiteralKeys": "off"
       },
       "a11y": {
         "noSvgWithoutTitle": "off",

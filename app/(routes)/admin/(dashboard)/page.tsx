@@ -2,12 +2,13 @@ import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
+import { dateMonthYear } from "@/lib/date-utils";
 import prismadb from "@/lib/prismadb";
-import { CalendarSearch, CreditCardIcon, EuroIcon, Package, User } from "lucide-react";
+import { CalendarSearch, EuroIcon, Package, User } from "lucide-react";
 import { Suspense } from "react";
 import { Component } from "./_components/product-chart";
-import { dateMonthYear } from "@/lib/date-utils";
 import { UserChart } from "./_components/user-chart";
+import { UserProducts } from "./_components/user-products";
 
 const DashboardPage = (context: { searchParams: { month: string | undefined; year: string | undefined } }) => {
   const month = Number(context.searchParams.month || new Date().getMonth());
@@ -74,8 +75,11 @@ const DashboardPage = (context: { searchParams: { month: string | undefined; yea
             </CardContent>
           </Card>
         </div>
-        <ProductsType startDate={startDate} endDate={endDate} />
-        <ClientCount startDate={startDate} endDate={endDate} />
+        <div className="flex flex-wrap gap-4 justify-center">
+          <ProductsType startDate={startDate} endDate={endDate} />
+          <ClientCount startDate={startDate} endDate={endDate} />
+          <ClientProducts startDate={startDate} endDate={endDate} />
+        </div>
         {/* <ToogleChose /> */}
       </div>
     </div>
@@ -209,4 +213,89 @@ async function PendingOrders() {
     where: { dateOfEdition: { equals: null } },
   });
   return orders;
+}
+
+const ClientProducts = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
+  const users = await getUserOrders({ startDate, endDate });
+
+  const topProducts = getTopProducts(users);
+
+  const userProductQuantities = users.map((user) => {
+    const productQuantities = user.orders
+      .flatMap((order) => order.orderItems)
+      .reduce(
+        (acc, item) => {
+          // for (const product of topProducts) {
+          //   acc[product] = acc[product] || 0;
+          // }
+          // acc["Autres"] = acc["Autres"] || 0;
+
+          if (topProducts.includes(item.name)) {
+            acc[item.name] = (acc[item.name] || 0) + item.quantity;
+          } else {
+            acc[`${"Autres"}`] = (acc[`${"Autres"}`] || 0) + item.quantity;
+          }
+          acc.total = (acc.total || 0) + item.quantity; // Calculate total quantity for each user
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
+
+    const { total, ...rest } = productQuantities;
+    return { name: user.company || user.name || user.email || "Anonyme", productQuantities: rest, total };
+  });
+
+  return (
+    <UserProducts
+      chartData={userProductQuantities}
+      productName={[...topProducts, "Autres"]}
+      monthYear={dateMonthYear(startDate)}
+    />
+  );
+};
+
+function getTopProducts(users: Awaited<ReturnType<typeof getUserOrders>>) {
+  const productsWithQuantities = users.flatMap((user) => {
+    return user.orders.flatMap((order) =>
+      order.orderItems.flatMap((item) => ({ name: item.name, quantity: item.quantity })),
+    );
+  });
+  const groupedProducts = productsWithQuantities.reduce(
+    (acc, item) => {
+      if (!acc[item.name]) {
+        acc[item.name] = 0;
+      }
+      acc[item.name] += item.quantity;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
+  const topProducts = Object.entries(groupedProducts)
+    .sort(([, quantityA], [, quantityB]) => quantityB - quantityA) // Sort by quantity descending
+    .slice(0, 3) // Get top 3
+    .map(([name]) => name);
+
+  return topProducts;
+}
+
+async function getUserOrders({ startDate, endDate }: { startDate: Date; endDate: Date }) {
+  const users = await prismadb.user.findMany({
+    where: {
+      orders: {
+        some: {
+          dateOfShipping: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+      },
+    },
+    select: {
+      orders: { where: { dateOfShipping: { gte: startDate, lte: endDate } }, select: { orderItems: true } },
+      name: true,
+      company: true,
+      email: true,
+    },
+  });
+  return users;
 }
