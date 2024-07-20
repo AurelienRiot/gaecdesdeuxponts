@@ -246,11 +246,7 @@ const ClientProducts = async ({ startDate, endDate }: { startDate: Date; endDate
   });
 
   return (
-    <UserProducts
-      chartData={userProductQuantities}
-      productName={[...topProducts, "Autres"]}
-      monthYear={dateMonthYear(startDate)}
-    />
+    <UserProducts chartData={userProductQuantities} productName={topProducts} monthYear={dateMonthYear(startDate)} />
   );
 };
 
@@ -275,7 +271,7 @@ function getTopProducts(users: Awaited<ReturnType<typeof getUserOrders>>) {
     .slice(0, 3) // Get top 3
     .map(([name]) => name);
 
-  return topProducts;
+  return groupedProducts.length > 3 ? topProducts.concat("Autres") : topProducts;
 }
 
 async function getUserOrders({ startDate, endDate }: { startDate: Date; endDate: Date }) {
