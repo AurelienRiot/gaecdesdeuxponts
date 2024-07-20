@@ -33,7 +33,7 @@ export function Component({
         <CardDescription>{monthYear}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="w-full aspect-[3/4] sm:aspect-video  pb-0">
+        <ChartContainer className="w-full" style={{ height: `${chartData.length * 50}px` }} config={chartConfig}>
           <BarChart
             accessibilityLayer
             data={chartData}
