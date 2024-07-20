@@ -66,8 +66,6 @@ export function UserChart({
               <Pie
                 data={pieData.map((data, index) => ({ ...data, fill: `hsl(var(--chart-${index + 1}))` }))}
                 dataKey="totalSpent"
-                labelLine={false}
-                dominantBaseline={"central"}
                 label={({ payload, ...props }) => {
                   const left = props.x < 0;
                   const right = props.x > props.cx;
@@ -82,13 +80,14 @@ export function UserChart({
                       dominantBaseline={props.dominantBaseline}
                       fill="hsla(var(--foreground))"
                     >
-                      {left || right
+                      {/* {left || right
                         ? (payload.name as string).split(" ").map((word, index) => (
                             <tspan x={right ? props.x - 10 : props.x} y={`${index * 20 + props.y}`} key={index}>
                               {word}
                             </tspan>
                           ))
-                        : payload.name}
+                        : payload.name} */}
+                      {payload.name}
                     </text>
                   );
                 }}
