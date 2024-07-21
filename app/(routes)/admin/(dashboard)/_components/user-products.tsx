@@ -72,13 +72,24 @@ export function UserProducts({
               // tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label}
             />
             <XAxis dataKey="total" type="number" hide />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <ChartLegend content={<ChartLegendContent />} />
-            {Object.entries(chartConfig).map(([key, { label, color }]) => (
-              <Bar key={key} dataKey={key} layout="vertical" stackId="a" fill={color} radius={5}>
-                <LabelList dataKey={key} position="center" fill="white" fontSize={14} />
-              </Bar>
-            ))}
+            {Object.entries(chartConfig).map(([key, { label, color }], index) => {
+              const isLast = index === Object.entries(chartConfig).length - 1;
+              const isFirst = index === 0;
+              return (
+                <Bar
+                  key={key}
+                  dataKey={key}
+                  layout="vertical"
+                  stackId="a"
+                  fill={color}
+                  radius={[isFirst ? 4 : 0, isLast ? 4 : 0, isLast ? 4 : 0, isFirst ? 4 : 0]}
+                >
+                  <LabelList dataKey={key} position="center" fill="white" fontSize={14} />
+                </Bar>
+              );
+            })}
           </BarChart>
         </ChartContainer>
       </CardContent>

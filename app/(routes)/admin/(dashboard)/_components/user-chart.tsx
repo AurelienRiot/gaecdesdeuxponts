@@ -95,7 +95,7 @@ export function UserChart({
               >
                 <LabelList
                   dataKey="totalSpent"
-                  className="fill-background "
+                  fill="white"
                   stroke="none"
                   fontSize={12}
                   formatter={(value: number) => `${value} €`}

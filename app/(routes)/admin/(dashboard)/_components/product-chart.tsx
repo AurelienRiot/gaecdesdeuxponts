@@ -5,11 +5,13 @@ import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis, YAxis } from "rec
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import DownloadChart from "./dowload-chart";
+import { Package } from "lucide-react";
 
 const ID = "quantite-produits";
 const chartConfig = {
   quantity: {
     label: "Quantité",
+    icon: Package,
   },
 } satisfies ChartConfig;
 
