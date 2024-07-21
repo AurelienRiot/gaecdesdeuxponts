@@ -32,7 +32,7 @@ export function Component({
           Quantité des produits
           <DownloadChart id={ID} />
         </CardTitle>
-        <CardDescription>{monthYear}</CardDescription>
+        <CardDescription className="capitalize">{monthYear}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer className="w-full" style={{ height: `${chartData.length * 50}px` }} config={chartConfig}>
@@ -52,7 +52,7 @@ export function Component({
                 position="center"
                 dataKey="quantity"
                 offset={12}
-                className="fill-white font-bold"
+                className="fill-white font-bold tabular-nums"
                 fontSize={12}
               />
               {chartData.map((item) => (

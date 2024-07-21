@@ -35,7 +35,7 @@ export function UserChart({
             Clients
             <DownloadChart id={ID} />
           </CardTitle>
-          <CardDescription>{monthYear}</CardDescription>
+          <CardDescription className="capitalize">{monthYear}</CardDescription>
         </CardHeader>
         <CardContent className="w-full  ">
           <ChartContainer
@@ -98,6 +98,7 @@ export function UserChart({
                   fill="white"
                   stroke="none"
                   fontSize={12}
+                  className="font-bold tabular-nums"
                   formatter={(value: number) => `${value} €`}
                 />
               </Pie>

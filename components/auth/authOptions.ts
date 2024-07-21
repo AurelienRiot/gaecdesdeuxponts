@@ -10,6 +10,7 @@ import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
 import WelcomeEmail from "../email/welcome";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
+const expirationTime = 5 * 60 * 1000;
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -55,7 +56,7 @@ export const authOptions: NextAuthOptions = {
             token.id = dbUser.id;
             token.name = dbUser.name;
             token.role = dbUser.role;
-            token.tokenExpires = new Date(Date.now() + 5 * 60 * 1000);
+            token.tokenExpires = new Date(Date.now() + expirationTime);
           }
         }
       }
@@ -76,7 +77,7 @@ export const authOptions: NextAuthOptions = {
           token.id = dbUser.id;
           token.name = dbUser.name;
           token.role = dbUser.role;
-          token.tokenExpires = new Date(Date.now() + 5 * 60 * 1000);
+          token.tokenExpires = new Date(Date.now() + expirationTime);
         }
       }
       return token;

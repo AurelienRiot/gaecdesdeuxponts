@@ -51,7 +51,7 @@ export function UserProducts({
           <DownloadChart id={ID} />
         </CardTitle>
 
-        <CardDescription>{monthYear}</CardDescription>
+        <CardDescription className="capitalize">{monthYear}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer className="w-full aspect-square sm:aspect-video  pb-0" config={chartConfig}>
@@ -86,7 +86,13 @@ export function UserProducts({
                   fill={color}
                   radius={[isFirst ? 4 : 0, isLast ? 4 : 0, isLast ? 4 : 0, isFirst ? 4 : 0]}
                 >
-                  <LabelList dataKey={key} position="center" fill="white" fontSize={14} />
+                  <LabelList
+                    dataKey={key}
+                    position="center"
+                    fill="white"
+                    className="tabular-nums font-bold"
+                    fontSize={14}
+                  />
                 </Bar>
               );
             })}
