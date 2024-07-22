@@ -52,7 +52,7 @@ async function createOrder(data: OrderFormValues) {
       });
       return {
         success: true,
-        message: "Commande creé",
+        message: "Commande crée",
         data: {
           id: data.id,
         },

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { addDelay, cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import type { UserWithAddress } from "@/types";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
