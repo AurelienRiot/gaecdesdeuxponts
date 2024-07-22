@@ -15,7 +15,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function Component({
+export function ProductChart({
   chartData,
   monthYear,
 }: {

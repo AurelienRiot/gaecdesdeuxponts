@@ -6,10 +6,10 @@ import { dateMonthYear } from "@/lib/date-utils";
 import prismadb from "@/lib/prismadb";
 import { CalendarSearch, EuroIcon, Package, User } from "lucide-react";
 import { Suspense } from "react";
-import { Component } from "./_components/product-chart";
+import { ProductChart } from "./_components/product-chart";
+import SelectDate from "./_components/select-date";
 import { UserChart } from "./_components/user-chart";
 import { UserProducts } from "./_components/user-products";
-import SelectDate from "./_components/select-date";
 
 const DashboardPage = (context: { searchParams: { month: string | undefined; year: string | undefined } }) => {
   const month = Number(context.searchParams.month || new Date().getMonth());
@@ -159,7 +159,7 @@ const ProductsType = async ({ startDate, endDate }: { startDate: Date; endDate: 
     return data;
   });
 
-  return <Component chartData={chartData} monthYear={dateMonthYear(startDate)} />;
+  return <ProductChart chartData={chartData} monthYear={dateMonthYear(startDate)} />;
 };
 
 const ClientCount = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {

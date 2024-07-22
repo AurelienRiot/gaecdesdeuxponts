@@ -26,7 +26,7 @@ const TimePicker = ({ className, date, setDate }: HourPickerProps) => {
         <PopoverTrigger asChild>
           <Button variant="outline" role="combobox" aria-expanded={open} className="flex w-[200px] justify-between">
             <span>
-              {date.toLocaleTimeString([], {
+              {date.toLocaleTimeString("fr-FR", {
                 hour: "2-digit",
                 minute: "2-digit",
               })}

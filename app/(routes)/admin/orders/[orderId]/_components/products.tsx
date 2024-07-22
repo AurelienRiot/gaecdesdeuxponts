@@ -1,11 +1,12 @@
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, IconButton } from "@/components/ui/button";
 import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { GrPowerReset } from "react-icons/gr";
 import type { ProductWithMain } from "@/types";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { ChevronsUpDown } from "lucide-react";
@@ -62,7 +63,7 @@ export const ShippingProducts = ({
               {items.map((item, productIndex) => (
                 <div
                   key={`${item.itemId} productIndex`}
-                  className="overflow-x-auto rounded-md p-4 pb-4 thin-scrollbar even:bg-secondary"
+                  className="w-fit rounded-md p-4 pb-4 thin-scrollbar bg-chart1/50 even:bg-chart2/50"
                 >
                   <ProductName products={products} productIndex={productIndex} />
                 </div>
@@ -98,25 +99,25 @@ function ProductName({
 
   return (
     <>
-      <div className="flex min-w-[800px] gap-4">
+      <div className="flex flex-wrap items-center gap-4">
         <SelectProductName selectedProduct={selectedProduct} products={products} productIndex={productIndex} />
         <FormField
           control={form.control}
           name={`orderItems.${productIndex}.price`}
           render={({ field }) => (
-            <FormItem className="w-40">
-              <FormLabel className="flex items-center justify-between gap-2">
+            <FormItem className="w-20 relative">
+              <FormLabel className="flex items-center justify-between gap-2 ">
                 <span>Prix</span>
-                <Button
-                  variant={"outline"}
+
+                <IconButton
+                  Icon={GrPowerReset}
+                  className="border-dashed p-2 bg-transparent"
+                  iconClassName="size-3"
                   onClick={() => field.onChange(selectedProduct?.price)}
                   type="button"
-                  size={"xs"}
-                  className="border-dashed text-xs"
-                >
-                  Réninitialiser
-                </Button>
+                />
               </FormLabel>
+              <span className="absolute right-1 top-[50px] transform -translate-y-1/2 text-gray-500">€</span>
               <FormControl>
                 <Input
                   type="number"
@@ -179,7 +180,6 @@ const SelectProductName = ({
   selectedProduct?: ProductWithMain;
 }) => {
   const form = useFormContext<OrderFormValues>();
-  const items = form.watch("orderItems");
 
   const [open, setOpen] = useState(false);
 
@@ -206,8 +206,8 @@ const SelectProductName = ({
       name={`orderItems.${productIndex}.name`}
       render={({ field }) => (
         <FormItem className="relative w-56">
-          <FormLabel className="flex h-8 items-center justify-between gap-2">
-            <span className="">{`Name du produit ${productIndex + 1}`}</span>
+          <FormLabel id={`product-${productIndex}`} className="flex h-8 items-center justify-between gap-2">
+            <span className="">{`Nom du produit ${productIndex + 1}`}</span>
           </FormLabel>
           <FormControl>
             <Popover open={open} onOpenChange={setOpen}>
@@ -227,9 +227,18 @@ const SelectProductName = ({
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-0">
+              <PopoverContent side="bottom" className="w-[200px] p-0" avoidCollisions={false}>
                 <Command>
-                  <CommandInput placeholder="Nom du produit" />
+                  <CommandInput
+                    onFocus={async () => {
+                      const element = document.getElementById(`product-${productIndex}`);
+                      if (element) {
+                        const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+                        window.scrollTo({ top: elementPosition, behavior: "smooth" });
+                      }
+                    }}
+                    placeholder="Nom du produit"
+                  />
                   <CommandList>
                     {products.map((product) => (
                       <CommandItem
