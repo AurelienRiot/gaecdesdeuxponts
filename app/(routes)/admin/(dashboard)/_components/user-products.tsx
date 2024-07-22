@@ -68,6 +68,7 @@ export function UserProducts({
               type="category"
               tickLine={false}
               tickMargin={10}
+              className="text-[10px] sm:text-xs"
               axisLine={false}
               // tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label}
             />
