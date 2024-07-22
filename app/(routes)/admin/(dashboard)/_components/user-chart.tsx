@@ -38,72 +38,76 @@ export function UserChart({
           <CardDescription className="capitalize">{monthYear}</CardDescription>
         </CardHeader>
         <CardContent className="w-full  ">
-          <ChartContainer
-            config={chartConfig}
-            className="w-full aspect-square sm:aspect-video  pb-0 [&_.recharts-pie-label-text]:fill-foreground "
-          >
-            <PieChart>
-              <ChartTooltip
-                content={
-                  <ChartTooltipContent
-                    formatter={(value, name, item) => (
-                      <p className="flex items-center gap-1">
-                        <span
-                          className={"shrink-0 rounded-[2px] border-[--color-border] bg-[--color-bg] h-2.5 w-2.5"}
-                          style={
-                            {
-                              "--color-bg": item.payload.fill,
-                              "--color-border": item.payload.fill,
-                            } as React.CSSProperties
-                          }
-                        />{" "}
-                        {name} : <span className="font-bold">{value} €</span>
-                      </p>
-                    )}
-                  />
-                }
-              />
-              <Pie
-                data={pieData.map((data, index) => ({ ...data, fill: `hsl(var(--chart-${index + 1}))` }))}
-                dataKey="totalSpent"
-                label={({ payload, ...props }) => {
-                  const left = props.x < 0;
-                  const right = props.x > props.cx;
-                  return (
-                    <text
-                      cx={props.cx}
-                      cy={props.cy}
-                      x={props.x}
-                      y={props.y}
-                      className="relative"
-                      textAnchor={props.textAnchor}
-                      dominantBaseline={props.dominantBaseline}
-                      fill="hsla(var(--foreground))"
-                    >
-                      {/* {left || right
+          {pieData.length > 0 ? (
+            <ChartContainer
+              config={chartConfig}
+              className="w-full aspect-square sm:aspect-video  pb-0 [&_.recharts-pie-label-text]:fill-foreground "
+            >
+              <PieChart>
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      formatter={(value, name, item) => (
+                        <p className="flex items-center gap-1">
+                          <span
+                            className={"shrink-0 rounded-[2px] border-[--color-border] bg-[--color-bg] h-2.5 w-2.5"}
+                            style={
+                              {
+                                "--color-bg": item.payload.fill,
+                                "--color-border": item.payload.fill,
+                              } as React.CSSProperties
+                            }
+                          />{" "}
+                          {name} : <span className="font-bold">{value} €</span>
+                        </p>
+                      )}
+                    />
+                  }
+                />
+                <Pie
+                  data={pieData.map((data, index) => ({ ...data, fill: `hsl(var(--chart-${index + 1}))` }))}
+                  dataKey="totalSpent"
+                  label={({ payload, ...props }) => {
+                    const left = props.x < 0;
+                    const right = props.x > props.cx;
+                    return (
+                      <text
+                        cx={props.cx}
+                        cy={props.cy}
+                        x={props.x}
+                        y={props.y}
+                        className="relative"
+                        textAnchor={props.textAnchor}
+                        dominantBaseline={props.dominantBaseline}
+                        fill="hsla(var(--foreground))"
+                      >
+                        {/* {left || right
                         ? (payload.name as string).split(" ").map((word, index) => (
                             <tspan x={right ? props.x - 10 : props.x} y={`${index * 20 + props.y}`} key={index}>
                               {word}
                             </tspan>
                           ))
                         : payload.name} */}
-                      {payload.name}
-                    </text>
-                  );
-                }}
-                nameKey="name"
-              >
-                <LabelList
-                  dataKey="totalSpent"
-                  fill="white"
-                  stroke="none"
-                  fontSize={12}
-                  className="font-bold tabular-nums"
-                  formatter={(value: number) => `${value} €`}
-                />
-              </Pie>
-            </PieChart>
-          </ChartContainer>
+                        {payload.name}
+                      </text>
+                    );
+                  }}
+                  nameKey="name"
+                >
+                  <LabelList
+                    dataKey="totalSpent"
+                    fill="white"
+                    stroke="none"
+                    fontSize={12}
+                    className="font-bold tabular-nums"
+                    formatter={(value: number) => `${value} €`}
+                  />
+                </Pie>
+              </PieChart>
+            </ChartContainer>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">Aucun client</div>
+          )}
         </CardContent>
         {/* <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 font-medium leading-none">

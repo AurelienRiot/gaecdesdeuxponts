@@ -82,18 +82,22 @@ const ProductsType = async ({ startDate, endDate }: { startDate: Date; endDate: 
         <CardDescription className="capitalize">{dateMonthYear(startDate)}</CardDescription>
       </CardHeader>
       <CardContent className="p-8 pt-0">
-        <Tabs defaultValue="total">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="total">Total</TabsTrigger>
-            <TabsTrigger value="perUser">Par client</TabsTrigger>
-          </TabsList>
-          <TabsContent value="total" className="pt-4">
-            <ProductChart chartData={chartData} />
-          </TabsContent>
-          <TabsContent value="perUser">
-            <PerUserItems data={itemsPerUser} />
-          </TabsContent>
-        </Tabs>
+        {orderItems.length > 0 ? (
+          <Tabs defaultValue="total">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="total">Total</TabsTrigger>
+              <TabsTrigger value="perUser">Par client</TabsTrigger>
+            </TabsList>
+            <TabsContent value="total" className="pt-4">
+              <ProductChart chartData={chartData} />
+            </TabsContent>
+            <TabsContent value="perUser">
+              <PerUserItems data={itemsPerUser} />
+            </TabsContent>
+          </Tabs>
+        ) : (
+          <p className="text-center">Aucun produit acheté</p>
+        )}
       </CardContent>
       {/* <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">

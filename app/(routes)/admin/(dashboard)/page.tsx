@@ -102,7 +102,7 @@ const TotalRevenue = async ({ startDate, endDate }: { startDate: Date; endDate: 
       totalPrice: true,
     },
   });
-  return total.reduce((acc, cur) => acc + cur.totalPrice, 0).toFixed(2);
+  return total.length === 0 ? 0 : total.reduce((acc, cur) => acc + cur.totalPrice, 0).toFixed(2);
 };
 
 const OrderNumber = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {

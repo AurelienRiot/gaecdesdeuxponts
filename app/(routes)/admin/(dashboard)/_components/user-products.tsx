@@ -54,51 +54,55 @@ export function UserProducts({
         <CardDescription className="capitalize">{monthYear}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer className="w-full aspect-square sm:aspect-video  pb-0" config={chartConfig}>
-          <BarChart
-            accessibilityLayer
-            data={data}
-            layout="vertical"
-            margin={{
-              left: 0,
-            }}
-          >
-            <YAxis
-              dataKey="name"
-              type="category"
-              tickLine={false}
-              tickMargin={10}
-              className="text-[10px] sm:text-xs"
-              axisLine={false}
-              // tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label}
-            />
-            <XAxis dataKey="total" type="number" hide />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <ChartLegend content={<ChartLegendContent />} />
-            {Object.entries(chartConfig).map(([key, { label, color }], index) => {
-              const isLast = index === Object.entries(chartConfig).length - 1;
-              const isFirst = index === 0;
-              return (
-                <Bar
-                  key={key}
-                  dataKey={key}
-                  layout="vertical"
-                  stackId="a"
-                  fill={color}
-                  radius={[isFirst ? 4 : 0, isLast ? 4 : 0, isLast ? 4 : 0, isFirst ? 4 : 0]}
-                >
-                  <LabelList
+        {chartData.length > 0 ? (
+          <ChartContainer className="w-full aspect-square sm:aspect-video  pb-0" config={chartConfig}>
+            <BarChart
+              accessibilityLayer
+              data={data}
+              layout="vertical"
+              margin={{
+                left: 0,
+              }}
+            >
+              <YAxis
+                dataKey="name"
+                type="category"
+                tickLine={false}
+                tickMargin={10}
+                className="text-[10px] sm:text-xs"
+                axisLine={false}
+                // tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label}
+              />
+              <XAxis dataKey="total" type="number" hide />
+              <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+              <ChartLegend content={<ChartLegendContent />} />
+              {Object.entries(chartConfig).map(([key, { label, color }], index) => {
+                const isLast = index === Object.entries(chartConfig).length - 1;
+                const isFirst = index === 0;
+                return (
+                  <Bar
+                    key={key}
                     dataKey={key}
-                    position="center"
-                    fill="white"
-                    className="tabular-nums font-bold"
-                    fontSize={14}
-                  />
-                </Bar>
-              );
-            })}
-          </BarChart>
-        </ChartContainer>
+                    layout="vertical"
+                    stackId="a"
+                    fill={color}
+                    radius={[isFirst ? 4 : 0, isLast ? 4 : 0, isLast ? 4 : 0, isFirst ? 4 : 0]}
+                  >
+                    <LabelList
+                      dataKey={key}
+                      position="center"
+                      fill="white"
+                      className="tabular-nums font-bold"
+                      fontSize={14}
+                    />
+                  </Bar>
+                );
+              })}
+            </BarChart>
+          </ChartContainer>
+        ) : (
+          <div className="flex justify-center items-center h-full">Aucune Commande</div>
+        )}
       </CardContent>
       {/* <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
