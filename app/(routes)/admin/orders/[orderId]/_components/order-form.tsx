@@ -88,7 +88,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
     }
     function onSuccessCreate(result?: { id: string }) {
       if (result) {
-        router.replace(`/admin/orders/${result.id}`);
+        router.replace(`/admin/orders/${result.id}#button-container`);
         router.refresh();
       }
     }
@@ -176,7 +176,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
         </form>
       </Form>
       {!!initialData && !!initialData.dateOfEdition && (
-        <div className="flex flex-wrap gap-4">
+        <div id="button-container" className="flex flex-wrap gap-4">
           <div>
             <Label>Bon de livraison</Label>
             <DisplayShippingOrder orderId={form.getValues("id")} />

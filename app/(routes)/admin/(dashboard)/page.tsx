@@ -6,10 +6,11 @@ import { dateMonthYear } from "@/lib/date-utils";
 import prismadb from "@/lib/prismadb";
 import { CalendarSearch, EuroIcon, Package, User } from "lucide-react";
 import { Suspense } from "react";
-import { ProductChart } from "./_components/product-chart";
+import { ProductChart } from "./_components/product-type/product-chart";
 import SelectDate from "./_components/select-date";
 import { UserChart } from "./_components/user-chart";
 import { UserProducts } from "./_components/user-products";
+import ProductsType from "./_components/product-type/product-fetch";
 
 const DashboardPage = (context: { searchParams: { month: string | undefined; year: string | undefined } }) => {
   const month = Number(context.searchParams.month || new Date().getMonth());
@@ -115,51 +116,6 @@ const OrderNumber = async ({ startDate, endDate }: { startDate: Date; endDate: D
     },
   });
   return total;
-};
-
-const ProductsType = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
-  const orderItems = await prismadb.orderItem.findMany({
-    where: {
-      order: {
-        dateOfShipping: {
-          gte: startDate,
-          lte: endDate,
-        },
-      },
-    },
-    select: {
-      name: true,
-      quantity: true,
-    },
-  });
-
-  const groupedItems = orderItems.reduce(
-    (acc, item) => {
-      if (!acc[item.name]) {
-        acc[item.name] = { name: item.name, positiveQuantity: 0, negativeQuantity: 0 };
-      }
-      if (item.quantity > 0) {
-        acc[item.name].positiveQuantity += item.quantity;
-      } else {
-        acc[item.name].negativeQuantity += item.quantity;
-      }
-      return acc;
-    },
-    {} as Record<string, { name: string; positiveQuantity: number; negativeQuantity: number }>,
-  );
-
-  const chartData = Object.values(groupedItems).flatMap((item) => {
-    const data = [];
-    if (item.positiveQuantity !== 0) {
-      data.push({ name: item.name, quantity: item.positiveQuantity });
-    }
-    if (item.negativeQuantity !== 0) {
-      data.push({ name: item.name, quantity: item.negativeQuantity });
-    }
-    return data;
-  });
-
-  return <ProductChart chartData={chartData} monthYear={dateMonthYear(startDate)} />;
 };
 
 const ClientCount = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
