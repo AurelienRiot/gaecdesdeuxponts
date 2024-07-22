@@ -22,8 +22,8 @@ async function updateUser(data: UserFormValues) {
           id,
         },
         data: {
-          name,
-          company: isPro ? company : undefined,
+          name: name.trim(),
+          company: isPro ? company?.trim() : undefined,
           phone,
           image,
           role: isPro ? "pro" : "user",

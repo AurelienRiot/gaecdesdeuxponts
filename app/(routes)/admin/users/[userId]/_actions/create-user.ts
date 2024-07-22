@@ -24,9 +24,9 @@ async function createUser(data: UserFormValues) {
       }
       await prismadb.user.create({
         data: {
-          name,
+          name: name.trim(),
           email,
-          company: isPro ? company : undefined,
+          company: isPro ? company?.trim() : undefined,
           phone,
           image,
           role: isPro ? "pro" : "user",

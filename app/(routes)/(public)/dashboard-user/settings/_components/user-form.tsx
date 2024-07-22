@@ -56,6 +56,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }: UserFormProps
 
   const onSubmit = async (data: UserFormValues) => {
     data.name = data.name.trim();
+    data.company = data.company?.trim();
     function onSuccess() {
       setUser((prev) =>
         prev

@@ -21,6 +21,7 @@ function PerUserItems({
     setOpen(false);
   }
 
+  console.log(data);
   const chartData = Object.values(data[user]).flatMap((item) => {
     const data = [];
     if (item.positiveQuantity !== 0) {
@@ -31,8 +32,6 @@ function PerUserItems({
     }
     return data;
   });
-
-  console.log(chartData);
 
   return (
     <div id="user-input" className="space-y-4 pt-4">

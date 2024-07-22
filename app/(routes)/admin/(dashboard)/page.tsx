@@ -6,11 +6,10 @@ import { dateMonthYear } from "@/lib/date-utils";
 import prismadb from "@/lib/prismadb";
 import { CalendarSearch, EuroIcon, Package, User } from "lucide-react";
 import { Suspense } from "react";
-import { ProductChart } from "./_components/product-type/product-chart";
+import ProductsType from "./_components/product-type/product-fetch";
 import SelectDate from "./_components/select-date";
 import { UserChart } from "./_components/user-chart";
 import { UserProducts } from "./_components/user-products";
-import ProductsType from "./_components/product-type/product-fetch";
 
 const DashboardPage = (context: { searchParams: { month: string | undefined; year: string | undefined } }) => {
   const month = Number(context.searchParams.month || new Date().getMonth());
