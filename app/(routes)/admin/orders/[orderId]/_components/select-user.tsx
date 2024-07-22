@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-shema";
+import { ScrollToTarget } from "@/lib/scroll-to-traget";
 
 const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
   const form = useFormContext<OrderFormValues>();
@@ -50,16 +51,7 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
             </PopoverTrigger>
             <PopoverContent side="bottom" avoidCollisions={false} className="w-[200px] p-0">
               <Command>
-                <CommandInput
-                  placeholder="Nom du client"
-                  onFocus={async () => {
-                    const element = document.getElementById("user-input");
-                    if (element) {
-                      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-                      window.scrollTo({ top: elementPosition, behavior: "smooth" });
-                    }
-                  }}
-                />
+                <CommandInput placeholder="Nom du client" onFocus={() => ScrollToTarget("user-input")} />
                 <CommandList>
                   {users.map((user) => (
                     <CommandItem

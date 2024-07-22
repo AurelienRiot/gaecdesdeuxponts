@@ -10,6 +10,7 @@ import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-shema";
 import Image from "next/image";
+import { ScrollToTarget } from "@/lib/scroll-to-traget";
 
 const SelectShop = ({ shops }: { shops: Shop[] }) => {
   const form = useFormContext<OrderFormValues>();
@@ -63,16 +64,7 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
             </PopoverTrigger>
             <PopoverContent side="bottom" avoidCollisions={false} className="w-[200px] p-0">
               <Command>
-                <CommandInput
-                  onFocus={async () => {
-                    const element = document.getElementById(`shop-input`);
-                    if (element) {
-                      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-                      window.scrollTo({ top: elementPosition, behavior: "smooth" });
-                    }
-                  }}
-                  placeholder="Nom du magasin"
-                />
+                <CommandInput onFocus={() => ScrollToTarget("shop-input")} placeholder="Nom du magasin" />
                 <CommandList>
                   {shops.map((shop) => (
                     <CommandItem key={shop.id} value={shop.id} keywords={[shop.name]} onSelect={onValueChange}>

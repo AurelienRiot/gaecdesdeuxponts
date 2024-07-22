@@ -1,3 +1,4 @@
+"use client";
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import { Badge } from "@/components/ui/badge";
 import { Button, IconButton } from "@/components/ui/button";
@@ -6,14 +7,15 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { GrPowerReset } from "react-icons/gr";
 import type { ProductWithMain } from "@/types";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { GrPowerReset } from "react-icons/gr";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-shema";
+import { ScrollToTarget } from "@/lib/scroll-to-traget";
 
 export const ShippingProducts = ({
   products,
@@ -117,7 +119,7 @@ function ProductName({
                   type="button"
                 />
               </FormLabel>
-              <span className="absolute right-1 top-[50px] transform -translate-y-1/2 text-gray-500">€</span>
+              <span className="absolute right-1 top-[50px] transform -translate-y-1/2 text-muted-foreground">€</span>
               <FormControl>
                 <Input
                   type="number"
@@ -230,13 +232,7 @@ const SelectProductName = ({
               <PopoverContent side="bottom" className="w-[200px] p-0" avoidCollisions={false}>
                 <Command>
                   <CommandInput
-                    onFocus={async () => {
-                      const element = document.getElementById(`product-${productIndex}`);
-                      if (element) {
-                        const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-                        window.scrollTo({ top: elementPosition, behavior: "smooth" });
-                      }
-                    }}
+                    onFocus={() => ScrollToTarget(`product-${productIndex}`)}
                     placeholder="Nom du produit"
                   />
                   <CommandList>
