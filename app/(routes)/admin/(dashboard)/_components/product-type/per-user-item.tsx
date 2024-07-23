@@ -21,7 +21,6 @@ function PerUserItems({
     setOpen(false);
   }
 
-  console.log(data);
   const chartData = Object.values(data[user]).flatMap((item) => {
     const data = [];
     if (item.positiveQuantity !== 0) {
@@ -34,7 +33,7 @@ function PerUserItems({
   });
 
   return (
-    <div id="user-input" className="space-y-4 pt-4">
+    <div className="space-y-4 pt-4">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -48,7 +47,7 @@ function PerUserItems({
         </PopoverTrigger>
         <PopoverContent side="bottom" avoidCollisions={false} className="w-[200px] p-0">
           <Command>
-            <CommandInput placeholder="Nom du client" onFocus={() => ScrollToTarget("user-input", -40)} />
+            <CommandInput placeholder="Nom du client" onFocus={() => ScrollToTarget("quantite-produits")} />
             <CommandList>
               {Object.entries(data).map(([key, value]) => (
                 <CommandItem key={key} value={key} onSelect={onValueChange}>
