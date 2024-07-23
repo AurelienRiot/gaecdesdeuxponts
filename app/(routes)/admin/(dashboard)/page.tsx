@@ -145,7 +145,9 @@ const ClientCount = async ({ startDate, endDate }: { startDate: Date; endDate: D
   const topUsers = usersWithTotalSpent.sort((a, b) => b.totalSpent - a.totalSpent).slice(0, 4);
   const otherTotalSpent = usersWithTotalSpent.slice(4).reduce((acc, user) => acc + user.totalSpent, 0);
 
-  const finalUsers = otherTotalSpent ? [...topUsers, { name: "Autres", totalSpent: otherTotalSpent }] : topUsers;
+  const finalUsers = otherTotalSpent
+    ? [...topUsers, { name: "Autres", totalSpent: Number(otherTotalSpent.toFixed(2)) }]
+    : topUsers;
 
   return <UserChart pieData={finalUsers} monthYear={dateMonthYear(startDate)} />;
 };
