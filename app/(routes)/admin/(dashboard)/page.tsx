@@ -11,6 +11,8 @@ import SelectDate from "./_components/select-date";
 import { UserChart } from "./_components/user-chart";
 import { UserProducts } from "./_components/user-products";
 
+export const dynamic = "force-dynamic";
+
 const DashboardPage = (context: { searchParams: { month: string | undefined; year: string | undefined } }) => {
   const month = Number(context.searchParams.month || new Date().getMonth());
   const year = Number(context.searchParams.year || new Date().getFullYear());
@@ -168,7 +170,7 @@ async function PendingOrders() {
   const orders = await prismadb.order.count({
     where: { dateOfEdition: { equals: null } },
   });
-  return orders;
+  return orders === 0 ? <span>0</span> : <span className="text-destructive">{orders}</span>;
 }
 
 const ClientProducts = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
