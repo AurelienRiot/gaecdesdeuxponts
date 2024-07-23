@@ -55,22 +55,28 @@ export function UserProducts({
       </CardHeader>
       <CardContent>
         {chartData.length > 0 ? (
-          <ChartContainer className="w-full aspect-square sm:aspect-video  pb-0" config={chartConfig}>
+          <ChartContainer
+            className="w-full   pb-0"
+            style={{ height: `${25 + chartData.length * 75}px` }}
+            config={chartConfig}
+          >
             <BarChart
               accessibilityLayer
               data={data}
               layout="vertical"
               margin={{
-                left: 0,
+                left: 14,
               }}
+              barCategoryGap={10}
             >
               <YAxis
                 dataKey="name"
                 type="category"
                 tickLine={false}
-                tickMargin={10}
+                tickMargin={5}
                 className="text-[10px] sm:text-xs"
                 axisLine={false}
+                hide
                 // tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label}
               />
               <XAxis dataKey="total" type="number" hide />
@@ -88,6 +94,15 @@ export function UserProducts({
                     fill={color}
                     radius={[isFirst ? 4 : 0, isLast ? 4 : 0, isLast ? 4 : 0, isFirst ? 4 : 0]}
                   >
+                    {index === 0 && (
+                      <LabelList
+                        position="insideTopLeft"
+                        offset={-14}
+                        dataKey="name"
+                        fill="hsla(var(--foreground))"
+                        width={300}
+                      />
+                    )}
                     <LabelList
                       dataKey={key}
                       position="center"

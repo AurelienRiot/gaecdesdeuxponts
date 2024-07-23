@@ -1,6 +1,6 @@
 "use client";
 
-import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, LabelList, ReferenceLine, XAxis, YAxis } from "recharts";
 
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import { Package } from "lucide-react";
@@ -21,7 +21,7 @@ export function ProductChart({
   }[];
 }) {
   return (
-    <ChartContainer className="w-full" style={{ height: `${chartData.length * 50}px` }} config={chartConfig}>
+    <ChartContainer className="w-full " style={{ height: `${chartData.length * 50}px` }} config={chartConfig}>
       <BarChart
         accessibilityLayer
         data={chartData}
@@ -30,8 +30,9 @@ export function ProductChart({
       >
         <CartesianGrid vertical={false} horizontal={false} />
         <XAxis type="number" dataKey="quantity" hide />
-        <YAxis dataKey="name" type="category" tickLine={false} tickMargin={10} axisLine={false} hide />
+        <YAxis dataKey="name" type="category" hide />
         <ChartTooltip cursor={false} content={<ChartTooltipContent hideIndicator />} />
+        {/* <ReferenceLine x={0} strokeDasharray="1 3" stroke="hsla(var(--muted-foreground))" /> */}
         <Bar dataKey="quantity" barSize={25}>
           <LabelList position="top" dataKey="name" fill="hsla(var(--foreground))" width={300} />
           <LabelList
