@@ -53,7 +53,6 @@ export const authOptions: NextAuthOptions = {
             where: { id: token.id },
             select: { id: true, name: true, role: true },
           });
-          console.log({ dbUser });
           if (!dbUser) {
             token.role = "deleted";
           } else {
@@ -64,7 +63,6 @@ export const authOptions: NextAuthOptions = {
           }
         }
       }
-      console.log({ token });
       if (user) {
         const u = user as User;
         if (!u.id.startsWith("CS_")) {

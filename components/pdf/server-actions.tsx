@@ -8,7 +8,7 @@ import type { FullOrder } from "@/types";
 import { render } from "@react-email/render";
 import { pdf } from "@react-pdf/renderer";
 import * as z from "zod";
-import { checkAdmin } from "../auth/checkAuth";
+import { checkAdmin, checkReadOnlyAdmin } from "../auth/checkAuth";
 import SendBLEmail from "../email/send-bl";
 import SendFactureEmail from "../email/send-facture";
 import Invoice from "./create-invoice";
@@ -27,7 +27,7 @@ export async function createPDF64String(data: z.infer<typeof pdf64StringSchema>)
   return await safeServerAction({
     data,
     schema: pdf64StringSchema,
-    getUser: checkAdmin,
+    getUser: checkReadOnlyAdmin,
     serverAction: async (data) => {
       const order = await prismadb.order.findUnique({
         where: {
@@ -65,7 +65,7 @@ export async function createMonthlyPDF64String(data: z.infer<typeof monthlyPdf64
   return await safeServerAction({
     data,
     schema: monthlyPdf64StringSchema,
-    getUser: checkAdmin,
+    getUser: checkReadOnlyAdmin,
     serverAction: async (data) => {
       const orders = await prismadb.order.findMany({
         where: {
