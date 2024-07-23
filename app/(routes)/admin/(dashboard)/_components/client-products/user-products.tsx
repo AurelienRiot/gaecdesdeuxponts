@@ -11,7 +11,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import DownloadChart from "./dowload-chart";
+import DownloadChart from "../dowload-chart";
 
 const ID = "produits-clients";
 export function UserProducts({
