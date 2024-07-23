@@ -1,6 +1,6 @@
+import { createId } from "@/lib/id";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
-import { createId } from "@/lib/id";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import type { User } from "@prisma/client";
 import { render } from "@react-email/render";
@@ -51,8 +51,12 @@ export const authOptions: NextAuthOptions = {
         if (!token.tokenExpires || new Date(token.tokenExpires) < new Date()) {
           const dbUser = await prismadb.user.findUnique({
             where: { id: token.id },
+            select: { id: true, name: true, role: true },
           });
-          if (dbUser) {
+          console.log({ dbUser });
+          if (!dbUser) {
+            token.role = "deleted";
+          } else {
             token.id = dbUser.id;
             token.name = dbUser.name;
             token.role = dbUser.role;
@@ -60,6 +64,7 @@ export const authOptions: NextAuthOptions = {
           }
         }
       }
+      console.log({ token });
       if (user) {
         const u = user as User;
         if (!u.id.startsWith("CS_")) {
@@ -72,8 +77,11 @@ export const authOptions: NextAuthOptions = {
         }
         const dbUser = await prismadb.user.findUnique({
           where: { email: u.email as string },
+          select: { id: true, name: true, role: true },
         });
-        if (dbUser) {
+        if (!dbUser) {
+          token.role = "deleted";
+        } else {
           token.id = dbUser.id;
           token.name = dbUser.name;
           token.role = dbUser.role;

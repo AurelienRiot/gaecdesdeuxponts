@@ -41,6 +41,7 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E, U>({
 
   const validatedData = schema.safeParse(data);
   if (!validatedData.success) {
+    console.timeEnd("Total Execution Time");
     return {
       success: false,
       message: validatedData.error.issues[0].message,
@@ -48,10 +49,13 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E, U>({
   }
   const user = await getUser();
   if (ignoreCheckUser) {
-    return await serverAction(data, user);
+    const result = await serverAction(data, user);
+    console.timeEnd("Total Execution Time");
+    return result;
   }
 
   if (!user) {
+    console.timeEnd("Total Execution Time");
     return {
       success: false,
       message: "Vous devez être authentifier",

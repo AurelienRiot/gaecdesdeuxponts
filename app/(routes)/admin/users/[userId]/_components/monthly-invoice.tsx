@@ -20,8 +20,8 @@ const MonthlyInvoice = ({ orders }: { orders: monthlyOrdersType[] }) => {
     return order?.month === selectedMonth && order.year === selectedYear;
   });
 
-  const isPaid = selectedOrders.every((order) => order.isPaid);
-  const emailSend = selectedOrders.every((order) => order.invoiceEmail);
+  const isPaid = selectedOrders.length > 0 && selectedOrders.every((order) => order.isPaid);
+  const emailSend = selectedOrders.length > 0 && selectedOrders.every((order) => order.invoiceEmail);
 
   const years = Array.from(new Set(orders.map((order) => order.year))).sort((a, b) => a - b);
   const months = Array.from(new Set(orders.map((order) => order.month))).sort((a, b) => a - b);

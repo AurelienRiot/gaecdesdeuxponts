@@ -12,6 +12,16 @@ const checkAdmin = async () => {
   return true;
 };
 
+const checkReadOnlyAdmin = async () => {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user || (session.user.role !== "admin" && session.user.role !== "readOnlyAdmin")) {
+    return false;
+  }
+
+  return true;
+};
+
 const checkUser = async () => {
   const session = await getServerSession(authOptions);
   if (!session || !session.user || !session.user.email) {
@@ -26,12 +36,8 @@ const checkPro = async () => {
   if (!session || !session.user) {
     return false;
   }
-  if (session.user.role === "pro") {
-    return "pro";
-  }
-
-  if (session.user.role === "admin") {
-    return "admin";
+  if (["pro", "admin", "readOnlyAdmin"].includes(session.user.role)) {
+    return session.user.role;
   }
 
   const user = await prismadb.user.findUnique({
@@ -49,4 +55,4 @@ const checkPro = async () => {
   return user.role;
 };
 
-export { checkAdmin, checkUser, checkPro };
+export { checkAdmin, checkUser, checkPro, checkReadOnlyAdmin };

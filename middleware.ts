@@ -26,20 +26,25 @@ export async function middleware(req: NextRequest) {
     // }
     // const { role } = (await apiResponse.json()) as { role: string };
     const role = token.role;
+    // console.log(token);
 
     const path = req.nextUrl.pathname;
 
+    if (role === "deleted") {
+      return redirectToLogin(req);
+    }
+
     if (path.startsWith("/admin")) {
-      if (role !== "admin") {
+      if (role !== "admin" && role !== "readOnlyAdmin") {
         return redirectToLogin(req);
       }
     }
 
     if (path.startsWith("/dashboard-user")) {
-      if (!["user", "pro", "admin"].includes(role)) {
+      if (!["user", "pro", "admin", "readOnlyAdmin"].includes(role)) {
         return redirectToLogin(req);
       }
-      if (role === "admin") {
+      if (role === "admin" || role === "readOnlyAdmin") {
         return NextResponse.redirect(new URL("/admin/orders", req.url));
       }
       if (path.startsWith("/dashboard-user/produits-pro")) {

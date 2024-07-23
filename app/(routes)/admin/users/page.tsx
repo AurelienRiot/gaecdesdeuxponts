@@ -7,7 +7,7 @@ const UserPage = async () => {
   const allUsers = await prismadb.user.findMany({
     where: {
       NOT: {
-        role: { in: ["admin", "deleted"] },
+        role: { in: ["admin", "deleted", "readOnlyAdmin"] },
       },
     },
     orderBy: {
