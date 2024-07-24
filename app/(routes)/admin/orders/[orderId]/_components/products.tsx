@@ -38,7 +38,7 @@ export const ShippingProducts = ({
       };
       form.setValue("orderItems", [...items, newItems]);
     } else {
-      toast.error("Remplissez tous les produits déjà existant");
+      toast.error("Completer tous les produits déjà existant");
     }
   };
 

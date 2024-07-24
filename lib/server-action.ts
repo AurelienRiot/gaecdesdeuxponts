@@ -58,7 +58,7 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E, U>({
     console.timeEnd("Total Execution Time");
     return {
       success: false,
-      message: "Vous devez être authentifier",
+      message: "Vous devez être authentifier avec un compte admin",
     };
   }
 

@@ -80,7 +80,7 @@ export function UserProducts({
                 // tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label}
               />
               <XAxis dataKey="total" type="number" hide />
-              <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+              <ChartTooltip content={<ChartTooltipContent />} />
               <ChartLegend content={<ChartLegendContent />} />
               {Object.entries(chartConfig).map(([key, { label, color }], index) => {
                 const isLast = index === Object.entries(chartConfig).length - 1;

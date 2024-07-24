@@ -46,7 +46,7 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
               size={"xs"}
               className="border-dashed text-xs"
             >
-              Réninitialiser
+              À domicile
             </Button>
           </FormLabel>
           <Popover open={open} onOpenChange={setOpen}>
@@ -58,7 +58,7 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
                 disabled={form.formState.isSubmitting}
                 className={cn("min-w-48 justify-between")}
               >
-                {shops.find((shop) => shop.id === shopId)?.name || "A domicile"}
+                {shops.find((shop) => shop.id === shopId)?.name || "À domicile"}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>

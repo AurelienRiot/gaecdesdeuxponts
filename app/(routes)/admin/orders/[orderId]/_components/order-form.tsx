@@ -26,7 +26,7 @@ import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
 
 type ProductFormProps = {
-  initialData: OrderFormValues | null;
+  initialData: (OrderFormValues & { invoiceEmail: Date | null; shippingEmail: Date | null }) | null;
   products: ProductWithMain[];
   shops: Shop[];
   users: UserWithAddress[];
@@ -118,22 +118,24 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
           <div className="flex flex-wrap items-end gap-8">
             <SelectUser users={users} />
-            <FormField
-              control={form.control}
-              name="datePickUp"
-              render={({ field }) => (
-                <>
-                  <FormDatePicker
-                    {...field}
-                    date={field.value}
-                    onSelectDate={field.onChange}
-                    title="Date de retrait"
-                    button={"none"}
-                  />
-                  {field.value && <TimePicker date={field.value} setDate={field.onChange} />}
-                </>
-              )}
-            />
+            {!!initialData && (
+              <FormField
+                control={form.control}
+                name="datePickUp"
+                render={({ field }) => (
+                  <>
+                    <FormDatePicker
+                      {...field}
+                      date={field.value}
+                      onSelectDate={field.onChange}
+                      title="Date de retrait"
+                      button={"none"}
+                    />
+                    {field.value && <TimePicker date={field.value} setDate={field.onChange} />}
+                  </>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
               name="dateOfShipping"
@@ -179,11 +181,11 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
         <div id="button-container" className="flex flex-wrap gap-4">
           <div>
             <Label>Bon de livraison</Label>
-            <DisplayShippingOrder orderId={form.getValues("id")} />
+            <DisplayShippingOrder orderId={form.getValues("id")} isSend={!!initialData.shippingEmail} />
           </div>
           <div>
             <Label>Facture</Label>
-            <DisplayInvoice orderId={form.getValues("id")} />
+            <DisplayInvoice orderId={form.getValues("id")} isSend={!!initialData.invoiceEmail} />
           </div>
         </div>
       )}

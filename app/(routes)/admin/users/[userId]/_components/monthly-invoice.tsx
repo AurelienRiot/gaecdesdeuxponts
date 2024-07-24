@@ -66,7 +66,7 @@ const MonthlyInvoice = ({ orders }: { orders: monthlyOrdersType[] }) => {
             ))}
           </SelectContent>
         </Select>
-        <DisplayMonthlyInvoice orders={selectedOrders} />
+        <DisplayMonthlyInvoice orders={selectedOrders} isSend={emailSend} />
         <Button
           disabled={loading}
           className={cn(

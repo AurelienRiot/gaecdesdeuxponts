@@ -31,7 +31,7 @@ export function ProductChart({
         <CartesianGrid vertical={false} horizontal={false} />
         <XAxis type="number" dataKey="quantity" hide />
         <YAxis dataKey="name" type="category" hide />
-        <ChartTooltip cursor={false} content={<ChartTooltipContent hideIndicator />} />
+        <ChartTooltip content={<ChartTooltipContent hideIndicator />} />
         {/* <ReferenceLine x={0} strokeDasharray="1 3" stroke="hsla(var(--muted-foreground))" /> */}
         <Bar dataKey="quantity" barSize={25}>
           <LabelList position="top" dataKey="name" fill="hsla(var(--foreground))" width={300} />

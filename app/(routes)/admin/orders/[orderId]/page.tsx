@@ -2,6 +2,8 @@ import prismadb from "@/lib/prismadb";
 import { OrderForm } from "./_components/order-form";
 import { headers } from "next/headers";
 
+export const dynamic = "force-dynamic";
+
 const ProductPage = async ({ params }: { params: { orderId: string } }) => {
   const headersList = headers();
   const referer = headersList.get("referer") || "/admin/orders";
@@ -15,6 +17,8 @@ const ProductPage = async ({ params }: { params: { orderId: string } }) => {
       dateOfPayment: true,
       dateOfShipping: true,
       dateOfEdition: true,
+      invoiceEmail: true,
+      shippingEmail: true,
       orderItems: {
         select: {
           name: true,

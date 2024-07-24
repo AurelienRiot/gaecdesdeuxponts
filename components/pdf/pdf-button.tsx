@@ -7,6 +7,7 @@ import Spinner from "../animations/spinner";
 import { useToastPromise } from "../ui/sonner";
 import type { monthlyOrdersType } from "./pdf-data";
 import { SendBL, createMonthlyPDF64String, createPDF64String, sendFacture, sendMonthlyInvoice } from "./server-actions";
+import { useState } from "react";
 
 function base64ToBlob(base64: string, contentType = "application/pdf", sliceSize = 512): Blob {
   const byteCharacters = Buffer.from(base64, "base64").toString("binary");
@@ -28,7 +29,7 @@ function base64ToBlob(base64: string, contentType = "application/pdf", sliceSize
   return blob;
 }
 
-export const DisplayInvoice = ({ orderId }: { orderId: string }) => {
+export const DisplayInvoice = ({ orderId, isSend }: { orderId: string; isSend: boolean }) => {
   const { toastServerAction, loading: sendFactureLoading } = useToastPromise({
     serverAction: sendFacture,
     message: "Envoi de la facture",
@@ -60,8 +61,8 @@ export const DisplayInvoice = ({ orderId }: { orderId: string }) => {
     await serverAction({ data: { orderId, type: "invoice" }, onSuccess });
   };
 
-  const onSendFile = async () => {
-    toastServerAction({ data: { orderId } });
+  const onSendFile = async (setSend: (send: boolean) => void) => {
+    toastServerAction({ data: { orderId }, onSuccess: () => setSend(true) });
   };
   return (
     <PdfButton
@@ -69,14 +70,17 @@ export const DisplayInvoice = ({ orderId }: { orderId: string }) => {
       onViewFile={onViewFile}
       onSaveFile={onSaveFile}
       onSendFile={onSendFile}
+      isSend={isSend}
     />
   );
 };
 
 export const DisplayMonthlyInvoice = ({
   orders,
+  isSend,
 }: {
   orders: monthlyOrdersType[];
+  isSend: boolean;
 }) => {
   const { serverAction, loading: createMonthlyPDF64StringLoading } = useServerAction(createMonthlyPDF64String);
   const { toastServerAction, loading: sendFactureLoading } = useToastPromise({
@@ -112,8 +116,8 @@ export const DisplayMonthlyInvoice = ({
     await serverAction({ data: { orderIds }, onSuccess });
   };
 
-  const onSendFile = async () => {
-    toastServerAction({ data: { orderIds } });
+  const onSendFile = async (setSend: (send: boolean) => void) => {
+    toastServerAction({ data: { orderIds }, onSuccess: () => setSend(true) });
   };
 
   return (
@@ -122,11 +126,12 @@ export const DisplayMonthlyInvoice = ({
       onViewFile={onViewFile}
       onSaveFile={onSaveFile}
       onSendFile={onSendFile}
+      isSend={isSend}
     />
   );
 };
 
-export const DisplayShippingOrder = ({ orderId }: { orderId: string }) => {
+export const DisplayShippingOrder = ({ orderId, isSend }: { orderId: string; isSend: boolean }) => {
   const { toastServerAction, loading: sendBLLoading } = useToastPromise({
     serverAction: SendBL,
     message: "Envoi du BL",
@@ -159,8 +164,8 @@ export const DisplayShippingOrder = ({ orderId }: { orderId: string }) => {
     await serverAction({ data: { orderId, type: "shipping" }, onSuccess });
   };
 
-  const onSendFile = async () => {
-    toastServerAction({ data: { orderId } });
+  const onSendFile = async (setSend: (send: boolean) => void) => {
+    toastServerAction({ data: { orderId }, onSuccess: () => setSend(true) });
   };
 
   return (
@@ -169,6 +174,7 @@ export const DisplayShippingOrder = ({ orderId }: { orderId: string }) => {
       onViewFile={onViewFile}
       onSaveFile={onSaveFile}
       onSendFile={onSendFile}
+      isSend={isSend}
     />
   );
 };
@@ -178,12 +184,16 @@ function PdfButton({
   onSaveFile,
   onSendFile,
   disabled,
+  isSend,
 }: {
   onViewFile: () => void;
   onSaveFile: () => void;
-  onSendFile: () => void;
+  onSendFile: (setSend: (send: boolean) => void) => void;
   disabled?: boolean;
+  isSend: boolean;
 }) {
+  const [send, setSend] = useState(isSend);
+  console.log("send", send);
   return (
     <div className="flex flex-wrap gap-1">
       <Button onClick={onViewFile} type="button" disabled={disabled}>
@@ -195,10 +205,10 @@ function PdfButton({
 
         {"Télecharger"}
       </Button>
-      <Button onClick={onSendFile} type="button" disabled={disabled}>
+      <Button onClick={() => onSendFile(setSend)} type="button" disabled={disabled}>
         {disabled && <Spinner className="h-5 w-5 mr-2" />}
 
-        {"Envoyer par mail"}
+        {send ? "Renvoyer par mail" : "Envoyer par mail"}
       </Button>
     </div>
   );
