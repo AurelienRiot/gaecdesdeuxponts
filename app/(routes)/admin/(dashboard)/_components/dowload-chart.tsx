@@ -2,17 +2,22 @@
 
 import { IconButton } from "@/components/ui/button";
 import html2canvas from "html2canvas"; // Import html2canvas
+import { saveAs } from "file-saver";
 import { Download } from "lucide-react";
+import { toast } from "sonner";
 
 function DownloadChart({ id }: { id: string }) {
   const downloadChart = async () => {
     const chartElement = document.getElementById(id); // Get the chart element
     if (chartElement) {
-      const canvas = await html2canvas(chartElement);
-      const link = document.createElement("a");
-      link.href = canvas.toDataURL("image/png");
-      link.download = `${id}.png`;
-      link.click();
+      await html2canvas(chartElement)
+        .then((canvas) => {
+          const img = canvas.toDataURL();
+          saveAs(img, `${id}.png`);
+        })
+        .catch(() => {
+          toast.error("Erreur lors de l'enregistrement de l'image");
+        });
     }
   };
 

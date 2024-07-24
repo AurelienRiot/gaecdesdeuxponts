@@ -34,14 +34,16 @@ export function ProductChart({
         <ChartTooltip content={<ChartTooltipContent hideIndicator />} />
         {/* <ReferenceLine x={0} strokeDasharray="1 3" stroke="hsla(var(--muted-foreground))" /> */}
         <Bar dataKey="quantity" barSize={25}>
-          <LabelList position="top" dataKey="name" fill="hsla(var(--foreground))" width={300} />
+          {/* <LabelList position="top" dataKey="name" fill="hsla(var(--foreground))" width={300} />
+           */}
           <LabelList
-            position="center"
-            dataKey="quantity"
-            offset={12}
-            className="fill-white font-bold tabular-nums"
-            fontSize={12}
+            position="insideTopLeft"
+            style={{ transform: "translateY(-20px)" }}
+            dataKey="name"
+            fill="hsla(var(--foreground))"
+            width={300}
           />
+          <LabelList dataKey="quantity" offset={12} className="fill-white font-bold tabular-nums" fontSize={12} />
           {chartData.map((item) => (
             <Cell key={item.name} fill={item.quantity > 0 ? "hsl(var(--chart-1))" : "hsl(var(--chart-2))"} />
           ))}

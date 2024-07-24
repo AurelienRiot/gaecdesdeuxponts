@@ -42,7 +42,7 @@ function PerUserItems({
             className={cn("w-48 justify-between", user ? "" : "text-muted-foreground")}
           >
             {user ?? "Nom du client"}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" data-html2canvas-ignore="true" />
           </Button>
         </PopoverTrigger>
         <PopoverContent side="bottom" avoidCollisions={false} className="w-[200px] p-0">

@@ -65,6 +65,7 @@ export function UserProducts({
               data={data}
               layout="vertical"
               margin={{
+                top: 10,
                 left: 14,
               }}
               barCategoryGap={10}
@@ -97,7 +98,7 @@ export function UserProducts({
                     {index === 0 && (
                       <LabelList
                         position="insideTopLeft"
-                        offset={-14}
+                        style={{ transform: "translateY(-20px)" }}
                         dataKey="name"
                         fill="hsla(var(--foreground))"
                         width={300}

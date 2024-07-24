@@ -1,10 +1,10 @@
-import prismadb from "@/lib/prismadb";
-import { ProductChart } from "./product-chart";
-import { dateMonthYear } from "@/lib/date-utils";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import PerUserItems from "./per-user-item";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { dateMonthYear } from "@/lib/date-utils";
+import prismadb from "@/lib/prismadb";
 import DownloadChart from "../dowload-chart";
+import PerUserItems from "./per-user-item";
+import { ProductChart } from "./product-chart";
 
 const ID = "quantite-produits";
 
@@ -75,7 +75,7 @@ const ProductsType = async ({ startDate, endDate }: { startDate: Date; endDate: 
   return (
     <Card id={ID} className=" w-full max-w-xl">
       <CardHeader>
-        <CardTitle className="flex justify-between">
+        <CardTitle className="flex justify-between ">
           Quantité des produits
           <DownloadChart id={ID} />
         </CardTitle>
@@ -85,7 +85,9 @@ const ProductsType = async ({ startDate, endDate }: { startDate: Date; endDate: 
         {orderItems.length > 0 ? (
           <Tabs defaultValue="total">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="total">Total</TabsTrigger>
+              <TabsTrigger className="grid grid-cols-1" value="total">
+                Total
+              </TabsTrigger>
               <TabsTrigger value="perUser">Par client</TabsTrigger>
             </TabsList>
             <TabsContent value="total" className="pt-4">
