@@ -34,12 +34,12 @@ export const AddressForm = ({ className }: AdressFormProps) => {
   };
 
   return (
-    <div className={cn("-mb-8 space-y-4", className)}>
+    <div className={cn("-mb-8 space-y-4 ", className)}>
       <FormField
         control={form.control}
         name={"address"}
         render={({ field }) => (
-          <FormItem className="flex flex-col">
+          <FormItem className="flex flex-col ">
             <FormLabel className="my-auto h-6 leading-normal">Adresse</FormLabel>
             <Popover open={open} onOpenChange={setOpen}>
               <FormControl>

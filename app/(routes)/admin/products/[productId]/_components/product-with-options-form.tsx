@@ -1,5 +1,5 @@
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
-import UploadImage from "@/components/images-upload/image-upload";
+import InputImageModal from "@/components/images-upload/image-modal";
 import { getUnitLabel, hasOptionWithValue, type OptionsArray } from "@/components/product/product-function";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button, IconButton } from "@/components/ui/button";
@@ -7,28 +7,17 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Modal } from "@/components/ui/modal";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { createId } from "@/lib/id";
 import { cn } from "@/lib/utils";
 import { Unit } from "@prisma/client";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
-import {
-  Check,
-  ChevronLeft,
-  ChevronRight,
-  ChevronsDown,
-  ChevronsUp,
-  ChevronsUpDown,
-  UploadCloud,
-  X,
-} from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, ChevronsDown, ChevronsUp, ChevronsUpDown, X } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import OptionValueForm from "./options-values-form";
-import { createId } from "@/lib/id";
 import type { ProductFormValues } from "./product-schema";
-import InputImageModal from "@/components/images-upload/image-modal";
 
 export const ProductWithOptions = ({
   optionsArray,
@@ -75,7 +64,7 @@ export const ProductWithOptions = ({
         <FormItem key={listChanges} className="">
           <FormLabel>Produits</FormLabel>
           <FormControl>
-            <div className="space-y-4">
+            <div className="space-y-6">
               <div className="flex flex-wrap items-end gap-4">
                 <Button
                   type="button"
@@ -108,10 +97,7 @@ export const ProductWithOptions = ({
                 ))}
               </div>
               {products.map((_, productIndex) => (
-                <div
-                  key={productIndex}
-                  className="overflow-x-auto rounded-md p-4 pb-4 thin-scrollbar even:bg-secondary"
-                >
+                <div key={productIndex} className=" rounded-md p-4 space-y-4 bg-chart1/50 even:bg-chart2/50 w-fit">
                   <ProductName
                     setListChanges={setListChanges}
                     products={products}
@@ -148,7 +134,6 @@ function ProductName({
   setListChanges: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const form = useFormContext<ProductFormValues>();
-  const [openImage, setOpenImage] = useState(false);
 
   const moveProductUp = () => {
     if (productIndex > 0) {
@@ -186,18 +171,18 @@ function ProductName({
 
   return (
     <>
-      <div className="flex min-w-[1800px] gap-4">
+      <div className="flex flex-wrap gap-4">
         <div className="flex h-full flex-col justify-between gap-4 py-2">
           <IconButton
             Icon={ChevronsUp}
-            className={productIndex === 0 ? "opacity-0" : ""}
+            className={productIndex === 0 ? "hidden" : "block"}
             iconClassName={"size-4"}
             onClick={moveProductUp}
             type="button"
           />
           <IconButton
             Icon={ChevronsDown}
-            className={productIndex === products.length - 1 ? "opacity-0" : ""}
+            className={productIndex === products.length - 1 ? "hidden" : "block"}
             iconClassName="size-4"
             onClick={moveProductDown}
             type="button"
@@ -209,7 +194,7 @@ function ProductName({
           name={`products.${productIndex}.name`}
           render={({ field }) => (
             <FormItem className="relative w-48">
-              <FormLabel>{`Name du produit ${productIndex + 1}`}</FormLabel>
+              <FormLabel>{`Nom du produit ${productIndex + 1}`}</FormLabel>
               <FormControl>
                 <Input disabled={form.formState.isSubmitting} placeholder="Nom du produit" {...field} />
               </FormControl>
@@ -222,8 +207,9 @@ function ProductName({
           control={form.control}
           name={`products.${productIndex}.price`}
           render={({ field }) => (
-            <FormItem className="w-48">
+            <FormItem className="w-20 relative">
               <FormLabel>Prix</FormLabel>
+              <span className="absolute right-1 top-[44px] transform -translate-y-1/2 text-muted-foreground">€</span>
               <FormControl>
                 <Input
                   type="number"
@@ -258,7 +244,7 @@ function ProductName({
           control={form.control}
           name={`products.${productIndex}.isArchived`}
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border">
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 my-auto rounded-md border h-fit bg-background">
               <label className="flex h-full w-full cursor-pointer flex-row items-start space-x-3 space-y-0 p-4">
                 <FormControl>
                   <Checkbox
@@ -279,7 +265,7 @@ function ProductName({
           control={form.control}
           name={`products.${productIndex}.isFeatured`}
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border">
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 my-auto rounded-md border h-fit bg-background">
               <label className="flex h-full w-full cursor-pointer flex-row items-start space-x-3 space-y-0 p-4">
                 <FormControl>
                   <Checkbox
@@ -332,7 +318,7 @@ function ProductName({
           // />
         ) : null}
       </div>
-      <div className="flex gap-4 pl-4">
+      <div className="flex flex-wrap gap-4 ">
         {options.map((_, optionIndex) => (
           <OptionValueForm
             key={optionIndex}

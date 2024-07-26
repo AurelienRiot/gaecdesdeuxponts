@@ -29,7 +29,7 @@ const OptionValueForm = ({
       control={form.control}
       name={`products.${productIndex}.options.${optionIndex}.value`}
       render={({ field }) => (
-        <FormItem className="w-48">
+        <FormItem className="w-44">
           <FormLabel>
             {form.getValues().products[productIndex].options[optionIndex].name || "Nom de l'option"}
           </FormLabel>
@@ -40,7 +40,7 @@ const OptionValueForm = ({
                   variant="outline"
                   role="combobox"
                   disabled={form.formState.isSubmitting}
-                  className={cn("min-w-48 justify-between", field.value ? "" : "text-muted-foreground")}
+                  className={cn("w-full justify-between", field.value ? "" : "text-muted-foreground")}
                 >
                   {field.value ? field.value : "Valeur de l'option"}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />

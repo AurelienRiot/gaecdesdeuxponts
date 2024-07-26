@@ -28,18 +28,16 @@ const ProductPage = async ({ params }: { params: { productId: string } }) => {
   mappedGroupedOptions.forEach((option, index) => {
     mappedGroupedOptions[index] = {
       name: option.name,
-      values: [...option.values, "Personnalisé"],
+      values: option.values.some((value) => value === "Personnalisé")
+        ? option.values
+        : [...option.values, "Personnalisé"],
     };
   });
 
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <ProductForm
-          categories={categories}
-          initialData={mainProduct}
-          optionsArray={mappedGroupedOptions}
-        />
+        <ProductForm categories={categories} initialData={mainProduct} optionsArray={mappedGroupedOptions} />
       </div>
     </div>
   );

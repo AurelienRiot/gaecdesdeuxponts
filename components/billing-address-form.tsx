@@ -38,7 +38,7 @@ export const BillingAddressForm = ({ className }: AdressFormProps) => {
   };
 
   return (
-    <div className={cn("-mb-8 space-y-4", className)}>
+    <div className={cn("-mb-8 space-y-4 ", className)}>
       <div className="-mb-1 flex items-center gap-2">
         <p className="text-sm font-medium leading-none">Même adresse de facturation</p>
         <Switch
