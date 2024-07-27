@@ -2,7 +2,7 @@
 
 import prismadb from "@/lib/prismadb";
 import cloudinary from "cloudinary";
-import { checkAdmin } from "../auth/checkAuth";
+import { checkAdmin, checkReadOnlyAdmin } from "../auth/checkAuth";
 import type { ReturnTypeServerAction } from "@/lib/server-action";
 import { z } from "zod";
 import safeServerAction from "@/lib/server-action";
@@ -37,7 +37,7 @@ type SignatureType = {
 };
 
 async function getSignature(): Promise<ReturnTypeServerAction<SignatureType, undefined>> {
-  const isAuth = await checkAdmin();
+  const isAuth = await checkReadOnlyAdmin();
   if (!isAuth) {
     return {
       success: false,
@@ -59,7 +59,7 @@ async function getSignature(): Promise<ReturnTypeServerAction<SignatureType, und
 }
 
 async function listFiles(): Promise<ReturnTypeServerAction<Ressources[], undefined>> {
-  const isAuth = await checkAdmin();
+  const isAuth = await checkReadOnlyAdmin();
   if (!isAuth) {
     return {
       success: false,

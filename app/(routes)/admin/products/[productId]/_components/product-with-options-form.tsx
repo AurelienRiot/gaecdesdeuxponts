@@ -227,7 +227,7 @@ function ProductName({
           control={form.control}
           name={`products.${productIndex}.description`}
           render={({ field }) => (
-            <FormItem className="w-96">
+            <FormItem className="w-full max-w-96">
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <AutosizeTextarea
@@ -244,7 +244,7 @@ function ProductName({
           control={form.control}
           name={`products.${productIndex}.isArchived`}
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 my-auto rounded-md border h-fit bg-background">
+            <FormItem className="flex flex-row items-start  space-x-3 space-y-0 my-auto rounded-md border h-fit bg-background">
               <label className="flex h-full w-full cursor-pointer flex-row items-start space-x-3 space-y-0 p-4">
                 <FormControl>
                   <Checkbox
