@@ -97,7 +97,7 @@ export const ProductWithOptions = ({
                 ))}
               </div>
               {products.map((_, productIndex) => (
-                <div key={productIndex} className=" rounded-md p-4 space-y-4 bg-chart1/50 even:bg-chart2/50 w-fit">
+                <div key={productIndex} className=" rounded-md p-4 space-y-4 bg-chart1/50 even:bg-chart2/50 w-full">
                   <ProductName
                     setListChanges={setListChanges}
                     products={products}
@@ -244,7 +244,7 @@ function ProductName({
           control={form.control}
           name={`products.${productIndex}.isArchived`}
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start  space-x-3 space-y-0 my-auto rounded-md border h-fit bg-background">
+            <FormItem className="flex flex-row items-start  space-x-3 space-y-0 my-auto rounded-md border h-fit bg-background ">
               <label className="flex h-full w-full cursor-pointer flex-row items-start space-x-3 space-y-0 p-4">
                 <FormControl>
                   <Checkbox
