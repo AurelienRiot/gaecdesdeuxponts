@@ -3,6 +3,7 @@
 import { AddressForm } from "@/components/address-form";
 import { BillingAddressForm } from "@/components/billing-address-form";
 import DeleteButton from "@/components/delete-button";
+import InputImageModal from "@/components/images-upload/image-modal";
 import ButtonBackward from "@/components/ui/button-backward";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -19,17 +20,15 @@ import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
+import useServerAction from "@/hooks/use-server-action";
 import type { UserWithOrdersAndAdress } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import deleteUser from "../../_actions/delete-user";
+import updateUser from "../_actions/update-user";
 import MailForm from "./mail-form";
 import { schema, type UserFormValues } from "./user-schema";
-import updateUser from "../_actions/update-user";
-import useServerAction from "@/hooks/use-server-action";
-import InputImageModal from "@/components/images-upload/image-modal";
 
 interface UserFormProps {
   initialData: UserWithOrdersAndAdress;

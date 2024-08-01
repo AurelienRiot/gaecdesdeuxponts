@@ -54,8 +54,7 @@ const useToastPromise = <D, R, E = undefined>({
     onSuccess,
   }: { data: D; onFinally?: () => void; onError?: (error?: E) => void; onSuccess?: (result?: R) => void }) {
     setLoading(true);
-    const abortController = new AbortController();
-    const { signal } = abortController;
+    const { signal, abort } = new AbortController();
     const promise = async () => {
       await addDelay(2100, signal).catch(async (e) => {
         const error = e as Error;
@@ -88,7 +87,7 @@ const useToastPromise = <D, R, E = undefined>({
             size={"xs"}
             className="animate-[hide-element_2s_forwards] text-xs"
             onClick={() => {
-              abortController.abort();
+              abort();
             }}
           >
             Annuler

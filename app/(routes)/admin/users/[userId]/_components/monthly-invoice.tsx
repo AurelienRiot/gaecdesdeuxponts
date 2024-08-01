@@ -14,7 +14,7 @@ const MonthlyInvoice = ({ orders }: { orders: monthlyOrdersType[] }) => {
     message: "Validation de la facture",
     errorMessage: "Validation de la facture annulé",
   });
-  const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth() + 1);
+  const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
   const selectedOrders = orders.filter((order) => {
     return order?.month === selectedMonth && order.year === selectedYear;
