@@ -193,7 +193,6 @@ function PdfButton({
   isSend: boolean;
 }) {
   const [send, setSend] = useState(isSend);
-  console.log("send", send);
   return (
     <div className="flex flex-wrap gap-1">
       <Button onClick={onViewFile} type="button" disabled={disabled}>

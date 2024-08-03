@@ -151,7 +151,7 @@ const thankYouMsgStyles = StyleSheet.create({
 const InvoiceThankYouMsg = () => (
   <View style={thankYouMsgStyles.titleContainer}>
     <Text style={thankYouMsgStyles.reportTitle}>Merci de votre confiance</Text>
-    <Text style={thankYouMsgStyles.iban}>IBAN : FR76 1234 5678 9012 3456 7890, Code Bic : AGRIFRPP836</Text>
+    <Text style={thankYouMsgStyles.iban}>IBAN : FR76 1360 6000 6846 3201 0973 614, Code Bic : AGRIFRPP836</Text>
     <Text style={thankYouMsgStyles.iban}>Siret : 844 554 147 00018 ,N° TVA intracom : FR46844554147</Text>
   </View>
 );
