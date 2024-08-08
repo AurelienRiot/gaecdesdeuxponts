@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "@react-pdf/renderer";
 import { mainColor } from "./main-document";
-import type { AMAPData, MonthlyPDFDataType, PDFData } from "./pdf-data";
+import type { AMAPData, AMAPType, MonthlyPDFDataType, PDFData } from "./pdf-data";
 import { dateFormatter } from "@/lib/date-utils";
 
 const detailsStyles = StyleSheet.create({
@@ -19,7 +19,7 @@ type DetailsProps =
       title: "Facture mensuelle";
       pdfData: MonthlyPDFDataType;
     }
-  | { title: "Contrat AMAP"; pdfData: AMAPData };
+  | { title: "Contrat AMAP"; pdfData: AMAPType };
 
 const noStyles = StyleSheet.create({
   invoiceDateContainer: {
