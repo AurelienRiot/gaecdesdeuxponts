@@ -330,3 +330,52 @@ export const monthlyPDFData: MonthlyPDFDataType = {
     },
   ],
 };
+
+export type AMAPType = {
+  customer: Customer;
+  order: {
+    id: string;
+    dateOfEdition: string;
+    startDate: Date;
+    endDate: Date;
+    totalPrice: number;
+    numberOfWeek: number;
+    weeksOfAbsence: number;
+    items: {
+      id: string;
+      desc: string;
+      priceTTC: number;
+      qty: number;
+    }[];
+  };
+};
+
+export const AMAPData: AMAPType = {
+  customer: {
+    id: "clx5ubreg000tt35lvpqjzlqs",
+    name: "Pub Demystify - des",
+    customerId: "CS_JTF0B99",
+    shippingAddress: "Avenue deis PORTISOL, 83600, Fréjus, FR",
+    facturationAddress: "venelle Koad ar Runig, 29470, Plougastel-Daoulas, FR",
+    phone: "+33356452546",
+    email: "pub.demystify390@passmail.net",
+    orderId: "CA-0sUttHF",
+  },
+  order: {
+    id: "CA-0sUttHF",
+    dateOfEdition: "8 juin 2024",
+    totalPrice: 60,
+    numberOfWeek: 20,
+    weeksOfAbsence: 0,
+    startDate: new Date(),
+    endDate: new Date(new Date().setMonth(12)),
+    items: [
+      {
+        id: "PR-0sUttHF",
+        desc: "Lait cru",
+        priceTTC: 1,
+        qty: 3,
+      },
+    ],
+  },
+};

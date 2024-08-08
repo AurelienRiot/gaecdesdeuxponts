@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "@react-pdf/renderer";
 import { mainColor } from "./main-document";
-import type { MonthlyPDFDataType, PDFData } from "./pdf-data";
+import type { AMAPData, MonthlyPDFDataType, PDFData } from "./pdf-data";
 import { dateFormatter } from "@/lib/date-utils";
 
 const detailsStyles = StyleSheet.create({
@@ -18,7 +18,8 @@ type DetailsProps =
   | {
       title: "Facture mensuelle";
       pdfData: MonthlyPDFDataType;
-    };
+    }
+  | { title: "Contrat AMAP"; pdfData: AMAPData };
 
 const noStyles = StyleSheet.create({
   invoiceDateContainer: {
@@ -38,8 +39,12 @@ const Details = ({ title, pdfData }: DetailsProps) => (
     <InvoiceTitle title={title} />
     {title !== "Facture mensuelle" ? (
       <View style={noStyles.invoiceDateContainer}>
-        <Text style={noStyles.label}>N° de commande : </Text>
-        <Text style={noStyles.invoiceDate}>{pdfData.order?.id}</Text>
+        {title === "Contrat AMAP" ? (
+          <Text style={noStyles.label}>N° de contrat : </Text>
+        ) : (
+          <Text style={noStyles.label}>N° de commande : </Text>
+        )}
+        <Text style={noStyles.invoiceDate}>{pdfData.customer?.orderId}</Text>
       </View>
     ) : (
       <View style={noStyles.invoiceDateContainer}>
@@ -56,7 +61,7 @@ const Details = ({ title, pdfData }: DetailsProps) => (
         <Text style={noStyles.invoiceDate}>{pdfData.order.dateOfPayment}</Text>
       </View>
     )}
-    {title !== "Facture mensuelle" ? (
+    {title !== "Facture mensuelle" && title !== "Contrat AMAP" ? (
       <View style={noStyles.invoiceDateContainer}>
         <Text style={noStyles.label}>{"Date d'édition :"} </Text>
         <Text style={noStyles.invoiceDate}>{pdfData.order.dateOfEdition}</Text>
@@ -64,7 +69,7 @@ const Details = ({ title, pdfData }: DetailsProps) => (
     ) : (
       <View style={noStyles.invoiceDateContainer}>
         <Text style={noStyles.label}>{"Date d'édition :"} </Text>
-        <Text style={noStyles.invoiceDate}>{pdfData.orders.length > 0 && dateFormatter(new Date())}</Text>
+        <Text style={noStyles.invoiceDate}>{dateFormatter(new Date())}</Text>
       </View>
     )}
   </View>

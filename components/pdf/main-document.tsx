@@ -1,4 +1,4 @@
-import { Document, Image, Page, StyleSheet, Text, View, Font } from "@react-pdf/renderer";
+import { Document, Image, Page, StyleSheet, Text, View, Font, Link } from "@react-pdf/renderer";
 import type { PDFData } from "./pdf-data";
 
 export const tableRowsCount = 10;
@@ -23,7 +23,7 @@ Font.register({
   ],
 });
 
-const MainStyles = StyleSheet.create({
+export const MainStyles = StyleSheet.create({
   page: {
     fontFamily: "Inter",
     fontSize: 11,
@@ -117,13 +117,15 @@ const CompanyStyles = StyleSheet.create({
   },
 });
 
-const Company = () => (
+export const Company = () => (
   <View style={CompanyStyles.headerContainer}>
     <Logo />
     <Text>Gaec des deux ponts</Text>
     <Text>6 B le Pont Robert 44290 MASSERAC</Text>
     <Text>06 72 06 45 55</Text>
-    <Text style={CompanyStyles.contact}>laiteriedupontrobert@gmail.com - laiteriedupontrobert.fr</Text>
+    <Text style={CompanyStyles.contact}>
+      laiteriedupontrobert@gmail.com - <Link href="https://www.laiteriedupontrobert.fr">laiteriedupontrobert.fr</Link>
+    </Text>
   </View>
 );
 
@@ -148,7 +150,7 @@ const thankYouMsgStyles = StyleSheet.create({
   },
 });
 
-const InvoiceThankYouMsg = () => (
+export const InvoiceThankYouMsg = () => (
   <View style={thankYouMsgStyles.titleContainer}>
     <Text style={thankYouMsgStyles.reportTitle}>Merci de votre confiance</Text>
     <Text style={thankYouMsgStyles.iban}>IBAN : FR76 1360 6000 6846 3201 0973 614, Code Bic : AGRIFRPP836</Text>

@@ -20,6 +20,9 @@ const DisplayShippingOrder = dynamic(() => import("./display-shipping-order"), {
 const DisplayMonthlyInvoice = dynamic(() => import("./display-monthly-invoice"), {
   ssr: false,
 });
+const DisplayContratAMAP = dynamic(() => import("./display-amap"), {
+  ssr: false,
+});
 
 const TestPage = () => {
   return (
@@ -34,12 +37,13 @@ const TestPage = () => {
         </Button>
         <DisplayId />
       </div>
-      <Tabs defaultValue="shippingOrder" className="h-full w-full max-w-[1000px]">
+      <Tabs defaultValue="contratAMAP" className="h-full w-full max-w-[1000px]">
         <TabsList className="flex w-full gap-2">
           <TabsTrigger value="invoice">Facture</TabsTrigger>
           <TabsTrigger value="monthlyInvoice">Facture mensuelle</TabsTrigger>
           <TabsTrigger value="order">Bon de commande</TabsTrigger>
           <TabsTrigger value="shippingOrder">Bon de livraison</TabsTrigger>
+          <TabsTrigger value="contratAMAP">Contrat AMAP</TabsTrigger>
         </TabsList>
         <TabsContent value="invoice" className="h-full w-full">
           <DisplayInvoice />
@@ -52,6 +56,9 @@ const TestPage = () => {
         </TabsContent>
         <TabsContent value="shippingOrder" className="h-full w-full">
           <DisplayShippingOrder />
+        </TabsContent>
+        <TabsContent value="contratAMAP" className="h-full w-full">
+          <DisplayContratAMAP />
         </TabsContent>
       </Tabs>
     </div>
