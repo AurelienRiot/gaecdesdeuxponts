@@ -20,10 +20,8 @@ export function DatePickerWithRange({
   popoverClassName,
   date,
   setDate,
-  captionLayout = "dropdown-buttons",
+  captionLayout = "dropdown",
   numberOfMonths = 2,
-  fromYear = 1930,
-  toYear = 2030,
   ...props
 }: DatePickerWithRangeProps) {
   return (
@@ -50,7 +48,7 @@ export function DatePickerWithRange({
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <Calendar
-            initialFocus
+            // initialFocus
             captionLayout={captionLayout}
             locale={fr}
             mode={"range"}
@@ -58,8 +56,8 @@ export function DatePickerWithRange({
             selected={date}
             onSelect={setDate}
             numberOfMonths={numberOfMonths}
-            fromYear={fromYear}
-            toYear={toYear}
+            startMonth={new Date(2020, 0)}
+            endMonth={new Date(2050, 11)}
             {...props}
           />
         </PopoverContent>

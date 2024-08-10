@@ -2,11 +2,7 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Calendar, type CalendarProps } from "@/components/ui/calendar";
 import { FormItem, FormLabel } from "@/components/ui/form";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { dateFormatter } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
 import { fr } from "date-fns/locale";
@@ -22,18 +18,7 @@ type FormDatePickerProps = Omit<CalendarProps, "disabled"> & {
 };
 
 const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
-  (
-    {
-      title,
-      className,
-      date,
-      button = "reset",
-      disabled,
-      onSelectDate,
-      ...props
-    }: FormDatePickerProps,
-    ref,
-  ) => {
+  ({ title, className, date, button = "reset", disabled, onSelectDate, ...props }: FormDatePickerProps, ref) => {
     const [open, setOpen] = useState(false);
 
     return (
@@ -72,10 +57,7 @@ const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
             <Button
               disabled={disabled}
               variant={"outline"}
-              className={cn(
-                "relative w-full pl-3 text-left font-normal",
-                !date && "text-muted-foreground",
-              )}
+              className={cn("relative w-full pl-3 text-left font-normal", !date && "text-muted-foreground")}
               ref={ref}
             >
               {date ? dateFormatter(date) : <span>Choisir une date</span>}
@@ -90,7 +72,7 @@ const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
             <Calendar
               {...props}
               mode="single"
-              captionLayout="buttons"
+              captionLayout="dropdown"
               selected={date ?? undefined}
               // month={month}
               locale={fr}

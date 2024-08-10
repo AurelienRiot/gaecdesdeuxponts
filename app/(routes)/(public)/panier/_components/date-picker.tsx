@@ -1,11 +1,7 @@
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { MIN_DAYS, dateFormatter, isDateDisabled } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
 import { addMonths } from "date-fns";
@@ -49,23 +45,13 @@ const DatePicker = ({ className, date, shopId }: DatePickerProps) => {
   };
 
   return (
-    <div
-      className={cn(
-        "relative flex flex-wrap items-center justify-between gap-y-2",
-        className,
-      )}
-    >
-      <div className="text-base font-medium text-secondary-foreground">
-        Date de retrait
-      </div>
+    <div className={cn("relative flex flex-wrap items-center justify-between gap-y-2", className)}>
+      <div className="text-base font-medium text-secondary-foreground">Date de retrait</div>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant={"outline"}
-            className={cn(
-              "w-[240px] pl-3 text-left font-normal",
-              !date && "text-muted-foreground",
-            )}
+            className={cn("w-[240px] pl-3 text-left font-normal", !date && "text-muted-foreground")}
           >
             {date ? dateFormatter(date) : <span>Choisir une date</span>}
 
@@ -79,23 +65,24 @@ const DatePicker = ({ className, date, shopId }: DatePickerProps) => {
           <Calendar
             mode="single"
             className="p-3"
-            captionLayout="buttons"
+            captionLayout="dropdown"
             selected={date}
             defaultMonth={
-              new Date().getDate() + MIN_DAYS >
-              new Date(
-                new Date().getFullYear(),
-                new Date().getMonth() + 1,
-                0,
-              ).getDate()
-                ? addMonths(new Date(), 1)
-                : new Date()
+              date
+                ? date
+                : new Date().getDate() + MIN_DAYS >
+                    new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate()
+                  ? addMonths(new Date(), 1)
+                  : new Date()
             }
             locale={fr}
             onSelect={onSelectDate}
             modifiers={{
               disabled: (date) => isDateDisabled(date),
             }}
+            startMonth={new Date(2024, 0)}
+            endMonth={new Date(2050, 11)}
+
             // modifiers={{
             //   full: fullDays,
             //   partiallyFull: partiallyFullDays,

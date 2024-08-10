@@ -2,6 +2,7 @@ import { LogoutButton } from "@/components/auth/auth-button";
 import { MainNav } from "@/components/navbar-admin/main-nav";
 import { ThemeToggle } from "../theme-toggle";
 import MobileNav from "./mobile-nav2";
+import UserRole from "./user-role";
 
 const Navbar = async () => {
   return (
@@ -10,6 +11,7 @@ const Navbar = async () => {
         <MainNav className="pl-8 " />
         {/* <MobileNav className=" md:hidden" /> */}
         <div className=" flex items-center space-x-4 ">
+          <UserRole />
           <ThemeToggle />
           <LogoutButton />
         </div>
