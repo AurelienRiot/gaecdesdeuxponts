@@ -376,6 +376,12 @@ export const AMAPData: AMAPType = {
         priceTTC: 1,
         qty: 3,
       },
+      {
+        id: "PR-065KINES",
+        desc: "Lait pasteurisé",
+        priceTTC: 2,
+        qty: 4,
+      },
     ],
   },
 };

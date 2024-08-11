@@ -343,6 +343,9 @@ const InvoiceTableFooter = ({
 }: {
   order: AMAPType["order"];
 }) => {
+  const totalPrice = (
+    order.items.reduce((acc, item) => acc + item.priceTTC * item.qty, 0) * order.numberOfWeek
+  ).toFixed(2);
   return (
     <>
       <View style={tableFooterStyles.row}>
@@ -354,7 +357,7 @@ const InvoiceTableFooter = ({
       </View>
       <View style={tableFooterStyles.row}>
         <Text style={[tableFooterStyles.description, { fontWeight: "bold" }]}>MONTANT TOTAL ( € )</Text>
-        <Text style={tableFooterStyles.total}> {order.totalPrice}</Text>
+        <Text style={tableFooterStyles.total}> {totalPrice}</Text>
       </View>
     </>
   );
