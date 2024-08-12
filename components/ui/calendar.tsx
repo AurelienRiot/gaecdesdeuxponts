@@ -40,8 +40,9 @@ function Calendar({
     React.useMemo(() => {
       const currentYear = new Date().getFullYear();
       return {
-        from: currentYear - Math.floor(yearRange / 2 - 1),
-        to: currentYear + Math.ceil(yearRange / 2),
+        // from: currentYear - Math.floor(yearRange / 2 - 1),
+        from: props.startMonth ? props.startMonth.getFullYear() : currentYear - Math.floor(yearRange / 2 - 1),
+        to: props.endMonth ? props.endMonth.getFullYear() : currentYear + Math.ceil(yearRange / 2),
       };
     }, [yearRange]),
   );
@@ -53,16 +54,16 @@ function Calendar({
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cn("p-3", className)}
+      className={cn("p-4 w-full", className)}
       // style={{
       //   width: 248.8 * (columnsDisplayed ?? 1) + "px",
       // }}
       classNames={{
-        months: "flex flex-col relative",
+        months: "flex flex-col md:flex-row md:gap-4 relative justify-center",
         month_caption: "flex justify-center h-7 mx-10 relative items-center",
         weekdays: "flex flex-row",
         weekday: "text-muted-foreground w-8 font-normal text-[0.8rem]",
-        month: "gap-y-4 w-full odd:mt-4",
+        month: "gap-y-4 w-full md:odd:mt-0 odd:mt-4",
         caption: "flex justify-center pt-1 relative items-center",
         caption_label: "text-sm font-medium truncate",
         button_next: cn(
@@ -101,8 +102,6 @@ function Calendar({
       }}
       components={{
         Dropdown: ({ value, onChange, options, ...props }: DropdownProps) => {
-          // const options = React.Children.toArray(props.) as React.ReactElement<React.HTMLProps<HTMLOptionElement>>[];
-          console.log(options ? options.length : 0);
           if (!options) return <div></div>;
           const selected = options.find((child) => `${child.value}` === `${value}`);
           const handleChange = (newValue: string) => {
@@ -114,7 +113,7 @@ function Calendar({
 
           return (
             <Select value={value != null ? value.toString() : ""} onValueChange={handleChange}>
-              <SelectTrigger className="pr-1.5 ring-0 focus:ring-0 w-fit ">
+              <SelectTrigger className="pr-1.5 ring-0 focus:ring-0 w-fit focus:ring-offset-0 ">
                 <SelectValue>{selected?.label}</SelectValue>
               </SelectTrigger>
               <SelectContent position="popper" className="z-[1200]">

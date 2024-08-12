@@ -65,7 +65,7 @@ const DatePicker = ({ className, date, shopId }: DatePickerProps) => {
           <Calendar
             mode="single"
             className="p-3"
-            captionLayout="dropdown"
+            captionLayout="label"
             selected={date}
             defaultMonth={
               date
@@ -80,8 +80,8 @@ const DatePicker = ({ className, date, shopId }: DatePickerProps) => {
             modifiers={{
               disabled: (date) => isDateDisabled(date),
             }}
-            startMonth={new Date(2024, 0)}
-            endMonth={new Date(2050, 11)}
+            startMonth={new Date(new Date().getFullYear(), new Date().getMonth())}
+            endMonth={new Date(new Date().getFullYear() + 2, 11)}
 
             // modifiers={{
             //   full: fullDays,

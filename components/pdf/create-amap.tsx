@@ -51,48 +51,60 @@ export const MapaStyle = StyleSheet.create({
   },
 });
 
-const AmapPDF = ({ data }: { data: AMAPType }) => (
-  <Document title={`Contrat AMAP ${data.customer.orderId}`}>
-    <Page size="A4" style={MapaStyle.page}>
-      <View style={MapaStyle.header}>
-        <Company />
-        <Details pdfData={data} title="Contrat AMAP" />
-      </View>
-      <ContenueContrat />
-      <Engagement />
-      <Description />
-      <Consommateur customer={data.customer} />
-      <Commande order={data.order} />
-      <DateDistribution />
-      <Text
-        style={{
-          position: "absolute",
-          bottom: 5,
-          left: 10,
-          textAlign: "center",
-        }}
-        render={({ pageNumber }) => (pageNumber === 2 ? "À remplir en 2 exemplaires" : null)}
-        fixed
-      />
-      <Text
-        style={MapaStyle.pageNumbers}
-        render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`}
-        fixed
-      />
-    </Page>
-  </Document>
-);
+const AmapPDF = ({ data }: { data: AMAPType }) => {
+  const numberOfWeeks =
+    data.order.frequency === "hebdomadaire"
+      ? Math.round((data.order.endDate.getTime() - data.order.startDate.getTime()) / (7 * 24 * 60 * 60 * 1000))
+      : data.order.frequency === "mensuel"
+        ? Math.round((data.order.endDate.getTime() - data.order.startDate.getTime()) / (30 * 24 * 60 * 60 * 1000))
+        : Math.round((data.order.endDate.getTime() - data.order.startDate.getTime()) / (60 * 24 * 60 * 60 * 1000));
+
+  const numberOfMonths = Math.round(
+    (data.order.endDate.getTime() - data.order.startDate.getTime()) / (30 * 24 * 60 * 60 * 1000),
+  );
+  return (
+    <Document title={`Contrat AMAP ${data.customer.orderId}`}>
+      <Page size="A4" style={MapaStyle.page}>
+        <View style={MapaStyle.header}>
+          <Company />
+          <Details pdfData={data} title="Contrat AMAP" />
+        </View>
+        <ContenueContrat numberOfWeeks={numberOfWeeks} numberOfMonths={numberOfMonths} />
+        <Engagement />
+        <Description />
+        <Consommateur customer={data.customer} />
+        <Commande numberOfWeeks={numberOfWeeks} order={data.order} />
+        <DateDistribution />
+        <Text
+          style={{
+            position: "absolute",
+            bottom: 5,
+            left: 10,
+            textAlign: "center",
+          }}
+          render={({ pageNumber }) => (pageNumber === 2 ? "À remplir en 2 exemplaires" : null)}
+          fixed
+        />
+        <Text
+          style={MapaStyle.pageNumbers}
+          render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`}
+          fixed
+        />
+      </Page>
+    </Document>
+  );
+};
 
 export default AmapPDF;
 
-function ContenueContrat() {
+function ContenueContrat({ numberOfWeeks, numberOfMonths }: { numberOfWeeks: number; numberOfMonths: number }) {
   return (
     <View style={MapaStyle.container}>
       <Text style={MapaStyle.title}>Contenu du contrat</Text>
       <Text style={MapaStyle.paragraph}>
         Le présent contrat est passé entre le/la consommateur.trice et les producteurs pour l’approvisionnement toutes
-        les deux semaines (semaines impaires) de produits laitiers bio pour une durée totale de 9 mois (d’avril à
-        décembre) soit 20 semaines en 2024.
+        les deux semaines (semaines impaires) de produits laitiers bio pour une durée totale de {numberOfMonths} mois
+        (d’avril à décembre) soit {numberOfWeeks} semaines en 2024.
       </Text>
       <Text style={MapaStyle.paragraph}>
         Les producteurs s’engagent à exercer leur activité dans le respect de la charte des AMAP : qualité sanitaire des
@@ -173,13 +185,13 @@ function Consommateur({ customer }: { customer: AMAPType["customer"] }) {
   );
 }
 
-function Commande({ order }: { order: AMAPType["order"] }) {
+function Commande({ order, numberOfWeeks }: { order: AMAPType["order"]; numberOfWeeks: number }) {
   return (
     <View style={MapaStyle.container}>
       <Text style={MapaStyle.title}>Commande</Text>
       <InvoiceTableHeader />
       <InvoiceTableRow items={order.items} />
-      <InvoiceTableFooter order={order} />
+      <InvoiceTableFooter numberOfWeeks={numberOfWeeks} order={order} />
       <View style={{ marginTop: 10, display: "flex", flexDirection: "row", gap: 4 }}>
         <Text style={{ fontWeight: "bold", textDecoration: "underline" }}>Semaine d'absence pévues :</Text>
         <Text>{order.weeksOfAbsence}</Text>
@@ -340,12 +352,12 @@ const tableFooterStyles = StyleSheet.create({
 
 const InvoiceTableFooter = ({
   order,
+  numberOfWeeks,
 }: {
   order: AMAPType["order"];
+  numberOfWeeks: number;
 }) => {
-  const totalPrice = (
-    order.items.reduce((acc, item) => acc + item.priceTTC * item.qty, 0) * order.numberOfWeek
-  ).toFixed(2);
+  const totalPrice = (order.items.reduce((acc, item) => acc + item.priceTTC * item.qty, 0) * numberOfWeeks).toFixed(2);
   return (
     <>
       <View style={tableFooterStyles.row}>
@@ -353,7 +365,7 @@ const InvoiceTableFooter = ({
           Nombre de semaines prévues (possibilité de soustraire 2 semaines de vacances : merci de m’indiquer les numéros
           de vos semaines d’absence)
         </Text>
-        <Text style={tableFooterStyles.total}> X {order.numberOfWeek}</Text>
+        <Text style={tableFooterStyles.total}> X {numberOfWeeks}</Text>
       </View>
       <View style={tableFooterStyles.row}>
         <Text style={[tableFooterStyles.description, { fontWeight: "bold" }]}>MONTANT TOTAL ( € )</Text>
@@ -366,7 +378,7 @@ const InvoiceTableFooter = ({
 function DateDistribution() {
   return (
     <View break style={MapaStyle.container}>
-      <Text style={MapaStyle.title}>Dates de distribution des Camemberts</Text>
+      <Text style={MapaStyle.title}>Dates de distribution des produits laitiers</Text>
       <Text style={MapaStyle.paragraph}>Avril : le 09 et le 23</Text>
       <Text style={MapaStyle.paragraph}> Mai : le 07 et le 21</Text>
       <Text style={MapaStyle.paragraph}>Juin : le 04 et le 18</Text>

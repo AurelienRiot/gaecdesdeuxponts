@@ -63,7 +63,7 @@ const Details = ({ title, pdfData }: DetailsProps) => (
     )}
     {title !== "Facture mensuelle" && title !== "Contrat AMAP" ? (
       <View style={noStyles.invoiceDateContainer}>
-        <Text style={noStyles.label}>{"Date d'édition :"} </Text>
+        i<Text style={noStyles.label}>{"Date d'édition :"} </Text>
         <Text style={noStyles.invoiceDate}>{pdfData.order.dateOfEdition}</Text>
       </View>
     ) : (

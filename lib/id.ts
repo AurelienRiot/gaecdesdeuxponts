@@ -17,8 +17,8 @@ export function createId(type: (typeof IdType)[number]) {
     case "mainProduct":
       return `MP_${nanoid(7)}`;
     case "order":
-      return `CM-${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear() % 100}_${nanoid(5)}`;
+      return `CM_${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear() % 100}_${nanoid(5)}`;
     case "amap":
-      return `CA-${nanoid(7)}`;
+      return `CA_${nanoid(7)}`;
   }
 }

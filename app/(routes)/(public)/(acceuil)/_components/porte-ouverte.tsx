@@ -21,7 +21,8 @@ function PorteOuverte() {
             <div className="space-y-2">
               <h3 className="text-xl font-bold">Pour les enfants</h3>
               <p className="max-w-[600px] text-muted-foreground md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed">
-                Participez à une chasse au trésor et testez vos connaissances avec notre quiz sur la ferme !
+                Participez à une <span className="font-bold"> aventure puzzle - photes cache </span> et testez vos
+                connaissances avec notre <span className="font-bold">quizz</span> sur la ferme !
               </p>
             </div>
             {/* <div className="flex gap-4">

@@ -338,9 +338,10 @@ export type AMAPType = {
     dateOfEdition: string;
     startDate: Date;
     endDate: Date;
-    totalPrice: number;
-    numberOfWeek: number;
+    frequency: "hebdomadaire" | "mensuel" | "bi-mensuel";
     weeksOfAbsence: number;
+    shippingDay: number;
+    totalPrice: number;
     items: {
       id: string;
       desc: string;
@@ -365,7 +366,9 @@ export const AMAPData: AMAPType = {
     id: "CA-0sUttHF",
     dateOfEdition: "8 juin 2024",
     totalPrice: 60,
-    numberOfWeek: 20,
+    shippingDay: 5,
+    frequency: "hebdomadaire",
+
     weeksOfAbsence: 0,
     startDate: new Date(),
     endDate: new Date(new Date().setMonth(12)),
