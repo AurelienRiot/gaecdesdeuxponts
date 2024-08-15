@@ -1,3 +1,5 @@
+import z from "zod";
+import ky from "ky";
 interface Feature {
   type: "Feature";
   geometry: {
@@ -22,6 +24,30 @@ interface Feature {
   };
 }
 
+const fetchResponceSchema = z.object({
+  features: z.array(
+    z.object({
+      geometry: z.object({
+        coordinates: z.array(z.number()),
+        type: z.literal("Point"),
+      }),
+      properties: z.object({
+        label: z.string(),
+        id: z.string(),
+        type: z.string(),
+        name: z.string(),
+        postcode: z.string(),
+        citycode: z.string(),
+        x: z.number(),
+        y: z.number(),
+        city: z.string(),
+        context: z.string(),
+        importance: z.number(),
+      }),
+    }),
+  ),
+});
+
 export type Suggestion = {
   label: string;
   city: string;
@@ -29,30 +55,29 @@ export type Suggestion = {
   line1: string;
   postal_code: string;
   state: string;
-  coordinates: [number, number];
+  coordinates: number[];
 };
 
-const AddressAutocomplete = async (value: string) => {
+const AddressAutocomplete = async (value: string): Promise<Suggestion[]> => {
   const trimmedValue = value.trim();
-  if (trimmedValue.length < 3) return [] as Suggestion[];
+  if (trimmedValue.length < 3) return [];
 
-  const response = await fetch(
-    `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(
-      value,
-    )}&autocomplete=1`,
-  );
-  const data = await response.json();
-  const features = data.features;
-  const suggestions = features.map((feature: Feature) => ({
+  const response = await ky
+    .get(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(value)}&autocomplete=1`)
+    .json();
+
+  const { features } = await fetchResponceSchema.parse(response);
+
+  const suggestions: Suggestion[] = features.map((feature) => ({
     label: feature.properties.label,
     city: feature.properties.city,
     country: "FR",
     line1: feature.properties.name,
     postal_code: feature.properties.postcode,
-    state: feature.properties.context.split(", ").at(-1),
+    state: feature.properties.context.split(", ").at(-1) as string,
     coordinates: feature.geometry.coordinates,
   }));
-  return suggestions as Suggestion[];
+  return suggestions;
 };
 
 export const LocationAutocomplete = async ({
@@ -61,26 +86,28 @@ export const LocationAutocomplete = async ({
 }: {
   latitude: number;
   longitude: number;
-}) => {
-  if (latitude === 0 && longitude === 0) return [] as Suggestion[];
+}): Promise<Suggestion[]> => {
+  if (latitude === 0 && longitude === 0) return [];
 
-  const response = await fetch(
-    `https://api-adresse.data.gouv.fr/reverse/?lat=${encodeURIComponent(
-      latitude.toString(),
-    )}&lon=${encodeURIComponent(longitude.toString())}`,
-  );
-  const data = await response.json();
-  const features = data.features;
-  const suggestions = features.map((feature: Feature) => ({
+  const response = await ky
+    .get(
+      `https://api-adresse.data.gouv.fr/reverse/?lat=${encodeURIComponent(
+        latitude.toString(),
+      )}&lon=${encodeURIComponent(longitude.toString())}`,
+    )
+    .json();
+
+  const { features } = await fetchResponceSchema.parse(response);
+  const suggestions: Suggestion[] = features.map((feature) => ({
     label: feature.properties.label,
     city: feature.properties.city,
     country: "FR",
     line1: feature.properties.name,
     postal_code: feature.properties.postcode,
-    state: feature.properties.context.split(", ").at(-1),
+    state: feature.properties.context.split(", ").at(-1) as string,
     coordinates: feature.geometry.coordinates,
   }));
-  return suggestions as Suggestion[];
+  return suggestions;
 };
 
 export default AddressAutocomplete;

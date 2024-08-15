@@ -28,7 +28,10 @@ const MapFocus = ({
 
   const setSearchTerm = async (value: string) => {
     setQuery(value);
-    const temp = await AddressAutocomplete(value);
+    const temp = await AddressAutocomplete(value).catch((e) => {
+      console.log(e);
+      return [];
+    });
     setSuggestions(temp);
   };
 
@@ -67,7 +70,7 @@ const MapFocus = ({
         <CommandInput
           title="Entrer votre adresse"
           placeholder="Entrer votre adresse..."
-          className="z-[400] focus:text-base mb-1 h-9 min-w-48 bg-neutral-50 p-4 shadow-md"
+          className="z-[400] focus:text-base bg-background mb-1 h-9 min-w-48  p-4 shadow-md"
           value={query}
           showIcon={false}
           onValueChange={(e) => {

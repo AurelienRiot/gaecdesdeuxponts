@@ -1,7 +1,7 @@
 import { Document, Font, Link, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import { Fragment } from "react";
 import Details from "./details";
-import { Company, borderColor, foregroundColor, mainColor } from "./main-document";
+import { Company, InvoiceThankYouMsg, borderColor, foregroundColor, mainColor } from "./main-document";
 import type { AMAPType } from "./pdf-data";
 
 Font.register({
@@ -53,14 +53,14 @@ export const MapaStyle = StyleSheet.create({
 
 const AmapPDF = ({ data }: { data: AMAPType }) => {
   const numberOfWeeks =
-    data.order.frequency === "hebdomadaire"
-      ? Math.round((data.order.endDate.getTime() - data.order.startDate.getTime()) / (7 * 24 * 60 * 60 * 1000))
-      : data.order.frequency === "mensuel"
-        ? Math.round((data.order.endDate.getTime() - data.order.startDate.getTime()) / (30 * 24 * 60 * 60 * 1000))
-        : Math.round((data.order.endDate.getTime() - data.order.startDate.getTime()) / (60 * 24 * 60 * 60 * 1000));
+    data.contrat.frequency === "hebdomadaire"
+      ? Math.round((data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (7 * 24 * 60 * 60 * 1000))
+      : data.contrat.frequency === "mensuel"
+        ? Math.round((data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (30 * 24 * 60 * 60 * 1000))
+        : Math.round((data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (60 * 24 * 60 * 60 * 1000));
 
   const numberOfMonths = Math.round(
-    (data.order.endDate.getTime() - data.order.startDate.getTime()) / (30 * 24 * 60 * 60 * 1000),
+    (data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (30 * 24 * 60 * 60 * 1000),
   );
   return (
     <Document title={`Contrat AMAP ${data.customer.orderId}`}>
@@ -73,8 +73,9 @@ const AmapPDF = ({ data }: { data: AMAPType }) => {
         <Engagement />
         <Description />
         <Consommateur customer={data.customer} />
-        <Commande numberOfWeeks={numberOfWeeks} order={data.order} />
+        <Commande numberOfWeeks={numberOfWeeks} order={data.contrat} />
         <DateDistribution />
+        <InvoiceThankYouMsg />
         <Text
           style={{
             position: "absolute",
@@ -185,7 +186,7 @@ function Consommateur({ customer }: { customer: AMAPType["customer"] }) {
   );
 }
 
-function Commande({ order, numberOfWeeks }: { order: AMAPType["order"]; numberOfWeeks: number }) {
+function Commande({ order, numberOfWeeks }: { order: AMAPType["contrat"]; numberOfWeeks: number }) {
   return (
     <View style={MapaStyle.container}>
       <Text style={MapaStyle.title}>Commande</Text>
@@ -314,7 +315,7 @@ const tableRowStyles = StyleSheet.create({
   },
 });
 
-const InvoiceTableRow = ({ items }: { items: AMAPType["order"]["items"] }) => {
+const InvoiceTableRow = ({ items }: { items: AMAPType["contrat"]["items"] }) => {
   const rows = items.map((item, i) => (
     <View style={tableRowStyles.row} key={i}>
       <Text style={tableRowStyles.description}>{item.desc}</Text>
@@ -354,7 +355,7 @@ const InvoiceTableFooter = ({
   order,
   numberOfWeeks,
 }: {
-  order: AMAPType["order"];
+  order: AMAPType["contrat"];
   numberOfWeeks: number;
 }) => {
   const totalPrice = (order.items.reduce((acc, item) => acc + item.priceTTC * item.qty, 0) * numberOfWeeks).toFixed(2);

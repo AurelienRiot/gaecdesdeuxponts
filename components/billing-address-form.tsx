@@ -33,7 +33,10 @@ export const BillingAddressForm = ({ className }: AdressFormProps) => {
 
   const setSearchTerm = async (value: string) => {
     setQuery(value);
-    const temp = await AddressAutocomplete(value);
+    const temp = await AddressAutocomplete(value).catch((e) => {
+      console.log(e);
+      return [];
+    });
     setSuggestions(temp);
   };
 

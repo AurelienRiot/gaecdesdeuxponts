@@ -290,7 +290,10 @@ const AddressForm = ({ form }: { form: UseFormReturn<ShopFormValues> }) => {
 
   const setSearchTerm = async (value: string) => {
     setQuery(value);
-    const temp = await AddressAutocomplete(value);
+    const temp = await AddressAutocomplete(value).catch((e) => {
+      console.log(e);
+      return [];
+    });
     setSuggestions(temp);
   };
 

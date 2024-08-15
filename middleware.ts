@@ -9,25 +9,7 @@ export async function middleware(req: NextRequest) {
     return redirectToLogin(req);
   }
   try {
-    // const apiResponse = await fetch(`${baseUrl}/api/auth`, {
-    // 	method: "GET",
-    // 	headers: {
-    // 		Cookie: cookies()
-    // 			.getAll()
-    // 			.map((cookie) => `${cookie.name}=${cookie.value}`)
-    // 			.join("; "),
-    // 	},
-    // 	cache: "no-store",
-    // });
-
-    // if (!apiResponse.ok) {
-    // 	console.log("API call error:", apiResponse.statusText);
-    // 	return redirectToLogin(req);
-    // }
-    // const { role } = (await apiResponse.json()) as { role: string };
     const role = token.role;
-    // console.log(token);
-
     const path = req.nextUrl.pathname;
 
     if (role === "deleted") {

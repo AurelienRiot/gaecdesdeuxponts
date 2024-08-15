@@ -1,48 +1,30 @@
-import AddressAutocomplete, {
-  type Suggestion,
-} from "@/actions/adress-autocompleteFR";
+import AddressAutocomplete, { type Suggestion } from "@/actions/adress-autocompleteFR";
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { haversine } from "@/lib/math";
 import { cn } from "@/lib/utils";
 import type { Shop } from "@prisma/client";
 import { ChevronDown } from "lucide-react";
-import { type Dispatch,type SetStateAction, useState } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 
-interface AddressInputProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface AddressInputProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   setSortedShops: Dispatch<SetStateAction<Shop[]>>;
-  setCoordinates: Dispatch<
-    SetStateAction<{ long: number | undefined; lat: number | undefined }>
-  >;
+  setCoordinates: Dispatch<SetStateAction<{ long: number | undefined; lat: number | undefined }>>;
   shops: Shop[];
 }
 
-export const AddressInput = ({
-  setSortedShops,
-  setCoordinates,
-  shops,
-  className,
-  ...props
-}: AddressInputProps) => {
+export const AddressInput = ({ setSortedShops, setCoordinates, shops, className, ...props }: AddressInputProps) => {
   const [suggestions, setSuggestions] = useState([] as Suggestion[]);
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
 
   const setSearchTerm = async (value: string) => {
     setQuery(() => value);
-    const temp = await AddressAutocomplete(value);
+    const temp = await AddressAutocomplete(value).catch((e) => {
+      console.log(e);
+      return [];
+    });
     setSuggestions(() => temp);
   };
 
@@ -73,11 +55,7 @@ export const AddressInput = ({
           variant="outline"
           role="combobox"
           onClick={() => setOpen((open) => !open)}
-          className={cn(
-            " justify-between active:scale-100 ",
-            query && "font-normal text-muted-foreground ",
-            className,
-          )}
+          className={cn(" justify-between active:scale-100 ", query && "font-normal text-muted-foreground ", className)}
           {...props}
         >
           Rechercher votre adresse
@@ -94,18 +72,15 @@ export const AddressInput = ({
               await setSearchTerm(e);
               const coordinates = {
                 long: suggestions[0]?.coordinates?.[0],
-                lat: suggestions[0]?.coordinates?.[1]
+                lat: suggestions[0]?.coordinates?.[1],
               };
-              
 
               sortShops(coordinates);
               setCoordinates(coordinates);
             }}
           />
           <CommandList>
-            {query.length > 3 && (
-              <CommandEmpty>Adresse introuvable</CommandEmpty>
-            )}
+            {query.length > 3 && <CommandEmpty>Adresse introuvable</CommandEmpty>}
             {suggestions.map((address, index) => (
               <CommandItem
                 className="cursor-pointer

@@ -333,9 +333,9 @@ export const monthlyPDFData: MonthlyPDFDataType = {
 
 export type AMAPType = {
   customer: Customer;
-  order: {
+  contrat: {
     id: string;
-    dateOfEdition: string;
+    dateOfEdition: Date;
     startDate: Date;
     endDate: Date;
     frequency: "hebdomadaire" | "mensuel" | "bi-mensuel";
@@ -362,13 +362,12 @@ export const AMAPData: AMAPType = {
     email: "pub.demystify390@passmail.net",
     orderId: "CA-0sUttHF",
   },
-  order: {
+  contrat: {
     id: "CA-0sUttHF",
-    dateOfEdition: "8 juin 2024",
+    dateOfEdition: new Date(),
     totalPrice: 60,
     shippingDay: 5,
     frequency: "hebdomadaire",
-
     weeksOfAbsence: 0,
     startDate: new Date(),
     endDate: new Date(new Date().setMonth(12)),

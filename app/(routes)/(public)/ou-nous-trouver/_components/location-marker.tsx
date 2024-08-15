@@ -1,4 +1,4 @@
-import AddressAutocomplete, { LocationAutocomplete } from "@/actions/adress-autocompleteFR";
+import { LocationAutocomplete, Suggestion } from "@/actions/adress-autocompleteFR";
 import { IconButton } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { Locate } from "lucide-react";
@@ -37,7 +37,10 @@ const LocationMarker = ({
       lat: latitude,
     });
     if (accept) {
-      const temp = await LocationAutocomplete({ latitude, longitude });
+      const temp = await LocationAutocomplete({ latitude, longitude }).catch((e) => {
+        console.log(e);
+        return [];
+      });
 
       posthog?.capture("localisation_trouvée", {
         latitude,
