@@ -46,6 +46,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
     resolver: zodResolver(schema),
     defaultValues: {
       id: initialData.id,
+      completed: initialData.completed,
       email: initialData.email || "",
       name: initialData.name || "",
       image: initialData.image || "",
@@ -186,6 +187,27 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                     <div className="space-y-1 leading-none">
                       <FormLabel>Professionnel</FormLabel>
                       <FormDescription>{"Faire de cette utilisateur un professionnel"}</FormDescription>
+                    </div>
+                  </label>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="completed"
+              render={({ field }) => (
+                <FormItem className="flex h-20 cursor-pointer flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <label className="flex cursor-pointer flex-row items-start space-x-3 space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        disabled={form.formState.isSubmitting}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel>Profile complet</FormLabel>
+                      <FormDescription>Indique si le profil de l'utilisateur est complet.</FormDescription>
                     </div>
                   </label>
                 </FormItem>

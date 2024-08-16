@@ -11,7 +11,7 @@ async function createUser(data: UserFormValues) {
     schema,
     getUser: checkAdmin,
     serverAction: async (data) => {
-      const { email, name, company, phone, isPro, address, billingAddress, image, id } = data;
+      const { email, name, company, phone, isPro, address, billingAddress, image, id, completed } = data;
       const user = await prismadb.user.findUnique({
         where: { email },
       });
@@ -30,6 +30,7 @@ async function createUser(data: UserFormValues) {
           company: isPro ? company?.trim() : undefined,
           phone,
           image,
+          completed,
           role: isPro ? "pro" : "user",
           address: {
             create: address ?? defaultAddress,

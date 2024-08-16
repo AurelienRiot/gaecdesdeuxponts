@@ -2,6 +2,7 @@
 
 import { AddressForm } from "@/components/address-form";
 import { BillingAddressForm } from "@/components/billing-address-form";
+import InputImageModal from "@/components/images-upload/image-modal";
 import ButtonBackward from "@/components/ui/button-backward";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -25,7 +26,6 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import createUser from "../_actions/create-user";
 import { schema, type UserFormValues } from "./user-schema";
-import InputImageModal from "@/components/images-upload/image-modal";
 
 export const CreateUserForm = () => {
   const { serverAction } = useServerAction(createUser);
@@ -42,6 +42,7 @@ export const CreateUserForm = () => {
       name: "",
       email: "",
       company: "",
+      completed: true,
       phone: "",
       address: {
         label: "",
@@ -121,6 +122,7 @@ export const CreateUserForm = () => {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="company"
@@ -169,6 +171,27 @@ export const CreateUserForm = () => {
                       <div className="space-y-1 leading-none">
                         <FormLabel>Professionnel</FormLabel>
                         <FormDescription>{"Faire de cette utilisateur un professionnel"}</FormDescription>
+                      </div>
+                    </label>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="completed"
+                render={({ field }) => (
+                  <FormItem className="flex h-20 cursor-pointer flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                    <label className="flex cursor-pointer flex-row items-start space-x-3 space-y-0">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          disabled={form.formState.isSubmitting}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>Profile complet</FormLabel>
+                        <FormDescription>Indique si le profil de l'utilisateur est complet.</FormDescription>
                       </div>
                     </label>
                   </FormItem>

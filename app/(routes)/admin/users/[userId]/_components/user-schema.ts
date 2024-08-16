@@ -9,6 +9,7 @@ export const schema = z.object({
     message: "Le nom est obligatoire",
   }),
   company: z.string().optional(),
+  completed: z.boolean().default(false),
   email: z.string().email(),
   phone: z.string().refine(
     (value) => {

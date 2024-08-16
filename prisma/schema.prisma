@@ -49,6 +49,7 @@ model User {
   emailVerified    DateTime?
   phone            String? 
   image            String?
+  completed        Boolean @default(true)
   role             Role @default(user)
   orders           Order[]
   accounts         Account[]

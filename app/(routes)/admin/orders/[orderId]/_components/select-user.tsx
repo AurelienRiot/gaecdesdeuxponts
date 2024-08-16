@@ -10,9 +10,11 @@ import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-shema";
 import { ScrollToTarget } from "@/lib/scroll-to-traget";
+import { useRouter } from "next/navigation";
 
 const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
   const form = useFormContext<OrderFormValues>();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const userId = form.watch("userId");
   const name = (() => {
@@ -22,8 +24,14 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
 
   function onValueChange(value: string) {
     const user = users.find((user) => user.id === value);
+
     if (!user) {
       toast.error("Utilisateur introuvable");
+      return;
+    }
+    if (!user.completed) {
+      router.push(`/admin/users/${user.id}`);
+      toast.error("Utilisateur incomplet", { position: "top-center" });
       return;
     }
     form.setValue("userId", value);
