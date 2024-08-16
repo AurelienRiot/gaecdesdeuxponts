@@ -34,11 +34,7 @@ const CardUser: React.FC<CardUserProps> = ({ user, className }) => {
         </CardHeader>
         <CardContent className="text-center p-2  rounded-md w-fit mx-auto         ">
           <div className="flex flex-row items-center justify-center gap-1 font-bold rounded-md">
-            {user.role === "pro" ? (
-              <p className="text-green-500">Professionnel</p>
-            ) : (
-              <p className="text-blue-500">Particulier</p>
-            )}
+            {user.completed ? <p className="text-green-500">Complet</p> : <p className="text-red-500">Incomplet</p>}
           </div>
         </CardContent>
         <CardFooter className="flex flex-row items-end justify-between  gap-1">
