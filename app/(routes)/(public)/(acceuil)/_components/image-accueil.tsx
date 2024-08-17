@@ -57,9 +57,7 @@ const ImageAccueil = () => {
         </p> */}
         <div className="mx-auto flex gap-4">
           <Button asChild variant={"heartbeat"}>
-            <Link href="/category/Lait/product/Lait%20cru?Contenant=Vrac">
-              Acheter
-            </Link>
+            <Link href="/category/Lait/product/Lait%20cru?Contenant=Vrac">Acheter</Link>
           </Button>
           <Button variant={"outline"} asChild>
             <Link href="/lait-cru">En savoir plus</Link>

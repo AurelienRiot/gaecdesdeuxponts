@@ -33,6 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     images: [
       "https://www.laiteriedupontrobert.fr/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fferme.77874bf1.webp&w=3840&q=75",
+      "https://www.laiteriedupontrobert.fr/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fposter.d2c91e30.webp&w=3840&q=75",
     ],
   },
 };
