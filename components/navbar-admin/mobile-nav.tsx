@@ -1,32 +1,40 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+
 import { cn } from "@/lib/utils";
-import { Check, ChevronsUpDown, Menu } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Suspense, useState } from "react";
-import { adminRoutes } from "./main-nav";
 import AutoCloseSheet from "../auto-close-sheet";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { MainAdminRoutes, SecondaryAdminRoutes } from "./main-nav";
 
-type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
-
-interface MobileNavProps extends PopoverTriggerProps {}
-
-export default function MobileNav({ className }: MobileNavProps) {
+function MobileNav() {
   const pathname = usePathname();
-  const router = useRouter();
+  const mainRoutes = MainAdminRoutes(pathname);
+  return (
+    <nav className="fixed bottom-0 left-0 right-0 bg-neutral-950 text-neutral-200 px-2 flex justify-around items-center h-16 md:hidden">
+      <div className="grid grid-cols-5 w-full items-center justify-between px-4">
+        {mainRoutes.map((route) => (
+          <Link
+            key={route.href}
+            href={route.href}
+            className={cn("flex flex-col items-center px-2 py-1 rounded-md", route.active && "bg-green-600 font-bold")}
+          >
+            <route.Icone className="w-6 h-6" />
+            <span className="text-sm">{route.label}</span>
+          </Link>
+        ))}
+        <AutresButton />
+      </div>
+    </nav>
+  );
+}
 
+function AutresButton() {
+  const pathName = usePathname();
   const [open, setOpen] = useState(false);
-  const routes = adminRoutes(pathname);
+
+  const secondaryRoutes = SecondaryAdminRoutes(pathName);
 
   return (
     <>
@@ -35,46 +43,69 @@ export default function MobileNav({ className }: MobileNavProps) {
         <AutoCloseSheet setIsOpen={setOpen} />{" "}
       </Suspense>
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            size="sm"
-            role="combobox"
-            aria-expanded={open}
-            aria-label="Selectionner"
-            className={cn(className)}
-          >
-            <Menu className=" h-4 w-4" />
+        <PopoverTrigger className=" group relative transition-colors duration-300    data-[state=open]:text-destructive text-sm">
+          <div className="size-6 relative -translate-y-2  -translate-x-2 mx-auto">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              className="absolute left-[10px] top-[18px] h-4  w-4 transition-transform duration-300 group-data-[state=open]:translate-x-[5px] group-data-[state=open]:translate-y-[-2px] group-data-[state=open]:-rotate-45 "
+              viewBox="0 0 24 24"
+              aria-hidden
+            >
+              <line x1="2" y1="2" x2="22" y2="2"></line>
+            </svg>
 
-            {/* <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" /> */}
-          </Button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              className="absolute left-[10px] top-[13px] h-4 w-4 transition-transform duration-300 group-data-[state=open]:translate-x-[-4px] group-data-[state=open]:translate-y-[3px] group-data-[state=open]:rotate-45  "
+              viewBox="0 0 24 24"
+              aria-hidden
+            >
+              <line x1="2" y1="2" x2="14" y2="2"></line>
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              className="absolute left-[15px] top-[23px] h-4  w-4 transition-transform duration-300 group-data-[state=open]:translate-x-[-5px] group-data-[state=open]:translate-y-[-3px] group-data-[state=open]:rotate-45 "
+              viewBox="0 0 24 24"
+              aria-hidden
+            >
+              <line x1="2" y1="2" x2="14" y2="2"></line>
+            </svg>
+          </div>
+          <span className="mx-auto">Autres</span>
         </PopoverTrigger>
-        <PopoverContent className="h-auto w-[200px] p-0">
-          <Command>
-            <CommandList>
-              {/* <CommandInput placeholder="recherche" /> */}
-              {/* <CommandEmpty> Aucun résultat</CommandEmpty> */}
-              <CommandGroup>
-                {routes.map((route) => (
-                  <CommandItem
-                    key={route.href}
-                    value={route.label}
-                    onSelect={() => {
-                      router.push(route.href);
-                    }}
-                    className="test-sm cursor-pointer"
-                  >
-                    <route.Icone className="mr-2 h-4 w-4" />
-                    {route.label}
-                    <Check className={cn("ml-auto h-4 w-4", route.active ? "opacity-100" : "opacity-0")} />
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-            <CommandSeparator />
-          </Command>
+        <PopoverContent className="w-fit  px-2 bg-neutral-950 text-neutral-200 border-0 shadow-lg">
+          {secondaryRoutes.map((route) => (
+            <Link
+              key={route.href}
+              href={route.href}
+              className={cn(
+                "flex flex-row items-center gap-2 px-2 py-2 rounded-md",
+                route.active && "bg-green-600 font-bold",
+              )}
+            >
+              <route.Icone className="w-6 h-6" />
+              <span className="text-sm">{route.label}</span>
+            </Link>
+          ))}
         </PopoverContent>
       </Popover>
     </>
   );
 }
+
+export default MobileNav;

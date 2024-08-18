@@ -58,10 +58,10 @@ export const MainAdminRoutes = (pathname: string) => [
     Icone: ListOrderedIcon,
   },
   {
-    href: `/admin/products`,
-    label: "Produits",
-    active: pathname.startsWith(`/admin/products`),
-    Icone: PackageIcon,
+    href: `/admin`,
+    label: "Résumé",
+    active: pathname === `/admin`,
+    Icone: LayoutDashboardIcon,
   },
 ];
 
@@ -84,12 +84,11 @@ export const SecondaryAdminRoutes = (pathname: string) => [
     active: pathname.startsWith(`/admin/categories`),
     Icone: RowsIcon,
   },
-
   {
-    href: `/admin`,
-    label: "Résumé",
-    active: pathname === `/admin`,
-    Icone: LayoutDashboardIcon,
+    href: `/admin/products`,
+    label: "Produits",
+    active: pathname.startsWith(`/admin/products`),
+    Icone: PackageIcon,
   },
 ];
 

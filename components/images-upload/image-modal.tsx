@@ -42,7 +42,7 @@ function InputImageModal({ selectedFiles, setSelectedFiles, multipleImages }: In
             src={selectedFiles[0]}
             alt="image"
             fill
-            className="h-full w-full object-cover rounded-lg"
+            className="h-full w-full object-contain rounded-lg"
             sizes="100px"
           />
         )}

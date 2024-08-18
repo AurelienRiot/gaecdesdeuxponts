@@ -273,12 +273,11 @@ const DisplaySelectedImages = ({ selectedFiles, setSelectedFiles, multipleImages
                   alt=""
                   fill
                   sizes="(max-width: 768px) 100px, (max-width: 1200px) 100px, 100px"
-                  className="pointer-events-none rounded-xl object-cover"
+                  className="pointer-events-none rounded-xl object-contain"
                 />
                 <button
                   type="button"
                   onClick={(e) => {
-                    console.log(selectedFiles.filter((item) => item !== url));
                     setSelectedFiles(selectedFiles.filter((item) => item !== url));
                   }}
                   className="absolute right-0 z-10 hidden items-center justify-center rounded-tr-md bg-destructive px-2 text-destructive-foreground transition-all hover:bg-destructive/90 group-hover:flex"
