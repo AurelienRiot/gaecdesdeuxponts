@@ -117,7 +117,7 @@ function Calendar({
                 <SelectValue>{selected?.label}</SelectValue>
               </SelectTrigger>
               <SelectContent position="popper" className="z-[1200]">
-                <ScrollArea className="h-80">
+                <ScrollArea className=" max-h-60 overflow-y-auto">
                   {options.map((option, id) => (
                     <SelectItem
                       key={`${option.value}-${id}`}

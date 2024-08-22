@@ -7,6 +7,7 @@ import { z } from "zod";
 
 const schema = z.object({
   orderIds: z.array(z.string()),
+  date: z.date(),
   isPaid: z.boolean(),
 });
 
@@ -15,15 +16,16 @@ async function montlyInvoicePaid(data: z.infer<typeof schema>) {
     data,
     schema,
     getUser: checkAdmin,
-    serverAction: async () => {
+    serverAction: async (data) => {
+      const { date, orderIds, isPaid } = data;
       await prismadb.order.updateMany({
         where: {
           id: {
-            in: data.orderIds,
+            in: orderIds,
           },
         },
         data: {
-          dateOfPayment: data.isPaid ? new Date() : null,
+          dateOfPayment: isPaid ? date : null,
         },
       });
 

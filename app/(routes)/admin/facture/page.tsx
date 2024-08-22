@@ -24,6 +24,10 @@ const DisplayContratAMAP = dynamic(() => import("./display-amap"), {
   ssr: false,
 });
 
+const DisplayFormAMAP = dynamic(() => import("./display-amap-form"), {
+  ssr: false,
+});
+
 const TestPage = () => {
   return (
     <div className="h-[calc(100vh-66px)] space-y-4 p-4">
@@ -37,13 +41,14 @@ const TestPage = () => {
         </Button>
         <DisplayId />
       </div>
-      <Tabs defaultValue="contratAMAP" className="h-full w-full max-w-[1000px]">
+      <Tabs defaultValue="formAMAP" className="h-full w-full max-w-[1000px]">
         <TabsList className="flex w-full gap-2">
           <TabsTrigger value="invoice">Facture</TabsTrigger>
           <TabsTrigger value="monthlyInvoice">Facture mensuelle</TabsTrigger>
           <TabsTrigger value="order">Bon de commande</TabsTrigger>
           <TabsTrigger value="shippingOrder">Bon de livraison</TabsTrigger>
           <TabsTrigger value="contratAMAP">Contrat AMAP</TabsTrigger>
+          <TabsTrigger value="formAMAP">Formulaire AMAP</TabsTrigger>
         </TabsList>
         <TabsContent value="invoice" className="h-full w-full">
           <DisplayInvoice />
@@ -59,6 +64,9 @@ const TestPage = () => {
         </TabsContent>
         <TabsContent value="contratAMAP" className="h-full w-full">
           <DisplayContratAMAP />
+        </TabsContent>
+        <TabsContent value="formAMAP" className="h-full w-full">
+          <DisplayFormAMAP />
         </TabsContent>
       </Tabs>
     </div>

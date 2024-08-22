@@ -12,7 +12,7 @@ Font.register({
   ],
 });
 
-export const MapaStyle = StyleSheet.create({
+export const AMAPStyle = StyleSheet.create({
   page: {
     fontFamily: "Inter",
     fontSize: 11,
@@ -64,8 +64,8 @@ const AmapPDF = ({ data }: { data: AMAPType }) => {
   );
   return (
     <Document title={`Contrat AMAP ${data.customer.orderId}`}>
-      <Page size="A4" style={MapaStyle.page}>
-        <View style={MapaStyle.header}>
+      <Page size="A4" style={AMAPStyle.page}>
+        <View style={AMAPStyle.header}>
           <Company />
           <Details pdfData={data} title="Contrat AMAP" />
         </View>
@@ -87,7 +87,7 @@ const AmapPDF = ({ data }: { data: AMAPType }) => {
           fixed
         />
         <Text
-          style={MapaStyle.pageNumbers}
+          style={AMAPStyle.pageNumbers}
           render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`}
           fixed
         />
@@ -98,70 +98,69 @@ const AmapPDF = ({ data }: { data: AMAPType }) => {
 
 export default AmapPDF;
 
-function ContenueContrat({ numberOfWeeks, numberOfMonths }: { numberOfWeeks: number; numberOfMonths: number }) {
+export function ContenueContrat({ numberOfWeeks, numberOfMonths }: { numberOfWeeks: number; numberOfMonths: number }) {
   return (
-    <View style={MapaStyle.container}>
-      <Text style={MapaStyle.title}>Contenu du contrat</Text>
-      <Text style={MapaStyle.paragraph}>
+    <View style={AMAPStyle.container}>
+      <Text style={AMAPStyle.title}>Contenu du contrat</Text>
+      <Text style={AMAPStyle.paragraph}>
         Le présent contrat est passé entre le/la consommateur.trice et les producteurs pour l’approvisionnement toutes
-        les deux semaines (semaines impaires) de produits laitiers bio pour une durée totale de {numberOfMonths} mois
-        (d’avril à décembre) soit {numberOfWeeks} semaines en 2024.
+        les semaines de produits laitiers bio pour une durée totale de {numberOfMonths} mois (d’avril à décembre) soit{" "}
+        {numberOfWeeks} semaines en 2024.
       </Text>
-      <Text style={MapaStyle.paragraph}>
+      <Text style={AMAPStyle.paragraph}>
         Les producteurs s’engagent à exercer leur activité dans le respect de la charte des AMAP : qualité sanitaire des
         produits, respect de la biodiversité, de l’environnement.
       </Text>
-      <Text style={MapaStyle.paragraph}>
+      <Text style={AMAPStyle.paragraph}>
         Le/la consommateur.trice et les producteurs doivent respecter la charte des AMAP consultable via le lien{" "}
         <Link href="http://www.reseau-amap.org/docs/chartedesamap.PDF">
           http://www.reseau-amap.org/docs/chartedesamap.PDF
         </Link>
         .
       </Text>
-      <Text style={MapaStyle.paragraph}>
-        La distribution du lait cru aura lieu toutes les deux semaines, les mardis soir, au local de l’ancien presbytère
-        en face de la gendarmerie de Guémené Penfao, de 18h à 19h, en alternance avec les fromages de chèvre.
+      <Text style={AMAPStyle.paragraph}>
+        La distribution du lait cru aura lieu toutes les semaines, les mardis soir, au local de l’ancien presbytère en
+        face de la gendarmerie de Guémené Penfao, de 18h à 19h.
       </Text>
-      <Text style={MapaStyle.paragraph}>
+      <Text style={AMAPStyle.paragraph}>
         Sur la période du contrat, certaines distributions pourront être susceptibles de ne pas être assurées si des
         difficultés ponctuelles sont rencontrées sur la ferme. Si cela devait arriver, les producteurs en informeront
         les consommateurs.trices aussi vite que possible et au moins une semaine à l’avance. Dans ce cas, soit les
         produits laitiers seront déposés au local de l’ancien presbytère et la distribution se fera en l’absence des
-        producteurs, soit la distribution sera décalée à la semaine suivante. Le nombre de livraisons sera, dans tous
-        les cas, conforme au nombre de mois prévus dans le contrat.
+        producteurs. Le nombre de livraisons sera, dans tous les cas, conforme au nombre de mois prévus dans le contrat.
       </Text>
     </View>
   );
 }
 
-function Engagement() {
+export function Engagement() {
   return (
-    <View style={MapaStyle.container}>
-      <Text style={MapaStyle.title}>Engagement</Text>
-      <Text style={MapaStyle.paragraph}>
+    <View style={AMAPStyle.container}>
+      <Text style={AMAPStyle.title}>Engagement</Text>
+      <Text style={AMAPStyle.paragraph}>
         L’engagement suivant est souscrit et réglé par chèque(s) à la signature du contrat pour toutes les livraisons du
         contrat. Les chèques seront remplis à l’ordre de Gaec des deux ponts.
       </Text>
-      <Text style={MapaStyle.paragraph}>
+      <Text style={AMAPStyle.paragraph}>
         Le/la consommateur.trice s’engage sur la totalité de la durée du contrat soit 9 mois.
       </Text>
-      <Text style={MapaStyle.paragraph}>
-        En cas d’oubli, le lait cru peut être retiré à la ferme le soir même de la distribution, sinon les produits
+      <Text style={AMAPStyle.paragraph}>
+        En cas d’oubli, le lait cru peut être retiré à la ferme le lendemain de la distribution, sinon les produits
         seront perdus.
       </Text>
     </View>
   );
 }
 
-function Description() {
+export function Description() {
   return (
-    <View style={[MapaStyle.container, { marginTop: 20 }]} break>
-      <Text style={MapaStyle.title}>Descriptif des produits</Text>
+    <View style={[AMAPStyle.container, { marginTop: 20 }]} break>
+      <Text style={AMAPStyle.title}>Descriptif des produits</Text>
       <Text style={{ fontWeight: "bold" }}>- Lait Cru Bio</Text>
-      <Text style={[MapaStyle.paragraph, { textIndent: 0, marginTop: 10 }]}>
+      <Text style={[AMAPStyle.paragraph, { textIndent: 0, marginTop: 10 }]}>
         En provenance directe de la ferme, notre lait cru est riche en nutriments essentiels tels que les vitamines, les
         minéraux et les enzymes naturelles qui sont souvent détruits lors de la pasteurisation.Notre lait cru doit être
-        conservé entre 0°C et 4°C et consommé dans les 3 jours suivant l'achat pour garantir sa fraîcheur et sa qualité.
+        conservé entre 0°C et 4°C et consommé dans les 5 jours suivant l'achat pour garantir sa fraîcheur et sa qualité.
         Il est important de respecter scrupuleusement la chaîne du froid pour éviter toute contamination.
       </Text>
     </View>
@@ -174,10 +173,10 @@ export const ConsommateurStyle = StyleSheet.create({
   },
 });
 
-function Consommateur({ customer }: { customer: AMAPType["customer"] }) {
+export function Consommateur({ customer }: { customer: AMAPType["customer"] }) {
   return (
-    <View style={MapaStyle.container}>
-      <Text style={MapaStyle.title}>Consommateur.trice</Text>
+    <View style={AMAPStyle.container}>
+      <Text style={AMAPStyle.title}>Consommateur.trice</Text>
       {!!customer.name && <Text>{customer.name}</Text>}
       {!!customer.facturationAddress && <Text>{customer.facturationAddress}</Text>}
       {!!customer.phone && <Text>{customer.phone}</Text>}
@@ -186,10 +185,10 @@ function Consommateur({ customer }: { customer: AMAPType["customer"] }) {
   );
 }
 
-function Commande({ order, numberOfWeeks }: { order: AMAPType["contrat"]; numberOfWeeks: number }) {
+export function Commande({ order, numberOfWeeks }: { order: AMAPType["contrat"]; numberOfWeeks: number }) {
   return (
-    <View style={MapaStyle.container}>
-      <Text style={MapaStyle.title}>Commande</Text>
+    <View style={AMAPStyle.container}>
+      <Text style={AMAPStyle.title}>Commande</Text>
       <InvoiceTableHeader />
       <InvoiceTableRow items={order.items} />
       <InvoiceTableFooter numberOfWeeks={numberOfWeeks} order={order} />
@@ -273,7 +272,7 @@ const tableHeaderStyles = StyleSheet.create({
   },
 });
 
-const InvoiceTableHeader = () => (
+export const InvoiceTableHeader = () => (
   <View style={tableHeaderStyles.container}>
     <Text style={tableHeaderStyles.description}>Produit</Text>
     <Text style={tableHeaderStyles.unit}>Prix unitaire ( € )</Text>
@@ -315,7 +314,7 @@ const tableRowStyles = StyleSheet.create({
   },
 });
 
-const InvoiceTableRow = ({ items }: { items: AMAPType["contrat"]["items"] }) => {
+export const InvoiceTableRow = ({ items }: { items: AMAPType["contrat"]["items"] }) => {
   const rows = items.map((item, i) => (
     <View style={tableRowStyles.row} key={i}>
       <Text style={tableRowStyles.description}>{item.desc}</Text>
@@ -351,7 +350,7 @@ const tableFooterStyles = StyleSheet.create({
   },
 });
 
-const InvoiceTableFooter = ({
+export const InvoiceTableFooter = ({
   order,
   numberOfWeeks,
 }: {
@@ -376,20 +375,20 @@ const InvoiceTableFooter = ({
   );
 };
 
-function DateDistribution() {
+export function DateDistribution() {
   return (
-    <View break style={MapaStyle.container}>
-      <Text style={MapaStyle.title}>Dates de distribution des produits laitiers</Text>
-      <Text style={MapaStyle.paragraph}>Avril : le 09 et le 23</Text>
-      <Text style={MapaStyle.paragraph}> Mai : le 07 et le 21</Text>
-      <Text style={MapaStyle.paragraph}>Juin : le 04 et le 18</Text>
-      <Text style={MapaStyle.paragraph}>Juillet : le 02, le 16 et le 30 </Text>
-      <Text style={MapaStyle.paragraph}>Août : le 13 et le 27 </Text>
-      <Text style={MapaStyle.paragraph}>Septembre : le 10 et le 24 </Text>
-      <Text style={MapaStyle.paragraph}>Octobre : le 08 et le 22 </Text>
-      <Text style={MapaStyle.paragraph}>Novembre : le 05 et le 19 </Text>
-      <Text style={MapaStyle.paragraph}>Décembre : le 03, le 17 et le 31</Text>
+    <View break style={AMAPStyle.container}>
+      <Text style={AMAPStyle.title}>Dates de distribution des produits laitiers</Text>
+      <Text style={AMAPStyle.paragraph}>Avril : le 09 et le 23</Text>
+      <Text style={AMAPStyle.paragraph}> Mai : le 07 et le 21</Text>
+      <Text style={AMAPStyle.paragraph}>Juin : le 04 et le 18</Text>
+      <Text style={AMAPStyle.paragraph}>Juillet : le 02, le 16 et le 30 </Text>
+      <Text style={AMAPStyle.paragraph}>Août : le 13 et le 27 </Text>
+      <Text style={AMAPStyle.paragraph}>Septembre : le 10 et le 24 </Text>
+      <Text style={AMAPStyle.paragraph}>Octobre : le 08 et le 22 </Text>
+      <Text style={AMAPStyle.paragraph}>Novembre : le 05 et le 19 </Text>
+      <Text style={AMAPStyle.paragraph}>Décembre : le 03, le 17 et le 31</Text>
     </View>
   );
 }
-<Text style={MapaStyle.paragraph}></Text>;
+<Text style={AMAPStyle.paragraph}></Text>;

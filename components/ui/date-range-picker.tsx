@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { dateFormatter } from "@/lib/date-utils";
 
 type DatePickerWithRangeProps = Omit<React.ComponentProps<typeof DayPicker>, "selected" | "onSelect" | "mode"> & {
   date: DateRange | undefined;
@@ -22,6 +23,8 @@ export function DatePickerWithRange({
   setDate,
   captionLayout = "dropdown",
   numberOfMonths = 2,
+  startMonth,
+  endMonth,
   ...props
 }: DatePickerWithRangeProps) {
   return (
@@ -36,10 +39,10 @@ export function DatePickerWithRange({
             {date?.from ? (
               date.to ? (
                 <>
-                  {format(date.from, "d MMMM yyyy", { locale: fr })} - {format(date.to, "d MMMM yyyy", { locale: fr })}
+                  {dateFormatter(date.from)} - {dateFormatter(date.to)}
                 </>
               ) : (
-                format(date.from, "d MMMM yyyy", { locale: fr })
+                dateFormatter(date.from)
               )
             ) : (
               <span>Choisir une date</span>
@@ -56,8 +59,8 @@ export function DatePickerWithRange({
             selected={date}
             onSelect={setDate}
             numberOfMonths={numberOfMonths}
-            startMonth={new Date(2020, 0)}
-            endMonth={new Date(2050, 11)}
+            startMonth={startMonth}
+            endMonth={endMonth}
             {...props}
           />
         </PopoverContent>

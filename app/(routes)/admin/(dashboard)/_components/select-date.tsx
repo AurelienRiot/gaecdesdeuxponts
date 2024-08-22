@@ -45,7 +45,7 @@ const SelectDate = ({ month, year }: { month: number; year: number }) => {
           <SelectValue placeholder="Année" />
         </SelectTrigger>
         <SelectContent side="top">
-          {[2024].map((year) => (
+          {Array.from({ length: new Date().getFullYear() - 2024 + 1 }, (_, index) => 2024 + index).map((year) => (
             <SelectItem key={year} value={year.toString()}>
               {year}
             </SelectItem>

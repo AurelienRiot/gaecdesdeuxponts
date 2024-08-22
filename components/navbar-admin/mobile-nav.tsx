@@ -12,8 +12,8 @@ function MobileNav() {
   const pathname = usePathname();
   const mainRoutes = MainAdminRoutes(pathname);
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-neutral-950 text-neutral-200 px-2 flex justify-around items-center h-16 md:hidden">
-      <div className="grid grid-cols-5 w-full items-center justify-between px-4">
+    <nav className="fixed bottom-0 left-0 right-0 bg-neutral-950 text-neutral-200 sm:px-2 flex justify-around items-center h-16 md:hidden">
+      <div className="grid grid-cols-5 w-full items-center justify-between  sm:px-4">
         {mainRoutes.map((route) => (
           <Link
             key={route.href}

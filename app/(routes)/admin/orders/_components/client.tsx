@@ -65,7 +65,12 @@ export const OrderClient: React.FC<OrderClientProps> = ({ initialData, initialDa
 
       <Separator className="mb-4" />
       <div className="flex flex-col gap-4 sm:flex-row">
-        <DatePickerWithRange date={dateRange} setDate={setDateRange} />
+        <DatePickerWithRange
+          date={dateRange}
+          setDate={setDateRange}
+          startMonth={new Date(2024, 0)}
+          endMonth={new Date(new Date().getFullYear(), 11)}
+        />
         <LoadingButton className="w-fit" disabled={loading} onClick={() => handleChangeDate()}>
           Valider
         </LoadingButton>

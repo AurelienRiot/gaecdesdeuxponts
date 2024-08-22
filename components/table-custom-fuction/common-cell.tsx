@@ -16,10 +16,11 @@ import Currency from "../ui/currency";
 type DateCellProps = {
   date: Date;
   hours?: boolean;
+  days?: boolean;
 };
 
-function DateCell({ date, hours }: DateCellProps) {
-  return <div className="text-left">{dateFormatter(date, hours)}</div>;
+function DateCell({ date, hours, days }: DateCellProps) {
+  return <div className="text-left">{dateFormatter(date, { hours, days })}</div>;
 }
 
 type NameCellProps = {

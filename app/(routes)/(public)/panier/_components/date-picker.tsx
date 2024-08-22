@@ -35,7 +35,6 @@ const DatePicker = ({ className, date, shopId }: DatePickerProps) => {
       selectedDate.setHours(8);
       selectedDate.setMinutes(30);
     }
-    console.log(dateFormatter(selectedDate, true));
 
     router.replace(makeCartUrl(shopId, selectedDate), {
       scroll: false,

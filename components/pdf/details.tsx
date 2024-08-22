@@ -19,7 +19,8 @@ type DetailsProps =
       title: "Facture mensuelle";
       pdfData: MonthlyPDFDataType;
     }
-  | { title: "Contrat AMAP"; pdfData: AMAPType };
+  | { title: "Contrat AMAP"; pdfData: AMAPType }
+  | { title: "Formulaire AMAP"; pdfData?: never };
 
 const noStyles = StyleSheet.create({
   invoiceDateContainer: {
@@ -38,14 +39,23 @@ const Details = (data: DetailsProps) => (
   <View style={detailsStyles.container}>
     <InvoiceTitle title={data.title} />
     <OrderNumber data={data} />
-    <View style={noStyles.invoiceDateContainer}>
-      <Text style={noStyles.label}>N° de client : </Text>
-      <Text style={noStyles.invoiceDate}>{data.pdfData.customer.customerId}</Text>
-    </View>
+    <CustomerNumber data={data} />
     <FacturationDate data={data} />
     <EditionDate data={data} />
   </View>
 );
+
+function CustomerNumber({ data }: { data: DetailsProps }) {
+  if (data.title === "Formulaire AMAP") {
+    return null;
+  }
+  return (
+    <View style={noStyles.invoiceDateContainer}>
+      <Text style={noStyles.label}>N° de client : </Text>
+      <Text style={noStyles.invoiceDate}>{data.pdfData.customer.customerId}</Text>
+    </View>
+  );
+}
 
 function OrderNumber({ data }: { data: DetailsProps }) {
   if (data.title === "Facture mensuelle") {
@@ -63,6 +73,11 @@ function OrderNumber({ data }: { data: DetailsProps }) {
       </View>
     );
   }
+
+  if (data.title === "Formulaire AMAP") {
+    return null;
+  }
+
   return (
     <View style={noStyles.invoiceDateContainer}>
       <Text style={noStyles.label}>N° de commande : </Text>
@@ -113,6 +128,9 @@ function EditionDate({ data }: { data: DetailsProps }) {
         <Text style={noStyles.invoiceDate}>{dateFormatter(data.pdfData.contrat.dateOfEdition)}</Text>
       </View>
     );
+  }
+  if (data.title === "Formulaire AMAP") {
+    return null;
   }
   return (
     <View style={noStyles.invoiceDateContainer}>
