@@ -13,28 +13,16 @@ const UserPage = async () => {
     orderBy: {
       createdAt: "desc",
     },
-    // include: {
-    //   orders: { select: { id: true } },
-    // },
+    include: {
+      orders: { select: { id: true } },
+    },
   });
 
-  // const orderLengths = allUsers.map((user) => {
-  //   return user.orders.length;
-  // });
+  const orderLengths: { length: number; id: string }[] = allUsers.map((user) => {
+    return { length: user.orders.length, id: user.id };
+  });
 
-  // const formatedUsers = allUsers.map((user) => {
-  //   return {
-  //     ...user,
-  //     orders: [],
-  //   };
-  // });
-
-  return (
-    <UserClient
-      users={allUsers}
-      // orderLengths={orderLengths}
-    />
-  );
+  return <UserClient users={allUsers} orderLengths={orderLengths} />;
 };
 
 export default UserPage;

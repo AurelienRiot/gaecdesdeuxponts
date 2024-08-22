@@ -37,7 +37,7 @@ const testimonials = [
 ];
 
 export const PartenaireCards = async () => {
-  const shops = await getShops();
+  const { shops } = await getShops();
   const firstFiveShops = shops.slice(0, 5);
   const secondFiveShops = shops.slice(-5);
   return (

@@ -53,7 +53,7 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
       address: initialData?.address || "",
       phone: initialData?.phone || "",
       website: initialData?.website || "",
-      email: initialData?.email || "",
+      email: initialData?.email || undefined,
       isArchived: initialData?.isArchived || false,
     },
   });

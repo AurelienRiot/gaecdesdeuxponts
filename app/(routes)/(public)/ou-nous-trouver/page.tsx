@@ -3,15 +3,11 @@ import { ShopCard } from "@/components/skeleton-ui/shop-card";
 import { Button } from "@/components/ui/button";
 import Container from "@/components/ui/container";
 import { Input } from "@/components/ui/input";
-import prismadb from "@/lib/prismadb";
 import { ChevronDown } from "lucide-react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import { Suspense } from "react";
 import PlacePicker from "./_components/place";
-import type { Metadata } from "next";
-
-export const revalidate = 86400;
-const farmShopId = process.env.NEXT_PUBLIC_FARM_ID;
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -41,10 +37,7 @@ const OuNousTrouver = async () => {
 export default OuNousTrouver;
 
 const ServerPlace = async () => {
-  const shops = await getShops();
-  const farmShop = await prismadb.shop.findUnique({
-    where: { id: farmShopId },
-  });
+  const { shops, farmShop } = await getShops();
 
   return <PlacePicker shops={shops} farmShop={farmShop} />;
 };

@@ -2,16 +2,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { User } from "@prisma/client";
+import { Package } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 interface CardUserProps {
   user: User;
-  // orderLength: number;
+  orderLength: number;
   className?: string;
 }
 
-const CardUser: React.FC<CardUserProps> = ({ user, className }) => {
+const CardUser: React.FC<CardUserProps> = ({ user, className, orderLength }) => {
   const name = user.company || user.name || user.email;
   return (
     <>
@@ -33,8 +34,12 @@ const CardUser: React.FC<CardUserProps> = ({ user, className }) => {
           )}
         </CardHeader>
         <CardContent className="text-center p-2  rounded-md w-fit mx-auto         ">
-          <div className="flex flex-row items-center justify-center gap-1 font-bold rounded-md">
+          <div className="flex flex-col items-center justify-center gap-1 font-bold rounded-md">
             {user.completed ? <p className="text-green-500">Complet</p> : <p className="text-red-500">Incomplet</p>}
+            <p className="flex gap-2 items-center justify-center">
+              {" "}
+              <Package className="h-4 w-4" />: {orderLength}
+            </p>
           </div>
         </CardContent>
         <CardFooter className="flex flex-row items-end justify-between  gap-1">
