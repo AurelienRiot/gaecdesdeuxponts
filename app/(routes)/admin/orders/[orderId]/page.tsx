@@ -4,15 +4,16 @@ import { headers } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
-const ProductPage = async ({
+const OrderFormPage = async ({
   params,
   searchParams,
 }: { params: { orderId: string }; searchParams: { orderId: string | undefined } }) => {
+  console.log(params, searchParams);
   const headersList = headers();
   const referer = headersList.get("referer") || "/admin/orders";
 
   const orderId = params.orderId === "new" ? decodeURIComponent(searchParams.orderId || "new") : params.orderId;
-  console.log(orderId);
+  console.log(orderId, searchParams.orderId);
   const shippingOrders = await prismadb.order.findUnique({
     where: {
       id: orderId,
@@ -76,4 +77,4 @@ const ProductPage = async ({
   );
 };
 
-export default ProductPage;
+export default OrderFormPage;
