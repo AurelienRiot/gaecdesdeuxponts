@@ -94,7 +94,7 @@ function FacturationDate({ isPaid, orderIds }: { isPaid: boolean; orderIds: stri
   });
   const [date, setDate] = useState(new Date());
   return (
-    <div>
+    <div className="space-y-4">
       <DatePicker date={date} setDate={setDate} />
 
       <Button

@@ -48,7 +48,7 @@ function OrderIdCell({ id, shippingEmail, invoiceEmail }: OrderIdCellProps) {
   return (
     <Button asChild variant={"link"} className="px-0 font-bold flex flex-col justify-start h-auto">
       <Link href={`/admin/orders/${id}`}>
-        <p className="whitespace-nowrap mr-auto">Éditer le bon de livraison</p>
+        <p className="whitespace-nowrap mr-auto">Éditer la commande</p>
         <div className="flex gap-2 justify-left items-center mr-auto">
           {shippingEmail && (
             <div className="relative">

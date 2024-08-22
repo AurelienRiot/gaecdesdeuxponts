@@ -1,7 +1,7 @@
 "use client";
 import DeleteButton from "@/components/delete-button";
 import { DisplayInvoice, DisplayShippingOrder } from "@/components/pdf/pdf-button";
-import { LoadingButton } from "@/components/ui/button";
+import { Button, LoadingButton } from "@/components/ui/button";
 import ButtonBackward from "@/components/ui/button-backward";
 import { Form, FormField } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
@@ -24,9 +24,13 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
+import Link from "next/link";
+import { Plus } from "lucide-react";
 
 type ProductFormProps = {
-  initialData: (OrderFormValues & { invoiceEmail: Date | null; shippingEmail: Date | null }) | null;
+  initialData:
+    | (Omit<OrderFormValues, "id"> & { id: string | null; invoiceEmail: Date | null; shippingEmail: Date | null })
+    | null;
   products: ProductWithMain[];
   shops: Shop[];
   users: UserWithAddress[];
@@ -40,7 +44,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
 
   const title = initialData ? "Modifier le bon de livraison" : "Crée un bon de livraison";
-  const action = initialData
+  const action = initialData?.id
     ? initialData.dateOfEdition
       ? "Sauvegarder les changements"
       : "Valider la commande"
@@ -92,7 +96,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
         router.refresh();
       }
     }
-    initialData
+    initialData?.id
       ? await updateOrderAction({ data, onSuccess: onSuccessUpdate })
       : await createOrderAction({ data, onSuccess: onSuccessCreate });
   };
@@ -101,7 +105,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
     <>
       <div className="flex items-center justify-between">
         <Heading title={title} description={""} />
-        {initialData && (
+        {initialData?.id && (
           <DeleteButton
             action={deleteOrder}
             data={{ id: initialData.id }}
@@ -124,13 +128,13 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
                 name="datePickUp"
                 render={({ field }) => (
                   <>
-                    <FormDatePicker
+                    {/* <FormDatePicker
                       {...field}
                       date={field.value}
                       onSelectDate={field.onChange}
                       title="Date de retrait"
                       button={"none"}
-                    />
+                    /> */}
                     {field.value && <TimePicker date={field.value} setDate={field.onChange} />}
                   </>
                 )}
@@ -172,12 +176,16 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
 
           <TotalPrice />
 
-          <LoadingButton disabled={form.formState.isSubmitting} className="ml-auto" type="submit">
+          <LoadingButton
+            disabled={form.formState.isSubmitting}
+            className="ml-auto bg-green-600 hover:bg-green-800"
+            type="submit"
+          >
             {action}
           </LoadingButton>
         </form>
       </Form>
-      {!!initialData && !!initialData.dateOfEdition && (
+      {!!initialData?.id && !!initialData.dateOfEdition && (
         <div id="button-container" className="flex flex-wrap gap-4">
           <div>
             <Label>Bon de livraison</Label>
@@ -189,6 +197,15 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
           </div>
         </div>
       )}
+      {!!initialData?.id && (
+        <Button asChild onClick={() => router.push(`/admin/orders/new`)} className=" w-fit">
+          <Link href={`/admin/orders/new?orderId=${form.getValues("id")}`}>
+            <Plus className="mr-2 h-4 w-4" />
+            Nouvelle commande
+          </Link>
+        </Button>
+      )}
+      <br />
       <ButtonBackward
         onClick={() => {
           router.back();

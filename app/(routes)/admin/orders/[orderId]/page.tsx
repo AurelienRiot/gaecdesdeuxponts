@@ -4,12 +4,18 @@ import { headers } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
-const ProductPage = async ({ params }: { params: { orderId: string } }) => {
+const ProductPage = async ({
+  params,
+  searchParams,
+}: { params: { orderId: string }; searchParams: { orderId: string | undefined } }) => {
   const headersList = headers();
   const referer = headersList.get("referer") || "/admin/orders";
+
+  const orderId = params.orderId === "new" ? searchParams.orderId : params.orderId;
+
   const shippingOrders = await prismadb.order.findUnique({
     where: {
-      id: params.orderId,
+      id: orderId,
     },
     select: {
       id: true,
@@ -55,10 +61,16 @@ const ProductPage = async ({ params }: { params: { orderId: string } }) => {
 
   const shops = await prismadb.shop.findMany({});
 
+  const initialData = !shippingOrders
+    ? null
+    : params.orderId === "new"
+      ? { ...shippingOrders, id: null }
+      : shippingOrders;
+
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <OrderForm products={products} initialData={shippingOrders} users={users} shops={shops} referer={referer} />
+        <OrderForm products={products} initialData={initialData} users={users} shops={shops} referer={referer} />
       </div>
     </div>
   );
