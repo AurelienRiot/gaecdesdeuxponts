@@ -138,7 +138,7 @@ const CardInfo = ({ description, type }: { description: string; type: string }) 
         ? "Acheter les produits fait avec notre lait"
         : "Acheter nos produits ainsi que les produits fait avec notre lait";
   if (!description) {
-    return null;
+    return <p className="text-center">{typeText}</p>;
   }
   return (
     <Popover>
