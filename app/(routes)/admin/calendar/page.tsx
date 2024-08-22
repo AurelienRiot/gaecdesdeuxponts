@@ -3,6 +3,8 @@ import { Separator } from "@/components/ui/separator";
 import OrdersCalendar from "./_components/orders-calendar";
 import prismadb from "@/lib/prismadb";
 
+export const dynamic = "force-dynamic";
+
 async function CalendarPage({ searchParams }: { searchParams: { date: string | undefined } }) {
   const month = searchParams.date ? new Date(searchParams.date) : new Date();
   const from = new Date(month.getFullYear(), month.getMonth(), 1);
