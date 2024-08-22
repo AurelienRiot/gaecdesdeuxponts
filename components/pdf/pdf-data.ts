@@ -338,9 +338,9 @@ export type AMAPType = {
     dateOfEdition: Date;
     startDate: Date;
     endDate: Date;
-    frequency: "hebdomadaire" | "mensuel" | "bi-mensuel";
-    weeksOfAbsence: number;
-    shippingDay: number;
+    // frequency: "hebdomadaire" | "mensuel" | "bi-mensuel";
+    weeksOfAbsence: Date[];
+    // shippingDay: number;
     totalPrice: number;
     items: {
       id: string;
@@ -354,35 +354,27 @@ export type AMAPType = {
 export const AMAPData: AMAPType = {
   customer: {
     id: "clx5ubreg000tt35lvpqjzlqs",
-    name: "Pub Demystify - des",
+    name: "Nom :",
     customerId: "CS_JTF0B99",
-    shippingAddress: "Avenue deis PORTISOL, 83600, Fréjus, FR",
-    facturationAddress: "venelle Koad ar Runig, 29470, Plougastel-Daoulas, FR",
-    phone: "+33356452546",
-    email: "pub.demystify390@passmail.net",
+    shippingAddress: "Adresse :",
+    facturationAddress: "Adresse :",
+    phone: "Tél :",
+    email: "email :",
     orderId: "CA-0sUttHF",
   },
   contrat: {
     id: "CA-0sUttHF",
     dateOfEdition: new Date(),
     totalPrice: 60,
-    shippingDay: 5,
-    frequency: "hebdomadaire",
-    weeksOfAbsence: 0,
-    startDate: new Date(),
-    endDate: new Date(new Date().setMonth(12)),
+    weeksOfAbsence: [],
+    startDate: new Date(1725314400000),
+    endDate: new Date(1735599600000),
     items: [
       {
-        id: "PR-0sUttHF",
-        desc: "Lait cru",
-        priceTTC: 1,
+        id: "PR_7HDJDXU",
+        desc: "Lait cru bio bidon 2L",
+        priceTTC: 2.2,
         qty: 3,
-      },
-      {
-        id: "PR-065KINES",
-        desc: "Lait pasteurisé",
-        priceTTC: 2,
-        qty: 4,
       },
     ],
   },

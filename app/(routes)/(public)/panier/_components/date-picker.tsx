@@ -28,6 +28,7 @@ const DatePicker = ({ className, date, shopId }: DatePickerProps) => {
       toast.error("Erreur veuillez réssayer");
       return;
     }
+    console.log(selectedDate.getTime());
     if (date) {
       selectedDate.setHours(date.getHours());
       selectedDate.setMinutes(date.getMinutes());

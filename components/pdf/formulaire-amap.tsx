@@ -11,6 +11,8 @@ import {
   DateDistribution,
   Description,
   Engagement,
+  getNumberOfMonths,
+  getNumberOfWeeks,
 } from "./create-amap";
 
 // Font.register({
@@ -22,40 +24,32 @@ import {
 // });
 
 const AmapPDFForm = ({ data }: { data: AMAPType }) => {
-  const numberOfWeeks =
-    data.contrat.frequency === "hebdomadaire"
-      ? Math.round((data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (7 * 24 * 60 * 60 * 1000))
-      : data.contrat.frequency === "mensuel"
-        ? Math.round((data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (30 * 24 * 60 * 60 * 1000))
-        : Math.round((data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (60 * 24 * 60 * 60 * 1000));
-
-  const numberOfMonths = Math.round(
-    (data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (30 * 24 * 60 * 60 * 1000),
+  const numberOfWeeks = getNumberOfWeeks(
+    data.contrat.startDate,
+    data.contrat.endDate,
+    data.contrat.weeksOfAbsence.length,
   );
+  // data.contrat.frequency === "hebdomadaire"
+  //   ? Math.round((data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (7 * 24 * 60 * 60 * 1000))
+  //   : data.contrat.frequency === "mensuel"
+  //     ? Math.round((data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (30 * 24 * 60 * 60 * 1000))
+  //     : Math.round((data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (60 * 24 * 60 * 60 * 1000));
+
+  const numberOfMonths = getNumberOfMonths(data.contrat.startDate, data.contrat.endDate);
   return (
-    <Document title={`Formulaire AMAP Laiterie du Pont Robert `}>
+    <Document title={`Formulaire AMAP Laiterie du Pont Robert`}>
       <Page size="A4" style={AMAPStyle.page}>
         <View style={AMAPStyle.header}>
           <Company />
           <Details title="Formulaire AMAP" />
         </View>
-        <ContenueContrat numberOfWeeks={numberOfWeeks} numberOfMonths={numberOfMonths} />
-        <Engagement />
+        <ContenueContrat numberOfWeeks={numberOfWeeks} numberOfMonths={numberOfMonths} data={data} />
+        <Engagement numberOfMonths={numberOfMonths} />
         <Description />
         <Consommateur customer={data.customer} />
-        <Commande numberOfWeeks={numberOfWeeks} order={data.contrat} />
+        <Commande numberOfWeeks={numberOfWeeks} order={data.contrat} form={true} />
         <DateDistribution />
-        <InvoiceThankYouMsg />
-        <Text
-          style={{
-            position: "absolute",
-            bottom: 5,
-            left: 10,
-            textAlign: "center",
-          }}
-          render={({ pageNumber }) => (pageNumber === 2 ? "À remplir en 2 exemplaires" : null)}
-          fixed
-        />
+
         <Text
           style={AMAPStyle.pageNumbers}
           render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`}

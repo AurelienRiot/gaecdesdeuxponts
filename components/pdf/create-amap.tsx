@@ -1,4 +1,5 @@
 import { Document, Font, Link, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { getISOWeek } from "date-fns";
 import { Fragment } from "react";
 import Details from "./details";
 import { Company, InvoiceThankYouMsg, borderColor, foregroundColor, mainColor } from "./main-document";
@@ -51,17 +52,31 @@ export const AMAPStyle = StyleSheet.create({
   },
 });
 
-const AmapPDF = ({ data }: { data: AMAPType }) => {
-  const numberOfWeeks =
-    data.contrat.frequency === "hebdomadaire"
-      ? Math.round((data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (7 * 24 * 60 * 60 * 1000))
-      : data.contrat.frequency === "mensuel"
-        ? Math.round((data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (30 * 24 * 60 * 60 * 1000))
-        : Math.round((data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (60 * 24 * 60 * 60 * 1000));
+export function getNumberOfWeeks(startDate: Date, endDate: Date, weeksOfAbsence: number) {
+  const startWeek = getISOWeek(startDate);
+  const endWeek = getISOWeek(endDate);
+  if (endWeek < startWeek) return endWeek + 52 - startWeek - weeksOfAbsence + 1;
+  return endWeek - startWeek - weeksOfAbsence;
+}
 
-  const numberOfMonths = Math.round(
-    (data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (30 * 24 * 60 * 60 * 1000),
+export function getNumberOfMonths(startDate: Date, endDate: Date) {
+  return endDate.getMonth() - startDate.getMonth() + 1;
+}
+
+const AmapPDF = ({ data }: { data: AMAPType }) => {
+  const numberOfWeeks = getNumberOfWeeks(
+    data.contrat.startDate,
+    data.contrat.endDate,
+    data.contrat.weeksOfAbsence.length,
   );
+
+  // data.contrat.frequency === "hebdomadaire"
+  //   ? Math.round((data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (7 * 24 * 60 * 60 * 1000))
+  //   : data.contrat.frequency === "mensuel"
+  //     ? Math.round((data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (30 * 24 * 60 * 60 * 1000))
+  //     : Math.round((data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (60 * 24 * 60 * 60 * 1000));
+
+  const numberOfMonths = getNumberOfMonths(data.contrat.startDate, data.contrat.endDate);
   return (
     <Document title={`Contrat AMAP ${data.customer.orderId}`}>
       <Page size="A4" style={AMAPStyle.page}>
@@ -69,13 +84,13 @@ const AmapPDF = ({ data }: { data: AMAPType }) => {
           <Company />
           <Details pdfData={data} title="Contrat AMAP" />
         </View>
-        <ContenueContrat numberOfWeeks={numberOfWeeks} numberOfMonths={numberOfMonths} />
-        <Engagement />
+        <ContenueContrat numberOfWeeks={numberOfWeeks} numberOfMonths={numberOfMonths} data={data} />
+        <Engagement numberOfMonths={numberOfMonths} />
         <Description />
         <Consommateur customer={data.customer} />
         <Commande numberOfWeeks={numberOfWeeks} order={data.contrat} />
         <DateDistribution />
-        <InvoiceThankYouMsg />
+        (
         <Text
           style={{
             position: "absolute",
@@ -86,6 +101,7 @@ const AmapPDF = ({ data }: { data: AMAPType }) => {
           render={({ pageNumber }) => (pageNumber === 2 ? "À remplir en 2 exemplaires" : null)}
           fixed
         />
+        )
         <Text
           style={AMAPStyle.pageNumbers}
           render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`}
@@ -98,14 +114,19 @@ const AmapPDF = ({ data }: { data: AMAPType }) => {
 
 export default AmapPDF;
 
-export function ContenueContrat({ numberOfWeeks, numberOfMonths }: { numberOfWeeks: number; numberOfMonths: number }) {
+export function ContenueContrat({
+  numberOfWeeks,
+  numberOfMonths,
+  data,
+}: { numberOfWeeks: number; numberOfMonths: number; data: AMAPType }) {
   return (
     <View style={AMAPStyle.container}>
-      <Text style={AMAPStyle.title}>Contenu du contrat</Text>
+      <Text style={AMAPStyle.title}>Contenu du contrat AMAP</Text>
       <Text style={AMAPStyle.paragraph}>
         Le présent contrat est passé entre le/la consommateur.trice et les producteurs pour l’approvisionnement toutes
-        les semaines de produits laitiers bio pour une durée totale de {numberOfMonths} mois (d’avril à décembre) soit{" "}
-        {numberOfWeeks} semaines en 2024.
+        les semaines de produits laitiers bio pour une durée totale de {numberOfMonths} mois (
+        {data.contrat.startDate.toLocaleString("fr-FR", { month: "long" })} à{" "}
+        {data.contrat.endDate.toLocaleString("fr-FR", { month: "long" })}) pour {numberOfWeeks} semaines .
       </Text>
       <Text style={AMAPStyle.paragraph}>
         Les producteurs s’engagent à exercer leur activité dans le respect de la charte des AMAP : qualité sanitaire des
@@ -119,8 +140,8 @@ export function ContenueContrat({ numberOfWeeks, numberOfMonths }: { numberOfWee
         .
       </Text>
       <Text style={AMAPStyle.paragraph}>
-        La distribution du lait cru aura lieu toutes les semaines, les mardis soir, au local de l’ancien presbytère en
-        face de la gendarmerie de Guémené Penfao, de 18h à 19h.
+        La distribution des produits laitiers aura lieu toutes les semaines, les mardis soir, au local de l’ancien
+        presbytère en face de la gendarmerie de Guémené Penfao, de 18h à 19h.
       </Text>
       <Text style={AMAPStyle.paragraph}>
         Sur la période du contrat, certaines distributions pourront être susceptibles de ne pas être assurées si des
@@ -133,7 +154,7 @@ export function ContenueContrat({ numberOfWeeks, numberOfMonths }: { numberOfWee
   );
 }
 
-export function Engagement() {
+export function Engagement({ numberOfMonths }: { numberOfMonths: number }) {
   return (
     <View style={AMAPStyle.container}>
       <Text style={AMAPStyle.title}>Engagement</Text>
@@ -142,7 +163,7 @@ export function Engagement() {
         contrat. Les chèques seront remplis à l’ordre de Gaec des deux ponts.
       </Text>
       <Text style={AMAPStyle.paragraph}>
-        Le/la consommateur.trice s’engage sur la totalité de la durée du contrat soit 9 mois.
+        Le/la consommateur.trice s’engage sur la totalité de la durée du contrat soit {numberOfMonths} mois.
       </Text>
       <Text style={AMAPStyle.paragraph}>
         En cas d’oubli, le lait cru peut être retiré à la ferme le lendemain de la distribution, sinon les produits
@@ -156,7 +177,7 @@ export function Description() {
   return (
     <View style={[AMAPStyle.container, { marginTop: 20 }]} break>
       <Text style={AMAPStyle.title}>Descriptif des produits</Text>
-      <Text style={{ fontWeight: "bold" }}>- Lait Cru Bio</Text>
+      <Text style={{ fontWeight: "bold" }}>- Lait cru bio bidon 2L</Text>
       <Text style={[AMAPStyle.paragraph, { textIndent: 0, marginTop: 10 }]}>
         En provenance directe de la ferme, notre lait cru est riche en nutriments essentiels tels que les vitamines, les
         minéraux et les enzymes naturelles qui sont souvent détruits lors de la pasteurisation.Notre lait cru doit être
@@ -185,17 +206,22 @@ export function Consommateur({ customer }: { customer: AMAPType["customer"] }) {
   );
 }
 
-export function Commande({ order, numberOfWeeks }: { order: AMAPType["contrat"]; numberOfWeeks: number }) {
+export function Commande({
+  order,
+  numberOfWeeks,
+  form,
+}: { order: AMAPType["contrat"]; numberOfWeeks: number; form?: boolean }) {
   return (
     <View style={AMAPStyle.container}>
       <Text style={AMAPStyle.title}>Commande</Text>
       <InvoiceTableHeader />
-      <InvoiceTableRow items={order.items} />
-      <InvoiceTableFooter numberOfWeeks={numberOfWeeks} order={order} />
+      <InvoiceTableRow items={order.items} form={form} />
+      <InvoiceTableFooter numberOfWeeks={numberOfWeeks} order={order} form={form} />
       <View style={{ marginTop: 10, display: "flex", flexDirection: "row", gap: 4 }}>
         <Text style={{ fontWeight: "bold", textDecoration: "underline" }}>Semaine d'absence pévues :</Text>
-        <Text>{order.weeksOfAbsence}</Text>
+        {!form && <Text>{order.weeksOfAbsence.length}</Text>}
       </View>
+      (
       <View style={{ marginTop: 10, display: "flex", flexDirection: "row", gap: 4 }}>
         <Text style={{ fontWeight: "bold", textDecoration: "underline" }}>Règlement :</Text>
         <View style={{ fontSize: 10 }}>
@@ -204,27 +230,31 @@ export function Commande({ order, numberOfWeeks }: { order: AMAPType["contrat"];
           <Text style={{ fontWeight: "bold" }}>A l’ordre du Gaec des deux ponts</Text>
         </View>
       </View>
-      <View
-        style={{
-          marginTop: 30,
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text>Fait à</Text>
-        <Text style={{ marginRight: 50 }}> , le</Text>
-      </View>
-
-      <View
-        style={{
-          marginTop: 20,
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text>Signature du /de la consommateur.trice :</Text>
-        <Text style={{ marginRight: 20 }}>Signature des producteurs :</Text>
-      </View>
+      )
+      {!form && (
+        <View
+          style={{
+            marginTop: 30,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text>Fait à</Text>
+          <Text style={{ marginRight: 50 }}> , le</Text>
+        </View>
+      )}
+      {!form && (
+        <View
+          style={{
+            marginTop: 20,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text>Signature du /de la consommateur.trice :</Text>
+          <Text style={{ marginRight: 20 }}>Signature des producteurs :</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -314,13 +344,13 @@ const tableRowStyles = StyleSheet.create({
   },
 });
 
-export const InvoiceTableRow = ({ items }: { items: AMAPType["contrat"]["items"] }) => {
+export const InvoiceTableRow = ({ items, form }: { items: AMAPType["contrat"]["items"]; form?: boolean }) => {
   const rows = items.map((item, i) => (
     <View style={tableRowStyles.row} key={i}>
       <Text style={tableRowStyles.description}>{item.desc}</Text>
       <Text style={tableRowStyles.unit}>{item.priceTTC}</Text>
-      <Text style={tableRowStyles.qty}>{item.qty}</Text>
-      <Text style={tableRowStyles.totalTTC}>{(item.priceTTC * item.qty).toFixed(2)}</Text>
+      <Text style={tableRowStyles.qty}>{!form && item.qty}</Text>
+      <Text style={tableRowStyles.totalTTC}>{!form && (item.priceTTC * item.qty).toFixed(2)}</Text>
     </View>
   ));
   return <Fragment>{rows}</Fragment>;
@@ -353,42 +383,84 @@ const tableFooterStyles = StyleSheet.create({
 export const InvoiceTableFooter = ({
   order,
   numberOfWeeks,
+  form,
 }: {
   order: AMAPType["contrat"];
   numberOfWeeks: number;
+  form?: boolean;
 }) => {
   const totalPrice = (order.items.reduce((acc, item) => acc + item.priceTTC * item.qty, 0) * numberOfWeeks).toFixed(2);
   return (
     <>
       <View style={tableFooterStyles.row}>
-        <Text style={[tableFooterStyles.description, { fontSize: 10 }]}>
-          Nombre de semaines prévues (possibilité de soustraire 2 semaines de vacances : merci de m’indiquer les numéros
-          de vos semaines d’absence)
+        <Text style={[tableFooterStyles.description, !form ? { fontSize: 10 } : { fontSize: 10, textAlign: "right" }]}>
+          Nombre de semaines prévues
+          {/* (possibilité de soustraire 2 semaines de vacances : merci de m’indiquer les numéros 
+          de vos semaines d’absence)*/}
         </Text>
-        <Text style={tableFooterStyles.total}> X {numberOfWeeks}</Text>
+        {!form && <Text style={tableFooterStyles.total}> X {numberOfWeeks}</Text>}
       </View>
       <View style={tableFooterStyles.row}>
-        <Text style={[tableFooterStyles.description, { fontWeight: "bold" }]}>MONTANT TOTAL ( € )</Text>
-        <Text style={tableFooterStyles.total}> {totalPrice}</Text>
+        <Text
+          style={[
+            tableFooterStyles.description,
+            !form ? { fontWeight: "bold" } : { fontWeight: "bold", textAlign: "right" },
+          ]}
+        >
+          MONTANT TOTAL ( € )
+        </Text>
+        <Text style={tableFooterStyles.total}> {!form && totalPrice}</Text>
       </View>
     </>
   );
 };
 
-export function DateDistribution() {
+export function DateDistribution({ form }: { form?: boolean }) {
   return (
-    <View break style={AMAPStyle.container}>
-      <Text style={AMAPStyle.title}>Dates de distribution des produits laitiers</Text>
-      <Text style={AMAPStyle.paragraph}>Avril : le 09 et le 23</Text>
-      <Text style={AMAPStyle.paragraph}> Mai : le 07 et le 21</Text>
-      <Text style={AMAPStyle.paragraph}>Juin : le 04 et le 18</Text>
-      <Text style={AMAPStyle.paragraph}>Juillet : le 02, le 16 et le 30 </Text>
-      <Text style={AMAPStyle.paragraph}>Août : le 13 et le 27 </Text>
-      <Text style={AMAPStyle.paragraph}>Septembre : le 10 et le 24 </Text>
-      <Text style={AMAPStyle.paragraph}>Octobre : le 08 et le 22 </Text>
-      <Text style={AMAPStyle.paragraph}>Novembre : le 05 et le 19 </Text>
-      <Text style={AMAPStyle.paragraph}>Décembre : le 03, le 17 et le 31</Text>
+    <View
+      break
+      style={[
+        AMAPStyle.container,
+        { marginTop: 20 },
+        { flexDirection: "column", justifyContent: "space-between", flexGrow: 1 },
+      ]}
+    >
+      <View>
+        <Text style={AMAPStyle.title}>Dates de distribution des produits laitiers</Text>
+        {!form && (
+          <Text style={{ marginBottom: 10, fontWeight: "bold" }}>
+            Barrer les dates où il n'y auras pas de livraison
+          </Text>
+        )}
+        <Text>Septembre : le 03, le 10, le 17 et le 24 </Text>
+        <Text>Octobre : le 01, le 08, le 15, le 22 et le 29 </Text>
+        <Text>Novembre : le 05, le 12, le 19 et le 26 </Text>
+        <Text>Décembre : le 03, le 10, le 17, le 24 et le 30</Text>
+      </View>
+      <InvoiceThankYouMsg />
     </View>
   );
 }
-<Text style={AMAPStyle.paragraph}></Text>;
+
+export function Calendar() {
+  const daysInMonth = 31;
+  const month = "August";
+  const year = 2022;
+
+  const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+
+  return (
+    <View style={AMAPStyle.container}>
+      <Text style={AMAPStyle.title}>
+        {month} {year} Calendar
+      </Text>
+      <View style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
+        {days.map((day) => (
+          <Text key={day} style={{ width: "14.28%", textAlign: "center", marginBottom: 10 }}>
+            {day}
+          </Text>
+        ))}
+      </View>
+    </View>
+  );
+}
