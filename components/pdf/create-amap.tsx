@@ -1,17 +1,17 @@
-import { Document, Font, Link, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { Document, Link, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import { getISOWeek } from "date-fns";
 import { Fragment } from "react";
 import Details from "./details";
 import { Company, InvoiceThankYouMsg, borderColor, foregroundColor, mainColor } from "./main-document";
 import type { AMAPType } from "./pdf-data";
 
-Font.register({
-  family: "Inter",
-  fonts: [
-    { src: "https://www.laiteriedupontrobert.fr/fonts/inter.ttf", fontWeight: 400 },
-    { src: "https://www.laiteriedupontrobert.fr/fonts/inter-bold.ttf", fontWeight: 600 },
-  ],
-});
+// Font.register({
+//   family: "Inter",
+//   fonts: [
+//     { src: "https://www.laiteriedupontrobert.fr/fonts/inter.ttf", fontWeight: 400 },
+//     { src: "https://www.laiteriedupontrobert.fr/fonts/inter-bold.ttf", fontWeight: 600 },
+//   ],
+// });
 
 export const AMAPStyle = StyleSheet.create({
   page: {
@@ -32,10 +32,10 @@ export const AMAPStyle = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 20,
-    textIndent: 30,
+    textIndent: 15,
   },
   paragraph: {
-    textIndent: 30,
+    textIndent: 15,
   },
 
   header: {
@@ -126,7 +126,7 @@ export function ContenueContrat({
         Le présent contrat est passé entre le/la consommateur.trice et les producteurs pour l’approvisionnement toutes
         les semaines de produits laitiers bio pour une durée totale de {numberOfMonths} mois (
         {data.contrat.startDate.toLocaleString("fr-FR", { month: "long" })} à{" "}
-        {data.contrat.endDate.toLocaleString("fr-FR", { month: "long" })}) pour {numberOfWeeks} semaines .
+        {data.contrat.endDate.toLocaleString("fr-FR", { month: "long" })}) pour {numberOfWeeks} semaines.
       </Text>
       <Text style={AMAPStyle.paragraph}>
         Les producteurs s’engagent à exercer leur activité dans le respect de la charte des AMAP : qualité sanitaire des

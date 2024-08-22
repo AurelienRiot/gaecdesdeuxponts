@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import {
+  Calendar,
   LayoutDashboardIcon,
   ListOrderedIcon,
   PackageIcon,
@@ -40,10 +41,10 @@ export function MainNav({ className }: React.HTMLAttributes<HTMLElement>) {
 
 export const MainAdminRoutes = (pathname: string) => [
   {
-    href: `/`,
-    label: "Accueil",
-    active: pathname === `/`,
-    Icone: PresentationIcon,
+    href: `/admin/calendar`,
+    label: "Calendrier",
+    active: pathname === `/admin/calendar`,
+    Icone: Calendar,
   },
   {
     href: `/admin/users`,
@@ -66,6 +67,12 @@ export const MainAdminRoutes = (pathname: string) => [
 ];
 
 export const SecondaryAdminRoutes = (pathname: string) => [
+  {
+    href: `/`,
+    label: "Accueil",
+    active: pathname === `/`,
+    Icone: PresentationIcon,
+  },
   {
     href: `/admin/contacts`,
     label: "Contacts",

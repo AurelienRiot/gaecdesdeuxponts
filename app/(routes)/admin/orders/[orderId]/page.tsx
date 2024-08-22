@@ -11,7 +11,7 @@ const ProductPage = async ({
   const headersList = headers();
   const referer = headersList.get("referer") || "/admin/orders";
 
-  const orderId = params.orderId === "new" ? searchParams.orderId : params.orderId;
+  const orderId = params.orderId === "new" ? searchParams.orderId || "new" : params.orderId;
 
   const shippingOrders = await prismadb.order.findUnique({
     where: {
