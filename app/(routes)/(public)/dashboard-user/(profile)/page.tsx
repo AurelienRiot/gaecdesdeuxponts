@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { PencilLine } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ProButton, UserAddress, UserEmail, UserName, UserPhone } from "./_components/user-data";
+import { UserAddress, UserEmail, UserName, UserPhone } from "./_components/user-data";
 
 export const metadata: Metadata = {
   title: "Profil utilisateur",

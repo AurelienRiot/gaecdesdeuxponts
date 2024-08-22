@@ -9,6 +9,7 @@ export const schema = z.object({
   long: z.coerce.number().min(-180).max(180),
   tags: z.array(z.string()),
   address: z.string().min(1, { message: "L'adresse est requise" }),
+  type: z.enum(["sell", "product", "both"]).optional(),
   phone: z.string().refine(
     (value) => {
       return value === "" || isValidPhoneNumber(value);

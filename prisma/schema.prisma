@@ -272,6 +272,7 @@ model Shop {
   address       String
   phone         String
   tags          String[]
+  type          ShopType @default(sell)
   email         String?
   description   String
   imageUrl      String?
@@ -283,6 +284,11 @@ model Shop {
 
    }
 
+enum ShopType {
+  sell
+  product
+  both
+}
 model Comment {
    id        String    @unique @id @default(cuid())
    name      String

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import type { Column } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 
-type CreatedAtHeaderProps= {
+type CreatedAtHeaderProps = {
   createdAt: Date;
 };
 
@@ -14,6 +14,7 @@ function CreatedAtHeader<T>({
   return (
     <Button
       variant="ghost"
+      className="text-left px-0"
       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
     >
       Date de création

@@ -26,7 +26,13 @@ import deleteShop from "../_actions/delete-shop";
 import updateShop from "../_actions/update-shop";
 import { schema, type ShopFormValues } from "./shop-schema";
 import TagsMultipleSelector from "@/components/display-shops/tags";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
+const TYPE = [
+  { value: "sell", label: "Vente" },
+  { value: "product", label: "Production" },
+  { value: "both", label: "Vente et production" },
+];
 const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
   const router = useRouter();
 
@@ -40,6 +46,7 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
       name: initialData?.name || "",
       imageUrl: initialData?.imageUrl || "",
       description: initialData?.description || "",
+      type: initialData?.type,
       lat: initialData?.lat || undefined,
       long: initialData?.long || undefined,
       tags: initialData?.tags || [],
@@ -226,6 +233,35 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
                       disabled={form.formState.isSubmitting}
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem className="w-44">
+                  <FormLabel>Type</FormLabel>
+                  <Select
+                    disabled={form.formState.isSubmitting}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue defaultValue={field.value} placeholder="Selectionner le type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {TYPE.map(({ value, label }) => (
+                        <SelectItem key={value} value={value}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

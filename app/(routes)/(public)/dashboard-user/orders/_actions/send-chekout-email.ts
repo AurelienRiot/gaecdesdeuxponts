@@ -12,6 +12,8 @@ import { currencyFormatter } from "@/lib/utils";
 import type { FullOrder } from "@/types";
 import { render } from "@react-email/render";
 import { pdf } from "@react-pdf/renderer";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 import { z } from "zod";
 
 const ExcludeEmail = ["yoyololo1235@gmail.com", "pub.demystify390@passmail.net"];
@@ -54,11 +56,8 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
         };
       }
 
-      console.time("Generate PDF");
       const pdfBuffer = await generatePdf(order);
-      console.timeEnd("Generate PDF");
 
-      console.time("Generate email");
       try {
         // Send emails in parallel
         const emailPromises = [
@@ -92,17 +91,13 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
                   id: order.id,
                   name: user.name || user.email || "Utilisateur inconnu",
                   price: currencyFormatter.format(order.totalPrice),
-                  date: dateFormatter(order.createdAt),
+                  date: format(order.datePickUp, "EEEE d MMMM yyyy, HH:mm", { locale: fr }),
                 }),
               ),
             }),
           );
         }
-        console.timeEnd("Generate email");
-        console.time("Send Emails");
         await Promise.all(emailPromises);
-
-        console.timeEnd("Send Emails");
       } catch (error) {
         return {
           success: false,

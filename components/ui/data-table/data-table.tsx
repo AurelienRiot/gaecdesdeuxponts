@@ -6,20 +6,9 @@ import { DataTableAdvancedToolbar } from "@/components/ui/data-table/advanced/da
 import { DataTableFloatingBar } from "@/components/ui/data-table/data-table-floating-bar";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 import { DataTableToolbar } from "@/components/ui/data-table/data-table-toolbar";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useDataTable } from "@/hooks/use-data-table";
-import type{
-  DataTableFilterableColumn,
-  DataTableSearchableColumn,
-  DataTableViewOptionsColumn,
-} from "@/types";
+import type { DataTableFilterableColumn, DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -51,7 +40,7 @@ export function DataTable<TData, TValue>({
     columns,
   });
   return (
-    <div className="w-full space-y-2.5 overflow-x-auto  ">
+    <div className="w-full space-y-2.5 overflow-x-auto  " id="datatable">
       {advancedFilter ? (
         <DataTableAdvancedToolbar
           table={table}
@@ -77,12 +66,7 @@ export function DataTable<TData, TValue>({
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id} className="whitespace-nowrap">
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
                 })}
@@ -93,34 +77,19 @@ export function DataTable<TData, TValue>({
             {table.getRowModel().rows.length > 0 ? (
               <>
                 {table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
+                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
+                      <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                     ))}
                   </TableRow>
                 ))}
                 {emptyRows
                   ? [
                       ...Array(
-                        Math.max(
-                          0,
-                          table.getState().pagination.pageSize -
-                            table.getRowModel().rows.length,
-                        ),
+                        Math.max(0, table.getState().pagination.pageSize - table.getRowModel().rows.length),
                       ).keys(),
                     ].map((emptyRowIndex) => (
-                      <TableRow
-                        key={`empty-row-${emptyRowIndex}`}
-                        className="h-16"
-                      >
+                      <TableRow key={`empty-row-${emptyRowIndex}`} className="h-16">
                         <TableCell colSpan={table.getAllFlatColumns().length} />
                       </TableRow>
                     ))
@@ -128,11 +97,8 @@ export function DataTable<TData, TValue>({
               </>
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-16 text-center"
-                >
-                  Aucun resultat
+                <TableCell colSpan={columns.length} className="h-16 text-center">
+                  Aucun résultat
                 </TableCell>
               </TableRow>
             )}
@@ -140,15 +106,8 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className="space-y-2.5">
-        <DataTablePagination
-          selectedRows={!!floatingBarContent}
-          table={table}
-        />
-        {floatingBarContent ? (
-          <DataTableFloatingBar table={table}>
-            {floatingBarContent}
-          </DataTableFloatingBar>
-        ) : null}
+        <DataTablePagination selectedRows={!!floatingBarContent} table={table} />
+        {floatingBarContent ? <DataTableFloatingBar table={table}>{floatingBarContent}</DataTableFloatingBar> : null}
       </div>
     </div>
   );

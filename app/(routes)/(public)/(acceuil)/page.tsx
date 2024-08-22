@@ -1,10 +1,9 @@
 import { getFeaturedProducts } from "@/actions/get-products";
 import ProductList from "@/components/products-list";
+import { Suspense } from "react";
 import FeaturesWithHeading from "./_components/features";
 import ImageAccueil from "./_components/image-accueil";
-import PorteOuverte from "./_components/porte-ouverte";
 import { PartenaireCards } from "./_components/partenaires";
-import { Suspense } from "react";
 
 export const dynamic = "force-static";
 
@@ -17,7 +16,7 @@ export default function Home() {
       /> */}
 
       <ImageAccueil />
-      <PorteOuverte />
+      {/* <PorteOuverte /> */}
       {/* <Suspense fallback={<ProductListSkeleton title="Découvrer nos produits" />}>
         <NosProduits title="Découvrer nos produits" />
       </Suspense> */}

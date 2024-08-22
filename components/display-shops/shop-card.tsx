@@ -63,7 +63,7 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
               ) : null}
               <span className="text-balance text-center text-lg sm:text-xl lg:text-2xl">{shop.name}</span>
             </CardTitle>
-            <CardInfo description={shop.description} />
+            <CardInfo description={shop.description} type={shop.type} />
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
             {!!shop.address && (
@@ -130,13 +130,20 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
 
 ShopCard.displayName = "ShopCard";
 
-const CardInfo = ({ description }: { description: string }) => {
+const CardInfo = ({ description, type }: { description: string; type: string }) => {
+  const typeText =
+    type === "sell"
+      ? "Acheter nos produits"
+      : type === "product"
+        ? "Acheter les produits fait avec notre lait"
+        : "Acheter nos produits ainsi que les produits fait avec notre lait";
   if (!description) {
     return null;
   }
   return (
     <Popover>
       <PopoverTrigger>
+        {typeText}
         <CardDescription className="overflow-hidden text-ellipsis whitespace-nowrap underline-offset-2 hover:underline">
           <Icons.search className="mb-1 mr-1 inline h-4 w-4 self-center" /> {description}
         </CardDescription>

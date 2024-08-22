@@ -15,8 +15,9 @@ const farmShopId = process.env.NEXT_PUBLIC_FARM_ID;
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Points de vente",
-    description: "Trouvez le points de vente le plus proche de chez vous",
+    title: "Points de vente et magasins partenaires",
+    description:
+      "Trouvez les points de vente et magasins partenaire qui vendent et utilisent notre lait les plus proches de chez vous",
   };
 }
 
@@ -24,8 +25,11 @@ const OuNousTrouver = async () => {
   return (
     <Container className="my-8 space-y-8 p-2">
       <div className="text-center xl:text-left">
-        <h1 className="text-4xl font-bold">Points de vente</h1>
-        <p className="text-lg">Trouvez le points de vente le plus proche de chez vous</p>
+        <h1 className="text-4xl font-bold">Points de vente et magasins partenaires</h1>
+        <p className="text-lg">
+          Trouvez les points de vente et magasins partenaire qui vendent et utilisent notre lait les plus proches de
+          chez vous
+        </p>
       </div>
       <Suspense fallback={<PlaceLoading />}>
         <ServerPlace />
