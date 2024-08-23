@@ -1,19 +1,19 @@
 import prismadb from "@/lib/prismadb";
 import { OrderForm } from "./_components/order-form";
+import OrderClient from "./client";
 
 // export const dynamic = "force-dynamic";
-
 const OrderFormPage = async ({
   params,
   searchParams,
 }: { params: { orderId: string }; searchParams: { orderId: string | undefined; referer: string | undefined } }) => {
-  // console.log(params, searchParams);
+  console.log(params, searchParams);
   // const headersList = headers();
   // const referer = headersList.get("referer") || "/admin/orders";
 
-  const referer = searchParams.referer || "/admin/orders";
+  const referer = decodeURIComponent(searchParams.referer || "/admin/orders");
   const orderId = params.orderId === "new" ? decodeURIComponent(searchParams.orderId || "new") : params.orderId;
-  console.log(orderId, searchParams.orderId);
+  // console.log(orderId, searchParams.orderId);
   const shippingOrders = await prismadb.order.findUnique({
     where: {
       id: orderId,
@@ -72,6 +72,7 @@ const OrderFormPage = async ({
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
         <OrderForm products={products} initialData={initialData} users={users} shops={shops} referer={referer} />
+        <OrderClient params={params} searchParams={searchParams} />
       </div>
     </div>
   );
