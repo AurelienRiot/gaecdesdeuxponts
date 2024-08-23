@@ -200,7 +200,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
       {!!initialData?.id && (
         <Button asChild onClick={() => router.push(`/admin/orders/new`)} className=" w-fit">
           <Link
-            href={`/admin/orders/new?orderId=${encodeURIComponent(form.getValues("id"))}&referer=${encodeURIComponent(referer)}`}
+            href={`/admin/orders/new?id=${encodeURIComponent(form.getValues("id"))}&referer=${encodeURIComponent(referer)}`}
           >
             <Plus className="mr-2 h-4 w-4" />
             Nouvelle commande
