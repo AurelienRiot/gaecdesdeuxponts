@@ -1,18 +1,17 @@
 import prismadb from "@/lib/prismadb";
 import { OrderForm } from "./_components/order-form";
-import { headers } from "next/headers";
 
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 
 const OrderFormPage = async ({
   params,
   searchParams,
-}: { params: { orderId: string }; searchParams: { orderId: string | undefined } }) => {
+}: { params: { orderId: string }; searchParams: { orderId: string | undefined; referer: string | undefined } }) => {
   // console.log(params, searchParams);
-  const headersList = headers();
-  const referer = headersList.get("referer") || "/admin/orders";
+  // const headersList = headers();
+  // const referer = headersList.get("referer") || "/admin/orders";
 
-  // const referer = "/admin/orders";
+  const referer = searchParams.referer || "/admin/orders";
   const orderId = params.orderId === "new" ? decodeURIComponent(searchParams.orderId || "new") : params.orderId;
   console.log(orderId, searchParams.orderId);
   const shippingOrders = await prismadb.order.findUnique({

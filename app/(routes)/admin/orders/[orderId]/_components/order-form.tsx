@@ -197,7 +197,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
           </div>
         </div>
       )}
-      {/* {!!initialData?.id && (
+      {!!initialData?.id && (
         <Button asChild onClick={() => router.push(`/admin/orders/new`)} className=" w-fit">
           <Link href={`/admin/orders/new?orderId=${encodeURIComponent(form.getValues("id"))}`}>
             <Plus className="mr-2 h-4 w-4" />
@@ -205,10 +205,10 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
           </Link>
         </Button>
       )}
-      <br /> */}
+      <br />
       <ButtonBackward
         onClick={() => {
-          router.back();
+          router.push(referer);
           router.refresh();
         }}
       />
