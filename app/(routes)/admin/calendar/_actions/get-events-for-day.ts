@@ -1,5 +1,5 @@
 "use server";
-import { calendarAPI } from "@/lib/api-calendar";
+import { calendarAPI } from "@/lib/api-google";
 
 export async function getEventsForDay(date: Date) {
   try {

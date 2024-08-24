@@ -4,6 +4,8 @@ import { Separator } from "@/components/ui/separator";
 import GoogleCalendar from "./_components/google-calendar";
 import OrdersCalendar from "./_components/orders-calendar";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { directionRouteXL } from "./_actions/opt-routes";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +29,17 @@ function CalendarPage({ searchParams }: { searchParams: { date: string | undefin
   //     },
   //   },
   // });
+  async function getDirection() {
+    const origin = "6 le Pont Robert 44290 Massérac, France";
+    const destination = "6 le Pont Robert 44290 Massérac, France";
+    const waypoints = [
+      "2 Pl. de l'Eglise 44290 Guémené-Penfao, France",
+      "7 Rue de l'Eglise 44290 Guémené-Penfao, France",
+      "La Bourg 35550 Saint-Ganton, France",
+    ];
+    await directionRouteXL();
+    // await direction({ origin, destination, waypoints });
+  }
 
   return (
     <div className="flex-col">
@@ -36,6 +49,7 @@ function CalendarPage({ searchParams }: { searchParams: { date: string | undefin
         <Separator />
         <OrdersCalendar month={month} date={date} setDate={setDate} />
         <GoogleCalendar date={date} />
+        <Button onClick={getDirection}>Get direction</Button>
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import { createCustomer } from "@/components/pdf/pdf-data";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { orderSchema, type OrderFormValues } from "../_components/order-shema";
+import createOrdersEvent from "@/components/google-events/create-orders-event";
 
 async function createOrder(data: OrderFormValues) {
   return await safeServerAction({
@@ -50,6 +51,13 @@ async function createOrder(data: OrderFormValues) {
           },
         },
       });
+
+      if (data.dateOfShipping) {
+        const event = await createOrdersEvent({ date: data.dateOfShipping });
+        if (!event.success) {
+          console.log(event.message);
+        }
+      }
       return {
         success: true,
         message: "Commande crée",

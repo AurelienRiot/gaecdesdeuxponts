@@ -2,8 +2,8 @@
 
 import { Button, LoadingButton } from "@/components/ui/button";
 import useServerAction from "@/hooks/use-server-action";
-import { createEvent } from "../_actions/create-events";
 import { getEventsForDay } from "../_actions/get-events-for-day";
+import { createEvent } from "@/components/google-events/create-orders-action";
 
 function GoogleCalendar({ date }: { date: Date }) {
   const { loading, serverAction } = useServerAction(createEvent);

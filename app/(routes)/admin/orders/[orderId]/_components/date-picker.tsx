@@ -72,7 +72,7 @@ const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
             <Calendar
               {...props}
               mode="single"
-              captionLayout="dropdown"
+              captionLayout="label"
               selected={date ?? undefined}
               // month={month}
               locale={fr}
