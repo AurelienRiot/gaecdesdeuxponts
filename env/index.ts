@@ -15,6 +15,8 @@ const envVariableSchema = z.object({
   NEXTAUTH_URL: z.string(),
   NEXT_PUBLIC_POSTHOG_KEY: z.string(),
   NEXT_PUBLIC_FARM_ID: z.string(),
+  GOOGLE_SERVICE_ACCOUNT: z.string(),
+  CALENDAR_ID: z.string(),
 });
 
 envVariableSchema.parse(process.env);

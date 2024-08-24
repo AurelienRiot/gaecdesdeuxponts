@@ -1,8 +1,9 @@
 import { customAlphabet } from "nanoid";
 
 export const nanoid = customAlphabet("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", 5);
+const reducedAlphabet = customAlphabet("abcdefghijklmnopqrstuv0123456789", 17);
 
-export const IdType = ["category", "product", "user", "shop", "mainProduct", "order", "amap"] as const;
+export const IdType = ["category", "product", "user", "shop", "mainProduct", "order", "amap", "command"] as const;
 
 export function createId(type: (typeof IdType)[number]) {
   switch (type) {
@@ -20,5 +21,7 @@ export function createId(type: (typeof IdType)[number]) {
       return `CM_${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear() % 100}_${nanoid(5)}`;
     case "amap":
       return `CA_${nanoid(7)}`;
+    case "command":
+      return `commandes${reducedAlphabet()}`;
   }
 }

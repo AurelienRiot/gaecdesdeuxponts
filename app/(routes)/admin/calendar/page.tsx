@@ -1,29 +1,32 @@
+"use client";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
+import GoogleCalendar from "./_components/google-calendar";
 import OrdersCalendar from "./_components/orders-calendar";
-import prismadb from "@/lib/prismadb";
+import { useState } from "react";
 
 export const dynamic = "force-dynamic";
 
-async function CalendarPage({ searchParams }: { searchParams: { date: string | undefined } }) {
-  const month = searchParams.date ? new Date(searchParams.date) : new Date();
+function CalendarPage({ searchParams }: { searchParams: { date: string | undefined } }) {
+  const [date, setDate] = useState(new Date());
+  const month = searchParams.date ? new Date(searchParams.date) : date;
   const from = new Date(month.getFullYear(), month.getMonth(), 1);
   const to = new Date(month.getFullYear(), month.getMonth() + 1, 0);
 
-  const orders = await prismadb.order.findMany({
-    include: {
-      orderItems: true,
-      shop: true,
-      user: { include: { address: true, billingAddress: true } },
-      customer: true,
-    },
-    where: {
-      dateOfShipping: {
-        gte: from,
-        lte: to,
-      },
-    },
-  });
+  // const orders = await prismadb.order.findMany({
+  //   include: {
+  //     orderItems: true,
+  //     shop: true,
+  //     user: { include: { address: true, billingAddress: true } },
+  //     customer: true,
+  //   },
+  //   where: {
+  //     dateOfShipping: {
+  //       gte: from,
+  //       lte: to,
+  //     },
+  //   },
+  // });
 
   return (
     <div className="flex-col">
@@ -31,7 +34,8 @@ async function CalendarPage({ searchParams }: { searchParams: { date: string | u
         <Heading title={`Calendrier des commandes`} description="Liste des commandes" />
 
         <Separator />
-        <OrdersCalendar month={month} />
+        <OrdersCalendar month={month} date={date} setDate={setDate} />
+        <GoogleCalendar date={date} />
       </div>
     </div>
   );
