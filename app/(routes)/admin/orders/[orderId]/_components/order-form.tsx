@@ -39,6 +39,7 @@ type ProductFormProps = {
 
 export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, users, shops, referer }) => {
   const router = useRouter();
+  const user = initialData?.userId ? users.find((user) => user.id === initialData.userId) : null;
 
   const { serverAction: createOrderAction } = useServerAction(createOrder);
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
@@ -191,10 +192,12 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
             <Label>Bon de livraison</Label>
             <DisplayShippingOrder orderId={form.getValues("id")} isSend={!!initialData.shippingEmail} />
           </div>
-          <div>
-            <Label>Facture</Label>
-            <DisplayInvoice orderId={form.getValues("id")} isSend={!!initialData.invoiceEmail} />
-          </div>
+          {user?.role !== "admin" && (
+            <div>
+              <Label>Facture</Label>
+              <DisplayInvoice orderId={form.getValues("id")} isSend={!!initialData.invoiceEmail} />
+            </div>
+          )}
         </div>
       )}
       {!!initialData?.id && (
