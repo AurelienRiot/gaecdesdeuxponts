@@ -10,8 +10,9 @@ async function getOrders({ startDate, endDate }: { startDate: Date; endDate: Dat
       NOT: { shop: null },
     },
     include: {
-      orderItems: true,
-      customer: true,
+      orderItems: { select: { itemId: true, name: true, quantity: true, unit: true } },
+      customer: { select: { customerId: true, name: true, shippingAddress: true } },
+      user: { select: { company: true, email: true } },
     },
   });
 
@@ -20,6 +21,7 @@ async function getOrders({ startDate, endDate }: { startDate: Date; endDate: Dat
     customerId: order.customer?.customerId,
     shippingAddress: order.customer?.shippingAddress,
     name: order.customer?.name,
+    company: order.user?.company,
     orderItems: order.orderItems.map((item) => ({
       itemId: item.itemId,
       name: item.name,

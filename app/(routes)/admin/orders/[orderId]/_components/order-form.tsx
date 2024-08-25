@@ -192,7 +192,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
             <Label>Bon de livraison</Label>
             <DisplayShippingOrder orderId={form.getValues("id")} isSend={!!initialData.shippingEmail} />
           </div>
-          {user?.role !== "admin" && (
+          {user?.role !== "pro" && (
             <div>
               <Label>Facture</Label>
               <DisplayInvoice orderId={form.getValues("id")} isSend={!!initialData.invoiceEmail} />

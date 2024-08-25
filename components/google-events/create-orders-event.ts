@@ -60,7 +60,6 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
   const productDescriptions = productQuantities
     .map((item) => `<strong>${item.name}</strong> : ${item.quantity} ${item.unit || ""}`)
     .join("<br />");
-
   const orderDescriptions = formattedOrders
     .map(
       (order) =>
@@ -68,9 +67,14 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
         order.orderItems
           .map((item) => `<strong>${item.name}</strong> : ${item.quantity} ${item.unit || ""}`)
           .join("<br />") +
-        `<br />${order.shippingAddress}<br /><br />`,
+        `<br /><a href="https://maps.google.com/?q=${order.shippingAddress}+${order.company}">Addresse</a><br />`,
     )
     .join("<br />");
 
-  return `${productDescriptions}<br /><br />${orderDescriptions}`;
+  const uniqueShippingAddresses = [
+    ...new Set(formattedOrders.map((order) => `${order.shippingAddress}+${order.company}`)),
+  ];
+  const directionString = `<strong><a href="https://www.google.fr/maps/dir/Current+Location/${uniqueShippingAddresses.join("/")}">Parcoure</a></strong>`;
+
+  return `${productDescriptions}<br /><br />${directionString}<br /><br />${orderDescriptions}`;
 }
