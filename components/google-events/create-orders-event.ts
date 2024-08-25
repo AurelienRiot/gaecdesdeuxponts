@@ -1,11 +1,10 @@
+import { calendarAPI } from "@/lib/api-google";
 import { createId } from "@/lib/id";
-import getOrders from "./get-orders-for-events";
-import { dateFormatter } from "@/lib/date-utils";
+import { addHours, format } from "date-fns";
+import { fr } from "date-fns/locale";
 import deleteEvent from "./delete-events";
 import getEventsList from "./get-events-list";
-import { addHours, format } from "date-fns";
-import { calendarAPI } from "@/lib/api-google";
-import { fr } from "date-fns/locale";
+import getOrders from "./get-orders-for-events";
 
 export default async function createOrdersEvent(data: { date: Date }) {
   const date = addHours(data.date, 2);

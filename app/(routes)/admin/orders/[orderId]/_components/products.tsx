@@ -17,6 +17,8 @@ import { toast } from "sonner";
 import type { OrderFormValues } from "./order-shema";
 import { ScrollToTarget } from "@/lib/scroll-to-traget";
 
+const negativePrice = "bg-destructive text-destructive-foreground";
+
 export const ShippingProducts = ({
   products,
 }: {
@@ -92,6 +94,7 @@ function ProductName({
 }) {
   const form = useFormContext<OrderFormValues>();
   const items = form.watch("orderItems");
+  const quantity = items[productIndex].quantity;
   const selectedProduct = products.find((product) => product.id === items[productIndex].itemId);
 
   const deleteProduct = () => {
@@ -102,7 +105,12 @@ function ProductName({
   return (
     <>
       <div className="flex flex-wrap items-center gap-4">
-        <SelectProductName selectedProduct={selectedProduct} products={products} productIndex={productIndex} />
+        <SelectProductName
+          selectedProduct={selectedProduct}
+          products={products}
+          productIndex={productIndex}
+          quantity={quantity}
+        />
         <FormField
           control={form.control}
           name={`orderItems.${productIndex}.price`}
@@ -119,12 +127,20 @@ function ProductName({
                   type="button"
                 />
               </FormLabel>
-              <span className="absolute right-1 top-[50px] transform -translate-y-1/2 text-muted-foreground">€</span>
+              <span
+                className={cn(
+                  "absolute right-1 top-[50px] transform -translate-y-1/2 text-muted-foreground",
+                  quantity < 0 ? negativePrice : "",
+                )}
+              >
+                €
+              </span>
               <FormControl>
                 <Input
                   type="number"
                   disabled={form.formState.isSubmitting}
                   placeholder="9,99"
+                  className={quantity < 0 ? negativePrice : ""}
                   {...field}
                   value={field.value || ""}
                 />
@@ -147,6 +163,7 @@ function ProductName({
                   type="number"
                   disabled={form.formState.isSubmitting}
                   placeholder="Quantité du produit"
+                  className={quantity < 0 ? negativePrice : ""}
                   {...field}
                   value={field.value || ""}
                 />
@@ -176,8 +193,10 @@ const SelectProductName = ({
   productIndex,
   products,
   selectedProduct,
+  quantity,
 }: {
   productIndex: number;
+  quantity: number;
   products: ProductWithMain[];
   selectedProduct?: ProductWithMain;
 }) => {
@@ -218,7 +237,11 @@ const SelectProductName = ({
                   variant="outline"
                   role="combobox"
                   disabled={form.formState.isSubmitting}
-                  className={cn("w-full justify-between", field.value ? "" : "text-muted-foreground")}
+                  className={cn(
+                    "w-full justify-between",
+                    field.value ? "" : "text-muted-foreground",
+                    quantity < 0 ? negativePrice : "",
+                  )}
                 >
                   {selectedProduct?.product.isPro && (
                     <Badge variant="orange" className="mr-2">
