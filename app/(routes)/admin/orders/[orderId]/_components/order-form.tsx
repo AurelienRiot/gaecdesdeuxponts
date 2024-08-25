@@ -44,12 +44,12 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
   const { serverAction: createOrderAction } = useServerAction(createOrder);
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
 
-  const title = initialData ? "Modifier le bon de livraison" : "Crée un bon de livraison";
+  const title = initialData ? "Modifier la commande" : "Crée une commande";
   const action = initialData?.id
     ? initialData.dateOfEdition
       ? "Sauvegarder les changements"
       : "Valider la commande"
-    : "Crée le bon de livraison";
+    : "Crée la commande";
 
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(orderSchema),
