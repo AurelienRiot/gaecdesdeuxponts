@@ -92,7 +92,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
     }
     function onSuccessCreate(result?: { id: string }) {
       if (result) {
-        router.replace(`/admin/orders/${result.id}#button-container`);
+        router.replace(`/admin/orders/${result.id}?referer=${encodeURIComponent(referer)}#button-container`);
         router.refresh();
       }
     }
@@ -108,7 +108,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
         {initialData?.id && (
           <DeleteButton
             action={deleteOrder}
-            data={{ id: initialData.id }}
+            data={{ id: initialData.id, dateOfShipping: initialData.dateOfShipping }}
             isSubmitting={form.formState.isSubmitting}
             onSuccess={() => {
               router.push(referer);

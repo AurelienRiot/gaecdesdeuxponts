@@ -35,7 +35,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     function onSuccess() {
       router.refresh();
     }
-    await serverAction({ data: { id: data.id }, onSuccess, onFinally: () => setOpen(false) });
+    await serverAction({
+      data: { id: data.id, dateOfShipping: data.datePickUp },
+      onSuccess,
+      onFinally: () => setOpen(false),
+    });
   };
 
   return (
