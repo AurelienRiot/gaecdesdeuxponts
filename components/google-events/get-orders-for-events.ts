@@ -39,7 +39,8 @@ async function getOrders({ startDate, endDate }: { startDate: Date; endDate: Dat
     )
     .reduce((acc: { itemId: string; name: string; quantity: number; unit: string | null }[], curr) => {
       const existing = acc.find((item) => item.itemId === curr.itemId);
-      if (existing && existing.quantity > 0) {
+      if (curr.quantity < 0) return acc;
+      if (existing) {
         existing.quantity += curr.quantity;
       } else {
         acc.push(curr);
