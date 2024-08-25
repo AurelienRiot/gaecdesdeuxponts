@@ -8,7 +8,6 @@ import {
   Commande,
   Consommateur,
   ContenueContrat,
-  DateDistribution,
   Description,
   Engagement,
   getNumberOfMonths,
@@ -59,5 +58,17 @@ const AmapPDFForm = ({ data }: { data: AMAPType }) => {
     </Document>
   );
 };
+
+const DateDistribution = () => (
+  <View style={[AMAPStyle.container, { marginTop: 40 }]}>
+    <Text style={AMAPStyle.title}>Dates de distribution des produits laitiers</Text>
+
+    <Text style={{ marginBottom: 10, fontWeight: "bold" }}>Barrer les dates où il n'y auras pas de livraison</Text>
+    <Text>Septembre : le 03, le 10, le 17 et le 24 </Text>
+    <Text>Octobre : le 01, le 08, le 15, le 22 et le 29 </Text>
+    <Text>Novembre : le 05, le 12, le 19 et le 26 </Text>
+    <Text>Décembre : le 03, le 10, le 17, le 24 et le 30</Text>
+  </View>
+);
 
 export default AmapPDFForm;

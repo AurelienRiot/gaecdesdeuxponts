@@ -32,7 +32,7 @@ async function createBugReport(data: BugReportValues) {
             from: "laiteriedupontrobert@gmail.com",
             to: "pub.demystify390@passmail.net",
             subject: "[BUG REPORT] - Laiterie du Pont Robert",
-            html: render(
+            html: await render(
               ContactSend({
                 baseUrl,
                 url: `${baseUrl}/admin/contacts`,

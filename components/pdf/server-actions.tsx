@@ -191,7 +191,7 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
         from: "laiteriedupontrobert@gmail.com",
         to: order.customer.email,
         subject: "Bon de livraison - Laiterie du Pont Robert",
-        html: render(
+        html: await render(
           SendBLEmail({
             date: dateFormatter(order.dateOfShipping),
             baseUrl,
@@ -274,7 +274,7 @@ export async function sendFacture(data: z.infer<typeof factureSchema>) {
         from: "laiteriedupontrobert@gmail.com",
         to: order.customer.email,
         subject: "Facture - Laiterie du Pont Robert",
-        html: render(
+        html: await render(
           SendFactureEmail({
             date: dateFormatter(order.dateOfShipping),
             baseUrl,
@@ -360,7 +360,7 @@ export async function sendMonthlyInvoice(data: z.infer<typeof monthlyPdf64String
         from: "laiteriedupontrobert@gmail.com",
         to: orders[0].customer.email,
         subject: `Facture Mensuelle ${date}  - Laiterie du Pont Robert`,
-        html: render(
+        html: await render(
           SendMonthlyInvoiceEmail({
             date,
             baseUrl,

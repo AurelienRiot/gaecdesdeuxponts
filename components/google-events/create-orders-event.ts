@@ -3,8 +3,9 @@ import getOrders from "./get-orders-for-events";
 import { dateFormatter } from "@/lib/date-utils";
 import deleteEvent from "./delete-events";
 import getEventsList from "./get-events-list";
-import { addHours } from "date-fns";
+import { addHours, format } from "date-fns";
 import { calendarAPI } from "@/lib/api-google";
+import { fr } from "date-fns/locale";
 
 export default async function createOrdersEvent(data: { date: Date }) {
   const date = addHours(data.date, 2);
@@ -29,7 +30,7 @@ export default async function createOrdersEvent(data: { date: Date }) {
       // eventId: "commandesi9hhkhnpk88rhd58h",
       requestBody: {
         id,
-        summary: `Commandes ${dateFormatter(date)}`,
+        summary: `Commandes ${format(date, "EEEE d", { locale: fr })}`,
         description: description,
         start: {
           // dateTime: new Date().toISOString(),

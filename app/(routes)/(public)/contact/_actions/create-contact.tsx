@@ -31,7 +31,7 @@ const createContact = async (data: ContactFormValues) =>
             from: "laiteriedupontrobert@gmail.com",
             to: "laiteriedupontrobert@gmail.com",
             subject: "[NOUVEAU MESSAGE] - Laiterie du Pont Robert",
-            html: render(
+            html: await render(
               ContactSend({
                 baseUrl,
                 url: `${baseUrl}/admin/contacts`,

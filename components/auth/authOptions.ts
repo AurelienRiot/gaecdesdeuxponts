@@ -27,7 +27,7 @@ export const authOptions: NextAuthOptions = {
           from: "laiteriedupontrobert@gmail.com",
           to: email,
           subject: "Connexion à votre compte ",
-          html: render(WelcomeEmail({ url, baseUrl })),
+          html: await render(WelcomeEmail({ url, baseUrl })),
         });
       },
     }),

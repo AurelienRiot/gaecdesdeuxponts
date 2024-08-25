@@ -120,7 +120,7 @@ export function ContenueContrat({
   data,
 }: { numberOfWeeks: number; numberOfMonths: number; data: AMAPType }) {
   return (
-    <View style={AMAPStyle.container}>
+    <View style={[AMAPStyle.container, { marginTop: 40 }]}>
       <Text style={AMAPStyle.title}>Contenu du contrat AMAP</Text>
       <Text style={AMAPStyle.paragraph}>
         Le présent contrat est passé entre le/la consommateur.trice et les producteurs pour l’approvisionnement toutes

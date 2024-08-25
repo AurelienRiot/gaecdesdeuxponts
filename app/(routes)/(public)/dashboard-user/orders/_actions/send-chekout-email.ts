@@ -65,7 +65,7 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
             from: "laiteriedupontrobert@gmail.com",
             to: user.email || "",
             subject: "Confirmation de votre commande - Laiterie du Pont Robert",
-            html: render(
+            html: await render(
               OrderEmail({
                 date: dateFormatter(order.createdAt),
                 baseUrl,
@@ -85,7 +85,7 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
               from: "laiteriedupontrobert@gmail.com",
               to: "laiteriedupontrobert@gmail.com",
               subject: "[NOUVELLE COMMANDE] - Laiterie du Pont Robert",
-              html: render(
+              html: await render(
                 OrderSendEmail({
                   baseUrl,
                   id: order.id,
