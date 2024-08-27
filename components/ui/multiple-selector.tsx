@@ -1,13 +1,13 @@
 "use client";
 
+import { X } from "lucide-react";
 import * as React from "react";
-import { type LucideIcon, X } from "lucide-react";
 
-import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
-import { Command as CommandPrimitive, useCommandState } from "cmdk";
-import { useEffect, forwardRef } from "react";
 import { Badge } from "@/components/ui/badge";
+import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
+import { Command as CommandPrimitive, useCommandState } from "cmdk";
+import { forwardRef, useEffect } from "react";
 import type { IconType } from "react-icons/lib";
 
 export interface Option {

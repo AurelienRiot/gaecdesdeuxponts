@@ -42,8 +42,8 @@ const PageOrderTable = () => {
 
   const formattedOrders: OrderColumnType[] = (user.orders || []).map((order) => ({
     id: order.id,
-    productsList: createProductList(order),
-    products: createProduct(order),
+    productsList: createProductList(order.orderItems),
+    products: createProduct(order.orderItems),
     totalPrice: currencyFormatter.format(order.totalPrice),
     status: createStatus(order),
     datePickUp: createDatePickUp({ dateOfShipping: order.dateOfShipping, datePickUp: order.datePickUp }),

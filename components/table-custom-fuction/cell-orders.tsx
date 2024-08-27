@@ -1,6 +1,6 @@
 import { formDateDayMonth } from "@/lib/date-utils";
 import type { OrderWithItemsAndShop } from "@/types";
-import type { Shop } from "@prisma/client";
+import type { AMAPItem, OrderItem, Shop } from "@prisma/client";
 import type { Row } from "@tanstack/react-table";
 import { Search } from "lucide-react";
 import Link from "next/link";
@@ -119,8 +119,8 @@ function ShopNameCell({ shopName, shop }: ShopNameCellProps) {
   );
 }
 
-function createProductList(order: OrderWithItemsAndShop) {
-  return order.orderItems.map((item) => {
+function createProductList(items: OrderItem[] | AMAPItem[]) {
+  return items.map((item) => {
     const name = item.name;
     if (item.quantity !== 1) {
       return {
@@ -133,8 +133,8 @@ function createProductList(order: OrderWithItemsAndShop) {
   });
 }
 
-function createProduct(order: OrderWithItemsAndShop) {
-  return order.orderItems
+function createProduct(items: OrderItem[] | AMAPItem[]) {
+  return items
     .map((item) => {
       let name = item.name;
       if (item.quantity > 0 && item.quantity !== 1) {

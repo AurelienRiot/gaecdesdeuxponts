@@ -2,17 +2,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { User } from "@prisma/client";
-import { Package } from "lucide-react";
+import { CheckIcon, CrossIcon, Package, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { FaCheck } from "react-icons/fa";
 
 interface CardUserProps {
   user: User;
   orderLength: number;
+  isPaid: boolean;
+  display: boolean;
   className?: string;
 }
 
-const CardUser: React.FC<CardUserProps> = ({ user, className, orderLength }) => {
+const CardUser: React.FC<CardUserProps> = ({ user, className, isPaid, display, orderLength }) => {
   const name = user.company || user.name || user.email;
   return (
     <>
@@ -38,7 +41,8 @@ const CardUser: React.FC<CardUserProps> = ({ user, className, orderLength }) => 
             {user.completed ? <p className="text-green-500">Complet</p> : <p className="text-red-500">Incomplet</p>}
             <p className="flex gap-2 items-center justify-center">
               {" "}
-              <Package className="h-4 w-4" />: {orderLength}
+              {orderLength} <Package className="h-4 w-4" />
+              {display && (isPaid ? <FaCheck className="text-green-500" /> : <X className="text-destructive" />)}
             </p>
           </div>
         </CardContent>

@@ -27,6 +27,8 @@ const MonthlyInvoice = ({ orders }: { orders: monthlyOrdersType[] }) => {
   const years = Array.from(new Set(orders.map((order) => order.year))).sort((a, b) => a - b);
   const months = Array.from(new Set(orders.map((order) => order.month))).sort((a, b) => a - b);
 
+  const initialDate = selectedOrders.length > 0 ? selectedOrders[0].dateOfPayment : new Date();
+
   return (
     <>
       <div className="justify-left flex flex-wrap items-center gap-4 whitespace-nowrap">
@@ -69,7 +71,11 @@ const MonthlyInvoice = ({ orders }: { orders: monthlyOrdersType[] }) => {
         </Select>
         <DisplayMonthlyInvoice orders={selectedOrders} isSend={emailSend} />
       </div>
-      <FacturationDate isPaid={isPaid} orderIds={selectedOrders.map((order) => order.orderId)} />
+      <FacturationDate
+        isPaid={isPaid}
+        initialDate={initialDate}
+        orderIds={selectedOrders.map((order) => order.orderId)}
+      />
       {emailSend ? (
         <p className="text-sm font-normal text-green-500">La facture a été envoyée</p>
       ) : (
@@ -86,13 +92,17 @@ const MonthlyInvoice = ({ orders }: { orders: monthlyOrdersType[] }) => {
 
 export default MonthlyInvoice;
 
-function FacturationDate({ isPaid, orderIds }: { isPaid: boolean; orderIds: string[] }) {
+function FacturationDate({
+  isPaid,
+  orderIds,
+  initialDate,
+}: { isPaid: boolean; orderIds: string[]; initialDate: Date | null }) {
   const { loading, toastServerAction } = useToastPromise({
     serverAction: montlyInvoicePaid,
     message: "Validation de la facture",
     errorMessage: "Validation de la facture annulé",
   });
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(initialDate || new Date());
   return (
     <div className="space-y-4">
       <DatePicker date={date} setDate={setDate} />

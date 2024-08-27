@@ -1,34 +1,13 @@
-"use client";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import GoogleCalendar from "./_components/google-calendar";
-import OrdersCalendar from "./_components/orders-calendar";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { directionRouteXL } from "./_actions/opt-routes";
+import OrdersCalendar from "./_components/orders-calendar";
 
 export const dynamic = "force-dynamic";
 
 function CalendarPage({ searchParams }: { searchParams: { date: string | undefined } }) {
-  const [date, setDate] = useState(new Date());
-  const month = searchParams.date ? new Date(searchParams.date) : date;
-  const from = new Date(month.getFullYear(), month.getMonth(), 1);
-  const to = new Date(month.getFullYear(), month.getMonth() + 1, 0);
+  const month = searchParams.date ? new Date(decodeURIComponent(searchParams.date)) : new Date();
 
-  // const orders = await prismadb.order.findMany({
-  //   include: {
-  //     orderItems: true,
-  //     shop: true,
-  //     user: { include: { address: true, billingAddress: true } },
-  //     customer: true,
-  //   },
-  //   where: {
-  //     dateOfShipping: {
-  //       gte: from,
-  //       lte: to,
-  //     },
-  //   },
-  // });
   async function getDirection() {
     const origin = "6 le Pont Robert 44290 Massérac, France";
     const destination = "6 le Pont Robert 44290 Massérac, France";
@@ -47,9 +26,7 @@ function CalendarPage({ searchParams }: { searchParams: { date: string | undefin
         <Heading title={`Calendrier des commandes`} description="Liste des commandes" />
 
         <Separator />
-        <OrdersCalendar month={month} date={date} setDate={setDate} />
-        <GoogleCalendar date={date} />
-        <Button onClick={getDirection}>Get direction</Button>
+        <OrdersCalendar month={month} />
       </div>
     </div>
   );

@@ -55,10 +55,14 @@ export const AddressInput = ({ setSortedShops, setCoordinates, shops, className,
           variant="outline"
           role="combobox"
           onClick={() => setOpen((open) => !open)}
-          className={cn(" justify-between active:scale-100 ", query && "font-normal text-muted-foreground ", className)}
+          className={cn(
+            " justify-between active:scale-100 ",
+            !query && "font-normal text-muted-foreground ",
+            className,
+          )}
           {...props}
         >
-          Rechercher votre adresse
+          {query ?? " Rechercher votre adresse"}
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

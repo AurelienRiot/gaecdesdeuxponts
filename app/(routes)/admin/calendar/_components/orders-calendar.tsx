@@ -1,22 +1,22 @@
 "use client";
 import { Calendar } from "@/components/ui/calendar";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-function OrdersCalendar({ month, date, setDate }: { month: Date; date: Date; setDate: (date: Date) => void }) {
+function OrdersCalendar({ month }: { month: Date }) {
   const router = useRouter();
+  const [date, setDate] = useState(new Date());
   return (
     <div className="max-w-64">
       <Calendar
         mode="single"
         selected={date}
         onSelect={(e) => {
-          console.log(e.toISOString());
           setDate(e);
+          router.push(`/admin/calendar/${e.toISOString()}`);
         }}
         month={month}
-        onMonthChange={(e) => {
-          router.push(`/admin/calendar?date=${e.toISOString()}`);
-        }}
+        onMonthChange={(e) => router.replace(`/admin/calendar?date=${encodeURIComponent(e.toISOString())}`)}
         required
       />
     </div>

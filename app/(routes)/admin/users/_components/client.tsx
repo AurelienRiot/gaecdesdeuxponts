@@ -13,9 +13,10 @@ import CardUser from "./card-user";
 interface UserClientProps {
   users: User[];
   orderLengths: { length: number; id: string }[];
+  isPaidArray: { isPaid: boolean; id: string; display: boolean }[];
 }
 
-const UserClient: React.FC<UserClientProps> = ({ users, orderLengths }) => {
+const UserClient: React.FC<UserClientProps> = ({ users, orderLengths, isPaidArray }) => {
   const [search, setSearch] = useState("");
   const searchKeys = ["email", "name", "phone", "addresse", "company"];
   const displayKeys = ["Email", "Nom", "Téléphone", "Addresse", "Entreprise"];
@@ -65,6 +66,8 @@ const UserClient: React.FC<UserClientProps> = ({ users, orderLengths }) => {
               key={user.id}
               user={user}
               orderLength={orderLengths.find((orderLength) => orderLength.id === user.id)?.length || 0}
+              isPaid={!!isPaidArray.find((isPaid) => isPaid.id === user.id)?.isPaid}
+              display={!!isPaidArray.find((isPaid) => isPaid.id === user.id)?.display}
             />
           ))}
         </div>

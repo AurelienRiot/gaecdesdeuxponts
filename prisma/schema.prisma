@@ -52,6 +52,7 @@ model User {
   completed        Boolean @default(true)
   role             Role @default(user)
   orders           Order[]
+  amapOrders       AMAPOrder[]
   accounts         Account[]
   sessions         Session[]
   address          Address? 
@@ -208,6 +209,40 @@ model OrderItem {
   @@index([orderId])
 }
 
+model AMAPOrder {
+  id         String @unique @id @default(cuid())
+  dateOfEdition DateTime
+  startDate DateTime
+  endDate DateTime
+  daysOfAbsence DateTime[]
+  shippingDays DateTime[]
+  totalPrice Float
+  amapItems   AMAPItem[]
+  userId     String  
+  user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shopId     String
+  shop       Shop @relation(fields: [shopId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+  @@index([shopId])
+}
+
+model AMAPItem {
+  id           String @unique @id @default(cuid())
+  itemId       String
+  price        Float
+  quantity     Float @default(1)
+  unit         String?
+  name         String
+  description  String @db.VarChar(1000)
+  orderId      String
+  order        AMAPOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
 model Contact {
   id        String   @unique @id @default(cuid())
   name      String
@@ -278,6 +313,7 @@ model Shop {
   imageUrl      String?
   website       String?
   order         Order[] 
+  amapOrders     AMAPOrder[]
   isArchived    Boolean  @default(false)
   createdAt     DateTime @default(now()) 
   updatedAt     DateTime @updatedAt 
@@ -288,6 +324,7 @@ enum ShopType {
   sell
   product
   both
+  amap
 }
 model Comment {
    id        String    @unique @id @default(cuid())

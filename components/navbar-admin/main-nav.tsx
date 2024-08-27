@@ -9,6 +9,7 @@ import {
   PhoneCallIcon,
   PresentationIcon,
   RowsIcon,
+  ShoppingBasket,
   Store,
   Users,
 } from "lucide-react";
@@ -41,17 +42,18 @@ export function MainNav({ className }: React.HTMLAttributes<HTMLElement>) {
 
 export const MainAdminRoutes = (pathname: string) => [
   {
-    href: `/`,
-    label: "Accueil",
-    active: pathname === `/`,
-    Icone: PresentationIcon,
+    href: `/admin/calendar`,
+    label: "Calendrier",
+    active: pathname.startsWith(`/admin/calendar`),
+    Icone: Calendar,
   },
   {
-    href: `/admin/users`,
-    label: "Clients",
-    active: pathname.startsWith(`/admin/users`),
-    Icone: Users,
+    href: `/admin/amap`,
+    label: "AMAP",
+    active: pathname.startsWith(`/admin/amap`),
+    Icone: ShoppingBasket,
   },
+
   {
     href: `/admin/orders`,
     label: "Commandes",
@@ -67,6 +69,18 @@ export const MainAdminRoutes = (pathname: string) => [
 ];
 
 export const SecondaryAdminRoutes = (pathname: string) => [
+  {
+    href: `/`,
+    label: "Accueil",
+    active: pathname === `/`,
+    Icone: PresentationIcon,
+  },
+  {
+    href: `/admin/users`,
+    label: "Clients",
+    active: pathname.startsWith(`/admin/users`),
+    Icone: Users,
+  },
   {
     href: `/admin/contacts`,
     label: "Contacts",

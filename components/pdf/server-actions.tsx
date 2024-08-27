@@ -4,18 +4,20 @@ import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { currencyFormatter } from "@/lib/utils";
-import type { FullOrder } from "@/types";
+import type { AMAPOrderWithItemsAndUser, FullOrder } from "@/types";
 import { render } from "@react-email/render";
 import { pdf } from "@react-pdf/renderer";
 import * as z from "zod";
 import { checkAdmin, checkReadOnlyAdmin } from "../auth/checkAuth";
+import SendAMAPEmail from "../email/send-amap";
 import SendBLEmail from "../email/send-bl";
 import SendFactureEmail from "../email/send-facture";
+import SendMonthlyInvoiceEmail from "../email/send-monthly-invoice";
+import AmapPDF from "./create-amap";
 import Invoice from "./create-invoice";
 import MonthlyInvoice from "./create-monthly-invoice";
 import ShippingOrder from "./create-shipping";
-import { createMonthlyPDFData, createPDFData } from "./pdf-data";
-import SendMonthlyInvoiceEmail from "../email/send-monthly-invoice";
+import { createAMAPData, createMonthlyPDFData, createPDFData } from "./pdf-data";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 
@@ -28,10 +30,10 @@ export async function createPDF64String(data: z.infer<typeof pdf64StringSchema>)
     data,
     schema: pdf64StringSchema,
     getUser: checkReadOnlyAdmin,
-    serverAction: async (data) => {
+    serverAction: async ({ orderId, type }) => {
       const order = await prismadb.order.findUnique({
         where: {
-          id: data.orderId,
+          id: orderId,
         },
         include: {
           orderItems: true,
@@ -46,7 +48,43 @@ export async function createPDF64String(data: z.infer<typeof pdf64StringSchema>)
         };
       }
 
-      const blob = await generatePdf({ data: order, type: data.type });
+      const blob = await generatePdf({ data: order, type: type });
+      const base64String = await blobToBase64(blob);
+      return {
+        success: true,
+        message: "",
+        data: base64String,
+      };
+    },
+  });
+}
+
+const amapPdf64StringSchema = z.object({
+  orderId: z.string(),
+});
+export async function createAMAPPDF64String(data: z.infer<typeof amapPdf64StringSchema>) {
+  return await safeServerAction({
+    data,
+    schema: amapPdf64StringSchema,
+    getUser: checkReadOnlyAdmin,
+    serverAction: async ({ orderId }) => {
+      const order = await prismadb.aMAPOrder.findUnique({
+        where: {
+          id: orderId,
+        },
+        include: {
+          amapItems: true,
+          user: { include: { address: true, billingAddress: true } },
+        },
+      });
+      if (!order) {
+        return {
+          success: false,
+          message: "La commande n'existe pas",
+        };
+      }
+
+      const blob = await generatePdf({ data: order, type: "amap" });
       const base64String = await blobToBase64(blob);
       return {
         success: true,
@@ -115,7 +153,8 @@ async function generatePdf({
       data: FullOrder;
       type: "invoice" | "shipping";
     }
-  | { data: FullOrder[]; type: "monthly" }): Promise<Blob> {
+  | { data: FullOrder[]; type: "monthly" }
+  | { data: AMAPOrderWithItemsAndUser; type: "amap" }): Promise<Blob> {
   let doc: JSX.Element;
   switch (type) {
     case "invoice":
@@ -127,6 +166,10 @@ async function generatePdf({
     case "monthly": {
       const isPaid = data.every((order) => !!order.dateOfPayment);
       doc = <MonthlyInvoice data={createMonthlyPDFData(data)} isPaid={isPaid} />;
+      break;
+    }
+    case "amap": {
+      doc = <AmapPDF data={createAMAPData(data, data.user)} />;
       break;
     }
   }
@@ -201,7 +244,7 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
         ),
         attachments: [
           {
-            filename: `Bon_de_livraison-${order.id}.pdf`,
+            filename: `Bon de livraison ${order.id}.pdf`,
             content: pdfBuffer,
             contentType: "application/pdf",
           },
@@ -285,7 +328,7 @@ export async function sendFacture(data: z.infer<typeof factureSchema>) {
         ),
         attachments: [
           {
-            filename: `Facture-${order.id}.pdf`,
+            filename: `Facture ${order.id}.pdf`,
             content: pdfBuffer,
             contentType: "application/pdf",
           },
@@ -388,6 +431,70 @@ export async function sendMonthlyInvoice(data: z.infer<typeof monthlyPdf64String
       return {
         success: true,
         message: "Facture envoyée",
+      };
+    },
+  });
+}
+
+const AMAPSchema = z.object({
+  orderId: z.string(),
+});
+
+export async function SendAMAP(data: z.infer<typeof AMAPSchema>) {
+  return await safeServerAction({
+    data,
+    schema: BLSchema,
+    getUser: checkAdmin,
+    serverAction: async ({ orderId }) => {
+      const order = await prismadb.aMAPOrder.findUnique({
+        where: {
+          id: orderId,
+        },
+        include: {
+          amapItems: true,
+          shop: true,
+          user: { include: { address: true, billingAddress: true } },
+        },
+      });
+      if (!order) {
+        return {
+          success: false,
+          message: "La contrat n'existe pas",
+        };
+      }
+
+      const pdfData = createAMAPData(order, order.user);
+
+      const doc = <AmapPDF data={pdfData} />;
+      const pdfBlob = await pdf(doc).toBlob();
+      const arrayBuffer = await pdfBlob.arrayBuffer();
+      const pdfBuffer = await Buffer.from(arrayBuffer);
+
+      await transporter.sendMail({
+        from: "laiteriedupontrobert@gmail.com",
+        to: pdfData.customer.email,
+        subject: "Bon de livraison - Laiterie du Pont Robert",
+        html: await render(
+          SendAMAPEmail({
+            startDate: dateFormatter(order.startDate),
+            endDate: dateFormatter(order.endDate),
+            baseUrl,
+            id: order.id,
+            email: pdfData.customer.email,
+          }),
+        ),
+        attachments: [
+          {
+            filename: `Contrat AMAP ${order.id}.pdf`,
+            content: pdfBuffer,
+            contentType: "application/pdf",
+          },
+        ],
+      });
+
+      return {
+        success: true,
+        message: "contrat envoyé",
       };
     },
   });

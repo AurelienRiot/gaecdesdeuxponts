@@ -61,6 +61,7 @@ const UserPage = async ({
       year: order.dateOfShipping.getFullYear(),
       invoiceEmail: order.invoiceEmail,
       isPaid: !!order.dateOfPayment,
+      dateOfPayment: order.dateOfPayment,
     };
   });
 
@@ -73,8 +74,8 @@ const UserPage = async ({
     id: order.id,
     shippingEmail: order.shippingEmail,
     invoiceEmail: order.invoiceEmail,
-    products: createProduct(order),
-    productsList: createProductList(order),
+    products: createProduct(order.orderItems),
+    productsList: createProductList(order.orderItems),
     datePickUp: createDatePickUp({ dateOfShipping: order.dateOfShipping, datePickUp: order.datePickUp }),
     status: createStatus(order),
     isPaid: !!order.dateOfPayment,

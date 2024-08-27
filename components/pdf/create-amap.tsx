@@ -1,9 +1,10 @@
 import { Document, Link, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
-import { getISOWeek } from "date-fns";
+import { format, getISOWeek } from "date-fns";
 import { Fragment } from "react";
 import Details from "./details";
 import { Company, InvoiceThankYouMsg, borderColor, foregroundColor, mainColor } from "./main-document";
 import type { AMAPType } from "./pdf-data";
+import { groupedDatesByMonth } from "@/lib/date-utils";
 
 // Font.register({
 //   family: "Inter",
@@ -64,11 +65,12 @@ export function getNumberOfMonths(startDate: Date, endDate: Date) {
 }
 
 const AmapPDF = ({ data }: { data: AMAPType }) => {
-  const numberOfWeeks = getNumberOfWeeks(
-    data.contrat.startDate,
-    data.contrat.endDate,
-    data.contrat.weeksOfAbsence.length,
-  );
+  // const numberOfWeeks = getNumberOfWeeks(
+  //   data.contrat.startDate,
+  //   data.contrat.endDate,
+  //   data.contrat.weeksOfAbsence.length,
+  // );
+  const numberOfWeeks = data.contrat.shippingDay.length;
 
   // data.contrat.frequency === "hebdomadaire"
   //   ? Math.round((data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (7 * 24 * 60 * 60 * 1000))
@@ -89,7 +91,7 @@ const AmapPDF = ({ data }: { data: AMAPType }) => {
         <Description />
         <Consommateur customer={data.customer} />
         <Commande numberOfWeeks={numberOfWeeks} order={data.contrat} />
-        <DateDistribution />
+        <DateDistribution shippingDate={data.contrat.shippingDay} />
         (
         <Text
           style={{
@@ -123,14 +125,14 @@ export function ContenueContrat({
     <View style={[AMAPStyle.container, { marginTop: 40 }]}>
       <Text style={AMAPStyle.title}>Contenu du contrat AMAP</Text>
       <Text style={AMAPStyle.paragraph}>
-        Le présent contrat est passé entre le/la consommateur.trice et les producteurs pour l’approvisionnement toutes
+        Le présent contrat est passé entre le/la consommateur.trice et les producteurs pour l'approvisionnement toutes
         les semaines de produits laitiers bio pour une durée totale de {numberOfMonths} mois (
         {data.contrat.startDate.toLocaleString("fr-FR", { month: "long" })} à{" "}
         {data.contrat.endDate.toLocaleString("fr-FR", { month: "long" })}) pour {numberOfWeeks} semaines.
       </Text>
       <Text style={AMAPStyle.paragraph}>
-        Les producteurs s’engagent à exercer leur activité dans le respect de la charte des AMAP : qualité sanitaire des
-        produits, respect de la biodiversité, de l’environnement.
+        Les producteurs s'engagent à exercer leur activité dans le respect de la charte des AMAP : qualité sanitaire des
+        produits, respect de la biodiversité, de l'environnement.
       </Text>
       <Text style={AMAPStyle.paragraph}>
         Le/la consommateur.trice et les producteurs doivent respecter la charte des AMAP consultable via le lien{" "}
@@ -140,14 +142,14 @@ export function ContenueContrat({
         .
       </Text>
       <Text style={AMAPStyle.paragraph}>
-        La distribution des produits laitiers aura lieu toutes les semaines, les mardis soir, au local de l’ancien
+        La distribution des produits laitiers aura lieu toutes les semaines, les mardis soir, au local de l'ancien
         presbytère en face de la gendarmerie de Guémené Penfao, de 18h à 19h.
       </Text>
       <Text style={AMAPStyle.paragraph}>
         Sur la période du contrat, certaines distributions pourront être susceptibles de ne pas être assurées si des
         difficultés ponctuelles sont rencontrées sur la ferme. Si cela devait arriver, les producteurs en informeront
-        les consommateurs.trices aussi vite que possible et au moins une semaine à l’avance. Dans ce cas, soit les
-        produits laitiers seront déposés au local de l’ancien presbytère et la distribution se fera en l’absence des
+        les consommateurs.trices aussi vite que possible et au moins une semaine à l'avance. Dans ce cas, soit les
+        produits laitiers seront déposés au local de l'ancien presbytère et la distribution se fera en l'absence des
         producteurs. Le nombre de livraisons sera, dans tous les cas, conforme au nombre de mois prévus dans le contrat.
       </Text>
     </View>
@@ -159,14 +161,14 @@ export function Engagement({ numberOfMonths }: { numberOfMonths: number }) {
     <View style={AMAPStyle.container}>
       <Text style={AMAPStyle.title}>Engagement</Text>
       <Text style={AMAPStyle.paragraph}>
-        L’engagement suivant est souscrit et réglé par chèque(s) à la signature du contrat pour toutes les livraisons du
-        contrat. Les chèques seront remplis à l’ordre de Gaec des deux ponts.
+        L'engagement suivant est souscrit et réglé par chèque(s) à la signature du contrat pour toutes les livraisons du
+        contrat. Les chèques seront remplis à l'ordre de Gaec des deux ponts.
       </Text>
       <Text style={AMAPStyle.paragraph}>
-        Le/la consommateur.trice s’engage sur la totalité de la durée du contrat soit {numberOfMonths} mois.
+        Le/la consommateur.trice s'engage sur la totalité de la durée du contrat soit {numberOfMonths} mois.
       </Text>
       <Text style={AMAPStyle.paragraph}>
-        En cas d’oubli, le lait cru peut être retiré à la ferme le lendemain de la distribution, sinon les produits
+        En cas d'oubli, le lait cru peut être retiré à la ferme le lendemain de la distribution, sinon les produits
         seront perdus.
       </Text>
     </View>
@@ -180,7 +182,7 @@ export function Description() {
       <Text style={{ fontWeight: "bold" }}>- Lait cru bio bidon 2L</Text>
       <Text style={[AMAPStyle.paragraph, { textIndent: 0, marginTop: 10 }]}>
         En provenance directe de la ferme, notre lait cru est riche en nutriments essentiels tels que les vitamines, les
-        minéraux et les enzymes naturelles qui sont souvent détruits lors de la pasteurisation.Notre lait cru doit être
+        minéraux et les enzymes naturelles qui sont souvent détruits lors de la pasteurisation. Notre lait cru doit être
         conservé entre 0°C et 4°C et consommé dans les 5 jours suivant l'achat pour garantir sa fraîcheur et sa qualité.
         Il est important de respecter scrupuleusement la chaîne du froid pour éviter toute contamination.
       </Text>
@@ -219,7 +221,7 @@ export function Commande({
       <InvoiceTableFooter numberOfWeeks={numberOfWeeks} order={order} form={form} />
       <View style={{ marginTop: 10, display: "flex", flexDirection: "row", gap: 4 }}>
         <Text style={{ fontWeight: "bold", textDecoration: "underline" }}>Semaine d'absence pévues :</Text>
-        {!form && <Text>{order.weeksOfAbsence.length}</Text>}
+        {!form && <Text>{order.dayOfAbsence.length}</Text>}
       </View>
       (
       <View style={{ marginTop: 10, display: "flex", flexDirection: "row", gap: 4 }}>
@@ -227,7 +229,7 @@ export function Commande({
         <View style={{ fontSize: 10 }}>
           <Text>Si montant inférieur à 40 €, un seul chèque</Text>
           <Text>Si montant supérieur à 40 €, deux chèques encaissés au début et au milieu du contrat.</Text>
-          <Text style={{ fontWeight: "bold" }}>A l’ordre du Gaec des deux ponts</Text>
+          <Text style={{ fontWeight: "bold" }}>A l'ordre du Gaec des deux ponts</Text>
         </View>
       </View>
       )
@@ -395,8 +397,8 @@ export const InvoiceTableFooter = ({
       <View style={tableFooterStyles.row}>
         <Text style={[tableFooterStyles.description, !form ? { fontSize: 10 } : { fontSize: 10, textAlign: "right" }]}>
           Nombre de semaines prévues
-          {/* (possibilité de soustraire 2 semaines de vacances : merci de m’indiquer les numéros 
-          de vos semaines d’absence)*/}
+          {/* (possibilité de soustraire 2 semaines de vacances : merci de m'indiquer les numéros 
+          de vos semaines d'absence)*/}
         </Text>
         {!form && <Text style={tableFooterStyles.total}> X {numberOfWeeks}</Text>}
       </View>
@@ -415,7 +417,10 @@ export const InvoiceTableFooter = ({
   );
 };
 
-export function DateDistribution({ form }: { form?: boolean }) {
+function DateDistribution({ shippingDate }: { shippingDate: Date[] }) {
+  const groupedDates = groupedDatesByMonth(shippingDate);
+  const months = Object.keys(groupedDates);
+
   return (
     <View
       break
@@ -427,40 +432,24 @@ export function DateDistribution({ form }: { form?: boolean }) {
     >
       <View>
         <Text style={AMAPStyle.title}>Dates de distribution des produits laitiers</Text>
-        {!form && (
-          <Text style={{ marginBottom: 10, fontWeight: "bold" }}>
-            Barrer les dates où il n'y auras pas de livraison
-          </Text>
-        )}
-        <Text>Septembre : le 03, le 10, le 17 et le 24 </Text>
-        <Text>Octobre : le 01, le 08, le 15, le 22 et le 29 </Text>
-        <Text>Novembre : le 05, le 12, le 19 et le 26 </Text>
-        <Text>Décembre : le 03, le 10, le 17, le 24 et le 30</Text>
-      </View>
-      <InvoiceThankYouMsg />
-    </View>
-  );
-}
-
-export function Calendar() {
-  const daysInMonth = 31;
-  const month = "August";
-  const year = 2022;
-
-  const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
-
-  return (
-    <View style={AMAPStyle.container}>
-      <Text style={AMAPStyle.title}>
-        {month} {year} Calendar
-      </Text>
-      <View style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
-        {days.map((day) => (
-          <Text key={day} style={{ width: "14.28%", textAlign: "center", marginBottom: 10 }}>
-            {day}
+        {months.map((month, index) => (
+          <Text key={month} style={AMAPStyle.paragraph}>
+            {month}
+            {" : "}
+            {groupedDates[month].map((date, index) => (
+              <Text key={index}>
+                {" "}
+                {groupedDates[month].length === 1
+                  ? `le ${format(date, "d")}.`
+                  : index === groupedDates[month].length - 1
+                    ? `et le ${format(date, "d")}.`
+                    : `le ${format(date, "d")},`}
+              </Text>
+            ))}
           </Text>
         ))}
       </View>
+      <InvoiceThankYouMsg />
     </View>
   );
 }

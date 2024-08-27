@@ -33,8 +33,8 @@ type ProductFormProps = {
 
 export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categories, optionsArray }) => {
   const router = useRouter();
-  const { serverAction: createProductAction, loading: createProductLoading } = useServerAction(createProduct);
-  const { serverAction: updateProductAction, loading: updateProductLoading } = useServerAction(updateProduct);
+  const { serverAction: createProductAction } = useServerAction(createProduct);
+  const { serverAction: updateProductAction } = useServerAction(updateProduct);
 
   const title = initialData ? "Modifier le produit" : "Crée un nouveau produit";
   const description = initialData ? "Modifier le produit" : "Ajouter un nouveau produit";

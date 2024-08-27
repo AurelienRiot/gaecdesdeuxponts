@@ -1,8 +1,9 @@
 import MultipleSelector, { type Option } from "@/components/ui/multiple-selector";
 import { MdLocalBar, MdOutlineStorefront } from "react-icons/md";
-import { PiFarm } from "react-icons/pi";
+import { PiBasket, PiFarm } from "react-icons/pi";
 import { LuCigarette, LuCoffee } from "react-icons/lu";
 import { GiBread } from "react-icons/gi";
+import { IoRestaurantSharp } from "react-icons/io5";
 
 const tagOptions: Option[] = [
   { label: "Bar", value: "bar", Icon: MdLocalBar },
@@ -11,6 +12,8 @@ const tagOptions: Option[] = [
   { label: "Tabac", value: "tabac", Icon: LuCigarette },
   { label: "Café", value: "cafe", Icon: LuCoffee },
   { label: "Boulangerie", value: "boulangerie", Icon: GiBread },
+  { label: "AMAP", value: "amap", Icon: PiBasket },
+  { label: "Restaurant", value: "restaurant", Icon: IoRestaurantSharp },
 ];
 
 type TagsMultipleSelectorProps = {

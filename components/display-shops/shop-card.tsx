@@ -49,17 +49,19 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
           {...props}
         >
           <CardHeader>
-            <CardTitle className="flex  cursor-pointer items-center justify-center gap-2">
+            <CardTitle className="flex  cursor-pointer items-center justify-left  gap-6">
               {shop.imageUrl ? (
-                <span className=" relative size-16 rounded-sm bg-transparent transition-transform hover:scale-150">
-                  <Image
-                    src={shop.imageUrl}
-                    alt={shop.name}
-                    fill
-                    sizes="(max-width: 768px) 45px, (max-width: 1200px) 45px, 45px"
-                    className="rounded-sm object-contain"
-                  />
-                </span>
+                // <span className=" relative  size-20 rounded-sm bg-transparent ">
+                <Image
+                  src={shop.imageUrl}
+                  alt={shop.name}
+                  // fill
+                  width={64}
+                  height={64}
+                  // sizes="(max-width: 768px) 45px, (max-width: 1200px) 45px, 45px"
+                  className="rounded-sm object-contain h-16 w-auto max-w-[25%]"
+                />
+                // </span>
               ) : null}
               <span className="text-balance text-center text-lg sm:text-xl lg:text-2xl">{shop.name}</span>
             </CardTitle>
@@ -136,7 +138,9 @@ const CardInfo = ({ description, type }: { description: string; type: string }) 
       ? "Acheter nos produits"
       : type === "product"
         ? "Acheter les produits fait avec notre lait"
-        : "Acheter nos produits ainsi que les produits fait avec notre lait";
+        : type === "amap"
+          ? "Commander les produits fait avec notre lait"
+          : "Acheter nos produits ainsi que les produits fait avec notre lait";
   if (!description) {
     return <p className="text-center">{typeText}</p>;
   }

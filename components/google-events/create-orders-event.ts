@@ -23,10 +23,13 @@ export default async function createOrdersEvent(data: { date: Date }) {
   const description = await createDescription({ startDate, endDate });
 
   const id = createId("command");
+  // return {
+  //   success: true,
+  //   message: "event created",
+  // };
   return await calendarAPI.events
     .insert({
       calendarId: process.env.CALENDAR_ID,
-      // eventId: "commandesi9hhkhnpk88rhd58h",
       requestBody: {
         id,
         summary: `Commandes ${format(date, "EEEE d", { locale: fr })}`,
@@ -54,27 +57,47 @@ export default async function createOrdersEvent(data: { date: Date }) {
 }
 
 async function createDescription({ startDate, endDate }: { startDate: Date; endDate: Date }) {
-  const { productQuantities, formattedOrders } = await getOrders({ startDate, endDate });
+  const { productQuantities, formattedOrders, groupedAMAPOrders } = await getOrders({ startDate, endDate });
   if (productQuantities.length === 0) return "<font color='red'> Aucune commande </font>";
 
-  const productDescriptions = productQuantities
-    .map((item) => `<strong>${item.name}</strong> : ${item.quantity} ${item.unit || ""}`)
-    .join("<br />");
-  const orderDescriptions = formattedOrders
-    .map(
-      (order) =>
-        `<strong><a href="${process.env.NEXT_PUBLIC_URL}/admin/orders/${order.id}">Commande n°${order.id}</a></strong><br /><a href="${process.env.NEXT_PUBLIC_URL}/admin/users/${order.customerId}">${order.name}</a><br />` +
-        order.orderItems
-          .map((item) => `<strong>${item.name}</strong> : ${item.quantity} ${item.unit || ""}`)
-          .join("<br />") +
-        `<br /><a href="https://maps.google.com/?q=${order.shippingAddress}+${order.company}">Addresse</a><br />`,
-    )
-    .join("<br />");
+  const amapOrdersDescription =
+    Object.values(groupedAMAPOrders)
+      .map(
+        (order) =>
+          `<strong><a href="${process.env.NEXT_PUBLIC_URL}/admin/shop/${order.shopId}">${order.shopName}</a></strong> <br />` +
+          order.orderItems
+            .map((item) => `<strong>${item.name}</strong> : ${item.quantity} ${item.unit || ""}`)
+            .join("<br />") +
+          `<br /><a href="https://maps.google.com/?q=${order.address}">Addresse</a><br />`,
+      )
+      .join("<br />") + "<br />";
+
+  const productDescriptions =
+    productQuantities
+      .map((item) => `<strong>${item.name}</strong> : ${item.quantity} ${item.unit || ""}`)
+      .join("<br />") + "<br /><br />";
+
+  const orderDescriptions =
+    formattedOrders.length === 0
+      ? ""
+      : formattedOrders
+          .map(
+            (order) =>
+              `<strong><a href="${process.env.NEXT_PUBLIC_URL}/admin/orders/${order.id}">Commande n°${order.id}</a></strong> <br /><a href="${process.env.NEXT_PUBLIC_URL}/admin/users/${order.customerId}">${order.name}</a><br />` +
+              order.orderItems
+                .map((item) => `<strong>${item.name}</strong> : ${item.quantity} ${item.unit || ""}`)
+                .join("<br />") +
+              `<br /><a href="https://maps.google.com/?q=${order.shippingAddress}+${order.company}">Addresse</a><br />`,
+          )
+          .join("<br />");
 
   const uniqueShippingAddresses = [
     ...new Set(formattedOrders.map((order) => `${order.shippingAddress}+${order.company}`)),
   ];
-  const directionString = `<strong><a href="https://www.google.fr/maps/dir/Current+Location/${uniqueShippingAddresses.join("/")}">Parcoure</a></strong>`;
+  const directionString =
+    formattedOrders.length === 0
+      ? ""
+      : `<strong><a  href="https://www.google.fr/maps/dir/Current+Location/${uniqueShippingAddresses.join("/")}">Parcoure</a></strong> <br /><br />`;
 
-  return `${productDescriptions}<br /><br />${directionString}<br /><br />${orderDescriptions}`;
+  return productDescriptions + amapOrdersDescription + directionString + orderDescriptions;
 }

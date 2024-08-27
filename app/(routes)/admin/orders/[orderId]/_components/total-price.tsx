@@ -24,7 +24,7 @@ const TotalPrice = () => {
         <FormItem className="w-48">
           <FormLabel>Prix total</FormLabel>
           <FormControl>
-            <Input onChange={() => {}} value={`${field.value || 0}€`} />
+            <div className="flex h-10 w-full rounded-md border border-input px-3 py-2 text-base ">{`${field.value || 0}€`}</div>
           </FormControl>
           <FormMessage />
         </FormItem>

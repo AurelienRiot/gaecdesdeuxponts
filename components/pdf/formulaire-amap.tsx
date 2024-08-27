@@ -1,8 +1,4 @@
-import { Document, Font, Link, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
-import { Fragment } from "react";
-import Details from "./details";
-import { Company, InvoiceThankYouMsg, borderColor, foregroundColor, mainColor } from "./main-document";
-import type { AMAPType } from "./pdf-data";
+import { Document, Page, Text, View } from "@react-pdf/renderer";
 import {
   AMAPStyle,
   Commande,
@@ -11,8 +7,10 @@ import {
   Description,
   Engagement,
   getNumberOfMonths,
-  getNumberOfWeeks,
 } from "./create-amap";
+import Details from "./details";
+import { Company } from "./main-document";
+import type { AMAPType } from "./pdf-data";
 
 // Font.register({
 //   family: "Inter",
@@ -23,11 +21,12 @@ import {
 // });
 
 const AmapPDFForm = ({ data }: { data: AMAPType }) => {
-  const numberOfWeeks = getNumberOfWeeks(
-    data.contrat.startDate,
-    data.contrat.endDate,
-    data.contrat.weeksOfAbsence.length,
-  );
+  // const numberOfWeeks = getNumberOfWeeks(
+  //   data.contrat.startDate,
+  //   data.contrat.endDate,
+  //   data.contrat.weeksOfAbsence.length,
+  // );
+  const numberOfWeeks = data.contrat.shippingDay.length;
   // data.contrat.frequency === "hebdomadaire"
   //   ? Math.round((data.contrat.endDate.getTime() - data.contrat.startDate.getTime()) / (7 * 24 * 60 * 60 * 1000))
   //   : data.contrat.frequency === "mensuel"
@@ -67,7 +66,7 @@ const DateDistribution = () => (
     <Text>Septembre : le 03, le 10, le 17 et le 24 </Text>
     <Text>Octobre : le 01, le 08, le 15, le 22 et le 29 </Text>
     <Text>Novembre : le 05, le 12, le 19 et le 26 </Text>
-    <Text>Décembre : le 03, le 10, le 17, le 24 et le 30</Text>
+    <Text>Décembre : le 03, le 10, le 17, le 24 et le 31</Text>
   </View>
 );
 

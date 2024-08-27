@@ -1,6 +1,6 @@
-import { dateFormatter, dateMonthYear } from "@/lib/date-utils";
+import { dateFormatter, dateMonthYear, getTuesdaysBetweenDates } from "@/lib/date-utils";
 import { addressFormatter, formatFrenchPhoneNumber } from "@/lib/utils";
-import type { FullOrder, UserWithAddress } from "@/types";
+import type { AMAPOrderWithItems, FullOrder, UserWithAddress } from "@/types";
 import type { Customer } from "@prisma/client";
 
 export const createCustomer = (user: UserWithAddress) => {
@@ -75,6 +75,7 @@ export type monthlyOrdersType = {
   month: number;
   year: number;
   invoiceEmail: Date | null;
+  dateOfPayment: Date | null;
   isPaid: boolean;
 };
 
@@ -331,6 +332,32 @@ export const monthlyPDFData: MonthlyPDFDataType = {
   ],
 };
 
+export const createDataAMAPOrder = (order: AMAPOrderWithItems): AMAPType["contrat"] => {
+  return {
+    id: order.id,
+    dateOfEdition: order.dateOfEdition,
+    type: "AMAP de Guémené",
+    startDate: order.startDate,
+    endDate: order.endDate,
+    dayOfAbsence: order.daysOfAbsence,
+    shippingDay: order.shippingDays,
+    items: order.amapItems.map((item) => ({
+      id: item.itemId,
+      desc: item.name,
+      priceTTC: item.price,
+      qty: item.quantity,
+    })),
+    totalPrice: order.totalPrice,
+  };
+};
+
+export const createAMAPData = (order: AMAPOrderWithItems, user: UserWithAddress): AMAPType => {
+  return {
+    customer: { ...createCustomer(user), orderId: order.id, id: user.id },
+    contrat: createDataAMAPOrder(order),
+  };
+};
+
 export type AMAPType = {
   customer: Customer;
   contrat: {
@@ -338,9 +365,9 @@ export type AMAPType = {
     dateOfEdition: Date;
     startDate: Date;
     endDate: Date;
-    // frequency: "hebdomadaire" | "mensuel" | "bi-mensuel";
-    weeksOfAbsence: Date[];
-    // shippingDay: number;
+    type: "AMAP de Guémené";
+    dayOfAbsence: Date[];
+    shippingDay: Date[];
     totalPrice: number;
     items: {
       id: string;
@@ -364,9 +391,11 @@ export const AMAPData: AMAPType = {
   },
   contrat: {
     id: "CA-0sUttHF",
+    type: "AMAP de Guémené",
     dateOfEdition: new Date(),
     totalPrice: 60,
-    weeksOfAbsence: [],
+    dayOfAbsence: [],
+    shippingDay: getTuesdaysBetweenDates(new Date(1725314400000), new Date(1735599600000)) as Date[],
     startDate: new Date(1725314400000),
     endDate: new Date(1735599600000),
     items: [

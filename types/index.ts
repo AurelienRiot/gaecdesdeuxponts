@@ -1,4 +1,6 @@
 import type {
+  AMAPItem,
+  AMAPOrder,
   Address,
   BillingAddress,
   Customer,
@@ -87,4 +89,12 @@ export interface OrderWithItemsAndUserAndShop extends OrderWithItemsAndShop {
 
 export interface MainProductWithProducts extends MainProduct {
   products: ProductWithOptions[];
+}
+
+export interface AMAPOrderWithItems extends AMAPOrder {
+  amapItems: AMAPItem[];
+}
+
+export interface AMAPOrderWithItemsAndUser extends AMAPOrderWithItems {
+  user: UserWithAddress;
 }

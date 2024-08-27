@@ -28,10 +28,11 @@ import { schema, type ShopFormValues } from "./shop-schema";
 import TagsMultipleSelector from "@/components/display-shops/tags";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const TYPE = [
+const TYPE: { value: Shop["type"]; label: string }[] = [
   { value: "sell", label: "Vente" },
   { value: "product", label: "Production" },
   { value: "both", label: "Vente et production" },
+  { value: "amap", label: "AMAP" },
 ];
 const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
   const router = useRouter();

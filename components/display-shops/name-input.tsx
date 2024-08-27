@@ -1,7 +1,7 @@
 "use client";
 import { Input } from "@/components/ui/input";
-import type{ Shop } from "@prisma/client";
-import { type ChangeEvent, type Dispatch,type SetStateAction, useState } from "react";
+import type { Shop } from "@prisma/client";
+import { type ChangeEvent, type Dispatch, type SetStateAction, useState } from "react";
 
 interface NameInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   setSortedShops: Dispatch<SetStateAction<Shop[]>>;
@@ -21,7 +21,8 @@ const NameInput = ({ setSortedShops, shops, ...props }: NameInputProps) => {
       // If one name contains the search term and the other does not, the one with the search term goes first
       if (indexA !== -1 && indexB === -1) {
         return -1; // A has the search term and B does not, A goes first
-      } if (indexB !== -1 && indexA === -1) {
+      }
+      if (indexB !== -1 && indexA === -1) {
         return 1; // B has the search term and A does not, B goes first
       }
 
@@ -37,14 +38,7 @@ const NameInput = ({ setSortedShops, shops, ...props }: NameInputProps) => {
 
     setSortedShops(sortedShops);
   };
-  return (
-    <Input
-      value={search}
-      onChange={onChange}
-      placeholder="Rechercher le nom"
-      {...props}
-    />
-  );
+  return <Input value={search} onChange={onChange} placeholder="Rechercher par nom" {...props} />;
 };
 
 export default NameInput;

@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import type { OrderFormValues } from "./order-shema";
 import { ScrollToTarget } from "@/lib/scroll-to-traget";
 
-const negativePrice = "bg-destructive text-destructive-foreground";
+const negativeQuantityStyle = "bg-destructive text-destructive-foreground";
 
 export const ShippingProducts = ({
   products,
@@ -130,7 +130,7 @@ function ProductName({
               <span
                 className={cn(
                   "absolute right-1 top-[50px] transform -translate-y-1/2 text-muted-foreground",
-                  quantity < 0 ? negativePrice : "",
+                  quantity < 0 ? negativeQuantityStyle : "",
                 )}
               >
                 €
@@ -140,7 +140,7 @@ function ProductName({
                   type="number"
                   disabled={form.formState.isSubmitting}
                   placeholder="9,99"
-                  className={quantity < 0 ? negativePrice : ""}
+                  className={quantity < 0 ? negativeQuantityStyle : ""}
                   {...field}
                   value={field.value || ""}
                 />
@@ -163,7 +163,7 @@ function ProductName({
                   type="number"
                   disabled={form.formState.isSubmitting}
                   placeholder="Quantité du produit"
-                  className={quantity < 0 ? negativePrice : ""}
+                  className={quantity < 0 ? negativeQuantityStyle : ""}
                   {...field}
                   value={field.value || ""}
                 />
@@ -240,7 +240,7 @@ const SelectProductName = ({
                   className={cn(
                     "w-full justify-between",
                     field.value ? "" : "text-muted-foreground",
-                    quantity < 0 ? negativePrice : "",
+                    quantity < 0 ? negativeQuantityStyle : "",
                   )}
                 >
                   {selectedProduct?.product.isPro && (

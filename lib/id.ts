@@ -20,7 +20,7 @@ export function createId(type: (typeof IdType)[number]) {
     case "order":
       return `CM_${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear() % 100}_${nanoid(5)}`;
     case "amap":
-      return `CA_${nanoid(7)}`;
+      return `AM_${nanoid(7)}`;
     case "command":
       return `commandes${reducedAlphabet()}`;
   }
