@@ -29,6 +29,7 @@ import deleteUser from "../../_actions/delete-user";
 import updateUser from "../_actions/update-user";
 import MailForm from "./mail-form";
 import { schema, type UserFormValues } from "./user-schema";
+import CheckboxForm from "@/components/chekbox-form";
 
 interface UserFormProps {
   initialData: UserWithOrdersAndAdress;
@@ -176,42 +177,28 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
               control={form.control}
               name="isPro"
               render={({ field }) => (
-                <FormItem className="flex h-20 cursor-pointer flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                  <label className="flex cursor-pointer flex-row items-start space-x-3 space-y-0">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        disabled={form.formState.isSubmitting}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>Professionnel</FormLabel>
-                      <FormDescription>{"Faire de cette utilisateur un professionnel"}</FormDescription>
-                    </div>
-                  </label>
-                </FormItem>
+                <CheckboxForm
+                  ref={field.ref}
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  disabled={form.formState.isSubmitting}
+                  title="Professionnel"
+                  description="Faire de cette utilisateur un professionnel"
+                />
               )}
             />
             <FormField
               control={form.control}
               name="completed"
               render={({ field }) => (
-                <FormItem className="flex h-20 cursor-pointer flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                  <label className="flex cursor-pointer flex-row items-start space-x-3 space-y-0">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        disabled={form.formState.isSubmitting}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>Profile complet</FormLabel>
-                      <FormDescription>Indique si le profil de l'utilisateur est complet.</FormDescription>
-                    </div>
-                  </label>
-                </FormItem>
+                <CheckboxForm
+                  ref={field.ref}
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  disabled={form.formState.isSubmitting}
+                  title="Profile complet"
+                  description="Indique si le profil de l'utilisateur est complet."
+                />
               )}
             />
             <AddressForm />

@@ -27,6 +27,7 @@ import updateShop from "../_actions/update-shop";
 import { schema, type ShopFormValues } from "./shop-schema";
 import TagsMultipleSelector from "@/components/display-shops/tags";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import CheckboxForm from "@/components/chekbox-form";
 
 const TYPE: { value: Shop["type"]; label: string }[] = [
   { value: "sell", label: "Vente" },
@@ -188,21 +189,14 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
               control={form.control}
               name="isArchived"
               render={({ field }) => (
-                <FormItem className="flex cursor-pointer flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                  <label className="flex cursor-pointer flex-row items-start space-x-3 space-y-0">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        disabled={form.formState.isSubmitting}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>Archivé</FormLabel>
-                      <FormDescription>{"Ce magasin n'apparaitra pas sur le site."}</FormDescription>
-                    </div>
-                  </label>
-                </FormItem>
+                <CheckboxForm
+                  checked={field.value}
+                  ref={field.ref}
+                  onCheckedChange={field.onChange}
+                  disabled={form.formState.isSubmitting}
+                  title="Archivé"
+                  description="Ce magasin n'apparaitra pas sur le site."
+                />
               )}
             />
             <FormField

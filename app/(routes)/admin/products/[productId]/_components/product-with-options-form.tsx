@@ -18,6 +18,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import OptionValueForm from "./options-values-form";
 import type { ProductFormValues } from "./product-schema";
+import CheckboxForm from "@/components/chekbox-form";
 
 export const ProductWithOptions = ({
   optionsArray,
@@ -244,42 +245,28 @@ function ProductName({
           control={form.control}
           name={`products.${productIndex}.isArchived`}
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start  space-x-3 space-y-0 my-auto rounded-md border h-fit bg-background ">
-              <label className="flex h-full w-full cursor-pointer flex-row items-start space-x-3 space-y-0 p-4">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    disabled={form.formState.isSubmitting}
-                  />
-                </FormControl>
-                <div className="space-y-1 leading-none">
-                  <FormLabel className="cursor-pointer">Archivé</FormLabel>
-                  <FormDescription>{"Ce produit n'apparaitra pas sur le site."}</FormDescription>
-                </div>
-              </label>
-            </FormItem>
+            <CheckboxForm
+              ref={field.ref}
+              checked={field.value}
+              onCheckedChange={field.onChange}
+              disabled={form.formState.isSubmitting}
+              title="Archivé"
+              description="Ce produit n'apparaitra pas sur le site."
+            />
           )}
         />
         <FormField
           control={form.control}
           name={`products.${productIndex}.isFeatured`}
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 my-auto rounded-md border h-fit bg-background">
-              <label className="flex h-full w-full cursor-pointer flex-row items-start space-x-3 space-y-0 p-4">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    disabled={form.formState.isSubmitting}
-                  />
-                </FormControl>
-                <div className="space-y-1 leading-none">
-                  <FormLabel className="cursor-pointer">Mise en avant</FormLabel>
-                  <FormDescription>{"Ce produit apparaitra sur la page d'accueil."}</FormDescription>
-                </div>
-              </label>
-            </FormItem>
+            <CheckboxForm
+              ref={field.ref}
+              checked={field.value}
+              onCheckedChange={field.onChange}
+              disabled={form.formState.isSubmitting}
+              title="Mise en avant"
+              description="Ce produit apparaitra sur la page d'accueil."
+            />
           )}
         />
         <FormField

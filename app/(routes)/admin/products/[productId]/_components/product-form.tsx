@@ -24,6 +24,7 @@ import { updateProduct } from "../_actions/update-product";
 import { PlateEditor } from "./plate-editor";
 import { mainProductSchema, type ProductFormValues } from "./product-schema";
 import { ProductWithOptions } from "./product-with-options-form";
+import CheckboxForm from "@/components/chekbox-form";
 
 type ProductFormProps = {
   initialData: MainProductWithProducts | null;
@@ -182,42 +183,28 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
               control={form.control}
               name="isArchived"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                  <label className="flex cursor-pointer flex-row items-start space-x-3 space-y-0">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        disabled={form.formState.isSubmitting}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel className="cursor-pointer">Archivé</FormLabel>
-                      <FormDescription>{"Ce produit n'apparaitra pas sur le site."}</FormDescription>
-                    </div>
-                  </label>
-                </FormItem>
+                <CheckboxForm
+                  ref={field.ref}
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  disabled={form.formState.isSubmitting}
+                  title="Archivé"
+                  description="Ce produit n'apparaitra pas sur le site."
+                />
               )}
             />
             <FormField
               control={form.control}
               name="isPro"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                  <label className="flex cursor-pointer flex-row items-start space-x-3 space-y-0">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        disabled={form.formState.isSubmitting}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel className="cursor-pointer">Professionel</FormLabel>
-                      <FormDescription>{"Ce produit apparaitra sur la partie professionnel du site."}</FormDescription>
-                    </div>
-                  </label>
-                </FormItem>
+                <CheckboxForm
+                  ref={field.ref}
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  disabled={form.formState.isSubmitting}
+                  title="Professionel"
+                  description="Ce produit apparaitra sur la partie professionnel du site."
+                />
               )}
             />
           </div>
