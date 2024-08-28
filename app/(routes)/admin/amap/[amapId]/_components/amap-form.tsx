@@ -1,31 +1,31 @@
 "use client";
 
+import DeleteButton from "@/components/delete-button";
+import { DisplayAMAPOrder } from "@/components/pdf/pdf-button";
 import { LoadingButton } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
+import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import useServerAction from "@/hooks/use-server-action";
+import { getTuesdaysBetweenDates } from "@/lib/date-utils";
 import { createId } from "@/lib/id";
+import type { AMAPOrderWithItems } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Product, Shop, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import type { AMAPOrderWithItems } from "@/types";
 import { useEffect } from "react";
-import { schema, type AMAPFormValues } from "./amap-schema";
-import FormDatePicker from "./date-picker";
-import SelectShop from "./select-shop";
-import SelectUser from "./select-user";
-import { AMAPProducts } from "./products";
-import TotalPrice from "./total-price";
-import DaysOfShipping from "./days-of-shipping";
-import useServerAction from "@/hooks/use-server-action";
+import { useForm } from "react-hook-form";
+import { deleteAMAP } from "../../_actions/delete-amap";
 import createAMAP from "../_actions/create-amap";
 import updateAMAP from "../_actions/update-amap";
-import { deleteAMAP } from "../../_actions/delete-amap";
-import DeleteButton from "@/components/delete-button";
-import { DisplayAMAPOrder } from "@/components/pdf/pdf-button";
-import { Label } from "@/components/ui/label";
-import { getTuesdaysBetweenDates } from "@/lib/date-utils";
+import { schema, type AMAPFormValues } from "./amap-schema";
+import FormDatePicker from "./date-picker";
+import DaysOfShipping from "./days-of-shipping";
+import { AMAPProducts } from "./products";
+import SelectShop from "./select-shop";
+import SelectUser from "./select-user";
+import TotalPrice from "./total-price";
 
 const START = new Date(1725314400000);
 const END = new Date(1735599600000);
@@ -60,6 +60,10 @@ export const AMAPForm: React.FC<AMAPFormProps> = ({ initialData, users, shops, p
       shopId: initialData?.shopId || shops[0]?.id || undefined,
     },
   });
+
+  // const onError:SubmitErrorHandler<AMAPFormValues> = (e) => {
+  //   console.log(e);
+  // };
 
   const onSubmit = async (data: AMAPFormValues) => {
     function onSuccess() {

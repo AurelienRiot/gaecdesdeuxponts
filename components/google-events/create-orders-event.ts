@@ -48,11 +48,11 @@ export default async function createOrdersEvent(data: { date: Date }) {
     })
     .then((event) => {
       console.log(event.data.htmlLink);
-      return { success: true, message: "event created" };
+      return { success: true, message: "Agenda mise à jour" };
     })
     .catch((error) => {
       console.log(error);
-      return { success: false, message: "event not created" };
+      return { success: false, message: "Erreur dans l'envoi de l'evènement" };
     });
 }
 

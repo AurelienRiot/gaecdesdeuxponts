@@ -9,6 +9,7 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import CardUser from "./card-user";
+import { Toggle } from "@/components/ui/toggle";
 
 interface UserClientProps {
   users: User[];
@@ -21,9 +22,15 @@ const UserClient: React.FC<UserClientProps> = ({ users, orderLengths, isPaidArra
   const searchKeys = ["email", "name", "phone", "addresse", "company"];
   const displayKeys = ["Email", "Nom", "Téléphone", "Addresse", "Entreprise"];
   const [selectValue, setSelectValue] = useState(searchKeys[4]);
+  const [toogle, setToogle] = useState(false);
 
   const filteredUsers = users.filter((user) => {
     const value = String(user[selectValue as keyof User]);
+    if (toogle) {
+      return (
+        value.toLowerCase().includes(search.toLowerCase()) && !isPaidArray.find((item) => item.id === user.id)?.isPaid
+      );
+    }
     return value.toLowerCase().includes(search.toLowerCase());
   });
 
@@ -59,6 +66,9 @@ const UserClient: React.FC<UserClientProps> = ({ users, orderLengths, isPaidArra
               ))}
             </SelectContent>
           </Select>
+          <Toggle aria-label="Toggle paid" variant={"outline"} className="w-fit " onPressedChange={setToogle}>
+            Non payé
+          </Toggle>
         </div>
         <div className="flex flex-wrap justify-center items-center gap-2 p-2 pt-4 ">
           {filteredUsers.map((user, index) => (

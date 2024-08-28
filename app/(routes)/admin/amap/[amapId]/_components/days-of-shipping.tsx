@@ -16,8 +16,6 @@ function DaysOfShipping() {
   const shippingDays = form.watch("shippingDays");
   const daysOfAbsence = form.watch("daysOfAbsence");
 
-  console.log({ daysOfAbsence, shippingDays });
-
   if (!startDate || !endDate) return null;
 
   function handleDayClick(day: Date) {

@@ -48,6 +48,7 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
+                ref={field.ref}
                 variant="outline"
                 role="combobox"
                 disabled={form.formState.isSubmitting}

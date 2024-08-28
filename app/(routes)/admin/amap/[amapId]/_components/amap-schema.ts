@@ -18,8 +18,8 @@ export const schema = z.object({
       quantity: z.coerce.number(),
     }),
   ),
-  userId: z.string().min(1, { message: "Selectionner l'utilisateur" }),
-  shopId: z.string().min(1, { message: "Selectionner l'AMAP" }),
+  userId: z.string({ required_error: "Selectionner l'utilisateur" }).min(1, { message: "Selectionner l'utilisateur" }),
+  shopId: z.string({ required_error: "Selectionner l'utilisateur" }).min(1, { message: "Selectionner l'AMAP" }),
 });
 
 export type AMAPFormValues = z.infer<typeof schema>;
