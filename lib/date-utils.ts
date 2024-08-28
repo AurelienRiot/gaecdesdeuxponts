@@ -1,7 +1,8 @@
 import { fr } from "date-fns/locale";
 import { addDays, format } from "date-fns";
 
-export const dateFormatter = (date: Date, options?: { hours?: boolean; days?: boolean }) => {
+export const dateFormatter = (date: Date, options?: { hours?: boolean; days?: boolean; customFormat?: string }) => {
+  if (options?.customFormat) return format(date, options.customFormat, { locale: fr });
   if (options?.hours) return format(date, "d MMMM yyyy, HH:mm", { locale: fr });
   if (options?.days) return format(date, "EEEE d MMMM yyyy", { locale: fr });
   return format(date, "d MMMM yyyy", { locale: fr });

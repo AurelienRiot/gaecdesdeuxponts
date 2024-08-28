@@ -2,7 +2,6 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { directionRouteXL } from "./_actions/opt-routes";
 import OrdersCalendar from "./_components/orders-calendar";
-import prismadb from "@/lib/prismadb";
 
 export const dynamic = "force-dynamic";
 
@@ -22,12 +21,18 @@ function CalendarPage({ searchParams }: { searchParams: { date: string | undefin
   }
 
   return (
-    <div className=" space-y-4 p-8 pt-6 ">
-      <Heading title={`Calendrier des commandes`} description="Liste des commandes" className="mx-auto w-fit" />
+    <>
+      <div className=" space-y-4 p-8  pt-2 ">
+        <Heading
+          title={`Calendrier des commandes`}
+          description="Liste des commandes"
+          className="mx-auto w-fit  text-center"
+        />
 
-      <Separator />
+        <Separator />
+      </div>
       <OrdersCalendar month={month} />
-    </div>
+    </>
   );
 }
 

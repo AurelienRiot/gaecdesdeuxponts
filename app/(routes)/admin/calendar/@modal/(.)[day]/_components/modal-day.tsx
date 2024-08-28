@@ -10,15 +10,15 @@ function ModalDay({ date, children }: { date: Date; children: React.ReactNode })
     <Dialog
       open={true}
       onOpenChange={(isOpen) => {
-        if (!isOpen) router.back();
+        router.back();
       }}
       modal={true}
     >
-      <DialogContent className="left-[50%] top-[50%] max-h-[90%] w-[90%] max-w-[700px] overflow-y-scroll hide-scrollbar rounded-sm">
+      <DialogContent className="left-[50%] top-[50%] max-h-[90%] w-[90%] max-w-[700px] overflow-y-scroll  rounded-sm">
         <DialogHeader>
-          <DialogTitle className="text-center text-xl">
+          <DialogTitle className="text-center text-2xl lining-nums">
             {" "}
-            {`Commande pour le ${dateFormatter(date, { days: true })}`}{" "}
+            {`Commande pour le ${dateFormatter(date, { customFormat: "EEEE d MMMM" })}`}{" "}
           </DialogTitle>
         </DialogHeader>
         {children}
