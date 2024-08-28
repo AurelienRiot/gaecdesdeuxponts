@@ -85,6 +85,7 @@ export const CreateUserForm = () => {
                 <FormItem className="my-auto">
                   <FormControl>
                     <InputImageModal
+                      ref={field.ref}
                       selectedFiles={field.value ? [field.value] : []}
                       setSelectedFiles={(files: string[]) => {
                         files.length > 0 ? field.onChange(files[0]) : field.onChange(null);

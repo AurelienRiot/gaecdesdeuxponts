@@ -12,25 +12,13 @@ import { toast } from "sonner";
 import { z } from "zod";
 import Spinner from "../animations/spinner";
 import { Icons } from "../icons";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 
-export const LoginButton = (
-  props: React.AnchorHTMLAttributes<HTMLAnchorElement>,
-) => {
+export const LoginButton = (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
   return (
     <Button
-      className={cn(
-        "bg-primary-foreground text-primary hover:bg-accent hover:text-accent-foreground",
-        props.className,
-      )}
+      className={cn("bg-primary-foreground text-primary hover:bg-accent hover:text-accent-foreground", props.className)}
       title="Se connecter"
       asChild
     >
@@ -42,29 +30,16 @@ export const LoginButton = (
   );
 };
 
-export const LogoutButton = (
-  props: React.ButtonHTMLAttributes<HTMLButtonElement>,
-) => {
+export const LogoutButton = (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
-    <Button
-      title="Se deconnecter"
-      onClick={() => signOut({ callbackUrl: "/" })}
-      {...props}
-    >
+    <Button title="Se deconnecter" onClick={() => signOut({ callbackUrl: "/" })} {...props}>
       <LogOut className="h-6 w-6" />
     </Button>
   );
 };
-export const LogoutButtonText = (
-  props: React.ButtonHTMLAttributes<HTMLButtonElement>,
-) => {
+export const LogoutButtonText = (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
-    <Button
-      title="Se deconnecter"
-      variant={"destructive"}
-      onClick={() => signOut({ callbackUrl: "/" })}
-      {...props}
-    >
+    <Button title="Se deconnecter" variant={"destructive"} onClick={() => signOut({ callbackUrl: "/" })} {...props}>
       Déconnexion
     </Button>
   );
@@ -74,7 +49,7 @@ export const GoogleButton = ({ callbackUrl }: { callbackUrl: string }) => {
   const [loading, setLoading] = useState(false);
   return (
     <button
-    type="button"
+      type="button"
       onClick={async () => {
         setLoading(true);
         await signIn("google", {
@@ -87,10 +62,7 @@ export const GoogleButton = ({ callbackUrl }: { callbackUrl: string }) => {
       <Icons.google />
       <span className="mx-auto self-center font-medium text-white sm:text-lg">
         {loading ? (
-          <Spinner
-            size={40}
-            className="absolute left-[135px] top-1 font-sans text-white"
-          />
+          <Spinner size={40} className="absolute left-[135px] top-1 font-sans text-white" />
         ) : (
           "Se connecter avec Google"
         )}
@@ -101,9 +73,9 @@ export const GoogleButton = ({ callbackUrl }: { callbackUrl: string }) => {
 
 const formSchema = z.object({
   email: z
-    .string()
-    .email({ message: "L'email doit être un email valide" })
-    .min(1, { message: "L'email ne peut pas être vide" })
+    .string({ required_error: "Veuillez entrer votre email" })
+    .email({ message: "L'email n'est pas un email valide" })
+    .min(1, { message: "Veuillez entrer votre email" })
     .max(100, { message: "L'email ne peut pas dépasser 100 caractères" }),
 });
 
@@ -148,9 +120,7 @@ export const EmailButton = ({ callbackUrl }: { callbackUrl: string }) => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-md">
-                      Entrer votre email pour recevoir le lien de connexion
-                    </FormLabel>
+                    <FormLabel className="text-md">Entrer votre email pour recevoir le lien de connexion</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
@@ -179,15 +149,9 @@ export const EmailButton = ({ callbackUrl }: { callbackUrl: string }) => {
         </Form>
       )}
 
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={success ? { scale: 1 } : { scale: 0 }}
-        transition={{ duration: 0.3 }}
-      >
+      <motion.div initial={{ scale: 0 }} animate={success ? { scale: 1 } : { scale: 0 }} transition={{ duration: 0.3 }}>
         <p className="text-center text-xl">E-mail envoyé ! </p>
-        <p className="text-center text-xl">
-          Veuillez vérifier votre boîte mail.
-        </p>
+        <p className="text-center text-xl">Veuillez vérifier votre boîte mail.</p>
       </motion.div>
     </>
   );

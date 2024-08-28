@@ -1,9 +1,8 @@
 "use client";
 
 import { AddressForm } from "@/components/address-form";
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import { BillingAddressForm } from "@/components/billing-address-form";
-import { AlertModal } from "@/components/ui/alert-modal-form";
+import DeleteButton from "@/components/delete-button";
 import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
@@ -15,13 +14,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { Address, BillingAddress } from "@prisma/client";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import deleteUser from "../_actions/delete-user";
 import updateUser from "../_actions/update-user";
 import { formSchema, type UserFormValues } from "./form-schema";
-import DeleteButton from "@/components/delete-button";
 
 interface UserFormProps {
   initialData: {

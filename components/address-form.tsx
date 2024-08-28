@@ -74,6 +74,7 @@ export const AddressForm = ({ className }: AdressFormProps) => {
                   <AnimateHeight display={filter} className="p-1">
                     <PopoverTrigger asChild>
                       <Button
+                        ref={field.ref}
                         variant="outline"
                         role="combobox"
                         onClick={() => setOpen((open) => !open)}

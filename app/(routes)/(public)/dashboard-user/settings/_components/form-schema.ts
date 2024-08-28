@@ -4,8 +4,8 @@ import { isValidPhoneNumber } from "libphonenumber-js";
 import { z } from "zod";
 
 export const formSchema = z.object({
-  name: z.string().min(1, {
-    message: "Le nom est obligatoire",
+  name: z.string({ required_error: "Veuillez entrer votre nom" }).min(1, {
+    message: "Veuillez entrer votre nom",
   }),
   company: z.string().optional(),
   phone: z.string().refine(

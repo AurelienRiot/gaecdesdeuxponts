@@ -121,6 +121,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
                 <FormLabel>Images</FormLabel>
                 <FormControl>
                   <UploadImage
+                    ref={field.ref}
                     selectedFiles={field.value}
                     setSelectedFiles={(files: string[]) => {
                       field.onChange(files);

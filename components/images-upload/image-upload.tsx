@@ -1,16 +1,16 @@
 "use client";
+import useServerAction from "@/hooks/use-server-action";
 import { addDelay, checkIfUrlAccessible } from "@/lib/utils";
 import { AnimatePresence, Reorder } from "framer-motion";
-import { Loader2, Plus, Trash, UploadCloud, X } from "lucide-react";
+import { Loader2, Plus, UploadCloud, X } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { AnimateHeight } from "../animations/animate-size";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
-import { type Ressources, deleteObject, getSignature, listFiles } from "./server";
-import useServerAction from "@/hooks/use-server-action";
+import { deleteObject, getSignature, listFiles, type Ressources } from "./server";
 
 export const getFileKey = (url: string): string => {
   const parts = url.split("/");
@@ -30,48 +30,52 @@ type UploadImageProps = {
   multipleImages?: boolean;
 };
 
-const UploadImage = ({ selectedFiles, setSelectedFiles, multipleImages = false }: UploadImageProps) => {
-  const [allFiles, setAllFiles] = useState<string[]>([]);
-  const { serverAction: listFilesAction } = useServerAction(listFiles);
+const UploadImage = forwardRef<HTMLDivElement, UploadImageProps>(
+  ({ selectedFiles, setSelectedFiles, multipleImages = false }, ref) => {
+    const [allFiles, setAllFiles] = useState<string[]>([]);
+    const { serverAction: listFilesAction } = useServerAction(listFiles);
 
-  useEffect(() => {
-    const fetchFiles = async () => {
-      function onSuccess(data?: Ressources[]) {
-        if (!data) {
-          toast.error("Impossible de charger le fichier. Veuillez reessayer plus tard.");
-          return;
+    useEffect(() => {
+      const fetchFiles = async () => {
+        function onSuccess(data?: Ressources[]) {
+          if (!data) {
+            toast.error("Impossible de charger le fichier. Veuillez reessayer plus tard.");
+            return;
+          }
+          setAllFiles(data.map((item) => makeURL(item.public_id)));
         }
-        setAllFiles(data.map((item) => makeURL(item.public_id)));
-      }
-      await listFilesAction({ data: {}, onSuccess });
-    };
-    fetchFiles();
-  }, []);
+        await listFilesAction({ data: {}, onSuccess });
+      };
+      fetchFiles();
+    }, []);
 
-  return (
-    <div className="justify-left flex flex-col gap-4 p-4">
-      <InputImage
-        selectedFiles={selectedFiles}
-        setSelectedFiles={setSelectedFiles}
-        multipleImages={multipleImages}
-        setAllFiles={setAllFiles}
-      />
-      <DisplaySelectedImages
-        selectedFiles={selectedFiles}
-        setSelectedFiles={setSelectedFiles}
-        multipleImages={multipleImages}
-      />
+    return (
+      <div ref={ref} className="justify-left flex flex-col gap-4 p-4">
+        <InputImage
+          selectedFiles={selectedFiles}
+          setSelectedFiles={setSelectedFiles}
+          multipleImages={multipleImages}
+          setAllFiles={setAllFiles}
+        />
+        <DisplaySelectedImages
+          selectedFiles={selectedFiles}
+          setSelectedFiles={setSelectedFiles}
+          multipleImages={multipleImages}
+        />
 
-      <DisplayImages
-        allFiles={allFiles}
-        setFiles={setAllFiles}
-        selectedFiles={selectedFiles}
-        setSelectedFiles={setSelectedFiles}
-        multipleImages={multipleImages}
-      />
-    </div>
-  );
-};
+        <DisplayImages
+          allFiles={allFiles}
+          setFiles={setAllFiles}
+          selectedFiles={selectedFiles}
+          setSelectedFiles={setSelectedFiles}
+          multipleImages={multipleImages}
+        />
+      </div>
+    );
+  },
+);
+
+UploadImage.displayName = "UploadImage";
 
 export default UploadImage;
 

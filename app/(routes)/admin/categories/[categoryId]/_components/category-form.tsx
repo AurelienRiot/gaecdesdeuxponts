@@ -77,6 +77,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
                 <FormLabel>{"Image du panneau d'affichage"} </FormLabel>
                 <FormControl>
                   <UploadImage
+                    ref={field.ref}
                     selectedFiles={field.value ? [field.value] : []}
                     setSelectedFiles={(files: string[]) => {
                       if (files.length > 0) {

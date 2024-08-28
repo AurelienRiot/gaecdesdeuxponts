@@ -99,6 +99,7 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
                 <FormLabel>Images</FormLabel>
                 <FormControl>
                   <UploadImage
+                    ref={field.ref}
                     selectedFiles={field.value ? [field.value] : []}
                     setSelectedFiles={(files: string[]) => {
                       if (files.length > 0) {

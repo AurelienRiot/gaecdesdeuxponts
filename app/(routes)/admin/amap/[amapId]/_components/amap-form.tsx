@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { Product, Shop, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { UseFormReturn, useForm } from "react-hook-form";
 import { deleteAMAP } from "../../_actions/delete-amap";
 import createAMAP from "../_actions/create-amap";
 import updateAMAP from "../_actions/update-amap";
@@ -29,6 +29,23 @@ import TotalPrice from "./total-price";
 
 const START = new Date(1725314400000);
 const END = new Date(1735599600000);
+
+function initialProduct(products: Product[]) {
+  const item = products.find((product) => product.name === "Lait cru bio bidon 2L");
+  if (item) {
+    return [
+      {
+        itemId: item.id,
+        unit: item.unit,
+        description: item.description,
+        name: item.name,
+        price: item.price,
+        quantity: 1,
+      },
+    ];
+  }
+  return [];
+}
 
 interface AMAPFormProps {
   initialData: AMAPOrderWithItems | null;
@@ -55,7 +72,7 @@ export const AMAPForm: React.FC<AMAPFormProps> = ({ initialData, users, shops, p
       startDate: initialData?.startDate || new Date() < START ? START : new Date(),
       endDate: initialData?.endDate || END,
       totalPrice: initialData?.totalPrice || 0,
-      amapItems: initialData?.amapItems || [],
+      amapItems: initialData?.amapItems || initialProduct(products),
       userId: initialData?.userId || undefined,
       shopId: initialData?.shopId || shops[0]?.id || undefined,
     },
@@ -72,20 +89,6 @@ export const AMAPForm: React.FC<AMAPFormProps> = ({ initialData, users, shops, p
     }
     initialData ? await updateAMAPAction({ data, onSuccess }) : await createAMAPAction({ data, onSuccess });
   };
-
-  useEffect(() => {
-    if (form.getValues("amapItems").length === 0) {
-      const item = products.find((product) => product.name === "Lait cru bio bidon 2L");
-      if (item) {
-        form.setValue(`amapItems.0.itemId`, item.id);
-        form.setValue(`amapItems.0.unit`, item.unit);
-        form.setValue(`amapItems.0.description`, item.description);
-        form.setValue(`amapItems.0.name`, item.name);
-        form.setValue(`amapItems.0.price`, item.price);
-        form.setValue(`amapItems.0.quantity`, 1);
-      }
-    }
-  });
 
   return (
     <>

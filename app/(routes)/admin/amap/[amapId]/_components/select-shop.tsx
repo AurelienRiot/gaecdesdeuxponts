@@ -42,6 +42,7 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
+                ref={field.ref}
                 key={shopId || "domicile"}
                 variant="outline"
                 role="combobox"

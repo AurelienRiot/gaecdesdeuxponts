@@ -88,6 +88,7 @@ export const BillingAddressForm = ({ className }: AdressFormProps) => {
                       <AnimateHeight display={filter} className="p-1">
                         <PopoverTrigger asChild>
                           <Button
+                            ref={field.ref}
                             variant="outline"
                             role="combobox"
                             onClick={() => setOpen((open) => !open)}
@@ -198,6 +199,7 @@ const AddressInput = ({ label, addressKey, disabled, className, type = "text", .
           <FormControl>
             <div className={cn("relative p-2", className)} {...props}>
               <FloatingInput
+                ref={field.ref}
                 value={addressValue}
                 onChange={(e) => {
                   form.setValue(`billingAddress.${addressKey}`, e.target.value);

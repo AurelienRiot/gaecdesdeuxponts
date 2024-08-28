@@ -289,6 +289,7 @@ function ProductName({
             <FormItem className="my-auto">
               <FormControl>
                 <InputImageModal
+                  ref={field.ref}
                   multipleImages
                   selectedFiles={field.value}
                   setSelectedFiles={(files: string[]) => {
