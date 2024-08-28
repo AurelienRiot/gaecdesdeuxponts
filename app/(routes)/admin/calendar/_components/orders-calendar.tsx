@@ -1,5 +1,6 @@
 "use client";
 import { Calendar } from "@/components/ui/calendar";
+import { fr } from "date-fns/locale";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -10,6 +11,7 @@ function OrdersCalendar({ month }: { month: Date }) {
     <div className="max-w-64 mx-auto">
       <Calendar
         mode="single"
+        locale={fr}
         selected={date}
         onSelect={(e) => {
           setDate(e);

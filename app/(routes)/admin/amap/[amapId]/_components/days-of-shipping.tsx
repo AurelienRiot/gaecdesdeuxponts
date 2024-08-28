@@ -47,7 +47,7 @@ function DaysOfShipping() {
   }
 
   return (
-    <>
+    <div className="space-y-4">
       <Label>Date de livraisons</Label>
       <Calendar
         mode="single"
@@ -64,7 +64,7 @@ function DaysOfShipping() {
         }}
         classNames={{
           selected: "",
-          day: "p-0 size-8 text-sm flex-1 flex items-center justify-center rounded-md has-[button]",
+          day: "p-0 size-8 text-sm flex-1 flex items-center justify-center rounded-md ",
         }}
         modifiersClassNames={{
           shipping: "bg-green-500 text-green-100 hover:bg-green-500/90",
@@ -74,7 +74,7 @@ function DaysOfShipping() {
       />
 
       <DisplayShippingDays days={shippingDays} />
-    </>
+    </div>
   );
 }
 

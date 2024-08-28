@@ -74,7 +74,7 @@ const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
               mode="single"
               captionLayout="label"
               selected={date ?? undefined}
-              // month={month}
+              defaultMonth={date ?? new Date()}
               locale={fr}
               onSelect={(d) => {
                 if (d) {

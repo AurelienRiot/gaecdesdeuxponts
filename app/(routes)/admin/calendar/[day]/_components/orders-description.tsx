@@ -27,7 +27,7 @@ function OrderDescriptions({
                   alt={`Image de ${order.name}`}
                   width={40}
                   height={40}
-                  className="size-10 rounded-full object-contain mr-3 inline"
+                  className="size-10 rounded-sm object-contain mr-3 inline"
                 />
               )}
               {order.name}
