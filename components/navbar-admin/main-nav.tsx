@@ -61,26 +61,27 @@ export const MainAdminRoutes = (pathname: string) => [
     Icone: ListOrderedIcon,
   },
   {
+    href: `/admin/users`,
+    label: "Clients",
+    active: pathname.startsWith(`/admin/users`),
+    Icone: Users,
+  },
+];
+
+export const SecondaryAdminRoutes = (pathname: string) => [
+  {
     href: `/admin`,
     label: "Résumé",
     active: pathname === `/admin`,
     Icone: LayoutDashboardIcon,
   },
-];
-
-export const SecondaryAdminRoutes = (pathname: string) => [
   {
     href: `/`,
     label: "Accueil",
     active: pathname === `/`,
     Icone: PresentationIcon,
   },
-  {
-    href: `/admin/users`,
-    label: "Clients",
-    active: pathname.startsWith(`/admin/users`),
-    Icone: Users,
-  },
+
   {
     href: `/admin/contacts`,
     label: "Contacts",
