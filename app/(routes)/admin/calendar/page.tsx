@@ -21,13 +21,11 @@ function CalendarPage({ searchParams }: { searchParams: { date: string | undefin
   }
 
   return (
-    <div className="flex-col">
-      <div className="flex-1 space-y-4 p-8 pt-6">
-        <Heading title={`Calendrier des commandes`} description="Liste des commandes" />
+    <div className=" space-y-4 p-8 pt-6 ">
+      <Heading title={`Calendrier des commandes`} description="Liste des commandes" className="mx-auto w-fit" />
 
-        <Separator />
-        <OrdersCalendar month={month} />
-      </div>
+      <Separator />
+      <OrdersCalendar month={month} />
     </div>
   );
 }

@@ -1,21 +1,14 @@
 import type getOrders from "@/components/google-events/get-orders-for-events";
-import { PiPackageDuotone } from "react-icons/pi";
+import DisplayItem from "./display.item";
 
 function ProductDescription({
   productQuantities,
 }: { productQuantities: Awaited<ReturnType<typeof getOrders>>["productQuantities"] }) {
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-bold">Résumé des produits</h2>
-      <div className="space-y-2">
-        {productQuantities.map((item) => (
-          <div key={item.itemId} className="text-sm flex items-center space-x-2">
-            <PiPackageDuotone className="h-5 w-5" />
-            <div>
-              <strong>{item.name}</strong>: {item.quantity} {item.unit || ""}
-            </div>
-          </div>
-        ))}
+      <h2 className="text-lg font-bold bg-blue-100 p-2 rounded-md">Résumé des produits</h2>
+      <div className="space-y-2 bg-white p-4 rounded-md shadow-sm">
+        <DisplayItem items={productQuantities} />
       </div>
     </div>
   );

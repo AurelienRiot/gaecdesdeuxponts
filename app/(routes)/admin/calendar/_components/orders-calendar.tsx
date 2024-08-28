@@ -7,7 +7,7 @@ function OrdersCalendar({ month }: { month: Date }) {
   const router = useRouter();
   const [date, setDate] = useState(new Date());
   return (
-    <div className="max-w-64">
+    <div className="max-w-64 mx-auto">
       <Calendar
         mode="single"
         selected={date}

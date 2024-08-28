@@ -23,23 +23,22 @@ const DayEventPage = async ({ params }: { params: { day: string | undefined } })
   });
 
   return (
-    <div className="flex-col">
-      <div className="flex-1 space-y-4 p-8 pt-6">
-        <div className="flex flex-col items-center justify-between sm:flex-row">
-          <Heading
-            title={`Commandes pour le ${dateFormatter(date, { days: true })} `}
-            description="Liste des différentes commandes et livraisons"
-          />
-          {/* <Button asChild className="m-2 pb-6 pt-6 sm:ml-2 sm:pb-0 sm:pt-0">
+    <div className="space-y-4 p-8 pt-6 ">
+      <div className="flex flex-col items-center justify-between sm:flex-row">
+        <Heading
+          title={`Commandes pour le ${dateFormatter(date, { days: true })} `}
+          description="Liste des différentes commandes et livraisons"
+          className="w-fit mx-auto"
+        />
+        {/* <Button asChild className="m-2 pb-6 pt-6 sm:ml-2 sm:pb-0 sm:pt-0">
           <Link href={`/admin/amap/new`}>
             <Plus className="mr-2  h-4 w-4" />
             Créer un nouveau
           </Link>
         </Button> */}
-        </div>
-        <Separator />
-        {result ? <DescriptionEvents date={date} result={result} /> : <NoResults />}
       </div>
+      <Separator />
+      {result ? <DescriptionEvents date={date} result={result} /> : <NoResults />}
     </div>
   );
 };
@@ -54,11 +53,11 @@ function DescriptionEvents({ result, date }: { result: Awaited<ReturnType<typeof
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 mx-auto w-fit">
       <ProductDescrition productQuantities={productQuantities} />
+      <UpdateEvents date={date} />
       <AMAPDescrition groupedAMAPOrders={groupedAMAPOrders} />
       <OrderDescriptions formattedOrders={formattedOrders} />
-      <UpdateEvents date={date} />
     </div>
   );
 }
