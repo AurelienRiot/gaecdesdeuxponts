@@ -62,7 +62,7 @@ export const AddressInput = ({ setSortedShops, setCoordinates, shops, className,
           )}
           {...props}
         >
-          {query ?? " Rechercher votre adresse"}
+          {" Rechercher votre adresse"}
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

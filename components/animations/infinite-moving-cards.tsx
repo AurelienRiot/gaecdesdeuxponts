@@ -5,12 +5,13 @@ import React, { useEffect, useState } from "react";
 import { Icons } from "../icons";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { formatFrenchPhoneNumber } from "@/lib/utils";
 import type { Shop } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
+import { CardInfo } from "../display-shops/shop-card";
 
 export const InfiniteMovingCards = ({
   items,
@@ -118,21 +119,21 @@ const StarRating = ({ rating }: { rating: number }) => {
 function ShopCard({ shop }: { shop: Shop }) {
   return (
     <Card className="max-w-sm flex flex-col justify-between">
-      <CardTitle className="flex  cursor-pointer items-center justify-center gap-2 pt-2">
-        {shop.imageUrl ? (
-          <span className=" relative size-16 rounded-sm bg-transparent transition-transform hover:scale-150">
+      <CardHeader className="py-2">
+        <CardTitle className="flex  cursor-pointer items-center justify-left  gap-6">
+          {shop.imageUrl ? (
             <Image
               src={shop.imageUrl}
               alt={shop.name}
-              fill
-              sizes="(max-width: 768px) 45px, (max-width: 1200px) 45px, 45px"
-              className="rounded-sm object-contain"
+              width={64}
+              height={64}
+              className="rounded-sm object-contain h-10 sm:h-16 w-auto max-w-[20%]"
             />
-          </span>
-        ) : null}
-        <span className="text-balance text-center  sm:text-lg lg:text-xl">{shop.name}</span>
-      </CardTitle>
-      <CardInfo description={shop.description} />
+          ) : null}
+          <span className="text-balance text-center text-lg sm:text-xl lg:text-2xl">{shop.name}</span>
+        </CardTitle>
+        <CardInfo description={shop.description} type={shop.type} />
+      </CardHeader>
 
       <CardContent className="flex flex-col gap-2 text-xs">
         {!!shop.address && (
@@ -161,31 +162,3 @@ function ShopCard({ shop }: { shop: Shop }) {
     </Card>
   );
 }
-
-export const CardInfo = ({ description }: { description: string }) => {
-  if (!description) {
-    return null;
-  }
-  return (
-    <Popover>
-      <PopoverTrigger>
-        <CardDescription className="overflow-hidden text-xs text-ellipsis px-4 whitespace-nowrap underline-offset-2 hover:underline">
-          <Icons.search className="mb-1 mr-1 inline h-4 w-4 self-center" /> {description}
-        </CardDescription>
-      </PopoverTrigger>
-      <PopoverContent
-        className={
-          "  w-[400px]   max-w-[90vw] overscroll-none    border-4 border-border p-0 outline-none hide-scrollbar"
-        }
-        align="center"
-        side="bottom"
-      >
-        <AutosizeTextarea
-          className="flex resize-none items-center justify-center border-none bg-transparent pt-4 text-sm outline-none focus-visible:ring-0 disabled:cursor-default disabled:opacity-100"
-          value={description}
-          disabled
-        />
-      </PopoverContent>
-    </Popover>
-  );
-};

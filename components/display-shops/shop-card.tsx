@@ -132,7 +132,7 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
 
 ShopCard.displayName = "ShopCard";
 
-const CardInfo = ({ description, type }: { description: string; type: string }) => {
+export const CardInfo = ({ description, type }: { description: string; type: string }) => {
   const typeText =
     type === "sell"
       ? "Acheter nos produits"
