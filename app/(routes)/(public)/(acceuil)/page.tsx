@@ -17,7 +17,7 @@ export default function Home() {
       /> */}
 
       <ImageAccueil />
-      <PorteOuverte />
+      {/* <PorteOuverte /> */}
       {/* <Suspense fallback={<ProductListSkeleton title="Découvrer nos produits" />}>
         <NosProduits title="Découvrer nos produits" />
       </Suspense> */}
