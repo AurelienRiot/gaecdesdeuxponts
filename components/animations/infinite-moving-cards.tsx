@@ -118,7 +118,7 @@ const StarRating = ({ rating }: { rating: number }) => {
 
 function ShopCard({ shop }: { shop: Shop }) {
   return (
-    <Card className="max-w-sm flex flex-col justify-between">
+    <Card className="max-w-sm flex flex-col justify-center ">
       <CardHeader className="py-2">
         <CardTitle className="flex  cursor-pointer items-center justify-left  gap-6">
           {shop.imageUrl ? (

@@ -42,16 +42,16 @@ const InfoContact = () => {
       title: "Réseau Sociaux",
       description: "Retrouvez nous sur les reseaux sociaux",
       link: (
-        <div className="justify-left flex items-center gap-4 sm:gap-8">
+        <div className="justify-between flex items-center gap-4 sm:gap-8">
           <Link target="_blank" href={"https://www.facebook.com/profile.php?id=61559928455527"}>
             <Icons.Facebook className="size-6" />
           </Link>
           <Link target="_blank" href={"https://www.instagram.com/julie_jeanmarc"}>
             <Icons.Instagram className="size-7" />
           </Link>
-          <Link target="_blank" href={"https://www.leboncoin.fr/ad/autres_services/2711381825"}>
+          {/* <Link target="_blank" href={"https://www.leboncoin.fr/ad/autres_services/2711381825"}>
             <Icons.LeBonCoin className="size-14" />
-          </Link>
+          </Link> */}
         </div>
       ),
     },
