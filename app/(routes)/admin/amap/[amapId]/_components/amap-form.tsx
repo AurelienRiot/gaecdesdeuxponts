@@ -31,18 +31,16 @@ const START = new Date(1725314400000);
 const END = new Date(1735599600000);
 
 function initialProduct(products: Product[]) {
-  const item = products.find((product) => product.name === "Lait cru bio bidon 2L");
-  if (item) {
-    return [
-      {
-        itemId: item.id,
-        unit: item.unit,
-        description: item.description,
-        name: item.name,
-        price: item.price,
-        quantity: 1,
-      },
-    ];
+  // const item = products.find((product) => product.name === "Lait cru bio bidon 2L");
+  if (products) {
+    return products.map((item) => ({
+      itemId: item.id,
+      unit: item.unit,
+      description: item.description,
+      name: item.name,
+      price: item.price,
+      quantity: 1,
+    }));
   }
   return [];
 }

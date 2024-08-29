@@ -17,7 +17,7 @@ const CategoryPage = async ({ params }: { params: { amapId: string } }) => {
 
   const shops = await prismadb.shop.findMany({ where: { type: "amap" } });
 
-  const products = await prismadb.product.findMany({ where: { product: { isPro: false } } });
+  const products = await prismadb.product.findMany({ where: { productName: "Produits AMAP" } });
 
   return (
     <div className="flex-col">

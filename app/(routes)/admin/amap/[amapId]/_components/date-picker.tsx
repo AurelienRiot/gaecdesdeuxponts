@@ -40,7 +40,6 @@ const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
       const start = title === "Date de fin" ? new Date(startDate) : selectedDate;
       const end = title === "Date de fin" ? selectedDate : new Date(endDate);
       const shippingDays = getTuesdaysBetweenDates(start, end);
-      shippingDays?.map((d) => console.log(dateFormatter(d)));
 
       shippingDays && form.setValue("shippingDays", shippingDays);
     }
@@ -77,6 +76,8 @@ const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
               locale={fr}
               onSelect={onSelectDate}
               disabled={(d) => d < new Date()}
+              startMonth={new Date()}
+              endMonth={new Date(new Date().setFullYear(new Date().getFullYear() + 1, 11))}
               // modifiers={{
               //   full: fullDays,
               //   partiallyFull: partiallyFullDays,

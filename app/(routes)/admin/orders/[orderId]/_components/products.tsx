@@ -6,8 +6,9 @@ import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ScrollToTarget } from "@/lib/scroll-to-traget";
 import { cn } from "@/lib/utils";
-import type { ProductWithMain } from "@/types";
+import type { ProductWithMain, UserWithAddress } from "@/types";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
@@ -15,15 +16,16 @@ import { useFormContext } from "react-hook-form";
 import { GrPowerReset } from "react-icons/gr";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-shema";
-import { ScrollToTarget } from "@/lib/scroll-to-traget";
 
 const negativeQuantityStyle =
   "bg-destructive hover:bg-destructive/90 hover:text-destructive-foreground text-destructive-foreground";
 
 export const ShippingProducts = ({
   products,
+  user,
 }: {
   products: ProductWithMain[];
+  user?: UserWithAddress | null;
 }) => {
   const form = useFormContext<OrderFormValues>();
   const items = form.watch("orderItems");
@@ -70,7 +72,7 @@ export const ShippingProducts = ({
                   key={`${item.itemId} productIndex`}
                   className="w-fit rounded-md p-4 pb-4 thin-scrollbar bg-chart1/50 even:bg-chart2/50"
                 >
-                  <ProductName products={products} productIndex={productIndex} />
+                  <ProductName user={user} products={products} productIndex={productIndex} />
                 </div>
               ))}
             </div>
@@ -89,7 +91,9 @@ export const ShippingProducts = ({
 function ProductName({
   productIndex,
   products,
+  user,
 }: {
+  user?: UserWithAddress | null;
   productIndex: number;
   products: ProductWithMain[];
 }) {
@@ -107,6 +111,7 @@ function ProductName({
     <>
       <div className="flex flex-wrap items-center gap-4">
         <SelectProductName
+          user={user}
           selectedProduct={selectedProduct}
           products={products}
           productIndex={productIndex}
@@ -196,7 +201,9 @@ const SelectProductName = ({
   products,
   selectedProduct,
   quantity,
+  user,
 }: {
+  user?: UserWithAddress | null;
   productIndex: number;
   quantity: number;
   products: ProductWithMain[];
@@ -222,7 +229,6 @@ const SelectProductName = ({
 
     setOpen(false);
   }
-
   return (
     <FormField
       control={form.control}
@@ -261,21 +267,29 @@ const SelectProductName = ({
                     placeholder="Nom du produit"
                   />
                   <CommandList>
-                    {products.map((product) => (
-                      <CommandItem
-                        key={product.id}
-                        value={product.id}
-                        keywords={[product.name]}
-                        onSelect={onValueChange}
-                      >
-                        {product.product.isPro && (
-                          <Badge variant="orange" className="mr-2">
-                            Pro
-                          </Badge>
-                        )}
-                        {product.name}
-                      </CommandItem>
-                    ))}
+                    {products
+                      .filter(
+                        (product) =>
+                          !user ||
+                          product.isArchived ||
+                          product.product.isArchived ||
+                          (user.role === "pro" ? product.product.isPro : !product.product.isPro),
+                      )
+                      .map((product) => (
+                        <CommandItem
+                          key={product.id}
+                          value={product.id}
+                          keywords={[product.name]}
+                          onSelect={onValueChange}
+                        >
+                          {product.product.isPro && (
+                            <Badge variant="orange" className="mr-2">
+                              Pro
+                            </Badge>
+                          )}
+                          {product.name}
+                        </CommandItem>
+                      ))}
                   </CommandList>
                 </Command>
               </PopoverContent>

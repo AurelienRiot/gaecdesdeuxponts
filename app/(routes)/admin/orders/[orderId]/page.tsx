@@ -52,6 +52,13 @@ const OrderFormPage = async ({
   });
 
   const products = await prismadb.product.findMany({
+    where: {
+      product: {
+        categoryName: {
+          not: "Produits AMAP",
+        },
+      },
+    },
     include: {
       product: true,
     },

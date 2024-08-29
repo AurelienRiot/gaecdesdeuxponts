@@ -40,7 +40,6 @@ export type ProductFormProps = {
 
 export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, users, shops, referer }) => {
   const router = useRouter();
-  const user = initialData?.userId ? users.find((user) => user.id === initialData.userId) : null;
 
   const { serverAction: createOrderAction } = useServerAction(createOrder);
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
@@ -89,6 +88,10 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
       ],
     },
   });
+
+  const userId = form.watch("userId");
+
+  const user = userId ? users.find((user) => user.id === userId) : null;
 
   const onSubmit = async (data: OrderFormValues) => {
     function onSuccessUpdate() {
@@ -178,7 +181,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
             /> */}
             <SelectShop shops={shops} />
           </div>
-          <ShippingProducts products={products} />
+          <ShippingProducts products={products} user={user} />
 
           <TotalPrice />
 
