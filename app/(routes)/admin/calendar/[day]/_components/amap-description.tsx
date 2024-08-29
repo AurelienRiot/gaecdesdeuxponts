@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { BiMap } from "react-icons/bi";
-import DisplayItem from "./display.item";
+import DisplayItem from "./display-item";
 import DisplayAddress from "./display-address";
 
 function AMAPDescrition({

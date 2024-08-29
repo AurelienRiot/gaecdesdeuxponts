@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Toggle } from "@/components/ui/toggle";
 import type { User } from "@prisma/client";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import CardUser from "./card-user";
-import { Toggle } from "@/components/ui/toggle";
 
 interface UserClientProps {
   users: User[];

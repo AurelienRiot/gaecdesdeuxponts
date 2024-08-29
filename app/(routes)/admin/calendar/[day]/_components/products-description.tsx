@@ -1,5 +1,5 @@
 import type getOrders from "@/components/google-events/get-orders-for-events";
-import DisplayItem from "./display.item";
+import DisplayItem from "./display-item";
 
 function ProductDescription({
   productQuantities,

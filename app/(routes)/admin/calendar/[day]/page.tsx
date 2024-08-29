@@ -55,7 +55,7 @@ function DescriptionEvents({ result, date }: { result: Awaited<ReturnType<typeof
   return (
     <div className="space-y-4 mx-auto w-fit">
       <ProductDescrition productQuantities={productQuantities} />
-      <UpdateEvents date={date} />
+      {/* <UpdateEvents date={date} /> */}
       <AMAPDescrition groupedAMAPOrders={groupedAMAPOrders} />
       <OrderDescriptions formattedOrders={formattedOrders} />
     </div>

@@ -19,7 +19,8 @@ function DisplayItem({ items }: { items: Awaited<ReturnType<typeof getOrders>>["
           <p>
             <span className="text-sm font-medium text-gray-700">{item.name} : </span>
             <span className=" text-gray-500">
-              {item.quantity} {item.unit || ""}
+              {item.quantity}
+              {item.unit || ""}
             </span>
           </p>
         </div>

@@ -12,6 +12,7 @@ import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { NameCell } from "./common-cell";
+import { getUnitLabel } from "../product/product-function";
 
 type ProductCellProps = {
   products: string;
@@ -30,7 +31,8 @@ function ProductCell<T>({ row }: { row: Row<T & ProductCellProps> }) {
             </>
           ) : (
             <>
-              <strong>{product.name}</strong> {product.quantity} {product.unit}
+              <strong>{product.name}</strong> {product.quantity}
+              {product.unit}
             </>
           )}
         </span>
@@ -126,7 +128,7 @@ function createProductList(items: OrderItem[] | AMAPItem[]) {
       return {
         name,
         quantity: `${item.quantity}`,
-        unit: item.unit || undefined,
+        unit: getUnitLabel(item.unit).quantity || undefined,
       };
     }
     return { name, quantity: "", unit: undefined };

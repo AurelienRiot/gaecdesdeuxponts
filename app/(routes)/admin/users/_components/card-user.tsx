@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { User } from "@prisma/client";
-import { CheckIcon, CrossIcon, Package, X } from "lucide-react";
+import { Package, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaCheck } from "react-icons/fa";
@@ -16,7 +16,8 @@ interface CardUserProps {
 }
 
 const CardUser: React.FC<CardUserProps> = ({ user, className, isPaid, display, orderLength }) => {
-  const name = user.company || user.name || user.email;
+  const name = user.company || user.name || user.email || "";
+
   return (
     <>
       <Card className={cn("flex h-full relative w-[150px] sm:w-[200px] flex-col justify-between ", className)}>

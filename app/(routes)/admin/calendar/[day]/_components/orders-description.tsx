@@ -1,10 +1,11 @@
 import type getOrders from "@/components/google-events/get-orders-for-events";
-import Link from "next/link";
-import DisplayItem from "./display.item";
+import { Button } from "@/components/ui/button";
+import { ListOrdered } from "lucide-react";
 import Image from "next/image";
-import DisplayAddress from "./display-address";
-import { BiMap } from "react-icons/bi"; // Import the map icon from react-icons
+import Link from "next/link";
 import { FaMapLocationDot } from "react-icons/fa6";
+import DisplayAddress from "./display-address";
+import DisplayItem from "./display-item";
 
 function OrderDescriptions({
   formattedOrders,
@@ -20,7 +21,7 @@ function OrderDescriptions({
       {formattedOrders.map((order) => (
         <div key={order.id} className="bg-white p-4 rounded-md shadow-sm">
           <div className="flex items-center space-x-2">
-            <Link href={`/admin/orders/${order.id}`} target="_blank" className="text-blue-500 font-bold text-lg">
+            <Link href={`/admin/orders/${order.id}`} target="_blank" className="text-gray-800 font-bold text-lg">
               {order.image && (
                 <Image
                   src={order.image}
@@ -30,15 +31,22 @@ function OrderDescriptions({
                   className="size-10 rounded-sm object-contain mr-3 inline"
                 />
               )}
-              {order.name}
+              {order.company ? order.company : order.name}
             </Link>
           </div>
 
           <div className="mt-2">
             <DisplayItem items={order.orderItems} />
           </div>
-
-          <DisplayAddress address={order.shippingAddress} />
+          <div className="flex gap-2 justify-center items-center mt-2">
+            <DisplayAddress address={order.shippingAddress} />
+            <Button asChild>
+              <Link href={`/admin/orders/${order.id}`} target="_blank">
+                <ListOrdered className="h-5 w-5 mr-3" />
+                Commande
+              </Link>
+            </Button>
+          </div>
         </div>
       ))}
     </div>
@@ -48,11 +56,9 @@ function OrderDescriptions({
 function DirectionUrl({
   formattedOrders,
 }: { formattedOrders: Awaited<ReturnType<typeof getOrders>>["formattedOrders"] }) {
-  const uniqueShippingAddresses = [
-    ...new Set(formattedOrders.map((order) => `${order.shippingAddress}+${order.company}`)),
-  ];
+  const uniqueShippingAddresses = [...new Set(formattedOrders.map((order) => `${order.shippingAddress}`))];
 
-  const directionString = `https://www.google.fr/maps/dir/Current+Location/${uniqueShippingAddresses.join("/")}`;
+  const directionString = `https://www.google.fr/maps/dir/6+Le+Pont+Robert,+44290+Massérac/${uniqueShippingAddresses.join("/")}`;
 
   return (
     <Link

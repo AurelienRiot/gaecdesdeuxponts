@@ -17,7 +17,8 @@ import { toast } from "sonner";
 import type { OrderFormValues } from "./order-shema";
 import { ScrollToTarget } from "@/lib/scroll-to-traget";
 
-const negativeQuantityStyle = "bg-destructive text-destructive-foreground";
+const negativeQuantityStyle =
+  "bg-destructive hover:bg-destructive/90 hover:text-destructive-foreground text-destructive-foreground";
 
 export const ShippingProducts = ({
   products,
@@ -131,6 +132,7 @@ function ProductName({
                 className={cn(
                   "absolute right-1 top-[50px] transform -translate-y-1/2 text-muted-foreground",
                   quantity < 0 ? negativeQuantityStyle : "",
+                  form.formState.isSubmitting ? "disabled:opacity-50 bg-transparent" : "",
                 )}
               >
                 €

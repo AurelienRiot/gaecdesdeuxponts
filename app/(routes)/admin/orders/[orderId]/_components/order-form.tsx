@@ -26,8 +26,9 @@ import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
 import Link from "next/link";
 import { Plus } from "lucide-react";
+import { toast } from "sonner";
 
-type ProductFormProps = {
+export type ProductFormProps = {
   initialData:
     | (Omit<OrderFormValues, "id"> & { id: string | null; invoiceEmail: Date | null; shippingEmail: Date | null })
     | null;
@@ -44,7 +45,11 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
   const { serverAction: createOrderAction } = useServerAction(createOrder);
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
 
-  const title = initialData ? "Modifier la commande" : "Crée une commande";
+  const title = initialData?.id
+    ? { label: "Modifier la commande", color: "text-blue-500" }
+    : initialData
+      ? { label: "Nouvelle commande", color: "text-green-500" }
+      : { label: "Crée une commande", color: "text-purple-500" };
   const action = initialData?.id
     ? initialData.dateOfEdition
       ? "Sauvegarder les changements"
@@ -98,14 +103,14 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
       }
     }
     initialData?.id
-      ? await updateOrderAction({ data, onSuccess: onSuccessUpdate })
-      : await createOrderAction({ data, onSuccess: onSuccessCreate });
+      ? await updateOrderAction({ data, onSuccess: onSuccessUpdate, toastOptions: { position: "top-center" } })
+      : await createOrderAction({ data, onSuccess: onSuccessCreate, toastOptions: { position: "top-center" } });
   };
 
   return (
     <>
       <div className="flex items-center justify-between">
-        <Heading title={title} description={""} />
+        <Heading className={title.color} title={title.label} description={""} />
         {initialData?.id && (
           <DeleteButton
             action={deleteOrder}
@@ -203,6 +208,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
       {!!initialData?.id && (
         <Button asChild onClick={() => router.push(`/admin/orders/new`)} className=" w-fit">
           <Link
+            onClick={() => toast.success("Création d'une nouvelle commande", { position: "bottom-center" })}
             href={`/admin/orders/new?id=${encodeURIComponent(form.getValues("id"))}&referer=${encodeURIComponent(referer)}`}
           >
             <Plus className="mr-2 h-4 w-4" />

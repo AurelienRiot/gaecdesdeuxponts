@@ -6,16 +6,11 @@ export type OptionsArray = {
   values: string[];
 }[];
 
-export function hasOptionWithValue<T extends { name: string; value: string }[]>(
-  options: T,
-  value: string,
-): boolean {
+export function hasOptionWithValue<T extends { name: string; value: string }[]>(options: T, value: string): boolean {
   return options.some((option) => option.value === value);
 }
 export function makeCategoryUrl(categoryName: string, isPro: boolean) {
-  return isPro
-    ? `/dashboard-user/produits-pro/category/${categoryName}`
-    : `/category/${categoryName}`;
+  return isPro ? `/dashboard-user/produits-pro/category/${categoryName}` : `/category/${categoryName}`;
 }
 
 export function makeOptionsUrl(options: Option[], parsing?: boolean) {
@@ -23,7 +18,7 @@ export function makeOptionsUrl(options: Option[], parsing?: boolean) {
   options.forEach((option, index) => {
     url += `${option.name}=${encodeURIComponent(option.value)}`;
     if (index < options.length - 1) {
-      url+=parsing ? "&amp;" : "&";
+      url += parsing ? "&amp;" : "&";
     }
   });
   if (url) {
@@ -53,7 +48,7 @@ export function makeProductUrl({
   return url;
 }
 
-export function getUnitLabel(value?: Unit | null) {
+export function getUnitLabel(value?: Unit | string | null) {
   if (!value) return { price: "", quantity: "", type: "" };
   switch (value) {
     case "centgramme":
@@ -81,10 +76,7 @@ export function findProduct({
   });
   return products.find((product) => {
     return optionsValue.every(({ name, value }, index) => {
-      return (
-        !value ||
-        product.options.find((option) => option.name === name)?.value === value
-      );
+      return !value || product.options.find((option) => option.name === name)?.value === value;
     });
   });
 }
@@ -95,25 +87,20 @@ export const getAllOptions = (
     value: string;
   }[],
 ) => {
-  const groupedOptions = options.reduce<Record<string, string[]>>(
-    (acc, option) => {
-      if (!acc[option.name]) {
-        acc[option.name] = [];
-      }
-      if (!acc[option.name].includes(option.value)) {
-        acc[option.name].push(option.value);
-      }
-      return acc;
-    },
-    {},
-  );
+  const groupedOptions = options.reduce<Record<string, string[]>>((acc, option) => {
+    if (!acc[option.name]) {
+      acc[option.name] = [];
+    }
+    if (!acc[option.name].includes(option.value)) {
+      acc[option.name].push(option.value);
+    }
+    return acc;
+  }, {});
 
-  const mappedGroupedOptions: OptionsArray = Object.entries(groupedOptions).map(
-    ([key, value]) => ({
-      name: key,
-      values: value,
-    }),
-  );
+  const mappedGroupedOptions: OptionsArray = Object.entries(groupedOptions).map(([key, value]) => ({
+    name: key,
+    values: value,
+  }));
 
   return mappedGroupedOptions;
 };

@@ -1,5 +1,6 @@
 import prismadb from "@/lib/prismadb";
 import { addHours } from "date-fns";
+import { getUnitLabel } from "../product/product-function";
 
 async function getOrders({ startDate, endDate }: { startDate: Date; endDate: Date }) {
   const start = startDate.toISOString().split("T")[0];
@@ -15,8 +16,8 @@ async function getOrders({ startDate, endDate }: { startDate: Date; endDate: Dat
     },
     include: {
       orderItems: { select: { itemId: true, name: true, quantity: true, unit: true } },
-      customer: { select: { customerId: true, name: true, shippingAddress: true } },
-      user: { select: { company: true, email: true, image: true } },
+      customer: { select: { shippingAddress: true } },
+      user: { select: { company: true, email: true, image: true, name: true } },
     },
   });
 
@@ -51,7 +52,7 @@ async function getOrders({ startDate, endDate }: { startDate: Date; endDate: Dat
           itemId: item.itemId,
           name: item.name,
           quantity: item.quantity,
-          unit: item.unit,
+          unit: getUnitLabel(item.unit).quantity,
         })),
       })),
     );
@@ -80,16 +81,16 @@ async function getOrders({ startDate, endDate }: { startDate: Date; endDate: Dat
 
   const formattedOrders = orders.map((order) => ({
     id: order.id,
-    customerId: order.customer?.customerId,
+    customerId: order.userId,
     shippingAddress: order.customer?.shippingAddress,
-    name: order.customer?.name,
+    name: order.user?.name,
     company: order.user?.company,
     image: order.user?.image,
     orderItems: order.orderItems.map((item) => ({
       itemId: item.itemId,
       name: item.name,
       quantity: item.quantity,
-      unit: item.unit,
+      unit: getUnitLabel(item.unit).quantity,
     })),
   }));
 
@@ -99,7 +100,7 @@ async function getOrders({ startDate, endDate }: { startDate: Date; endDate: Dat
         itemId: item.itemId,
         name: item.name,
         quantity: item.quantity,
-        unit: item.unit,
+        unit: getUnitLabel(item.unit).quantity,
       })),
     )
     .concat(Object.values(groupedAMAPOrders).flatMap((order) => order.orderItems.map((item) => item)))

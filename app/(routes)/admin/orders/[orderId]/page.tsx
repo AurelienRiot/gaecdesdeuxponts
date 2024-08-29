@@ -1,6 +1,6 @@
 import prismadb from "@/lib/prismadb";
 import { headers } from "next/headers";
-import { OrderForm } from "./_components/order-form";
+import { OrderForm, type ProductFormProps } from "./_components/order-form";
 
 export const dynamic = "force-dynamic";
 const OrderFormPage = async ({
@@ -59,10 +59,14 @@ const OrderFormPage = async ({
 
   const shops = await prismadb.shop.findMany({});
 
-  const initialData = !shippingOrders
+  const initialData: ProductFormProps["initialData"] = !shippingOrders
     ? null
     : params.orderId === "new"
-      ? { ...shippingOrders, id: null }
+      ? {
+          ...shippingOrders,
+          orderItems: shippingOrders.orderItems.filter((item) => item.quantity > 0 && item.price > 0),
+          id: null,
+        }
       : shippingOrders;
 
   return (

@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { BiMap } from "react-icons/bi";
 
@@ -6,16 +7,14 @@ function DisplayAddress({ address }: { address: string | undefined }) {
     return null;
   }
   return (
-    <Link
-      href={`https://maps.google.com/?q=${address}`}
-      target="_blank"
-      className="text-red-500 font-semibold mt-4 inline-block"
-    >
-      <span className="flex items-center space-x-1">
-        <BiMap className="h-4 w-4" />
-        <span>Adresse</span>
-      </span>
-    </Link>
+    <Button asChild variant={"outline"} className="text-red-500 font-semibold  inline-block">
+      <Link href={`https://maps.google.com/?q=${address}`} target="_blank">
+        <span className="flex items-center space-x-1">
+          <BiMap className="h-4 w-4" />
+          <span>Adresse</span>
+        </span>
+      </Link>
+    </Button>
   );
 }
 

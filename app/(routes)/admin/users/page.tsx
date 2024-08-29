@@ -26,12 +26,13 @@ const UserPage = async () => {
 
   const userOrders = allUsers.map((user) => ({
     id: user.id,
+    name: user.company || "",
     role: user.role,
     orders: user.orders.filter(
       (order) =>
         order.dateOfShipping &&
-        order.dateOfShipping.getTime() >= new Date(new Date().setMonth(new Date().getMonth() - 1, 1)).getTime() &&
-        order.dateOfShipping.getTime() <= new Date(new Date().setMonth(new Date().getMonth(), 1)).getTime(),
+        order.dateOfShipping.getTime() <=
+          new Date(new Date().setFullYear(new Date().getFullYear(), new Date().getMonth(), 1)).setHours(0, 0, 0, 0),
     ),
   }));
 

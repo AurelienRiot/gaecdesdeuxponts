@@ -66,7 +66,7 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
         (order) =>
           `<strong><a href="${process.env.NEXT_PUBLIC_URL}/admin/shop/${order.shopId}">${order.shopName}</a></strong> <br />` +
           order.orderItems
-            .map((item) => `<strong>${item.name}</strong> : ${item.quantity} ${item.unit || ""}`)
+            .map((item) => `<strong>${item.name}</strong> : ${item.quantity}${item.unit || ""}`)
             .join("<br />") +
           `<br /><a href="https://maps.google.com/?q=${order.address}">Addresse</a><br />`,
       )
@@ -74,7 +74,7 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
 
   const productDescriptions =
     productQuantities
-      .map((item) => `<strong>${item.name}</strong> : ${item.quantity} ${item.unit || ""}`)
+      .map((item) => `<strong>${item.name}</strong> : ${item.quantity}${item.unit || ""}`)
       .join("<br />") + "<br /><br />";
 
   const orderDescriptions =
@@ -83,21 +83,19 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
       : formattedOrders
           .map(
             (order) =>
-              `<strong><a href="${process.env.NEXT_PUBLIC_URL}/admin/orders/${order.id}">Commande n°${order.id}</a></strong> <br /><a href="${process.env.NEXT_PUBLIC_URL}/admin/users/${order.customerId}">${order.name}</a><br />` +
+              `<strong><a href="${process.env.NEXT_PUBLIC_URL}/admin/orders/${order.id}"><font color='red'>Acceder a la commande </font></a></strong> <br /><a href="${process.env.NEXT_PUBLIC_URL}/admin/users/${order.customerId}">${order.name}</a><br />` +
               order.orderItems
-                .map((item) => `<strong>${item.name}</strong> : ${item.quantity} ${item.unit || ""}`)
+                .map((item) => `<strong>${item.name}</strong> : ${item.quantity}${item.unit || ""}`)
                 .join("<br />") +
-              `<br /><a href="https://maps.google.com/?q=${order.shippingAddress}+${order.company}">Addresse</a><br />`,
+              `<br /><a href="https://maps.google.com/?q=${order.shippingAddress}">Adresse</a><br />`,
           )
           .join("<br />");
 
-  const uniqueShippingAddresses = [
-    ...new Set(formattedOrders.map((order) => `${order.shippingAddress}+${order.company}`)),
-  ];
+  const uniqueShippingAddresses = [...new Set(formattedOrders.map((order) => `${order.shippingAddress}`))];
   const directionString =
     formattedOrders.length === 0
       ? ""
-      : `<strong><a  href="https://www.google.fr/maps/dir/Current+Location/${uniqueShippingAddresses.join("/")}">Parcoure</a></strong> <br /><br />`;
+      : `<strong><a  href="https://www.google.fr/maps/dir/6+Le+Pont+Robert,+44290+Massérac/${uniqueShippingAddresses.join("/")}">Parcours</a></strong> <br /><br />`;
 
   return productDescriptions + amapOrdersDescription + directionString + orderDescriptions;
 }
