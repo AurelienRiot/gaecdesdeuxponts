@@ -1,21 +1,26 @@
 "use client";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { DayPicker, labelNext, labelPrevious, useDayPicker } from "react-day-picker";
 import * as React from "react";
-import { format } from "date-fns";
+import { DayPicker, labelNext, labelPrevious, useDayPicker } from "react-day-picker";
 
-function OrdersCalendar({ month, className }: { month: Date; className?: string }) {
+function OrdersCalendar({ month, className, orderDates }: { month: Date; orderDates: Date[]; className?: string }) {
   const router = useRouter();
 
   return (
     <DayPicker
       locale={fr}
       month={month}
+      modifiers={{
+        order: (day) => orderDates.some((date) => date.toDateString() === day.toDateString()),
+      }}
+      modifiersClassNames={{
+        order: "bg-green-500 text-white hover:bg-green-500/90",
+      }}
       onMonthChange={(e) => router.replace(`/admin/calendar?date=${encodeURIComponent(e.toISOString())}`)}
       showOutsideDays={true}
       onDayClick={(date) => router.push(`/admin/calendar/${date.toISOString()}`)}
@@ -50,8 +55,7 @@ function OrdersCalendar({ month, className }: { month: Date; className?: string 
         ),
         range_start: "day-range-start rounded-s-md",
         range_end: "day-range-end rounded-e-md",
-        selected:
-          "bg-primary text-primary-foreground hover:!bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+        selected: "bg-green-500 text-white hover:!bg-green-500/90",
         today: "bg-accent text-accent-foreground",
         outside:
           "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",

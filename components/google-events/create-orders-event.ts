@@ -6,6 +6,8 @@ import deleteEvent from "./delete-events";
 import getEventsList from "./get-events-list";
 import getOrders, { destination, origin } from "./get-orders-for-events";
 
+export const googleDirectioUrl = "https://www.google.fr/maps/dir";
+
 export default async function createOrdersEvent(data: { date: Date }) {
   const date = addHours(data.date, 2);
   const startDate = new Date(date.toISOString().split("T")[0]);
@@ -95,7 +97,7 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
   const directionString =
     formattedOrders.length === 0
       ? ""
-      : `<strong><a  href="https://www.google.fr/maps/dir/${origin}/${uniqueShippingAddresses.join("/")}/${destination}">Parcours</a></strong> <br /><br />`;
+      : `<strong><a  href="${googleDirectioUrl}/${origin}/${uniqueShippingAddresses.join("/")}/${destination}">Parcours</a></strong> <br /><br />`;
 
   return productDescriptions + amapOrdersDescription + directionString + orderDescriptions;
 }

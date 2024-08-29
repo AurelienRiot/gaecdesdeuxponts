@@ -7,6 +7,7 @@ import { FaMapLocationDot } from "react-icons/fa6";
 import DisplayAddress from "./display-address";
 import DisplayItem from "./display-item";
 import { destination, origin } from "@/components/google-events/get-orders-for-events";
+import { googleDirectioUrl } from "@/components/google-events/create-orders-event";
 
 function OrderDescriptions({
   formattedOrders,
@@ -59,7 +60,7 @@ function DirectionUrl({
 }: { formattedOrders: Awaited<ReturnType<typeof getOrders>>["formattedOrders"] }) {
   const uniqueShippingAddresses = [...new Set(formattedOrders.map((order) => `${order.shippingAddress}`))];
 
-  const directionString = `https://www.google.fr/maps/dir/${origin}/${uniqueShippingAddresses.join("/")}/${destination}`;
+  const directionString = `${googleDirectioUrl}/${origin}/${uniqueShippingAddresses.join("/")}/${destination}`;
 
   return (
     <Link

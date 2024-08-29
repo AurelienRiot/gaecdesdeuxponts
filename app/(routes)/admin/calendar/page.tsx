@@ -1,13 +1,29 @@
-import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import OrdersCalendar from "./_components/orders-calendar";
 import { directionGoogle } from "./_actions/direction-google";
+import OrdersCalendar from "./_components/orders-calendar";
+import { Button } from "@/components/ui/button";
+import prismadb from "@/lib/prismadb";
 
 export const dynamic = "force-dynamic";
 
-function CalendarPage({ searchParams }: { searchParams: { date: string | undefined } }) {
+async function CalendarPage({ searchParams }: { searchParams: { date: string | undefined } }) {
   const month = searchParams.date ? new Date(decodeURIComponent(searchParams.date)) : new Date();
+  const beginMonth = new Date(new Date(month.getFullYear(), month.getMonth(), 1).setHours(0, 0, 0, 0));
+  const endMonth = new Date(new Date(month.getFullYear(), month.getMonth() + 1, 1).setHours(0, 0, 0, 0));
+  const orders = await prismadb.order.findMany({
+    where: {
+      dateOfShipping: {
+        gte: beginMonth,
+        lt: endMonth,
+      },
+    },
+    select: {
+      dateOfShipping: true,
+    },
+    distinct: ["dateOfShipping"],
+  });
+  const orderDates: Date[] = orders.map((order) => order.dateOfShipping).filter((date): date is Date => date !== null);
 
   async function getDirection() {
     "use server";
@@ -33,10 +49,10 @@ function CalendarPage({ searchParams }: { searchParams: { date: string | undefin
 
         <Separator />
       </div>
-      <OrdersCalendar month={month} />
-      {/* <form action={getDirection}>
+      <OrdersCalendar month={month} orderDates={orderDates} />
+      <form action={getDirection}>
         <Button>Get Directions</Button>
-      </form> */}
+      </form>
     </>
   );
 }
