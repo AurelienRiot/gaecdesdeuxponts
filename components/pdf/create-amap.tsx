@@ -179,7 +179,7 @@ export function Description() {
   return (
     <View style={[AMAPStyle.container, { marginTop: 20 }]} break>
       <Text style={AMAPStyle.title}>Descriptif des produits</Text>
-      <Text style={{ fontWeight: "bold" }}>- Lait cru bio bidon 2L</Text>
+      <Text style={{ fontWeight: "bold" }}>- Lait cru bio</Text>
       <Text style={[AMAPStyle.paragraph, { textIndent: 0, marginTop: 10 }]}>
         En provenance directe de la ferme, notre lait cru est riche en nutriments essentiels tels que les vitamines, les
         minéraux et les enzymes naturelles qui sont souvent détruits lors de la pasteurisation. Notre lait cru doit être
@@ -318,7 +318,7 @@ const tableRowStyles = StyleSheet.create({
     flexDirection: "row",
     borderWidth: 1,
     borderColor: borderColor,
-    paddingVertical: 2,
+    // paddingVertical: 2,
     alignItems: "center",
   },
   description: {

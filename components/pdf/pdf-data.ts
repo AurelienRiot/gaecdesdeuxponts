@@ -405,6 +405,12 @@ export const AMAPData: AMAPType = {
         priceTTC: 2.2,
         qty: 3,
       },
+      {
+        id: "PR_7HDJDXU",
+        desc: "Lait cru bouteille verre 1L",
+        priceTTC: 1.1,
+        qty: 3,
+      },
     ],
   },
 };
