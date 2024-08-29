@@ -4,7 +4,7 @@ import { addHours, format } from "date-fns";
 import { fr } from "date-fns/locale";
 import deleteEvent from "./delete-events";
 import getEventsList from "./get-events-list";
-import getOrders from "./get-orders-for-events";
+import getOrders, { destination, origin } from "./get-orders-for-events";
 
 export default async function createOrdersEvent(data: { date: Date }) {
   const date = addHours(data.date, 2);
@@ -95,7 +95,7 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
   const directionString =
     formattedOrders.length === 0
       ? ""
-      : `<strong><a  href="https://www.google.fr/maps/dir/6+Le+Pont+Robert,+44290+Massérac/${uniqueShippingAddresses.join("/")}">Parcours</a></strong> <br /><br />`;
+      : `<strong><a  href="https://www.google.fr/maps/dir/${origin}/${uniqueShippingAddresses.join("/")}/${destination}">Parcours</a></strong> <br /><br />`;
 
   return productDescriptions + amapOrdersDescription + directionString + orderDescriptions;
 }

@@ -1,6 +1,10 @@
 import prismadb from "@/lib/prismadb";
 import { addHours } from "date-fns";
 import { getUnitLabel } from "../product/product-function";
+import { directionGoogle } from "./direction-google";
+
+export const origin = "6 le Pont Robert 44290 Massérac, France";
+export const destination = "Pont de l'Eau, 44460 Avessac, France";
 
 async function getOrders({ startDate, endDate }: { startDate: Date; endDate: Date }) {
   const start = startDate.toISOString().split("T")[0];
@@ -79,7 +83,7 @@ async function getOrders({ startDate, endDate }: { startDate: Date; endDate: Dat
     {} as Record<string, (typeof amapOrders)[0]>,
   );
 
-  const formattedOrders = orders.map((order) => ({
+  let formattedOrders = orders.map((order) => ({
     id: order.id,
     customerId: order.userId,
     shippingAddress: order.customer?.shippingAddress,
@@ -93,6 +97,13 @@ async function getOrders({ startDate, endDate }: { startDate: Date; endDate: Dat
       unit: getUnitLabel(item.unit).quantity,
     })),
   }));
+
+  const waypoints = formattedOrders.map((order) => order.shippingAddress || "");
+
+  const orderWaypoints = await directionGoogle({ origin, destination, waypoints });
+  if (orderWaypoints.success && orderWaypoints.data) {
+    formattedOrders = orderWaypoints.data.map((index) => formattedOrders[index]);
+  }
 
   const productQuantities = orders
     .flatMap((order) =>
