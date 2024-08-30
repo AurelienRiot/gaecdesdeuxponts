@@ -115,7 +115,6 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
                 </FormItem>
               )}
             />
-
             <FormButton className="w-full">{action}</FormButton>
           </form>
         </Form>
@@ -294,7 +293,7 @@ const AddressModal = forwardRef<HTMLButtonElement, AddressModalProps>(
           </span>
         </Button>
         <Modal
-          className="left-[50%] top-[25%] md:top-[50%] max-h-[90%] w-[90%] max-w-[700px] overflow-y-scroll  rounded-sm"
+          className="left-[50%] top-[50%] max-h-[90%] w-[90%] max-w-[700px]  rounded-sm"
           title=""
           description=""
           isOpen={open}
@@ -330,6 +329,7 @@ function AddressSelect({
         <Button
           variant="outline"
           role="combobox"
+          id="select-address"
           // disabled={form.formState.isSubmitting}
           className={cn("w-full justify-between")}
         >
@@ -339,7 +339,7 @@ function AddressSelect({
       </PopoverTrigger>
       <PopoverContent side="bottom" align="start" avoidCollisions={false} className=" z-[1200] p-0   ">
         <Command>
-          <CommandInput onFocus={() => ScrollToTarget("shop-input")} placeholder="Nom du client" />
+          <CommandInput onFocus={() => ScrollToTarget("select-address")} placeholder="Nom du client" />
           <CommandList>
             {usersAndShops.map((item) => (
               <CommandItem
@@ -388,6 +388,7 @@ function AddressSearch({ onValueChange }: { onValueChange: (address: string) => 
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
+          id={"search-address"}
           variant="outline"
           role="combobox"
           onClick={() => setOpen((open) => !open)}
@@ -400,6 +401,7 @@ function AddressSearch({ onValueChange }: { onValueChange: (address: string) => 
       <PopoverContent className="w-full p-0 z-[1200]" side="bottom" align="start">
         <Command loop shouldFilter={false} className="w-full">
           <CommandInput
+            onFocus={() => ScrollToTarget("search-address")}
             placeholder="Entrer l'adresse..."
             className="h-9 w-full"
             value={query}
