@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import type { OrderFormValues } from "./order-shema";
 import { ScrollToTarget } from "@/lib/scroll-to-traget";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
   const form = useFormContext<OrderFormValues>();
@@ -21,6 +22,7 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
     const user = users.find((user) => user.id === userId);
     return user?.company || user?.name || user?.email?.split("@")[0];
   })();
+  const image = users.find((user) => user.id === userId)?.image;
 
   function onValueChange(value: string) {
     const user = users.find((user) => user.id === value);
@@ -54,7 +56,20 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
                 disabled={form.formState.isSubmitting}
                 className={cn("w-48 justify-between", field.value ? "" : "text-muted-foreground")}
               >
-                {name ?? "Nom du client"}
+                {name ? (
+                  <>
+                    <Image
+                      src={image ? image : "/skeleton-image.webp"}
+                      alt="user"
+                      width={16}
+                      height={16}
+                      className="mr-2 object-contain rounded-sm"
+                    />
+                    {name}
+                  </>
+                ) : (
+                  "Nom du client"
+                )}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -69,7 +84,17 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
                       keywords={[user.name || "", user.email || "", user.company || ""]}
                       onSelect={onValueChange}
                     >
-                      <Check className={cn("mr-2 h-4 w-4", field.value === user.id ? "opacity-100" : "opacity-0")} />
+                      {field.value === user.id ? (
+                        <Check className={cn("mr-2 h-4 w-4")} />
+                      ) : (
+                        <Image
+                          src={user.image ? user.image : "/skeleton-image.webp"}
+                          alt="user"
+                          width={16}
+                          height={16}
+                          className="mr-2 object-contain rounded-sm"
+                        />
+                      )}
                       {user.company || user.name || user.email?.split("@")[0]}
                     </CommandItem>
                   ))}

@@ -156,13 +156,20 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
                 <FormDatePicker {...field} date={field.value} onSelectDate={field.onChange} title="Date de livraison" />
               )}
             />
-            <FormField
-              control={form.control}
-              name="dateOfPayment"
-              render={({ field }) => (
-                <FormDatePicker {...field} date={field.value} onSelectDate={field.onChange} title="Date de paiement" />
-              )}
-            />
+            {user?.role !== "pro" && (
+              <FormField
+                control={form.control}
+                name="dateOfPayment"
+                render={({ field }) => (
+                  <FormDatePicker
+                    {...field}
+                    date={field.value}
+                    onSelectDate={field.onChange}
+                    title="Date de paiement"
+                  />
+                )}
+              />
+            )}
             {/* <FormField
               control={form.control}
               name="dateOfEdition"

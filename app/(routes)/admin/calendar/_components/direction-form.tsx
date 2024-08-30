@@ -19,9 +19,9 @@ import { Separator } from "@/components/ui/separator";
 import useScrollToHashOnMount from "@/hooks/use-scroll-to-hash";
 import useServerAction from "@/hooks/use-server-action";
 import { ScrollToTarget } from "@/lib/scroll-to-traget";
-import { cn } from "@/lib/utils";
+import { addDelay, cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronDown, ChevronsUpDown, Plus, X } from "lucide-react";
+import { ChevronDown, ChevronsUpDown, Dot, Plus, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { forwardRef, useState } from "react";
@@ -29,6 +29,9 @@ import { useForm, useFormContext } from "react-hook-form";
 import { FaMapLocationDot } from "react-icons/fa6";
 import getDirection from "../_actions/get-direction";
 import { directionSchema, type DirectionFormValues } from "./direction-schema";
+import { toast } from "sonner";
+import { GiPositionMarker } from "react-icons/gi";
+import { FaDotCircle } from "react-icons/fa";
 
 const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 
@@ -83,45 +86,61 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
         <Separator />
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit, (e) => console.log(e))} className="w-full space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit, (e) => console.log(e))} className="w-full relative space-y-8">
             <SuccessModal
               isOpen={open}
               onClose={() => setOpen(false)}
               usersAndShops={usersAndShops}
               reorderedWaypoints={reorderedWaypoints}
             />
-            <FormField
-              control={form.control}
-              name="origin"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Départ</FormLabel>
-                  <FormControl>
-                    <AddressModal
-                      onValueChange={field.onChange}
-                      usersAndShops={usersAndShops}
-                      value={field.value}
-                      ref={field.ref}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <WaypointsForm usersAndShops={usersAndShops} />
-            <FormField
-              control={form.control}
-              name="destination"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Destination</FormLabel>
-                  <FormControl>
-                    <AddressModal onValueChange={field.onChange} usersAndShops={usersAndShops} value={field.value} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="space-y-4 relative pl-6">
+              <style jsx>{`
+                .border-dotted {
+                  -webkit-border-style: dotted;
+                  border-radius: 0
+                }
+   `}</style>
+              <div className="absolute h-full w-1 top-0 left-0   border-r-8 border-dotted bg-transparent" />
+              <FormField
+                control={form.control}
+                name="origin"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xl bold">Départ</FormLabel>
+
+                    <FormControl>
+                      <AddressModal
+                        index="origin"
+                        onValueChange={field.onChange}
+                        usersAndShops={usersAndShops}
+                        value={field.value}
+                        ref={field.ref}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <WaypointsForm usersAndShops={usersAndShops} />
+              <FormField
+                control={form.control}
+                name="destination"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xl bold">Destination</FormLabel>
+                    <FormControl>
+                      <AddressModal
+                        index="destination"
+                        onValueChange={field.onChange}
+                        usersAndShops={usersAndShops}
+                        value={field.value}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormButton className="w-full">{action}</FormButton>
           </form>
         </Form>
@@ -193,8 +212,19 @@ function WaypointsForm({ usersAndShops }: { usersAndShops: UserAndShop[] }) {
 
   const error = form.control.getFieldState("waypoints").error;
 
-  function addWaypoint() {
-    form.setValue("waypoints", [...form.getValues("waypoints"), ""]);
+  async function addWaypoint() {
+    const waypoints = form.getValues("waypoints");
+    if (waypoints.length === 20) {
+      toast.error("Vous ne pouvez pas ajouter plus de 20 points de passages");
+      return;
+    }
+    form.setValue("waypoints", [...waypoints, ""]);
+    setTimeout(() => {
+      const button = document.getElementById(`button-${waypoints.length}`);
+      if (button) {
+        button.click();
+      }
+    }, 0);
   }
 
   function removeWaypoint(index: number) {
@@ -208,36 +238,42 @@ function WaypointsForm({ usersAndShops }: { usersAndShops: UserAndShop[] }) {
       name="waypoints"
       render={({ field }) => (
         <FormItem className="relative">
-          <FormLabel>Points de passages</FormLabel>
-
+          <FormLabel className="text-xl bold">Points de passages</FormLabel>
           <FormControl>
             <div className="space-y-4">
-              {field.value.map((value, index) => (
-                <FormField
-                  key={index + value}
-                  control={form.control}
-                  name={`waypoints.${index}`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <div className="relative">
-                          <IconButton
-                            Icon={X}
-                            onClick={() => removeWaypoint(index)}
-                            className="absolute -top-2 -right-2 size-4 p-px text-destructive-foreground bg-destructive z-10"
-                          />
-                          <AddressModal
-                            onValueChange={field.onChange}
-                            usersAndShops={usersAndShops}
-                            value={field.value}
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              ))}
+              <div className="space-y-4 relative">
+                <div className=" w-4 h-full bg-background absolute -top-2 -left-7 " />
+
+                {field.value.map((value, index) => (
+                  <FormField
+                    key={index + value}
+                    control={form.control}
+                    name={`waypoints.${index}`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <div className="relative group">
+                            <IconButton
+                              type="button"
+                              Icon={X}
+                              onClick={() => removeWaypoint(index)}
+                              className="absolute -top-2 -right-2 size-5 p-px text-destructive-foreground bg-destructive z-10 border-none md:opacity-0  group-hover:opacity-100  transition-opacity duration-300"
+                            />
+                            <AddressModal
+                              onValueChange={field.onChange}
+                              usersAndShops={usersAndShops}
+                              value={field.value}
+                              index={index}
+                            />
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ))}
+              </div>
+
               <Button
                 type="button"
                 onClick={addWaypoint}
@@ -259,10 +295,11 @@ type AddressModalProps = {
   onValueChange: (address: string) => void;
   usersAndShops: UserAndShop[];
   value: string;
+  index: number | string;
 };
 
 const AddressModal = forwardRef<HTMLButtonElement, AddressModalProps>(
-  ({ usersAndShops, onValueChange, value }, ref) => {
+  ({ usersAndShops, onValueChange, value, index }, ref) => {
     const form = useFormContext<DirectionFormValues>();
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState(value);
@@ -280,13 +317,27 @@ const AddressModal = forwardRef<HTMLButtonElement, AddressModalProps>(
     return (
       <>
         <Button
+          id={"button-" + index}
           type={"button"}
           variant="outline"
-          className={cn(" w-full text-left  pl-2 relative flex justify-start", !value ? "opacity-50" : "")}
+          className={cn(" w-full text-left  pl-2 relative flex justify-start ")}
           onClick={() => setOpen(true)}
           ref={ref}
         >
-          <span className="absolute inset-0 bg-gradient-to-r from-transparent to-background from-85%" />
+          {index === "origin" ? (
+            <div className="pb-3 pt-12 bg-background absolute -top-11 -left-8 ">
+              <GiPositionMarker className="size-6 text-red-600 " />
+            </div>
+          ) : index === "destination" ? (
+            <div className="pb-10 pt-2 bg-background absolute -top-1 -left-8 ">
+              <GiPositionMarker className="size-6 text-green-600 " />
+            </div>
+          ) : (
+            <div className="pb-4 bg-background absolute top-3 -left-[29px] ">
+              <FaDotCircle className="size-4 text-blue-600 " />
+            </div>
+          )}
+          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-background from-80% via-95% to-transparent  " />
           <Image
             src={image ? image : "/skeleton-image.webp"}
             alt={"image"}
@@ -294,7 +345,7 @@ const AddressModal = forwardRef<HTMLButtonElement, AddressModalProps>(
             height={24}
             className="mr-2 h-4 w-4 object-contain rounded-sm"
           />
-          <span className="overflow-hidden whitespace-nowrap">
+          <span className={cn("overflow-hidden whitespace-nowrap", !value ? "opacity-50" : "")}>
             {" "}
             {value ? (label ? label : value) : "Entrer une adresse"}
           </span>
@@ -346,15 +397,11 @@ function AddressSelect({
       </PopoverTrigger>
       <PopoverContent side="bottom" align="start" avoidCollisions={false} className=" z-[1200] p-0   ">
         <Command>
-          <CommandInput onFocus={() => ScrollToTarget("select-address")} placeholder="Nom du client" />
-          {/* <ScrollArea
-            onWheel={onScroll}
-            onTouchStart={onTouchStart}
-            onTouchEnd={onTouchEnd}
-            onTouchMove={onTouchMove}
-            ref={scrollAreaRef}
-            className="max-h-[300px] h-fit"
-          > */}
+          <CommandInput
+            // onFocus={() => ScrollToTarget("select-address")}
+            placeholder="Nom du client"
+          />
+
           <CommandListModal>
             {usersAndShops.map((item) => (
               <CommandItem
@@ -379,7 +426,6 @@ function AddressSelect({
               </CommandItem>
             ))}
           </CommandListModal>
-          {/* </ScrollArea> */}
         </Command>
       </PopoverContent>
     </Popover>
@@ -417,7 +463,7 @@ function AddressSearch({ onValueChange }: { onValueChange: (address: string) => 
       <PopoverContent className="w-full p-0 z-[1200]" side="bottom" align="start">
         <Command loop shouldFilter={false} className="w-full">
           <CommandInput
-            onFocus={() => ScrollToTarget("search-address")}
+            // onFocus={() => ScrollToTarget("search-address")}
             placeholder="Entrer l'adresse..."
             className="h-9 w-full"
             value={query}

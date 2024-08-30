@@ -48,7 +48,6 @@ function DaysOfShipping() {
     <div className="space-y-4">
       <Label>Date de livraisons</Label>
       <Calendar
-        mode="single"
         className="p-3 w-72"
         captionLayout="label"
         locale={fr}

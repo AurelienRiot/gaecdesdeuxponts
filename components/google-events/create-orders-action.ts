@@ -2,7 +2,7 @@
 
 import safeServerAction from "@/lib/server-action";
 import { z } from "zod";
-import { checkAdmin } from "../auth/checkAuth";
+import { checkReadOnlyAdmin } from "../auth/checkAuth";
 import createOrdersEvent from "./create-orders-event";
 
 const createEventSchema = z.object({
@@ -14,7 +14,7 @@ type CreateEventProps = z.infer<typeof createEventSchema>;
 export const createEvent = async (data: CreateEventProps) =>
   await safeServerAction({
     data,
-    getUser: checkAdmin,
+    getUser: checkReadOnlyAdmin,
     schema: createEventSchema,
     serverAction: createOrdersEvent,
   });

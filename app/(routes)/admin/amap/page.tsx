@@ -44,6 +44,7 @@ async function AMAPPage(context: {
             contains: id,
           },
         },
+    orderBy: { createdAt: "desc" },
     include: { user: true, amapItems: true, shop: true },
   });
 

@@ -1,14 +1,14 @@
 "use server";
 
-import safeServerAction from "@/lib/server-action";
-import { type DirectionFormValues, directionSchema } from "../_components/direction-schema";
-import { checkAdmin } from "@/components/auth/checkAuth";
+import { checkReadOnlyAdmin } from "@/components/auth/checkAuth";
 import { directionGoogle } from "@/components/google-events/direction-google";
+import safeServerAction from "@/lib/server-action";
+import { directionSchema, type DirectionFormValues } from "../_components/direction-schema";
 
 async function getDirection(data: DirectionFormValues) {
   return await safeServerAction({
     data,
-    getUser: checkAdmin,
+    getUser: checkReadOnlyAdmin,
     schema: directionSchema,
     serverAction: async ({ destination, origin, waypoints }) => {
       const orderedWaipoints = await directionGoogle({ origin, destination, waypoints });
