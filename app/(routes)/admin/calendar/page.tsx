@@ -4,11 +4,13 @@ import prismadb from "@/lib/prismadb";
 import { addressFormatter } from "@/lib/utils";
 import { DirectionForm } from "./_components/direction-form";
 import OrdersCalendar from "./_components/orders-calendar";
+import { addHours } from "date-fns";
 
 export const dynamic = "force-dynamic";
 
 async function CalendarPage({ searchParams }: { searchParams: { date: string | undefined } }) {
-  const month = searchParams.date ? new Date(decodeURIComponent(searchParams.date)) : new Date();
+  const month = addHours(searchParams.date ? new Date(decodeURIComponent(searchParams.date)) : new Date(), 2);
+
   const beginMonth = new Date(new Date(month.getFullYear(), month.getMonth(), 1).setHours(0, 0, 0, 0));
   const endMonth = new Date(new Date(month.getFullYear(), month.getMonth() + 1, 1).setHours(0, 0, 0, 0));
   const orders = await prismadb.order.findMany({
