@@ -9,6 +9,8 @@ import Image from "next/image";
 import { Suspense } from "react";
 import PlacePicker from "./_components/place";
 
+export const dynamic = "force-static";
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Points de vente et magasins partenaires",

@@ -18,6 +18,7 @@ const envVariableSchema = z.object({
   GOOGLE_SERVICE_ACCOUNT: z.string(),
   CALENDAR_ID: z.string(),
   GOOGLE_API_KEY: z.string(),
+  NEXT_PUBLIC_GOOGLE_DIR_URL: z.string(),
 });
 
 envVariableSchema.parse(process.env);

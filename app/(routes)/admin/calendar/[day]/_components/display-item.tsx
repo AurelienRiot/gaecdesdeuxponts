@@ -7,7 +7,7 @@ function DisplayItem({ items }: { items: Awaited<ReturnType<typeof getOrders>>["
   return (
     <div className="mt-2 space-y-2">
       {items.map((item) => (
-        <div key={item.itemId} className="flex items-center space-x-3">
+        <div key={item.itemId} className="flex gap-1 items-center justify-start ">
           {/* Icône conditionnelle selon le type de produit */}
           {item.name.includes("bouteille") ? (
             <LuMilk className="h-5 w-5 text-blue-500" />
@@ -16,12 +16,11 @@ function DisplayItem({ items }: { items: Awaited<ReturnType<typeof getOrders>>["
           ) : (
             <PiPackageDuotone className="h-5 w-5 text-gray-500" />
           )}
-          <p>
-            <span className="text-sm font-medium text-gray-700">{item.name} : </span>
-            <span className=" text-gray-500">
-              {item.quantity}
-              {item.unit || ""}
-            </span>
+          <p className="text-sm col-span-7 font-medium text-gray-700">{item.name}</p>
+          <p>:</p>
+          <p className=" text-gray-500">
+            {item.quantity}
+            {item.unit || ""}
           </p>
         </div>
       ))}

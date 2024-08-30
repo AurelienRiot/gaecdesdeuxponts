@@ -20,7 +20,7 @@ const TimePicker = ({ className, date, setDate }: HourPickerProps) => {
   const timeOptions = generateTimeOptions(date);
   return (
     <div className={cn("space-y-2", className)}>
-      <Label>Heure de retrait</Label>
+      <Label>Heure de retrait/livraison</Label>
 
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>

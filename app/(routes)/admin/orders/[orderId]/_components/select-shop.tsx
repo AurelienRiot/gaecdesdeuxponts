@@ -38,7 +38,7 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
       render={({ field }) => (
         <FormItem className="w-48">
           <FormLabel id="shop-input" className="flex items-center justify-between gap-2">
-            <span>Lieu de retrait</span>
+            <span>Lieu de retrait/livraison</span>
             <Button
               variant={"outline"}
               onClick={() => onValueChange(undefined)}

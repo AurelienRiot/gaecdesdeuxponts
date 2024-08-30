@@ -316,39 +316,39 @@ export const InvoiceTableHeader = () => (
 const tableRowStyles = StyleSheet.create({
   row: {
     flexDirection: "row",
-    borderWidth: 1,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
     borderColor: borderColor,
-    // paddingVertical: 2,
     alignItems: "center",
+    paddingTop: 2,
   },
   description: {
     width: "40%",
     textAlign: "left",
     paddingLeft: 8,
-    paddingRight: 8,
     flexWrap: "wrap",
   },
-
   unit: {
     width: "20%",
     textAlign: "right",
-    paddingRight: 8,
+    paddingRight: 2,
   },
   qty: {
     width: "20%",
     textAlign: "right",
-    paddingRight: 8,
+    paddingRight: 2,
   },
   totalTTC: {
     width: "20%",
     textAlign: "right",
-    paddingRight: 8,
+    paddingRight: 2,
   },
 });
 
 export const InvoiceTableRow = ({ items, form }: { items: AMAPType["contrat"]["items"]; form?: boolean }) => {
   const rows = items.map((item, i) => (
-    <View style={tableRowStyles.row} key={i}>
+    <View style={[tableRowStyles.row, i === 0 ? { borderTopWidth: 1 } : { borderTopWidth: 0 }]} key={i}>
       <Text style={tableRowStyles.description}>{item.desc}</Text>
       <Text style={tableRowStyles.unit}>{item.priceTTC}</Text>
       <Text style={tableRowStyles.qty}>{!form && item.qty}</Text>

@@ -401,7 +401,7 @@ export const AMAPData: AMAPType = {
     items: [
       {
         id: "PR_7HDJDXU",
-        desc: "Lait cru bio bidon 2L",
+        desc: "Lait cru bidon 2L",
         priceTTC: 2.2,
         qty: 3,
       },

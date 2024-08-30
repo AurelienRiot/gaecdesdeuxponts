@@ -17,10 +17,10 @@ function ModalDay({ date, children }: { date?: Date; children: React.ReactNode }
     >
       <DialogContent className="left-[50%] top-[50%] max-h-[90%] w-[90%] max-w-[700px] overflow-y-scroll  rounded-sm">
         <DialogHeader>
-          <DialogTitle className="flex items-center justify-center text-2xl lining-nums">
-            Commande pour le
+          <DialogTitle className="flex gap-1 items-center justify-center text-2xl lining-nums">
+            <span>Commande pour le</span>
             {date ? (
-              dateFormatter(date, { customFormat: "EEEE d MMMM" })
+              <span>{dateFormatter(date, { customFormat: "EEEE d MMMM" })}</span>
             ) : (
               <Skeleton className="inline ml-4 " variant={"default"} size={"lg"} />
             )}

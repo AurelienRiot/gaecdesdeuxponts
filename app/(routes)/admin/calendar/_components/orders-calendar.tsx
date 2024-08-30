@@ -15,16 +15,17 @@ function OrdersCalendar({ month, className, orderDates }: { month: Date; orderDa
     <DayPicker
       locale={fr}
       month={month}
+      className={cn("max-w-xs mx-auto", className)}
       modifiers={{
         order: (day) => orderDates.some((date) => date.toDateString() === day.toDateString()),
       }}
       modifiersClassNames={{
-        order: "bg-green-500 text-white hover:bg-green-500/90",
+        order:
+          "bg-green-500 text-white hover:!bg-green-500/90 has-[button]:hover:!bg-green-500/90 has-[button]:hover:text-white ",
       }}
       onMonthChange={(e) => router.replace(`/admin/calendar?date=${encodeURIComponent(e.toISOString())}`)}
       showOutsideDays={true}
       onDayClick={(date) => router.push(`/admin/calendar/${date.toISOString()}`)}
-      className={cn("p-4 w-full max-w-96 mx-auto", className)}
       classNames={{
         months: "flex flex-col md:flex-row md:gap-4 relative justify-center",
         month_caption: "flex justify-center h-7 mx-10 relative items-center",
@@ -159,7 +160,7 @@ function OrdersCalendar({ month, className, orderDates }: { month: Date; orderDa
           );
         },
       }}
-      formatters={{ formatWeekdayName: (weekday) => format(new Date(weekday), "EEEE", { locale: fr }) }}
+      formatters={{ formatWeekdayName: (weekday) => format(new Date(weekday), "EEE", { locale: fr }) }}
     />
   );
 }

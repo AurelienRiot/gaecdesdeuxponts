@@ -3,7 +3,7 @@ import { addHours } from "date-fns";
 import { getUnitLabel } from "../product/product-function";
 import { directionGoogle } from "./direction-google";
 
-export const origin = "6 le Pont Robert 44290 Massérac, France";
+export const origin = "6 le Pont Robert 44290 Massérac";
 export const destination = "Pont de l'Eau, 44460 Avessac, France";
 
 async function getOrders({ startDate, endDate }: { startDate: Date; endDate: Date }) {

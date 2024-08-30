@@ -7,7 +7,8 @@ import { FaMapLocationDot } from "react-icons/fa6";
 import DisplayAddress from "./display-address";
 import DisplayItem from "./display-item";
 import { destination, origin } from "@/components/google-events/get-orders-for-events";
-import { googleDirectioUrl } from "@/components/google-events/create-orders-event";
+
+const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 
 function OrderDescriptions({
   formattedOrders,

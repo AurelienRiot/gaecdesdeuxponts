@@ -21,8 +21,8 @@ export const currencyFormatter = (() => {
   };
 })();
 
-export const addressFormatter = (address: Address, full = true) => {
-  if (!address.line1) {
+export const addressFormatter = (address: Address | null, full = true) => {
+  if (!address || !address.line1) {
     return "";
   }
   if (full) {

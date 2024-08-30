@@ -1,9 +1,9 @@
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import { directionGoogle } from "./_actions/direction-google";
-import OrdersCalendar from "./_components/orders-calendar";
-import { Button } from "@/components/ui/button";
 import prismadb from "@/lib/prismadb";
+import { addressFormatter } from "@/lib/utils";
+import { DirectionForm } from "./_components/direction-form";
+import OrdersCalendar from "./_components/orders-calendar";
 
 export const dynamic = "force-dynamic";
 
@@ -25,35 +25,40 @@ async function CalendarPage({ searchParams }: { searchParams: { date: string | u
   });
   const orderDates: Date[] = orders.map((order) => order.dateOfShipping).filter((date): date is Date => date !== null);
 
-  async function getDirection() {
-    "use server";
-
-    const origin = "6 le Pont Robert 44290 Massérac, France";
-    const destination = "Pont de l'Eau, 44460 Avessac, France";
-    const waypoints = [
-      "2 Pl. de l'Eglise 44290 Guémené-Penfao, France",
-      "7 Rue de l'Eglise 44290 Guémené-Penfao, France",
-      "La Bourg 35550 Saint-Ganton, France",
-    ];
-    await directionGoogle({ origin, destination, waypoints });
-  }
+  const users = await prismadb.user
+    .findMany({
+      where: { role: { notIn: ["readOnlyAdmin", "admin", "deleted"] } },
+      select: { name: true, company: true, image: true, address: true },
+    })
+    .then((u) =>
+      u.map((user) => ({
+        label: user.company || user.name || "",
+        image: user.image,
+        address: addressFormatter(user.address, true),
+      })),
+    );
+  const shops = await prismadb.shop.findMany({ select: { name: true, address: true, imageUrl: true } }).then((s) =>
+    s.map((shop) => ({
+      label: shop.name || "",
+      address: shop.address,
+      image: shop.imageUrl,
+    })),
+  );
 
   return (
-    <>
-      <div className=" space-y-4 p-8  pt-2 ">
+    <div className="max-w-[90vw] md:max-w-[500px] mx-auto">
+      <div className=" space-y-4 p-8  pt-2   w-full">
         <Heading
           title={`Calendrier des commandes`}
           description="Liste des commandes"
-          className="mx-auto w-fit  text-center"
+          className=" w-fit  text-center mx-auto"
         />
 
         <Separator />
       </div>
       <OrdersCalendar month={month} orderDates={orderDates} />
-      <form action={getDirection}>
-        <Button>Get Directions</Button>
-      </form>
-    </>
+      <DirectionForm usersAndShops={[...users, ...shops]} />
+    </div>
   );
 }
 

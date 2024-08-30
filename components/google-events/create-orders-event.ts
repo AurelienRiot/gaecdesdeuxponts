@@ -6,7 +6,7 @@ import deleteEvent from "./delete-events";
 import getEventsList from "./get-events-list";
 import getOrders, { destination, origin } from "./get-orders-for-events";
 
-export const googleDirectioUrl = "https://www.google.fr/maps/dir";
+const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 
 export default async function createOrdersEvent(data: { date: Date }) {
   const date = addHours(data.date, 2);
@@ -74,10 +74,12 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
       )
       .join("<br />") + "<br />";
 
+  const header = `<h2><a href="${process.env.NEXT_PUBLIC_URL}/admin/calendar/${startDate.toISOString()}">Voir les commandes sur le site</a></h2> <br /><h3><font color='green'>Résumer des produits </font></h3>`;
+
   const productDescriptions =
     productQuantities
       .map((item) => `<strong>${item.name}</strong> : ${item.quantity}${item.unit || ""}`)
-      .join("<br />") + "<br /><br />";
+      .join("<br />") + "<br />";
 
   const orderDescriptions =
     formattedOrders.length === 0
@@ -85,7 +87,7 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
       : formattedOrders
           .map(
             (order) =>
-              `<strong><a href="${process.env.NEXT_PUBLIC_URL}/admin/orders/${order.id}"><font color='red'>Acceder a la commande </font></a></strong> <br /><a href="${process.env.NEXT_PUBLIC_URL}/admin/users/${order.customerId}">${order.name}</a><br />` +
+              `<a href="${process.env.NEXT_PUBLIC_URL}/admin/users/${order.customerId}">${order.company ? order.company : order.name}</a><br /><strong><a href="${process.env.NEXT_PUBLIC_URL}/admin/orders/${order.id}"><font color='red'>Acceder à la commande </font></a></strong> <br />` +
               order.orderItems
                 .map((item) => `<strong>${item.name}</strong> : ${item.quantity}${item.unit || ""}`)
                 .join("<br />") +
@@ -97,7 +99,7 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
   const directionString =
     formattedOrders.length === 0
       ? ""
-      : `<strong><a  href="${googleDirectioUrl}/${origin}/${uniqueShippingAddresses.join("/")}/${destination}">Parcours</a></strong> <br /><br />`;
+      : `<strong><a  href="${googleDirectioUrl}/${origin}/${uniqueShippingAddresses.join("/")}/${destination}">Voir le parcours</a></strong> <br /><br />`;
 
-  return productDescriptions + amapOrdersDescription + directionString + orderDescriptions;
+  return header + productDescriptions + amapOrdersDescription + directionString + orderDescriptions;
 }
