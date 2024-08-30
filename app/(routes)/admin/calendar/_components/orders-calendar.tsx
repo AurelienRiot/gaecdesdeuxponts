@@ -41,7 +41,7 @@ function OrdersCalendar({ month, className, orderDates }: { month: Date; orderDa
         month_caption: "flex justify-center h-7 mx-10 relative items-center",
         weekdays: "flex flex-row",
         weekday: "text-muted-foreground w-12 font-normal text-[0.8rem]",
-        month: "gap-y-4 w-full md:odd:mt-0 odd:mt-4",
+        month: "gap-2 w-full md:odd:mt-0 odd:mt-4",
         caption: "flex justify-center pt-1 relative items-center",
         caption_label: "text-sm font-medium truncate",
         button_next: cn(
@@ -58,8 +58,8 @@ function OrdersCalendar({ month, className, orderDates }: { month: Date; orderDa
         ),
         nav: "flex items-start",
         month_grid: "mt-4",
-        week: "flex w-full mt-2",
-        day: "p-0 size-12 text-sm flex-1 flex items-center justify-center has-[button]:hover:!bg-accent rounded-md has-[button]:hover:aria-selected:!bg-primary has-[button]:hover:text-accent-foreground has-[button]:hover:aria-selected:text-primary-foreground",
+        week: "flex w-full mt-2 gap-1",
+        day: "p-0 size-10 text-sm flex-1 flex items-center justify-center has-[button]:hover:!bg-accent rounded-md has-[button]:hover:aria-selected:!bg-primary has-[button]:hover:text-accent-foreground has-[button]:hover:aria-selected:text-primary-foreground",
         day_button: cn(
           buttonVariants({ variant: "ghost" }),
           "size-8 p-0 font-normal transition-none hover:bg-transparent hover:text-inherit aria-selected:opacity-100",

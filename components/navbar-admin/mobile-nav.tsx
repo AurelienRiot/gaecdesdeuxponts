@@ -88,13 +88,17 @@ function AutresButton() {
           </div>
           <span className="mx-auto">Autres</span>
         </PopoverTrigger>
-        <PopoverContent className="w-fit  px-2 bg-neutral-950 text-neutral-200 border-0 shadow-lg">
+        <PopoverContent
+          side="top"
+          align="end"
+          className="w-fit  pt-2 px-2 bg-neutral-950 text-neutral-200 border-0 shadow-lg"
+        >
           {secondaryRoutes.map((route) => (
             <Link
               key={route.href}
               href={route.href}
               className={cn(
-                "flex flex-row items-center gap-2 px-2 py-2 rounded-md",
+                "flex flex-row items-center gap-4 px-4 py-2 rounded-md",
                 route.active && "bg-green-600 font-bold",
               )}
             >

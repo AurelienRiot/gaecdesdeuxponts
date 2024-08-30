@@ -44,7 +44,7 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
               onClick={() => onValueChange(undefined)}
               type="button"
               size={"xs"}
-              className="border-dashed text-xs"
+              className="border-dashed text-xs whitespace-nowrap"
             >
               À domicile
             </Button>
