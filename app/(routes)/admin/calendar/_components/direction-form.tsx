@@ -3,7 +3,14 @@
 import AddressAutocomplete, { type Suggestion } from "@/actions/adress-autocompleteFR";
 import { destination, origin } from "@/components/google-events/get-orders-for-events";
 import { Button, IconButton, buttonVariants } from "@/components/ui/button";
-import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import {
+  Command,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandListModal,
+} from "@/components/ui/command";
 import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
@@ -293,7 +300,7 @@ const AddressModal = forwardRef<HTMLButtonElement, AddressModalProps>(
           </span>
         </Button>
         <Modal
-          className="left-[50%] top-[50%] max-h-[90%] w-[90%] max-w-[700px]  rounded-sm"
+          className="left-[50%] top-[25%] md:top-[50%] max-h-[90%] w-[90%] max-w-[700px]  rounded-sm "
           title=""
           description=""
           isOpen={open}
@@ -340,7 +347,15 @@ function AddressSelect({
       <PopoverContent side="bottom" align="start" avoidCollisions={false} className=" z-[1200] p-0   ">
         <Command>
           <CommandInput onFocus={() => ScrollToTarget("select-address")} placeholder="Nom du client" />
-          <CommandList>
+          {/* <ScrollArea
+            onWheel={onScroll}
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
+            onTouchMove={onTouchMove}
+            ref={scrollAreaRef}
+            className="max-h-[300px] h-fit"
+          > */}
+          <CommandListModal>
             {usersAndShops.map((item) => (
               <CommandItem
                 key={item.address}
@@ -363,7 +378,8 @@ function AddressSelect({
                 {item.label}
               </CommandItem>
             ))}
-          </CommandList>
+          </CommandListModal>
+          {/* </ScrollArea> */}
         </Command>
       </PopoverContent>
     </Popover>

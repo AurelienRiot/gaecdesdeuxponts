@@ -10,6 +10,16 @@ import { DayPicker, labelNext, labelPrevious, useDayPicker } from "react-day-pic
 
 function OrdersCalendar({ month, className, orderDates }: { month: Date; orderDates: Date[]; className?: string }) {
   const router = useRouter();
+  const [orders, setOrders] = React.useState(orderDates);
+
+  React.useEffect(() => {
+    setOrders((prevOrders) => {
+      const newOrders = orderDates.filter(
+        (date) => !prevOrders.some((prevDate) => prevDate.toDateString() === date.toDateString()),
+      );
+      return [...prevOrders, ...newOrders];
+    });
+  }, [orderDates]);
 
   return (
     <DayPicker
@@ -17,7 +27,7 @@ function OrdersCalendar({ month, className, orderDates }: { month: Date; orderDa
       month={month}
       className={cn("max-w-xs mx-auto", className)}
       modifiers={{
-        order: (day) => orderDates.some((date) => date.toDateString() === day.toDateString()),
+        order: (day) => orders.some((date) => date.toDateString() === day.toDateString()),
       }}
       modifiersClassNames={{
         order:

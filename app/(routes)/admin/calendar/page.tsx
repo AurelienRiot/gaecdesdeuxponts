@@ -5,6 +5,9 @@ import { addressFormatter } from "@/lib/utils";
 import { DirectionForm } from "./_components/direction-form";
 import OrdersCalendar from "./_components/orders-calendar";
 import { addHours } from "date-fns";
+import { getAllShops } from "@/actions/get-shops";
+import { getSearchUsers } from "@/actions/get-user";
+import { getOrdersByDateOfShipping } from "@/actions/get-orders";
 
 export const dynamic = "force-dynamic";
 
@@ -13,39 +16,37 @@ async function CalendarPage({ searchParams }: { searchParams: { date: string | u
 
   const beginMonth = new Date(new Date(month.getFullYear(), month.getMonth(), 1).setHours(0, 0, 0, 0));
   const endMonth = new Date(new Date(month.getFullYear(), month.getMonth() + 1, 1).setHours(0, 0, 0, 0));
-  const orders = await prismadb.order.findMany({
-    where: {
-      dateOfShipping: {
-        gte: beginMonth,
-        lt: endMonth,
-      },
-    },
-    select: {
-      dateOfShipping: true,
-    },
-    distinct: ["dateOfShipping"],
-  });
-  const orderDates: Date[] = orders.map((order) => order.dateOfShipping).filter((date): date is Date => date !== null);
 
-  const users = await prismadb.user
-    .findMany({
-      where: { role: { notIn: ["readOnlyAdmin", "admin", "deleted"] } },
-      select: { name: true, company: true, image: true, address: true },
-    })
-    .then((u) =>
-      u.map((user) => ({
-        label: user.company || user.name || "",
-        image: user.image,
-        address: addressFormatter(user.address, true),
-      })),
+  const promises = await Promise.all([
+    getSearchUsers(),
+    getAllShops(),
+    getOrdersByDateOfShipping({ beginMonth, endMonth }),
+  ]).then(([users, shops, orderDates]) => {
+    const userMap = new Map(
+      users.map((user) => [
+        user.company || user.name || "",
+        {
+          label: user.company || user.name || "",
+          image: user.image,
+          address: addressFormatter(user.address, true),
+        },
+      ]),
     );
-  const shops = await prismadb.shop.findMany({ select: { name: true, address: true, imageUrl: true } }).then((s) =>
-    s.map((shop) => ({
-      label: shop.name || "",
-      address: shop.address,
-      image: shop.imageUrl,
-    })),
-  );
+
+    for (const shop of shops) {
+      if (!userMap.has(shop.name)) {
+        userMap.set(shop.name, {
+          label: shop.name,
+          address: shop.address,
+          image: shop.imageUrl,
+        });
+      }
+    }
+
+    return { usersAndShops: Array.from(userMap.values()), orderDates };
+  });
+
+  const { usersAndShops, orderDates } = promises;
 
   return (
     <div className="max-w-[90vw] md:max-w-[500px] mx-auto">
@@ -58,8 +59,8 @@ async function CalendarPage({ searchParams }: { searchParams: { date: string | u
 
         <Separator />
       </div>
-      <OrdersCalendar month={month} orderDates={orderDates} />
-      <DirectionForm usersAndShops={[...users, ...shops]} />
+      <OrdersCalendar month={month} orderDates={orderDates.map((date) => new Date(date))} />
+      <DirectionForm usersAndShops={usersAndShops} />
     </div>
   );
 }

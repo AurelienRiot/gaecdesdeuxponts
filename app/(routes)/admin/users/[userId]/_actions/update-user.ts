@@ -4,6 +4,7 @@ import { defaultAddress } from "@/components/zod-schema/address-schema";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { schema, type UserFormValues } from "../_components/user-schema";
+import { revalidateTag } from "next/cache";
 
 async function updateUser(data: UserFormValues) {
   return await safeServerAction({
@@ -46,6 +47,8 @@ async function updateUser(data: UserFormValues) {
               : undefined,
         },
       });
+      revalidateTag("users");
+
       return {
         success: true,
         message: "Utilisateur mise à jour",

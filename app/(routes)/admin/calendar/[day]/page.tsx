@@ -8,7 +8,6 @@ import AMAPDescrition from "./_components/amap-description";
 import OrderDescriptions from "./_components/orders-description";
 import ProductDescrition from "./_components/products-description";
 import UpdateEvents from "./_components/update-events";
-import { Skeleton } from "@/components/skeleton-ui/skeleton";
 
 export const dynamic = "force-dynamic";
 

@@ -79,6 +79,60 @@ const CommandList = React.forwardRef<
 
 CommandList.displayName = CommandPrimitive.List.displayName;
 
+const CommandListModal = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
+>(({ className, ...props }, forwardedRef) => {
+  const internalRef = React.useRef<HTMLDivElement>(null);
+  const ref = forwardedRef || internalRef;
+
+  const lastTouchY = React.useRef<number | null>(null);
+
+  const scrollInsideElement = (amount: number) => {
+    if ("current" in ref && ref.current) {
+      ref.current.scrollBy({
+        top: amount,
+        behavior: "instant",
+      });
+    }
+  };
+
+  function onScroll(e: React.WheelEvent<HTMLDivElement>) {
+    if (e.deltaY) {
+      scrollInsideElement(e.deltaY);
+    }
+  }
+  function onTouchStart(e: React.TouchEvent<HTMLDivElement>) {
+    lastTouchY.current = e.touches[0].clientY;
+  }
+
+  function onTouchMove(e: React.TouchEvent<HTMLDivElement>) {
+    if (lastTouchY.current !== null) {
+      const touchY = e.touches[0].clientY;
+      const deltaY = lastTouchY.current - touchY;
+      scrollInsideElement(deltaY);
+      lastTouchY.current = touchY;
+    }
+  }
+
+  function onTouchEnd() {
+    lastTouchY.current = null;
+  }
+  return (
+    <CommandPrimitive.List
+      ref={ref}
+      onWheel={onScroll}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+      onTouchMove={onTouchMove}
+      className={cn("max-h-[300px] overflow-y-auto overflow-x-hidden overscroll-contain", className)}
+      {...props}
+    />
+  );
+});
+
+CommandListModal.displayName = "CommandListModal";
+
 const CommandEmpty = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Empty>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Empty>
@@ -141,6 +195,7 @@ export {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandListModal,
   CommandSeparator,
   CommandShortcut,
 };

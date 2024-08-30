@@ -3,6 +3,7 @@
 import { getSessionUser } from "@/actions/get-user";
 import prismadb from "@/lib/prismadb";
 import type { ReturnTypeServerAction } from "@/lib/server-action";
+import { revalidateTag } from "next/cache";
 
 async function deleteUser(): Promise<ReturnTypeServerAction> {
   const user = await getSessionUser();
@@ -35,6 +36,8 @@ async function deleteUser(): Promise<ReturnTypeServerAction> {
   //     message: "Une erreur est survenue",
   //   };
   // }
+
+  revalidateTag("users");
 
   return {
     success: true,

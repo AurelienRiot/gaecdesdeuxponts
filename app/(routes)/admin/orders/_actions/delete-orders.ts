@@ -3,6 +3,7 @@ import { checkAdmin } from "@/components/auth/checkAuth";
 import createOrdersEvent from "@/components/google-events/create-orders-event";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const deleteSchema = z.object({
@@ -30,6 +31,8 @@ async function deleteOrder(data: z.infer<typeof deleteSchema>) {
         });
 
       if (data.dateOfShipping) {
+        revalidateTag("orders");
+
         const event = await createOrdersEvent({ date: data.dateOfShipping });
         if (!event.success) {
           console.log(event.message);

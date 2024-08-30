@@ -6,6 +6,7 @@ import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { orderSchema, type OrderFormValues } from "../_components/order-shema";
 import createOrdersEvent from "@/components/google-events/create-orders-event";
+import { revalidateTag } from "next/cache";
 
 async function updateOrder(data: OrderFormValues) {
   return await safeServerAction({
@@ -64,6 +65,7 @@ async function updateOrder(data: OrderFormValues) {
       });
 
       if (data.dateOfShipping) {
+        revalidateTag("orders");
         const event = await createOrdersEvent({ date: data.dateOfShipping });
         if (!event.success) {
           console.log(event.message);
