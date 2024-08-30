@@ -2,7 +2,7 @@
 
 import AddressAutocomplete, { type Suggestion } from "@/actions/adress-autocompleteFR";
 import { destination, origin } from "@/components/google-events/get-orders-for-events";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button, IconButton, buttonVariants } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,7 @@ import useServerAction from "@/hooks/use-server-action";
 import { ScrollToTarget } from "@/lib/scroll-to-traget";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronDown, ChevronsUpDown, Plus } from "lucide-react";
+import { ChevronDown, ChevronsUpDown, Plus, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { forwardRef, useState } from "react";
@@ -42,11 +42,13 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
       origin,
       destination,
       waypoints: [
-        "3, le Clos Cheny, 44290, Guémené-Penfao, FR",
-        "7 Rue de l'Eglise 44290 Guémené-Penfao",
-        "1 Rue de l'Hotel de Ville 44290 Guémené-Penfao",
-        "6 Rue de Plessé, 44460, Avessac, FR",
-        "17 Place Nominoë, 35600, Bains-sur-Oust, FR",
+        "",
+        "",
+        // "3, le Clos Cheny, 44290, Guémené-Penfao, FR",
+        // "7 Rue de l'Eglise 44290 Guémené-Penfao",
+        // "1 Rue de l'Hotel de Ville 44290 Guémené-Penfao",
+        // "6 Rue de Plessé, 44460, Avessac, FR",
+        // "17 Place Nominoë, 35600, Bains-sur-Oust, FR",
       ],
     },
   });
@@ -74,7 +76,7 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
         <Separator />
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit, (e) => console.log(e))} className="w-full space-y-8">
             <SuccessModal
               isOpen={open}
               onClose={() => setOpen(false)}
@@ -183,8 +185,16 @@ function SuccessModal({
 function WaypointsForm({ usersAndShops }: { usersAndShops: UserAndShop[] }) {
   const form = useFormContext<DirectionFormValues>();
 
+  const error = form.control.getFieldState("waypoints").error;
+
   function addWaypoint() {
     form.setValue("waypoints", [...form.getValues("waypoints"), ""]);
+  }
+
+  function removeWaypoint(index: number) {
+    const waypoints = form.getValues("waypoints");
+    waypoints.splice(index, 1);
+    form.setValue("waypoints", waypoints);
   }
   return (
     <FormField
@@ -204,11 +214,18 @@ function WaypointsForm({ usersAndShops }: { usersAndShops: UserAndShop[] }) {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <AddressModal
-                          onValueChange={field.onChange}
-                          usersAndShops={usersAndShops}
-                          value={field.value}
-                        />
+                        <div className="relative">
+                          <IconButton
+                            Icon={X}
+                            onClick={() => removeWaypoint(index)}
+                            className="absolute -top-2 -right-2 size-4 p-px text-destructive-foreground bg-destructive z-10"
+                          />
+                          <AddressModal
+                            onValueChange={field.onChange}
+                            usersAndShops={usersAndShops}
+                            value={field.value}
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -219,12 +236,13 @@ function WaypointsForm({ usersAndShops }: { usersAndShops: UserAndShop[] }) {
                 type="button"
                 onClick={addWaypoint}
                 variant={"outline"}
-                className="border-dashed w-full border-primary"
+                className="border-dashed w-full border-primary "
               >
                 <Plus className="h-4 w-4 mr-2" /> Ajouter un point
               </Button>
             </div>
           </FormControl>
+          {!!error?.root && <p className={cn("text-sm font-medium text-destructive")}>{error.root.message}</p>}
         </FormItem>
       )}
     />
@@ -239,6 +257,7 @@ type AddressModalProps = {
 
 const AddressModal = forwardRef<HTMLButtonElement, AddressModalProps>(
   ({ usersAndShops, onValueChange, value }, ref) => {
+    const form = useFormContext<DirectionFormValues>();
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState(value);
 
@@ -246,6 +265,7 @@ const AddressModal = forwardRef<HTMLButtonElement, AddressModalProps>(
       setInput(val);
       onValueChange(val);
       setOpen(false);
+      form.clearErrors();
     }
 
     const image = usersAndShops.find((u) => u.address === value)?.image;
@@ -256,14 +276,11 @@ const AddressModal = forwardRef<HTMLButtonElement, AddressModalProps>(
         <Button
           type={"button"}
           variant="outline"
-          className={cn(
-            " w-full text-left overflow-hidden whitespace-nowrap pl-2 relative flex justify-start",
-            !value ? "opacity-50" : "",
-          )}
+          className={cn(" w-full text-left  pl-2 relative flex justify-start", !value ? "opacity-50" : "")}
           onClick={() => setOpen(true)}
           ref={ref}
         >
-          <span className="absolute inset-0 bg-gradient-to-r from-transparent to-white from-85%" />
+          <span className="absolute inset-0 bg-gradient-to-r from-transparent to-background from-85%" />
           <Image
             src={image ? image : "/skeleton-image.webp"}
             alt={"image"}
@@ -271,7 +288,10 @@ const AddressModal = forwardRef<HTMLButtonElement, AddressModalProps>(
             height={24}
             className="mr-2 h-4 w-4 object-contain rounded-sm"
           />
-          <span className=""> {value ? (label ? label : value) : "Entrer une adresse"}</span>
+          <span className="overflow-hidden whitespace-nowrap">
+            {" "}
+            {value ? (label ? label : value) : "Entrer une adresse"}
+          </span>
         </Button>
         <Modal
           className="left-[50%] top-[25%] md:top-[50%] max-h-[90%] w-[90%] max-w-[700px] overflow-y-scroll  rounded-sm"

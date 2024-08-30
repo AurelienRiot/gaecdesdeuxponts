@@ -8,7 +8,7 @@ export const directionSchema = z.object({
     message: "Entrez la destination",
   }),
   waypoints: z
-    .array(z.string({ required_error: "" }).min(1, { message: "" }))
+    .array(z.string({ required_error: "Rentrer une adresse" }).min(1, { message: "Rentrer une adresse" }))
     .min(2, { message: "Entrez au moins deux points de passage" }),
 });
 
