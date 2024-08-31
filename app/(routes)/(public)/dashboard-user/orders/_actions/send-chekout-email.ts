@@ -11,7 +11,7 @@ import safeServerAction from "@/lib/server-action";
 import { currencyFormatter } from "@/lib/utils";
 import type { FullOrder } from "@/types";
 import { render } from "@react-email/render";
-import { pdf } from "@react-pdf/renderer";
+import { renderToBuffer } from "@react-pdf/renderer";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { z } from "zod";
@@ -123,11 +123,8 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
 
 async function generatePdf(order: FullOrder) {
   const pdfData = createPDFData(order);
-  const doc = Order({ data: pdfData });
-  const pdfBlob = await pdf(doc).toBlob();
-  const arrayBuffer = await pdfBlob.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
-  return buffer;
+  const pdfBuffer = await renderToBuffer(Order({ data: pdfData }));
+  return pdfBuffer;
 }
 
 export default sendCheckoutEmail;
