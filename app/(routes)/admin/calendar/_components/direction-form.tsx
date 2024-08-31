@@ -19,7 +19,7 @@ import { Separator } from "@/components/ui/separator";
 import useScrollToHashOnMount from "@/hooks/use-scroll-to-hash";
 import useServerAction from "@/hooks/use-server-action";
 import { ScrollToTarget } from "@/lib/scroll-to-traget";
-import { addDelay, cn } from "@/lib/utils";
+import { addDelay, cn, svgToDataUri } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDown, ChevronsUpDown, Dot, Plus, X } from "lucide-react";
 import Image from "next/image";
@@ -99,8 +99,18 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
                   -webkit-border-style: dotted;
                   border-radius: 0
                 }
+                  .dotted-line {
+  background-image: url("${svgToDataUri(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" >
+  <circle cx="4" cy="4" r="4" fill="#E4E4E7" />
+</svg>`,
+  )}"); 
+  background-repeat: repeat-y; 
+}
    `}</style>
-              <div className="absolute h-full w-1 top-0 left-0   border-r-8 border-dotted bg-transparent" />
+              {/* <div className="absolute h-full w-1 top-0 left-0   border-r-8 border-dotted bg-transparent" /> */}
+              <div className="dotted-line w-4 h-full top-0 left-0 absolute" />
+
               <FormField
                 control={form.control}
                 name="origin"
@@ -242,7 +252,7 @@ function WaypointsForm({ usersAndShops }: { usersAndShops: UserAndShop[] }) {
           <FormControl>
             <div className="space-y-4">
               <div className="space-y-4 relative">
-                <div className=" w-4 h-full bg-background absolute -top-2 -left-7 " />
+                <div className=" w-4 h-full bg-background absolute -top-[6px] -left-7 " />
 
                 {field.value.map((value, index) => (
                   <FormField
@@ -257,7 +267,7 @@ function WaypointsForm({ usersAndShops }: { usersAndShops: UserAndShop[] }) {
                               type="button"
                               Icon={X}
                               onClick={() => removeWaypoint(index)}
-                              className="absolute -top-2 -right-2 size-5 p-px text-destructive-foreground bg-destructive z-10 border-none md:opacity-0  group-hover:opacity-100  transition-opacity duration-300"
+                              className="absolute -top-2 -right-2 size-5 p-1 text-destructive-foreground bg-destructive z-10 border-none md:opacity-0  group-hover:opacity-100  transition-opacity duration-300"
                             />
                             <AddressModal
                               onValueChange={field.onChange}
@@ -333,7 +343,7 @@ const AddressModal = forwardRef<HTMLButtonElement, AddressModalProps>(
               <GiPositionMarker className="size-6 text-green-600 " />
             </div>
           ) : (
-            <div className="pb-4 bg-background absolute top-3 -left-[29px] ">
+            <div className="pb-[14px] pt-2 bg-background absolute top-1 -left-[29px] ">
               <FaDotCircle className="size-4 text-blue-600 " />
             </div>
           )}
