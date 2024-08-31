@@ -3,10 +3,12 @@ import { dateFormatter, dateMonthYear } from "@/lib/date-utils";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
-import { addDelay, currencyFormatter } from "@/lib/utils";
+import { currencyFormatter } from "@/lib/utils";
 import type { AMAPOrderWithItemsAndUser, FullOrder } from "@/types";
 import { render } from "@react-email/render";
-import { pdf } from "@react-pdf/renderer";
+import { pdf, renderToBuffer } from "@react-pdf/renderer";
+import { revalidateTag } from "next/cache";
+import { Worker } from "node:worker_threads";
 import * as z from "zod";
 import { checkAdmin, checkReadOnlyAdmin } from "../auth/checkAuth";
 import SendAMAPEmail from "../email/send-amap";
@@ -18,7 +20,6 @@ import Invoice from "./create-invoice";
 import MonthlyInvoice from "./create-monthly-invoice";
 import ShippingOrder from "./create-shipping";
 import { createAMAPData, createMonthlyPDFData, createPDFData } from "./pdf-data";
-import { revalidateTag } from "next/cache";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 
@@ -399,18 +400,22 @@ export async function sendMonthlyInvoice(data: z.infer<typeof monthlyPdf64String
       console.timeEnd("Fetching orders");
 
       const date = dateMonthYear(orders.map((order) => order.dateOfShipping));
-      console.time("Generating pdf");
+      // console.time("Generating pdf");
 
-      const doc = <MonthlyInvoice data={createMonthlyPDFData(orders)} isPaid={false} />;
-      console.timeEnd("Generating pdf");
-      console.time("Generating blob");
-      const pdfBlob = await pdf(doc).toBlob();
-      console.timeEnd("Generating blob");
-      console.time("Generating arrayBuffer");
-      const arrayBuffer = await pdfBlob.arrayBuffer();
-      console.timeEnd("Generating arrayBuffer");
+      // const doc = <MonthlyInvoice data={createMonthlyPDFData(orders)} isPaid={false} />;
+      // console.timeEnd("Generating pdf");
+      // console.time("Generating blob");
+      // // const pdfBlob = await pdf(doc).toBlob();
+      // const pdfBlob = await generatePDFInWorker(doc);
+      // console.timeEnd("Generating blob");
+      // console.time("Generating arrayBuffer");
+      // const arrayBuffer = await pdfBlob.arrayBuffer();
+      // console.timeEnd("Generating arrayBuffer");
       console.time("Generating pdfBuffer");
-      const pdfBuffer = await Buffer.from(arrayBuffer);
+      // const pdfBuffer = await Buffer.from(arrayBuffer);
+
+      const pdfBuffer = await renderToBuffer(<MonthlyInvoice data={createMonthlyPDFData(orders)} isPaid={false} />);
+
       console.timeEnd("Generating pdfBuffer");
 
       console.time("Generating email");
@@ -522,3 +527,21 @@ export async function SendAMAP(data: z.infer<typeof AMAPSchema>) {
     },
   });
 }
+
+const generatePDFInWorker = (doc: JSX.Element): Promise<Blob> => {
+  return new Promise((resolve, reject) => {
+    const worker = new Worker("./pdfWorker.js", { workerData: { doc } });
+    worker.on("message", (message: unknown) => {
+      // Type check or assert the result
+      if (message instanceof Blob) {
+        resolve(message);
+      } else {
+        reject(new Error("Unexpected result type from worker"));
+      }
+    });
+    worker.on("error", reject);
+    worker.on("exit", (code) => {
+      if (code !== 0) reject(new Error(`Worker stopped with exit code ${code}`));
+    });
+  });
+};
