@@ -89,25 +89,30 @@ export const LocationAutocomplete = async ({
 }): Promise<Suggestion[]> => {
   if (latitude === 0 && longitude === 0) return [];
 
-  const response = await ky
-    .get(
-      `https://api-adresse.data.gouv.fr/reverse/?lat=${encodeURIComponent(
-        latitude.toString(),
-      )}&lon=${encodeURIComponent(longitude.toString())}`,
-    )
-    .json();
+  try {
+    const response = await ky
+      .get(
+        `https://api-adresse.data.gouv.fr/reverse/?lat=${encodeURIComponent(
+          latitude.toString(),
+        )}&lon=${encodeURIComponent(longitude.toString())}`,
+      )
+      .json();
 
-  const { features } = await fetchResponceSchema.parse(response);
-  const suggestions: Suggestion[] = features.map((feature) => ({
-    label: feature.properties.label,
-    city: feature.properties.city,
-    country: "FR",
-    line1: feature.properties.name,
-    postal_code: feature.properties.postcode,
-    state: feature.properties.context.split(", ").at(-1) as string,
-    coordinates: feature.geometry.coordinates,
-  }));
-  return suggestions;
+    const { features } = await fetchResponceSchema.parse(response);
+    const suggestions: Suggestion[] = features.map((feature) => ({
+      label: feature.properties.label,
+      city: feature.properties.city,
+      country: "FR",
+      line1: feature.properties.name,
+      postal_code: feature.properties.postcode,
+      state: feature.properties.context.split(", ").at(-1) as string,
+      coordinates: feature.geometry.coordinates,
+    }));
+    return suggestions;
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
 };
 
 export default AddressAutocomplete;

@@ -35,7 +35,10 @@ function OrdersCalendar({ month, className, orderDates }: { month: Date; orderDa
       }}
       onMonthChange={(e) => router.replace(`/admin/calendar?date=${encodeURIComponent(e.toISOString())}`)}
       showOutsideDays={true}
-      onDayClick={(date) => router.push(`/admin/calendar/${date.toISOString()}`)}
+      onDayClick={(date) => {
+        console.log({ iso: date.toISOString(), time: date.getTime() });
+        router.push(`/admin/calendar/${date.toISOString()}`);
+      }}
       classNames={{
         months: "flex flex-col md:flex-row md:gap-4 relative justify-center",
         month_caption: "flex justify-center h-7 mx-10 relative items-center",

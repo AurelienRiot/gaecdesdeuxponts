@@ -43,7 +43,15 @@ function OrderDescriptions({
           </div>
           <div className="flex gap-2 justify-center items-center mt-2">
             <DisplayAddress address={order.shippingAddress} />
-            <Button asChild>
+            <Button
+              asChild
+              variant={"shine"}
+              className={
+                order.shippingEmail
+                  ? "from-green-500 via-green-500/50 to-green-500"
+                  : "from-red-500 via-red-500/50 to-red-500"
+              }
+            >
               <Link href={`/admin/orders/${order.id}`} target="_blank">
                 <ListOrdered className="h-5 w-5 mr-3" />
                 Commande

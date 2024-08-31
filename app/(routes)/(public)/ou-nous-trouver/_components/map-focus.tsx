@@ -11,12 +11,17 @@ import LocationMarker from "./location-marker";
 import { usePostHog } from "posthog-js/react";
 import { IconButton } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/use-local-storage";
+import type { Shop } from "@prisma/client";
 
 const MapFocus = ({
   className,
   setCoordinates,
+  shops,
+  setSortedShops,
 }: {
   className?: string;
+  setSortedShops: Dispatch<SetStateAction<Shop[]>>;
+  shops: Shop[];
   setCoordinates: Dispatch<SetStateAction<{ long: number | undefined; lat: number | undefined }>>;
 }) => {
   const { getValue } = useLocalStorage("cookies-banner");
@@ -64,7 +69,13 @@ const MapFocus = ({
 
   return (
     <>
-      <LocationMarker setPin={setPin} setCoordinates={setCoordinates} className="absolute right-3 top-3 z-[1000]" />
+      <LocationMarker
+        shops={shops}
+        setSortedShops={setSortedShops}
+        setPin={setPin}
+        setCoordinates={setCoordinates}
+        className="absolute right-3 top-3 z-[1000]"
+      />
 
       <Command loop shouldFilter={false} className={className}>
         <CommandInput

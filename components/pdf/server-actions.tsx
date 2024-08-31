@@ -3,7 +3,7 @@ import { dateFormatter, dateMonthYear } from "@/lib/date-utils";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
-import { currencyFormatter } from "@/lib/utils";
+import { addDelay, currencyFormatter } from "@/lib/utils";
 import type { AMAPOrderWithItemsAndUser, FullOrder } from "@/types";
 import { render } from "@react-email/render";
 import { pdf } from "@react-pdf/renderer";
@@ -18,6 +18,7 @@ import Invoice from "./create-invoice";
 import MonthlyInvoice from "./create-monthly-invoice";
 import ShippingOrder from "./create-shipping";
 import { createAMAPData, createMonthlyPDFData, createPDFData } from "./pdf-data";
+import { revalidateTag } from "next/cache";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 
@@ -104,10 +105,10 @@ export async function createMonthlyPDF64String(data: z.infer<typeof monthlyPdf64
     data,
     schema: monthlyPdf64StringSchema,
     getUser: checkReadOnlyAdmin,
-    serverAction: async (data) => {
+    serverAction: async ({ orderIds }) => {
       const orders = await prismadb.order.findMany({
         where: {
-          id: { in: data.orderIds },
+          id: { in: orderIds },
           dateOfShipping: { not: null },
         },
         include: {
@@ -132,7 +133,7 @@ export async function createMonthlyPDF64String(data: z.infer<typeof monthlyPdf64
         };
       }
 
-      const date = dateMonthYear(orders[0].dateOfShipping);
+      const date = dateMonthYear(orders.map((order) => order.dateOfShipping));
 
       const blob = await generatePdf({ data: orders, type: "monthly" });
       const base64String = await blobToBase64(blob);
@@ -258,6 +259,8 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
           shippingEmail: new Date(),
         },
       });
+      revalidateTag("orders");
+
       return {
         success: true,
         message: "BL envoyé",
@@ -343,6 +346,7 @@ export async function sendFacture(data: z.infer<typeof factureSchema>) {
           invoiceEmail: new Date(),
         },
       });
+      revalidateTag("orders");
 
       return {
         success: true,
@@ -357,10 +361,10 @@ export async function sendMonthlyInvoice(data: z.infer<typeof monthlyPdf64String
     data,
     schema: monthlyPdf64StringSchema,
     getUser: checkAdmin,
-    serverAction: async (data) => {
+    serverAction: async ({ orderIds }) => {
       const orders = await prismadb.order.findMany({
         where: {
-          id: { in: data.orderIds },
+          id: { in: orderIds },
           dateOfShipping: { not: null },
         },
         include: {
@@ -392,7 +396,7 @@ export async function sendMonthlyInvoice(data: z.infer<typeof monthlyPdf64String
         };
       }
 
-      const date = dateMonthYear(orders[0].dateOfShipping);
+      const date = dateMonthYear(orders.map((order) => order.dateOfShipping));
 
       const doc = <MonthlyInvoice data={createMonthlyPDFData(orders)} isPaid={false} />;
       const pdfBlob = await pdf(doc).toBlob();
@@ -427,6 +431,9 @@ export async function sendMonthlyInvoice(data: z.infer<typeof monthlyPdf64String
           invoiceEmail: new Date(),
         },
       });
+      revalidateTag("orders");
+
+      // await addDelay(2000);
 
       return {
         success: true,

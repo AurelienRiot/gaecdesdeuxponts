@@ -1,16 +1,10 @@
 "use client";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface ModalProps {
   title: string;
-  description: string;
+  description?: string;
   isOpen: boolean;
   onClose: () => void;
   children?: React.ReactNode;
@@ -37,7 +31,7 @@ export const Modal: React.FC<ModalProps> = ({
       <DialogContent className={className}>
         <DialogHeader>
           <DialogTitle> {title} </DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
+          {!!description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
         <div>{children}</div>
       </DialogContent>

@@ -87,6 +87,7 @@ async function getOrders({ startDate, endDate }: { startDate: Date; endDate: Dat
     id: order.id,
     customerId: order.userId,
     shippingAddress: order.customer?.shippingAddress,
+    shippingEmail: order.shippingEmail,
     name: order.user?.name,
     company: order.user?.company,
     image: order.user?.image,

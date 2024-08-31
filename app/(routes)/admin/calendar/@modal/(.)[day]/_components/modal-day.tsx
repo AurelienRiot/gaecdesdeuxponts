@@ -15,7 +15,10 @@ function ModalDay({ date, children }: { date?: Date; children: React.ReactNode }
       }}
       modal={true}
     >
-      <DialogContent className="left-[50%] top-[50%] max-h-[90%] w-[90%] max-w-[700px] overflow-y-scroll  rounded-sm">
+      <DialogContent
+        aria-describedby={`Résumer des commandes`}
+        className="left-[50%] top-[50%] max-h-[90%] w-[90%] max-w-[700px] overflow-y-scroll  rounded-sm"
+      >
         <DialogHeader>
           <DialogTitle className="flex gap-1 items-center justify-center text-2xl lining-nums">
             <span>Commande pour le</span>

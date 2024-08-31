@@ -89,7 +89,7 @@ export const createMonthlyPDFData = (orders: FullOrder[]): MonthlyPDFDataType =>
   if (!orders[0].dateOfShipping) {
     throw new Error("Date invalide");
   }
-  const date = dateMonthYear(orders[0].dateOfShipping);
+  const date = dateMonthYear(orders.map((order) => order.dateOfShipping));
 
   const customer = orders[orders.length - 1].customer;
   if (!customer) {

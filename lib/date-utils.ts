@@ -20,10 +20,17 @@ export function formDateDayMonth(date: Date) {
   })}`;
 }
 
-export const dateMonthYear = (date: Date) => {
-  return `${date.toLocaleString("fr-FR", {
-    month: "long",
-  })} ${date.getFullYear()}`;
+export const dateMonthYear = (dates: (Date | null)[]) => {
+  const orderDates = (dates.filter((date) => date !== null) as Date[]).sort((a, b) => a.getTime() - b.getTime());
+  const months = new Set(
+    orderDates.map((date) =>
+      date.toLocaleString("fr-FR", {
+        month: "long",
+      }),
+    ),
+  );
+  const year = orderDates[0].getFullYear();
+  return `${Array.from(months).join(" - ")} ${year}`;
 };
 
 export const getTuesdaysBetweenDates = (from: Date | undefined, to: Date | undefined) => {

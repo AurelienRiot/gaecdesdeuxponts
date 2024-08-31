@@ -7,7 +7,7 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { Plus } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { FormEventHandler, useEffect, useRef, useState } from "react";
 import type { DateRange } from "react-day-picker";
 import { toast } from "sonner";
 import { columns, filterableColumns, viewOptionsColumns, type OrderColumn } from "./columns";
@@ -93,33 +93,27 @@ export const OrderClient: React.FC<OrderClientProps> = ({ initialData, initialDa
 };
 
 function SearchId() {
-  const [searchId, setSearchId] = useState("");
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
 
-  function onSubmit() {
-    router.push(`?id=${searchId}`);
+  function onSubmit(formData: FormData) {
+    router.push(`?id=${formData.get("searchId")}`);
   }
   return (
-    <div className="flex flex-wrap gap-2">
-      <Input
-        className="max-w-xs"
-        value={searchId}
-        onChange={(event) => {
-          setSearchId(event.target.value);
-        }}
-        placeholder="Rechercher par numéros de commande"
-      />
-      <Button onClick={onSubmit}>Rechercher</Button>
+    <form className="flex flex-wrap gap-2" action={onSubmit}>
+      <Input name="searchId" className="max-w-xs" placeholder="Rechercher par numéros de commande" />
+      <Button type="submit">Rechercher</Button>
       <Button
+        type="button"
         variant={"outline"}
         className="border-dashed"
         onClick={() => {
-          setSearchId("");
+          formRef.current?.reset();
           router.push(`/admin/orders`);
         }}
       >
-        Effacer
+        Réinitialiser
       </Button>
-    </div>
+    </form>
   );
 }

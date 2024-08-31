@@ -25,7 +25,13 @@ const PlacePicker = ({
   const [sortedShops, setSortedShops] = useState<Shop[]>(shops);
   return (
     <>
-      <Leaflet shops={shops} farmShop={farmShop} setCoordinates={setCoordinates} coordinates={coordinates} />
+      <Leaflet
+        shops={shops}
+        farmShop={farmShop}
+        setCoordinates={setCoordinates}
+        setSortedShops={setSortedShops}
+        coordinates={coordinates}
+      />
       <div className="flex flex-wrap items-center justify-start gap-2">
         <AddressInput setSortedShops={setSortedShops} setCoordinates={setCoordinates} shops={shops} />
         <NameInput setSortedShops={setSortedShops} shops={shops} className="w-fit" />

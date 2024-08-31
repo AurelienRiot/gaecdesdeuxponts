@@ -11,22 +11,17 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        markdown:
-          "font-normal bg-primary text-primary-foreground hover:bg-primary/90",
+        markdown: "font-normal bg-primary text-primary-foreground hover:bg-primary/90",
         rounded:
           "w-auto rounded-full bg-primary text-primary-foreground px-5 py-3 disabled:cursor-not-allowed disabled:opacity-50  font-semibold hover:opacity-75  will-change-transform",
         shadow:
           " bg-green-500 border-2 shadow-[-5px_5px_0_black] dark:shadow-[-5px_5px_0_white] hover:bg-green-500/90 border-black active:shadow-none dark:active:shadow-none",
-        expandIcon:
-          "group relative text-primary-foreground bg-primary hover:bg-primary/90",
+        expandIcon: "group relative text-primary-foreground bg-primary hover:bg-primary/90",
         ringHover:
           "bg-primary text-primary-foreground transition-all duration-300 hover:bg-primary/90 hover:ring-2 hover:ring-primary/90 hover:ring-offset-2",
         shine:
@@ -74,29 +69,11 @@ export interface ButtonProps
 
 export type ButtonIconProps = IconProps | IconRefProps;
 
-const Button = React.forwardRef<
-  HTMLButtonElement,
-  ButtonProps & ButtonIconProps
->(
-  (
-    {
-      className,
-      variant,
-      size,
-      asChild = false,
-      iconPlacement,
-      Icon,
-      ...props
-    },
-    ref,
-  ) => {
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps & ButtonIconProps>(
+  ({ className, variant, size, asChild = false, iconPlacement, Icon, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-      >
+      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
         {Icon && iconPlacement === "left" && (
           <div className="group-hover:translate-x-100 w-0 translate-x-[0%] pr-0 opacity-0 transition-all duration-200 group-hover:w-5 group-hover:pr-2 group-hover:opacity-100 ">
             <Icon />
@@ -115,24 +92,12 @@ const Button = React.forwardRef<
 Button.displayName = "Button";
 
 const LoadingButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    { className, variant, size, asChild = false, disabled, children, ...props },
-    ref,
-  ) => {
+  ({ className, variant, size, asChild = false, disabled, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        disabled={disabled}
-        ref={ref}
-        {...props}
-      >
+      <Comp className={cn(buttonVariants({ variant, size, className }))} disabled={disabled} ref={ref} {...props}>
         <>
-          {disabled && (
-            <Loader2
-              className={cn("h-4 w-4 animate-spin", children ? "mr-2" : "")}
-            />
-          )}
+          {disabled && <Loader2 className={cn("h-4 w-4 animate-spin", children ? "mr-2" : "")} />}
           {children}
         </>
       </Comp>
@@ -141,8 +106,7 @@ const LoadingButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 LoadingButton.displayName = "LoadingButton";
 
-export interface IconButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   Icon: React.ElementType;
   iconClassName?: string;
   noStyle?: boolean;
@@ -158,10 +122,15 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
             ? ""
             : "flex items-center justify-center rounded-full border bg-background p-2 shadow-md transition-all hover:scale-110 active:scale-95",
           className,
+          props.disabled ? "cursor-not-allowed opacity-50 hover:scale-100 active:scale-100" : "",
         )}
         {...props}
       >
-        <Icon className={iconClassName} />
+        {props.disabled ? (
+          <Loader2 className={cn("animate-spin", iconClassName)} />
+        ) : (
+          <Icon className={iconClassName} />
+        )}
         <span className="sr-only">{title}</span>
       </button>
     );

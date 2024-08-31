@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 
-import { Font, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { StyleSheet, Text, View } from "@react-pdf/renderer";
 import Details from "./details";
 import MainDocument, { borderColor, foregroundColor, mainColor, tableRowsCount } from "./main-document";
 import PaidWatermark from "./paid-watermark";

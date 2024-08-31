@@ -1,6 +1,6 @@
 "use client";
 
-import AddressAutocomplete, { type Suggestion } from "@/actions/adress-autocompleteFR";
+import AddressAutocomplete, { LocationAutocomplete, type Suggestion } from "@/actions/adress-autocompleteFR";
 import { destination, origin } from "@/components/google-events/get-orders-for-events";
 import { Button, IconButton, buttonVariants } from "@/components/ui/button";
 import {
@@ -18,20 +18,20 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Separator } from "@/components/ui/separator";
 import useScrollToHashOnMount from "@/hooks/use-scroll-to-hash";
 import useServerAction from "@/hooks/use-server-action";
-import { ScrollToTarget } from "@/lib/scroll-to-traget";
 import { addDelay, cn, svgToDataUri } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronDown, ChevronsUpDown, Dot, Plus, X } from "lucide-react";
+import { ChevronDown, ChevronsUpDown, Locate, Plus, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { forwardRef, useState } from "react";
 import { useForm, useFormContext } from "react-hook-form";
+import { FaDotCircle } from "react-icons/fa";
 import { FaMapLocationDot } from "react-icons/fa6";
+import { GiPositionMarker } from "react-icons/gi";
+import { toast } from "sonner";
 import getDirection from "../_actions/get-direction";
 import { directionSchema, type DirectionFormValues } from "./direction-schema";
-import { toast } from "sonner";
-import { GiPositionMarker } from "react-icons/gi";
-import { FaDotCircle } from "react-icons/fa";
+import { LocationMarker } from "@/app/(routes)/(public)/ou-nous-trouver/_components/location-marker";
 
 const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 
@@ -86,7 +86,7 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
         <Separator />
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit, (e) => console.log(e))} className="w-full relative space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="w-full relative space-y-8">
             <SuccessModal
               isOpen={open}
               onClose={() => setOpen(false)}
@@ -116,7 +116,18 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
                 name="origin"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xl bold">Départ</FormLabel>
+                    <FormLabel className="text-xl bold">
+                      Départ
+                      <LocationMarker
+                        onAddressFound={({ address }) => {
+                          if (address) {
+                            form.setValue("origin", address);
+                          } else {
+                            toast.error("Erreur de localisation", { position: "top-center" });
+                          }
+                        }}
+                      />
+                    </FormLabel>
 
                     <FormControl>
                       <AddressModal
@@ -137,7 +148,18 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
                 name="destination"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xl bold">Destination</FormLabel>
+                    <FormLabel className="text-xl bold">
+                      Destination
+                      <LocationMarker
+                        onAddressFound={({ address }) => {
+                          if (address) {
+                            field.onChange(address);
+                          } else {
+                            toast.error("Erreur de localisation", { position: "top-center" });
+                          }
+                        }}
+                      />
+                    </FormLabel>
                     <FormControl>
                       <AddressModal
                         index="destination"

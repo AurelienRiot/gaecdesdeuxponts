@@ -52,18 +52,26 @@ const useToastPromise = <D, R, E = undefined>({
     onFinally,
     onError,
     onSuccess,
-  }: { data: D; onFinally?: () => void; onError?: (error?: E) => void; onSuccess?: (result?: R) => void }) {
+    delay = true,
+  }: {
+    data: D;
+    onFinally?: () => void;
+    onError?: (error?: E) => void;
+    onSuccess?: (result?: R) => void;
+    delay?: boolean;
+  }) {
     setLoading(true);
-    const { signal, abort } = new AbortController();
+    const abortController = new AbortController();
     const promise = async () => {
-      await addDelay(2100, signal).catch(async (e) => {
-        const error = e as Error;
-        if (error?.name === "AbortError") {
-          await onError?.();
-          throw new Error(errorMessage);
-        }
-        throw e;
-      });
+      delay &&
+        (await addDelay(2100, abortController.signal).catch(async (e) => {
+          const error = e as Error;
+          if (error?.name === "AbortError") {
+            await onError?.();
+            throw new Error(errorMessage);
+          }
+          throw e;
+        }));
 
       const result = await serverAction(data).catch((e) => {
         throw new Error(errorMessage);
@@ -83,15 +91,17 @@ const useToastPromise = <D, R, E = undefined>({
           <span className="align-middle">
             <Loader2 className="my-auto mr-2 inline size-4 animate-spin" /> {message}{" "}
           </span>
-          <Button
-            size={"xs"}
-            className="animate-[hide-element_2s_forwards] text-xs"
-            onClick={() => {
-              abort();
-            }}
-          >
-            Annuler
-          </Button>
+          {delay && (
+            <Button
+              size={"xs"}
+              className="animate-[hide-element_2s_forwards] text-xs"
+              onClick={() => {
+                abortController.abort();
+              }}
+            >
+              Annuler
+            </Button>
+          )}
         </div>
       ),
       success: async (result) => {

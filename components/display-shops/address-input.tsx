@@ -28,26 +28,6 @@ export const AddressInput = ({ setSortedShops, setCoordinates, shops, className,
     setSuggestions(() => temp);
   };
 
-  const sortShops = (coordinates: {
-    long: number | undefined;
-    lat: number | undefined;
-  }) => {
-    if (coordinates.long !== undefined && coordinates.lat !== undefined) {
-      const shopsWithDistance = shops.map((shop) => ({
-        ...shop,
-        distance: haversine(coordinates, {
-          long: shop.long,
-          lat: shop.lat,
-        }),
-      }));
-
-      const sorted = shopsWithDistance
-        .filter((shop) => shop.distance !== undefined)
-        .sort((a, b) => (a.distance as number) - (b.distance as number));
-      setSortedShops(sorted);
-    }
-  };
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -79,7 +59,7 @@ export const AddressInput = ({ setSortedShops, setCoordinates, shops, className,
                 lat: suggestions[0]?.coordinates?.[1],
               };
 
-              sortShops(coordinates);
+              setSortedShops(sortShops({ lat: coordinates.lat, long: coordinates.long, shops }));
               setCoordinates(coordinates);
             }}
           />
@@ -96,7 +76,7 @@ export const AddressInput = ({ setSortedShops, setCoordinates, shops, className,
                     long: address.coordinates[0],
                     lat: address.coordinates[1],
                   };
-                  sortShops(coordinates);
+                  setSortedShops(sortShops({ lat: coordinates.lat, long: coordinates.long, shops }));
                   setCoordinates(coordinates);
                   setOpen(false);
                 }}
@@ -109,4 +89,33 @@ export const AddressInput = ({ setSortedShops, setCoordinates, shops, className,
       </PopoverContent>
     </Popover>
   );
+};
+
+export const sortShops = ({
+  long,
+  lat,
+  shops,
+}: {
+  long: number | undefined;
+  lat: number | undefined;
+  shops: Shop[];
+}) => {
+  if (long !== undefined && lat !== undefined) {
+    const shopsWithDistance = shops.map((shop) => ({
+      ...shop,
+      distance: haversine(
+        { lat, long },
+        {
+          long: shop.long,
+          lat: shop.lat,
+        },
+      ),
+    }));
+
+    const sorted = shopsWithDistance
+      .filter((shop) => shop.distance !== undefined)
+      .sort((a, b) => (a.distance as number) - (b.distance as number));
+    return sorted;
+  }
+  return shops;
 };
