@@ -20,6 +20,7 @@ async function updateAMAP(data: AMAPFormValues) {
       shopId,
       startDate,
       totalPrice,
+      totalPaid,
       userId,
     }) => {
       await prismadb.aMAPItem.deleteMany({
@@ -34,6 +35,7 @@ async function updateAMAP(data: AMAPFormValues) {
         },
         data: {
           totalPrice,
+          totalPaid,
           userId,
           shippingDays,
           daysOfAbsence,

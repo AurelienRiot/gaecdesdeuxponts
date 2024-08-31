@@ -26,6 +26,7 @@ import { AMAPProducts } from "./products";
 import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TotalPrice from "./total-price";
+import TotalPaid from "./total-paid";
 
 const START = new Date(1725314400000);
 const END = new Date(1735599600000);
@@ -70,6 +71,7 @@ export const AMAPForm: React.FC<AMAPFormProps> = ({ initialData, users, shops, p
       startDate: initialData?.startDate || new Date() < START ? START : new Date(),
       endDate: initialData?.endDate || END,
       totalPrice: initialData?.totalPrice || 0,
+      totalPaid: initialData?.totalPaid || 0,
       amapItems: initialData?.amapItems || initialProduct(products),
       userId: initialData?.userId || undefined,
       shopId: initialData?.shopId || shops[0]?.id || undefined,
@@ -127,7 +129,10 @@ export const AMAPForm: React.FC<AMAPFormProps> = ({ initialData, users, shops, p
           </div>
           <AMAPProducts products={products} />
           <DaysOfShipping />
-          <TotalPrice />
+          <div className="flex flex-wrap items-end gap-8">
+            <TotalPrice />
+            <TotalPaid />
+          </div>
           {!!initialData && (
             <div id="button-container">
               <Label>Bon de livraison</Label>

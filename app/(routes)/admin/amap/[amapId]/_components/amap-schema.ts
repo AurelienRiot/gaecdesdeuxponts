@@ -8,6 +8,7 @@ export const schema = z.object({
   daysOfAbsence: z.array(z.date()),
   shippingDays: z.array(z.date()),
   totalPrice: z.number(),
+  totalPaid: z.coerce.number(),
   amapItems: z.array(
     z.object({
       itemId: z.string().min(1),

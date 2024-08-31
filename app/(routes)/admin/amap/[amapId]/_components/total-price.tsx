@@ -22,7 +22,7 @@ const TotalPrice = () => {
       control={form.control}
       name={`totalPrice`}
       render={({ field }) => (
-        <FormItem className="w-48">
+        <FormItem className="w-24">
           <FormLabel>Prix total</FormLabel>
           <FormControl>
             <div className="flex h-10 w-full rounded-md border border-input px-3 py-2 text-base ">{`${field.value || 0}€`}</div>

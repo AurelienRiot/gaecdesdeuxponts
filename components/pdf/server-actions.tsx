@@ -362,6 +362,7 @@ export async function sendMonthlyInvoice(data: z.infer<typeof monthlyPdf64String
     schema: monthlyPdf64StringSchema,
     getUser: checkAdmin,
     serverAction: async ({ orderIds }) => {
+      console.time("Fetching orders");
       const orders = await prismadb.order.findMany({
         where: {
           id: { in: orderIds },
@@ -395,13 +396,24 @@ export async function sendMonthlyInvoice(data: z.infer<typeof monthlyPdf64String
           message: "Le client n'existe pas, revalider la commande",
         };
       }
+      console.timeEnd("Fetching orders");
 
       const date = dateMonthYear(orders.map((order) => order.dateOfShipping));
+      console.time("Generating pdf");
 
       const doc = <MonthlyInvoice data={createMonthlyPDFData(orders)} isPaid={false} />;
+      console.timeEnd("Generating pdf");
+      console.time("Generating blob");
       const pdfBlob = await pdf(doc).toBlob();
+      console.timeEnd("Generating blob");
+      console.time("Generating arrayBuffer");
       const arrayBuffer = await pdfBlob.arrayBuffer();
+      console.timeEnd("Generating arrayBuffer");
+      console.time("Generating pdfBuffer");
       const pdfBuffer = await Buffer.from(arrayBuffer);
+      console.timeEnd("Generating pdfBuffer");
+
+      console.time("Generating email");
 
       await transporter.sendMail({
         from: "laiteriedupontrobert@gmail.com",
@@ -423,6 +435,9 @@ export async function sendMonthlyInvoice(data: z.infer<typeof monthlyPdf64String
         ],
       });
 
+      console.timeEnd("Generating email");
+      console.time("update orders");
+
       await prismadb.order.updateMany({
         where: {
           id: { in: data.orderIds },
@@ -431,6 +446,7 @@ export async function sendMonthlyInvoice(data: z.infer<typeof monthlyPdf64String
           invoiceEmail: new Date(),
         },
       });
+      console.time("update order");
       revalidateTag("orders");
 
       // await addDelay(2000);

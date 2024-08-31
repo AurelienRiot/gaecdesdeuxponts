@@ -20,12 +20,14 @@ async function createAMAP(data: AMAPFormValues) {
       shopId,
       startDate,
       totalPrice,
+      totalPaid,
       userId,
     }) => {
       await prismadb.aMAPOrder.create({
         data: {
           id,
           totalPrice,
+          totalPaid,
           userId,
           shippingDays,
           daysOfAbsence,

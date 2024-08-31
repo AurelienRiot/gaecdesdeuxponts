@@ -217,6 +217,7 @@ model AMAPOrder {
   daysOfAbsence DateTime[]
   shippingDays DateTime[]
   totalPrice Float
+  totalPaid   Float @default(0)
   amapItems   AMAPItem[]
   userId     String  
   user       User @relation(fields: [userId], references: [id], onDelete: Cascade)

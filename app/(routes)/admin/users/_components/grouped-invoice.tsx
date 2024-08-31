@@ -141,7 +141,12 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
             );
           })}
         </Accordion>
-        <Button disabled={loading} className="mt-4" onClick={sendInvoices}>
+        <Button
+          disabled={loading}
+          variant={"shine"}
+          className="mt-4 w-full from-green-600 via-green-600/80 to-green-600"
+          onClick={sendInvoices}
+        >
           Envoyer les factures
         </Button>
       </Modal>
