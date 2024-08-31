@@ -109,27 +109,30 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
                 <AccordionContent>
                   <ul className="space-y-4  py-2 text-sm  ">
                     {user.orders.map((order, pointIndex) => (
-                      <li
-                        className="mx-4 flex gap-2 justify-start
+                      <li key={pointIndex}>
+                        <label
+                          htmlFor={order.id}
+                          className="mx-4 flex gap-2 justify-start
                        items-center"
-                        key={pointIndex}
-                      >
-                        <Checkbox
-                          checked={ordersId.includes(order.id)}
-                          onCheckedChange={(check) =>
-                            setOrderIdsRecord((prev) => {
-                              const updatedOrders = check
-                                ? [...prev[user.id], order.id]
-                                : prev[user.id].filter((id) => id !== order.id);
-                              return { ...prev, [user.id]: updatedOrders };
-                            })
-                          }
-                          className="mr-2"
-                        />
-                        <span>
-                          {dateFormatter(order.dateOfShipping || new Date())} :{" "}
-                          {currencyFormatter.format(order.totalPrice)}{" "}
-                        </span>
+                        >
+                          <Checkbox
+                            id={order.id}
+                            checked={ordersId.includes(order.id)}
+                            onCheckedChange={(check) =>
+                              setOrderIdsRecord((prev) => {
+                                const updatedOrders = check
+                                  ? [...prev[user.id], order.id]
+                                  : prev[user.id].filter((id) => id !== order.id);
+                                return { ...prev, [user.id]: updatedOrders };
+                              })
+                            }
+                            className="mr-2"
+                          />
+                          <span>
+                            {dateFormatter(order.dateOfShipping || new Date())} :{" "}
+                            {currencyFormatter.format(order.totalPrice)}{" "}
+                          </span>
+                        </label>
                       </li>
                     ))}
                   </ul>

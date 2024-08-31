@@ -21,7 +21,7 @@ const DashboardPage = (context: { searchParams: { month: string | undefined; yea
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <Heading title={`Résumé de ${dateMonthYear(startDate)}`} description="Présentation " />
+        <Heading title={`Résumé de ${dateMonthYear([startDate])}`} description="Présentation " />
         <Separator />
         <SelectDate month={month} year={year} />
         <div className="flex flex-wrap gap-4 justify-center">
@@ -149,7 +149,7 @@ const ClientCount = async ({ startDate, endDate }: { startDate: Date; endDate: D
     ? [...topUsers, { name: "Autres", totalSpent: Number(otherTotalSpent.toFixed(2)) }]
     : topUsers;
 
-  return <UserChart pieData={finalUsers} monthYear={dateMonthYear(startDate)} />;
+  return <UserChart pieData={finalUsers} monthYear={dateMonthYear([startDate])} />;
 };
 
 const ClientNumber = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {

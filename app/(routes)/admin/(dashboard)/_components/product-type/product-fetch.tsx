@@ -79,7 +79,7 @@ const ProductsType = async ({ startDate, endDate }: { startDate: Date; endDate: 
           Quantité des produits
           <DownloadChart id={ID} />
         </CardTitle>
-        <CardDescription className="capitalize">{dateMonthYear(startDate)}</CardDescription>
+        <CardDescription className="capitalize">{dateMonthYear([startDate])}</CardDescription>
       </CardHeader>
       <CardContent className="p-8 pt-0">
         {orderItems.length > 0 ? (

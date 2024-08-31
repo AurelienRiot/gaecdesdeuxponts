@@ -28,7 +28,7 @@ const ClientProducts = async ({ startDate, endDate }: { startDate: Date; endDate
   });
 
   return (
-    <UserProducts chartData={userProductQuantities} productName={topProducts} monthYear={dateMonthYear(startDate)} />
+    <UserProducts chartData={userProductQuantities} productName={topProducts} monthYear={dateMonthYear([startDate])} />
   );
 };
 
