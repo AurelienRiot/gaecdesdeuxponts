@@ -1,6 +1,6 @@
 {
   "functions": {
-    "(routes)/admin/users/_actions/send-grouped-monthly-invoice.js": {
+    "app/admin/users/_actions/send-grouped-monthly-invoice.js": {
       "maxDuration": 60
     }
   }
