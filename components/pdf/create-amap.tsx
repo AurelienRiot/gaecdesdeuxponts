@@ -92,7 +92,7 @@ const AmapPDF = ({ data }: { data: AMAPType }) => {
         <Consommateur customer={data.customer} />
         <Commande numberOfWeeks={numberOfWeeks} order={data.contrat} />
         <DateDistribution shippingDate={data.contrat.shippingDay} />
-        (
+
         <Text
           style={{
             position: "absolute",
@@ -103,7 +103,7 @@ const AmapPDF = ({ data }: { data: AMAPType }) => {
           render={({ pageNumber }) => (pageNumber === 2 ? "À remplir en 2 exemplaires" : null)}
           fixed
         />
-        )
+
         <Text
           style={AMAPStyle.pageNumbers}
           render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`}
@@ -223,7 +223,7 @@ export function Commande({
         <Text style={{ fontWeight: "bold", textDecoration: "underline" }}>Semaine d'absence pévues :</Text>
         {!form && <Text>{order.dayOfAbsence.length}</Text>}
       </View>
-      (
+
       <View style={{ marginTop: 10, display: "flex", flexDirection: "row", gap: 4 }}>
         <Text style={{ fontWeight: "bold", textDecoration: "underline" }}>Règlement :</Text>
         <View style={{ fontSize: 10 }}>
@@ -232,7 +232,7 @@ export function Commande({
           <Text style={{ fontWeight: "bold" }}>A l'ordre du Gaec des deux ponts</Text>
         </View>
       </View>
-      )
+
       {!form && (
         <View
           style={{

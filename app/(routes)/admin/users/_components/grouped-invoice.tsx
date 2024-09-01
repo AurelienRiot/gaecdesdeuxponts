@@ -1,6 +1,6 @@
 "use client";
 
-import { sendMonthlyInvoice } from "@/components/pdf/server-actions";
+import { sendGroupedMonthlyInvoice, sendMonthlyInvoice } from "@/components/pdf/server-actions/send-monthly-invoice";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -9,7 +9,7 @@ import { useToastPromise } from "@/components/ui/sonner";
 import { dateFormatter } from "@/lib/date-utils";
 import { currencyFormatter } from "@/lib/utils";
 import type { Role } from "@prisma/client";
-import { LetterText, MailCheck } from "lucide-react";
+import { MailCheck } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -33,7 +33,7 @@ type GroupedInvoiceProps = {
 function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
   const [showModal, setShowModal] = useState(false);
   const { loading, toastServerAction } = useToastPromise({
-    serverAction: sendMonthlyInvoice,
+    serverAction: sendGroupedMonthlyInvoice,
     message: "Envoi de la facture mensuelle",
     errorMessage: "Envoi de la facture mensuelle annulé",
   });
@@ -49,14 +49,15 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
 
   async function sendInvoices() {
     const orderIdsArray = Object.values(orderIdsRecord).filter((orderIds) => orderIds.length > 0);
-    orderIdsArray.map((orderIds, index) => {
-      function onSuccess() {
-        toast.success(`Facture ${index + 1} sur ${orderIdsArray.length}  envoyées`);
-      }
-      if (orderIds.length > 0) {
-        toastServerAction({ data: { orderIds }, delay: false, onSuccess });
-      }
-    });
+    toastServerAction({ data: orderIdsArray, delay: false });
+    // orderIdsArray.map((orderIds, index) => {
+    //   function onSuccess() {
+    //     toast.success(`Facture ${index + 1} sur ${orderIdsArray.length}  envoyées`);
+    //   }
+    //   if (orderIds.length > 0) {
+    //     toastServerAction({ data: { orderIds }, delay: false, onSuccess });
+    //   }
+    // });
   }
 
   return (

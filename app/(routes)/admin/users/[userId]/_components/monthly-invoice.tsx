@@ -137,12 +137,12 @@ const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
             <Button
               ref={ref}
               variant={"outline"}
-              className={cn("w-48 pl-3 text-left font-normal", !date && "text-muted-foreground")}
+              className={cn("w-fit pl-3 text-left font-normal", !date && "text-muted-foreground")}
             >
               {date ? dateFormatter(date, { days: true }) : <span>Choisir une date</span>}
 
               <Icons.coloredCalendar
-                className="ml-auto h-4 w-4 opacity-100 data-[state=false]:opacity-50"
+                className="ml-4 h-4 w-4 opacity-100 data-[state=false]:opacity-50"
                 data-state={!!date}
               />
             </Button>

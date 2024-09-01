@@ -6,16 +6,17 @@ import { toast } from "sonner";
 import Spinner from "../animations/spinner";
 import { useToastPromise } from "../ui/sonner";
 import type { monthlyOrdersType } from "./pdf-data";
+
+import { useState } from "react";
+import { sendFacture } from "./server-actions/send-facture";
 import {
-  SendAMAP,
-  SendBL,
   createAMAPPDF64String,
   createMonthlyPDF64String,
   createPDF64String,
-  sendFacture,
-  sendMonthlyInvoice,
-} from "./server-actions";
-import { useState } from "react";
+} from "./server-actions/create-pdf64-string";
+import { sendMonthlyInvoice } from "./server-actions/send-monthly-invoice";
+import { SendBL } from "./server-actions/send-bl";
+import { SendAMAP } from "./server-actions/send-amap";
 
 function base64ToBlob(base64: string, contentType = "application/pdf", sliceSize = 512): Blob {
   const byteCharacters = Buffer.from(base64, "base64").toString("binary");
