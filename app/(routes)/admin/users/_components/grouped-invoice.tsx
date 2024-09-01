@@ -48,29 +48,29 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
   );
 
   async function sendInvoices() {
-    const orderIdsArray = Object.values(orderIdsRecord).filter((orderIds) => orderIds.length > 0);
-    // const orderIdsArray = [
-    //   ["11", "12"],
-    //   ["21", "22"],
-    //   ["31", "32"],
-    //   ["41", "42"],
-    //   ["51", "52"],
-    //   ["61", "62"],
-    //   ["71", "72"],
-    //   ["81", "82"],
-    //   ["91", "92"],
-    //   ["101", "102"],
-    //   ["111", "112"],
-    //   ["121", "122"],
-    //   ["131", "132"],
-    //   ["141", "142"],
-    //   ["151", "152"],
-    //   ["161", "162"],
-    //   ["171", "172"],
-    //   ["181", "182"],
-    //   ["191", "192"],
-    //   ["201", "202"],
-    // ];
+    // const orderIdsArray = Object.values(orderIdsRecord).filter((orderIds) => orderIds.length > 0);
+    const orderIdsArray = [
+      ["11", "12"],
+      ["21", "22"],
+      ["31", "32"],
+      ["41", "42"],
+      ["51", "52"],
+      ["61", "62"],
+      ["71", "72"],
+      ["81", "82"],
+      ["91", "92"],
+      ["101", "102"],
+      ["111", "112"],
+      ["121", "122"],
+      ["131", "132"],
+      ["141", "142"],
+      ["151", "152"],
+      ["161", "162"],
+      ["171", "172"],
+      ["181", "182"],
+      ["191", "192"],
+      ["201", "202"],
+    ];
     const chunkSize = 5;
     let cumulativeCount = 0;
     for (let i = 0; i < orderIdsArray.length; i += chunkSize) {

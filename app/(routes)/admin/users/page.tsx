@@ -45,7 +45,7 @@ const UserPage = async () => {
     <div className="m-4 space">
       <div className="flex flex-col items-center justify-between sm:flex-row gap-y-2">
         <Heading title={`Clients (${allUsers.length})`} description="Liste des clients" />
-        {/* <GroupedInvoicePage proUserWithOrders={proUserWithOrders} /> */}
+        <GroupedInvoicePage proUserWithOrders={proUserWithOrders} />
         <Button asChild>
           <Link href={`/admin/users/new`}>
             <Plus className="mr-2 h-4 w-4" />
