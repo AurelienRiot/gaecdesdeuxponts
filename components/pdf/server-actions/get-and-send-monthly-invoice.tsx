@@ -53,8 +53,8 @@ export async function getAndSendMonthlyInvoice(orderIds: string[]): Promise<Retu
   try {
     await transporter.sendMail({
       from: "laiteriedupontrobert@gmail.com",
-      // to: orders[0].customer.email,
-      to: "pub.demystify390@passmail.net",
+      to: orders[0].customer.email,
+      // to: "pub.demystify390@passmail.net",
       subject: `Facture Mensuelle ${date}  - Laiterie du Pont Robert`,
       html: await render(
         SendMonthlyInvoiceEmail({
@@ -79,14 +79,14 @@ export async function getAndSendMonthlyInvoice(orderIds: string[]): Promise<Retu
   }
   // await addDelay(3000);
 
-  // await prismadb.order.updateMany({
-  //   where: {
-  //     id: { in: orderIds },
-  //   },
-  //   data: {
-  //     invoiceEmail: new Date(),
-  //   },
-  // });
+  await prismadb.order.updateMany({
+    where: {
+      id: { in: orderIds },
+    },
+    data: {
+      invoiceEmail: new Date(),
+    },
+  });
   revalidateTag("orders");
 
   return {
