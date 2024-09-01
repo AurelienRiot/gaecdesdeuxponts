@@ -1,6 +1,6 @@
 {
   "functions": {
-    "admin/users/_actions/send-grouped-monthly-invoice.ts": {
+    "admin/users/_actions/send-grouped-monthly-invoice.js": {
       "maxDuration": 60
     }
   }
