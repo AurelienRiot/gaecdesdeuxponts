@@ -21,6 +21,7 @@ export type AMAPColumn = {
   startDate: Date;
   endDate: Date;
   totalPrice: number;
+  totalPaid: number;
   products: string;
   productsList: { name: string; quantity?: string; unit?: string }[];
   shopName: string;
@@ -58,6 +59,11 @@ export const columns: ColumnDef<AMAPColumn>[] = [
     cell: ({ row }) => currencyFormatter.format(row.original.totalPrice),
   },
   {
+    accessorKey: "totalPaid",
+    header: "Total payé",
+    cell: ({ row }) => currencyFormatter.format(row.original.totalPaid),
+  },
+  {
     accessorKey: "shippingDays",
     header: "Prochaine livraison",
     cell: ({ row }) => {
@@ -72,6 +78,16 @@ export const columns: ColumnDef<AMAPColumn>[] = [
       });
       return <p className="text-left">{dateFormatter(closestFutureDate, { days: true })}</p>;
     },
+  },
+  {
+    accessorKey: "startDate",
+    header: "Début/fin du contrat",
+    cell: ({ row }) => (
+      <p className="text-left flex flex-col">
+        <span>{dateFormatter(row.original.startDate, { days: true })}</span>
+        <span>{dateFormatter(row.original.endDate, { days: true })}</span>
+      </p>
+    ),
   },
   // {
   //   accessorKey: "datePickUp",

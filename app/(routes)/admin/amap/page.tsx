@@ -55,6 +55,7 @@ async function AMAPPage(context: {
     shopName: order.shop.name,
     shopId: order.shop.id,
     totalPrice: order.totalPrice,
+    totalPaid: order.totalPaid,
     startDate: order.startDate,
     endDate: order.endDate,
     shippingDays: order.shippingDays,
