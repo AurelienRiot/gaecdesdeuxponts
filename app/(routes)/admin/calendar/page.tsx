@@ -23,28 +23,28 @@ async function CalendarPage({ searchParams }: { searchParams: { date: string | u
     getOrdersByDateOfShipping({ beginMonth, endMonth }),
     getAMAPOrders({ beginMonth, endMonth }),
   ]).then(([users, shops, orderDates, amapDates]) => {
-    const userMap = new Map(
-      users.map((user) => [
-        user.company || user.name || "",
+    const shopsMap = new Map(
+      shops.map((shop) => [
+        shop.name,
         {
-          label: user.company || user.name || "",
-          image: user.image,
-          address: addressFormatter(user.address, true),
+          label: shop.name,
+          image: shop.imageUrl,
+          address: shop.address,
         },
       ]),
     );
 
-    for (const shop of shops) {
-      if (!userMap.has(shop.name)) {
-        userMap.set(shop.name, {
-          label: shop.name,
-          address: shop.address,
-          image: shop.imageUrl,
+    for (const user of users) {
+      if (!shopsMap.has(user.name || user.company || "")) {
+        shopsMap.set(user.name || user.company || "", {
+          label: user.company || user.name || "",
+          image: user.image,
+          address: addressFormatter(user.address, true),
         });
       }
     }
 
-    return { usersAndShops: Array.from(userMap.values()), orderDates: new Set(orderDates.concat(amapDates)) };
+    return { usersAndShops: Array.from(shopsMap.values()), orderDates: new Set(orderDates.concat(amapDates)) };
   });
 
   return (

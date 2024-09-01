@@ -82,7 +82,6 @@ export const LocationMarker = ({
     }
 
     onAddressFound({ address: address[0].label, latitude, longitude });
-
     setLoading(false);
   };
 
