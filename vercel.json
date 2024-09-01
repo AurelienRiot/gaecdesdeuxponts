@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "/components/pdf/server-actions/send-monthly-invoice.tsx": {
+      "maxDuration": 60
+    }
+  }
+}

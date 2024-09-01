@@ -1,19 +1,14 @@
 "use server";
 import { checkAdmin } from "@/components/auth/checkAuth";
-import SendMonthlyInvoiceEmail from "@/components/email/send-monthly-invoice";
 import { dateMonthYear } from "@/lib/date-utils";
-import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import safeServerAction, { type ReturnTypeServerAction } from "@/lib/server-action";
-import { render } from "@react-email/render";
+import { addDelay } from "@/lib/utils";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import MonthlyInvoice from "../create-monthly-invoice";
 import { createMonthlyPDFData } from "../pdf-data";
-import { addDelay } from "@/lib/utils";
-
-const baseUrl = process.env.NEXT_PUBLIC_URL;
 
 const monthlyInvoiceSchema = z.object({
   orderIds: z.array(z.string()),
