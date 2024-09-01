@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, type CalendarProps } from "@/components/ui/calendar";
 import { FormItem, FormLabel } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { dateFormatter, getTuesdaysBetweenDates } from "@/lib/date-utils";
+import { dateFormatter, getDaysBetweenDates } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
 import { fr } from "date-fns/locale";
 import { forwardRef, useState } from "react";
@@ -24,6 +24,7 @@ const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
     const [open, setOpen] = useState(false);
     const startDate = form.watch("startDate");
     const endDate = form.watch("endDate");
+    const day = form.watch("day");
 
     function onSelectDate(selectedDate: Date | undefined) {
       if (!selectedDate) {
@@ -39,7 +40,7 @@ const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
       form.setValue("daysOfAbsence", []);
       const start = title === "Date de fin" ? new Date(startDate) : selectedDate;
       const end = title === "Date de fin" ? selectedDate : new Date(endDate);
-      const shippingDays = getTuesdaysBetweenDates(start, end);
+      const shippingDays = getDaysBetweenDates({ from: start, to: end, day });
 
       shippingDays && form.setValue("shippingDays", shippingDays);
     }

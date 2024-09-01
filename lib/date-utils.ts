@@ -33,13 +33,17 @@ export const dateMonthYear = (dates: (Date | null)[]) => {
   return `${Array.from(months).join(" - ")} ${year}`;
 };
 
-export const getTuesdaysBetweenDates = (from: Date | undefined, to: Date | undefined) => {
+export const getDaysBetweenDates = ({
+  from,
+  to,
+  day,
+}: { from: Date | undefined; to: Date | undefined; day: number }) => {
   if (!from || !to) return;
   const tuesdays: Date[] = [];
   const currentDate = new Date(from);
 
   // Set the current date to the first Tuesday on or after the start date
-  currentDate.setDate(currentDate.getDate() + ((2 - currentDate.getDay() + 7) % 7));
+  currentDate.setDate(currentDate.getDate() + ((day - currentDate.getDay() + 7) % 7));
 
   while (currentDate <= new Date(to)) {
     // tuesdays.push(new Date(new Date(currentDate).setHours(18, 0, 0, 0)));
@@ -74,4 +78,11 @@ export function groupedDatesByMonth(dates: Date[]) {
     );
 
   return orderedGroupMonth;
+}
+
+export function getDayName(dayNumber: number) {
+  const date = new Date();
+  date.setDate(date.getDate() - date.getDay() + dayNumber); // Set date to the given day number
+
+  return new Intl.DateTimeFormat("fr-FR", { weekday: "long" }).format(date);
 }

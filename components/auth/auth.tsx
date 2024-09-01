@@ -23,7 +23,7 @@ declare module "next-auth/jwt" {
   }
 }
 
-export const Logout = ({ callbackUrl }: { callbackUrl: string }) => {
+export const Logout = ({ callbackUrl = "/" }: { callbackUrl?: string }) => {
   if (typeof window !== "undefined") {
     signOut({
       callbackUrl,

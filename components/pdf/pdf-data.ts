@@ -1,4 +1,4 @@
-import { dateFormatter, dateMonthYear, getTuesdaysBetweenDates } from "@/lib/date-utils";
+import { dateFormatter, dateMonthYear, getDaysBetweenDates } from "@/lib/date-utils";
 import { addressFormatter, formatFrenchPhoneNumber } from "@/lib/utils";
 import type { AMAPOrderWithItems, FullOrder, UserWithAddress } from "@/types";
 import type { Customer } from "@prisma/client";
@@ -395,7 +395,7 @@ export const AMAPData: AMAPType = {
     dateOfEdition: new Date(),
     totalPrice: 60,
     dayOfAbsence: [],
-    shippingDay: getTuesdaysBetweenDates(new Date(1725314400000), new Date(1735599600000)) as Date[],
+    shippingDay: getDaysBetweenDates({ from: new Date(1725314400000), to: new Date(1735599600000), day: 2 }) as Date[],
     startDate: new Date(1725314400000),
     endDate: new Date(1735599600000),
     items: [

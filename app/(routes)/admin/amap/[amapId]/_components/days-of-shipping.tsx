@@ -15,31 +15,32 @@ function DaysOfShipping() {
   const endDate = form.watch("endDate");
   const shippingDays = form.watch("shippingDays");
   const daysOfAbsence = form.watch("daysOfAbsence");
+  const day = form.watch("day");
 
   if (!startDate || !endDate) return null;
 
-  function handleDayClick(day: Date) {
-    if (shippingDays.some((d) => d.getTime() === day.getTime())) {
+  function handleDayClick(selectedDate: Date) {
+    if (shippingDays.some((d) => d.getTime() === selectedDate.getTime())) {
       form.setValue(
         "shippingDays",
-        shippingDays.filter((d) => d.getTime() !== day.getTime()),
+        shippingDays.filter((d) => d.getTime() !== selectedDate.getTime()),
       );
-      form.setValue("daysOfAbsence", [...daysOfAbsence, day]);
+      form.setValue("daysOfAbsence", [...daysOfAbsence, selectedDate]);
     } else {
       form.setValue(
         "daysOfAbsence",
-        daysOfAbsence.filter((d) => d.getTime() !== day.getTime()),
+        daysOfAbsence.filter((d) => d.getTime() !== selectedDate.getTime()),
       );
-      form.setValue("shippingDays", [...shippingDays, day]);
+      form.setValue("shippingDays", [...shippingDays, selectedDate]);
     }
-    setDate(day);
+    setDate(selectedDate);
   }
 
-  function disabledDay(day: Date) {
-    const dayOfWeek = day.getDay();
-    const isBeforeStartDate = day < new Date(startDate);
-    const isAfterEndDate = day > new Date(endDate);
-    const isNotTuesday = dayOfWeek !== 2; // 2 represents Tuesday
+  function disabledDay(d: Date) {
+    const dayOfWeek = d.getDay();
+    const isBeforeStartDate = d < new Date(startDate);
+    const isAfterEndDate = d > new Date(endDate);
+    const isNotTuesday = dayOfWeek !== day; // 2 represents Tuesday
 
     return isBeforeStartDate || isAfterEndDate || isNotTuesday;
   }

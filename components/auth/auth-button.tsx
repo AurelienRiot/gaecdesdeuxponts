@@ -120,7 +120,7 @@ export const EmailButton = ({ callbackUrl }: { callbackUrl: string }) => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-md">Entrer votre email pour recevoir le lien de connexion</FormLabel>
+                    <FormLabel className="text-md">Entrer votre email pour vous connecter</FormLabel>
                     <FormControl>
                       <Input
                         type="email"

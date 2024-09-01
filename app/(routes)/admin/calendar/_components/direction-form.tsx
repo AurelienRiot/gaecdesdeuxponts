@@ -95,10 +95,6 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
             />
             <div className="space-y-4 relative pl-6">
               <style jsx>{`
-                .border-dotted {
-                  -webkit-border-style: dotted;
-                  border-radius: 0
-                }
                   .dotted-line {
   background-image: url("${svgToDataUri(
     `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" >
@@ -396,6 +392,11 @@ const AddressModal = forwardRef<HTMLButtonElement, AddressModalProps>(
               placeholder="adresse"
               onChange={(e) => {
                 setInput(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  onClose(input);
+                }
               }}
               value={input}
             />

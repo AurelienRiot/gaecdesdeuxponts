@@ -5,6 +5,7 @@ export const schema = z.object({
   dateOfEdition: z.date(),
   startDate: z.date(),
   endDate: z.date(),
+  day: z.number(),
   daysOfAbsence: z.array(z.date()),
   shippingDays: z.array(z.date()),
   totalPrice: z.number(),

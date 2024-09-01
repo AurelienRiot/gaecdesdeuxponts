@@ -8,14 +8,13 @@ import { Heading } from "@/components/ui/heading";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import useServerAction from "@/hooks/use-server-action";
-import { getTuesdaysBetweenDates } from "@/lib/date-utils";
+
 import { createId } from "@/lib/id";
 import type { AMAPOrderWithItems } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Product, Shop, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { UseFormReturn, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { deleteAMAP } from "../../_actions/delete-amap";
 import createAMAP from "../_actions/create-amap";
 import updateAMAP from "../_actions/update-amap";
@@ -23,13 +22,20 @@ import { schema, type AMAPFormValues } from "./amap-schema";
 import FormDatePicker from "./date-picker";
 import DaysOfShipping from "./days-of-shipping";
 import { AMAPProducts } from "./products";
+import SelectDay from "./select-day";
 import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
-import TotalPrice from "./total-price";
 import TotalPaid from "./total-paid";
+import TotalPrice from "./total-price";
+import { getDaysBetweenDates } from "@/lib/date-utils";
 
 const START = new Date(1725314400000);
 const END = new Date(1735599600000);
+
+function initialDay(shippingDays?: Date[]) {
+  if (!shippingDays) return 2;
+  return shippingDays[0].getDay();
+}
 
 function initialProduct(products: Product[]) {
   // const item = products.find((product) => product.name === "Lait cru bio bidon 2L");
@@ -67,7 +73,8 @@ export const AMAPForm: React.FC<AMAPFormProps> = ({ initialData, users, shops, p
       id: initialData?.id || createId("amap"),
       dateOfEdition: new Date(),
       daysOfAbsence: initialData?.daysOfAbsence || [],
-      shippingDays: initialData?.shippingDays || getTuesdaysBetweenDates(START, END),
+      shippingDays: initialData?.shippingDays || getDaysBetweenDates({ from: START, to: END, day: 2 }),
+      day: initialDay(initialData?.shippingDays),
       startDate: initialData?.startDate || new Date() < START ? START : new Date(),
       endDate: initialData?.endDate || END,
       totalPrice: initialData?.totalPrice || 0,
@@ -126,6 +133,7 @@ export const AMAPForm: React.FC<AMAPFormProps> = ({ initialData, users, shops, p
               )}
             />
             <SelectShop shops={shops} />
+            <SelectDay />
           </div>
           <AMAPProducts products={products} />
           <DaysOfShipping />
