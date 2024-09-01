@@ -1,6 +1,5 @@
 "use client";
 
-import { sendGroupedMonthlyInvoice } from "@/components/pdf/server-actions/send-monthly-invoice";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -13,6 +12,7 @@ import { MailCheck } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
+import sendGroupedMonthlyInvoice from "../_actions/send-grouped-monthly-invoice";
 
 type GroupedInvoiceProps = {
   proUserWithOrders: {

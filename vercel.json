@@ -1,6 +1,6 @@
 {
   "functions": {
-    "components/pdf/server-actions/send-monthly-invoice.tsx": {
+    "admin/users/_actions/send-grouped-monthly-invoice.ts": {
       "maxDuration": 60
     }
   }
