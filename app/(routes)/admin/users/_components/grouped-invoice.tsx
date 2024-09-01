@@ -34,8 +34,8 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
   const [showModal, setShowModal] = useState(false);
   const { loading, toastServerAction } = useToastPromise({
     serverAction: sendGroupedMonthlyInvoice,
-    message: "Envoi de la facture mensuelle",
-    errorMessage: "Envoi de la facture mensuelle annulé",
+    message: "Envoie des factures mensuelles",
+    errorMessage: "Envoie des factures mensuelles annulé",
   });
   const [orderIdsRecord, setOrderIdsRecord] = useState<Record<string, string[]>>(
     proUserWithOrders.reduce(

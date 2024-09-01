@@ -121,14 +121,14 @@ async function getAndSendMonthlyInvoice(orderIds: string[]): Promise<ReturnTypeS
   // }
   await addDelay(3000);
 
-  await prismadb.order.updateMany({
-    where: {
-      id: { in: orderIds },
-    },
-    data: {
-      invoiceEmail: new Date(),
-    },
-  });
+  // await prismadb.order.updateMany({
+  //   where: {
+  //     id: { in: orderIds },
+  //   },
+  //   data: {
+  //     invoiceEmail: new Date(),
+  //   },
+  // });
   revalidateTag("orders");
 
   return {
