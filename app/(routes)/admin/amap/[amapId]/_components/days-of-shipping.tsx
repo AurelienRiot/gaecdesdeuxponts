@@ -46,40 +46,37 @@ function DaysOfShipping() {
   }
 
   return (
-    <div className="space-y-4">
-      <Label>Date de livraisons</Label>
-      <Calendar
-        className="p-3 w-72"
-        captionLayout="label"
-        locale={fr}
-        month={date || new Date()}
-        startMonth={startDate}
-        endMonth={new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate())}
-        disabled={disabledDay}
-        modifiers={{
-          shipping: shippingDays,
-          removed: daysOfAbsence,
-        }}
-        classNames={{
-          selected: "",
-          day: "p-0 size-8 text-sm flex-1 flex items-center justify-center rounded-md ",
-        }}
-        modifiersClassNames={{
-          shipping: "bg-green-500 text-green-100 hover:bg-green-500/90",
-          removed: "bg-destructive text-destructive-100 hover:bg-destructive/90",
-        }}
-        onDayClick={handleDayClick}
-      />
-
-      <DisplayShippingDays days={shippingDays} />
-    </div>
+    <Calendar
+      className="p-3 w-72"
+      captionLayout="label"
+      locale={fr}
+      month={date || new Date()}
+      startMonth={startDate}
+      endMonth={new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate())}
+      disabled={disabledDay}
+      modifiers={{
+        shipping: shippingDays,
+        removed: daysOfAbsence,
+      }}
+      classNames={{
+        selected: "",
+        day: "p-0 size-8 text-sm flex-1 flex items-center justify-center rounded-md ",
+      }}
+      modifiersClassNames={{
+        shipping: "bg-green-500 text-green-100 hover:bg-green-500/90",
+        removed: "bg-destructive text-destructive-100 hover:bg-destructive/90",
+      }}
+      onDayClick={handleDayClick}
+    />
   );
 }
 
 export default DaysOfShipping;
 
-function DisplayShippingDays({ days }: { days: Date[] }) {
-  const groupedDates = groupedDatesByMonth(days);
+export function DisplayShippingDays() {
+  const form = useFormContext<AMAPFormValues>();
+  const shippingDays = form.watch("shippingDays");
+  const groupedDates = groupedDatesByMonth(shippingDays);
   const months = Object.keys(groupedDates);
   return (
     <div>

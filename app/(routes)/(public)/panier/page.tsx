@@ -10,7 +10,6 @@ export const dynamic = "force-static";
 const CartPage = async () => {
   // const shops = await getShops();
   const shops = [] as Shop[];
-  await addDelay(2000);
 
   return (
     <Container>

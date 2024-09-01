@@ -59,7 +59,6 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
       const pdfBuffer = await generatePdf(order);
 
       try {
-        // Send emails in parallel
         const emailPromises = [
           transporter.sendMail({
             from: "laiteriedupontrobert@gmail.com",

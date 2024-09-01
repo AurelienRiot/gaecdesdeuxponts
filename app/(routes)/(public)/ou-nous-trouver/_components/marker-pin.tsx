@@ -287,9 +287,9 @@ export function MakePin(color: "red" | "green" | "blue", label: string, imagesUr
             ${Pin(color)}
         </div>
     `,
-    className: "", // No default styles
-    iconSize: [40, 40], // Size of the marker icon
-    iconAnchor: [20, 40], // Point of the icon which will correspond to marker's location
-    popupAnchor: [0, -40], // Point from which the popup should open relative to the iconAnchor
+    className: "",
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -40],
   });
 }

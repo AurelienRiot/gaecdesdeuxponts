@@ -42,17 +42,6 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
     cell: StatusCell,
     filterFn: FilterOneInclude,
   },
-  // {
-  //   accessorKey: "id",
-  //   header: "Facture",
-  //   cell: ({ row }) => {
-  //     return row.original.status === "En cours de validation" ? (
-  //       "Non disponible"
-  //     ) : (
-  //       <DisplayInvoice orderId={row.original.id} />
-  //     );
-  //   },
-  // },
   {
     accessorKey: "datePickUp",
     header: DatePickUpHeader,
@@ -96,10 +85,7 @@ export const viewOptionsColumns: DataTableViewOptionsColumn<OrderColumnType>[] =
     id: "status",
     title: "Statut",
   },
-  // {
-  //   id: "id",
-  //   title: "Facture",
-  // },
+
   {
     id: "datePickUp",
     title: "Date de livraison",

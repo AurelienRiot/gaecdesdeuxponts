@@ -1,5 +1,6 @@
 import prismadb from "@/lib/prismadb";
 import { AMAPForm } from "./_components/amap-form";
+import AMAPFormulairePage from "./_components/amap-formulaire/formulaire-page";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +18,9 @@ const AMAPFormPage = async ({ params }: { params: { amapId: string } }) => {
     prismadb.shop.findMany({ where: { type: "amap" } }),
     prismadb.product.findMany({ where: { productName: "Produits AMAP" } }),
   ]);
-
+  if (params.amapId === "formulaire") {
+    return <AMAPFormulairePage shops={shops} products={products} />;
+  }
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">

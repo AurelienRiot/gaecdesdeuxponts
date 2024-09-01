@@ -30,13 +30,6 @@ async function deleteUser(): Promise<ReturnTypeServerAction> {
     },
   });
 
-  // if (user.count === 0) {
-  //   return {
-  //     success: false,
-  //     message: "Une erreur est survenue",
-  //   };
-  // }
-
   revalidateTag("users");
 
   return {

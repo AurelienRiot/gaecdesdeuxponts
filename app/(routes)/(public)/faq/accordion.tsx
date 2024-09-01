@@ -8,47 +8,24 @@ type AccordionContextValue = {
   onValueChange: (value: string[] | undefined) => void;
 };
 
-const AccordionContext = React.createContext<AccordionContextValue>(
-  {} as AccordionContextValue,
-);
-
-// const Accordion = AccordionPrimitive.Root;
+const AccordionContext = React.createContext<AccordionContextValue>({} as AccordionContextValue);
 
 const Accordion = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Root>,
-  Omit<
-    React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Root>,
-    "value" | "onValueChange" | "type"
-  >
+  Omit<React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Root>, "value" | "onValueChange" | "type">
 >(({ className, children, defaultValue, ...props }, ref) => {
-  const [value, onValueChange] = React.useState<string[] | undefined>(
-    undefined,
-  );
+  const [value, onValueChange] = React.useState<string[] | undefined>(undefined);
   return (
     <AccordionPrimitive.Root
       ref={ref}
       type="multiple"
-      // collapsible
       onValueChange={onValueChange}
       value={value}
-      defaultValue={
-        Array.isArray(defaultValue)
-          ? defaultValue
-          : defaultValue
-            ? [defaultValue]
-            : undefined
-      }
+      defaultValue={Array.isArray(defaultValue) ? defaultValue : defaultValue ? [defaultValue] : undefined}
       {...props}
     >
       <AccordionContext.Provider value={{ value, onValueChange }}>
-        <div
-          className={cn(
-            "rounded-[calc((var(--radius)-2px)-1px)]   bg-background",
-            className,
-          )}
-        >
-          {children}
-        </div>
+        <div className={cn("rounded-[calc((var(--radius)-2px)-1px)]   bg-background", className)}>{children}</div>
       </AccordionContext.Provider>
     </AccordionPrimitive.Root>
   );
@@ -66,14 +43,7 @@ const AccordionItem = React.forwardRef<
     }
     {...props}
   >
-    <div
-      className={cn(
-        "rounded-[calc((var(--radius)-2px)-1px)]   bg-background",
-        className,
-      )}
-    >
-      {children}
-    </div>
+    <div className={cn("rounded-[calc((var(--radius)-2px)-1px)]   bg-background", className)}>{children}</div>
   </AccordionPrimitive.Item>
 ));
 AccordionItem.displayName = "AccordionItem";
@@ -181,7 +151,6 @@ export const Accordion2 = ({
                 <div className="mt-8 h-[40px] w-full"></div>
                 <button
                   type="button"
-                  // onClick={() => setQuestion("")}
                   className="group/button absolute bottom-0 left-0 flex w-full items-center justify-center gap-1 rounded-b-md bg-gradient-to-r from-neutral-900 to-slate-900 py-2 font-semibold text-white  opacity-0 transition-all group-data-[state=open]:opacity-100 "
                 >
                   <span>Fermer</span>

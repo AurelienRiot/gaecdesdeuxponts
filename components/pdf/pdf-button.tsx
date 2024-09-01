@@ -17,26 +17,7 @@ import { SendAMAP } from "./server-actions/send-amap";
 import { SendBL } from "./server-actions/send-bl";
 import { sendFacture } from "./server-actions/send-facture";
 import { sendMonthlyInvoice } from "./server-actions/send-montly-invoice";
-
-function base64ToBlob(base64: string, contentType = "application/pdf", sliceSize = 512): Blob {
-  const byteCharacters = Buffer.from(base64, "base64").toString("binary");
-  const byteArrays: Uint8Array[] = [];
-
-  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-    const slice = byteCharacters.slice(offset, offset + sliceSize);
-
-    const byteNumbers = new Array(slice.length);
-    for (let i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i);
-    }
-
-    const byteArray = new Uint8Array(byteNumbers);
-    byteArrays.push(byteArray);
-  }
-  const blob = new Blob(byteArrays, { type: contentType });
-
-  return blob;
-}
+import { base64ToBlob } from "./server-actions/pdf-fuction";
 
 export const DisplayInvoice = ({ orderId, isSend }: { orderId: string; isSend: boolean }) => {
   const { toastServerAction, loading: sendFactureLoading } = useToastPromise({

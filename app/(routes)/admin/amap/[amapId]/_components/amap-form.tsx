@@ -20,7 +20,7 @@ import createAMAP from "../_actions/create-amap";
 import updateAMAP from "../_actions/update-amap";
 import { schema, type AMAPFormValues } from "./amap-schema";
 import FormDatePicker from "./date-picker";
-import DaysOfShipping from "./days-of-shipping";
+import DaysOfShipping, { DisplayShippingDays } from "./days-of-shipping";
 import { AMAPProducts } from "./products";
 import SelectDay from "./select-day";
 import SelectShop from "./select-shop";
@@ -136,7 +136,11 @@ export const AMAPForm: React.FC<AMAPFormProps> = ({ initialData, users, shops, p
             <SelectDay />
           </div>
           <AMAPProducts products={products} />
-          <DaysOfShipping />
+          <div className="space-y-4">
+            <Label>Date de livraisons</Label>
+            <DaysOfShipping />
+            <DisplayShippingDays />
+          </div>
           <div className="flex flex-wrap items-end gap-8">
             <TotalPrice />
             <TotalPaid />

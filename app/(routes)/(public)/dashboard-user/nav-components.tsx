@@ -44,9 +44,6 @@ const ProfilNavBar = () => {
               className={
                 "justify-left relative flex w-[200px] items-center gap-2 rounded-md px-4 py-2 transition-all duration-500 hover:opacity-50 data-[state=false]:w-[50px]"
               }
-              // style={{
-              //   transformStyle: "preserve-3d",
-              // }}
             >
               {active && (
                 <motion.div

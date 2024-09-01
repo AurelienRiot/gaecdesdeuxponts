@@ -365,7 +365,7 @@ export type AMAPType = {
     dateOfEdition: Date;
     startDate: Date;
     endDate: Date;
-    type: "AMAP de Guémené";
+    type: "AMAP de Guemene Penfao" | string;
     dayOfAbsence: Date[];
     shippingDay: Date[];
     totalPrice: number;
@@ -391,7 +391,7 @@ export const AMAPData: AMAPType = {
   },
   contrat: {
     id: "CA-0sUttHF",
-    type: "AMAP de Guémené",
+    type: "AMAP de Guemene Penfao",
     dateOfEdition: new Date(),
     totalPrice: 60,
     dayOfAbsence: [],

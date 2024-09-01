@@ -89,12 +89,6 @@ export const columns: ColumnDef<AMAPColumn>[] = [
       </p>
     ),
   },
-  // {
-  //   accessorKey: "datePickUp",
-  //   header: DatePickUpHeader,
-  //   cell: ({ row }) => <DateCell date={row.original.datePickUp} days={true} />,
-  // },
-
   {
     accessorKey: "shopName",
     header: "Nom de l'AMAP",
@@ -144,7 +138,7 @@ export const filterableColumns = ({
 
     {
       id: "shopName",
-      title: "Lieu de retrait",
+      title: "Nom de l'AMAP",
       options: shopArray,
     },
   ];
@@ -152,20 +146,29 @@ export const filterableColumns = ({
 
 export const viewOptionsColumns: DataTableViewOptionsColumn<AMAPColumn>[] = [
   {
+    id: "id",
+    title: "Contrat AMAP",
+  },
+  {
+    id: "name",
+    title: "Client",
+  },
+  {
     id: "products",
     title: "Produits",
   },
   {
-    id: "name",
-    title: "Nom",
+    id: "totalPrice",
+    title: "Prix total",
   },
   {
-    id: "id",
-    title: "Facture",
+    id: "totalPaid",
+    title: "Total payé",
   },
+
   {
     id: "shopName",
-    title: "Lieu de retrait",
+    title: "Nom de l'AMAP",
   },
 
   {
