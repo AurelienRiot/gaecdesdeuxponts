@@ -33,7 +33,9 @@ function OrdersCalendar({ month, className, orderDates }: { month: Date; orderDa
         order:
           "bg-green-500 text-white hover:!bg-green-500/90 has-[button]:hover:!bg-green-500/90 has-[button]:hover:text-white ",
       }}
-      onMonthChange={(e) => router.replace(`/admin/calendar?date=${encodeURIComponent(e.toISOString())}`)}
+      onMonthChange={(e) =>
+        router.push(`/admin/calendar?date=${encodeURIComponent(e.toISOString())}`, { scroll: false })
+      }
       showOutsideDays={true}
       onDayClick={(date) => {
         console.log({ iso: date.toISOString(), time: date.getTime() });

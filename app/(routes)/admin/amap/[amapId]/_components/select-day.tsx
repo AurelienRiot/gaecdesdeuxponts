@@ -34,13 +34,13 @@ function SelectDay() {
             value={String(field.value)}
           >
             <FormControl>
-              <SelectTrigger>
+              <SelectTrigger className="capitalize">
                 <SelectValue defaultValue={field.value} placeholder="Selectionner une categorie" />
               </SelectTrigger>
             </FormControl>
             <SelectContent>
               {[...Array(7)].map((_, day) => (
-                <SelectItem key={day} value={String(day)}>
+                <SelectItem key={day} value={String(day)} className="capitalize">
                   {getDayName(day)}
                 </SelectItem>
               ))}

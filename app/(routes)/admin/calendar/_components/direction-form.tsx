@@ -1,6 +1,7 @@
 "use client";
 
-import AddressAutocomplete, { LocationAutocomplete, type Suggestion } from "@/actions/adress-autocompleteFR";
+import AddressAutocomplete, { type Suggestion } from "@/actions/adress-autocompleteFR";
+import { LocationMarker } from "@/app/(routes)/(public)/ou-nous-trouver/_components/location-marker";
 import { destination, origin } from "@/components/google-events/get-orders-for-events";
 import { Button, IconButton, buttonVariants } from "@/components/ui/button";
 import {
@@ -18,20 +19,26 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Separator } from "@/components/ui/separator";
 import useScrollToHashOnMount from "@/hooks/use-scroll-to-hash";
 import useServerAction from "@/hooks/use-server-action";
-import { addDelay, cn, svgToDataUri } from "@/lib/utils";
+import { cn, svgToDataUri } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronDown, ChevronsUpDown, Locate, Plus, X } from "lucide-react";
+import "leaflet/dist/leaflet.css";
+import { ChevronDown, ChevronsUpDown, Plus, X } from "lucide-react";
+import dynamicImport from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { forwardRef, useState } from "react";
 import { useForm, useFormContext } from "react-hook-form";
-import { FaDotCircle } from "react-icons/fa";
+import { FaDotCircle, FaRegUser } from "react-icons/fa";
 import { FaMapLocationDot } from "react-icons/fa6";
 import { GiPositionMarker } from "react-icons/gi";
+import { LuMapPin } from "react-icons/lu";
 import { toast } from "sonner";
+import "../../../(public)/ou-nous-trouver/_components/marker.css";
 import getDirection from "../_actions/get-direction";
 import { directionSchema, type DirectionFormValues } from "./direction-schema";
-import { LocationMarker } from "@/app/(routes)/(public)/ou-nous-trouver/_components/location-marker";
+const MapModal = dynamicImport(() => import("./map-modal"), {
+  ssr: false,
+});
 
 const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 
@@ -388,8 +395,9 @@ const AddressModal = forwardRef<HTMLButtonElement, AddressModalProps>(
           <div className="space-y-4">
             <AddressSelect usersAndShops={usersAndShops} onValueChange={onClose} />
             <AddressSearch onValueChange={onClose} />
+            <MapModal onValueChange={onClose} />
             <Input
-              placeholder="adresse"
+              placeholder="Adresse"
               onChange={(e) => {
                 setInput(e.target.value);
               }}
@@ -422,9 +430,12 @@ function AddressSelect({
           role="combobox"
           id="select-address"
           // disabled={form.formState.isSubmitting}
-          className={cn("w-full justify-between")}
+          className={cn("w-full justify-between pl-2")}
         >
-          Rechercher un client
+          <span className="flex items-center">
+            <FaRegUser className="h-4 w-4 mr-2 inline" />
+            Rechercher un client
+          </span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -487,10 +498,13 @@ function AddressSearch({ onValueChange }: { onValueChange: (address: string) => 
           variant="outline"
           role="combobox"
           onClick={() => setOpen((open) => !open)}
-          className={cn(" justify-between active:scale-100 w-full font-normal text-muted-foreground")}
+          className={cn(" justify-between w-full  pl-2 items-center")}
         >
-          Rechercher votre adresse
-          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <span className="flex items-center">
+            <LuMapPin className="h-4 w-4 mr-2 " />
+            Rechercher une adresse
+          </span>
+          <ChevronDown className="ml-2 h-4 w-4 shrink-0 " />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0 z-[1200]" side="bottom" align="start">

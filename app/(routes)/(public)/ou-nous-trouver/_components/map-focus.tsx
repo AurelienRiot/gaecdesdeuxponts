@@ -5,7 +5,6 @@ import { X } from "lucide-react";
 import { type Dispatch, type SetStateAction, useState } from "react";
 import { Marker, useMap } from "react-leaflet";
 import { MakePin } from "./marker-pin";
-import "./marker.css";
 import { cn } from "@/lib/utils";
 import LocationMarker from "./location-marker";
 import { usePostHog } from "posthog-js/react";
