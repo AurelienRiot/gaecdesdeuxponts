@@ -11,6 +11,7 @@ import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import MonthlyInvoice from "../create-monthly-invoice";
 import { createMonthlyPDFData } from "../pdf-data";
+import { addDelay } from "@/lib/utils";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
@@ -40,7 +41,11 @@ export async function sendGroupedMonthlyInvoice(data: z.infer<typeof groupedMont
     serverAction: async (orderArray) => {
       // await addDelay(2000);
       const monthlyInvoice = await Promise.all(
-        orderArray.map(async (orderIds) => await getAndSendMonthlyInvoice(orderIds)),
+        orderArray.map(
+          async (orderIds) =>
+            // await addDelay(2000).then(() => ({ success: true }))),
+            await getAndSendMonthlyInvoice(orderIds),
+        ),
       );
       return monthlyInvoice.every((invoice) => invoice.success)
         ? { success: true, message: "Toutes les factures sont envoyées" }
@@ -88,32 +93,33 @@ async function getAndSendMonthlyInvoice(orderIds: string[]): Promise<ReturnTypeS
 
   const pdfBuffer = await renderToBuffer(<MonthlyInvoice data={createMonthlyPDFData(orders)} isPaid={false} />);
 
-  try {
-    await transporter.sendMail({
-      from: "laiteriedupontrobert@gmail.com",
-      to: orders[0].customer.email,
-      subject: `Facture Mensuelle ${date}  - Laiterie du Pont Robert`,
-      html: await render(
-        SendMonthlyInvoiceEmail({
-          date,
-          baseUrl,
-          email: orders[0].customer.email,
-        }),
-      ),
-      attachments: [
-        {
-          filename: `Facture mensuelle ${date}.pdf`,
-          content: pdfBuffer,
-          contentType: "application/pdf",
-        },
-      ],
-    });
-  } catch (error) {
-    return {
-      success: false,
-      message: "Erreur lors de l'envoi de la facture",
-    };
-  }
+  // try {
+  //   await transporter.sendMail({
+  //     from: "laiteriedupontrobert@gmail.com",
+  //     to: orders[0].customer.email,
+  //     subject: `Facture Mensuelle ${date}  - Laiterie du Pont Robert`,
+  //     html: await render(
+  //       SendMonthlyInvoiceEmail({
+  //         date,
+  //         baseUrl,
+  //         email: orders[0].customer.email,
+  //       }),
+  //     ),
+  //     attachments: [
+  //       {
+  //         filename: `Facture mensuelle ${date}.pdf`,
+  //         content: pdfBuffer,
+  //         contentType: "application/pdf",
+  //       },
+  //     ],
+  //   });
+  // } catch (error) {
+  //   return {
+  //     success: false,
+  //     message: "Erreur lors de l'envoi de la facture",
+  //   };
+  // }
+  await addDelay(3000);
 
   await prismadb.order.updateMany({
     where: {

@@ -1,6 +1,6 @@
 "use client";
 
-import { sendGroupedMonthlyInvoice, sendMonthlyInvoice } from "@/components/pdf/server-actions/send-monthly-invoice";
+import { sendGroupedMonthlyInvoice } from "@/components/pdf/server-actions/send-monthly-invoice";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -49,15 +49,39 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
 
   async function sendInvoices() {
     const orderIdsArray = Object.values(orderIdsRecord).filter((orderIds) => orderIds.length > 0);
-    toastServerAction({ data: orderIdsArray, delay: false });
-    // orderIdsArray.map((orderIds, index) => {
-    //   function onSuccess() {
-    //     toast.success(`Facture ${index + 1} sur ${orderIdsArray.length}  envoyées`);
-    //   }
-    //   if (orderIds.length > 0) {
-    //     toastServerAction({ data: { orderIds }, delay: false, onSuccess });
-    //   }
-    // });
+    // const orderIdsArray = [
+    //   ["11", "12"],
+    //   ["21", "22"],
+    //   ["31", "32"],
+    //   ["41", "42"],
+    //   ["51", "52"],
+    //   ["61", "62"],
+    //   ["71", "72"],
+    //   ["81", "82"],
+    //   ["91", "92"],
+    //   ["101", "102"],
+    //   ["111", "112"],
+    //   ["121", "122"],
+    //   ["131", "132"],
+    //   ["141", "142"],
+    //   ["151", "152"],
+    //   ["161", "162"],
+    //   ["171", "172"],
+    //   ["181", "182"],
+    //   ["191", "192"],
+    //   ["201", "202"],
+    // ];
+    const chunkSize = 5;
+    let cumulativeCount = 0;
+    for (let i = 0; i < orderIdsArray.length; i += chunkSize) {
+      const chunk = orderIdsArray.slice(i, i + chunkSize);
+      function onSuccess() {
+        cumulativeCount += chunk.length;
+        const currentCount = cumulativeCount;
+        toast.success(`Facture envoyée ${currentCount} sur ${orderIdsArray.length}`);
+      }
+      toastServerAction({ data: chunk, delay: false, onSuccess });
+    }
   }
 
   return (
