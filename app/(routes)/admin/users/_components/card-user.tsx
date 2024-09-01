@@ -2,20 +2,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { User } from "@prisma/client";
-import { Package, X } from "lucide-react";
+import { CalendarClock, Check, Package, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaCheck } from "react-icons/fa";
 
+export type UserStatus = "paid" | "unpaid" | "not send";
 interface CardUserProps {
   user: User;
   orderLength: number;
-  isPaid: boolean;
+  status: UserStatus;
   display: boolean;
   className?: string;
 }
 
-const CardUser: React.FC<CardUserProps> = ({ user, className, isPaid, display, orderLength }) => {
+const CardUser: React.FC<CardUserProps> = ({ user, className, status, display, orderLength }) => {
   const name = user.company || user.name || user.email || "";
 
   return (
@@ -43,7 +43,14 @@ const CardUser: React.FC<CardUserProps> = ({ user, className, isPaid, display, o
             <p className="flex gap-2 items-center justify-center">
               {" "}
               {orderLength} <Package className="h-4 w-4" />
-              {display && (isPaid ? <FaCheck className="text-green-500" /> : <X className="text-destructive" />)}
+              {display &&
+                (status === "paid" ? (
+                  <Check className="text-green-500 size-4" />
+                ) : status === "unpaid" ? (
+                  <X className="text-destructive size-4" />
+                ) : (
+                  <CalendarClock className="text-yellow-500 size-4" />
+                ))}
             </p>
           </div>
         </CardContent>

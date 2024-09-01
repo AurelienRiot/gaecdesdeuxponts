@@ -76,11 +76,10 @@ export async function getAndSendMonthlyInvoice(orderIds: string[]): Promise<Retu
       message: "Erreur lors de l'envoi de la facture",
     };
   }
-  // await addDelay(3000);
 
   await prismadb.order.updateMany({
     where: {
-      id: { in: orderIds },
+      id: { in: orders.map((order) => order.id) },
     },
     data: {
       invoiceEmail: new Date(),

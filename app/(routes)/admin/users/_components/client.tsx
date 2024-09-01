@@ -1,23 +1,19 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Toggle } from "@/components/ui/toggle";
 import type { User } from "@prisma/client";
-import { Plus } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
-import CardUser from "./card-user";
+import CardUser, { type UserStatus } from "./card-user";
 
 interface UserClientProps {
   users: User[];
   orderLengths: { length: number; id: string }[];
-  isPaidArray: { isPaid: boolean; id: string; display: boolean }[];
+  statusArray: { status: UserStatus; id: string; display: boolean }[];
 }
 
-const UserClient: React.FC<UserClientProps> = ({ users, orderLengths, isPaidArray }) => {
+const UserClient: React.FC<UserClientProps> = ({ users, orderLengths, statusArray }) => {
   const [search, setSearch] = useState("");
   const searchKeys = ["email", "name", "phone", "addresse", "company"];
   const displayKeys = ["Email", "Nom", "Téléphone", "Addresse", "Entreprise"];
@@ -28,7 +24,8 @@ const UserClient: React.FC<UserClientProps> = ({ users, orderLengths, isPaidArra
     const value = String(user[selectValue as keyof User]);
     if (toogle) {
       return (
-        value.toLowerCase().includes(search.toLowerCase()) && !isPaidArray.find((item) => item.id === user.id)?.isPaid
+        value.toLowerCase().includes(search.toLowerCase()) &&
+        !(statusArray.find((item) => item.id === user.id)?.status !== "unpaid")
       );
     }
     return value.toLowerCase().includes(search.toLowerCase());
@@ -66,8 +63,8 @@ const UserClient: React.FC<UserClientProps> = ({ users, orderLengths, isPaidArra
             key={user.id}
             user={user}
             orderLength={orderLengths.find((orderLength) => orderLength.id === user.id)?.length || 0}
-            isPaid={!!isPaidArray.find((isPaid) => isPaid.id === user.id)?.isPaid}
-            display={!!isPaidArray.find((isPaid) => isPaid.id === user.id)?.display}
+            status={statusArray.find((status) => status.id === user.id)?.status || "not send"}
+            display={!!statusArray.find((status) => status.id === user.id)?.display}
           />
         ))}
       </div>

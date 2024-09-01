@@ -46,31 +46,35 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
       {} as Record<string, string[]>,
     ),
   );
+  const orderIdsArray = Object.values(orderIdsRecord).filter((orderIds) => orderIds.length > 0);
 
   async function sendInvoices() {
-    // const orderIdsArray = Object.values(orderIdsRecord).filter((orderIds) => orderIds.length > 0);
-    const orderIdsArray = [
-      ["11", "12"],
-      ["21", "22"],
-      ["31", "32"],
-      ["41", "42"],
-      ["51", "52"],
-      ["61", "62"],
-      ["71", "72"],
-      ["81", "82"],
-      ["91", "92"],
-      ["101", "102"],
-      ["111", "112"],
-      ["121", "122"],
-      ["131", "132"],
-      ["141", "142"],
-      ["151", "152"],
-      ["161", "162"],
-      ["171", "172"],
-      ["181", "182"],
-      ["191", "192"],
-      ["201", "202"],
-    ];
+    if (orderIdsArray.length === 0) {
+      toast.error("Veuillez sélectionner au moins un client");
+      return;
+    }
+    // const orderIdsArray = [
+    //   ["11", "12"],
+    //   ["21", "22"],
+    //   ["31", "32"],
+    //   ["41", "42"],
+    //   ["51", "52"],
+    //   ["61", "62"],
+    //   ["71", "72"],
+    //   ["81", "82"],
+    //   ["91", "92"],
+    //   ["101", "102"],
+    //   ["111", "112"],
+    //   ["121", "122"],
+    //   ["131", "132"],
+    //   ["141", "142"],
+    //   ["151", "152"],
+    //   ["161", "162"],
+    //   ["171", "172"],
+    //   ["181", "182"],
+    //   ["191", "192"],
+    //   ["201", "202"],
+    // ];
     const chunkSize = 5;
     let cumulativeCount = 0;
     for (let i = 0; i < orderIdsArray.length; i += chunkSize) {
@@ -86,10 +90,10 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
 
   return (
     <>
-      <Button onClick={() => setShowModal(true)}> Envoie groupé de facture</Button>
+      <Button onClick={() => setShowModal(true)}> Envoie groupé de facture </Button>
       <Modal
-        className="left-[50%] top-[50%] max-h-[90%] w-[90%] max-w-[700px] overflow-y-scroll rounded-md"
-        title="Envoie groupé de facture"
+        className="left-[50%] top-[50%] lining-nums max-h-[90%] w-[90%] max-w-[700px] overflow-y-scroll rounded-md"
+        title={`Envoie groupé de facture (${orderIdsArray.length})`}
         isOpen={showModal}
         onClose={() => setShowModal(false)}
       >
@@ -157,6 +161,7 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
                             {dateFormatter(order.dateOfShipping || new Date())} :{" "}
                             {currencyFormatter.format(order.totalPrice)}{" "}
                           </span>
+                          {order.invoiceEmail ? <MailCheck className="size-4 inline ml-2 text-green-500" /> : null}
                         </label>
                       </li>
                     ))}

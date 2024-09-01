@@ -1,20 +1,16 @@
-import prismadb from "@/lib/prismadb";
-import UserClient from "./_components/client";
-import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Heading } from "@/components/ui/heading";
 import { Plus } from "lucide-react";
+import Link from "next/link";
+import type { UserStatus } from "./_components/card-user";
+import UserClient from "./_components/client";
 import GroupedInvoicePage from "./_components/grouped-invoice";
-import { getAllUsers } from "@/actions/get-user";
+import { getAllUsers } from "./_functions/get-all-users";
 
 export const dynamic = "force-dynamic";
 
 const UserPage = async () => {
   const allUsers = await getAllUsers();
-
-  const orderLengths: { length: number; id: string }[] = allUsers.map((user) => {
-    return { length: user.orders.length, id: user.id };
-  });
 
   const userOrders = allUsers.map((user) => ({
     id: user.id,
@@ -29,9 +25,14 @@ const UserPage = async () => {
     ),
   }));
 
-  const isPaidArray: { isPaid: boolean; id: string; display: boolean }[] = userOrders.map((user) => {
-    const isPaid = user.orders.every((order) => order.dateOfPayment);
-    return { isPaid, id: user.id, display: user.role === "pro" && user.orders.length > 0 };
+  const orderLengths: { length: number; id: string }[] = allUsers.map((user) => {
+    return { length: user.orders.length, id: user.id };
+  });
+  const statusArray: { status: UserStatus; id: string; display: boolean }[] = userOrders.map((user) => {
+    const invoiceNotSend = user.orders.every((order) => !order.invoiceEmail || order.dateOfPayment);
+    const dateOfPayment = user.orders.every((order) => order.dateOfPayment);
+    const status = dateOfPayment ? "paid" : invoiceNotSend ? "not send" : "unpaid";
+    return { status, id: user.id, display: user.role === "pro" && user.orders.length > 0 };
   });
 
   const proUserWithOrders = userOrders
@@ -53,7 +54,7 @@ const UserPage = async () => {
           </Link>
         </Button>
       </div>
-      <UserClient users={allUsers} orderLengths={orderLengths} isPaidArray={isPaidArray} />
+      <UserClient users={allUsers} orderLengths={orderLengths} statusArray={statusArray} />
     </div>
   );
 };
