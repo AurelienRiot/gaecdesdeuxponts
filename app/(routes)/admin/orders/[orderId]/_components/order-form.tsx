@@ -203,11 +203,12 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
       </Form>
       {!!initialData?.id && !!initialData.dateOfEdition && (
         <div id="button-container" className="flex flex-wrap gap-4">
-          <div>
-            <Label>Bon de livraison</Label>
-            <DisplayShippingOrder orderId={form.getValues("id")} isSend={!!initialData.shippingEmail} />
-          </div>
-          {user?.role !== "pro" && (
+          {user?.role === "pro" ? (
+            <div>
+              <Label>Bon de livraison</Label>
+              <DisplayShippingOrder orderId={form.getValues("id")} isSend={!!initialData.shippingEmail} />
+            </div>
+          ) : (
             <div>
               <Label>Facture</Label>
               <DisplayInvoice orderId={form.getValues("id")} isSend={!!initialData.invoiceEmail} />

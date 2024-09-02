@@ -224,7 +224,6 @@ function InputImage({ selectedFiles, setSelectedFiles, multipleImages, setAllFil
         e.preventDefault();
         setLoading(true);
         const files = await listFiles(bucketName);
-        console.log(bucketName);
         if (!files) {
           return;
         }

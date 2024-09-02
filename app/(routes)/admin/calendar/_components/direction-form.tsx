@@ -111,7 +111,6 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
   background-repeat: repeat-y; 
 }
    `}</style>
-              {/* <div className="absolute h-full w-1 top-0 left-0   border-r-8 border-dotted bg-transparent" /> */}
               <div className="dotted-line w-4 h-full top-0 left-0 absolute" />
 
               <FormField

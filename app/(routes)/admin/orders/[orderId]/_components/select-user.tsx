@@ -45,7 +45,7 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
       control={form.control}
       name="userId"
       render={({ field }) => (
-        <FormItem className="w-48">
+        <FormItem className="w-48 ">
           <FormLabel id="user-input">Client</FormLabel>
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
