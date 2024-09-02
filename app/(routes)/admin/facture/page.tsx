@@ -41,7 +41,7 @@ const TestPage = () => {
         </Button>
         <DisplayId />
       </div>
-      <Tabs defaultValue="formAMAP" className="h-full w-full max-w-[1000px]">
+      <Tabs defaultValue="monthlyInvoice" className="h-full w-full max-w-[1000px]">
         <TabsList className="flex w-full gap-2">
           <TabsTrigger value="invoice">Facture</TabsTrigger>
           <TabsTrigger value="monthlyInvoice">Facture mensuelle</TabsTrigger>

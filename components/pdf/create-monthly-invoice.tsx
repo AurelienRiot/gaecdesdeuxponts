@@ -38,16 +38,80 @@ const itemsTableStyles = StyleSheet.create({
   },
 });
 
-const ShippingItemsTable = ({ data }: { data: MonthlyPDFDataType }) => (
-  <View style={itemsTableStyles.tableContainer}>
-    <ShippingTableHeader />
-    <ShippingTableRow orders={data.orders} />
-    <ShippingTableBlankSpace
-      rowsCount={tableRowsCount - data.orders.reduce((acc, order) => acc + order.items.length + 1, 0)}
-    />
-    <InvoiceTableFooter orders={data.orders} />
-  </View>
-);
+function chunkOrdersByLines(orders: MonthlyPDFDataType["orders"], totalLines: number) {
+  const maxLinesFirstChunk = 15;
+  const maxLinesOtherChunks = 28;
+  const chunks = [];
+  let currentChunk = [];
+  let currentLinesCount = 0;
+  let currentMaxLines = maxLinesFirstChunk; // Start with the first chunk limit
+
+  for (const order of orders) {
+    const orderLines = 1 + order.items.length; // 1 for title + number of items
+
+    // Check if adding this order would exceed the maximum lines allowed in the current chunk
+    if (currentLinesCount + orderLines >= currentMaxLines) {
+      // Save the current chunk and start a new one
+      chunks.push(currentChunk);
+      currentChunk = [];
+      currentLinesCount = 0;
+
+      // After the first chunk, set the max lines for the next chunks
+      currentMaxLines = maxLinesOtherChunks;
+    }
+
+    // Add the current order to the chunk
+    currentChunk.push(order);
+    currentLinesCount += orderLines;
+  }
+
+  // Add the last chunk if it contains any orders
+  if (currentChunk.length > 0) {
+    chunks.push(currentChunk);
+  }
+
+  return chunks;
+}
+
+const ShippingItemsTable = ({ data }: { data: MonthlyPDFDataType }) => {
+  const totalLines = data.orders.reduce((acc, order) => acc + order.items.length + 1, 0);
+  const chunks = chunkOrdersByLines(data.orders, totalLines);
+  console.log(chunks);
+
+  if (chunks.length === 1) {
+    return (
+      <View style={itemsTableStyles.tableContainer}>
+        <ShippingTableHeader />
+        <ShippingTableRow orders={chunks[0]} />
+
+        <ShippingTableBlankSpace rowsCount={tableRowsCount - totalLines} />
+        <InvoiceTableFooter orders={data.orders} />
+      </View>
+    );
+  }
+  const chunk1 = chunks.shift();
+  return (
+    <>
+      <View style={[itemsTableStyles.tableContainer, { marginBottom: 50 }]}>
+        <ShippingTableHeader />
+        <ShippingTableRow orders={chunk1} />
+
+        <ShippingTableBlankSpace rowsCount={tableRowsCount - totalLines} />
+      </View>
+      {chunks.map((chunk, index) => {
+        const marginTop = index === chunks.length - 1 ? 0 : 50;
+        return (
+          <View key={chunk[0].id} break style={[itemsTableStyles.tableContainer, { marginTop }]}>
+            <ShippingTableHeader />
+            <ShippingTableRow orders={chunk} />
+
+            {index === chunks.length - 1 && <InvoiceTableFooter orders={data.orders} />}
+          </View>
+        );
+      })}
+    </>
+  );
+};
 
 const tableHeaderStyles = StyleSheet.create({
   container: {
@@ -157,28 +221,31 @@ const tableRowStyles = StyleSheet.create({
 const ShippingTableRow = ({
   orders,
 }: {
-  orders: MonthlyPDFDataType["orders"];
-}) => (
-  <Fragment>
-    {orders.map((order, i) => (
-      <Fragment key={i}>
-        <View style={tableRowStyles.row}>
-          <Text style={tableRowStyles.order}>{`Commande n° ${order.id} du ${order.dateOfShipping} `}</Text>
-        </View>
-        {order.items.map((item, i) => (
-          <View style={tableRowStyles.row} key={i}>
-            <Text style={tableRowStyles.description}>{item.desc}</Text>
-            <Text style={tableRowStyles.unit}>{(item.priceTTC / 1.055).toFixed(2)}</Text>
-            <Text style={tableRowStyles.qty}>{item.qty}</Text>
-            <Text style={tableRowStyles.totalHT}>{((item.priceTTC / 1.055) * item.qty).toFixed(2)}</Text>
-
-            <Text style={tableRowStyles.totalTTC}>{(item.priceTTC * item.qty).toFixed(2)}</Text>
+  orders: MonthlyPDFDataType["orders"] | undefined;
+}) => {
+  if (!orders) return null;
+  return (
+    <Fragment>
+      {orders.map((order, i) => (
+        <Fragment key={i}>
+          <View style={tableRowStyles.row}>
+            <Text style={tableRowStyles.order}>{`Commande n° ${order.id} du ${order.dateOfShipping} `}</Text>
           </View>
-        ))}
-      </Fragment>
-    ))}
-  </Fragment>
-);
+          {order.items.map((item, i) => (
+            <View style={tableRowStyles.row} key={i}>
+              <Text style={tableRowStyles.description}>{item.desc}</Text>
+              <Text style={tableRowStyles.unit}>{(item.priceTTC / 1.055).toFixed(2)}</Text>
+              <Text style={tableRowStyles.qty}>{item.qty}</Text>
+              <Text style={tableRowStyles.totalHT}>{((item.priceTTC / 1.055) * item.qty).toFixed(2)}</Text>
+
+              <Text style={tableRowStyles.totalTTC}>{(item.priceTTC * item.qty).toFixed(2)}</Text>
+            </View>
+          ))}
+        </Fragment>
+      ))}
+    </Fragment>
+  );
+};
 
 const tableBlankSpaceStyles = StyleSheet.create({
   row: {
