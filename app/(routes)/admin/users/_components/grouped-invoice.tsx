@@ -1,7 +1,7 @@
 "use client";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
+import { Button, LoadingButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Modal } from "@/components/ui/modal";
 import { useToastPromise } from "@/components/ui/sonner";
@@ -33,11 +33,12 @@ type GroupedInvoiceProps = {
 
 function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
   const [showModal, setShowModal] = useState(false);
-  const { loading, toastServerAction } = useToastPromise({
-    serverAction: sendGroupedMonthlyInvoice,
-    message: "Envoie des factures mensuelles",
-    errorMessage: "Envoie des factures mensuelles annulé",
-  });
+  // const { loading, toastServerAction } = useToastPromise({
+  //   serverAction: sendGroupedMonthlyInvoice,
+  //   message: "Envoie des factures mensuelles",
+  //   errorMessage: "Envoie des factures mensuelles annulé",
+  // });
+  const [loading, setLoading] = useState(false);
   const [orderIdsRecord, setOrderIdsRecord] = useState<Record<string, string[]>>(
     proUserWithOrders.reduce(
       (acc, user) => {
@@ -50,6 +51,7 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
   const orderIdsArray = Object.values(orderIdsRecord).filter((orderIds) => orderIds.length > 0);
 
   async function sendRoutes() {
+    setLoading(true);
     // const orderIdsArray = [
     //   ["11", "12"],
     //   ["21", "22"],
@@ -72,73 +74,92 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
     //   ["191", "192"],
     //   ["201", "202"],
     // ];
-    const res = await Promise.all(
-      orderIdsArray.map((orderIds) => {
-        return ky
-          .post("/api/grouped-invoice", { json: orderIds, timeout: 10000 })
-          .then(async (responce) => {
-            const res = await responce.text();
-            toast.success(res);
-            return true;
-          })
-          .catch(async (kyError: HTTPError) => {
-            if (kyError.response) {
-              const errorData = await kyError.response.text();
-              toast.error(errorData + orderIds[0]);
-            } else {
-              const error = kyError as TimeoutError;
-              // console.error(kyError.);
-              toast.error("Erreur, " + orderIds[0]);
-            }
-            return false;
-          });
-      }),
-    );
-
-    res.every((res) => res)
-      ? toast.success("Toutes les factures sont envoyées", { position: "top-center" })
-      : toast.error("Une erreur est survenue lors de l'envoi des factures", { position: "top-center" });
-  }
-
-  async function sendInvoices() {
-    const orderIdsArray = [
-      ["11", "12"],
-      ["21", "22"],
-      ["31", "32"],
-      ["41", "42"],
-      ["51", "52"],
-      ["61", "62"],
-      ["71", "72"],
-      ["81", "82"],
-      ["91", "92"],
-      ["101", "102"],
-      ["111", "112"],
-      ["121", "122"],
-      ["131", "132"],
-      ["141", "142"],
-      ["151", "152"],
-      ["161", "162"],
-      ["171", "172"],
-      ["181", "182"],
-      ["191", "192"],
-      ["201", "202"],
-    ];
-    if (orderIdsArray.length === 0) {
-      toast.error("Veuillez sélectionner au moins un client");
-      return;
-    }
-    const chunkSize = 10;
+    const chunkSize = 5;
     let cumulativeCount = 0;
     for (let i = 0; i < orderIdsArray.length; i += chunkSize) {
       const chunk = orderIdsArray.slice(i, i + chunkSize);
-      function onSuccess() {
-        cumulativeCount += chunk.length;
-        const currentCount = cumulativeCount;
-        toast.success(`Facture envoyée ${currentCount} sur ${orderIdsArray.length}`);
+      const chunkRes = await Promise.all(
+        chunk.map((orderIds) => {
+          return ky
+            .post("/api/grouped-invoice", { json: orderIds, timeout: 15000 })
+            .then(async (responce) => {
+              const res = await responce.text();
+              toast.success(res);
+              return true;
+            })
+            .catch(async (kyError: HTTPError) => {
+              if (kyError.response) {
+                const errorData = await kyError.response.text();
+                console.error(errorData + orderIds[0]);
+                toast.error(errorData + orderIds[0], { duration: 10000 });
+              } else {
+                const error = kyError as TimeoutError;
+                console.error("Erreur timeout");
+                toast.error("Erreur, " + orderIds[0]);
+              }
+              return false;
+            });
+        }),
+      );
+      if (!chunkRes.every((res) => res)) {
+        toast.error("Une erreur est survenue lors de l'envoi des factures", {
+          position: "top-center",
+          duration: 10000,
+        });
+        return;
       }
-      toastServerAction({ data: chunk, delay: false, onSuccess });
+      cumulativeCount += chunk.length;
+      const currentCount = cumulativeCount;
+      toast.success(`Facture envoyée ${currentCount} sur ${orderIdsArray.length}`, {
+        position: "top-center",
+        duration: 10000,
+      });
+      if (currentCount === orderIdsArray.length) {
+        toast.success("Toutes les factures sont envoyées", { position: "top-center", duration: 10000 });
+      }
     }
+    setLoading(false);
   }
+
+  // async function sendInvoices() {
+  //   const orderIdsArray = [
+  //     ["11", "12"],
+  //     ["21", "22"],
+  //     ["31", "32"],
+  //     ["41", "42"],
+  //     ["51", "52"],
+  //     ["61", "62"],
+  //     ["71", "72"],
+  //     ["81", "82"],
+  //     ["91", "92"],
+  //     ["101", "102"],
+  //     ["111", "112"],
+  //     ["121", "122"],
+  //     ["131", "132"],
+  //     ["141", "142"],
+  //     ["151", "152"],
+  //     ["161", "162"],
+  //     ["171", "172"],
+  //     ["181", "182"],
+  //     ["191", "192"],
+  //     ["201", "202"],
+  //   ];
+  //   if (orderIdsArray.length === 0) {
+  //     toast.error("Veuillez sélectionner au moins un client");
+  //     return;
+  //   }
+  //   const chunkSize = 10;
+  //   let cumulativeCount = 0;
+  //   for (let i = 0; i < orderIdsArray.length; i += chunkSize) {
+  //     const chunk = orderIdsArray.slice(i, i + chunkSize);
+  //     function onSuccess() {
+  //       cumulativeCount += chunk.length;
+  //       const currentCount = cumulativeCount;
+  //       toast.success(`Facture envoyée ${currentCount} sur ${orderIdsArray.length}`);
+  //     }
+  //     toastServerAction({ data: chunk, delay: false, onSuccess });
+  //   }
+  // }
 
   return (
     <>
@@ -223,26 +244,25 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
             );
           })}
         </Accordion>
-        <div className="flex gap-2">
+        {/* <div className="flex gap-2">
           <Button
             disabled={loading}
             variant={"shine"}
             className="mt-4 w-full from-green-600 via-green-600/80 to-green-600"
             onClick={sendInvoices}
           >
-            {/* Envoyer les factures */}
             Server action
-          </Button>
+          </Button> */}
 
-          <Button
-            disabled={loading}
-            variant={"shine"}
-            className="mt-4 w-full from-red-600 via-red-600/80 to-red-600"
-            onClick={sendRoutes}
-          >
-            Route handler
-          </Button>
-        </div>
+        <LoadingButton
+          disabled={loading}
+          variant={"shine"}
+          className="mt-4 w-full  from-green-600 via-green-600/80 to-green-600"
+          onClick={sendRoutes}
+        >
+          Envoyer les factures
+        </LoadingButton>
+        {/* </div> */}
       </Modal>
     </>
   );

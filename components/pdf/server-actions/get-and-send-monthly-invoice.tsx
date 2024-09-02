@@ -75,6 +75,16 @@ export async function getAndSendMonthlyInvoice(orderIds: string[]): Promise<Retu
         },
       ],
     });
+
+    await prismadb.order.updateMany({
+      where: {
+        id: { in: orders.map((order) => order.id) },
+      },
+      data: {
+        invoiceEmail: new Date(),
+      },
+    });
+    revalidateTag("orders");
   } catch (error) {
     return {
       success: false,
@@ -82,15 +92,6 @@ export async function getAndSendMonthlyInvoice(orderIds: string[]): Promise<Retu
     };
   }
 
-  // await prismadb.order.updateMany({
-  //   where: {
-  //     id: { in: orders.map((order) => order.id) },
-  //   },
-  //   data: {
-  //     invoiceEmail: new Date(),
-  //   },
-  // });
-  // revalidateTag("orders");
   return {
     success: true,
     message: `Facture envoyée pour ${name}`,
