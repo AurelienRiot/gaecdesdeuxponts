@@ -4,16 +4,14 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button, LoadingButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Modal } from "@/components/ui/modal";
-import { useToastPromise } from "@/components/ui/sonner";
 import { dateFormatter } from "@/lib/date-utils";
 import { currencyFormatter } from "@/lib/utils";
 import type { Role } from "@prisma/client";
+import ky, { type HTTPError, type TimeoutError } from "ky";
 import { MailCheck } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
-import sendGroupedMonthlyInvoice from "../_actions/send-grouped-monthly-invoice";
-import ky, { type TimeoutError, type HTTPError } from "ky";
 
 type GroupedInvoiceProps = {
   proUserWithOrders: {
@@ -33,16 +31,14 @@ type GroupedInvoiceProps = {
 
 function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
   const [showModal, setShowModal] = useState(false);
-  // const { loading, toastServerAction } = useToastPromise({
-  //   serverAction: sendGroupedMonthlyInvoice,
-  //   message: "Envoie des factures mensuelles",
-  //   errorMessage: "Envoie des factures mensuelles annulé",
-  // });
+
   const [loading, setLoading] = useState(false);
   const [orderIdsRecord, setOrderIdsRecord] = useState<Record<string, string[]>>(
     proUserWithOrders.reduce(
       (acc, user) => {
-        acc[user.id] = user.orders.map((order) => order.id);
+        acc[user.id] = user.orders
+          .map((order) => (!order.invoiceEmail ? order.id : null))
+          .filter((id): id is string => id !== null);
         return acc;
       },
       {} as Record<string, string[]>,
@@ -50,7 +46,7 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
   );
   const orderIdsArray = Object.values(orderIdsRecord).filter((orderIds) => orderIds.length > 0);
 
-  async function sendRoutes() {
+  async function sendInvoices() {
     setLoading(true);
     // const orderIdsArray = [
     //   ["11", "12"],
@@ -74,6 +70,11 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
     //   ["191", "192"],
     //   ["201", "202"],
     // ];
+    if (orderIdsArray.length === 0) {
+      toast.error("Veuillez sélectionner au moins un client");
+      setLoading(false);
+      return;
+    }
     const chunkSize = 5;
     let cumulativeCount = 0;
     for (let i = 0; i < orderIdsArray.length; i += chunkSize) {
@@ -90,19 +91,19 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
             .catch(async (kyError: HTTPError) => {
               if (kyError.response) {
                 const errorData = await kyError.response.text();
-                console.error(errorData + orderIds[0]);
-                toast.error(errorData + orderIds[0], { duration: 10000 });
+                console.error(errorData);
+                toast.error(errorData, { duration: 10000 });
               } else {
                 const error = kyError as TimeoutError;
                 console.error("Erreur timeout");
-                toast.error("Erreur, " + orderIds[0]);
+                toast.error("Erreur dans l'envoi des factures, veuillez recharger la page");
               }
               return false;
             });
         }),
       );
       if (!chunkRes.every((res) => res)) {
-        toast.error("Une erreur est survenue lors de l'envoi des factures", {
+        toast.error("Une erreur est survenue lors de l'envoi des factures, veuillez recharger la page", {
           position: "top-center",
           duration: 10000,
         });
@@ -120,46 +121,6 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
     }
     setLoading(false);
   }
-
-  // async function sendInvoices() {
-  //   const orderIdsArray = [
-  //     ["11", "12"],
-  //     ["21", "22"],
-  //     ["31", "32"],
-  //     ["41", "42"],
-  //     ["51", "52"],
-  //     ["61", "62"],
-  //     ["71", "72"],
-  //     ["81", "82"],
-  //     ["91", "92"],
-  //     ["101", "102"],
-  //     ["111", "112"],
-  //     ["121", "122"],
-  //     ["131", "132"],
-  //     ["141", "142"],
-  //     ["151", "152"],
-  //     ["161", "162"],
-  //     ["171", "172"],
-  //     ["181", "182"],
-  //     ["191", "192"],
-  //     ["201", "202"],
-  //   ];
-  //   if (orderIdsArray.length === 0) {
-  //     toast.error("Veuillez sélectionner au moins un client");
-  //     return;
-  //   }
-  //   const chunkSize = 10;
-  //   let cumulativeCount = 0;
-  //   for (let i = 0; i < orderIdsArray.length; i += chunkSize) {
-  //     const chunk = orderIdsArray.slice(i, i + chunkSize);
-  //     function onSuccess() {
-  //       cumulativeCount += chunk.length;
-  //       const currentCount = cumulativeCount;
-  //       toast.success(`Facture envoyée ${currentCount} sur ${orderIdsArray.length}`);
-  //     }
-  //     toastServerAction({ data: chunk, delay: false, onSuccess });
-  //   }
-  // }
 
   return (
     <>
@@ -244,25 +205,14 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
             );
           })}
         </Accordion>
-        {/* <div className="flex gap-2">
-          <Button
-            disabled={loading}
-            variant={"shine"}
-            className="mt-4 w-full from-green-600 via-green-600/80 to-green-600"
-            onClick={sendInvoices}
-          >
-            Server action
-          </Button> */}
-
         <LoadingButton
           disabled={loading}
           variant={"shine"}
           className="mt-4 w-full  from-green-600 via-green-600/80 to-green-600"
-          onClick={sendRoutes}
+          onClick={sendInvoices}
         >
           Envoyer les factures
         </LoadingButton>
-        {/* </div> */}
       </Modal>
     </>
   );
