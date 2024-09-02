@@ -13,7 +13,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 import sendGroupedMonthlyInvoice from "../_actions/send-grouped-monthly-invoice";
-import ky, { type HTTPError } from "ky";
+import ky, { type TimeoutError, type HTTPError } from "ky";
 
 type GroupedInvoiceProps = {
   proUserWithOrders: {
@@ -50,28 +50,28 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
   const orderIdsArray = Object.values(orderIdsRecord).filter((orderIds) => orderIds.length > 0);
 
   async function sendRoutes() {
-    const orderIdsArray = [
-      ["11", "12"],
-      ["21", "22"],
-      ["31", "32"],
-      ["41", "42"],
-      ["51", "52"],
-      ["61", "62"],
-      ["71", "72"],
-      ["81", "82"],
-      ["91", "92"],
-      ["101", "102"],
-      ["111", "112"],
-      ["121", "122"],
-      ["131", "132"],
-      ["141", "142"],
-      ["151", "152"],
-      ["161", "162"],
-      ["171", "172"],
-      ["181", "182"],
-      ["191", "192"],
-      ["201", "202"],
-    ];
+    // const orderIdsArray = [
+    //   ["11", "12"],
+    //   ["21", "22"],
+    //   ["31", "32"],
+    //   ["41", "42"],
+    //   ["51", "52"],
+    //   ["61", "62"],
+    //   ["71", "72"],
+    //   ["81", "82"],
+    //   ["91", "92"],
+    //   ["101", "102"],
+    //   ["111", "112"],
+    //   ["121", "122"],
+    //   ["131", "132"],
+    //   ["141", "142"],
+    //   ["151", "152"],
+    //   ["161", "162"],
+    //   ["171", "172"],
+    //   ["181", "182"],
+    //   ["191", "192"],
+    //   ["201", "202"],
+    // ];
     const res = await Promise.all(
       orderIdsArray.map((orderIds) => {
         return ky
@@ -86,7 +86,8 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
               const errorData = await kyError.response.text();
               toast.error(errorData + orderIds[0]);
             } else {
-              console.error(kyError);
+              const error = kyError as TimeoutError;
+              // console.error(kyError.);
               toast.error("Erreur, " + orderIds[0]);
             }
             return false;

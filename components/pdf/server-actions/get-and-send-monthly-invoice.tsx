@@ -12,8 +12,8 @@ import { addDelay } from "@/lib/utils";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 export async function getAndSendMonthlyInvoice(orderIds: string[]): Promise<ReturnTypeServerAction> {
-  await addDelay(3000);
-  return { success: true, message: "Facture envoyée" };
+  // await addDelay(3000);
+  // return { success: true, message: "Facture envoyée" };
   const orders = await prismadb.order.findMany({
     where: {
       id: { in: orderIds },
@@ -42,55 +42,55 @@ export async function getAndSendMonthlyInvoice(orderIds: string[]): Promise<Retu
     };
   }
 
-  if (orders[0].customer) {
+  if (!orders[0].customer) {
     return {
       success: false,
       message: "Le client n'existe pas, revalider la commande",
     };
   }
+  const name = orders[0].user?.name || orders[0].user?.company || orders[0].user.email || "";
 
   const date = dateMonthYear(orders.map((order) => order.dateOfShipping));
 
   const pdfBuffer = await renderToBuffer(<MonthlyInvoice data={createMonthlyPDFData(orders)} isPaid={false} />);
 
-  // try {
-  //   await transporter.sendMail({
-  //     from: "laiteriedupontrobert@gmail.com",
-  //     to: orders[0].customer.email,
-  //     // to: "pub.demystify390@passmail.net",
-  //     subject: `Facture Mensuelle ${date}  - Laiterie du Pont Robert`,
-  //     html: await render(
-  //       SendMonthlyInvoiceEmail({
-  //         date,
-  //         baseUrl,
-  //         email: orders[0].customer.email,
-  //       }),
-  //     ),
-  //     attachments: [
-  //       {
-  //         filename: `Facture mensuelle ${date}.pdf`,
-  //         content: pdfBuffer,
-  //         contentType: "application/pdf",
-  //       },
-  //     ],
-  //   });
-  // } catch (error) {
-  //   return {
-  //     success: false,
-  //     message: "Erreur lors de l'envoi de la facture",
-  //   };
-  // }
+  try {
+    await transporter.sendMail({
+      from: "laiteriedupontrobert@gmail.com",
+      // to: orders[0].customer?.email,
+      to: "pub.demystify390@passmail.net",
+      subject: `Facture Mensuelle ${date}  - Laiterie du Pont Robert`,
+      html: await render(
+        SendMonthlyInvoiceEmail({
+          date,
+          baseUrl,
+          email: orders[0].customer.email,
+        }),
+      ),
+      attachments: [
+        {
+          filename: `Facture mensuelle ${date}.pdf`,
+          content: pdfBuffer,
+          contentType: "application/pdf",
+        },
+      ],
+    });
+  } catch (error) {
+    return {
+      success: false,
+      message: `Erreur lors de l'envoi de la facture de ${name}`,
+    };
+  }
 
-  await prismadb.order.updateMany({
-    where: {
-      id: { in: orders.map((order) => order.id) },
-    },
-    data: {
-      invoiceEmail: new Date(),
-    },
-  });
-  revalidateTag("orders");
-  const name = orders[0].user?.name || orders[0].user?.company || orders[0].user.email || "";
+  // await prismadb.order.updateMany({
+  //   where: {
+  //     id: { in: orders.map((order) => order.id) },
+  //   },
+  //   data: {
+  //     invoiceEmail: new Date(),
+  //   },
+  // });
+  // revalidateTag("orders");
   return {
     success: true,
     message: `Facture envoyée pour ${name}`,
