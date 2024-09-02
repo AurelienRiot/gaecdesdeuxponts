@@ -13,6 +13,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 import sendGroupedMonthlyInvoice from "../_actions/send-grouped-monthly-invoice";
+import ky, { type HTTPError } from "ky";
 
 type GroupedInvoiceProps = {
   proUserWithOrders: {
@@ -48,34 +49,84 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
   );
   const orderIdsArray = Object.values(orderIdsRecord).filter((orderIds) => orderIds.length > 0);
 
+  async function sendRoutes() {
+    const orderIdsArray = [
+      ["11", "12"],
+      ["21", "22"],
+      ["31", "32"],
+      ["41", "42"],
+      ["51", "52"],
+      ["61", "62"],
+      ["71", "72"],
+      ["81", "82"],
+      ["91", "92"],
+      ["101", "102"],
+      ["111", "112"],
+      ["121", "122"],
+      ["131", "132"],
+      ["141", "142"],
+      ["151", "152"],
+      ["161", "162"],
+      ["171", "172"],
+      ["181", "182"],
+      ["191", "192"],
+      ["201", "202"],
+    ];
+    const res = await Promise.all(
+      orderIdsArray.map((orderIds) => {
+        return ky
+          .post("/api/grouped-invoice", { json: orderIds, timeout: 10000 })
+          .then(async (responce) => {
+            const res = await responce.text();
+            toast.success(res);
+            return true;
+          })
+          .catch(async (kyError: HTTPError) => {
+            if (kyError.response) {
+              const errorData = await kyError.response.text();
+              toast.error(errorData + orderIds[0]);
+            } else {
+              console.error(kyError);
+              toast.error("Erreur, " + orderIds[0]);
+            }
+            return false;
+          });
+      }),
+    );
+
+    res.every((res) => res)
+      ? toast.success("Toutes les factures sont envoyées", { position: "top-center" })
+      : toast.error("Une erreur est survenue lors de l'envoi des factures", { position: "top-center" });
+  }
+
   async function sendInvoices() {
+    const orderIdsArray = [
+      ["11", "12"],
+      ["21", "22"],
+      ["31", "32"],
+      ["41", "42"],
+      ["51", "52"],
+      ["61", "62"],
+      ["71", "72"],
+      ["81", "82"],
+      ["91", "92"],
+      ["101", "102"],
+      ["111", "112"],
+      ["121", "122"],
+      ["131", "132"],
+      ["141", "142"],
+      ["151", "152"],
+      ["161", "162"],
+      ["171", "172"],
+      ["181", "182"],
+      ["191", "192"],
+      ["201", "202"],
+    ];
     if (orderIdsArray.length === 0) {
       toast.error("Veuillez sélectionner au moins un client");
       return;
     }
-    // const orderIdsArray = [
-    //   ["11", "12"],
-    //   ["21", "22"],
-    //   ["31", "32"],
-    //   ["41", "42"],
-    //   ["51", "52"],
-    //   ["61", "62"],
-    //   ["71", "72"],
-    //   ["81", "82"],
-    //   ["91", "92"],
-    //   ["101", "102"],
-    //   ["111", "112"],
-    //   ["121", "122"],
-    //   ["131", "132"],
-    //   ["141", "142"],
-    //   ["151", "152"],
-    //   ["161", "162"],
-    //   ["171", "172"],
-    //   ["181", "182"],
-    //   ["191", "192"],
-    //   ["201", "202"],
-    // ];
-    const chunkSize = 5;
+    const chunkSize = 10;
     let cumulativeCount = 0;
     for (let i = 0; i < orderIdsArray.length; i += chunkSize) {
       const chunk = orderIdsArray.slice(i, i + chunkSize);
@@ -171,14 +222,26 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
             );
           })}
         </Accordion>
-        <Button
-          disabled={loading}
-          variant={"shine"}
-          className="mt-4 w-full from-green-600 via-green-600/80 to-green-600"
-          onClick={sendInvoices}
-        >
-          Envoyer les factures
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            disabled={loading}
+            variant={"shine"}
+            className="mt-4 w-full from-green-600 via-green-600/80 to-green-600"
+            onClick={sendInvoices}
+          >
+            {/* Envoyer les factures */}
+            Server action
+          </Button>
+
+          <Button
+            disabled={loading}
+            variant={"shine"}
+            className="mt-4 w-full from-red-600 via-red-600/80 to-red-600"
+            onClick={sendRoutes}
+          >
+            Route handler
+          </Button>
+        </div>
       </Modal>
     </>
   );
