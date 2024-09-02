@@ -155,7 +155,7 @@ type Status = (typeof statuses)[number];
 
 function createStatus(order: OrderWithItemsAndShop): Status {
   if (!order.dateOfEdition) return "En cours de validation";
-  if (!order.dateOfShipping) return "Commande validée";
+  if (!order.shippingEmail) return "Commande validée";
   if (!order.dateOfPayment) return "Commande livrée";
   return "Commande Payée";
 }

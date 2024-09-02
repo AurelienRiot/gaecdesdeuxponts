@@ -11,6 +11,8 @@ import ProductsType from "./_components/product-type/product-fetch";
 import SelectDate from "./_components/select-date";
 import { UserChart } from "./_components/user-chart";
 
+const MAX_ClIENTS = 9;
+
 export const dynamic = "force-dynamic";
 
 const DashboardPage = (context: { searchParams: { month: string | undefined; year: string | undefined } }) => {
@@ -142,8 +144,8 @@ const ClientCount = async ({ startDate, endDate }: { startDate: Date; endDate: D
     name: user.company || user.name || user.email || "Anonyme",
     totalSpent: Number(user.orders.reduce((acc, order) => acc + order.totalPrice, 0).toFixed(2)),
   }));
-  const topUsers = usersWithTotalSpent.sort((a, b) => b.totalSpent - a.totalSpent).slice(0, 4);
-  const otherTotalSpent = usersWithTotalSpent.slice(4).reduce((acc, user) => acc + user.totalSpent, 0);
+  const topUsers = usersWithTotalSpent.sort((a, b) => b.totalSpent - a.totalSpent).slice(0, MAX_ClIENTS);
+  const otherTotalSpent = usersWithTotalSpent.slice(MAX_ClIENTS).reduce((acc, user) => acc + user.totalSpent, 0);
 
   const finalUsers = otherTotalSpent
     ? [...topUsers, { name: "Autres", totalSpent: Number(otherTotalSpent.toFixed(2)) }]

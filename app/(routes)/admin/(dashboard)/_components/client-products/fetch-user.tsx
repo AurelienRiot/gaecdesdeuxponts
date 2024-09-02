@@ -2,6 +2,8 @@ import { dateMonthYear } from "@/lib/date-utils";
 import { UserProducts } from "./user-products";
 import prismadb from "@/lib/prismadb";
 
+const MAX_PRODUCTS = 4;
+
 const ClientProducts = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
   const users = await getUserOrders({ startDate, endDate });
 
@@ -50,10 +52,10 @@ function getTopProducts(users: Awaited<ReturnType<typeof getUserOrders>>) {
   );
   const topProducts = Object.entries(groupedProducts)
     .sort(([, quantityA], [, quantityB]) => quantityB - quantityA)
-    .slice(0, 3)
+    .slice(0, MAX_PRODUCTS - 1)
     .map(([name]) => name);
 
-  return Object.keys(groupedProducts).length > 3 ? topProducts.concat("Autres") : topProducts;
+  return Object.keys(groupedProducts).length > MAX_PRODUCTS - 1 ? topProducts.concat("Autres") : topProducts;
 }
 
 async function getUserOrders({ startDate, endDate }: { startDate: Date; endDate: Date }) {

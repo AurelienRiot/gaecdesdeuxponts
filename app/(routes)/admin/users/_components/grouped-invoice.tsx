@@ -85,7 +85,7 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
             .post("/api/grouped-invoice", { json: orderIds, timeout: 15000 })
             .then(async (responce) => {
               const res = await responce.text();
-              toast.success(res);
+              // toast.success(res);
               return true;
             })
             .catch(async (kyError: HTTPError) => {
@@ -96,7 +96,7 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
               } else {
                 const error = kyError as TimeoutError;
                 console.error("Erreur timeout");
-                toast.error("Erreur dans l'envoi des factures, veuillez recharger la page");
+                // toast.error("Erreur dans l'envoi des factures, veuillez recharger la page");
               }
               return false;
             });
@@ -112,8 +112,7 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
       cumulativeCount += chunk.length;
       const currentCount = cumulativeCount;
       toast.success(`Facture envoyée ${currentCount} sur ${orderIdsArray.length}`, {
-        position: "top-center",
-        duration: 10000,
+        position: "bottom-center",
       });
       if (currentCount === orderIdsArray.length) {
         toast.success("Toutes les factures sont envoyées", { position: "top-center", duration: 10000 });

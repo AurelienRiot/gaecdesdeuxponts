@@ -68,8 +68,6 @@ export function UserChart({
                   data={pieData.map((data, index) => ({ ...data, fill: `hsl(var(--chart-${index + 1}))` }))}
                   dataKey="totalSpent"
                   label={({ payload, ...props }) => {
-                    const left = props.x < 0;
-                    const right = props.x > props.cx;
                     return (
                       <text
                         cx={props.cx}

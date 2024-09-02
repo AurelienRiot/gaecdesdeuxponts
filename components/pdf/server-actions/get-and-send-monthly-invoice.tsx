@@ -8,11 +8,12 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import { revalidateTag } from "next/cache";
 import MonthlyInvoice from "../create-monthly-invoice";
 import { createMonthlyPDFData } from "../pdf-data";
+import { addDelay } from "@/lib/utils";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 export async function getAndSendMonthlyInvoice(orderIds: string[]): Promise<ReturnTypeServerAction> {
   // await addDelay(3000);
-  // return { success: true, message: "Facture envoyée" };
+  // return { success: true, message: `Facture envoyée ${orderIds[0]}` };
   const orders = await prismadb.order.findMany({
     where: {
       id: { in: orderIds },
