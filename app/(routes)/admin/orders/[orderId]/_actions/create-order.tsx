@@ -54,12 +54,12 @@ async function createOrder(data: OrderFormValues) {
       });
 
       if (data.dateOfShipping) {
-        revalidateTag("orders");
         const event = await createOrdersEvent({ date: data.dateOfShipping });
         if (!event.success) {
           console.log(event.message);
         }
       }
+      revalidateTag("orders");
       return {
         success: true,
         message: "Commande crée",

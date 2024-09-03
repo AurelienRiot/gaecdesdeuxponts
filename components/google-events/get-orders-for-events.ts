@@ -2,140 +2,135 @@ import prismadb from "@/lib/prismadb";
 import { addHours } from "date-fns";
 import { getUnitLabel } from "../product/product-function";
 import { directionGoogle } from "./direction-google";
-import { unstable_cache } from "next/cache";
 
 export const origin = "6 le Pont Robert 44290 Massérac";
 export const destination = "Pont de l'Eau, 44460 Avessac, France";
-export const getOrders = unstable_cache(
-  async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
-    const start = startDate.toISOString().split("T")[0];
-    // return dummieDate;
-    const [orders, amapOrders] = await Promise.all([
-      prismadb.order.findMany({
+export const getOrders = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
+  const start = startDate.toISOString().split("T")[0];
+  // return dummieDate;
+  const [orders, amapOrders] = await Promise.all([
+    prismadb.order.findMany({
+      where: {
+        dateOfShipping: {
+          gte: startDate,
+          lte: endDate,
+        },
+        NOT: { shop: null },
+      },
+      include: {
+        orderItems: { select: { itemId: true, name: true, quantity: true, unit: true } },
+        customer: { select: { shippingAddress: true } },
+        user: { select: { company: true, email: true, image: true, name: true } },
+      },
+    }),
+
+    prismadb.aMAPOrder
+      .findMany({
         where: {
-          dateOfShipping: {
-            gte: startDate,
-            lte: endDate,
+          startDate: {
+            lte: startDate,
           },
-          NOT: { shop: null },
+          endDate: {
+            gte: endDate,
+          },
         },
         include: {
-          orderItems: { select: { itemId: true, name: true, quantity: true, unit: true } },
-          customer: { select: { shippingAddress: true } },
-          user: { select: { company: true, email: true, image: true, name: true } },
+          user: { select: { name: true, email: true } },
+          amapItems: { select: { itemId: true, name: true, quantity: true, unit: true } },
+          shop: { select: { name: true, address: true, id: true, imageUrl: true } },
         },
-      }),
-
-      prismadb.aMAPOrder
-        .findMany({
-          where: {
-            startDate: {
-              lte: startDate,
-            },
-            endDate: {
-              gte: endDate,
-            },
-          },
-          include: {
-            user: { select: { name: true, email: true } },
-            amapItems: { select: { itemId: true, name: true, quantity: true, unit: true } },
-            shop: { select: { name: true, address: true, id: true, imageUrl: true } },
-          },
-        })
-        .then((orders) =>
-          orders.filter((order) =>
-            order.shippingDays.some((day) => addHours(day, 2).toISOString().split("T")[0] === start),
-          ),
-        )
-        .then((orders) =>
-          orders.map((order) => ({
-            shopName: order.shop.name,
-            shopId: order.shop.id,
-            address: order.shop.address,
-            image: order.shop.imageUrl,
-            orderItems: order.amapItems.map((item) => ({
-              itemId: item.itemId,
-              name: item.name,
-              quantity: item.quantity,
-              unit: getUnitLabel(item.unit).quantity,
-            })),
-          })),
+      })
+      .then((orders) =>
+        orders.filter((order) =>
+          order.shippingDays.some((day) => addHours(day, 2).toISOString().split("T")[0] === start),
         ),
-    ]);
+      )
+      .then((orders) =>
+        orders.map((order) => ({
+          shopName: order.shop.name,
+          shopId: order.shop.id,
+          address: order.shop.address,
+          image: order.shop.imageUrl,
+          orderItems: order.amapItems.map((item) => ({
+            itemId: item.itemId,
+            name: item.name,
+            quantity: item.quantity,
+            unit: getUnitLabel(item.unit).quantity,
+          })),
+        })),
+      ),
+  ]);
 
-    const groupedAMAPOrders = amapOrders.reduce(
-      (acc, order) => {
-        const key = order.shopName;
-        if (!acc[key]) {
-          acc[key] = order;
-        } else {
-          const newItems = acc[key].orderItems;
-          for (const item of order.orderItems) {
-            const existingItem = newItems.find((i) => i.itemId === item.itemId);
-            if (existingItem) {
-              existingItem.quantity += item.quantity;
-            } else {
-              newItems.push(item);
-            }
+  const groupedAMAPOrders = amapOrders.reduce(
+    (acc, order) => {
+      const key = order.shopName;
+      if (!acc[key]) {
+        acc[key] = order;
+      } else {
+        const newItems = acc[key].orderItems;
+        for (const item of order.orderItems) {
+          const existingItem = newItems.find((i) => i.itemId === item.itemId);
+          if (existingItem) {
+            existingItem.quantity += item.quantity;
+          } else {
+            newItems.push(item);
           }
-          acc[key] = { ...order, orderItems: newItems };
         }
-        return acc;
-      },
-      {} as Record<string, (typeof amapOrders)[0]>,
-    );
+        acc[key] = { ...order, orderItems: newItems };
+      }
+      return acc;
+    },
+    {} as Record<string, (typeof amapOrders)[0]>,
+  );
 
-    let formattedOrders = orders.map((order) => ({
-      id: order.id,
-      customerId: order.userId,
-      shippingAddress: order.customer?.shippingAddress,
-      shippingEmail: order.shippingEmail,
-      name: order.user?.name,
-      company: order.user?.company,
-      image: order.user?.image,
-      orderItems: order.orderItems.map((item) => ({
+  let formattedOrders = orders.map((order) => ({
+    id: order.id,
+    customerId: order.userId,
+    shippingAddress: order.customer?.shippingAddress,
+    shippingEmail: order.shippingEmail,
+    name: order.user?.name,
+    company: order.user?.company,
+    image: order.user?.image,
+    orderItems: order.orderItems.map((item) => ({
+      itemId: item.itemId,
+      name: item.name,
+      quantity: item.quantity,
+      unit: getUnitLabel(item.unit).quantity,
+    })),
+  }));
+
+  if (formattedOrders.length > 1) {
+    const waypoints = formattedOrders.map((order) => order.shippingAddress || "");
+
+    const orderWaypoints = await directionGoogle({ origin, destination, waypoints });
+    if (orderWaypoints.success && orderWaypoints.data) {
+      formattedOrders = orderWaypoints.data.map((index) => formattedOrders[index]);
+    }
+  }
+
+  const productQuantities = orders
+    .flatMap((order) =>
+      order.orderItems.map((item) => ({
         itemId: item.itemId,
         name: item.name,
         quantity: item.quantity,
         unit: getUnitLabel(item.unit).quantity,
       })),
-    }));
-
-    if (formattedOrders.length > 1) {
-      const waypoints = formattedOrders.map((order) => order.shippingAddress || "");
-
-      const orderWaypoints = await directionGoogle({ origin, destination, waypoints });
-      if (orderWaypoints.success && orderWaypoints.data) {
-        formattedOrders = orderWaypoints.data.map((index) => formattedOrders[index]);
+    )
+    .concat(Object.values(groupedAMAPOrders).flatMap((order) => order.orderItems.map((item) => item)))
+    .reduce((acc: { itemId: string; name: string; quantity: number; unit: string | null }[], curr) => {
+      const existing = acc.find((item) => item.itemId === curr.itemId);
+      if (curr.quantity < 0) return acc;
+      if (existing) {
+        existing.quantity += curr.quantity;
+      } else {
+        acc.push(curr);
       }
-    }
+      return acc;
+    }, []);
 
-    const productQuantities = orders
-      .flatMap((order) =>
-        order.orderItems.map((item) => ({
-          itemId: item.itemId,
-          name: item.name,
-          quantity: item.quantity,
-          unit: getUnitLabel(item.unit).quantity,
-        })),
-      )
-      .concat(Object.values(groupedAMAPOrders).flatMap((order) => order.orderItems.map((item) => item)))
-      .reduce((acc: { itemId: string; name: string; quantity: number; unit: string | null }[], curr) => {
-        const existing = acc.find((item) => item.itemId === curr.itemId);
-        if (curr.quantity < 0) return acc;
-        if (existing) {
-          existing.quantity += curr.quantity;
-        } else {
-          acc.push(curr);
-        }
-        return acc;
-      }, []);
-
-    return { productQuantities, formattedOrders, groupedAMAPOrders };
-  },
-  ["getOrdersForEvents"],
-  { revalidate: 60 * 60 * 24, tags: ["orders", "amap-orders"] },
-);
+  return { productQuantities, formattedOrders, groupedAMAPOrders };
+};
 
 export default getOrders;
 

@@ -1,13 +1,14 @@
 import getOrders from "@/components/google-events/get-orders-for-events";
-import { addHours } from "date-fns";
-import ModalDay from "./_components/modal-day";
 import NoResults from "@/components/ui/no-results";
-import ProductDescription from "../../[day]/_components/products-description";
-import UpdateEvents from "../../[day]/_components/update-events";
+import { dateFormatter } from "@/lib/date-utils";
+import { addHours } from "date-fns";
 import AMAPDescrition from "../../[day]/_components/amap-description";
 import OrderDescriptions from "../../[day]/_components/orders-description";
-import { dateFormatter } from "@/lib/date-utils";
-import { addDelay } from "@/lib/utils";
+import ProductDescription from "../../[day]/_components/products-description";
+import UpdateEvents from "../../[day]/_components/update-events";
+import ModalDay from "./_components/modal-day";
+
+export const dynamic = "force-dynamic";
 
 async function IntercepteDayPage({ params }: { params: { day: string | undefined } }) {
   const paramDate = params.day ? new Date(decodeURIComponent(params.day)) : new Date();
