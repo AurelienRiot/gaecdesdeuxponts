@@ -10,7 +10,6 @@ import {
 } from "@/components/table-custom-fuction/cell-orders";
 import { DateCell } from "@/components/table-custom-fuction/common-cell";
 import { FilterAllInclude, FilterOneInclude } from "@/components/table-custom-fuction/common-filter";
-import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
 import { DatePickUpHeader, ShopNameHeader } from "@/components/table-custom-fuction/header-orders";
 import type { DataTableFilterableColumn, DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -69,11 +68,6 @@ export const columns: ColumnDef<OrderColumn>[] = [
     header: ShopNameHeader,
     cell: ({ row }) => <AdminShopNameCell shopName={row.original.shopName} shopId={row.original.shopId} />,
     filterFn: FilterOneInclude,
-  },
-  {
-    accessorKey: "createdAt",
-    header: CreatedAtHeader,
-    cell: ({ row }) => <DateCell date={row.original.createdAt} />,
   },
 
   {
@@ -152,10 +146,7 @@ export const viewOptionsColumns: DataTableViewOptionsColumn<OrderColumn>[] = [
     id: "shopName",
     title: "Lieu de retrait",
   },
-  {
-    id: "createdAt",
-    title: "Date de création",
-  },
+
   {
     id: "actions" as keyof OrderColumn,
     title: "Actions",

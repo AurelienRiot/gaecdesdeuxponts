@@ -11,8 +11,7 @@ const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 export default async function createOrdersEvent(data: { date: Date }) {
   const date = addHours(data.date, 2);
   const startDate = new Date(date.toISOString().split("T")[0]);
-  const endDate = new Date(startDate);
-  endDate.setHours(23, 59, 59, 999);
+  const endDate = addHours(startDate, 24);
 
   const events = await getEventsList({ startDate, endDate });
   if (events.success && events.data) {
@@ -49,7 +48,6 @@ export default async function createOrdersEvent(data: { date: Date }) {
       },
     })
     .then((event) => {
-      console.log(event.data.htmlLink);
       return { success: true, message: "Agenda mise à jour" };
     })
     .catch((error) => {

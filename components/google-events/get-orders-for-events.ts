@@ -1,5 +1,4 @@
 import prismadb from "@/lib/prismadb";
-import { addHours } from "date-fns";
 import { getUnitLabel } from "../product/product-function";
 import { directionGoogle } from "./direction-google";
 
@@ -8,6 +7,7 @@ export const destination = "Pont de l'Eau, 44460 Avessac, France";
 export const getOrders = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
   const start = startDate.toISOString().split("T")[0];
   // return dummieDate;
+
   const [orders, amapOrders] = await Promise.all([
     prismadb.order.findMany({
       where: {
@@ -17,10 +17,12 @@ export const getOrders = async ({ startDate, endDate }: { startDate: Date; endDa
         },
         NOT: { shop: null },
       },
-      include: {
+      select: {
+        id: true,
+        shippingEmail: true,
         orderItems: { select: { itemId: true, name: true, quantity: true, unit: true } },
         customer: { select: { shippingAddress: true } },
-        user: { select: { company: true, email: true, image: true, name: true } },
+        user: { select: { company: true, email: true, image: true, name: true, id: true } },
       },
     }),
 
@@ -34,8 +36,9 @@ export const getOrders = async ({ startDate, endDate }: { startDate: Date; endDa
             gte: endDate,
           },
         },
-        include: {
-          user: { select: { name: true, email: true } },
+        select: {
+          shippingDays: true,
+          user: { select: { name: true, email: true, id: true } },
           amapItems: { select: { itemId: true, name: true, quantity: true, unit: true } },
           shop: { select: { name: true, address: true, id: true, imageUrl: true } },
         },
@@ -83,7 +86,7 @@ export const getOrders = async ({ startDate, endDate }: { startDate: Date; endDa
 
   let formattedOrders = orders.map((order) => ({
     id: order.id,
-    customerId: order.userId,
+    customerId: order.user.id,
     shippingAddress: order.customer?.shippingAddress,
     shippingEmail: order.shippingEmail,
     name: order.user?.name,

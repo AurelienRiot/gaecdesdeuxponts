@@ -18,6 +18,7 @@ import { CellAction } from "./cell-action";
 
 export type OrderColumn = {
   id: string;
+  image: string | null;
   userId: string;
   name: string;
   isPaid: boolean;
@@ -48,7 +49,9 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "name",
     header: "Client",
-    cell: ({ row }) => <NameCell name={row.original.name} url={`/admin/users/${row.original.userId}`} />,
+    cell: ({ row }) => (
+      <NameCell image={row.original.image} name={row.original.name} url={`/admin/users/${row.original.userId}`} />
+    ),
     filterFn: FilterOneInclude,
   },
   {
@@ -80,12 +83,6 @@ export const columns: ColumnDef<OrderColumn>[] = [
     cell: ({ row }) => <AdminShopNameCell shopName={row.original.shopName} shopId={row.original.shopId} />,
     filterFn: FilterOneInclude,
   },
-  {
-    accessorKey: "createdAt",
-    header: CreatedAtHeader,
-    cell: ({ row }) => <DateCell date={row.original.createdAt} />,
-  },
-
   {
     id: "actions",
     cell: ({ row }) => <CellAction data={row.original} />,
@@ -164,10 +161,6 @@ export const viewOptionsColumns: DataTableViewOptionsColumn<OrderColumn>[] = [
   {
     id: "shopName",
     title: "Lieu de retrait",
-  },
-  {
-    id: "createdAt",
-    title: "Date de création",
   },
   {
     id: "actions" as keyof OrderColumn,

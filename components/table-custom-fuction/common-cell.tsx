@@ -25,13 +25,25 @@ function DateCell({ date, hours, days }: DateCellProps) {
 
 type NameCellProps = {
   name: string;
+  image?: string | null;
   url?: string;
 };
 
-function NameCell({ name, url }: NameCellProps) {
+function NameCell({ image, name, url }: NameCellProps) {
+  console.log(image, name, url);
   return (
     <Button asChild variant={url ? "link" : "ghost"} className="px-0">
-      {url ? <Link href={url}>{name}</Link> : <span>{name}</span>}
+      {url ? (
+        <Link href={url}>
+          {image ? (
+            <Image src={image} alt={name} width={50} height={100} className="h-10 w-20 rounded-sm object-contain" />
+          ) : (
+            name
+          )}
+        </Link>
+      ) : (
+        <span>{name}</span>
+      )}
     </Button>
   );
 }

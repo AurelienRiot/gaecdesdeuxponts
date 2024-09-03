@@ -66,10 +66,7 @@ async function updateOrder(data: OrderFormValues) {
 
       if (data.dateOfShipping) {
         revalidateTag("orders");
-        const event = await createOrdersEvent({ date: data.dateOfShipping });
-        if (!event.success) {
-          console.log(event.message);
-        }
+        await createOrdersEvent({ date: data.dateOfShipping });
       }
 
       return {

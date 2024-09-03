@@ -23,7 +23,7 @@ const OrdersPage = async (context: {
     from = new Date(context.searchParams.from);
     to = new Date(context.searchParams.to);
   } else {
-    from = new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000);
+    from = new Date(new Date().getTime() - 14 * 24 * 60 * 60 * 1000);
     to = addYears(new Date(), 1);
   }
 
@@ -31,7 +31,6 @@ const OrdersPage = async (context: {
     from: from,
     to: to,
   };
-
   const orders = await prismadb.order.findMany({
     include: {
       orderItems: true,
@@ -41,23 +40,34 @@ const OrdersPage = async (context: {
     },
     where: !id
       ? {
-          dateOfShipping: {
-            gte: dateRange.from,
-            lte: dateRange.to,
-          },
+          OR: [
+            {
+              dateOfShipping: {
+                gte: dateRange.from,
+                lte: dateRange.to,
+              },
+            },
+            {
+              dateOfShipping: null,
+            },
+          ],
         }
       : {
           id: {
             contains: id,
           },
         },
-    orderBy: {
-      dateOfShipping: { sort: "desc", nulls: "first" },
-    },
+    orderBy: [
+      {
+        dateOfShipping: { sort: "desc", nulls: "first" },
+      },
+      { datePickUp: "desc" },
+    ],
   });
 
   const formattedOrders = orders.map((order) => ({
     id: order.id,
+    image: order.user.image,
     shippingEmail: order.shippingEmail,
     invoiceEmail: order.invoiceEmail,
     name: order.user.company || order.user.name || order.user.email || "",

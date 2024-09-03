@@ -1,6 +1,5 @@
 "use client";
 
-import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Calendar as CalendarIcon } from "lucide-react";
 import type * as React from "react";
@@ -9,8 +8,8 @@ import type { DateRange, DayPicker } from "react-day-picker";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 import { dateFormatter } from "@/lib/date-utils";
+import { cn } from "@/lib/utils";
 
 type DatePickerWithRangeProps = Omit<React.ComponentProps<typeof DayPicker>, "selected" | "onSelect" | "mode"> & {
   date: DateRange | undefined;

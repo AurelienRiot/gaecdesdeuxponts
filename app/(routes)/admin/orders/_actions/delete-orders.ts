@@ -33,10 +33,7 @@ async function deleteOrder(data: z.infer<typeof deleteSchema>) {
       if (data.dateOfShipping) {
         revalidateTag("orders");
 
-        const event = await createOrdersEvent({ date: data.dateOfShipping });
-        if (!event.success) {
-          console.log(event.message);
-        }
+        await createOrdersEvent({ date: data.dateOfShipping });
       }
 
       return {

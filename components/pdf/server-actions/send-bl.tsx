@@ -11,6 +11,7 @@ import { render } from "@react-email/render";
 import SendBLEmail from "@/components/email/send-bl";
 import { dateFormatter } from "@/lib/date-utils";
 import { revalidateTag } from "next/cache";
+import createOrdersEvent from "@/components/google-events/create-orders-event";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
@@ -86,6 +87,7 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
           shippingEmail: new Date(),
         },
       });
+      await createOrdersEvent({ date: order.dateOfShipping });
       revalidateTag("orders");
 
       return {

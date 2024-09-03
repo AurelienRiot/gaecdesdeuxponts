@@ -31,7 +31,7 @@ export const Modal: React.FC<ModalProps> = ({
       <DialogContent className={className}>
         <DialogHeader>
           <DialogTitle> {title} </DialogTitle>
-          {!!description && <DialogDescription>{description}</DialogDescription>}
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <div>{children}</div>
       </DialogContent>
