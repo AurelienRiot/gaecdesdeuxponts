@@ -17,7 +17,6 @@ async function getDailyOrders(data: z.infer<typeof schema>) {
     serverAction: async ({ date }) => {
       const startDate = date;
       const endDate = addHours(date, 24);
-      console.log({ startDate, endDate });
 
       const orders = await prismadb.order.findMany({
         where: {

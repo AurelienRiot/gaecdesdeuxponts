@@ -158,7 +158,6 @@ async function deleteObject(data: z.infer<typeof deleteObjectSchema>) {
 
       try {
         await cloudinary.v2.uploader.destroy(publicID);
-        console.log(`Image supprimé`);
         return { success: true, message: "Image supprimée" };
       } catch (error) {
         console.error(`Error deleting object: ${publicID}`, error);

@@ -39,7 +39,6 @@ const DatePicker = ({ usersAndShops }: { usersAndShops: UserAndShop[] }) => {
         return order.customer?.shippingAddress;
       });
       form.setValue("waypoints", addresses);
-      console.log(result);
     }
     serverAction({ data: { date }, onError: () => setOpen(true), onSuccess });
   }

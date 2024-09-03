@@ -136,9 +136,6 @@ const ClientCount = async ({ startDate, endDate }: { startDate: Date; endDate: D
             gte: startDate,
             lte: endDate,
           },
-          shippingEmail: {
-            not: null,
-          },
         },
       },
     },
@@ -171,9 +168,6 @@ const ClientNumber = async ({ startDate, endDate }: { startDate: Date; endDate: 
           dateOfShipping: {
             gte: startDate,
             lte: endDate,
-          },
-          shippingEmail: {
-            not: null,
           },
         },
       },

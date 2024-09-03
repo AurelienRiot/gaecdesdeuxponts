@@ -30,13 +30,12 @@ type NameCellProps = {
 };
 
 function NameCell({ image, name, url }: NameCellProps) {
-  console.log(image, name, url);
   return (
     <Button asChild variant={url ? "link" : "ghost"} className="px-0">
       {url ? (
         <Link href={url}>
           {image ? (
-            <Image src={image} alt={name} width={50} height={100} className="h-10 w-20 rounded-sm object-contain" />
+            <Image src={image} alt={name} width={50} height={100} className="h-10 w-10  rounded-sm object-contain" />
           ) : (
             name
           )}
