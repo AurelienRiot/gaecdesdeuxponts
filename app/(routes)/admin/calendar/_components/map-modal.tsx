@@ -22,7 +22,7 @@ function MapModal({ onValueChange }: { onValueChange: (address: string) => void 
         {"Chercher sur la carte"}
       </Button>
       <Dialog open={open} onOpenChange={() => setOpen(false)} modal={true}>
-        <DialogContent className="h-[90%] max-h-[90%] w-[90%] max-w-[90%]  z-[2000] ">
+        <DialogContent className="h-[90%] max-h-[90%] w-[90%] max-w-[90%]  z-[2000] pt-10">
           <MapSelect onValueChange={onValueChange} />
         </DialogContent>
       </Dialog>
@@ -36,7 +36,7 @@ function MapSelect({ onValueChange }: { onValueChange: (address: string) => void
       center={[47.6600571, -1.9121281]}
       zoom={12}
       style={{ height: "100%", width: "100%" }}
-      className="rounded-md shadow-md"
+      className="rounded-md shadow-md "
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

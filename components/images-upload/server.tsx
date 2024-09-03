@@ -156,6 +156,25 @@ async function deleteObject(data: z.infer<typeof deleteObjectSchema>) {
         };
       }
 
+      const imagesUser = await prismadb.user.findMany({
+        where: {
+          image: imageUrl,
+        },
+        select: {
+          name: true,
+          company: true,
+          email: true,
+        },
+      });
+
+      if (imagesUser.length > 0) {
+        const userNames = imagesUser.map((user) => user.name || user.company || user.email).join(", ");
+        return {
+          success: false,
+          message: `L'image est utilisée par le magasin : ${userNames}`,
+        };
+      }
+
       try {
         await cloudinary.v2.uploader.destroy(publicID);
         return { success: true, message: "Image supprimée" };

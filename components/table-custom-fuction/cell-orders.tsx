@@ -51,7 +51,7 @@ function OrderIdCell({ id, shippingEmail, invoiceEmail }: OrderIdCellProps) {
     <Button asChild variant={"link"} className="px-0 font-bold flex flex-col justify-start h-auto">
       <Link href={`/admin/orders/${id}`}>
         <p className="whitespace-nowrap mr-auto">Éditer la commande</p>
-        <div className="flex gap-2 justify-left items-center mr-auto">
+        {/* <div className="flex gap-2 justify-left items-center mr-auto">
           {shippingEmail && (
             <div className="relative">
               <p className="text-xs  text-green-500 whitespace-nowrap absolute font-bold left-[10px] top-6">
@@ -68,7 +68,7 @@ function OrderIdCell({ id, shippingEmail, invoiceEmail }: OrderIdCellProps) {
               <Icons.Invoice className="size-12 rotate-90" />
             </div>
           )}
-        </div>
+        </div> */}
       </Link>
     </Button>
   );
@@ -173,8 +173,7 @@ type StatusCellProps = {
   status: Status;
 };
 
-function StatusCell<T>({ row }: { row: Row<T & StatusCellProps> }) {
-  const { status } = row.original;
+function StatusCell({ status }: StatusCellProps) {
   const getStatusIcon = (status: Status) => {
     switch (status) {
       case "En cours de validation":

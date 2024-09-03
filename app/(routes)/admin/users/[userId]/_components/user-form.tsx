@@ -30,6 +30,9 @@ import updateUser from "../_actions/update-user";
 import MailForm from "./mail-form";
 import { schema, type UserFormValues } from "./user-schema";
 import CheckboxForm from "@/components/chekbox-form";
+import { AnimateHeight } from "@/components/animations/animate-size";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 interface UserFormProps {
   initialData: UserWithOrdersAndAdress;
@@ -38,8 +41,9 @@ interface UserFormProps {
 export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
   const router = useRouter();
   const { serverAction } = useServerAction(updateUser);
+  const [open, setOpen] = useState(false);
 
-  const title = "Modifier l'utilisateur";
+  const title = "Fiche utilisateur";
   const description = "Modifier un utilisateur";
   const action = "Enregistrer les modifications";
 
@@ -103,111 +107,116 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
         />
       </div>
       <Separator />
+      <Button onClick={() => setOpen(!open)} variant={open ? "destructive" : "secondary"}>
+        {open ? "Fermer" : "Modifier l'utilisateur"}
+      </Button>
+      <AnimateHeight display={open}>
+        <>
+          {<MailForm email={initialData.email} id={initialData.id} />}
 
-      {<MailForm email={initialData.email} id={initialData.id} />}
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem className="my-auto">
+                    <FormControl>
+                      <InputImageModal
+                        ref={field.ref}
+                        selectedFiles={field.value ? [field.value] : []}
+                        setSelectedFiles={(files: string[]) => {
+                          files.length > 0 ? field.onChange(files[0]) : field.onChange(null);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nom</FormLabel>
+                      <FormControl>
+                        <Input disabled={form.formState.isSubmitting} placeholder="Nom" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field }) => (
-              <FormItem className="my-auto">
-                <FormControl>
-                  <InputImageModal
-                    ref={field.ref}
-                    selectedFiles={field.value ? [field.value] : []}
-                    setSelectedFiles={(files: string[]) => {
-                      files.length > 0 ? field.onChange(files[0]) : field.onChange(null);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nom</FormLabel>
-                  <FormControl>
-                    <Input disabled={form.formState.isSubmitting} placeholder="Nom" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="company"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Entreprise</FormLabel>
-                  <FormControl>
-                    <Input disabled={form.formState.isSubmitting || !isPro} placeholder="entreprise" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Numéro de téléphone</FormLabel>
-                  <FormControl>
-                    <PhoneInput
-                      placeholder="Entrer un numéro de téléphone"
-                      defaultCountry="FR"
-                      className="w-full"
+                <FormField
+                  control={form.control}
+                  name="company"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Entreprise</FormLabel>
+                      <FormControl>
+                        <Input disabled={form.formState.isSubmitting || !isPro} placeholder="entreprise" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Numéro de téléphone</FormLabel>
+                      <FormControl>
+                        <PhoneInput
+                          placeholder="Entrer un numéro de téléphone"
+                          defaultCountry="FR"
+                          className="w-full"
+                          disabled={form.formState.isSubmitting}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="isPro"
+                  render={({ field }) => (
+                    <CheckboxForm
+                      ref={field.ref}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
                       disabled={form.formState.isSubmitting}
-                      {...field}
+                      title="Professionnel"
+                      description="Faire de cette utilisateur un professionnel"
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="isPro"
-              render={({ field }) => (
-                <CheckboxForm
-                  ref={field.ref}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  disabled={form.formState.isSubmitting}
-                  title="Professionnel"
-                  description="Faire de cette utilisateur un professionnel"
+                  )}
                 />
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="completed"
-              render={({ field }) => (
-                <CheckboxForm
-                  ref={field.ref}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  disabled={form.formState.isSubmitting}
-                  title="Profile complet"
-                  description="Indique si le profil de l'utilisateur est complet."
+                <FormField
+                  control={form.control}
+                  name="completed"
+                  render={({ field }) => (
+                    <CheckboxForm
+                      ref={field.ref}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={form.formState.isSubmitting}
+                      title="Profile complet"
+                      description="Indique si le profil de l'utilisateur est complet."
+                    />
+                  )}
                 />
-              )}
-            />
-            <AddressForm />
-            <BillingAddressForm />
-          </div>
-          <FormButton className="ml-auto">{action}</FormButton>
-        </form>
-      </Form>
-      <ButtonBackward />
+                <AddressForm />
+                <BillingAddressForm />
+              </div>
+              <FormButton className="ml-auto">{action}</FormButton>
+            </form>
+          </Form>
+        </>
+      </AnimateHeight>
     </>
   );
 };

@@ -34,11 +34,14 @@ export const columns: ColumnDef<OrderColumn>[] = [
     accessorKey: "id",
     header: "Commande",
     cell: ({ row }) => (
-      <OrderIdCell
-        id={row.original.id}
-        shippingEmail={row.original.shippingEmail}
-        invoiceEmail={row.original.invoiceEmail}
-      />
+      <>
+        <OrderIdCell
+          id={row.original.id}
+          shippingEmail={row.original.shippingEmail}
+          invoiceEmail={row.original.invoiceEmail}
+        />
+        <StatusCell status={row.original.status} />
+      </>
     ),
   },
   {
@@ -55,7 +58,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "status",
     header: "Statut",
-    cell: StatusCell,
+    cell: ({ row }) => <StatusCell status={row.original.status} />,
     filterFn: FilterOneInclude,
   },
   {

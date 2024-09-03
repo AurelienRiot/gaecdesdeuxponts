@@ -39,7 +39,7 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
   {
     accessorKey: "status",
     header: "Statut",
-    cell: StatusCell,
+    cell: ({ row }) => <StatusCell status={row.original.status} />,
     filterFn: FilterOneInclude,
   },
   {
