@@ -8,6 +8,7 @@ import prismadb from "@/lib/prismadb";
 import { currencyFormatter } from "@/lib/utils";
 import type { DateRange } from "react-day-picker";
 import { OrderClient } from "./_components/client";
+import { addYears } from "date-fns";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +24,7 @@ const OrdersPage = async (context: {
     to = new Date(context.searchParams.to);
   } else {
     from = new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000);
-    to = new Date();
+    to = addYears(new Date(), 1);
   }
 
   const dateRange: DateRange = {

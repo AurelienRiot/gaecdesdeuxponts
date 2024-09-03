@@ -101,6 +101,9 @@ const TotalRevenue = async ({ startDate, endDate }: { startDate: Date; endDate: 
         gte: startDate,
         lte: endDate,
       },
+      shippingEmail: {
+        not: null,
+      },
     },
     select: {
       totalPrice: true,
@@ -116,6 +119,9 @@ const OrderNumber = async ({ startDate, endDate }: { startDate: Date; endDate: D
         gte: startDate,
         lte: endDate,
       },
+      shippingEmail: {
+        not: null,
+      },
     },
   });
   return total;
@@ -129,6 +135,9 @@ const ClientCount = async ({ startDate, endDate }: { startDate: Date; endDate: D
           dateOfShipping: {
             gte: startDate,
             lte: endDate,
+          },
+          shippingEmail: {
+            not: null,
           },
         },
       },
@@ -162,6 +171,9 @@ const ClientNumber = async ({ startDate, endDate }: { startDate: Date; endDate: 
           dateOfShipping: {
             gte: startDate,
             lte: endDate,
+          },
+          shippingEmail: {
+            not: null,
           },
         },
       },
