@@ -23,28 +23,28 @@ async function CalendarPage({ searchParams }: { searchParams: { date: string | u
     getOrdersByDateOfShipping({ beginMonth, endMonth }),
     getAMAPOrders({ beginMonth, endMonth }),
   ]).then(([users, shops, orderDates, amapDates]) => {
-    const shopsMap = new Map(
-      shops.map((shop) => [
-        shop.name,
+    const usersMap = new Map(
+      users.map((user) => [
+        user.company || user.name || "",
         {
-          label: shop.name,
-          image: shop.imageUrl,
-          address: shop.address,
+          label: user.company || user.name || user.email || "",
+          image: user.image,
+          address: addressFormatter(user.address, true),
         },
       ]),
     );
 
-    for (const user of users) {
-      if (!shopsMap.has(user.name || user.company || "")) {
-        shopsMap.set(user.name || user.company || "", {
-          label: user.company || user.name || "",
-          image: user.image,
-          address: addressFormatter(user.address, true),
+    for (const shop of shops) {
+      if (!usersMap.has(shop.name)) {
+        usersMap.set(shop.name, {
+          label: shop.name,
+          image: shop.imageUrl,
+          address: shop.address,
         });
       }
     }
 
-    return { usersAndShops: Array.from(shopsMap.values()), orderDates: new Set(orderDates.concat(amapDates)) };
+    return { usersAndShops: Array.from(usersMap.values()), orderDates: new Set(orderDates.concat(amapDates)) };
   });
 
   return (
@@ -59,7 +59,7 @@ async function CalendarPage({ searchParams }: { searchParams: { date: string | u
         <Separator />
       </div>
       <OrdersCalendar month={month} orderDates={[...orderDates].map((date) => new Date(date))} />
-      <DirectionForm usersAndShops={usersAndShops} />
+      <DirectionForm usersAndShops={usersAndShops.reverse()} />
     </div>
   );
 }

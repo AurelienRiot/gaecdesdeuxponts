@@ -8,7 +8,7 @@ export const getSearchUsers = unstable_cache(
       orderBy: {
         updatedAt: "desc",
       },
-      select: { name: true, company: true, image: true, address: true },
+      select: { name: true, company: true, image: true, address: true, email: true },
     });
   },
   ["getSearchUsers"],

@@ -28,7 +28,11 @@ const DatePicker = ({ usersAndShops }: { usersAndShops: UserAndShop[] }) => {
           return "";
         }
 
-        const user = usersAndShops.find((user) => order.customer?.shippingAddress.includes(user.address));
+        const user = usersAndShops.find(
+          (user) =>
+            order.customer?.shippingAddress.includes(user.address) ||
+            user.address.includes(order.customer?.shippingAddress || "zzzz"),
+        );
         if (user) {
           return user.address;
         }
