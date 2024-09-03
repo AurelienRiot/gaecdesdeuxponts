@@ -41,9 +41,7 @@ export const getOrders = async ({ startDate, endDate }: { startDate: Date; endDa
         },
       })
       .then((orders) =>
-        orders.filter((order) =>
-          order.shippingDays.some((day) => addHours(day, 2).toISOString().split("T")[0] === start),
-        ),
+        orders.filter((order) => order.shippingDays.some((day) => day.toISOString().split("T")[0] === start)),
       )
       .then((orders) =>
         orders.map((order) => ({

@@ -12,29 +12,33 @@ interface UserClientProps {
   orderLengths: { length: number; id: string }[];
   statusArray: { status: UserStatus; id: string; display: boolean }[];
 }
+const keys = [
+  { value: "email", label: "Email" },
+  { value: "name", label: "Nom" },
+  { value: "phone", label: "Téléphone" },
+  { value: "addresse", label: "Addresse" },
+  { value: "company", label: "Entreprise" },
+];
 
 const UserClient: React.FC<UserClientProps> = ({ users, orderLengths, statusArray }) => {
   const [search, setSearch] = useState("");
-  const searchKeys = ["email", "name", "phone", "addresse", "company"];
-  const displayKeys = ["Email", "Nom", "Téléphone", "Addresse", "Entreprise"];
-  const [selectValue, setSelectValue] = useState(searchKeys[4]);
-  const [toogle, setToogle] = useState(false);
+  const [selectValue, setSelectValue] = useState(keys[4].value);
+  const [unpaid, setUnpaid] = useState(false);
+  const [pro, setPro] = useState(false);
 
   const filteredUsers = users.filter((user) => {
     const value = String(user[selectValue as keyof User]);
-    if (toogle) {
-      return (
-        value.toLowerCase().includes(search.toLowerCase()) &&
-        !(statusArray.find((item) => item.id === user.id)?.status !== "unpaid")
-      );
-    }
-    return value.toLowerCase().includes(search.toLowerCase());
+    const valueSearch = value.toLowerCase().includes(search.toLowerCase());
+    const unPaidSearch = !unpaid || statusArray.find((item) => item.id === user.id)?.status === "unpaid";
+    const proSearch = !pro || users.find((item) => item.id === user.id)?.role === "pro";
+
+    return valueSearch && unPaidSearch && proSearch;
   });
 
   return (
     <>
-      <div className="justify-content-center mt-4 grid grid-cols-1 gap-4 md:grid-cols-6">
-        <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Recherche" />
+      <div className="justify-content-center mt-4 flex flex-wrap gap-4 ">
+        <Input value={search} onChange={(e) => setSearch(e.target.value)} className="w-48" placeholder="Recherche" />
 
         <Select
           value={selectValue}
@@ -42,19 +46,22 @@ const UserClient: React.FC<UserClientProps> = ({ users, orderLengths, statusArra
             setSelectValue(newValue);
           }}
         >
-          <SelectTrigger>
+          <SelectTrigger className="w-48">
             <SelectValue placeholder="Select a value" />
           </SelectTrigger>
           <SelectContent>
-            {searchKeys.map((key, index) => (
-              <SelectItem key={key} value={key}>
-                {String(displayKeys[index])}
+            {keys.map((key) => (
+              <SelectItem key={key.value} value={key.value}>
+                {key.label}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
-        <Toggle aria-label="Toggle paid" variant={"outline"} className="w-fit " onPressedChange={setToogle}>
+        <Toggle aria-label="Toggle paid" variant={"outline"} className="w-fit " onPressedChange={setUnpaid}>
           Non payé
+        </Toggle>
+        <Toggle aria-label="Toggle pro" variant={"outline"} className="w-fit " onPressedChange={setPro}>
+          Pro
         </Toggle>
       </div>
       <div className="flex flex-wrap justify-center items-center gap-2 p-2 pt-4 ">

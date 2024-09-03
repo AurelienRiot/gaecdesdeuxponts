@@ -40,7 +40,7 @@ const OrdersPage = async (context: {
     },
     where: !id
       ? {
-          createdAt: {
+          dateOfShipping: {
             gte: dateRange.from,
             lte: dateRange.to,
           },
@@ -51,7 +51,7 @@ const OrdersPage = async (context: {
           },
         },
     orderBy: {
-      dateOfShipping: { sort: "asc", nulls: "first" },
+      dateOfShipping: { sort: "desc", nulls: "first" },
     },
   });
 

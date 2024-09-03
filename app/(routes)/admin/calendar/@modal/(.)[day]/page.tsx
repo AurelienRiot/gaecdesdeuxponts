@@ -12,16 +12,18 @@ export const dynamic = "force-dynamic";
 
 async function IntercepteDayPage({ params }: { params: { day: string | undefined } }) {
   const paramDate = params.day ? new Date(decodeURIComponent(params.day)) : new Date();
-  const date = addHours(paramDate, 2);
-  const startDate = new Date(date.toISOString().split("T")[0]);
-  const endDate = new Date(startDate);
-  endDate.setHours(23, 59, 59, 999);
+  const startDate = paramDate;
+  const endDate = addHours(startDate, 24);
 
   const result = await getOrders({ startDate, endDate }).catch((error) => {
     console.log(error);
   });
 
-  return <ModalDay date={date}>{result ? <DescriptionEvents date={date} result={result} /> : <NoResults />}</ModalDay>;
+  return (
+    <ModalDay date={startDate}>
+      {result ? <DescriptionEvents date={startDate} result={result} /> : <NoResults />}
+    </ModalDay>
+  );
 }
 
 export default IntercepteDayPage;

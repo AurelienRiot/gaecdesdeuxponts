@@ -13,10 +13,8 @@ export const dynamic = "force-dynamic";
 
 const DayEventPage = async ({ params }: { params: { day: string | undefined } }) => {
   const paramDate = params.day ? new Date(decodeURIComponent(params.day)) : new Date();
-  const date = addHours(paramDate, 2);
-  const startDate = new Date(date.toISOString().split("T")[0]);
-  const endDate = new Date(startDate);
-  endDate.setHours(23, 59, 59, 999);
+  const startDate = paramDate;
+  const endDate = addHours(startDate, 24);
 
   const result = await getOrders({ startDate, endDate }).catch((error) => {
     console.log(error);
@@ -26,7 +24,7 @@ const DayEventPage = async ({ params }: { params: { day: string | undefined } })
     <div className="space-y-4 p-8 pt-6 ">
       <div className="flex flex-col items-center justify-between sm:flex-row">
         <Heading
-          title={`Commandes pour le ${dateFormatter(date, { days: true })} `}
+          title={`Commandes pour le ${dateFormatter(startDate, { days: true })} `}
           description="Liste des différentes commandes et livraisons"
           className="w-fit mx-auto"
         />
@@ -39,7 +37,7 @@ const DayEventPage = async ({ params }: { params: { day: string | undefined } })
         </Button> */}
       </div>
       <Separator />
-      {result ? <DescriptionEvents date={date} result={result} /> : <NoResults />}
+      {result ? <DescriptionEvents date={startDate} result={result} /> : <NoResults />}
     </div>
   );
 };

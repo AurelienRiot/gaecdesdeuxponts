@@ -1,44 +1,31 @@
 "use client";
 
-import AddressAutocomplete, { type Suggestion } from "@/actions/adress-autocompleteFR";
 import { LocationMarker } from "@/app/(routes)/(public)/ou-nous-trouver/_components/location-marker";
 import { destination, origin } from "@/components/google-events/get-orders-for-events";
 import { Button, IconButton, buttonVariants } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandListModal,
-} from "@/components/ui/command";
+
 import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import useScrollToHashOnMount from "@/hooks/use-scroll-to-hash";
 import useServerAction from "@/hooks/use-server-action";
 import { cn, svgToDataUri } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import "leaflet/dist/leaflet.css";
-import { ChevronDown, ChevronsUpDown, Plus, X } from "lucide-react";
-import dynamicImport from "next/dynamic";
+import { Plus, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { forwardRef, useState } from "react";
 import { useForm, useFormContext } from "react-hook-form";
-import { FaDotCircle, FaRegUser } from "react-icons/fa";
+import { FaDotCircle } from "react-icons/fa";
 import { FaMapLocationDot } from "react-icons/fa6";
 import { GiPositionMarker } from "react-icons/gi";
-import { LuMapPin } from "react-icons/lu";
 import { toast } from "sonner";
 import "../../../(public)/ou-nous-trouver/_components/marker.css";
 import getDirection from "../_actions/get-direction";
+import AddressModal from "./address-modal";
 import { directionSchema, type DirectionFormValues } from "./direction-schema";
-const MapModal = dynamicImport(() => import("./map-modal"), {
-  ssr: false,
-});
+import DatePicker from "./date-picker";
 
 const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 
@@ -47,7 +34,12 @@ export type UserAndShop = { label: string; address: string; image?: string | nul
 export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] }) => {
   const { serverAction } = useServerAction(getDirection);
   const [open, setOpen] = useState(false);
+  const [openAddressModal, setOpenAddressModal] = useState(false);
   const [reorderedWaypoints, setReorderedWaypoints] = useState<string[]>([]);
+  const [modalProps, setModalProps] = useState<{
+    onValueChange: (address: string) => void;
+    value: string;
+  }>();
   useScrollToHashOnMount();
 
   const title = "Faire un trajet obtimisé";
@@ -100,6 +92,13 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
               usersAndShops={usersAndShops}
               reorderedWaypoints={reorderedWaypoints}
             />
+            <AddressModal
+              isOpen={openAddressModal}
+              setIsOpen={setOpenAddressModal}
+              onValueChange={modalProps?.onValueChange}
+              usersAndShops={usersAndShops}
+              value={modalProps?.value}
+            />
             <div className="space-y-4 relative pl-6">
               <style jsx>{`
                   .dotted-line {
@@ -118,7 +117,8 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
                 name="origin"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xl bold">
+                    <FormLabel className="text-xl bold flex gap-1 justify-start items-center">
+                      <DatePicker usersAndShops={usersAndShops} />
                       Départ
                       <LocationMarker
                         onAddressFound={({ address }) => {
@@ -132,19 +132,33 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
                     </FormLabel>
 
                     <FormControl>
-                      <AddressModal
+                      {/* <AddressModal
                         index="origin"
                         onValueChange={field.onChange}
                         usersAndShops={usersAndShops}
                         value={field.value}
                         ref={field.ref}
+                      /> */}
+                      <ButtonAddressModal
+                        ref={field.ref}
+                        value={field.value}
+                        index={"origin"}
+                        usersAndShops={usersAndShops}
+                        onClick={() => {
+                          setOpenAddressModal(true);
+                          setModalProps({ onValueChange: field.onChange, value: field.value });
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <WaypointsForm usersAndShops={usersAndShops} />
+              <WaypointsForm
+                usersAndShops={usersAndShops}
+                setModalProps={setModalProps}
+                setOpenAddressModal={setOpenAddressModal}
+              />
               <FormField
                 control={form.control}
                 name="destination"
@@ -163,11 +177,15 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
                       />
                     </FormLabel>
                     <FormControl>
-                      <AddressModal
-                        index="destination"
-                        onValueChange={field.onChange}
-                        usersAndShops={usersAndShops}
+                      <ButtonAddressModal
+                        ref={field.ref}
                         value={field.value}
+                        index={"destination"}
+                        usersAndShops={usersAndShops}
+                        onClick={() => {
+                          setOpenAddressModal(true);
+                          setModalProps({ onValueChange: field.onChange, value: field.value });
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -241,7 +259,21 @@ function SuccessModal({
   );
 }
 
-function WaypointsForm({ usersAndShops }: { usersAndShops: UserAndShop[] }) {
+function WaypointsForm({
+  usersAndShops,
+  setModalProps,
+  setOpenAddressModal,
+}: {
+  usersAndShops: UserAndShop[];
+  setOpenAddressModal: (open: boolean) => void;
+  setModalProps: ({
+    onValueChange,
+    value,
+  }: {
+    onValueChange: (address: string) => void;
+    value: string;
+  }) => void;
+}) {
   const form = useFormContext<DirectionFormValues>();
 
   const error = form.control.getFieldState("waypoints").error;
@@ -293,11 +325,15 @@ function WaypointsForm({ usersAndShops }: { usersAndShops: UserAndShop[] }) {
                               onClick={() => removeWaypoint(index)}
                               className="absolute -top-2 -right-2 size-5 p-1 text-destructive-foreground bg-destructive z-10 border-none md:opacity-0  group-hover:opacity-100  transition-opacity duration-300"
                             />
-                            <AddressModal
-                              onValueChange={field.onChange}
-                              usersAndShops={usersAndShops}
+                            <ButtonAddressModal
+                              ref={field.ref}
                               value={field.value}
                               index={index}
+                              usersAndShops={usersAndShops}
+                              onClick={() => {
+                                setOpenAddressModal(true);
+                                setModalProps({ onValueChange: field.onChange, value: field.value });
+                              }}
                             />
                           </div>
                         </FormControl>
@@ -325,219 +361,53 @@ function WaypointsForm({ usersAndShops }: { usersAndShops: UserAndShop[] }) {
   );
 }
 
-type AddressModalProps = {
-  onValueChange: (address: string) => void;
+type ButtonAddressModalProps = {
   usersAndShops: UserAndShop[];
   value: string;
   index: number | string;
+  onClick: () => void;
 };
 
-const AddressModal = forwardRef<HTMLButtonElement, AddressModalProps>(
-  ({ usersAndShops, onValueChange, value, index }, ref) => {
-    const form = useFormContext<DirectionFormValues>();
-    const [open, setOpen] = useState(false);
-    const [input, setInput] = useState(value);
-
-    function onClose(val: string) {
-      setInput(val);
-      onValueChange(val);
-      setOpen(false);
-      form.clearErrors();
-    }
-
+const ButtonAddressModal = forwardRef<HTMLButtonElement, ButtonAddressModalProps>(
+  ({ usersAndShops, onClick, value, index }, ref) => {
     const image = usersAndShops.find((u) => u.address === value)?.image;
     const label = usersAndShops.find((u) => u.address === value)?.label;
 
     return (
-      <>
-        <Button
-          id={"button-" + index}
-          type={"button"}
-          variant="outline"
-          className={cn(" w-full text-left  pl-2 relative flex justify-start ")}
-          onClick={() => setOpen(true)}
-          ref={ref}
-        >
-          {index === "origin" ? (
-            <div className="pb-3 pt-12 bg-background absolute -top-11 -left-8 ">
-              <GiPositionMarker className="size-6 text-red-600 " />
-            </div>
-          ) : index === "destination" ? (
-            <div className="pb-10 pt-2 bg-background absolute -top-1 -left-8 ">
-              <GiPositionMarker className="size-6 text-green-600 " />
-            </div>
-          ) : (
-            <div className="pb-[14px] pt-2 bg-background absolute top-1 -left-[29px] ">
-              <FaDotCircle className="size-4 text-blue-600 " />
-            </div>
-          )}
-          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-background from-80% via-95% to-transparent  " />
-          <Image
-            src={image ? image : "/skeleton-image.webp"}
-            alt={"image"}
-            width={24}
-            height={24}
-            className="mr-2 h-4 w-4 object-contain rounded-sm"
-          />
-          <span className={cn("overflow-hidden whitespace-nowrap", !value ? "opacity-50" : "")}>
-            {" "}
-            {value ? (label ? label : value) : "Entrer une adresse"}
-          </span>
-        </Button>
-        <Modal
-          className="left-[50%] top-[25%] md:top-[50%] max-h-[90%] w-[90%] max-w-[700px]  rounded-sm "
-          title=""
-          description=""
-          isOpen={open}
-          onClose={() => onClose(input)}
-        >
-          <div className="space-y-4">
-            <AddressSelect usersAndShops={usersAndShops} onValueChange={onClose} />
-            <AddressSearch onValueChange={onClose} />
-            <MapModal onValueChange={onClose} />
-            <Input
-              placeholder="Adresse"
-              onChange={(e) => {
-                setInput(e.target.value);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  onClose(input);
-                }
-              }}
-              value={input}
-            />
+      <Button
+        id={"button-" + index}
+        type={"button"}
+        variant="outline"
+        className={cn(" w-full text-left  pl-2 relative flex justify-start ")}
+        onClick={onClick}
+        ref={ref}
+      >
+        {index === "origin" ? (
+          <div className="pb-3 pt-12 bg-background absolute -top-11 -left-8 ">
+            <GiPositionMarker className="size-6 text-red-600 " />
           </div>
-        </Modal>
-      </>
+        ) : index === "destination" ? (
+          <div className="pb-10 pt-2 bg-background absolute -top-1 -left-8 ">
+            <GiPositionMarker className="size-6 text-green-600 " />
+          </div>
+        ) : (
+          <div className="pb-[14px] pt-2 bg-background absolute top-1 -left-[29px] ">
+            <FaDotCircle className="size-4 text-blue-600 " />
+          </div>
+        )}
+        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-background from-80% via-95% to-transparent  " />
+        <Image
+          src={image ? image : "/skeleton-image.webp"}
+          alt={"image"}
+          width={24}
+          height={24}
+          className="mr-2 h-4 w-4 object-contain rounded-sm"
+        />
+        <span className={cn("overflow-hidden whitespace-nowrap", !value ? "opacity-50" : "")}>
+          {" "}
+          {value ? (label ? label : value) : "Entrer une adresse"}
+        </span>
+      </Button>
     );
   },
 );
-AddressModal.displayName = "AddressModal";
-
-function AddressSelect({
-  usersAndShops,
-  onValueChange,
-}: { usersAndShops: UserAndShop[]; onValueChange: (address: string) => void }) {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          id="select-address"
-          // disabled={form.formState.isSubmitting}
-          className={cn("w-full justify-between pl-2")}
-        >
-          <span className="flex items-center">
-            <FaRegUser className="h-4 w-4 mr-2 inline" />
-            Rechercher un client
-          </span>
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent side="bottom" align="start" avoidCollisions={false} className=" z-[1200] p-0   ">
-        <Command>
-          <CommandInput
-            // onFocus={() => ScrollToTarget("select-address")}
-            placeholder="Nom du client"
-          />
-
-          <CommandListModal>
-            {usersAndShops.map((item) => (
-              <CommandItem
-                key={item.address}
-                value={item.address}
-                keywords={[item.label]}
-                onSelect={() => {
-                  onValueChange(item.address);
-                  setOpen(false);
-                }}
-              >
-                {item.image && (
-                  <Image
-                    src={item.image}
-                    alt={item.label}
-                    width={16}
-                    height={16}
-                    className="mr-2 object-contain rounded-sm"
-                  />
-                )}
-                {item.label}
-              </CommandItem>
-            ))}
-          </CommandListModal>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  );
-}
-
-function AddressSearch({ onValueChange }: { onValueChange: (address: string) => void }) {
-  const [open, setOpen] = useState(false);
-  const [suggestions, setSuggestions] = useState([] as Suggestion[]);
-  const [query, setQuery] = useState("");
-
-  const setSearchTerm = async (value: string) => {
-    setQuery(value);
-    const temp = await AddressAutocomplete(value).catch((e) => {
-      console.log(e);
-      return [];
-    });
-    setSuggestions(temp);
-  };
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          id={"search-address"}
-          variant="outline"
-          role="combobox"
-          onClick={() => setOpen((open) => !open)}
-          className={cn(" justify-between w-full  pl-2 items-center")}
-        >
-          <span className="flex items-center">
-            <LuMapPin className="h-4 w-4 mr-2 " />
-            Rechercher une adresse
-          </span>
-          <ChevronDown className="ml-2 h-4 w-4 shrink-0 " />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-full p-0 z-[1200]" side="bottom" align="start">
-        <Command loop shouldFilter={false} className="w-full">
-          <CommandInput
-            // onFocus={() => ScrollToTarget("search-address")}
-            placeholder="Entrer l'adresse..."
-            className="h-9 w-full"
-            value={query}
-            onValueChange={(e) => {
-              setSearchTerm(e);
-              setOpen(true);
-            }}
-          />
-          <CommandList className="w-full">
-            {query.length > 3 && <CommandEmpty>Adresse introuvable</CommandEmpty>}
-            {suggestions.map((suggestion, index) => (
-              <CommandItem
-                className="cursor-pointer
-                          bg-popover  text-popover-foreground w-full"
-                value={suggestion.label + index}
-                key={suggestion.label}
-                onSelect={() => {
-                  onValueChange(suggestion.label);
-
-                  setOpen(false);
-                }}
-              >
-                {suggestion.label}
-              </CommandItem>
-            ))}
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  );
-}
