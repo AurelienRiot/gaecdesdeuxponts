@@ -151,9 +151,7 @@ function createProduct(items: OrderItem[] | AMAPItem[]) {
     .join(", ");
 }
 
-// export type Status = "En cours de validation" | "Commande validée" | "Commande livrée" | "Commande Payée";
-
-const statuses = [
+const status = [
   "En cours de validation",
   "Commande validée",
   "Commande livrée",
@@ -161,14 +159,14 @@ const statuses = [
   "Commande Payée",
 ] as const;
 
-type Status = (typeof statuses)[number];
+type Status = (typeof status)[number];
 
 function createStatus(order: OrderWithItemsAndShop): Status {
-  if (!order.dateOfEdition) return "En cours de validation";
-  if (!order.shippingEmail) return "Commande validée";
-  if (!order.invoiceEmail) return "Commande livrée";
-  if (!order.dateOfPayment) return "En cours de paiement";
-  return "Commande Payée";
+  if (order.dateOfPayment) return "Commande Payée";
+  if (order.invoiceEmail) return "En cours de paiement";
+  if (order.shippingEmail) return "Commande livrée";
+  if (order.dateOfEdition) return "Commande validée";
+  return "En cours de validation";
 }
 
 const createStatusArray = (statuses: Status[]): { label: string; value: Status }[] => {
@@ -178,7 +176,7 @@ const createStatusArray = (statuses: Status[]): { label: string; value: Status }
   }));
 };
 
-const statusArray = createStatusArray([...statuses]);
+const statusArray = createStatusArray([...status]);
 
 type StatusCellProps = {
   status: Status;

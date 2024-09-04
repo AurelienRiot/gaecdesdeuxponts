@@ -1,11 +1,11 @@
 import type { AMAPOrderWithItemsAndUser, FullOrder } from "@/types";
 import { renderToBuffer } from "@react-pdf/renderer";
-import AmapPDF from "../create-amap";
-import Invoice from "../create-invoice";
-import MonthlyInvoice from "../create-monthly-invoice";
-import ShippingOrder from "../create-shipping";
-import { type AMAPType, createAMAPData, createMonthlyPDFData, createPDFData } from "../pdf-data";
-import AmapPDFForm from "../formulaire-amap";
+import AmapPDF from "./create-amap";
+import Invoice from "./create-invoice";
+import MonthlyInvoice from "./create-monthly-invoice";
+import ShippingOrder from "./create-shipping";
+import { type AMAPType, createAMAPData, createMonthlyPDFData, createPDFData } from "./pdf-data";
+import AmapPDFForm from "./formulaire-amap";
 
 async function generatePdfSring64({
   data,

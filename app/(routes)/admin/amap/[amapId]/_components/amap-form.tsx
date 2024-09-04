@@ -1,7 +1,6 @@
 "use client";
 
 import DeleteButton from "@/components/delete-button";
-import { DisplayAMAPOrder } from "@/components/pdf/pdf-button";
 import { LoadingButton } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
@@ -28,6 +27,7 @@ import SelectUser from "./select-user";
 import TotalPaid from "./total-paid";
 import TotalPrice from "./total-price";
 import { getDaysBetweenDates } from "@/lib/date-utils";
+import { DisplayAMAPOrder } from "@/components/pdf/button/display-amap-order";
 
 const START = new Date(1725314400000);
 const END = new Date(1735599600000);

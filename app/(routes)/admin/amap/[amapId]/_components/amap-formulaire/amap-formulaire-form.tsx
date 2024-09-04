@@ -4,7 +4,7 @@ import { LoadingButton } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { saveAs } from "file-saver";
 
-import { base64ToBlob } from "@/components/pdf/server-actions/pdf-fuction";
+import { base64ToBlob } from "@/components/pdf/pdf-fuction";
 import useServerAction from "@/hooks/use-server-action";
 import { getDaysBetweenDates } from "@/lib/date-utils";
 import { zodResolver } from "@hookform/resolvers/zod";

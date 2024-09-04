@@ -3,7 +3,7 @@ import { checkReadOnlyAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { z } from "zod";
-import { generatePdfSring64 } from "./pdf-fuction";
+import { generatePdfSring64 } from "../pdf-fuction";
 import { dateMonthYear } from "@/lib/date-utils";
 
 const pdf64StringSchema = z.object({

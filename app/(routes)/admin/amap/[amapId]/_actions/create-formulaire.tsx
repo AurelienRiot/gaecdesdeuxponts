@@ -2,7 +2,7 @@
 
 import { checkAdmin } from "@/components/auth/checkAuth";
 import type { AMAPType } from "@/components/pdf/pdf-data";
-import { generatePdfSring64 } from "@/components/pdf/server-actions/pdf-fuction";
+import { generatePdfSring64 } from "@/components/pdf/pdf-fuction";
 import safeServerAction from "@/lib/server-action";
 import { schema, type AMAPFormulaireValues } from "../_components/amap-formulaire/amap-formulaire-schema";
 
