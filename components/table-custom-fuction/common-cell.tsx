@@ -1,6 +1,6 @@
 "use client";
 import useServerAction from "@/hooks/use-server-action";
-import { dateFormatter } from "@/lib/date-utils";
+import { dateFormatter, getRelativeDate } from "@/lib/date-utils";
 import type { ReturnTypeServerAction } from "@/lib/server-action";
 import type { Row } from "@tanstack/react-table";
 import Image from "next/image";

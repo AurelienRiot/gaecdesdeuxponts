@@ -15,6 +15,7 @@ import { DatePickUpHeader, ShopNameHeader } from "@/components/table-custom-fuct
 import type { DataTableFilterableColumn, DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
 import type { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
+import { getRelativeDate } from "@/lib/date-utils";
 
 export type OrderColumn = {
   id: string;
@@ -72,7 +73,12 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "datePickUp",
     header: DatePickUpHeader,
-    cell: ({ row }) => <DateCell date={row.original.datePickUp} days={true} />,
+    cell: ({ row }) => (
+      <div>
+        <DateCell date={row.original.datePickUp} days={true} />
+        <span>{`${getRelativeDate(row.original.datePickUp)}`}</span>
+      </div>
+    ),
   },
   {
     accessorKey: "status",

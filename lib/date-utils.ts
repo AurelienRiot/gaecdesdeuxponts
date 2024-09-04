@@ -86,3 +86,24 @@ export function getDayName(dayNumber: number) {
 
   return new Intl.DateTimeFormat("fr-FR", { weekday: "long" }).format(date);
 }
+
+export const getRelativeDate = (date: Date) => {
+  const currentDate = new Date();
+  const daysDifference = Math.round((date.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+
+  if (daysDifference === 0) {
+    return "Aujourd'hui";
+  }
+  if (daysDifference === 1) {
+    return "Demain";
+  }
+  if (daysDifference === -1) {
+    return "Hier";
+  }
+  if (daysDifference > 1) {
+    return `dans ${daysDifference} jours`;
+  }
+  if (daysDifference < -1) {
+    return `Il y a ${Math.abs(daysDifference)} jours`;
+  }
+};

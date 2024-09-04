@@ -125,7 +125,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
             data={{ id: initialData.id, dateOfShipping: initialData.dateOfShipping }}
             isSubmitting={form.formState.isSubmitting}
             onSuccess={() => {
-              router.push(referer);
+              router.push("/admin/orders");
               router.refresh();
             }}
           />
