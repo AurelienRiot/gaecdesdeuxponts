@@ -46,8 +46,8 @@ export const columns: ColumnDef<OrderColumn>[] = [
           shippingEmail={row.original.shippingEmail}
           invoiceEmail={row.original.invoiceEmail}
           datePickUp={row.original.datePickUp}
+          status={row.original.status}
         />
-        <StatusCell status={row.original.status} />
       </>
     ),
   },

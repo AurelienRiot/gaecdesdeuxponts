@@ -37,6 +37,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
       <>
         <OrderIdCell
           id={row.original.id}
+          status={row.original.status}
           shippingEmail={row.original.shippingEmail}
           invoiceEmail={row.original.invoiceEmail}
           datePickUp={row.original.datePickUp}

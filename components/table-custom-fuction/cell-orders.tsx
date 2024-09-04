@@ -45,10 +45,11 @@ type OrderIdCellProps = {
   shippingEmail: Date | null;
   invoiceEmail: Date | null;
   datePickUp: Date;
+  status: Status;
 };
-function OrderIdCell({ id, shippingEmail, invoiceEmail, datePickUp }: OrderIdCellProps) {
+function OrderIdCell({ id, shippingEmail, invoiceEmail, datePickUp, status }: OrderIdCellProps) {
   return (
-    <Button asChild variant={"link"} className="px-0 font-bold flex flex-col justify-start h-auto">
+    <Button asChild variant={"link"} className="px-0 font-bold flex flex-col items-center gap-2  h-auto ">
       <Link href={`/admin/orders/${id}`}>
         <p className="whitespace-nowrap mr-auto"> {getRelativeDate(datePickUp)}</p>
         {/* <div className="flex gap-2 justify-left items-center mr-auto">
@@ -69,6 +70,9 @@ function OrderIdCell({ id, shippingEmail, invoiceEmail, datePickUp }: OrderIdCel
             </div>
           )}
         </div> */}
+        <div className="mr-auto">
+          <StatusCell status={status} />
+        </div>
       </Link>
     </Button>
   );
