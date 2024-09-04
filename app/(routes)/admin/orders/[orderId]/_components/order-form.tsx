@@ -40,6 +40,7 @@ export type ProductFormProps = {
 
 export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, users, shops, referer }) => {
   const router = useRouter();
+  const prevDateOfShipping = initialData?.dateOfShipping;
 
   const { serverAction: createOrderAction } = useServerAction(createOrder);
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
@@ -106,7 +107,11 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
       }
     }
     initialData?.id
-      ? await updateOrderAction({ data, onSuccess: onSuccessUpdate, toastOptions: { position: "top-center" } })
+      ? await updateOrderAction({
+          data: { ...data, prevDateOfShipping },
+          onSuccess: onSuccessUpdate,
+          toastOptions: { position: "top-center" },
+        })
       : await createOrderAction({ data, onSuccess: onSuccessCreate, toastOptions: { position: "top-center" } });
   };
 

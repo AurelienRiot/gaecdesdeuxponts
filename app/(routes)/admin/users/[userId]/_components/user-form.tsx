@@ -1,21 +1,13 @@
 "use client";
 
 import { AddressForm } from "@/components/address-form";
+import { AnimateHeight } from "@/components/animations/animate-size";
 import { BillingAddressForm } from "@/components/billing-address-form";
+import CheckboxForm from "@/components/chekbox-form";
 import DeleteButton from "@/components/delete-button";
 import InputImageModal from "@/components/images-upload/image-modal";
-import ButtonBackward from "@/components/ui/button-backward";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Form,
-  FormButton,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
@@ -24,24 +16,23 @@ import useServerAction from "@/hooks/use-server-action";
 import type { UserWithOrdersAndAdress } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import deleteUser from "../../_actions/delete-user";
 import updateUser from "../_actions/update-user";
 import MailForm from "./mail-form";
 import { schema, type UserFormValues } from "./user-schema";
-import CheckboxForm from "@/components/chekbox-form";
-import { AnimateHeight } from "@/components/animations/animate-size";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 
 interface UserFormProps {
   initialData: UserWithOrdersAndAdress;
+  incomplete: boolean;
 }
 
-export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
+export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) => {
   const router = useRouter();
   const { serverAction } = useServerAction(updateUser);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(incomplete);
+  console.log(open);
 
   const title = "Fiche utilisateur";
   const description = "Modifier un utilisateur";
@@ -110,12 +101,12 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
       <Button onClick={() => setOpen(!open)} variant={open ? "destructive" : "secondary"}>
         {open ? "Fermer" : "Modifier l'utilisateur"}
       </Button>
-      <AnimateHeight display={open}>
+      <AnimateHeight className="px-4" display={open}>
         <>
           {<MailForm email={initialData.email} id={initialData.id} />}
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8 ">
               <FormField
                 control={form.control}
                 name="image"
@@ -140,7 +131,9 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Nom</FormLabel>
+                      <FormLabel className={field.value?.includes("acompleter") ? "font-bold text-destructive" : ""}>
+                        Nom
+                      </FormLabel>
                       <FormControl>
                         <Input disabled={form.formState.isSubmitting} placeholder="Nom" {...field} />
                       </FormControl>
@@ -154,7 +147,9 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                   name="company"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Entreprise</FormLabel>
+                      <FormLabel className={field.value?.includes("acompleter") ? "font-bold text-destructive" : ""}>
+                        Entreprise
+                      </FormLabel>
                       <FormControl>
                         <Input disabled={form.formState.isSubmitting || !isPro} placeholder="entreprise" {...field} />
                       </FormControl>

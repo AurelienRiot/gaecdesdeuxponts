@@ -214,8 +214,14 @@ function SuccessModal({
   const directionString = `${googleDirectioUrl}/${ori}/${reorderedWaypoints.join("/")}/${dest}`;
 
   return (
-    <Modal title="Trajet obtimisé" description="Le trajet obtimisé a été généré." isOpen={isOpen} onClose={onClose}>
-      <div className="space-y-4">
+    <Modal
+      className=" max-h-[90%] w-[90%] overflow-y-scroll rounded-md"
+      title="Trajet obtimisé"
+      description="Le trajet obtimisé a été généré."
+      isOpen={isOpen}
+      onClose={onClose}
+    >
+      <div className="space-y-4 ">
         <Link
           href={directionString}
           target="_blank"

@@ -1,4 +1,3 @@
-import { formDateDayMonth } from "@/lib/date-utils";
 import type { OrderWithItemsAndShop } from "@/types";
 import type { AMAPItem, OrderItem, Shop } from "@prisma/client";
 import type { Row } from "@tanstack/react-table";
@@ -7,12 +6,11 @@ import Link from "next/link";
 import { FaCheckCircle, FaFileInvoiceDollar, FaShippingFast } from "react-icons/fa";
 import { PiHourglassLowFill } from "react-icons/pi";
 import { ShopCard } from "../display-shops/shop-card";
-import { Icons } from "../icons";
+import { getUnitLabel } from "../product/product-function";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { NameCell } from "./common-cell";
-import { getUnitLabel } from "../product/product-function";
 
 type ProductCellProps = {
   products: string;
@@ -149,14 +147,21 @@ function createProduct(items: OrderItem[] | AMAPItem[]) {
 
 // export type Status = "En cours de validation" | "Commande validée" | "Commande livrée" | "Commande Payée";
 
-const statuses = ["En cours de validation", "Commande validée", "Commande livrée", "Commande Payée"] as const;
+const statuses = [
+  "En cours de validation",
+  "Commande validée",
+  "Commande livrée",
+  "En cours de paiement",
+  "Commande Payée",
+] as const;
 
 type Status = (typeof statuses)[number];
 
 function createStatus(order: OrderWithItemsAndShop): Status {
   if (!order.dateOfEdition) return "En cours de validation";
   if (!order.shippingEmail) return "Commande validée";
-  if (!order.dateOfPayment) return "Commande livrée";
+  if (!order.invoiceEmail) return "Commande livrée";
+  if (!order.dateOfPayment) return "En cours de paiement";
   return "Commande Payée";
 }
 
@@ -216,6 +221,35 @@ function StatusCell({ status }: StatusCellProps) {
               </TooltipTrigger>
               <TooltipContent side="top" sideOffset={4} align="start">
                 <p>Commande livrée</p>
+              </TooltipContent>
+            </Tooltip>
+          </>
+        );
+      case "En cours de paiement":
+        return (
+          <>
+            <Tooltip>
+              <TooltipTrigger>
+                <FaCheckCircle className="text-green-500 size-6" />
+              </TooltipTrigger>
+              <TooltipContent side="top" sideOffset={4} align="start">
+                <p>Commande validée</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger>
+                <FaShippingFast className="text-green-500 size-6" />
+              </TooltipTrigger>
+              <TooltipContent side="top" sideOffset={4} align="start">
+                <p>Commande livrée</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger>
+                <FaFileInvoiceDollar className="text-orange-500 size-6" />
+              </TooltipTrigger>
+              <TooltipContent side="top" sideOffset={4} align="start">
+                <p>En cours de paiement</p>
               </TooltipContent>
             </Tooltip>
           </>

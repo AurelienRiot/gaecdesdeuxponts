@@ -18,8 +18,10 @@ export const dynamic = "force-dynamic";
 
 const UserPage = async ({
   params,
+  searchParams,
 }: {
   params: { userId: string | "new" | undefined };
+  searchParams: { incomplete: string | undefined };
 }) => {
   if (params.userId === "new") {
     return <CreateUserForm />;
@@ -88,7 +90,7 @@ const UserPage = async ({
   return (
     <div className="space-y-6 p-8 pt-6">
       <div className="mb-8 flex-1 space-y-4">
-        <UserForm initialData={formatedUser} />
+        <UserForm initialData={formatedUser} incomplete={!!searchParams.incomplete} />
       </div>
       {user.role === "pro" && (
         <MonthlyInvoice orders={montlyOrders.filter((order) => !!order) as monthlyOrdersType[]} />

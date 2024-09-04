@@ -22,6 +22,9 @@ export default async function createOrdersEvent(data: { date: Date }) {
   }
 
   const description = await createDescription({ startDate, endDate });
+  if (!description) {
+    return { success: true, message: "Aucune commande pour ce jour" };
+  }
 
   const id = createId("command");
   // return {
@@ -58,7 +61,8 @@ export default async function createOrdersEvent(data: { date: Date }) {
 
 async function createDescription({ startDate, endDate }: { startDate: Date; endDate: Date }) {
   const { productQuantities, formattedOrders, groupedAMAPOrders } = await getOrders({ startDate, endDate });
-  if (productQuantities.length === 0) return "<font color='red'> Aucune commande </font>";
+  if (productQuantities.length === 0) return null;
+  // "<font color='red'> Aucune commande </font>";
 
   const amapOrdersDescription =
     Object.values(groupedAMAPOrders)

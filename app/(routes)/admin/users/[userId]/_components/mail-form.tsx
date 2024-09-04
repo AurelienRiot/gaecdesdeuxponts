@@ -36,7 +36,12 @@ function MailForm({ email, id }: { email: string | null; id: string }) {
   return (
     <div className="py-4 space-y-4">
       <p className="font-bold">{email}</p>
-      <Button onClick={() => setDisplay(!display)}>Changer l'email</Button>
+      <Button
+        className={email?.includes("acompleter") ? "font-bold text-destructive" : ""}
+        onClick={() => setDisplay(!display)}
+      >
+        Changer l'email
+      </Button>
       {display && (
         <form className="flex gap-4" onSubmit={onSumbit}>
           <Input disabled={loading} name="email" className="max-w-xs" placeholder="Entrez la nouvelle adresse email" />
