@@ -11,6 +11,7 @@ import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { NameCell } from "./common-cell";
+import { getRelativeDate } from "@/lib/date-utils";
 
 type ProductCellProps = {
   products: string;
@@ -43,12 +44,13 @@ type OrderIdCellProps = {
   id: string;
   shippingEmail: Date | null;
   invoiceEmail: Date | null;
+  datePickUp: Date;
 };
-function OrderIdCell({ id, shippingEmail, invoiceEmail }: OrderIdCellProps) {
+function OrderIdCell({ id, shippingEmail, invoiceEmail, datePickUp }: OrderIdCellProps) {
   return (
     <Button asChild variant={"link"} className="px-0 font-bold flex flex-col justify-start h-auto">
       <Link href={`/admin/orders/${id}`}>
-        <p className="whitespace-nowrap mr-auto">Éditer la commande</p>
+        <p className="whitespace-nowrap mr-auto"> {getRelativeDate(datePickUp)}</p>
         {/* <div className="flex gap-2 justify-left items-center mr-auto">
           {shippingEmail && (
             <div className="relative">
