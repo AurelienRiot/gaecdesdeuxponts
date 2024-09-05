@@ -4,7 +4,8 @@ import { addHours, format } from "date-fns";
 import { fr } from "date-fns/locale";
 import deleteEvent from "./delete-events";
 import getEventsList from "./get-events-list";
-import getOrders, { destination, origin } from "./get-orders-for-events";
+import getOrders from "./get-orders-for-events";
+import { destination, origin } from "@/app/(routes)/admin/calendar/_components/direction-schema";
 
 const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 
@@ -69,7 +70,7 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
     Object.values(groupedAMAPOrders)
       .map(
         (order) =>
-          `<strong><a href="${process.env.NEXT_PUBLIC_URL}/admin/shop/${order.shopId}">${order.shopName}</a></strong> <br />` +
+          `<br /><strong><a href="${process.env.NEXT_PUBLIC_URL}/admin/shop/${order.shopId}">${order.shopName}</a></strong> <br />` +
           order.orderItems
             .map((item) => `<strong>${item.name}</strong> : ${item.quantity}${item.unit || ""}`)
             .join("<br />") +
@@ -102,7 +103,7 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
   const directionString =
     formattedOrders.length === 0
       ? ""
-      : `<strong><a  href="${googleDirectioUrl}/${origin}/${uniqueShippingAddresses.join("/")}/${destination}">Voir le parcours</a></strong> <br /><br />`;
+      : `<strong><a  href="${googleDirectioUrl}/${origin.label}/${uniqueShippingAddresses.join("/")}/${destination.label}">Voir le parcours</a></strong> <br /><br />`;
 
   return header + productDescriptions + amapOrdersDescription + directionString + orderDescriptions;
 }
