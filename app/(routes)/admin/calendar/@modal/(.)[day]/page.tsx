@@ -14,6 +14,7 @@ async function IntercepteDayPage({ params }: { params: { day: string | undefined
   const paramDate = params.day ? new Date(decodeURIComponent(params.day)) : new Date();
   const startDate = paramDate;
   const endDate = addHours(startDate, 24);
+  console.log({ startDate, endDate });
 
   const result = await getOrders({ startDate, endDate }).catch((error) => {
     console.log(error);

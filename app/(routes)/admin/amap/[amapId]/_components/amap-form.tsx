@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import useServerAction from "@/hooks/use-server-action";
 
+import { getDaysBetweenDates } from "@/lib/date-utils";
 import { createId } from "@/lib/id";
 import type { AMAPOrderWithItems } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,11 +27,9 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TotalPaid from "./total-paid";
 import TotalPrice from "./total-price";
-import { getDaysBetweenDates } from "@/lib/date-utils";
-import { DisplayAMAPOrder } from "@/components/pdf/button/display-amap-order";
 
 const START = new Date(1725314400000);
-const END = new Date(1735599600000);
+const END = new Date(1735686000000);
 
 function initialDay(shippingDays?: Date[]) {
   if (!shippingDays) return 2;
@@ -145,12 +144,12 @@ export const AMAPForm: React.FC<AMAPFormProps> = ({ initialData, users, shops, p
             <TotalPrice />
             <TotalPaid />
           </div>
-          {!!initialData && (
+          {/* {!!initialData && (
             <div id="button-container">
-              <Label>Bon de livraison</Label>
+              <Label>Contrat</Label>
               <DisplayAMAPOrder orderId={form.getValues("id")} isSend={false} />
             </div>
-          )}
+          )} */}
           <LoadingButton disabled={form.formState.isSubmitting} className="ml-auto" type="submit">
             {action}
           </LoadingButton>
@@ -159,5 +158,3 @@ export const AMAPForm: React.FC<AMAPFormProps> = ({ initialData, users, shops, p
     </>
   );
 };
-
-// products.find((product) => product.name === "Lait cru bio bidon 2L")
