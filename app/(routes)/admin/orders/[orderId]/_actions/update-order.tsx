@@ -85,11 +85,11 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
             await createOrdersEvent({ date: dateOfShipping });
           }
         })(),
-        (async () => {
-          if (prevDateOfShipping && prevDateOfShipping !== dateOfShipping) {
-            await createOrdersEvent({ date: prevDateOfShipping });
-          }
-        })(),
+        // (async () => {
+        //   if (prevDateOfShipping && prevDateOfShipping !== dateOfShipping) {
+        //     await createOrdersEvent({ date: prevDateOfShipping });
+        //   }
+        // })(),
       ]);
       revalidateTag("orders");
 
