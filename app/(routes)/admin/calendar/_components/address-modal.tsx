@@ -12,30 +12,35 @@ import "leaflet/dist/leaflet.css";
 import { ChevronDown, ChevronsUpDown } from "lucide-react";
 import dynamicImport from "next/dynamic";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { FaRegUser } from "react-icons/fa";
 import { LuMapPin } from "react-icons/lu";
 import "../../../(public)/ou-nous-trouver/_components/marker.css";
 import type { UserAndShop } from "./direction-form";
-import type { DirectionFormValues } from "./direction-schema";
+import type { DirectionFormValues, Point } from "./direction-schema";
 const MapModal = dynamicImport(() => import("./map-modal"), {
   ssr: false,
 });
 
 type AddressModalProps = {
-  onValueChange?: (address: string) => void;
+  onValueChange?: (address: Point) => void;
   usersAndShops: UserAndShop[];
-  value?: string;
+  value?: Point;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 };
 
 const AddressModal = ({ usersAndShops, onValueChange, value, setIsOpen, isOpen }: AddressModalProps) => {
   const form = useFormContext<DirectionFormValues>();
-  const [input, setInput] = useState(value || "");
+  const [input, setInput] = useState<Point>(value || { label: "" });
 
-  function onClose(val: string) {
+  useEffect(() => {
+    if (value) {
+      setInput(value);
+    }
+  }, [value]);
+  function onClose(val: Point) {
     setInput(val);
     if (onValueChange) onValueChange(val);
     setIsOpen(false);
@@ -58,14 +63,14 @@ const AddressModal = ({ usersAndShops, onValueChange, value, setIsOpen, isOpen }
           <Input
             placeholder="Adresse"
             onChange={(e) => {
-              setInput(e.target.value);
+              setInput({ label: e.target.value });
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 onClose(input);
               }
             }}
-            value={input}
+            value={input.label}
           />
         </div>
       </Modal>
@@ -76,7 +81,7 @@ const AddressModal = ({ usersAndShops, onValueChange, value, setIsOpen, isOpen }
 function AddressSelect({
   usersAndShops,
   onValueChange,
-}: { usersAndShops: UserAndShop[]; onValueChange: (address: string) => void }) {
+}: { usersAndShops: UserAndShop[]; onValueChange: (address: Point) => void }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -110,7 +115,7 @@ function AddressSelect({
                 value={item.address}
                 keywords={[item.label]}
                 onSelect={() => {
-                  onValueChange(item.address);
+                  onValueChange({ label: item.address, longitude: item.longitude, latitude: item.latitude });
                   setOpen(false);
                 }}
               >
@@ -133,7 +138,7 @@ function AddressSelect({
   );
 }
 
-function AddressSearch({ onValueChange }: { onValueChange: (address: string) => void }) {
+function AddressSearch({ onValueChange }: { onValueChange: (address: Point) => void }) {
   const [open, setOpen] = useState(false);
   const [suggestions, setSuggestions] = useState([] as Suggestion[]);
   const [query, setQuery] = useState("");
@@ -185,7 +190,11 @@ function AddressSearch({ onValueChange }: { onValueChange: (address: string) => 
                 value={suggestion.label + index}
                 key={suggestion.label}
                 onSelect={() => {
-                  onValueChange(suggestion.label);
+                  onValueChange({
+                    label: suggestion.label,
+                    longitude: suggestion.coordinates[0],
+                    latitude: suggestion.coordinates[1],
+                  });
 
                   setOpen(false);
                 }}

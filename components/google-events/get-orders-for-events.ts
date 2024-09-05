@@ -1,9 +1,8 @@
 import prismadb from "@/lib/prismadb";
 import { getUnitLabel } from "../product/product-function";
 import { directionGoogle } from "./direction-google";
+import { origin, destination } from "@/app/(routes)/admin/calendar/_components/direction-schema";
 
-export const origin = "6 le Pont Robert 44290 Massérac";
-export const destination = "Pont de l'Eau, 44460 Avessac, France";
 export const getOrders = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
   const start = startDate.toISOString().split("T")[0];
   // return dummieDate;
@@ -103,7 +102,7 @@ export const getOrders = async ({ startDate, endDate }: { startDate: Date; endDa
   if (formattedOrders.length > 1) {
     const waypoints = formattedOrders.map((order) => order.shippingAddress || "");
 
-    const orderWaypoints = await directionGoogle({ origin, destination, waypoints });
+    const orderWaypoints = await directionGoogle({ origin: origin.label, destination: destination.label, waypoints });
     if (orderWaypoints.success && orderWaypoints.data) {
       formattedOrders = orderWaypoints.data.map((index) => formattedOrders[index]);
     }

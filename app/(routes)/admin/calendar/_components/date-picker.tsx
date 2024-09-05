@@ -7,8 +7,9 @@ import { fr } from "date-fns/locale";
 import { useState } from "react";
 import getDailyOrders from "../_actions/get-daily-orders";
 import { useFormContext } from "react-hook-form";
-import type { DirectionFormValues } from "./direction-schema";
+import type { DirectionFormValues, Point } from "./direction-schema";
 import type { UserAndShop } from "./direction-form";
+import AddressAutocomplete from "@/actions/adress-autocompleteFR";
 
 const DatePicker = ({ usersAndShops }: { usersAndShops: UserAndShop[] }) => {
   const [open, setOpen] = useState(false);
@@ -17,27 +18,38 @@ const DatePicker = ({ usersAndShops }: { usersAndShops: UserAndShop[] }) => {
 
   async function onDaySelected(date: Date) {
     setOpen(false);
-    function onSuccess(
+    async function onSuccess(
       result?: {
         customer: { shippingAddress: string } | null;
       }[],
     ) {
       if (!result) return;
-      const addresses = result.map((order) => {
-        if (!order.customer?.shippingAddress) {
-          return "";
-        }
+      const addresses: Point[] = await Promise.all(
+        result.map(async (order) => {
+          if (!order.customer || !order.customer.shippingAddress) {
+            return { label: "" };
+          }
 
-        const user = usersAndShops.find(
-          (user) =>
-            order.customer?.shippingAddress.includes(user.address) ||
-            user.address.includes(order.customer?.shippingAddress || "zzzz"),
-        );
-        if (user) {
-          return user.address;
-        }
-        return order.customer?.shippingAddress;
-      });
+          const user = usersAndShops.find(
+            (user) =>
+              order.customer?.shippingAddress.includes(user.address) ||
+              user.address.includes(order.customer?.shippingAddress || ""),
+          );
+          let latitude = user?.latitude;
+          let longitude = user?.longitude;
+          if (!latitude || !longitude) {
+            const coordinates = await AddressAutocomplete(order.customer?.shippingAddress);
+            if (coordinates.length > 0) {
+              latitude = coordinates[0].coordinates[1];
+              longitude = coordinates[0].coordinates[0];
+            }
+          }
+          if (user) {
+            return { label: user.address, latitude, longitude };
+          }
+          return { label: order.customer?.shippingAddress, latitude, longitude };
+        }),
+      );
       form.setValue("waypoints", addresses);
     }
     serverAction({ data: { date }, onError: () => setOpen(true), onSuccess });

@@ -28,7 +28,7 @@ export const Modal: React.FC<ModalProps> = ({
   };
   return (
     <Dialog open={isOpen} onOpenChange={onChange} modal={modal}>
-      <DialogContent className={className}>
+      <DialogContent forceMount className={className}>
         <DialogHeader>
           <DialogTitle> {title} </DialogTitle>
           <DialogDescription>{description}</DialogDescription>

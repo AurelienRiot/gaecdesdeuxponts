@@ -11,7 +11,11 @@ async function getDirection(data: DirectionFormValues) {
     getUser: checkReadOnlyAdmin,
     schema: directionSchema,
     serverAction: async ({ destination, origin, waypoints }) => {
-      const orderedWaipoints = await directionGoogle({ origin, destination, waypoints });
+      const orderedWaipoints = await directionGoogle({
+        origin: origin.label,
+        destination: destination.label,
+        waypoints: waypoints.map((waypoint) => waypoint.label),
+      });
       if (!orderedWaipoints.success) {
         return { success: false, message: orderedWaipoints.message };
       }

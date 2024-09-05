@@ -1,7 +1,6 @@
 "use client";
 
 import { LocationMarker } from "@/app/(routes)/(public)/ou-nous-trouver/_components/location-marker";
-import { destination, origin } from "@/components/google-events/get-orders-for-events";
 import { Button, IconButton, buttonVariants } from "@/components/ui/button";
 
 import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -15,7 +14,7 @@ import "leaflet/dist/leaflet.css";
 import { Plus, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { useForm, useFormContext } from "react-hook-form";
 import { FaDotCircle } from "react-icons/fa";
 import { FaMapLocationDot } from "react-icons/fa6";
@@ -24,21 +23,27 @@ import { toast } from "sonner";
 import "../../../(public)/ou-nous-trouver/_components/marker.css";
 import getDirection from "../_actions/get-direction";
 import AddressModal from "./address-modal";
-import { directionSchema, type DirectionFormValues } from "./direction-schema";
+import { type Point, destination, directionSchema, origin, type DirectionFormValues } from "./direction-schema";
 import DatePicker from "./date-picker";
 
 const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 
-export type UserAndShop = { label: string; address: string; image?: string | null };
+export type UserAndShop = {
+  label: string;
+  address: string;
+  image?: string | null;
+  latitude?: number;
+  longitude?: number;
+};
 
 export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] }) => {
   const { serverAction } = useServerAction(getDirection);
   const [open, setOpen] = useState(false);
   const [openAddressModal, setOpenAddressModal] = useState(false);
-  const [reorderedWaypoints, setReorderedWaypoints] = useState<string[]>([]);
+  const [reorderedWaypoints, setReorderedWaypoints] = useState<Point[]>([]);
   const [modalProps, setModalProps] = useState<{
-    onValueChange: (address: string) => void;
-    value: string;
+    onValueChange: (address: Point) => void;
+    value: Point;
   }>();
   useScrollToHashOnMount();
 
@@ -51,8 +56,8 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
       origin,
       destination,
       waypoints: [
-        "",
-        "",
+        { label: "" },
+        { label: "" },
         // "3, le Clos Cheny, 44290, Guémené-Penfao, FR",
         // "7 Rue de l'Eglise 44290 Guémené-Penfao",
         // "1 Rue de l'Hotel de Ville 44290 Guémené-Penfao",
@@ -75,6 +80,12 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
     }
     await serverAction({ data, onSuccess, toastOptions: { position: "top-center" } });
   };
+
+  useEffect(() => {
+    if (modalProps) {
+      setOpenAddressModal(true);
+    }
+  }, [modalProps]);
 
   return (
     <div className="space-y-6 pt-6 flex justify-center  w-full ">
@@ -121,9 +132,9 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
                       <DatePicker usersAndShops={usersAndShops} />
                       Départ
                       <LocationMarker
-                        onAddressFound={({ address }) => {
+                        onAddressFound={({ address, latitude, longitude }) => {
                           if (address) {
-                            form.setValue("origin", address);
+                            form.setValue("origin", { label: address, latitude, longitude });
                           } else {
                             toast.error("Erreur de localisation", { position: "top-center" });
                           }
@@ -132,21 +143,13 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
                     </FormLabel>
 
                     <FormControl>
-                      {/* <AddressModal
-                        index="origin"
-                        onValueChange={field.onChange}
-                        usersAndShops={usersAndShops}
-                        value={field.value}
-                        ref={field.ref}
-                      /> */}
                       <ButtonAddressModal
                         ref={field.ref}
                         value={field.value}
                         index={"origin"}
                         usersAndShops={usersAndShops}
                         onClick={() => {
-                          setOpenAddressModal(true);
-                          setModalProps({ onValueChange: field.onChange, value: field.value });
+                          setModalProps(() => ({ onValueChange: field.onChange, value: field.value }));
                         }}
                       />
                     </FormControl>
@@ -183,8 +186,7 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
                         index={"destination"}
                         usersAndShops={usersAndShops}
                         onClick={() => {
-                          setOpenAddressModal(true);
-                          setModalProps({ onValueChange: field.onChange, value: field.value });
+                          setModalProps(() => ({ onValueChange: field.onChange, value: field.value }));
                         }}
                       />
                     </FormControl>
@@ -193,6 +195,9 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
                 )}
               />
             </div>
+            <Button type="button" variant="outline" className="w-full" onClick={() => setOpenAddressModal(true)}>
+              modal
+            </Button>
             <FormButton className="w-full">{action}</FormButton>
           </form>
         </Form>
@@ -206,12 +211,12 @@ function SuccessModal({
   onClose,
   reorderedWaypoints,
   usersAndShops,
-}: { isOpen: boolean; onClose: () => void; reorderedWaypoints: string[]; usersAndShops: UserAndShop[] }) {
+}: { isOpen: boolean; onClose: () => void; reorderedWaypoints: Point[]; usersAndShops: UserAndShop[] }) {
   const form = useFormContext<DirectionFormValues>();
   const ori = form.watch("origin");
   const dest = form.watch("destination");
 
-  const directionString = `${googleDirectioUrl}/${ori}/${reorderedWaypoints.join("/")}/${dest}`;
+  const directionString = `${googleDirectioUrl}/${ori.label}/${reorderedWaypoints.map(({ label }) => label).join("/")}/${dest.label}`;
 
   return (
     <Modal
@@ -231,10 +236,10 @@ function SuccessModal({
           Accéder au trajet optimisé
         </Link>
         {reorderedWaypoints.map((value, index) => {
-          const image = usersAndShops.find((shop) => shop.address === value)?.image;
-          const label = usersAndShops.find((shop) => shop.address === value)?.label;
+          const image = usersAndShops.find((shop) => shop.address === value.label)?.image;
+          const label = usersAndShops.find((shop) => shop.address === value.label)?.label;
           return (
-            <div className="flex gap-1 justify-center items-center" key={index + value}>
+            <div className="flex gap-1 justify-center items-center" key={index + value.label}>
               <div
                 className={cn(buttonVariants({ variant: "default", size: "icon" }), "bg-green-500 hover:bg-green-600")}
               >
@@ -255,7 +260,7 @@ function SuccessModal({
                   height={24}
                   className="mr-2 h-4 w-4 object-contain rounded-sm"
                 />
-                <span className=""> {value ? (label ? label : value) : "Entrer une adresse"}</span>
+                <span className=""> {value.label ? (label ? label : value.label) : "Entrer une adresse"}</span>
               </div>
             </div>
           );
@@ -270,14 +275,14 @@ function WaypointsForm({
   setModalProps,
   setOpenAddressModal,
 }: {
+  setOpenAddressModal: (value: boolean) => void;
   usersAndShops: UserAndShop[];
-  setOpenAddressModal: (open: boolean) => void;
   setModalProps: ({
     onValueChange,
     value,
   }: {
-    onValueChange: (address: string) => void;
-    value: string;
+    onValueChange: (address: Point) => void;
+    value: Point;
   }) => void;
 }) {
   const form = useFormContext<DirectionFormValues>();
@@ -290,7 +295,7 @@ function WaypointsForm({
       toast.error("Vous ne pouvez pas ajouter plus de 20 points de passages");
       return;
     }
-    form.setValue("waypoints", [...waypoints, ""]);
+    form.setValue("waypoints", [...waypoints, { label: "" }]);
     setTimeout(() => {
       const button = document.getElementById(`button-${waypoints.length}`);
       if (button) {
@@ -318,7 +323,7 @@ function WaypointsForm({
 
                 {field.value.map((value, index) => (
                   <FormField
-                    key={index + value}
+                    key={index + value.label}
                     control={form.control}
                     name={`waypoints.${index}`}
                     render={({ field }) => (
@@ -337,7 +342,6 @@ function WaypointsForm({
                               index={index}
                               usersAndShops={usersAndShops}
                               onClick={() => {
-                                setOpenAddressModal(true);
                                 setModalProps({ onValueChange: field.onChange, value: field.value });
                               }}
                             />
@@ -369,15 +373,15 @@ function WaypointsForm({
 
 type ButtonAddressModalProps = {
   usersAndShops: UserAndShop[];
-  value: string;
+  value: Point;
   index: number | string;
   onClick: () => void;
 };
 
 const ButtonAddressModal = forwardRef<HTMLButtonElement, ButtonAddressModalProps>(
   ({ usersAndShops, onClick, value, index }, ref) => {
-    const image = usersAndShops.find((u) => u.address === value)?.image;
-    const label = usersAndShops.find((u) => u.address === value)?.label;
+    const image = usersAndShops.find((u) => u.address === value.label)?.image;
+    const label = usersAndShops.find((u) => u.address === value.label)?.label;
 
     return (
       <Button
@@ -411,7 +415,7 @@ const ButtonAddressModal = forwardRef<HTMLButtonElement, ButtonAddressModalProps
         />
         <span className={cn("overflow-hidden whitespace-nowrap", !value ? "opacity-50" : "")}>
           {" "}
-          {value ? (label ? label : value) : "Entrer une adresse"}
+          {value.label ? (label ? label : value.label) : "Entrer une adresse"}
         </span>
       </Button>
     );

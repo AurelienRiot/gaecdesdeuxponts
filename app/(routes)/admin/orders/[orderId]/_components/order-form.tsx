@@ -28,6 +28,9 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
+import { AlertModal } from "@/components/ui/alert-modal-form";
+import { ConfirmModal } from "./confirm-modal";
+import { useState } from "react";
 
 export type ProductFormProps = {
   initialData:
@@ -42,6 +45,7 @@ export type ProductFormProps = {
 export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, users, shops, referer }) => {
   const router = useRouter();
   const prevDateOfShipping = initialData?.dateOfShipping;
+  const [showConfirmModal, setConfirmModal] = useState(false);
 
   const { serverAction: createOrderAction } = useServerAction(createOrder);
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
@@ -135,6 +139,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
       <Separator />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
+          {/* <ConfirmModal onClose={()=> setConfirmModal(false)} isOpen={showConfirmModal} onConfirm={onSubmit}/> */}
           <div className="flex flex-wrap items-end gap-8">
             <SelectUser users={users} />
             {!!initialData && (

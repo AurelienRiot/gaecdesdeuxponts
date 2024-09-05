@@ -6,8 +6,9 @@ import { useState } from "react";
 import { GrMapLocation } from "react-icons/gr";
 import { MapContainer, TileLayer, useMapEvent } from "react-leaflet";
 import { toast } from "sonner";
+import type { Point } from "./direction-schema";
 
-function MapModal({ onValueChange }: { onValueChange: (address: string) => void }) {
+function MapModal({ onValueChange }: { onValueChange: (address: Point) => void }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -30,7 +31,7 @@ function MapModal({ onValueChange }: { onValueChange: (address: string) => void 
   );
 }
 
-function MapSelect({ onValueChange }: { onValueChange: (address: string) => void }) {
+function MapSelect({ onValueChange }: { onValueChange: (address: Point) => void }) {
   return (
     <MapContainer
       center={[47.6600571, -1.9121281]}
@@ -47,14 +48,18 @@ function MapSelect({ onValueChange }: { onValueChange: (address: string) => void
   );
 }
 
-function MapClickHandler({ onValueChange }: { onValueChange: (address: string) => void }) {
+function MapClickHandler({ onValueChange }: { onValueChange: (address: Point) => void }) {
   useMapEvent("click", async (e) => {
     const address = await LocationAutocomplete({ latitude: e.latlng.lat, longitude: e.latlng.lng });
     if (address.length === 0) {
       toast.error("Adresse introuvable");
       return;
     }
-    onValueChange(address[0].label);
+    onValueChange({
+      label: address[0].label,
+      latitude: address[0].coordinates[1],
+      longitude: address[0].coordinates[0],
+    });
   });
 
   return null; // This component does not render anything
