@@ -271,6 +271,7 @@ const SelectProductName = ({
                       .filter(
                         (product) =>
                           !user ||
+                          user.role === "trackOnlyUser" ||
                           product.isArchived ||
                           product.product.isArchived ||
                           (user.role === "pro" ? product.product.isPro : !product.product.isPro),

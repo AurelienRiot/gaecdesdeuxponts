@@ -74,12 +74,7 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "datePickUp",
     header: DatePickUpHeader,
-    cell: ({ row }) => (
-      <div>
-        <DateCell date={row.original.datePickUp} days={true} />
-        <span>{`${getRelativeDate(row.original.datePickUp)}`}</span>
-      </div>
-    ),
+    cell: ({ row }) => <DateCell date={row.original.datePickUp} days={true} />,
   },
   {
     accessorKey: "status",

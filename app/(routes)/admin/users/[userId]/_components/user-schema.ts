@@ -20,7 +20,7 @@ export const schema = z.object({
     },
   ),
   image: z.string().optional().nullable(),
-  isPro: z.boolean().default(false).optional(),
+  role: z.enum(["user", "pro", "trackOnlyUser"]),
   address: addressSchema,
   billingAddress: billingAddressSchema,
 });

@@ -1,37 +1,29 @@
 "use client";
 
-import { Button, LoadingButton } from "@/components/ui/button";
+import { Button, buttonVariants, type ButtonProps } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import useServerAction from "@/hooks/use-server-action";
+import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
-import { toast } from "sonner";
+import { forwardRef, useState } from "react";
+import { useFormStatus } from "react-dom";
 import changeEmail from "../_actions/change-email";
 
 function MailForm({ email, id }: { email: string | null; id: string }) {
   const [display, setDisplay] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { serverAction } = useServerAction(changeEmail);
   const router = useRouter();
 
-  async function onSumbit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-    const newEmail = new FormData(e.target as HTMLFormElement).get("email");
-    await changeEmail({ email: newEmail as string, id })
-      .then((result) => {
-        if (!result.success) {
-          toast.error(result.message, { position: "top-center" });
-          return;
-        }
-        toast.success("Email modifie avec succes", { position: "top-center" });
+  async function onSumbit(formData: FormData) {
+    const email = formData.get("email") as string;
+    serverAction({
+      data: { email, id },
+      onSuccess: () => {
         router.refresh();
         setDisplay(false);
-      })
-      .catch((error) => {
-        toast.error("Une erreur est survenue", { position: "top-center" });
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      },
+    });
   }
   return (
     <div className="py-4 space-y-4">
@@ -43,11 +35,9 @@ function MailForm({ email, id }: { email: string | null; id: string }) {
         Changer l'email
       </Button>
       {display && (
-        <form className="flex gap-4" onSubmit={onSumbit}>
-          <Input disabled={loading} name="email" className="max-w-xs" placeholder="Entrez la nouvelle adresse email" />
-          <LoadingButton type="submit" disabled={loading}>
-            Valider
-          </LoadingButton>
+        <form className="flex gap-4" action={onSumbit}>
+          <Input type={"email"} name="email" className="max-w-xs" placeholder="Entrez la nouvelle adresse email" />
+          <LoadingButton type="submit">Valider</LoadingButton>
         </form>
       )}
     </div>
@@ -55,3 +45,22 @@ function MailForm({ email, id }: { email: string | null; id: string }) {
 }
 
 export default MailForm;
+
+const LoadingButton = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, disabled, children, ...props }, ref) => {
+    const { pending } = useFormStatus();
+    return (
+      <button
+        className={cn(buttonVariants({ variant, size, className }))}
+        disabled={disabled || pending}
+        ref={ref}
+        {...props}
+      >
+        <>
+          {pending && <Loader2 className={cn("h-4 w-4 animate-spin", children ? "mr-2" : "")} />}
+          {children}
+        </>
+      </button>
+    );
+  },
+);

@@ -28,6 +28,8 @@ import createUser from "../_actions/create-user";
 import { schema, type UserFormValues } from "./user-schema";
 import { Label } from "@/components/ui/label";
 import CheckboxForm from "@/components/chekbox-form";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import SelectRole from "./select-role";
 
 export const CreateUserForm = () => {
   const { serverAction } = useServerAction(createUser);
@@ -46,6 +48,7 @@ export const CreateUserForm = () => {
       company: "",
       completed: true,
       phone: "",
+      role: "user",
       address: {
         label: "",
         city: "",
@@ -59,7 +62,7 @@ export const CreateUserForm = () => {
     },
   });
 
-  const isPro = form.watch("isPro");
+  const role = form.watch("role");
 
   const onSubmit = async (data: UserFormValues) => {
     data.name = data.name.trim();
@@ -133,7 +136,11 @@ export const CreateUserForm = () => {
                   <FormItem>
                     <FormLabel>Entreprise</FormLabel>
                     <FormControl>
-                      <Input disabled={form.formState.isSubmitting || !isPro} placeholder="entreprise" {...field} />
+                      <Input
+                        disabled={form.formState.isSubmitting || role !== "pro"}
+                        placeholder="entreprise"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -158,20 +165,7 @@ export const CreateUserForm = () => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="isPro"
-                render={({ field }) => (
-                  <CheckboxForm
-                    ref={field.ref}
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    disabled={form.formState.isSubmitting}
-                    title="Professionnel"
-                    description="Faire de cette utilisateur un professionnel"
-                  />
-                )}
-              />
+              <SelectRole />
               <FormField
                 control={form.control}
                 name="completed"

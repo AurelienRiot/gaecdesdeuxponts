@@ -16,7 +16,7 @@ const MAX_ClIENTS = 9;
 export const dynamic = "force-dynamic";
 
 const DashboardPage = (context: { searchParams: { month: string | undefined; year: string | undefined } }) => {
-  const month = Number(context.searchParams.month || new Date().getMonth());
+  const month = Number(context.searchParams.month || new Date().getMonth() - 1);
   const year = Number(context.searchParams.year || new Date().getFullYear());
   const startDate = new Date(year, month, 1);
   const endDate = new Date(year, month + 1, 0);

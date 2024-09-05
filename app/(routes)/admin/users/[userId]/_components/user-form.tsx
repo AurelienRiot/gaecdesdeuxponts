@@ -22,6 +22,7 @@ import deleteUser from "../../_actions/delete-user";
 import updateUser from "../_actions/update-user";
 import MailForm from "./mail-form";
 import { schema, type UserFormValues } from "./user-schema";
+import SelectRole from "./select-role";
 
 interface UserFormProps {
   initialData: UserWithOrdersAndAdress;
@@ -32,7 +33,6 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
   const router = useRouter();
   const { serverAction } = useServerAction(updateUser);
   const [open, setOpen] = useState(incomplete);
-  console.log(open);
 
   const title = "Fiche utilisateur";
   const description = "Modifier un utilisateur";
@@ -48,7 +48,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
       image: initialData.image || "",
       company: initialData.company || "",
       phone: initialData.phone || "",
-      isPro: initialData.role === "pro" || false,
+      role: ["user", "pro", "trackOnlyUser"].includes(initialData.role) ? (initialData.role as "user") : "user",
       address: {
         label: initialData.address?.label || "",
         city: initialData.address?.city || "",
@@ -80,7 +80,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
     }
     await serverAction({ data, onSuccess });
   };
-  const isPro = form.watch("isPro");
+  const role = form.watch("role");
 
   return (
     <>
@@ -151,7 +151,11 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
                         Entreprise
                       </FormLabel>
                       <FormControl>
-                        <Input disabled={form.formState.isSubmitting || !isPro} placeholder="entreprise" {...field} />
+                        <Input
+                          disabled={form.formState.isSubmitting || role !== "pro"}
+                          placeholder="entreprise"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -176,20 +180,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="isPro"
-                  render={({ field }) => (
-                    <CheckboxForm
-                      ref={field.ref}
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      disabled={form.formState.isSubmitting}
-                      title="Professionnel"
-                      description="Faire de cette utilisateur un professionnel"
-                    />
-                  )}
-                />
+                <SelectRole />
                 <FormField
                   control={form.control}
                   name="completed"

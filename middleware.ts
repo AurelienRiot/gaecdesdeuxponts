@@ -12,10 +12,6 @@ export async function middleware(req: NextRequest) {
     const role = token.role;
     const path = req.nextUrl.pathname;
 
-    if (role === "deleted") {
-      return redirectToLogin(req);
-    }
-
     if (path.startsWith("/admin")) {
       if (role !== "admin" && role !== "readOnlyAdmin") {
         return redirectToLogin(req);

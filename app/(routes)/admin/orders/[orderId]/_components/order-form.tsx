@@ -207,7 +207,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
           </LoadingButton>
         </form>
       </Form>
-      {!!initialData?.id && !!initialData.dateOfEdition && (
+      {!!initialData?.id && !!initialData.dateOfEdition && user?.role !== "trackOnlyUser" && (
         <div id="button-container" className="flex flex-wrap gap-4">
           {user?.role === "pro" ? (
             <div>

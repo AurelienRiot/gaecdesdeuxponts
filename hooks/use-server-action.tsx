@@ -1,11 +1,12 @@
+"use client";
 import type { ReturnTypeServerAction } from "@/lib/server-action";
+import { addDelay } from "@/lib/utils";
 import { useState } from "react";
-import { type ExternalToast, toast } from "sonner";
+import { toast, type ExternalToast } from "sonner";
 
 function useServerAction<D, R, E = undefined>(action: (data: D) => Promise<ReturnTypeServerAction<R, E>>) {
   const [loading, setLoading] = useState(false);
-
-  async function serverAction({
+  const serverAction = async ({
     data,
     toastOptions,
     onSuccess,
@@ -17,8 +18,9 @@ function useServerAction<D, R, E = undefined>(action: (data: D) => Promise<Retur
     onError?: (e?: E | undefined) => void;
     onSuccess?: (result?: R) => void;
     toastOptions?: ExternalToast;
-  }) {
+  }) => {
     setLoading(true);
+
     return await action(data)
       .then(async (result) => {
         if (!result.success) {
@@ -38,7 +40,7 @@ function useServerAction<D, R, E = undefined>(action: (data: D) => Promise<Retur
         await onFinally?.();
         setLoading(false);
       });
-  }
+  };
 
   return { serverAction, loading, setLoading };
 }

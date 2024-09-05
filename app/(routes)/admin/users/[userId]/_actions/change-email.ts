@@ -3,11 +3,12 @@
 import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
+import { addDelay } from "@/lib/utils";
 import * as z from "zod";
 
 const schema = z.object({
-  email: z.string().email(),
   id: z.string(),
+  email: z.string().email(),
 });
 
 async function changeEmail(data: z.infer<typeof schema>) {
@@ -15,10 +16,11 @@ async function changeEmail(data: z.infer<typeof schema>) {
     data,
     schema,
     getUser: checkAdmin,
-    serverAction: async (data) => {
+    serverAction: async ({ email, id }) => {
+      await addDelay(2000);
       const user = await prismadb.user.findUnique({
         where: {
-          id: data.id,
+          id,
         },
       });
 
@@ -29,7 +31,7 @@ async function changeEmail(data: z.infer<typeof schema>) {
         };
       }
 
-      if (user.email === data.email) {
+      if (user.email === email) {
         return {
           success: false,
           message: "Le nouvel email est le même que l'ancien",
@@ -38,7 +40,7 @@ async function changeEmail(data: z.infer<typeof schema>) {
 
       const existingUser = await prismadb.user.findUnique({
         where: {
-          email: data.email,
+          email,
         },
       });
 
@@ -52,10 +54,10 @@ async function changeEmail(data: z.infer<typeof schema>) {
       try {
         await prismadb.user.update({
           where: {
-            id: user.id,
+            id,
           },
           data: {
-            email: data.email,
+            email,
             accounts: {
               deleteMany: {},
             },
