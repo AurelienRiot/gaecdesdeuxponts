@@ -1,0 +1,28 @@
+
+model Shop {
+  id            String @unique @id @default(cuid())
+  name          String
+  lat           Float 
+  long          Float
+  address       String
+  phone         String
+  tags          String[]
+  type          ShopType @default(sell)
+  email         String?
+  description   String
+  imageUrl      String?
+  website       String?
+  order         Order[] 
+  amapOrders     AMAPOrder[]
+  isArchived    Boolean  @default(false)
+  createdAt     DateTime @default(now()) 
+  updatedAt     DateTime @updatedAt 
+
+   }
+
+enum ShopType {
+  sell
+  product
+  both
+  amap
+}

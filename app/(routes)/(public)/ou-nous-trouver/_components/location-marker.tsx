@@ -74,6 +74,7 @@ export const LocationMarker = ({
 
   const handleLocationFound = async (e: GeolocationPosition) => {
     const { latitude, longitude } = e.coords;
+    console.log({ latitude, longitude });
     const address = await LocationAutocomplete({ latitude, longitude });
     if (address.length === 0) {
       onAddressFound({ latitude, longitude });
@@ -95,9 +96,16 @@ export const LocationMarker = ({
       return;
     }
     navigator.geolocation.getCurrentPosition(handleLocationFound, (e) => {
-      toast.error("Veuillez autoriser la localisation.", {
-        position: "top-center",
-      });
+      if (e.code === 1) {
+        toast.error("Veuillez autoriser la localisation.", {
+          position: "top-center",
+        });
+      } else {
+        toast.error("Impossible de trouver votre position.", {
+          position: "top-center",
+        });
+      }
+
       setLoading(false);
     });
   };

@@ -1,0 +1,55 @@
+model Order {
+  id         String @unique @id @default(cuid())
+  orderItems OrderItem[]
+  totalPrice Float 
+  dateOfPayment       DateTime?
+  dateOfShipping      DateTime?
+  dateOfEdition       DateTime?
+  orderEmail           DateTime?
+  shippingEmail          DateTime?
+  invoiceEmail           DateTime?
+  customerId     String?  @unique
+  customer       Customer? 
+  userId     String  
+  user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shopId     String? 
+  shop       Shop? @relation(fields: [shopId], references: [id])
+  datePickUp DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+  @@index([shopId])
+
+}
+
+model Customer {
+  id String @unique @id @default(cuid())
+  name String
+  customerId String
+  shippingAddress String
+  facturationAddress String
+  phone String?
+  email String
+
+  orderId String @unique
+  order Order @relation(fields: [orderId], references: [id],onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+
+model OrderItem {
+  id           String @unique @id @default(cuid())
+  itemId       String
+  price        Float
+  quantity     Float @default(1)
+  unit         String?
+  name         String
+  categoryName String
+  description  String @db.VarChar(1000)
+  orderId      String
+  order        Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}

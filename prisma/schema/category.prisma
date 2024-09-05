@@ -1,0 +1,10 @@
+model Category {
+  id          String @unique @id @default(cuid())
+  name        String @unique
+  description String?
+   imageUrl   String
+  products    MainProduct[] @relation("CategoryToProduct")
+  createdAt   DateTime @default(now())
+  updatedAd   DateTime @updatedAt
+
+}
