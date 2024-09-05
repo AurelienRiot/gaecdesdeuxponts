@@ -58,7 +58,7 @@ export const AMAPClient: React.FC<AMAPClientProps> = ({ initialData, initialDate
           date={dateRange}
           setDate={setDateRange}
           startMonth={new Date(2024, 0)}
-          endMonth={new Date(new Date().getFullYear(), 11)}
+          endMonth={new Date(new Date().getFullYear() + 1, 11)}
         />
         <LoadingButton className="w-fit" disabled={loading} onClick={() => handleChangeDate()}>
           Valider

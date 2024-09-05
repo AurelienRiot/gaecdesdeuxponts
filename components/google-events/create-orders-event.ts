@@ -15,9 +15,10 @@ export default async function createOrdersEvent(data: { date: Date }) {
 
   const events = await getEventsList({ startDate, endDate });
   if (events.success && events.data) {
-    const commandEvent = events.data.find((event) => event.id?.startsWith("commandes"));
-    if (commandEvent?.id) {
-      await deleteEvent(commandEvent.id);
+    for (const event of events.data) {
+      if (event.id?.includes("command")) {
+        await deleteEvent(event.id);
+      }
     }
   }
 

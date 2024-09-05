@@ -1,40 +1,49 @@
 "use server";
 
 import { checkAdmin } from "@/components/auth/checkAuth";
+import createOrdersEvent from "@/components/google-events/create-orders-event";
 import { createCustomer } from "@/components/pdf/pdf-data";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
+import { revalidateTag } from "next/cache";
 import { orderSchema, type OrderFormValues } from "../_components/order-shema";
-import createOrdersEvent from "@/components/google-events/create-orders-event";
-import { revalidatePath, revalidateTag } from "next/cache";
 
 async function createOrder(data: OrderFormValues) {
   return await safeServerAction({
     schema: orderSchema,
     data,
     getUser: checkAdmin,
-    serverAction: async (data) => {
+    serverAction: async ({
+      datePickUp,
+      id,
+      orderItems,
+      totalPrice,
+      userId,
+      dateOfEdition,
+      dateOfPayment,
+      dateOfShipping,
+      shopId,
+    }) => {
       const order = await prismadb.order.create({
         data: {
-          id: data.id,
-          totalPrice: data.totalPrice,
-          userId: data.userId,
-          dateOfShipping: data.dateOfShipping,
-          dateOfPayment: data.dateOfPayment,
-          dateOfEdition: data.dateOfEdition,
-          datePickUp: data.datePickUp,
-          shopId: data.shopId,
-
+          id,
+          totalPrice,
+          userId,
+          dateOfShipping,
+          dateOfPayment,
+          dateOfEdition,
+          datePickUp,
+          shopId,
           orderItems: {
-            create: data.orderItems.map((product) => {
+            create: orderItems.map(({ categoryName, description, itemId, name, price, quantity, unit }) => {
               return {
-                itemId: product.itemId,
-                price: product.price || 0,
-                quantity: product.quantity,
-                unit: product.unit,
-                name: product.name,
-                categoryName: product.categoryName,
-                description: product.description,
+                itemId,
+                price,
+                quantity,
+                unit,
+                name,
+                categoryName,
+                description,
               };
             }),
           },
@@ -53,15 +62,15 @@ async function createOrder(data: OrderFormValues) {
         },
       });
 
-      if (data.dateOfShipping) {
-        await createOrdersEvent({ date: data.dateOfShipping });
+      if (dateOfShipping) {
+        await createOrdersEvent({ date: dateOfShipping });
       }
       revalidateTag("orders");
       return {
         success: true,
         message: "Commande crée",
         data: {
-          id: data.id,
+          id,
         },
       };
     },

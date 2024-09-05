@@ -47,15 +47,15 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
           datePickUp: datePickUp,
           shopId: shopId,
           orderItems: {
-            create: orderItems.map((product) => {
+            create: orderItems.map(({ categoryName, description, itemId, name, price, quantity, unit }) => {
               return {
-                itemId: product.itemId,
-                price: product.price || 0,
-                quantity: product.quantity,
-                unit: product.unit,
-                name: product.name,
-                categoryName: product.categoryName,
-                description: product.description,
+                itemId,
+                price,
+                quantity,
+                unit,
+                name,
+                categoryName,
+                description,
               };
             }),
           },
@@ -82,19 +82,16 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
         })(),
         (async () => {
           if (dateOfShipping) {
-            console.log(dateOfShipping);
-            revalidateTag("orders");
             await createOrdersEvent({ date: dateOfShipping });
           }
         })(),
         (async () => {
           if (prevDateOfShipping && prevDateOfShipping !== dateOfShipping) {
-            console.log(prevDateOfShipping);
-            revalidateTag("orders");
             await createOrdersEvent({ date: prevDateOfShipping });
           }
         })(),
       ]);
+      revalidateTag("orders");
 
       return {
         success: true,
