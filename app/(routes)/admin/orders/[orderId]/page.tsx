@@ -10,6 +10,7 @@ const OrderFormPage = async ({
   const headersList = headers();
 
   const referer = decodeURIComponent(searchParams.referer || headersList.get("referer") || "/admin/orders");
+  console.log({ referer });
   const orderId = params.orderId === "new" ? decodeURIComponent(searchParams.id || "new") : params.orderId;
   const shippingOrders = await prismadb.order.findUnique({
     where: {

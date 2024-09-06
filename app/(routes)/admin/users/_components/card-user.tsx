@@ -18,6 +18,14 @@ interface CardUserProps {
 const CardUser: React.FC<CardUserProps> = ({ user, className, status, display, orderLength }) => {
   const name = user.company || user.name || user.email || "";
 
+  const role = !user.completed
+    ? "Incomplet"
+    : user.role === "pro"
+      ? "Professionnel"
+      : user.role === "user"
+        ? "Particulier"
+        : "Suivie seulement";
+
   return (
     <>
       <Card className={cn("flex h-full relative w-[150px] sm:w-[200px] flex-col justify-between ", className)}>
@@ -39,7 +47,7 @@ const CardUser: React.FC<CardUserProps> = ({ user, className, status, display, o
         </CardHeader>
         <CardContent className="text-center p-2  rounded-md w-fit mx-auto         ">
           <div className="flex flex-col items-center justify-center gap-1 font-bold rounded-md">
-            {user.completed ? <p className="text-green-500">Complet</p> : <p className="text-red-500">Incomplet</p>}
+            <p className={role === "Incomplet" ? "text-red-500" : "text-green-500"}>{role}</p>
             <p className="flex gap-2 items-center justify-center">
               {" "}
               {orderLength} <Package className="h-4 w-4" />

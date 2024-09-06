@@ -16,9 +16,11 @@ import type { Shop } from "@prisma/client";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { deleteOrder } from "../../_actions/delete-orders";
+import confirmOrder from "../_actions/confirm-order";
 import createOrder from "../_actions/create-order";
 import updateOrder from "../_actions/update-order";
 import FormDatePicker from "./date-picker";
@@ -28,9 +30,6 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
-import { AlertModal } from "@/components/ui/alert-modal-form";
-import { ConfirmModal } from "./confirm-modal";
-import { useState } from "react";
 
 export type ProductFormProps = {
   initialData:
@@ -45,10 +44,11 @@ export type ProductFormProps = {
 export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, users, shops, referer }) => {
   const router = useRouter();
   const prevDateOfShipping = initialData?.dateOfShipping;
-  const [showConfirmModal, setConfirmModal] = useState(false);
+  const [showValidateModal, setShowValidateModal] = useState(false);
 
   const { serverAction: createOrderAction } = useServerAction(createOrder);
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
+  const { serverAction: confirmOrderAction, loading } = useServerAction(confirmOrder);
 
   const title = initialData?.id
     ? { label: "Modifier la commande", color: "text-blue-500" }
@@ -99,25 +99,33 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
 
   const user = userId ? users.find((user) => user.id === userId) : null;
 
+  const onConfirm = async () => {
+    function onSuccess() {
+      router.replace(`/admin/orders/${initialData?.id}?referer=${encodeURIComponent(referer)}#button-container`);
+      router.refresh();
+    }
+    if (!initialData?.id) {
+      toast.error("Une erreur est survenue");
+      return;
+    }
+    await confirmOrderAction({
+      data: { id: initialData.id, confirm: !initialData.shippingEmail },
+      onSuccess,
+      toastOptions: { position: "top-center" },
+    });
+  };
+
   const onSubmit = async (data: OrderFormValues) => {
-    function onSuccessUpdate() {
-      if (!initialData?.dateOfEdition) {
-        router.refresh();
-      }
-    }
-    function onSuccessCreate(result?: { id: string }) {
-      if (result) {
-        router.replace(`/admin/orders/${result.id}?referer=${encodeURIComponent(referer)}#button-container`);
-        router.refresh();
-      }
-    }
     initialData?.id
       ? await updateOrderAction({
           data: { ...data, prevDateOfShipping },
-          onSuccess: onSuccessUpdate,
           toastOptions: { position: "top-center" },
         })
-      : await createOrderAction({ data, onSuccess: onSuccessCreate, toastOptions: { position: "top-center" } });
+      : await createOrderAction({ data, toastOptions: { position: "top-center" } });
+
+    const id = form.getValues("id");
+    router.replace(`/admin/orders/${id}?referer=${encodeURIComponent(referer)}#button-container`);
+    router.refresh();
   };
 
   return (
@@ -130,7 +138,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
             data={{ id: initialData.id, dateOfShipping: initialData.dateOfShipping }}
             isSubmitting={form.formState.isSubmitting}
             onSuccess={() => {
-              router.push("/admin/orders");
+              router.push(referer);
               router.refresh();
             }}
           />
@@ -212,23 +220,34 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
           </LoadingButton>
         </form>
       </Form>
-      {!!initialData?.id && !!initialData.dateOfEdition && user?.role !== "trackOnlyUser" && (
+      {!!initialData?.id && !!initialData.dateOfEdition && (
         <div id="button-container" className="flex flex-wrap gap-4">
-          {user?.role === "pro" ? (
+          {user?.role === "pro" && (
             <div>
               <Label>Bon de livraison</Label>
               <DisplayShippingOrder orderId={form.getValues("id")} isSend={!!initialData.shippingEmail} />
             </div>
-          ) : (
+          )}
+          {user?.role === "user" && (
             <div>
               <Label>Facture</Label>
               <DisplayInvoice orderId={form.getValues("id")} isSend={!!initialData.invoiceEmail} />
             </div>
           )}
+          {user?.role === "trackOnlyUser" && (
+            <Button
+              onClick={onConfirm}
+              disabled={form.formState.isSubmitting || loading}
+              variant={initialData.shippingEmail ? "destructive" : "default"}
+              className="w-fit"
+            >
+              {initialData.shippingEmail ? "Annuler la livraison" : "Confirmer la livraison"}
+            </Button>
+          )}
         </div>
       )}
       {!!initialData?.id && (
-        <Button asChild onClick={() => router.push(`/admin/orders/new`)} className=" w-fit">
+        <Button asChild className=" w-fit">
           <Link
             onClick={() => toast.success("Création d'une nouvelle commande", { position: "bottom-center" })}
             href={`/admin/orders/new?id=${encodeURIComponent(form.getValues("id"))}&referer=${encodeURIComponent(referer)}`}
