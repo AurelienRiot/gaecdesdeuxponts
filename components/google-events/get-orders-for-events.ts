@@ -1,7 +1,5 @@
 import prismadb from "@/lib/prismadb";
 import { getUnitLabel } from "../product/product-function";
-import { directionGoogle } from "./direction-google";
-import { origin, destination } from "@/app/(routes)/admin/calendar/_components/direction-schema";
 
 export const getOrders = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
   const start = startDate.toISOString().split("T")[0];
@@ -81,7 +79,7 @@ export const getOrders = async ({ startDate, endDate }: { startDate: Date; endDa
     {} as Record<string, (typeof amapOrders)[0]>,
   );
 
-  let formattedOrders = orders.map((order) => ({
+  const formattedOrders = orders.map((order) => ({
     id: order.id,
     customerId: order.user.id,
     shippingAddress: order.customer?.shippingAddress,
@@ -97,14 +95,14 @@ export const getOrders = async ({ startDate, endDate }: { startDate: Date; endDa
     })),
   }));
 
-  if (formattedOrders.length > 1) {
-    const waypoints = formattedOrders.map((order) => order.shippingAddress || "");
+  // if (formattedOrders.length > 1) {
+  //   const waypoints = formattedOrders.map((order) => order.shippingAddress || "");
 
-    const orderWaypoints = await directionGoogle({ origin: origin.label, destination: destination.label, waypoints });
-    if (orderWaypoints.success && orderWaypoints.data) {
-      formattedOrders = orderWaypoints.data.map((index) => formattedOrders[index]);
-    }
-  }
+  //   const orderWaypoints = await directionGoogle({ origin: origin.label, destination: destination.label, waypoints });
+  //   if (orderWaypoints.success && orderWaypoints.data) {
+  //     formattedOrders = orderWaypoints.data.map((index) => formattedOrders[index]);
+  //   }
+  // }
 
   const productQuantities = orders
     .flatMap((order) =>

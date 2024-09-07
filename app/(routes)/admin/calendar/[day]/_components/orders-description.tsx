@@ -4,9 +4,9 @@ import { ListOrdered } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaMapLocationDot } from "react-icons/fa6";
+import { destination, origin } from "../../_components/direction-schema";
 import DisplayAddress from "./display-address";
 import DisplayItem from "./display-item";
-import { destination, origin } from "../../_components/direction-schema";
 
 const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 
@@ -19,7 +19,7 @@ function OrderDescriptions({
 
   return (
     <div className="space-y-6">
-      <DirectionUrl formattedOrders={formattedOrders} />
+      {/* <DirectionUrl formattedOrders={formattedOrders} /> */}
 
       {formattedOrders.map((order) => (
         <div key={order.id} className="bg-white p-4 rounded-md shadow-sm">

@@ -1,3 +1,4 @@
+import { destination, origin } from "@/app/(routes)/admin/calendar/_components/direction-schema";
 import { calendarAPI } from "@/lib/api-google";
 import { createId } from "@/lib/id";
 import { addHours, format } from "date-fns";
@@ -5,7 +6,6 @@ import { fr } from "date-fns/locale";
 import deleteEvent from "./delete-events";
 import getEventsList from "./get-events-list";
 import getOrders from "./get-orders-for-events";
-import { destination, origin } from "@/app/(routes)/admin/calendar/_components/direction-schema";
 
 const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 
@@ -105,5 +105,5 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
       ? ""
       : `<strong><a  href="${googleDirectioUrl}/${origin.label}/${uniqueShippingAddresses.join("/")}/${destination.label}">Voir le parcours</a></strong> <br /><br />`;
 
-  return header + productDescriptions + amapOrdersDescription + directionString + orderDescriptions;
+  return header + productDescriptions + amapOrdersDescription + orderDescriptions;
 }
