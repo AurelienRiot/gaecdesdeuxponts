@@ -3,13 +3,10 @@ import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
 import type { ProductWithOptionsAndMain } from "@/types";
 import Link from "next/link";
-import { PlateVis } from "../plate-vis";
+import DisplayMinimalTiptapEditor from "../minimal-tiptap/display-minimal-tiptap";
 import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
-import AddToCartButton, {
-  BulkQuantity,
-  CustomQuantityAddToCart,
-} from "./cart-buttons";
+import AddToCartButton, { BulkQuantity, CustomQuantityAddToCart } from "./cart-buttons";
 import type { OptionsArray } from "./product-function";
 
 interface InfoProps {
@@ -19,19 +16,12 @@ interface InfoProps {
   scroll?: boolean;
 }
 
-const Info: React.FC<InfoProps> = ({
-  sameProducts,
-  scroll,
-  product,
-  optionsArray,
-}) => {
+const Info: React.FC<InfoProps> = ({ sameProducts, scroll, product, optionsArray }) => {
   const { quantities } = useCart();
   const value = product.price;
   return (
     <div className="space-y-6">
-      <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-        {product.name}
-      </h2>
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white">{product.name}</h2>
       <Separator className="w-48" />
       <div className="mt-3 items-end justify-between">
         <p className="text-2xl text-gray-900 dark:text-white">
@@ -53,11 +43,7 @@ const Info: React.FC<InfoProps> = ({
         <>
           <Separator className="w-48" />
 
-          <OptionsDisplay
-            optionsArray={optionsArray}
-            product={product}
-            sameProducts={sameProducts}
-          />
+          <OptionsDisplay optionsArray={optionsArray} product={product} sameProducts={sameProducts} />
         </>
       )}
       <Separator className="w-48" />
@@ -70,7 +56,7 @@ const Info: React.FC<InfoProps> = ({
         <AddToCartButton type="text" data={product} />
       )}
 
-      <PlateVis
+      <DisplayMinimalTiptapEditor
         value={product.product.productSpecs}
         className={scroll ? "h-[500px] overflow-scroll hide-scrollbar" : "p-0"}
       />
@@ -96,11 +82,9 @@ const OptionsDisplay = ({ optionsArray, product, sameProducts }: InfoProps) => {
               const selectedProduct = sameProducts.some((p) => {
                 return productOption.every((o, idx) => {
                   return o.value
-                    ? o.value ===
-                        p.options.find((op) => op.name === o.name)?.value
+                    ? o.value === p.options.find((op) => op.name === o.name)?.value
                     : idx === index
-                      ? value ===
-                        p.options.find((op) => op.name === o.name)?.value
+                      ? value === p.options.find((op) => op.name === o.name)?.value
                       : true;
                 });
               });
@@ -123,9 +107,7 @@ const OptionsDisplay = ({ optionsArray, product, sameProducts }: InfoProps) => {
               return (
                 <Badge
                   key={value + i}
-                  variant={
-                    isActive ? "green" : !isAvailable ? "disable" : "outline"
-                  }
+                  variant={isActive ? "green" : !isAvailable ? "disable" : "outline"}
                   className="py-1"
                 >
                   {isAvailable ? (

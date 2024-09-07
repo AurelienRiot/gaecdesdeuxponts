@@ -93,10 +93,6 @@
     @apply tracking-tight;
   }
 
-  .plate-ui h1,
-  .plate-ui h2 {
-    @apply tracking-wide;
-  }
 }
 
 @layer components {

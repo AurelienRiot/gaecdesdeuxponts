@@ -1,11 +1,11 @@
 "use client";
 
+import CheckboxForm from "@/components/chekbox-form";
 import DeleteButton from "@/components/delete-button";
 import UploadImage from "@/components/images-upload/image-upload";
 import type { OptionsArray } from "@/components/product/product-function";
 import { LoadingButton } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -21,10 +21,9 @@ import { useForm } from "react-hook-form";
 import deleteProduct from "../../_actions/delete-product";
 import { createProduct } from "../_actions/create-product";
 import { updateProduct } from "../_actions/update-product";
-import { PlateEditor } from "./plate-editor";
 import { mainProductSchema, type ProductFormValues } from "./product-schema";
+import ProductSpecs from "./product-specs";
 import { ProductWithOptions } from "./product-with-options-form";
-import CheckboxForm from "@/components/chekbox-form";
 
 type ProductFormProps = {
   initialData: MainProductWithProducts | null;
@@ -209,19 +208,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
             />
           </div>
           <ProductWithOptions optionsArray={optionsArray} />
-          <PlateEditor
-            loading={form.formState.isSubmitting}
-            initialValue={
-              initialData?.productSpecs
-                ? JSON.parse(initialData?.productSpecs)
-                : [
-                    {
-                      type: "p",
-                      children: [{ text: "Specifications" }],
-                    },
-                  ]
-            }
-          />
+          <ProductSpecs />
 
           <LoadingButton disabled={form.formState.isSubmitting} className="ml-auto" type="submit">
             {action}

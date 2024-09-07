@@ -17,14 +17,17 @@
       },
       "complexity": {
         "noUselessFragments": "off",
-        "useLiteralKeys": "off"
+        "useLiteralKeys": "off",
+        "noBannedTypes": "off"
       },
       "a11y": {
         "noSvgWithoutTitle": "off",
         "noAriaHiddenOnFocusable": "off"
       },
       "suspicious": {
-        "noArrayIndexKey": "off"
+        "noArrayIndexKey": "off",
+        "noExplicitAny": "off",
+        "noConfusingVoidType": "off"
       },
       "style": {
         "useTemplate": "off",

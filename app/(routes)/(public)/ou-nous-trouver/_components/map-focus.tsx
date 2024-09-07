@@ -2,7 +2,7 @@
 import AddressAutocomplete, { type Suggestion } from "@/actions/adress-autocompleteFR";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { X } from "lucide-react";
-import { type Dispatch, type SetStateAction, useState } from "react";
+import { type Dispatch, type SetStateAction, useState, useRef } from "react";
 import { Marker, useMap } from "react-leaflet";
 import { MakePin } from "./marker-pin";
 import { cn } from "@/lib/utils";
@@ -28,6 +28,7 @@ const MapFocus = ({
   const [query, setQuery] = useState("");
   const [pin, setPin] = useState<{ label: string; lat: number; long: number } | undefined>(undefined);
   const map = useMap();
+  const inputRef = useRef<HTMLInputElement>(null);
   const posthog = usePostHog();
 
   const setSearchTerm = async (value: string) => {
@@ -78,29 +79,40 @@ const MapFocus = ({
 
       <Command loop shouldFilter={false} className={className}>
         <CommandInput
+          ref={inputRef}
           title="Entrer votre adresse"
           placeholder="Entrer votre adresse..."
-          className="z-[400] focus:text-base bg-background mb-1 h-9 min-w-48  p-4 shadow-md"
+          className="z-[400]  bg-background mb-1 h-9 w-44 focus:w-56 text-xs transition-all  p-4 pr-0 shadow-md peer"
           value={query}
           showIcon={false}
           onValueChange={(e) => {
             setSearchTerm(e);
           }}
         />
+        <div className="absolute z-[401] peer-focus:from-70% peer-focus:to-90% inset-0 h-9 w-full bg-gradient-to-r pointer-events-none from-transparent from-80% to-95% to-background" />
         <IconButton
           Icon={X}
-          onClick={() => {
+          onMouseDown={(e) => {
+            e.preventDefault();
             setSuggestions(undefined);
             setQuery("");
+            if (inputRef.current) {
+              inputRef.current.focus();
+            }
           }}
           noStyle
           iconClassName="size-4"
-          className="absolute -right-0
-          top-[10px] z-[401] cursor-pointer  opacity-50"
-          title="Fermer la recherche"
+          className="absolute right-1
+          top-[10px] z-[402] cursor-pointer opacity-0 peer-focus:opacity-100 transition-opacity "
+          title="Réinitialiser la recherche"
         />
 
-        <CommandList className={cn("z-[400] space-y-2 rounded-md bg-popover", suggestions ? "p-2" : "")}>
+        <CommandList
+          className={cn(
+            "z-[400] space-y-2 rounded-md bg-popover p-2 max-w-56",
+            query.length > 3 && suggestions ? "" : "hidden",
+          )}
+        >
           {query.length > 3 && suggestions && (
             <CommandEmpty className="flex w-full cursor-default select-none items-center rounded-sm bg-popover px-2 py-1 text-left text-sm text-popover-foreground">
               Adresse introuvable
@@ -109,7 +121,7 @@ const MapFocus = ({
           {suggestions?.map((address, index) => (
             <CommandItem
               className="cursor-pointer   bg-popover text-popover-foreground"
-              value={index.toString()}
+              value={address.label}
               key={address.label}
               onSelect={() => onSelectAddress(address)}
             >
