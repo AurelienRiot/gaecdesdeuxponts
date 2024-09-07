@@ -11,7 +11,6 @@ export const getAMAPOrders = unstable_cache(
       WHERE date >= ${beginMonth} AND date <= ${endMonth}
     );
   `.then((orders) => {
-      console.log(orders[0]);
       return orders.flatMap((order) => order.shippingDays).filter((date): date is Date => date instanceof Date);
     });
   },

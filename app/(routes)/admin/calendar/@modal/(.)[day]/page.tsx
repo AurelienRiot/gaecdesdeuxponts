@@ -19,6 +19,7 @@ async function IntercepteDayPage({ params }: { params: { day: string | undefined
   const result = await getOrders({ startDate, endDate }).catch((error) => {
     console.log(error);
   });
+  console.log(result?.groupedAMAPOrders);
 
   return (
     <ModalDay date={startDate}>

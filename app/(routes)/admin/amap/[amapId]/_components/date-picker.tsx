@@ -30,16 +30,16 @@ const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
       if (!selectedDate) {
         return;
       }
-
-      setDate(selectedDate);
+      const newDate = title === "Date de début" ? selectedDate : new Date(selectedDate.setHours(23, 59, 59));
+      setDate(newDate);
       setOpen(false);
 
       if (!startDate && !endDate) {
         return;
       }
       form.setValue("daysOfAbsence", []);
-      const start = title === "Date de fin" ? new Date(startDate) : selectedDate;
-      const end = title === "Date de fin" ? selectedDate : new Date(endDate);
+      const start = title === "Date de fin" ? new Date(startDate) : newDate;
+      const end = title === "Date de fin" ? newDate : new Date(endDate);
       const shippingDays = getDaysBetweenDates({ from: start, to: end, day });
 
       shippingDays && form.setValue("shippingDays", shippingDays);

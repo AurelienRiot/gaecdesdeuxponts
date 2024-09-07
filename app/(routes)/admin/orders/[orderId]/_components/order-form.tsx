@@ -221,7 +221,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
         </form>
       </Form>
       {!!initialData?.id && !!initialData.dateOfEdition && (
-        <div id="button-container" className="flex flex-wrap gap-4">
+        <div id="button-container" className="space-y-4">
           {user?.role === "pro" && (
             <div>
               <Label>Bon de livraison</Label>
@@ -234,16 +234,14 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
               <DisplayInvoice orderId={form.getValues("id")} isSend={!!initialData.invoiceEmail} />
             </div>
           )}
-          {user?.role === "trackOnlyUser" && (
-            <Button
-              onClick={onConfirm}
-              disabled={form.formState.isSubmitting || loading}
-              variant={initialData.shippingEmail ? "destructive" : "default"}
-              className="w-fit"
-            >
-              {initialData.shippingEmail ? "Annuler la livraison" : "Confirmer la livraison"}
-            </Button>
-          )}
+          <Button
+            onClick={onConfirm}
+            disabled={form.formState.isSubmitting || loading}
+            variant={initialData.shippingEmail ? "destructive" : "green"}
+            className="w-fit"
+          >
+            {initialData.shippingEmail ? "Annuler la livraison" : "Confirmer la livraison"}
+          </Button>
         </div>
       )}
       {!!initialData?.id && (

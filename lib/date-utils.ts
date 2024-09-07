@@ -1,11 +1,17 @@
+import { formatInTimeZone } from "date-fns-tz";
+import { addDays } from "date-fns/addDays";
 import { fr } from "date-fns/locale";
-import { addDays, format } from "date-fns";
 
 export const dateFormatter = (date: Date, options?: { hours?: boolean; days?: boolean; customFormat?: string }) => {
-  if (options?.customFormat) return format(date, options.customFormat, { locale: fr });
-  if (options?.hours) return format(date, "d MMMM yyyy, HH:mm", { locale: fr });
-  if (options?.days) return format(date, "EEEE d MMMM yyyy", { locale: fr });
-  return format(date, "d MMMM yyyy", { locale: fr });
+  const timeZone = "Europe/Paris";
+
+  if (options?.customFormat) return formatInTimeZone(date, timeZone, options.customFormat, { locale: fr });
+
+  if (options?.hours) return formatInTimeZone(date, timeZone, "d MMMM yyyy, HH:mm", { locale: fr });
+
+  if (options?.days) return formatInTimeZone(date, timeZone, "EEEE d MMMM yyyy", { locale: fr });
+
+  return formatInTimeZone(date, timeZone, "d MMMM yyyy", { locale: fr });
 };
 
 export const MIN_DAYS = 3;
