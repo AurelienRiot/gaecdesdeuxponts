@@ -199,7 +199,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
                     </FormItem>
                   )}
                 />
-                <SelectRole />
+                <SelectRole display={open} />
                 <FormField
                   control={form.control}
                   name="completed"

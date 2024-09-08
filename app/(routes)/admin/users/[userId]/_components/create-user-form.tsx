@@ -37,7 +37,7 @@ export const CreateUserForm = () => {
       company: "",
       completed: true,
       phone: "",
-      role: "user",
+      role: "pro",
       address: {
         label: "",
         city: "",
@@ -154,7 +154,7 @@ export const CreateUserForm = () => {
                   </FormItem>
                 )}
               />
-              <SelectRole />
+              <SelectRole display />
               <FormField
                 control={form.control}
                 name="completed"

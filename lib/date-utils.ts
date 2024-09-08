@@ -45,19 +45,16 @@ export const getDaysBetweenDates = ({
   day,
 }: { from: Date | undefined; to: Date | undefined; day: number }) => {
   if (!from || !to) return;
-  const tuesdays: Date[] = [];
+  const days: Date[] = [];
   const currentDate = new Date(from);
 
-  // Set the current date to the first Tuesday on or after the start date
   currentDate.setDate(currentDate.getDate() + ((day - currentDate.getDay() + 7) % 7));
 
   while (currentDate <= new Date(to)) {
-    // tuesdays.push(new Date(new Date(currentDate).setHours(18, 0, 0, 0)));
-    tuesdays.push(new Date(currentDate));
-    currentDate.setDate(currentDate.getDate() + 7); // Move to the next Tuesday
+    days.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 7);
   }
-  // tuesdays.map((date) => console.log(dateFormatter(date)));
-  return tuesdays;
+  return days;
 };
 
 export function groupedDatesByMonth(dates: Date[]) {

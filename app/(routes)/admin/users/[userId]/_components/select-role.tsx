@@ -1,10 +1,16 @@
+import FancySwitch, { type OptionObject } from "@/components/ui/fancy-switch";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { cn } from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
 import type { UserFormValues } from "./user-schema";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
-function SelectRole() {
+const roleType: OptionObject[] = [
+  { value: "pro", label: "Professionnel" },
+  { value: "user", label: "Particulier" },
+  { value: "trackOnlyUser", label: "Suivie uniquement" },
+];
+
+function SelectRole({ display }: { display: boolean }) {
   const form = useFormContext<UserFormValues>();
   return (
     <FormField
@@ -12,21 +18,24 @@ function SelectRole() {
       name="role"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Type de l'utilisateur</FormLabel>
-          <RadioGroup value={field.value} onValueChange={field.onChange}>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="user" id="r1" />
-              <Label htmlFor="r1">Normal</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="pro" id="r2" />
-              <Label htmlFor="r2">Professionnel</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="trackOnlyUser" id="r3" />
-              <Label htmlFor="r3">Suivie seulement</Label>
-            </div>
-          </RadioGroup>
+          <FormLabel>
+            Type de l'utilisateur :{" "}
+            <span className="font-bold">{roleType.find((role) => role.value === field.value)?.label}</span>
+          </FormLabel>
+          <FormControl>
+            <FancySwitch
+              value={field.value}
+              onChange={field.onChange}
+              options={roleType}
+              className="lg:flex rounded-md border p-2 w-fit "
+              highlighterClassName={display ? "bg-primary rounded-full" : "opacity-0"}
+              aria-label="Order type"
+              radioClassName={cn(
+                "relative mx-2 flex h-9 cursor-pointer items-center justify-center rounded-full px-3.5 text-sm font-medium transition-colors focus:outline-none data-[checked]:text-primary-foreground",
+              )}
+              highlighterIncludeMargin={true}
+            />
+          </FormControl>
           <FormMessage />
         </FormItem>
       )}
