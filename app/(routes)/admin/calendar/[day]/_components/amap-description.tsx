@@ -16,7 +16,7 @@ function AMAPDescrition({
   return (
     <div className="space-y-6">
       {Object.values(groupedAMAPOrders).map((order) => (
-        <div key={order.shopId} className="bg-white p-4 rounded-md shadow-sm">
+        <div key={order.shopId} className="bg-white p-4 rounded-md shadow-sm space-y-4">
           <Link
             href={`${process.env.NEXT_PUBLIC_URL}/admin/shops/${order.shopId}`}
             target="_blank"
@@ -36,7 +36,7 @@ function AMAPDescrition({
 
           <DisplayItem items={order.orderItems} />
 
-          <DisplayAddress address={order.address} />
+          <DisplayAddress className="w-full text-center" address={order.address} />
         </div>
       ))}
     </div>

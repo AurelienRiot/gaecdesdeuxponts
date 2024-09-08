@@ -1,25 +1,25 @@
 "use client";
 
+import OrderCard, { type OrderCardProps } from "@/components/display-orders/order-card";
 import { Button, LoadingButton } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table/data-table";
 import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { Heading } from "@/components/ui/heading";
+import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { addHours } from "date-fns";
 import { Plus } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { FormEventHandler, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { DateRange } from "react-day-picker";
 import { toast } from "sonner";
-import { columns, filterableColumns, viewOptionsColumns, type OrderColumn } from "./columns";
-import { Input } from "@/components/ui/input";
 
 interface OrderClientProps {
-  initialData: OrderColumn[];
+  initialData: OrderCardProps[];
   initialDateRange: DateRange;
 }
 
 export const OrderClient: React.FC<OrderClientProps> = ({ initialData, initialDateRange }) => {
-  const [data, setData] = useState<OrderColumn[]>(initialData);
+  const [data, setData] = useState<OrderCardProps[]>(initialData);
   const [dateRange, setDateRange] = useState<DateRange | undefined>(initialDateRange);
   const [loading, setLoading] = useState(false);
   const pathName = usePathname();
@@ -41,18 +41,21 @@ export const OrderClient: React.FC<OrderClientProps> = ({ initialData, initialDa
     setLoading(false);
   };
 
+  const handleTodayOrders = () => {
+    const today = new Date();
+    const startOfDay = new Date(today.setHours(0, 0, 0, 0)); // Start of today
+    const endOfDay = addHours(today, 24);
+    const queryParams = new URLSearchParams({
+      from: startOfDay.toISOString(),
+      to: endOfDay.toISOString(),
+    }).toString();
+    router.push(`${pathName}?${queryParams}`);
+  };
+
   useEffect(() => {
     setData(initialData);
   }, [initialData]);
 
-  const products = data.flatMap((product) => product.productsList.map((p) => p.name));
-  const productsWithoutDuplicates = [...new Set(products.map((product) => product))].sort((a, b) => a.localeCompare(b));
-
-  const shopsName = data.map((order) => order.shopName);
-  const shopsNameWithoutDuplicates = [...new Set(shopsName.map((product) => product))].sort((a, b) =>
-    a.localeCompare(b),
-  );
-  const userNames = [...new Set(initialData.map((order) => order.name))];
   return (
     <>
       <div className="flex flex-col items-center justify-between sm:flex-row">
@@ -76,18 +79,15 @@ export const OrderClient: React.FC<OrderClientProps> = ({ initialData, initialDa
         </LoadingButton>
       </div>
       <SearchId />
+      <Button className="w-fit" onClick={handleTodayOrders}>
+        Afficher les commandes d'aujourd'hui
+      </Button>
       <Separator className="my-4" />
-
-      <DataTable
-        filterableColumns={filterableColumns({
-          products: productsWithoutDuplicates,
-          shopsName: shopsNameWithoutDuplicates,
-          userNames,
-        })}
-        viewOptionsColumns={viewOptionsColumns}
-        columns={columns}
-        data={data}
-      />
+      <div className="flex flex-wrap justify-center  gap-4">
+        {initialData.map((order) => (
+          <OrderCard key={order.id} order={order} />
+        ))}
+      </div>
     </>
   );
 };

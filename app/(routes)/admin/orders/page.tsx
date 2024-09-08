@@ -1,14 +1,11 @@
-import {
-  createDatePickUp,
-  createProduct,
-  createProductList,
-  createStatus,
-} from "@/components/table-custom-fuction/cell-orders";
+import { createDatePickUp, createProduct, createStatus } from "@/components/table-custom-fuction/cell-orders";
 import prismadb from "@/lib/prismadb";
 import { currencyFormatter } from "@/lib/utils";
 import type { DateRange } from "react-day-picker";
 import { OrderClient } from "./_components/client";
 import { addYears } from "date-fns";
+import { getUnitLabel } from "@/components/product/product-function";
+import type { OrderItem } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 
@@ -65,15 +62,27 @@ const OrdersPage = async (context: {
     ],
   });
 
+  function createProductList(items: OrderItem[]) {
+    return items.map((item) => {
+      const name = item.name;
+      if (item.quantity !== 1) {
+        return {
+          name,
+          price: item.price,
+          quantity: `${item.quantity}`,
+          unit: getUnitLabel(item.unit).quantity || undefined,
+        };
+      }
+      return { name, price: item.price, quantity: "", unit: undefined };
+    });
+  }
+
   const formattedOrders = orders.map((order) => ({
     id: order.id,
     image: order.user.image,
-    shippingEmail: order.shippingEmail,
-    invoiceEmail: order.invoiceEmail,
-    name: order.user.company || order.user.name || order.user.email || "",
     userId: order.userId,
-    isPaid: !!order.dateOfPayment,
-    datePickUp: createDatePickUp({ dateOfShipping: order.dateOfShipping, datePickUp: order.datePickUp }),
+    name: order.user.company || order.user.name || order.user.email || "",
+    shippingDate: createDatePickUp({ dateOfShipping: order.dateOfShipping, datePickUp: order.datePickUp }),
     productsList: createProductList(order.orderItems),
     products: createProduct(order.orderItems),
     status: createStatus(order),
@@ -82,6 +91,24 @@ const OrdersPage = async (context: {
     shopName: order.shop?.name || "Livraison à domicile",
     shopId: order.shop?.id || "",
   }));
+
+  // const formattedOrders = orders.map((order) => ({
+  //   id: order.id,
+  //   image: order.user.image,
+  //   shippingEmail: order.shippingEmail,
+  //   invoiceEmail: order.invoiceEmail,
+  //   name: order.user.company || order.user.name || order.user.email || "",
+  //   userId: order.userId,
+  //   isPaid: !!order.dateOfPayment,
+  //   datePickUp: createDatePickUp({ dateOfShipping: order.dateOfShipping, datePickUp: order.datePickUp }),
+  //   productsList: createProductList(order.orderItems),
+  //   products: createProduct(order.orderItems),
+  //   status: createStatus(order),
+  //   totalPrice: currencyFormatter.format(order.totalPrice),
+  //   createdAt: order.createdAt,
+  //   shopName: order.shop?.name || "Livraison à domicile",
+  //   shopId: order.shop?.id || "",
+  // }));
 
   return (
     <div className="flex-col">

@@ -30,7 +30,7 @@ const MonthlyInvoice = ({ orders }: { orders: monthlyOrdersType[] }) => {
   const initialDate = selectedOrders.length > 0 ? selectedOrders[0].dateOfPayment : new Date();
 
   return (
-    <>
+    <div className="space-y-4">
       <div className="justify-left flex flex-wrap items-center gap-4 whitespace-nowrap">
         Facture de
         <Select
@@ -86,7 +86,7 @@ const MonthlyInvoice = ({ orders }: { orders: monthlyOrdersType[] }) => {
       ) : (
         <p className="text-sm font-normal text-red-500">La facture n'est pas payée</p>
       )}
-    </>
+    </div>
   );
 };
 

@@ -1,7 +1,7 @@
 import type { OrderWithItemsAndShop } from "@/types";
 import type { AMAPItem, OrderItem, Shop } from "@prisma/client";
 import type { Row } from "@tanstack/react-table";
-import { Search } from "lucide-react";
+import { CheckCircle, CreditCard, Package, Search, Truck } from "lucide-react";
 import Link from "next/link";
 import { FaCheckCircle, FaFileInvoiceDollar, FaShippingFast } from "react-icons/fa";
 import { PiHourglassLowFill } from "react-icons/pi";
@@ -12,6 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { NameCell } from "./common-cell";
 import { getRelativeDate } from "@/lib/date-utils";
+import { Badge } from "../ui/badge";
 
 type ProductCellProps = {
   products: string;
@@ -187,105 +188,42 @@ function StatusCell({ status }: StatusCellProps) {
     switch (status) {
       case "En cours de validation":
         return (
-          <Tooltip>
-            <TooltipTrigger>
-              <PiHourglassLowFill className="text-orange-500 size-6" />
-            </TooltipTrigger>
-            <TooltipContent side="top" sideOffset={4} align="start">
-              <p>En cours de validation</p>
-            </TooltipContent>
-          </Tooltip>
+          <Badge variant="secondary" className={`bg-yellow-500 hover:bg-yellow-500/90 text-white text-xs px-2 py-0.5`}>
+            {<Package className="h-3 w-3" />}
+            <span className="ml-1 text-[10px]">{status}</span>
+          </Badge>
         );
 
       case "Commande validée":
         return (
-          <Tooltip>
-            <TooltipTrigger>
-              <FaCheckCircle className="text-green-500 size-6" />
-            </TooltipTrigger>
-            <TooltipContent side="top" sideOffset={4} align="start">
-              <p>Commande validée</p>
-            </TooltipContent>
-          </Tooltip>
+          <Badge variant="secondary" className={`bg-teal-500 hover:bg-teal-500/90 text-white text-xs px-2 py-0.5`}>
+            {<CheckCircle className="h-3 w-3" />}
+            <span className="ml-1 text-[10px]">{status}</span>
+          </Badge>
         );
       case "Commande livrée":
         return (
-          <>
-            <Tooltip>
-              <TooltipTrigger>
-                <FaCheckCircle className="text-green-500 size-6" />
-              </TooltipTrigger>
-              <TooltipContent side="top" sideOffset={4} align="start">
-                <p>Commande validée</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger>
-                <FaShippingFast className="text-green-500 size-6" />
-              </TooltipTrigger>
-              <TooltipContent side="top" sideOffset={4} align="start">
-                <p>Commande livrée</p>
-              </TooltipContent>
-            </Tooltip>
-          </>
+          <Badge variant="secondary" className={`bg-blue-500 hover:bg-blue-500/90 text-white text-xs px-2 py-0.5`}>
+            {<Truck className="h-3 w-3" />}
+            <span className="ml-1 text-[10px]">{status}</span>
+          </Badge>
         );
       case "En cours de paiement":
         return (
-          <>
-            <Tooltip>
-              <TooltipTrigger>
-                <FaCheckCircle className="text-green-500 size-6" />
-              </TooltipTrigger>
-              <TooltipContent side="top" sideOffset={4} align="start">
-                <p>Commande validée</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger>
-                <FaShippingFast className="text-green-500 size-6" />
-              </TooltipTrigger>
-              <TooltipContent side="top" sideOffset={4} align="start">
-                <p>Commande livrée</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger>
-                <FaFileInvoiceDollar className="text-orange-500 size-6" />
-              </TooltipTrigger>
-              <TooltipContent side="top" sideOffset={4} align="start">
-                <p>En cours de paiement</p>
-              </TooltipContent>
-            </Tooltip>
-          </>
+          <Badge variant="secondary" className={`bg-orange-500 hover:bg-orange-500/90 text-white text-xs px-2 py-0.5`}>
+            {<CreditCard className="h-3 w-3" />}
+            <span className="ml-1 text-[10px]">{status}</span>
+          </Badge>
         );
       case "Commande Payée":
         return (
-          <>
-            <Tooltip>
-              <TooltipTrigger>
-                <FaCheckCircle className="text-green-500 size-6" />
-              </TooltipTrigger>
-              <TooltipContent side="top" sideOffset={4} align="start">
-                <p>Commande validée</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger>
-                <FaShippingFast className="text-green-500 size-6" />
-              </TooltipTrigger>
-              <TooltipContent side="top" sideOffset={4} align="start">
-                <p>Commande livrée</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger>
-                <FaFileInvoiceDollar className="text-green-500 size-6" />
-              </TooltipTrigger>
-              <TooltipContent side="top" sideOffset={4} align="start">
-                <p>Commande Payée</p>
-              </TooltipContent>
-            </Tooltip>
-          </>
+          <Badge
+            variant="secondary"
+            className={`bg-green-500 hover:bg-green-500/90  text-primary-foreground hovertext-xs px-2 py-0.5`}
+          >
+            {<FaFileInvoiceDollar className="h-3 w-3" />}
+            <span className="ml-1 text-[10px]">{status}</span>
+          </Badge>
         );
     }
   };

@@ -13,6 +13,8 @@ import type { OrderColumn } from "./_components/order-column";
 import { OrderTable } from "./_components/order-table";
 import { UserForm } from "./_components/user-form";
 import { CreateUserForm } from "./_components/create-user-form";
+import { Heading } from "@/components/ui/heading";
+import { Separator } from "@/components/ui/separator";
 
 export const dynamic = "force-dynamic";
 
@@ -92,9 +94,13 @@ const UserPage = async ({
       <div className="mb-8 flex-1 space-y-4">
         <UserForm initialData={formatedUser} incomplete={!!searchParams.incomplete} />
       </div>
-      {user.role === "pro" && (
-        <MonthlyInvoice orders={montlyOrders.filter((order) => !!order) as monthlyOrdersType[]} />
-      )}
+      <div>
+        <Heading title={`Facture mensuelle`} description="" />
+        <Separator className="my-4" />
+        {user.role === "pro" && (
+          <MonthlyInvoice orders={montlyOrders.filter((order) => !!order) as monthlyOrdersType[]} />
+        )}
+      </div>
       <div>
         <OrderTable data={formattedOrders} />
       </div>

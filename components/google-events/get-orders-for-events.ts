@@ -30,7 +30,7 @@ export const getOrders = async ({ startDate, endDate }: { startDate: Date; endDa
             lte: startDate,
           },
           endDate: {
-            gte: endDate,
+            gte: new Date(),
           },
         },
         select: {
