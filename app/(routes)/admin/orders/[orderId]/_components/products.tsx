@@ -56,20 +56,9 @@ export const ShippingProducts = ({
           <FormLabel>Produits</FormLabel>
           <FormControl>
             <div className="space-y-4">
-              <div className="flex flex-wrap items-end gap-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="whitespace-nowrap border-dashed"
-                  onClick={addProduct}
-                >
-                  <PlusCircledIcon className="mr-2 size-4" />
-                  {"Ajouter un produit"}
-                </Button>
-              </div>
               {items.map((item, productIndex) => (
                 <div
-                  key={`${item.itemId} productIndex`}
+                  key={`${item.itemId} ${productIndex}`}
                   className="w-fit rounded-md p-4 pb-4 thin-scrollbar bg-chart1/50 even:bg-chart2/50"
                 >
                   <ProductName user={user} products={products} productIndex={productIndex} />
@@ -82,6 +71,12 @@ export const ShippingProducts = ({
               {form.formState.errors.orderItems?.message || "Veuillez completer tous les champs"}
             </p>
           )}
+          <div className="flex flex-wrap items-end gap-4">
+            <Button type="button" variant="outline" className="whitespace-nowrap border-dashed" onClick={addProduct}>
+              <PlusCircledIcon className="mr-2 size-4" />
+              {"Ajouter un produit"}
+            </Button>
+          </div>
         </FormItem>
       )}
     />

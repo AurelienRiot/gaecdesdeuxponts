@@ -11,11 +11,7 @@ interface AlertModalProps {
   onConfirm: () => void;
 }
 
-export const AlertModal: React.FC<AlertModalProps> = ({
-  isOpen,
-  onClose,
-  onConfirm,
-}) => {
+export const AlertModal: React.FC<AlertModalProps> = ({ isOpen, onClose, onConfirm }) => {
   const [loading, setLoading] = useState(false);
   const isMounted = useIsComponentMounted();
 
@@ -45,7 +41,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
             setLoading(false);
           }}
         >
-          {"Continuer"}
+          {"Confirmer"}
         </LoadingButton>
       </div>
     </Modal>

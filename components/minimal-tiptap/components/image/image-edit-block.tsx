@@ -41,35 +41,41 @@ const ImageEditBlock = ({ editor, className, close, ...props }: ImageEditBlockPr
   };
 
   const handleSubmit = (e: React.FormEvent) => {
+    console.log(e.currentTarget);
     e.preventDefault();
+    e.stopPropagation();
     handleLink();
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className={cn("space-y-6", className)} {...props}>
-        <div className="space-y-1">
-          <Label>Attach an image link</Label>
-          <div className="flex">
-            <Input
-              type="url"
-              required
-              placeholder="https://example.com"
-              value={link}
-              className="grow"
-              onChange={(e) => setLink(e.target.value)}
-            />
-            <Button type="submit" className="ml-2 inline-block">
-              Submit
-            </Button>
-          </div>
+    <div className={cn("space-y-6", className)} {...props}>
+      <div className="space-y-1">
+        <Label>Attach an image link</Label>
+        <div className="flex">
+          <Input
+            type="url"
+            required
+            placeholder="https://example.com"
+            value={link}
+            className="grow"
+            onChange={(e) => setLink(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                editor.chain().focus().setImage({ src: link }).run();
+                close();
+              }
+            }}
+          />
+          <Button type="button" onClick={handleLink} className="ml-2 inline-block">
+            Submit
+          </Button>
         </div>
-        <Button className="w-full" onClick={handleClick}>
+      </div>
+      {/* <Button className="w-full" onClick={handleClick}>
           Upload from your computer
         </Button>
-        <input type="file" accept="image/*" ref={fileInputRef} multiple className="hidden" onChange={handleFile} />
-      </div>
-    </form>
+        <input type="file" accept="image/*" ref={fileInputRef} multiple className="hidden" onChange={handleFile} /> */}
+    </div>
   );
 };
 

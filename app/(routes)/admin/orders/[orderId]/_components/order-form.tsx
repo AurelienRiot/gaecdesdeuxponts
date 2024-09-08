@@ -4,19 +4,21 @@ import { DisplayInvoice } from "@/components/pdf/button/display-invoice";
 import { DisplayShippingOrder } from "@/components/pdf/button/display-shipping-order";
 import { Button, LoadingButton } from "@/components/ui/button";
 import ButtonBackward from "@/components/ui/button-backward";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import { Form, FormField } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import useServerAction from "@/hooks/use-server-action";
+import { dateFormatter } from "@/lib/date-utils";
 import { createId } from "@/lib/id";
 import type { ProductWithMain, UserWithAddress } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Shop } from "@prisma/client";
-import { Plus } from "lucide-react";
+import { CalendarIcon, Plus, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { deleteOrder } from "../../_actions/delete-orders";
@@ -30,6 +32,8 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
+import { currencyFormatter } from "@/lib/utils";
+import Image from "next/image";
 
 export type ProductFormProps = {
   initialData:
@@ -44,8 +48,7 @@ export type ProductFormProps = {
 export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, users, shops, referer }) => {
   const router = useRouter();
   const prevDateOfShipping = initialData?.dateOfShipping;
-  const [showValidateModal, setShowValidateModal] = useState(false);
-
+  const confirm = useConfirm();
   const { serverAction: createOrderAction } = useServerAction(createOrder);
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
   const { serverAction: confirmOrderAction, loading } = useServerAction(confirmOrder);
@@ -116,16 +119,28 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
   };
 
   const onSubmit = async (data: OrderFormValues) => {
-    initialData?.id
-      ? await updateOrderAction({
-          data: { ...data, prevDateOfShipping },
-          toastOptions: { position: "top-center" },
-        })
-      : await createOrderAction({ data, toastOptions: { position: "top-center" } });
+    const result = await confirm({
+      title: "Confirmation de la commande",
+      description: ModalDescription({
+        date: data.dateOfShipping,
+        items: data.orderItems,
+        name: user?.company || user?.name,
+        image: user?.image,
+      }),
+      confirmText: "Oui",
+      cancelText: "Non",
+    });
+    if (result) {
+      initialData?.id
+        ? await updateOrderAction({
+            data: { ...data, prevDateOfShipping },
+            toastOptions: { position: "top-center" },
+          })
+        : await createOrderAction({ data, toastOptions: { position: "top-center" } });
 
-    const id = form.getValues("id");
-    router.replace(`/admin/orders/${id}?referer=${encodeURIComponent(referer)}#button-container`);
-    router.refresh();
+      router.replace(`/admin/orders/${data.id}?referer=${encodeURIComponent(referer)}#button-container`);
+      router.refresh();
+    }
   };
 
   return (
@@ -147,7 +162,6 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
       <Separator />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
-          {/* <ConfirmModal onClose={()=> setConfirmModal(false)} isOpen={showConfirmModal} onConfirm={onSubmit}/> */}
           <div className="flex flex-wrap items-end gap-8">
             <SelectUser users={users} />
             {!!initialData && (
@@ -189,22 +203,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
                 )}
               />
             )}
-            {/* <FormField
-              control={form.control}
-              name="dateOfEdition"
-              render={({ field }) => (
-                <div className="flex gap-2">
-                  <FormDatePicker
-                    {...field}
-                    date={field.value}
-                    onSelectDate={field.onChange}
-                    title="Date d'édition"
-                    button="uptade"
-                    disabled
-                  />
-                </div>
-              )}
-            /> */}
+
             <SelectShop shops={shops} />
           </div>
           <ShippingProducts products={products} user={user} />
@@ -263,5 +262,65 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
         }}
       />
     </>
+  );
+};
+
+const ModalDescription = ({
+  name,
+  date,
+  items,
+  image,
+}: { name?: string | null; image?: string | null; date?: Date | null; items: OrderFormValues["orderItems"] }) => {
+  if (!name) {
+    return "Aucun utilisateur selectioné";
+  }
+  return (
+    <div>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2  text-muted-foreground">
+        <div className="flex gap-2 items-center">
+          {image ? (
+            <Image src={image} width={20} height={20} alt={name} className="object-contain " />
+          ) : (
+            <UserIcon className="w-4 h-4" />
+          )}
+          <span className="font-semibold">{name}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <CalendarIcon className="w-4 h-4" />
+          {date ? (
+            <span className="font-semibold">{dateFormatter(date, { days: true })}</span>
+          ) : (
+            <span className="font-semibold text-destructive">Aucune date de livraison</span>
+          )}
+        </div>
+      </div>
+      <div className="space-y-4 py-4">
+        <div>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-left">Produit</TableHead>
+                  <TableHead className="text-right">Quantité</TableHead>
+                  <TableHead className="text-right">Prix</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {items.map((item, index) => (
+                  <TableRow
+                    key={item.itemId + index}
+                    className={item.quantity < 0 ? "text-destructive-foreground bg-destructive rounded-sm" : ""}
+                  >
+                    <TableCell className="font-medium">{item.name}</TableCell>
+                    <TableCell className="text-right">{item.quantity}</TableCell>
+                    <TableCell className="text-right">{currencyFormatter.format(item.price)}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };

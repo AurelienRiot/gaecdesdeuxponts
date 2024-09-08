@@ -4,6 +4,7 @@ import { CSPostHogProvider } from "@/providers/posthog-provider";
 import { cn } from "@/lib/utils";
 import { AuthProviders } from "@/providers/auth-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
+import ConfirmDialogProvider from "@/providers/confirm-dialog-provider";
 import type { Metadata } from "next";
 import {
   Playfair_Display as FontDisplay,
@@ -78,11 +79,13 @@ export default function RootLayout({
           <CSPostHogProvider>
             <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
               <TooltipProvider delayDuration={100} skipDelayDuration={0}>
-                <Toaster />
-                <DebugScreens />
-                {children}
+                <ConfirmDialogProvider>
+                  <Toaster />
+                  <DebugScreens />
+                  {children}
+                </ConfirmDialogProvider>
               </TooltipProvider>
-            </ThemeProvider>{" "}
+            </ThemeProvider>
           </CSPostHogProvider>
         </AuthProviders>
       </body>
