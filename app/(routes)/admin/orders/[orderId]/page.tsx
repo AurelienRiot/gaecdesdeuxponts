@@ -10,7 +10,7 @@ const OrderFormPage = async ({
   const headersList = headers();
   const headerReferer = headersList.get("referer");
 
-  const referer = headerReferer?.includes("/admin/orders")
+  const referer = headerReferer?.includes("/admin/orders/")
     ? "/admin/orders"
     : decodeURIComponent(searchParams.referer || "/admin/orders");
 

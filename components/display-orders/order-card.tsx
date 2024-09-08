@@ -41,7 +41,7 @@ function OrderCard({ order }: { order: OrderCardProps }) {
       >
         <Link href={`/admin/users/${order.userId}`} className="flex items-center gap-2 ">
           {order.image ? (
-            <Image src={order.image} alt={order.name} width={24} height={24} className="rounded-md object-contain" />
+            <Image src={order.image} alt={order.name} width={24} height={24} className="rounded-sm object-contain" />
           ) : (
             <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
               <span className="text-gray-600 font-semibold text-xs">{order.name.charAt(0)}</span>

@@ -92,21 +92,21 @@ export function getDayName(dayNumber: number) {
 
 export const getRelativeDate = (date: Date) => {
   const currentDate = new Date();
-  const daysDifference = Math.round((date.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
-
-  if (daysDifference === 0) {
+  const daysDifference = (date.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24);
+  console.log(daysDifference);
+  if (daysDifference > -1 && daysDifference < 1) {
     return "Aujourd'hui";
   }
-  if (daysDifference === 1) {
+  if (daysDifference >= 1 && daysDifference < 2) {
     return "Demain";
   }
-  if (daysDifference === -1) {
+  if (daysDifference < -1 && daysDifference > -2) {
     return "Hier";
   }
-  if (daysDifference > 1) {
-    return `dans ${daysDifference} jours`;
+  if (daysDifference >= 2) {
+    return `dans ${Math.floor(daysDifference + 1)} jours`;
   }
-  if (daysDifference < -1) {
-    return `Il y a ${Math.abs(daysDifference)} jours`;
+  if (daysDifference <= -2) {
+    return `Il y a ${Math.floor(Math.abs(daysDifference))} jours`;
   }
 };
