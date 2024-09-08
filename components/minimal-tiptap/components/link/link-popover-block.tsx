@@ -10,7 +10,7 @@ interface LinkPopoverBlockProps {
 }
 
 export const LinkPopoverBlock: React.FC<LinkPopoverBlockProps> = ({ url, onClear, onEdit }) => {
-  const [copyTitle, setCopyTitle] = React.useState<string>("Copy");
+  const [copyTitle, setCopyTitle] = React.useState<string>("Copier");
 
   const handleCopy = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -33,15 +33,15 @@ export const LinkPopoverBlock: React.FC<LinkPopoverBlockProps> = ({ url, onClear
   return (
     <div className="flex h-10 overflow-hidden rounded bg-background p-2 shadow-lg">
       <div className="inline-flex items-center gap-1">
-        <ToolbarButton tooltip="Edit link" onClick={onEdit} className="w-auto px-2">
-          Edit link
+        <ToolbarButton tooltip="Modifier le lien" onClick={onEdit} className="w-auto px-2">
+          Modifier le lien
         </ToolbarButton>
         <Separator orientation="vertical" />
-        <ToolbarButton tooltip="Open link in a new tab" onClick={handleOpenLink}>
+        <ToolbarButton tooltip="Ouvrir dans un nouvel onglet" onClick={handleOpenLink}>
           <ExternalLinkIcon className="size-4" />
         </ToolbarButton>
         <Separator orientation="vertical" />
-        <ToolbarButton tooltip="Clear link" onClick={onClear}>
+        <ToolbarButton tooltip="Enlever le lien" onClick={onClear}>
           <LinkBreak2Icon className="size-4" />
         </ToolbarButton>
         <Separator orientation="vertical" />

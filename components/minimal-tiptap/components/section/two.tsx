@@ -22,7 +22,7 @@ interface TextStyle extends FormatAction {
 const formatActions: TextStyle[] = [
   {
     value: "bold",
-    label: "Bold",
+    label: "Gras",
     icon: <FontBoldIcon className="size-5" />,
     action: (editor) => editor.chain().focus().toggleBold().run(),
     isActive: (editor) => editor.isActive("bold"),
@@ -31,7 +31,7 @@ const formatActions: TextStyle[] = [
   },
   {
     value: "italic",
-    label: "Italic",
+    label: "Italique",
     icon: <FontItalicIcon className="size-5" />,
     action: (editor) => editor.chain().focus().toggleItalic().run(),
     isActive: (editor) => editor.isActive("italic"),
@@ -40,7 +40,7 @@ const formatActions: TextStyle[] = [
   },
   {
     value: "strikethrough",
-    label: "Strikethrough",
+    label: "Barré",
     icon: <StrikethroughIcon className="size-5" />,
     action: (editor) => editor.chain().focus().toggleStrike().run(),
     isActive: (editor) => editor.isActive("strike"),
@@ -58,7 +58,7 @@ const formatActions: TextStyle[] = [
   },
   {
     value: "clearFormatting",
-    label: "Clear formatting",
+    label: "Supprimer le formatage",
     icon: <TextNoneIcon className="size-5" />,
     action: (editor) => editor.chain().focus().unsetAllMarks().run(),
     isActive: () => false,
@@ -87,7 +87,7 @@ export const SectionTwo: React.FC<SectionTwoProps> = ({
       activeActions={activeActions}
       mainActionCount={mainActionCount}
       dropdownIcon={<DotsHorizontalIcon className="size-5" />}
-      dropdownTooltip="More formatting"
+      dropdownTooltip="Plus d'options"
       dropdownClassName="w-8"
       size={size}
       variant={variant}

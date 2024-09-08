@@ -50,7 +50,7 @@ const ImageEditBlock = ({ editor, className, close, ...props }: ImageEditBlockPr
   return (
     <div className={cn("space-y-6", className)} {...props}>
       <div className="space-y-1">
-        <Label>Attach an image link</Label>
+        <Label>Url de l'image</Label>
         <div className="flex">
           <Input
             type="url"
@@ -67,7 +67,7 @@ const ImageEditBlock = ({ editor, className, close, ...props }: ImageEditBlockPr
             }}
           />
           <Button type="button" onClick={handleLink} className="ml-2 inline-block">
-            Submit
+            Valider
           </Button>
         </div>
       </div>
