@@ -45,7 +45,7 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
       control={form.control}
       name="userId"
       render={({ field }) => (
-        <FormItem className="w-48 ">
+        <FormItem className=" flex flex-col gap-2 ">
           <FormLabel id="user-input">Client</FormLabel>
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -54,15 +54,18 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
                 variant="outline"
                 role="combobox"
                 disabled={form.formState.isSubmitting}
-                className={cn("w-48 justify-between", field.value ? "" : "text-muted-foreground")}
+                className={cn(
+                  "min-w-48 max-w-64 w-full sm:w-fit justify-between",
+                  field.value ? "" : "text-muted-foreground",
+                )}
               >
                 {name ? (
                   <>
                     <Image
                       src={image ? image : "/skeleton-image.webp"}
                       alt="user"
-                      width={16}
-                      height={16}
+                      width={20}
+                      height={20}
                       className="mr-2 object-contain rounded-sm"
                     />
                     {name}
@@ -73,7 +76,7 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent side="bottom" avoidCollisions={false} className="w-[200px] p-0">
+            <PopoverContent side="bottom" avoidCollisions={false} className="w-full p-0 max-w-64">
               <Command>
                 <CommandInput placeholder="Nom du client" onFocus={() => ScrollToTarget("user-input")} />
                 <CommandList>

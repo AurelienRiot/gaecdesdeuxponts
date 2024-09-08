@@ -127,8 +127,6 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
         name: user?.company || user?.name,
         image: user?.image,
       }),
-      confirmText: "Oui",
-      cancelText: "Non",
     });
     if (result) {
       initialData?.id
@@ -276,21 +274,21 @@ const ModalDescription = ({
   }
   return (
     <div>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2  text-muted-foreground">
-        <div className="flex gap-2 items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 gap-y-4  text-muted-foreground">
+        <div className="flex gap-2 items-center ">
           {image ? (
-            <Image src={image} width={20} height={20} alt={name} className="object-contain " />
+            <Image src={image} width={20} height={20} alt={name} className="object-contain rounded-sm " />
           ) : (
-            <UserIcon className="w-4 h-4" />
+            <UserIcon className="w-5 h-5" />
           )}
           <span className="font-semibold">{name}</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 text-md">
           <CalendarIcon className="w-4 h-4" />
           {date ? (
-            <span className="font-semibold">{dateFormatter(date, { days: true })}</span>
+            <span className="font-bold">{dateFormatter(date, { days: true })}</span>
           ) : (
-            <span className="font-semibold text-destructive">Aucune date de livraison</span>
+            <span className="font-bold text-destructive">Aucune date de livraison</span>
           )}
         </div>
       </div>
@@ -312,7 +310,7 @@ const ModalDescription = ({
                     className={item.quantity < 0 ? "text-destructive-foreground bg-destructive rounded-sm" : ""}
                   >
                     <TableCell className="font-medium">{item.name}</TableCell>
-                    <TableCell className="text-right">{item.quantity}</TableCell>
+                    <TableCell className="text-right text-lg">{item.quantity}</TableCell>
                     <TableCell className="text-right">{currencyFormatter.format(item.price)}</TableCell>
                   </TableRow>
                 ))}

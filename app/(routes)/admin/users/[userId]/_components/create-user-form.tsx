@@ -2,19 +2,10 @@
 
 import { AddressForm } from "@/components/address-form";
 import { BillingAddressForm } from "@/components/billing-address-form";
+import CheckboxForm from "@/components/chekbox-form";
 import InputImageModal from "@/components/images-upload/image-modal";
 import ButtonBackward from "@/components/ui/button-backward";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Form,
-  FormButton,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
@@ -25,11 +16,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import createUser from "../_actions/create-user";
-import { schema, type UserFormValues } from "./user-schema";
-import { Label } from "@/components/ui/label";
-import CheckboxForm from "@/components/chekbox-form";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import SelectRole from "./select-role";
+import { schema, type UserFormValues } from "./user-schema";
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 
 export const CreateUserForm = () => {
   const { serverAction } = useServerAction(createUser);
@@ -178,6 +167,23 @@ export const CreateUserForm = () => {
                     title="Profile complet"
                     description="Indique si le profil de l'utilisateur est complet."
                   />
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`notes`}
+                render={({ field }) => (
+                  <FormItem className="w-full max-w-96">
+                    <FormLabel>Notes</FormLabel>
+                    <FormControl>
+                      <AutosizeTextarea
+                        disabled={form.formState.isSubmitting}
+                        placeholder="Notes sur le client"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
               />
               <AddressForm />

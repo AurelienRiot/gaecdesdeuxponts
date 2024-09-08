@@ -11,8 +11,7 @@ async function updateUser(data: UserFormValues) {
     data,
     schema,
     getUser: checkAdmin,
-    serverAction: async (data) => {
-      const { id, name, company, phone, role, address, billingAddress, image, completed } = data;
+    serverAction: async ({ id, name, company, phone, role, address, billingAddress, image, completed, notes }) => {
       const user = await prismadb.user.findUnique({
         where: { id },
         select: { billingAddress: true },
@@ -29,6 +28,7 @@ async function updateUser(data: UserFormValues) {
           image,
           completed,
           role,
+          notes,
           address: {
             upsert: {
               create: address ?? defaultAddress,

@@ -8,9 +8,12 @@ const OrderFormPage = async ({
   searchParams,
 }: { params: { orderId: string }; searchParams: { id: string | undefined; referer: string | undefined } }) => {
   const headersList = headers();
+  const headerReferer = headersList.get("referer");
 
-  const referer = decodeURIComponent(searchParams.referer || headersList.get("referer") || "/admin/orders");
-  console.log({ referer });
+  const referer = headerReferer?.includes("/admin/orders")
+    ? "/admin/orders"
+    : decodeURIComponent(searchParams.referer || "/admin/orders");
+
   const orderId = params.orderId === "new" ? decodeURIComponent(searchParams.id || "new") : params.orderId;
   const shippingOrders = await prismadb.order.findUnique({
     where: {

@@ -63,7 +63,7 @@ const AddressAutocomplete = async (value: string): Promise<Suggestion[]> => {
   if (trimmedValue.length < 3) return [];
 
   const response = await ky
-    .get(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(value)}&autocomplete=0&limit=10`)
+    .get(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(value)}&autocomplete=1&limit=10`)
     .json();
 
   const { features } = await fetchResponceSchema.parse(response);

@@ -6,6 +6,7 @@ import { BillingAddressForm } from "@/components/billing-address-form";
 import CheckboxForm from "@/components/chekbox-form";
 import DeleteButton from "@/components/delete-button";
 import InputImageModal from "@/components/images-upload/image-modal";
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button } from "@/components/ui/button";
 import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
@@ -21,8 +22,8 @@ import { useForm } from "react-hook-form";
 import deleteUser from "../../_actions/delete-user";
 import updateUser from "../_actions/update-user";
 import MailForm from "./mail-form";
-import { schema, type UserFormValues } from "./user-schema";
 import SelectRole from "./select-role";
+import { schema, type UserFormValues } from "./user-schema";
 
 interface UserFormProps {
   initialData: UserWithOrdersAndAdress;
@@ -49,6 +50,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
       company: initialData.company || "",
       phone: initialData.phone || "",
       role: ["user", "pro", "trackOnlyUser"].includes(initialData.role) ? (initialData.role as "user") : "user",
+      notes: initialData.notes || "",
       address: {
         label: initialData.address?.label || "",
         city: initialData.address?.city || "",
@@ -180,6 +182,23 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={form.control}
+                  name={`notes`}
+                  render={({ field }) => (
+                    <FormItem className="w-full max-w-96">
+                      <FormLabel>Notes</FormLabel>
+                      <FormControl>
+                        <AutosizeTextarea
+                          disabled={form.formState.isSubmitting}
+                          placeholder="Notes sur le client"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <SelectRole />
                 <FormField
                   control={form.control}
@@ -195,6 +214,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
                     />
                   )}
                 />
+
                 <AddressForm />
                 <BillingAddressForm />
               </div>

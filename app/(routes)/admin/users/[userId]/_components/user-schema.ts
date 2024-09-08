@@ -19,6 +19,7 @@ export const schema = z.object({
       message: "Le numéro de téléphone n'est pas valide",
     },
   ),
+  notes: z.string().optional(),
   image: z.string().optional().nullable(),
   role: z.enum(["user", "pro", "trackOnlyUser"]),
   address: addressSchema,
