@@ -2,9 +2,9 @@ import { formatInTimeZone } from "date-fns-tz";
 import { addDays } from "date-fns/addDays";
 import { fr } from "date-fns/locale";
 
-export const dateFormatter = (date: Date, options?: { hours?: boolean; days?: boolean; customFormat?: string }) => {
-  const timeZone = "Europe/Paris";
+export const timeZone = "Europe/Paris";
 
+export const dateFormatter = (date: Date, options?: { hours?: boolean; days?: boolean; customFormat?: string }) => {
   if (options?.customFormat) return formatInTimeZone(date, timeZone, options.customFormat, { locale: fr });
 
   if (options?.hours) return formatInTimeZone(date, timeZone, "d MMMM yyyy, HH:mm", { locale: fr });

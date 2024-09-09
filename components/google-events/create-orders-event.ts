@@ -1,22 +1,24 @@
 import { destination, origin } from "@/app/(routes)/admin/calendar/_components/direction-schema";
 import { calendarAPI } from "@/lib/api-google";
-import { dateFormatter } from "@/lib/date-utils";
+import { dateFormatter, timeZone } from "@/lib/date-utils";
 import { createId } from "@/lib/id";
-import getOrders from "./get-orders-for-events";
-import getEventsList from "./get-events-list";
-import deleteEvent from "./delete-events";
-import { format, toZonedTime } from "date-fns-tz";
 import { addHours } from "date-fns";
+import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
+import deleteEvent from "./delete-events";
+import getEventsList from "./get-events-list";
+import getOrders from "./get-orders-for-events";
 
 const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
-const timeZone = "Europe/Paris";
 
 export default async function createOrdersEvent(data: { date: Date }) {
   // Format the date to the desired format in the specified time zone
-  const [year, month, day] = format(data.date, "yyyy-MM-dd", { timeZone }).split("-");
-  console.log({ year, month, day });
-  const startDate = toZonedTime(`${year}-${month}-${day}`, timeZone);
-  const endDate = addHours(startDate, 24);
+
+  const start = formatInTimeZone(data.date, timeZone, "yyyy-MM-dd");
+  const end = formatInTimeZone(addHours(data.date, 24), timeZone, "yyyy-MM-dd");
+
+  console.log({ start, end });
+  const startDate = fromZonedTime(start, timeZone);
+  const endDate = fromZonedTime(end, timeZone);
   console.log({ startDate, endDate });
 
   // const [day, month, year] = data.date.toLocaleDateString("fr-FR").split("/");
@@ -54,12 +56,12 @@ export default async function createOrdersEvent(data: { date: Date }) {
         description: description,
         start: {
           // dateTime: new Date().toISOString(),
-          date: `${year}-${month}-${day}`,
+          date: start,
           timeZone,
         },
         end: {
           // dateTime: new Date(new Date().getTime() + 2 * 60 * 60 * 1000).toISOString(),
-          date: `${year}-${month}-${Number(day) + 1}`,
+          date: end,
           timeZone,
         },
       },
