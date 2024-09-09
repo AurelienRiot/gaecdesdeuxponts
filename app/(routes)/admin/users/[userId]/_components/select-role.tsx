@@ -1,9 +1,9 @@
 import FancySwitch, { type OptionObject } from "@/components/ui/fancy-switch";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { nanoid } from "@/lib/id";
 import { cn } from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
 import type { UserFormValues } from "./user-schema";
-import { createId, nanoid } from "@/lib/id";
 
 const roleType: OptionObject[] = [
   { value: "pro", label: "Professionnel" },

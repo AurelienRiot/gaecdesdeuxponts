@@ -1,7 +1,6 @@
 import { svgToDataUri } from "./utils";
 const { default: flattenColorPalette } = require("tailwindcss/lib/util/flattenColorPalette");
 
-// biome-ignore lint/suspicious/noExplicitAny:
 function addGlobalUtilities({ addUtilities }: any) {
   const newUtilities = {
     ".hide-scrollbar": {
@@ -19,7 +18,6 @@ function addGlobalUtilities({ addUtilities }: any) {
   addUtilities(newUtilities, ["responsive"]);
 }
 
-// biome-ignore lint/suspicious/noExplicitAny:
 function addVariablesForColors({ addBase, theme }: any) {
   const allColors = flattenColorPalette(theme("colors"));
   const newVars = Object.fromEntries(Object.entries(allColors).map(([key, val]) => [`--${key}`, val]));
@@ -29,7 +27,6 @@ function addVariablesForColors({ addBase, theme }: any) {
   });
 }
 
-// biome-ignore lint/suspicious/noExplicitAny:
 function addBackgroundGrid({ matchUtilities, theme }: any) {
   matchUtilities(
     {
@@ -61,7 +58,6 @@ function addBackgroundGrid({ matchUtilities, theme }: any) {
   );
 }
 
-// biome-ignore lint/suspicious/noExplicitAny:
 function ListStyleCheck({ matchUtilities, theme }: any) {
   matchUtilities(
     {
