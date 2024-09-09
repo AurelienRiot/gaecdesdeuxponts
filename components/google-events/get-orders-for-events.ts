@@ -115,7 +115,7 @@ export const getOrders = async ({ startDate, endDate }: { startDate: Date; endDa
     )
     .concat(Object.values(groupedAMAPOrders).flatMap((order) => order.orderItems.map((item) => item)))
     .reduce((acc: { itemId: string; name: string; quantity: number; unit: string | null }[], curr) => {
-      const existing = acc.find((item) => item.itemId === curr.itemId);
+      const existing = acc.find((item) => item.name === curr.name);
       if (curr.quantity < 0) return acc;
       if (existing) {
         existing.quantity += curr.quantity;

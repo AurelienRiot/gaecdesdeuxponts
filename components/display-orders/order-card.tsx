@@ -39,7 +39,14 @@ function OrderCard({ order }: { order: OrderCardProps }) {
         className="flex  items-center justify-start py-2 px-4 cursor-pointer"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <Link href={`/admin/users/${order.userId}`} className="flex items-center gap-2 ">
+        <Link
+          onClick={(e) => {
+            // e.nativeEvent.stopImmediatePropagation();
+            e.stopPropagation();
+          }}
+          href={`/admin/users/${order.userId}`}
+          className="flex items-center gap-2 "
+        >
           {order.image ? (
             <Image src={order.image} alt={order.name} width={24} height={24} className="rounded-sm object-contain" />
           ) : (
@@ -53,7 +60,13 @@ function OrderCard({ order }: { order: OrderCardProps }) {
           <Calendar className="h-3 w-3  mr-2" />
           <span>{shippingDate}</span>
         </div>
-        <Link href={`/admin/orders/${order.id}`}>
+        <Link
+          onClick={(e) => {
+            // e.nativeEvent.stopImmediatePropagation();
+            e.stopPropagation();
+          }}
+          href={`/admin/orders/${order.id}`}
+        >
           <StatusCell status={order.status} />
         </Link>
         {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
