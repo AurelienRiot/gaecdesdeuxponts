@@ -58,7 +58,7 @@ function OrderCard({ order }: { order: OrderCardProps }) {
         </Link>
         <div className="text-xs text-gray-500 whitespace-nowrap flex items-center font-semibold">
           <Calendar className="h-3 w-3  mr-2" />
-          <span>{shippingDate}</span>
+          <span className="capitalize">{shippingDate}</span>
         </div>
         <Link
           onClick={(e) => {

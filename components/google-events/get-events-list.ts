@@ -1,10 +1,11 @@
 import { calendarAPI } from "@/lib/api-google";
 import type { ReturnTypeServerAction } from "@/lib/server-action";
+import type { calendar_v3 } from "googleapis";
 
 async function getEventsList({
   startDate,
   endDate,
-}: { startDate: Date; endDate: Date }): Promise<ReturnTypeServerAction<{ id: string | undefined | null }[]>> {
+}: { startDate: Date; endDate: Date }): Promise<ReturnTypeServerAction<calendar_v3.Schema$Event[]>> {
   try {
     const response = await calendarAPI.events.list({
       calendarId: process.env.CALENDAR_ID,
@@ -12,6 +13,7 @@ async function getEventsList({
       timeMax: endDate.toISOString(),
       singleEvents: true,
       orderBy: "startTime",
+      timeZone: "Europe/Paris",
     });
 
     const events = response.data.items;
@@ -22,9 +24,7 @@ async function getEventsList({
     return {
       success: true,
       message: "id",
-      data: events.map((event) => ({
-        id: event.id,
-      })),
+      data: events,
     };
   } catch (error) {
     console.error("Error fetching events:", error);

@@ -40,7 +40,7 @@ export const getOrders = async ({ startDate, endDate }: { startDate: Date; endDa
           shop: { select: { name: true, address: true, id: true, imageUrl: true } },
         },
       })
-      .then((orders) => orders.filter((order) => order.shippingDays.some((day) => day >= startDate && day <= endDate)))
+      .then((orders) => orders.filter((order) => order.shippingDays.some((day) => day >= startDate && day < endDate)))
       .then((orders) =>
         orders.map((order) => ({
           shopName: order.shop.name,
