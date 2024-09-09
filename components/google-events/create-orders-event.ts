@@ -10,11 +10,10 @@ import getOrders from "./get-orders-for-events";
 const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 
 export default async function createOrdersEvent(data: { date: Date }) {
-  const date = addHours(data.date, 2);
-  const startDate = new Date(date.toISOString().split("T")[0]);
+  const startDate = new Date(data.date.setUTCHours(0, 0, 0, 0));
   const endDate = addHours(startDate, 24);
 
-  console.log({ date, startDate, endDate });
+  console.log({ date: data.date, startDate, endDate });
   return { success: true, message: "Agenda mise à jour" };
 
   // const events = await getEventsList({ startDate, endDate });
