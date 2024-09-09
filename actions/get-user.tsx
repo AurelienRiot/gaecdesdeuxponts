@@ -61,9 +61,12 @@ const GetUser = async () => {
     },
     include: {
       orders: {
-        orderBy: {
-          createdAt: "desc",
-        },
+        orderBy: [
+          {
+            dateOfShipping: { sort: "desc", nulls: "first" },
+          },
+          { datePickUp: "desc" },
+        ],
         include: {
           orderItems: true,
           shop: true,

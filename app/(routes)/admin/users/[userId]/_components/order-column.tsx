@@ -139,7 +139,7 @@ export const viewOptionsColumns: DataTableViewOptionsColumn<OrderColumn>[] = [
   },
   {
     id: "status",
-    title: "Status",
+    title: "Statut",
   },
   {
     id: "datePickUp",

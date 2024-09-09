@@ -28,13 +28,6 @@ const DayEventPage = async ({ params }: { params: { day: string | undefined } })
           description="Liste des différentes commandes et livraisons"
           className="w-fit mx-auto"
         />
-
-        {/* <Button asChild className="m-2 pb-6 pt-6 sm:ml-2 sm:pb-0 sm:pt-0">
-          <Link href={`/admin/amap/new`}>
-            <Plus className="mr-2  h-4 w-4" />
-            Créer un nouveau
-          </Link>
-        </Button> */}
       </div>
       <Separator />
       {result ? <DescriptionEvents date={startDate} result={result} /> : <NoResults />}

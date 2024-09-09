@@ -90,10 +90,16 @@ export function getDayName(dayNumber: number) {
   return new Intl.DateTimeFormat("fr-FR", { weekday: "long" }).format(date);
 }
 
+export function getMonthName(monthNumber: number) {
+  const date = new Date();
+  date.setMonth(monthNumber); // Set month to the given month number
+
+  return new Intl.DateTimeFormat("fr-FR", { month: "long" }).format(date);
+}
+
 export const getRelativeDate = (date: Date) => {
   const currentDate = new Date();
   const daysDifference = (date.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24);
-  console.log(daysDifference);
   if (daysDifference > -1 && daysDifference < 1) {
     return "Aujourd'hui";
   }
