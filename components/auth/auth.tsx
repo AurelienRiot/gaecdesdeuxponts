@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/app/(routes)/(public)/loading";
 import type { DefaultSession } from "next-auth";
 import type { DefaultJWT } from "next-auth/jwt";
 import { signOut } from "next-auth/react";
@@ -29,5 +30,5 @@ export const Logout = ({ callbackUrl = "/" }: { callbackUrl?: string }) => {
       callbackUrl,
     });
   }
-  return null;
+  return <Loading />;
 };

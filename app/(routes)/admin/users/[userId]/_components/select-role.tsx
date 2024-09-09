@@ -3,6 +3,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { cn } from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
 import type { UserFormValues } from "./user-schema";
+import { createId, nanoid } from "@/lib/id";
 
 const roleType: OptionObject[] = [
   { value: "pro", label: "Professionnel" },
@@ -25,7 +26,12 @@ function SelectRole({ display }: { display: boolean }) {
           <FormControl>
             <FancySwitch
               value={field.value}
-              onChange={field.onChange}
+              onChange={(value) => {
+                field.onChange(value);
+                if (value === "trackOnlyUser") {
+                  form.setValue("email", `${nanoid(5)}@mail.com`);
+                }
+              }}
               options={roleType}
               className="lg:flex rounded-md border p-2 w-fit "
               highlighterClassName={display ? "bg-primary rounded-full" : "opacity-0"}

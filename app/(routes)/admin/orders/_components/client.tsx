@@ -5,6 +5,7 @@ import { Button, LoadingButton } from "@/components/ui/button";
 import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
+import NoResults from "@/components/ui/no-results";
 import { Separator } from "@/components/ui/separator";
 import { addHours } from "date-fns";
 import { Plus } from "lucide-react";
@@ -84,9 +85,11 @@ export const OrderClient: React.FC<OrderClientProps> = ({ initialData, initialDa
       </Button>
       <Separator className="my-4" />
       <div className="flex flex-wrap justify-center  gap-4">
-        {initialData.map((order) => (
-          <OrderCard key={order.id} order={order} />
-        ))}
+        {initialData.length === 0 ? (
+          <NoResults />
+        ) : (
+          initialData.map((order) => <OrderCard key={order.id} order={order} />)
+        )}
       </div>
     </>
   );
