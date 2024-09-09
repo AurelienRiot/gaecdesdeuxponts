@@ -96,7 +96,7 @@ export default function RootLayout({
 const DebugScreens = () => {
   if (process.env.NODE_ENV === "development") {
     return (
-      <div className="fixed bottom-0 left-0 z-50 bg-foreground p-2 text-background">
+      <div className="fixed bottom-0 left-0 z-[1200] bg-foreground p-2 text-background">
         <ul className="text-xs font-semibold">
           <li className="block xs:hidden">{" < 400px"}</li>
           <li className="hidden xs:block sm:hidden">{"xs > 400px "}</li>
