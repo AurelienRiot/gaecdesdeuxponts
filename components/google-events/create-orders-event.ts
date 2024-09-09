@@ -2,18 +2,26 @@ import { destination, origin } from "@/app/(routes)/admin/calendar/_components/d
 import { calendarAPI } from "@/lib/api-google";
 import { dateFormatter } from "@/lib/date-utils";
 import { createId } from "@/lib/id";
-import { addHours } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
 import getOrders from "./get-orders-for-events";
 import getEventsList from "./get-events-list";
 import deleteEvent from "./delete-events";
+import { format, toZonedTime } from "date-fns-tz";
+import { addHours } from "date-fns";
 
 const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
+const timeZone = "Europe/Paris";
 
 export default async function createOrdersEvent(data: { date: Date }) {
-  const [day, month, year] = data.date.toLocaleDateString("fr-FR").split("/");
-  const startDate = toZonedTime(`${year}-${month}-${day}`, "Europe/Paris");
+  // Format the date to the desired format in the specified time zone
+  const [year, month, day] = format(data.date, "yyyy-MM-dd", { timeZone }).split("-");
+  console.log({ year, month, day });
+  const startDate = toZonedTime(`${year}-${month}-${day}`, timeZone);
   const endDate = addHours(startDate, 24);
+  console.log({ startDate, endDate });
+
+  // const [day, month, year] = data.date.toLocaleDateString("fr-FR").split("/");
+  // const startDate = toZonedTime(`${year}-${month}-${day}`, timeZone);
+  // const endDate = addHours(startDate, 24);
 
   // console.log({ date: data.date, startDate, endDate });
   // return { success: true, message: "Agenda mise à jour" };
@@ -46,13 +54,13 @@ export default async function createOrdersEvent(data: { date: Date }) {
         description: description,
         start: {
           // dateTime: new Date().toISOString(),
-          date: `${year}-${month}-${Number(day)}`,
-          timeZone: "Europe/Paris",
+          date: `${year}-${month}-${day}`,
+          timeZone,
         },
         end: {
           // dateTime: new Date(new Date().getTime() + 2 * 60 * 60 * 1000).toISOString(),
           date: `${year}-${month}-${Number(day) + 1}`,
-          timeZone: "Europe/Paris",
+          timeZone,
         },
       },
     })

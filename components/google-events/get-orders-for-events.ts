@@ -5,7 +5,6 @@ import { addDays } from "date-fns";
 export const getOrders = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
   const start = startDate.toISOString().split("T")[0];
   // return dummieDate;
-  console.log({ startDate, endDate });
   const [orders, amapOrders] = await Promise.all([
     prismadb.order.findMany({
       where: {
