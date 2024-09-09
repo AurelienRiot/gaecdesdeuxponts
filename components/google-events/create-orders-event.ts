@@ -17,51 +17,51 @@ export default async function createOrdersEvent(data: { date: Date }) {
   console.log({ date, startDate, endDate });
   return { success: true, message: "Agenda mise à jour" };
 
-  const events = await getEventsList({ startDate, endDate });
-  if (events.success && events.data) {
-    for (const event of events.data) {
-      if (event.id?.includes("command")) {
-        await deleteEvent(event.id);
-      }
-    }
-  }
+  // const events = await getEventsList({ startDate, endDate });
+  // if (events.success && events.data) {
+  //   for (const event of events.data) {
+  //     if (event.id?.includes("command")) {
+  //       await deleteEvent(event.id);
+  //     }
+  //   }
+  // }
 
-  const description = await createDescription({ startDate, endDate });
-  if (!description) {
-    return { success: true, message: "Aucune commande pour ce jour" };
-  }
+  // const description = await createDescription({ startDate, endDate });
+  // if (!description) {
+  //   return { success: true, message: "Aucune commande pour ce jour" };
+  // }
 
-  const id = createId("command");
-  // return {
-  //   success: true,
-  //   message: "event created",
-  // };
-  return await calendarAPI.events
-    .insert({
-      calendarId: process.env.CALENDAR_ID,
-      requestBody: {
-        id,
-        summary: `Commandes ${format(date, "EEEE d", { locale: fr })}`,
-        description: description,
-        start: {
-          // dateTime: new Date().toISOString(),
-          date: startDate.toISOString().split("T")[0],
-          // timeZone: "Europe/Paris",
-        },
-        end: {
-          // dateTime: new Date(new Date().getTime() + 2 * 60 * 60 * 1000).toISOString(),
-          date: endDate.toISOString().split("T")[0],
-          // timeZone: "Europe/Paris",
-        },
-      },
-    })
-    .then((event) => {
-      return { success: true, message: "Agenda mise à jour" };
-    })
-    .catch((error) => {
-      console.log(error);
-      return { success: false, message: "Erreur dans l'envoi de l'evènement" };
-    });
+  // const id = createId("command");
+  // // return {
+  // //   success: true,
+  // //   message: "event created",
+  // // };
+  // return await calendarAPI.events
+  //   .insert({
+  //     calendarId: process.env.CALENDAR_ID,
+  //     requestBody: {
+  //       id,
+  //       summary: `Commandes ${format(date, "EEEE d", { locale: fr })}`,
+  //       description: description,
+  //       start: {
+  //         // dateTime: new Date().toISOString(),
+  //         date: startDate.toISOString().split("T")[0],
+  //         // timeZone: "Europe/Paris",
+  //       },
+  //       end: {
+  //         // dateTime: new Date(new Date().getTime() + 2 * 60 * 60 * 1000).toISOString(),
+  //         date: endDate.toISOString().split("T")[0],
+  //         // timeZone: "Europe/Paris",
+  //       },
+  //     },
+  //   })
+  //   .then((event) => {
+  //     return { success: true, message: "Agenda mise à jour" };
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //     return { success: false, message: "Erreur dans l'envoi de l'evènement" };
+  //   });
 }
 
 async function createDescription({ startDate, endDate }: { startDate: Date; endDate: Date }) {
