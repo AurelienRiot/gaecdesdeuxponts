@@ -18,14 +18,14 @@ async function confirmOrder(data: z.infer<typeof confirmOrderSchema>) {
     data,
     getUser: checkAdmin,
     serverAction: async ({ confirm, id }) => {
-      await prismadb.order.update({
-        where: {
-          id,
-        },
-        data: {
-          shippingEmail: confirm ? new Date() : null,
-        },
-      });
+      // await prismadb.order.update({
+      //   where: {
+      //     id,
+      //   },
+      //   data: {
+      //     shippingEmail: confirm ? new Date() : null,
+      //   },
+      // });
 
       await createOrdersEvent({ date: new Date() });
       revalidateTag("orders");

@@ -14,6 +14,9 @@ export default async function createOrdersEvent(data: { date: Date }) {
   const startDate = new Date(date.toISOString().split("T")[0]);
   const endDate = addHours(startDate, 24);
 
+  console.log({ date, startDate, endDate });
+  return { success: true, message: "Agenda mise à jour" };
+
   const events = await getEventsList({ startDate, endDate });
   if (events.success && events.data) {
     for (const event of events.data) {
@@ -43,12 +46,12 @@ export default async function createOrdersEvent(data: { date: Date }) {
         start: {
           // dateTime: new Date().toISOString(),
           date: startDate.toISOString().split("T")[0],
-          timeZone: "Europe/Paris",
+          // timeZone: "Europe/Paris",
         },
         end: {
           // dateTime: new Date(new Date().getTime() + 2 * 60 * 60 * 1000).toISOString(),
           date: endDate.toISOString().split("T")[0],
-          timeZone: "Europe/Paris",
+          // timeZone: "Europe/Paris",
         },
       },
     })
