@@ -6,10 +6,11 @@ import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import NoResults from "@/components/ui/no-results";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { addHours } from "date-fns";
+import { addDays, addHours, nextDay, startOfToday } from "date-fns";
 import { Plus } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import type { DateRange } from "react-day-picker";
 import { toast } from "sonner";
@@ -19,11 +20,18 @@ interface OrderClientProps {
   initialDateRange: DateRange;
 }
 
+function createDateOrderUrl({ from, to }: { from: Date; to: Date }) {
+  const queryParams = new URLSearchParams({
+    from: from.toISOString(),
+    to: to.toISOString(),
+  }).toString();
+  return `/admin/orders?${queryParams}`;
+}
+
 export const OrderClient: React.FC<OrderClientProps> = ({ initialData, initialDateRange }) => {
   const [data, setData] = useState<OrderCardProps[]>(initialData);
   const [dateRange, setDateRange] = useState<DateRange | undefined>(initialDateRange);
   const [loading, setLoading] = useState(false);
-  const pathName = usePathname();
   const router = useRouter();
 
   const handleChangeDate = async () => {
@@ -33,11 +41,7 @@ export const OrderClient: React.FC<OrderClientProps> = ({ initialData, initialDa
       toast.error("Veuillez choisir une date");
       return;
     }
-    const queryParams = new URLSearchParams({
-      from: dateRange.from.toISOString(),
-      to: dateRange.to.toISOString(),
-    }).toString();
-    router.push(`${pathName}?${queryParams}`);
+    router.push(createDateOrderUrl({ from: dateRange.from, to: dateRange.to }));
 
     setLoading(false);
   };
@@ -46,11 +50,8 @@ export const OrderClient: React.FC<OrderClientProps> = ({ initialData, initialDa
     const today = new Date();
     const startOfDay = new Date(today.setHours(0, 0, 0, 0)); // Start of today
     const endOfDay = addHours(today, 24);
-    const queryParams = new URLSearchParams({
-      from: startOfDay.toISOString(),
-      to: endOfDay.toISOString(),
-    }).toString();
-    router.push(`${pathName}?${queryParams}`);
+
+    router.push(createDateOrderUrl({ from: startOfDay, to: endOfDay }));
   };
 
   useEffect(() => {
@@ -80,9 +81,7 @@ export const OrderClient: React.FC<OrderClientProps> = ({ initialData, initialDa
         </LoadingButton>
       </div>
       <SearchId />
-      <Button className="w-fit" onClick={handleTodayOrders}>
-        Afficher les commandes d'aujourd'hui
-      </Button>
+      <SelectDate />
       <Separator className="my-4" />
       <div className="flex flex-wrap justify-center  gap-4">
         {initialData.length === 0 ? (
@@ -94,6 +93,60 @@ export const OrderClient: React.FC<OrderClientProps> = ({ initialData, initialDa
     </>
   );
 };
+
+const selectDate = [
+  { value: "today", label: "Aujourd'hui" },
+  { value: "tomorrow", label: "Demain" },
+  { value: "tuesday", label: "Mardi prochain" },
+  { value: "friday", label: "Vendredi prochain" },
+] as const;
+
+function SelectDate() {
+  const router = useRouter();
+
+  const handleValueChange = (value: (typeof selectDate)[number]["value"]) => {
+    let startOfDay = new Date();
+    let endOfDay = new Date();
+
+    switch (value) {
+      case "today":
+        startOfDay = startOfToday();
+        endOfDay = addDays(startOfDay, 1);
+        break;
+      case "tomorrow":
+        startOfDay = addDays(startOfToday(), 1);
+        endOfDay = addDays(startOfDay, 1);
+        break;
+      case "tuesday":
+        startOfDay = nextDay(startOfToday(), 2);
+        endOfDay = addDays(startOfDay, 1);
+        break;
+      case "friday":
+        startOfDay = nextDay(startOfToday(), 5);
+        endOfDay = addDays(startOfDay, 1);
+        break;
+      default:
+        return;
+    }
+
+    router.push(createDateOrderUrl({ from: startOfDay, to: endOfDay }));
+  };
+
+  return (
+    <Select value={""} onValueChange={handleValueChange}>
+      <SelectTrigger className="w-40">
+        <SelectValue placeholder="Filtrer" />
+      </SelectTrigger>
+      <SelectContent side="top">
+        {selectDate.map(({ label, value }) => (
+          <SelectItem key={value} value={value}>
+            {label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
 
 function SearchId() {
   const router = useRouter();
