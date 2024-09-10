@@ -75,7 +75,6 @@ const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
               defaultMonth={date}
               locale={fr}
               onSelect={onSelectDate}
-              disabled={(d) => d < new Date()}
               startMonth={new Date()}
               endMonth={new Date(new Date().setFullYear(new Date().getFullYear() + 1, 11))}
               // modifiers={{

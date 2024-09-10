@@ -74,7 +74,7 @@ export const AMAPForm: React.FC<AMAPFormProps> = ({ initialData, users, shops, p
       daysOfAbsence: initialData?.daysOfAbsence || [],
       shippingDays: initialData?.shippingDays || getDaysBetweenDates({ from: START, to: END, day: 2 }),
       day: initialDay(initialData?.shippingDays),
-      startDate: initialData?.startDate || new Date() < START ? START : new Date(),
+      startDate: initialData?.startDate || START,
       endDate: initialData?.endDate || END,
       totalPrice: initialData?.totalPrice || 0,
       totalPaid: initialData?.totalPaid || 0,

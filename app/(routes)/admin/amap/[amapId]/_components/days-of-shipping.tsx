@@ -40,9 +40,9 @@ function DaysOfShipping() {
     const dayOfWeek = d.getDay();
     const isBeforeStartDate = d < new Date(startDate);
     const isAfterEndDate = d > new Date(endDate);
-    const isNotTuesday = dayOfWeek !== day; // 2 represents Tuesday
+    const isNotDay = dayOfWeek !== day;
 
-    return isBeforeStartDate || isAfterEndDate || isNotTuesday;
+    return isBeforeStartDate || isAfterEndDate || isNotDay;
   }
 
   return (
