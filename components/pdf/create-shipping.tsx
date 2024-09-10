@@ -54,7 +54,7 @@ const tableHeaderStyles = StyleSheet.create({
     flexGrow: 1,
   },
   ref: {
-    width: "40%",
+    width: "30%",
     height: "100%",
     paddingTop: 4,
     borderRightColor: borderColor,
@@ -68,6 +68,13 @@ const tableHeaderStyles = StyleSheet.create({
     borderRightWidth: 1,
   },
   qty: {
+    width: "10%",
+    height: "100%",
+    paddingTop: 4,
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
+  },
+  price: {
     width: "20%",
     height: "100%",
     paddingTop: 4,
@@ -79,6 +86,7 @@ const ShippingTableHeader = () => (
     <Text style={tableHeaderStyles.ref}>Reférence produit</Text>
     <Text style={tableHeaderStyles.description}>Description</Text>
     <Text style={tableHeaderStyles.qty}>Qte</Text>
+    <Text style={tableHeaderStyles.price}>Prix HT (€)</Text>
   </View>
 );
 
@@ -92,7 +100,7 @@ const tableRowStyles = StyleSheet.create({
     // fontStyle: "bold",
   },
   ref: {
-    width: "40%",
+    width: "30%",
     textAlign: "left",
     paddingLeft: 8,
     paddingRight: 8,
@@ -107,6 +115,11 @@ const tableRowStyles = StyleSheet.create({
   },
 
   qty: {
+    width: "10%",
+    textAlign: "right",
+    paddingRight: 8,
+  },
+  price: {
     width: "20%",
     textAlign: "right",
     paddingRight: 8,
@@ -119,6 +132,7 @@ const ShippingTableRow = ({ items }: { items: PDFData["order"]["items"] }) => {
       <Text style={tableRowStyles.ref}>{item.id}</Text>
       <Text style={tableRowStyles.description}>{item.desc}</Text>
       <Text style={tableRowStyles.qty}>{item.qty}</Text>
+      <Text style={tableRowStyles.price}>{(item.priceTTC / 1.055).toFixed(3)}</Text>
     </View>
   ));
   return <Fragment>{rows}</Fragment>;
@@ -134,17 +148,30 @@ const tableBlankSpaceStyles = StyleSheet.create({
     // fontStyle: "bold",
     color: "white",
   },
-  description: {
-    width: "60%",
+  ref: {
+    width: "30%",
+    textAlign: "left",
+    paddingLeft: 8,
+    paddingRight: 8,
+    flexWrap: "wrap",
   },
+  description: {
+    width: "40%",
+    textAlign: "left",
+    paddingLeft: 8,
+    paddingRight: 8,
+    flexWrap: "wrap",
+  },
+
   qty: {
     width: "10%",
+    textAlign: "right",
+    paddingRight: 8,
   },
-  rate: {
-    width: "15%",
-  },
-  amount: {
-    width: "15%",
+  price: {
+    width: "20%",
+    textAlign: "right",
+    paddingRight: 8,
   },
 });
 
@@ -152,10 +179,10 @@ const ShippingTableBlankSpace = ({ rowsCount }: { rowsCount: number }) => {
   const blankRows = rowsCount > 0 ? Array(rowsCount).fill(0) : [];
   const rows = blankRows.map((x, i) => (
     <View style={tableBlankSpaceStyles.row} key={`BR${i}`}>
+      <Text style={tableBlankSpaceStyles.ref}>-</Text>
       <Text style={tableBlankSpaceStyles.description}>-</Text>
       <Text style={tableBlankSpaceStyles.qty}>-</Text>
-      <Text style={tableBlankSpaceStyles.rate}>-</Text>
-      <Text style={tableBlankSpaceStyles.amount}>-</Text>
+      <Text style={tableBlankSpaceStyles.price}>-</Text>
     </View>
   ));
   return <Fragment>{rows}</Fragment>;

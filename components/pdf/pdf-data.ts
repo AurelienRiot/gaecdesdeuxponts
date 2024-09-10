@@ -106,42 +106,42 @@ export const createMonthlyPDFData = (orders: FullOrder[]): MonthlyPDFDataType =>
 
 export const pdfData: PDFData = {
   customer: {
-    id: "clx5ubreg000tt35lvpqjzlqs",
+    id: "CM_5-9-24_ZNIPY",
     name: "Pub Demystify - des",
-    customerId: "clvurl15d000cn7yjhkdo7wo2",
+    customerId: "CS_2R374KQ",
     shippingAddress: "Avenue deis PORTISOL, 83600, Fréjus, FR",
     facturationAddress: "venelle Koad ar Runig, 29470, Plougastel-Daoulas, FR",
     phone: "+33356452546",
     email: "pub.demystify390@passmail.net",
-    orderId: "7-6-2024-0sUttHF",
+    orderId: "CM_5-9-24_ZNIPY",
   },
   order: {
-    id: "7-6-2024-0sUttHF",
+    id: "CM_5-9-24_ZNIPY",
     dateOfEdition: "8 juin 2024",
     dateOfPayment: "19 juin 2024",
     dateOfShipping: "4 juin 2024",
     totalPrice: 44,
     items: [
       {
-        id: "clx5wkbeh0019t35l3aby38q6",
+        id: "PR_LRBL182",
         desc: "Fromage blanc",
         priceTTC: 10,
         qty: 3,
       },
       {
-        id: "clx5wkbeh001at35leiz5khp8",
+        id: "PR_LRBL182",
         desc: "Crème liquide 25cl",
         priceTTC: 2,
         qty: 1,
       },
       {
-        id: "clx5wkbeh001bt35lkoc4e6ro",
+        id: "PR_LRBL182",
         desc: "Crème liquide 1L",
         priceTTC: 8,
         qty: 1,
       },
       {
-        id: "clx5wkbeh001ct35lidijjyz4",
+        id: "PR_LRBL182",
         desc: "Crème liquide 50cl",
         priceTTC: 4,
         qty: 1,
