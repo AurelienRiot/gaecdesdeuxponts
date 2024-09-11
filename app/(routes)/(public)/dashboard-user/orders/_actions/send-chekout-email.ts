@@ -14,6 +14,7 @@ import { render } from "@react-email/render";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const ExcludeEmail = ["yoyololo1235@gmail.com", "pub.demystify390@passmail.net"];
@@ -111,6 +112,8 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
           orderEmail: new Date(),
         },
       });
+
+      revalidateTag("orders");
 
       return {
         success: true,

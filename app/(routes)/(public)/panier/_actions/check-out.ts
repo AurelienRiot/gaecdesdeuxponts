@@ -9,7 +9,7 @@ import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { addDelay } from "@/lib/utils";
 import type { ProductWithMain, UserWithAddress } from "@/types";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import * as z from "zod";
 
 const checkOutSchema = z.object({
@@ -149,5 +149,7 @@ async function createOrder({ totalPrice, productsWithQuantity, shopId, user, dat
     //   customer: true,
     // },
   });
+  revalidateTag("orders");
+
   return order;
 }

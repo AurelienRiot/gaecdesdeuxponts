@@ -99,7 +99,7 @@ export function getMonthName(monthNumber: number) {
 
 export const getRelativeDate = (date: Date) => {
   const currentDate = new Date();
-  const daysDifference = (date.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24);
+  const daysDifference = (new Date(date).getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24);
   if (daysDifference > -1 && daysDifference < 1) {
     return "Aujourd'hui";
   }

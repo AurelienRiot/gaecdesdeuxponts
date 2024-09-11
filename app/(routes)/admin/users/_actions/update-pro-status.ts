@@ -3,6 +3,7 @@
 import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const schema = z.object({
@@ -32,6 +33,7 @@ async function updateProStatus(data: z.infer<typeof schema>) {
           role: check ? "pro" : "user",
         },
       });
+      revalidateTag("users");
 
       return {
         success: true,

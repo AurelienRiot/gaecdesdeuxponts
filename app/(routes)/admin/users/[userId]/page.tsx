@@ -15,64 +15,69 @@ import { UserForm } from "./_components/user-form";
 import { CreateUserForm } from "./_components/create-user-form";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
+import { unstable_cache } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
-const getUser = async (id: string | undefined) => {
-  console.log(id);
-  const user = await prismadb.user.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      address: true,
-      billingAddress: true,
-      orders: {
-        orderBy: {
-          createdAt: "desc",
-        },
-        include: {
-          orderItems: true,
-          shop: true,
+const getUserPageData = unstable_cache(
+  async (id: string | undefined) => {
+    console.log(id);
+    const user = await prismadb.user.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        address: true,
+        billingAddress: true,
+        orders: {
+          orderBy: {
+            createdAt: "desc",
+          },
+          include: {
+            orderItems: true,
+            shop: true,
+          },
         },
       },
-    },
-  });
-  if (!user) return null;
+    });
+    if (!user) return null;
 
-  const montlyOrders: (monthlyOrdersType | null)[] = user.orders.map((order) => {
-    if (!order.dateOfShipping) return null;
-    return {
-      orderId: order.id,
-      month: order.dateOfShipping.getMonth() + 1,
-      year: order.dateOfShipping.getFullYear(),
-      invoiceEmail: order.invoiceEmail,
-      isPaid: !!order.dateOfPayment,
-      dateOfPayment: order.dateOfPayment,
+    const montlyOrders: (monthlyOrdersType | null)[] = user.orders.map((order) => {
+      if (!order.dateOfShipping) return null;
+      return {
+        orderId: order.id,
+        month: order.dateOfShipping.getMonth() + 1,
+        year: order.dateOfShipping.getFullYear(),
+        invoiceEmail: order.invoiceEmail,
+        isPaid: !!order.dateOfPayment,
+        dateOfPayment: order.dateOfPayment,
+      };
+    });
+
+    const formatedUser = {
+      ...user,
+      orders: [],
     };
-  });
 
-  const formatedUser = {
-    ...user,
-    orders: [],
-  };
-
-  const formattedOrders: OrderColumn[] = (user?.orders || []).map((order) => ({
-    id: order.id,
-    shippingEmail: order.shippingEmail,
-    invoiceEmail: order.invoiceEmail,
-    products: createProduct(order.orderItems),
-    productsList: createProductList(order.orderItems),
-    datePickUp: createDatePickUp({ dateOfShipping: order.dateOfShipping, datePickUp: order.datePickUp }),
-    status: createStatus(order),
-    isPaid: !!order.dateOfPayment,
-    totalPrice: currencyFormatter.format(order.totalPrice),
-    createdAt: order.createdAt,
-    shopName: order.shop?.name || "Livraison à domicile",
-    shopId: order.shop?.id || "",
-  }));
-  return { formatedUser, montlyOrders, formattedOrders };
-};
+    const formattedOrders: OrderColumn[] = (user?.orders || []).map((order) => ({
+      id: order.id,
+      shippingEmail: order.shippingEmail,
+      invoiceEmail: order.invoiceEmail,
+      products: createProduct(order.orderItems),
+      productsList: createProductList(order.orderItems),
+      datePickUp: createDatePickUp({ dateOfShipping: order.dateOfShipping, datePickUp: order.datePickUp }),
+      status: createStatus(order),
+      isPaid: !!order.dateOfPayment,
+      totalPrice: currencyFormatter.format(order.totalPrice),
+      createdAt: order.createdAt,
+      shopName: order.shop?.name || "Livraison à domicile",
+      shopId: order.shop?.id || "",
+    }));
+    return { formatedUser, montlyOrders, formattedOrders };
+  },
+  ["getUserPageData"],
+  { revalidate: 60 * 60 * 10, tags: ["users", "orders", "amap-orders"] },
+);
 
 const UserPage = async ({
   params,
@@ -85,7 +90,7 @@ const UserPage = async ({
     return <CreateUserForm />;
   }
 
-  const user = await getUser(params.userId);
+  const user = await getUserPageData(params.userId);
 
   if (!user) {
     return (

@@ -5,6 +5,7 @@ import { type UserFormValues, formSchema } from "../_components/form-schema";
 import { getSessionUser } from "@/actions/get-user";
 import prismadb from "@/lib/prismadb";
 import { defaultAddress } from "@/components/zod-schema/address-schema";
+import { revalidateTag } from "next/cache";
 
 async function getUser() {
   const user = await getSessionUser();
@@ -48,6 +49,7 @@ async function updateUser(data: UserFormValues) {
               : undefined,
         },
       });
+      revalidateTag("users");
 
       return {
         success: true,

@@ -4,6 +4,7 @@ import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { addDelay } from "@/lib/utils";
+import { revalidateTag } from "next/cache";
 import * as z from "zod";
 
 const schema = z.object({
@@ -72,6 +73,7 @@ async function changeEmail(data: z.infer<typeof schema>) {
           message: "Une erreur est survenue",
         };
       }
+      revalidateTag("users");
 
       return {
         success: true,

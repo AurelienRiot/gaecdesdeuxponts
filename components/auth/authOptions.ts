@@ -8,6 +8,7 @@ import type { NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
 import WelcomeEmail from "../email/welcome";
+import { revalidateTag } from "next/cache";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 const expirationTime = 5 * 60 * 1000;
@@ -73,6 +74,7 @@ export const authOptions: NextAuthOptions = {
               id: createId("user"),
             },
           });
+          revalidateTag("users");
         }
         const dbUser = await prismadb.user.findUnique({
           where: { email: u.email as string },

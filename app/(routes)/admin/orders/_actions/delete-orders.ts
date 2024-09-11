@@ -31,10 +31,9 @@ async function deleteOrder(data: z.infer<typeof deleteSchema>) {
         });
 
       if (data.dateOfShipping) {
-        revalidateTag("orders");
-
         await createOrdersEvent({ date: data.dateOfShipping });
       }
+      revalidateTag("orders");
 
       return {
         success: true,
