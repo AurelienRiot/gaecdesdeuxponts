@@ -19,12 +19,12 @@ const CardUser: React.FC<CardUserProps> = ({ user, className, status, display, o
   const name = user.company || user.name || user.email || "";
 
   const role = !user.completed
-    ? "Incomplet"
+    ? { label: "Incomplet", color: "text-destruction" }
     : user.role === "pro"
-      ? "Professionnel"
+      ? { label: "Professionnel", color: "text-green-500" }
       : user.role === "user"
-        ? "Particulier"
-        : "Suivie seulement";
+        ? { label: "Particulier", color: "text-blue-500" }
+        : { label: "Suivie seulement", color: "text-purple-500" };
 
   return (
     <>
@@ -47,7 +47,7 @@ const CardUser: React.FC<CardUserProps> = ({ user, className, status, display, o
         </CardHeader>
         <CardContent className="text-center p-2  rounded-md w-fit mx-auto         ">
           <div className="flex flex-col items-center justify-center gap-1 font-bold rounded-md">
-            <p className={role === "Incomplet" ? "text-red-500" : "text-green-500"}>{role}</p>
+            <p className={role.color}>{role.label}</p>
             <p className="flex gap-2 items-center justify-center">
               {" "}
               {orderLength} <Package className="h-4 w-4" />

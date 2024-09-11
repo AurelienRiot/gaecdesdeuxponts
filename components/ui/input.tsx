@@ -1,8 +1,7 @@
 import * as React from "react";
 
-import { cn, isDesktopSafari } from "@/lib/utils";
 import useIsComponentMounted from "@/hooks/use-mounted";
-import { toast } from "sonner";
+import { cn, isDesktopSafari } from "@/lib/utils";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 
@@ -31,15 +30,8 @@ const NumberInput = React.forwardRef<HTMLInputElement, InputProps>(
       );
     }
     function handleOnchange(e: React.ChangeEvent<HTMLInputElement>) {
-      // Get the current value of the input
       let value = e.target.value;
-
-      // Replace commas with periods
       value = value.replace(/,/g, ".");
-      toast.success(navigator.userAgent.toLowerCase());
-
-      // Check if the value is a valid number
-      // Create a new input event with the modified value
       const modifiedEvent = {
         ...e,
         target: {
@@ -47,9 +39,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, InputProps>(
           value,
         },
       };
-
-      // Call the onChange prop with the new event object
-      return onChange?.(modifiedEvent as React.ChangeEvent<HTMLInputElement>);
+      return onChange?.(modifiedEvent);
     }
 
     return (

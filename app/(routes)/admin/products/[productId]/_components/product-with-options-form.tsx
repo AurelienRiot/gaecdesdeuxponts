@@ -19,6 +19,7 @@ import { useFormContext } from "react-hook-form";
 import OptionValueForm from "./options-values-form";
 import type { ProductFormValues } from "./product-schema";
 import CheckboxForm from "@/components/chekbox-form";
+import { useRouter } from "next/navigation";
 
 export const ProductWithOptions = ({
   optionsArray,
@@ -26,6 +27,7 @@ export const ProductWithOptions = ({
   optionsArray: OptionsArray;
 }) => {
   const [listChanges, setListChanges] = useState(0);
+  const router = useRouter();
 
   const form = useFormContext<ProductFormValues>();
   const products = form.watch("products");
@@ -48,6 +50,7 @@ export const ProductWithOptions = ({
       price: 0,
     };
     form.setValue("products", [...products, newProduct]);
+    setTimeout(() => router.push(`#product-${newProduct.index}`), 10);
   };
 
   const addOptions = () => {
@@ -172,7 +175,7 @@ function ProductName({
 
   return (
     <>
-      <div className="flex flex-wrap gap-4">
+      <div id={`product-${productIndex}`} className="flex flex-wrap gap-4">
         <div className="flex h-full flex-col justify-between gap-4 py-2">
           <IconButton
             Icon={ChevronsUp}
