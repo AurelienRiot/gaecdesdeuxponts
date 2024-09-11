@@ -5,20 +5,20 @@ import { Form, FormField } from "@/components/ui/form";
 import { saveAs } from "file-saver";
 
 import { base64ToBlob } from "@/components/pdf/pdf-fuction";
+import { Label } from "@/components/ui/label";
 import useServerAction from "@/hooks/use-server-action";
 import { getDaysBetweenDates } from "@/lib/date-utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Product, Shop } from "@prisma/client";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import createAMAPFormulaire from "../../_actions/create-formulaire";
 import FormDatePicker from "../date-picker";
-import DaysOfShipping, { DisplayShippingDays } from "../days-of-shipping";
-import { AMAPProducts } from "../products";
+import { DisplayShippingDays } from "../days-of-shipping";
 import SelectDay from "../select-day";
 import SelectShop from "../select-shop";
 import { schema, type AMAPFormulaireValues } from "./amap-formulaire-schema";
-import { Label } from "@/components/ui/label";
 
 const START = new Date("2024-09-01");
 const END = new Date("2024-12-31");
@@ -44,6 +44,7 @@ interface AMAPFormProps {
 
 export const AMAPFormulaire: React.FC<AMAPFormProps> = ({ shops, products }) => {
   const { serverAction, loading } = useServerAction(createAMAPFormulaire);
+  const [everyTwoWeek, setEveryTwoWeek] = useState(false);
 
   const action = "Créer le formulaire";
   const form = useForm<AMAPFormulaireValues>({
@@ -81,14 +82,28 @@ export const AMAPFormulaire: React.FC<AMAPFormProps> = ({ shops, products }) => 
               control={form.control}
               name="startDate"
               render={({ field }) => (
-                <FormDatePicker {...field} date={field.value} setDate={field.onChange} title="Date de début" />
+                <FormDatePicker
+                  {...field}
+                  date={field.value}
+                  setDate={field.onChange}
+                  title="Date de début"
+                  everyTwoWeek={everyTwoWeek}
+                  setEveryTwoWeek={setEveryTwoWeek}
+                />
               )}
             />
             <FormField
               control={form.control}
               name="endDate"
               render={({ field }) => (
-                <FormDatePicker {...field} date={field.value} setDate={field.onChange} title="Date de fin" />
+                <FormDatePicker
+                  {...field}
+                  date={field.value}
+                  setDate={field.onChange}
+                  title="Date de fin"
+                  everyTwoWeek={everyTwoWeek}
+                  setEveryTwoWeek={setEveryTwoWeek}
+                />
               )}
             />
             <SelectShop shops={shops} />
