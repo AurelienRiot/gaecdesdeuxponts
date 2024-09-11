@@ -1,6 +1,8 @@
 import * as React from "react";
 
-import { cn, isSafari } from "@/lib/utils";
+import { cn, isDesktopSafari } from "@/lib/utils";
+import useIsComponentMounted from "@/hooks/use-mounted";
+import { toast } from "sonner";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 
@@ -14,8 +16,9 @@ Input.displayName = "Input";
 
 const NumberInput = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, onChange, value, type, ...props }, ref) => {
-    const safari = isSafari();
-    if (!safari) {
+    const safari = isDesktopSafari();
+    const isMounted = useIsComponentMounted();
+    if (!safari || !isMounted) {
       return (
         <input
           type={"number"}
@@ -33,6 +36,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, InputProps>(
 
       // Replace commas with periods
       value = value.replace(/,/g, ".");
+      toast.success(navigator.userAgent.toLowerCase());
 
       // Check if the value is a valid number
       // Create a new input event with the modified value

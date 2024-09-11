@@ -80,8 +80,13 @@ export const formatFrenchPhoneNumber = (phoneNumber: string | null): string => {
   return phoneNumber;
 };
 
-export function isSafari() {
+export function isDesktopSafari() {
+  if (typeof navigator === "undefined") return false;
   const userAgent = navigator.userAgent.toLowerCase();
-  console.log(userAgent);
-  return userAgent.includes("safari") && !userAgent.includes("chrome") && !userAgent.includes("android");
+  return (
+    userAgent.includes("safari") &&
+    !userAgent.includes("mobile") &&
+    !userAgent.includes("chrome") &&
+    !userAgent.includes("android")
+  );
 }
