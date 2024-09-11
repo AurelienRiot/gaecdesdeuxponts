@@ -79,3 +79,9 @@ export const formatFrenchPhoneNumber = (phoneNumber: string | null): string => {
   }
   return phoneNumber;
 };
+
+export function isSafari() {
+  const userAgent = navigator.userAgent.toLowerCase();
+  console.log(userAgent);
+  return userAgent.includes("safari") && !userAgent.includes("chrome") && !userAgent.includes("android");
+}

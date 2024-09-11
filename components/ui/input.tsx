@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
+import { cn, isSafari } from "@/lib/utils";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 
@@ -14,6 +14,19 @@ Input.displayName = "Input";
 
 const NumberInput = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, onChange, value, type, ...props }, ref) => {
+    const safari = isSafari();
+    if (!safari) {
+      return (
+        <input
+          type={"number"}
+          className={cn(baseInputClassName, className)}
+          ref={ref}
+          value={value ?? ""}
+          onChange={onChange}
+          {...props}
+        />
+      );
+    }
     function handleOnchange(e: React.ChangeEvent<HTMLInputElement>) {
       // Get the current value of the input
       let value = e.target.value;
