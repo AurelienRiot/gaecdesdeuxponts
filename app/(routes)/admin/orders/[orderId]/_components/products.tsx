@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button, IconButton } from "@/components/ui/button";
 import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Input, NumberInput } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollToTarget } from "@/lib/scroll-to-traget";
 import { cn } from "@/lib/utils";
@@ -138,13 +138,11 @@ function ProductName({
                 €
               </span>
               <FormControl>
-                <Input
-                  type="number"
+                <NumberInput
                   disabled={form.formState.isSubmitting}
-                  placeholder="9,99"
                   className={quantity < 0 ? negativeQuantityStyle : ""}
+                  placeholder="9,99"
                   {...field}
-                  value={field.value || ""}
                 />
               </FormControl>
               <FormMessage />
@@ -161,13 +159,11 @@ function ProductName({
               </FormLabel>
 
               <FormControl>
-                <Input
-                  type="number"
+                <NumberInput
                   disabled={form.formState.isSubmitting}
-                  placeholder="Quantité du produit"
                   className={quantity < 0 ? negativeQuantityStyle : ""}
+                  placeholder="9,99"
                   {...field}
-                  value={field.value || ""}
                 />
               </FormControl>
               <FormMessage />

@@ -18,20 +18,11 @@ import { Separator } from "@/components/ui/separator";
 
 export const dynamic = "force-dynamic";
 
-const UserPage = async ({
-  params,
-  searchParams,
-}: {
-  params: { userId: string | "new" | undefined };
-  searchParams: { incomplete: string | undefined };
-}) => {
-  if (params.userId === "new") {
-    return <CreateUserForm />;
-  }
-
+const getUser = async (id: string | undefined) => {
+  console.log(id);
   const user = await prismadb.user.findUnique({
     where: {
-      id: params.userId,
+      id,
     },
     include: {
       address: true,
@@ -47,15 +38,7 @@ const UserPage = async ({
       },
     },
   });
-
-  if (!user) {
-    return (
-      <>
-        <div>Utilisateur introuvable </div>
-        <ButtonBackward />
-      </>
-    );
-  }
+  if (!user) return null;
 
   const montlyOrders: (monthlyOrdersType | null)[] = user.orders.map((order) => {
     if (!order.dateOfShipping) return null;
@@ -88,21 +71,45 @@ const UserPage = async ({
     shopName: order.shop?.name || "Livraison à domicile",
     shopId: order.shop?.id || "",
   }));
+  return { formatedUser, montlyOrders, formattedOrders };
+};
+
+const UserPage = async ({
+  params,
+  searchParams,
+}: {
+  params: { userId: string | "new" | undefined };
+  searchParams: { incomplete: string | undefined };
+}) => {
+  if (params.userId === "new") {
+    return <CreateUserForm />;
+  }
+
+  const user = await getUser(params.userId);
+
+  if (!user) {
+    return (
+      <>
+        <div>Utilisateur introuvable </div>
+        <ButtonBackward />
+      </>
+    );
+  }
 
   return (
     <div className="space-y-6 p-8 pt-6">
       <div className="mb-8 flex-1 space-y-4">
-        <UserForm initialData={formatedUser} incomplete={!!searchParams.incomplete} />
+        <UserForm initialData={user.formatedUser} incomplete={!!searchParams.incomplete} />
       </div>
       <div>
         <Heading title={`Facture mensuelle`} description="" />
         <Separator className="my-4" />
-        {user.role === "pro" && (
-          <MonthlyInvoice orders={montlyOrders.filter((order) => !!order) as monthlyOrdersType[]} />
+        {user.formatedUser.role === "pro" && (
+          <MonthlyInvoice orders={user.montlyOrders.filter((order) => !!order) as monthlyOrdersType[]} />
         )}
       </div>
       <div>
-        <OrderTable data={formattedOrders} />
+        <OrderTable data={user.formattedOrders} />
       </div>
     </div>
   );

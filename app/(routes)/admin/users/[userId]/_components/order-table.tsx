@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { getMonthName } from "@/lib/date-utils";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { columns, filterableColumns, viewOptionsColumns, type OrderColumn } from "./order-column";
 
 interface OrderTableProps {
@@ -14,7 +14,12 @@ interface OrderTableProps {
 }
 
 export const OrderTable: React.FC<OrderTableProps> = ({ data }) => {
-  const [search, setSearch] = useState({ id: "", month: new Date().getMonth(), year: new Date().getFullYear() });
+  const searchParams = useSearchParams();
+  const search = {
+    id: searchParams.get("id") || "",
+    month: searchParams.get("month") !== null ? Number(searchParams.get("month")) : new Date().getMonth(),
+    year: searchParams.get("year") !== null ? Number(searchParams.get("year")) : new Date().getFullYear(),
+  };
 
   const filteredOrders = data
     .filter((order) => {
@@ -47,7 +52,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({ data }) => {
         description="Gérez les commandes"
       />
       <Separator className="my-4" />
-      <SearchOrders search={search} yearArray={yearArray} setSearch={setSearch} />
+      <SearchOrders search={search} yearArray={yearArray} />
       <DataTable
         filterableColumns={filterableColumns({
           products: categoriesWithoutDuplicates,
@@ -64,19 +69,18 @@ export const OrderTable: React.FC<OrderTableProps> = ({ data }) => {
 
 function SearchOrders({
   search,
-  setSearch,
   yearArray,
 }: {
   search: { id: string; month: number; year: number };
-  setSearch: Dispatch<SetStateAction<{ id: string; month: number; year: number }>>;
   yearArray: number[];
 }) {
+  const router = useRouter();
   return (
     <>
       <div className="flex items-center gap-4 flex-wrap">
         <Select
           onValueChange={(newValue) => {
-            setSearch(({ year }) => ({ id: "", month: Number(newValue), year }));
+            router.push(`?month=${Number(newValue)}&year=${search.year}`, { scroll: false });
           }}
           value={search.month.toString()}
         >
@@ -93,7 +97,7 @@ function SearchOrders({
         </Select>
         <Select
           onValueChange={(newValue) => {
-            setSearch(({ month }) => ({ id: "", month, year: Number(newValue) }));
+            router.push(`?month=${search.month}&year=${Number(newValue)}`, { scroll: false });
           }}
           value={search.year.toString()}
         >
@@ -111,7 +115,9 @@ function SearchOrders({
       </div>
       <Input
         value={search.id}
-        onChange={(e) => setSearch(({ month, year }) => ({ id: e.target.value, month, year }))}
+        onChange={(e) =>
+          router.push(`?month=${search.month}&year=${search.year}&id=${e.target.value}`, { scroll: false })
+        }
         placeholder="Rechercher par numéro de commande"
         className="max-w-64 my-4"
       />

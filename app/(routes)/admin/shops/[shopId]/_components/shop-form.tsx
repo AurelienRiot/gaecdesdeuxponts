@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
-import { Input } from "@/components/ui/input";
+import { Input, NumberInput } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
@@ -272,13 +272,7 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
                 <FormItem className="w-[150px]">
                   <FormLabel>Lattitude</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      disabled={form.formState.isSubmitting}
-                      placeholder="Lattitude"
-                      {...field}
-                      value={field.value || ""}
-                    />
+                    <NumberInput disabled={form.formState.isSubmitting} placeholder="Lattitude" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -291,13 +285,7 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
                 <FormItem className="w-[150px]">
                   <FormLabel>Longitude</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      disabled={form.formState.isSubmitting}
-                      placeholder="longitude"
-                      {...field}
-                      value={field.value || ""}
-                    />
+                    <NumberInput disabled={form.formState.isSubmitting} placeholder="longitude" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -96,8 +96,8 @@ const FilterOrders = ({ formattedOrders, yearArray }: { formattedOrders: OrderCo
       <DataTable
         data={filteredOrders}
         columns={OrdersColumn}
-        filterableColumns={filterableColumns()}
-        viewOptionsColumns={viewOptionsColumns}
+        // filterableColumns={filterableColumns()}
+        // viewOptionsColumns={viewOptionsColumns}
       />
     </div>
   );
