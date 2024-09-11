@@ -4,7 +4,7 @@ import { ProductCell } from "@/components/table-custom-fuction/cell-orders";
 import { NameCell } from "@/components/table-custom-fuction/common-cell";
 import { FilterAllInclude, FilterOneInclude } from "@/components/table-custom-fuction/common-filter";
 import { Button } from "@/components/ui/button";
-import { dateFormatter } from "@/lib/date-utils";
+import { dateFormatter, getNextDay, getRelativeDate } from "@/lib/date-utils";
 import { currencyFormatter } from "@/lib/utils";
 import type { DataTableFilterableColumn, DataTableViewOptionsColumn } from "@/types";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -31,13 +31,29 @@ export const columns: ColumnDef<AMAPColumn>[] = [
   {
     accessorKey: "id",
     header: "Contrat AMAP",
-    cell: ({ row }) => (
-      <Button asChild variant={"link"} className="px-0 font-bold flex flex-col justify-start h-auto">
-        <Link href={`/admin/amap/${row.original.id}`}>
-          <p className="whitespace-nowrap mr-auto">Éditer le contrat</p>
-        </Link>
-      </Button>
-    ),
+    cell: ({ row }) => {
+      const nextDay = getNextDay(row.original.shippingDays);
+
+      return (
+        <Button asChild variant={"link"} className="px-0 font-bold flex flex-col justify-start h-auto">
+          <Link href={`/admin/amap/${row.original.id}`}>
+            {nextDay ? (
+              <>
+                <p className="text-left whitespace-nowrap">
+                  Prochaine livraison {getRelativeDate(nextDay.closestFutureDate)}
+                </p>
+                <p>
+                  {nextDay.futureDates.length} livraison{nextDay.futureDates.length > 1 && "s"} restante
+                  {nextDay.futureDates.length > 1 && "s"}
+                </p>
+              </>
+            ) : (
+              "Aucune livraison"
+            )}
+          </Link>
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "name",
@@ -66,16 +82,11 @@ export const columns: ColumnDef<AMAPColumn>[] = [
     accessorKey: "shippingDays",
     header: "Prochaine livraison",
     cell: ({ row }) => {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const closestFutureDate = row.original.shippingDays.reduce((a, b) => {
-        const aIsFuture = a.getTime() >= today.getTime();
-        const bIsFuture = b.getTime() >= today.getTime();
-        if (!aIsFuture) return b;
-        if (!bIsFuture) return a;
-        return a.getTime() < b.getTime() ? a : b;
-      });
-      return <p className="text-left">{dateFormatter(closestFutureDate, { days: true })}</p>;
+      const nextDay = getNextDay(row.original.shippingDays);
+      if (!nextDay) {
+        return <p>Toutes les livraisons sont passées</p>;
+      }
+      return <p className="text-left whitespace-nowrap">{dateFormatter(nextDay.closestFutureDate, { days: true })}</p>;
     },
   },
   {
@@ -83,8 +94,8 @@ export const columns: ColumnDef<AMAPColumn>[] = [
     header: "Début/fin du contrat",
     cell: ({ row }) => (
       <p className="text-left flex flex-col">
-        <span>{dateFormatter(row.original.startDate, { days: true })}</span>
-        <span>{dateFormatter(row.original.endDate, { days: true })}</span>
+        <span className="whitespace-nowrap">{dateFormatter(row.original.startDate, { days: true })}</span>
+        <span className="whitespace-nowrap">{dateFormatter(row.original.endDate, { days: true })}</span>
       </p>
     ),
   },

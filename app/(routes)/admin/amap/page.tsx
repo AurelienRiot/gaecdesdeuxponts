@@ -69,12 +69,12 @@ async function AMAPPage(context: {
       <div className="flex-1 space-y-4 p-8 pt-6">
         <div className="flex flex-col items-center justify-between sm:flex-row">
           <Heading title={`Contrat AMAP (${amapOrders.length})`} description="Liste des différents contrats AMAP" />
-          <Button asChild className="m-2 pb-6 pt-6 sm:ml-2 sm:pb-0 sm:pt-0">
+          {/* <Button asChild className="m-2 pb-6 pt-6 sm:ml-2 sm:pb-0 sm:pt-0">
             <Link href={`/admin/amap/formulaire`}>
               <Plus className="mr-2  h-4 w-4" />
               Créer un formulaire
             </Link>
-          </Button>
+          </Button> */}
           <Button asChild className="m-2 pb-6 pt-6 sm:ml-2 sm:pb-0 sm:pt-0">
             <Link href={`/admin/amap/new`}>
               <Plus className="mr-2  h-4 w-4" />

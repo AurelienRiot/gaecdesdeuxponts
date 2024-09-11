@@ -195,9 +195,6 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
                 )}
               />
             </div>
-            <Button type="button" variant="outline" className="w-full" onClick={() => setOpenAddressModal(true)}>
-              modal
-            </Button>
             <FormButton className="w-full">{action}</FormButton>
           </form>
         </Form>

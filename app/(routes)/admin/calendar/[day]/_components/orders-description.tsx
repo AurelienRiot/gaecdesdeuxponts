@@ -24,7 +24,7 @@ function OrderDescriptions({
       {formattedOrders.map((order) => (
         <div key={order.id} className="bg-white p-4 rounded-md shadow-sm">
           <div className="flex items-center space-x-2">
-            <Link href={`/admin/orders/${order.id}`} target="_blank" className="text-gray-800 font-bold text-lg">
+            <Link href={`/admin/orders/${order.id}`} className="text-gray-800 font-bold text-lg">
               {order.image && (
                 <Image
                   src={order.image}
@@ -52,7 +52,7 @@ function OrderDescriptions({
                   : "from-red-500 via-red-500/50 to-red-500"
               }
             >
-              <Link href={`/admin/orders/${order.id}`} target="_blank">
+              <Link href={`/admin/orders/${order.id}`}>
                 <ListOrdered className="h-5 w-5 mr-3" />
                 Commande
               </Link>

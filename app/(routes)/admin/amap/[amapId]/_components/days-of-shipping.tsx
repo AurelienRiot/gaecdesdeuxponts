@@ -1,16 +1,13 @@
 "use client";
 import { Calendar } from "@/components/ui/calendar";
-import { Label } from "@/components/ui/label";
 import { groupedDatesByMonth } from "@/lib/date-utils";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import type { AMAPFormValues } from "./amap-schema";
 
 function DaysOfShipping() {
   const form = useFormContext<AMAPFormValues>();
-  const [date, setDate] = useState<Date | undefined>(undefined);
   const startDate = form.watch("startDate");
   const endDate = form.watch("endDate");
   const shippingDays = form.watch("shippingDays");
@@ -33,7 +30,6 @@ function DaysOfShipping() {
       );
       form.setValue("shippingDays", [...shippingDays, selectedDate]);
     }
-    setDate(selectedDate);
   }
 
   function disabledDay(d: Date) {
@@ -50,7 +46,6 @@ function DaysOfShipping() {
       className="p-3 w-72"
       captionLayout="label"
       locale={fr}
-      month={date || new Date()}
       startMonth={startDate}
       endMonth={new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate())}
       disabled={disabledDay}

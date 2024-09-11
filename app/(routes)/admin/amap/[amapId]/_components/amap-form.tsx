@@ -27,9 +27,10 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TotalPaid from "./total-paid";
 import TotalPrice from "./total-price";
+import { useState } from "react";
 
 const START = new Date(1725314400000);
-const END = new Date(1735686000000);
+const END = new Date(1734390000000);
 
 function initialDay(shippingDays?: Date[]) {
   if (!shippingDays) return 2;
@@ -60,6 +61,7 @@ interface AMAPFormProps {
 
 export const AMAPForm: React.FC<AMAPFormProps> = ({ initialData, users, shops, products }) => {
   const router = useRouter();
+  const [everyTwoWeek, setEveryTwoWeek] = useState(false);
   const { serverAction: createAMAPAction } = useServerAction(createAMAP);
   const { serverAction: updateAMAPAction } = useServerAction(updateAMAP);
 
@@ -121,14 +123,28 @@ export const AMAPForm: React.FC<AMAPFormProps> = ({ initialData, users, shops, p
               control={form.control}
               name="startDate"
               render={({ field }) => (
-                <FormDatePicker {...field} date={field.value} setDate={field.onChange} title="Date de début" />
+                <FormDatePicker
+                  {...field}
+                  everyTwoWeek={everyTwoWeek}
+                  setEveryTwoWeek={setEveryTwoWeek}
+                  date={field.value}
+                  setDate={field.onChange}
+                  title="Date de début"
+                />
               )}
             />
             <FormField
               control={form.control}
               name="endDate"
               render={({ field }) => (
-                <FormDatePicker {...field} date={field.value} setDate={field.onChange} title="Date de fin" />
+                <FormDatePicker
+                  {...field}
+                  everyTwoWeek={everyTwoWeek}
+                  setEveryTwoWeek={setEveryTwoWeek}
+                  date={field.value}
+                  setDate={field.onChange}
+                  title="Date de fin"
+                />
               )}
             />
             <SelectShop shops={shops} />

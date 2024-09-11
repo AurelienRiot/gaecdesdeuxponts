@@ -19,7 +19,6 @@ function AMAPDescrition({
         <div key={order.shopId} className="bg-white p-4 rounded-md shadow-sm space-y-4">
           <Link
             href={`${process.env.NEXT_PUBLIC_URL}/admin/shops/${order.shopId}`}
-            target="_blank"
             className="text-blue-500 font-bold text-lg flex items-center"
           >
             {order.image && (

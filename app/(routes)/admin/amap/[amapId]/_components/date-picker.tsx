@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, type CalendarProps } from "@/components/ui/calendar";
 import { FormItem, FormLabel } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Toggle } from "@/components/ui/toggle";
 import { dateFormatter, getDaysBetweenDates } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
 import { fr } from "date-fns/locale";
@@ -16,10 +17,15 @@ type FormDatePickerProps = Omit<CalendarProps, "disabled"> & {
   date: Date | undefined;
   disabled?: boolean;
   setDate: (date: Date | undefined) => void;
+  everyTwoWeek: boolean;
+  setEveryTwoWeek: (value: boolean) => void;
 };
 
 const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
-  ({ title, className, date, disabled, setDate, ...props }: FormDatePickerProps, ref) => {
+  (
+    { title, className, date, disabled, setDate, everyTwoWeek, setEveryTwoWeek, ...props }: FormDatePickerProps,
+    ref,
+  ) => {
     const form = useFormContext<AMAPFormValues>();
     const [open, setOpen] = useState(false);
     const startDate = form.watch("startDate");
@@ -30,24 +36,48 @@ const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
       if (!selectedDate) {
         return;
       }
-      setDate(selectedDate);
-      setOpen(false);
 
       if (!startDate && !endDate) {
         return;
       }
-      form.setValue("daysOfAbsence", []);
       const start = title === "Date de fin" ? new Date(startDate) : selectedDate;
       const end = title === "Date de fin" ? selectedDate : new Date(endDate);
       const shippingDays = getDaysBetweenDates({ from: start, to: end, day });
 
-      shippingDays && form.setValue("shippingDays", shippingDays);
+      if (shippingDays) {
+        if (everyTwoWeek) {
+          const daysOfAbsence = shippingDays.filter((_, index) => index % 2 === 1);
+
+          const remainingShippingDays = shippingDays.filter((_, index) => index % 2 !== 1);
+
+          form.setValue("daysOfAbsence", daysOfAbsence);
+          form.setValue("shippingDays", remainingShippingDays);
+        } else {
+          form.setValue("daysOfAbsence", []);
+          form.setValue("shippingDays", shippingDays);
+        }
+      }
+      setDate(selectedDate);
+      setOpen(false);
     }
 
     return (
       <FormItem className={cn("w-64", className)}>
         <FormLabel className="flex items-center justify-between gap-2">
           <span>{title}</span>
+          {title === "Date de début" && (
+            <Toggle
+              aria-label="every two weeks"
+              className="text-xs p-1"
+              variant={"outline"}
+              pressed={everyTwoWeek}
+              onPressedChange={() => {
+                setEveryTwoWeek(!everyTwoWeek);
+              }}
+            >
+              Toutes les deux semaines
+            </Toggle>
+          )}
         </FormLabel>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>

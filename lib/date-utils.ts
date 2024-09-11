@@ -116,3 +116,19 @@ export const getRelativeDate = (date: Date) => {
     return `Il y a ${Math.floor(Math.abs(daysDifference))} jours`;
   }
 };
+
+export function getNextDay(dates: Date[]) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const futureDates = dates.filter((date) => date.getTime() >= today.getTime());
+
+  if (futureDates.length === 0) {
+    return null;
+  }
+  const closestFutureDate = futureDates.reduce((a, b) => {
+    return a.getTime() < b.getTime() ? a : b;
+  });
+
+  return { closestFutureDate, futureDates };
+}

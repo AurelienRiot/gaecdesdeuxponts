@@ -1,10 +1,7 @@
-import { getFeaturedProducts } from "@/actions/get-products";
-import ProductList from "@/components/products-list";
 import { Suspense } from "react";
 import FeaturesWithHeading from "./_components/features";
 import ImageAccueil from "./_components/image-accueil";
 import { PartenaireCards } from "./_components/partenaires";
-import PorteOuverte from "./_components/porte-ouverte";
 
 export const dynamic = "force-static";
 
@@ -30,21 +27,21 @@ export default function Home() {
   );
 }
 
-const words = [
-  {
-    text: "Site",
-  },
-  {
-    text: "en",
-  },
-  {
-    text: "construction",
-    className: "text-orange-500",
-  },
-];
+// const words = [
+//   {
+//     text: "Site",
+//   },
+//   {
+//     text: "en",
+//   },
+//   {
+//     text: "construction",
+//     className: "text-orange-500",
+//   },
+// ];
 
-const NosProduits = async ({ title }: { title: string }) => {
-  const products = await getFeaturedProducts();
+// const NosProduits = async ({ title }: { title: string }) => {
+//   const products = await getFeaturedProducts();
 
-  return <ProductList title={title} items={products} />;
-};
+//   return <ProductList title={title} items={products} />;
+// };
