@@ -6,7 +6,7 @@ import { Button, IconButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Input, NumberInput } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { createId } from "@/lib/id";
@@ -212,13 +212,7 @@ function ProductName({
               <FormLabel>Prix</FormLabel>
               <span className="absolute right-1 top-[44px] transform -translate-y-1/2 text-muted-foreground">€</span>
               <FormControl>
-                <Input
-                  type="number"
-                  disabled={form.formState.isSubmitting}
-                  placeholder="9,99"
-                  {...field}
-                  value={products[productIndex].price || ""}
-                />
+                <NumberInput disabled={form.formState.isSubmitting} placeholder="9,99" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

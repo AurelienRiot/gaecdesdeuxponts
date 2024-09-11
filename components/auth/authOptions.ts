@@ -26,6 +26,7 @@ export const authOptions: NextAuthOptions = {
         await transporter.sendMail({
           from: "laiteriedupontrobert@gmail.com",
           to: email,
+          text: `Bienvenue sur Laiterie du Pont Robert. Connectez-vous en cliquant ici : ${url}`,
           subject: "Connexion à votre compte ",
           html: await render(WelcomeEmail({ url, baseUrl })),
         });

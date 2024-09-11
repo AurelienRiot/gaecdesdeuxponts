@@ -5,7 +5,7 @@ import DeleteButton from "@/components/delete-button";
 import UploadImage from "@/components/images-upload/image-upload";
 import type { OptionsArray } from "@/components/product/product-function";
 import { LoadingButton } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -209,9 +209,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
           <ProductWithOptions optionsArray={optionsArray} />
           <ProductSpecs />
 
-          <LoadingButton disabled={form.formState.isSubmitting} className="ml-auto" type="submit">
-            {action}
-          </LoadingButton>
+          <FormButton className="ml-auto">{action}</FormButton>
         </form>
       </Form>
     </>
