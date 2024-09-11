@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+import nextPwa from "next-pwa";
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -41,4 +42,11 @@ const nextConfig = {
   // This is required to support PostHog trailing slash API requests
   skipTrailingSlashRedirect: true,
 };
-export default nextConfig;
+const withPwa = nextPwa({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+  // important to avoid running the generation everytime on your local environment
+  disable: process.env.NODE_ENV === "development",
+});
+export default withPwa(nextConfig);
