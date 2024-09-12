@@ -19,8 +19,11 @@ async function deleteOrder(data: z.infer<typeof deleteSchema>) {
     serverAction: async (data) => {
       const { id } = data;
       await prismadb.order
-        .delete({
+        .update({
           where: { id },
+          data: {
+            deletedAt: new Date(),
+          },
         })
         .catch((e) => {
           console.log(e);

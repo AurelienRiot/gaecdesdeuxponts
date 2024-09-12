@@ -19,7 +19,6 @@ const ColorsPage = () => {
           editorContentClassName="p-5"
           output="html"
           placeholder="Entrez votre texte ici"
-          autofocus={true}
           immediatelyRender={false}
           editable={true}
           injectCSS={true}

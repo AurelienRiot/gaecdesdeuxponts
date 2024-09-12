@@ -11,6 +11,7 @@ import { usePostHog } from "posthog-js/react";
 import { IconButton } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import type { Shop } from "@prisma/client";
+import { sortShops } from "@/components/display-shops/address-input";
 
 const MapFocus = ({
   className,
@@ -53,17 +54,18 @@ const MapFocus = ({
       });
     }
 
-    map.setView([latitude, longitude], 10);
+    map.setView([latitude, longitude], 13);
     setPin({
       label: "Votre position",
       lat: latitude,
       long: longitude,
     });
+    setSortedShops(sortShops({ lat: latitude, long: longitude, shops }));
     setCoordinates({
       long: longitude,
       lat: latitude,
     });
-    setSuggestions(undefined);
+    // setSuggestions(undefined);
     setQuery(address.label);
   }
 
@@ -79,17 +81,25 @@ const MapFocus = ({
 
       <Command loop shouldFilter={false} className={className}>
         <CommandInput
+          onFocus={() => {
+            setSearchTerm(query);
+          }}
+          onBlur={() => {
+            setTimeout(() => {
+              setSuggestions(undefined);
+            }, 100);
+          }}
           ref={inputRef}
           title="Entrer votre adresse"
           placeholder="Entrer votre adresse..."
-          className="z-[400]  bg-background mb-1 h-9 w-44 focus:w-56 text-xs transition-all  p-4 pr-0 shadow-md peer"
+          className="z-[400]  bg-background mb-1 h-9 w-44 focus:w-56 text-base transition-all  p-4 pr-0 shadow-md peer"
           value={query}
           showIcon={false}
           onValueChange={(e) => {
             setSearchTerm(e);
           }}
         />
-        <div className="absolute z-[401] peer-focus:from-70% peer-focus:to-90% inset-0 h-9 w-full bg-gradient-to-r pointer-events-none from-transparent from-80% to-95% to-background" />
+        <div className="absolute z-[401] peer-focus:from-70% peer-focus:to-90% rounded-sm inset-0 h-9 w-full bg-gradient-to-r pointer-events-none from-transparent from-80% to-95% to-background" />
         <IconButton
           Icon={X}
           onMouseDown={(e) => {
@@ -109,7 +119,7 @@ const MapFocus = ({
 
         <CommandList
           className={cn(
-            "z-[400] space-y-2 rounded-md bg-popover p-2 max-w-56",
+            "z-[402] space-y-2 rounded-md bg-popover p-2 max-w-56",
             query.length > 3 && suggestions ? "" : "hidden",
           )}
         >
@@ -123,7 +133,10 @@ const MapFocus = ({
               className="cursor-pointer   bg-popover text-popover-foreground"
               value={address.label}
               key={address.label}
-              onSelect={() => onSelectAddress(address)}
+              onSelect={() => {
+                onSelectAddress(address);
+                console.log(index);
+              }}
             >
               {address.label}
             </CommandItem>

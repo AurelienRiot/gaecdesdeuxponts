@@ -55,6 +55,7 @@ export const MinimalTiptapEditor = React.forwardRef<HTMLDivElement, MinimalTipta
     const editor = useMinimalTiptapEditor({
       value,
       onUpdate: onChange,
+      autofocus: false,
       ...props,
     });
 

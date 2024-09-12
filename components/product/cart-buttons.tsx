@@ -5,19 +5,13 @@ import { cn } from "@/lib/utils";
 import type { ProductWithOptionsAndMain } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ShoppingCart } from "lucide-react";
-import { type Dispatch, type SetStateAction, useState } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { Button, IconButton } from "../ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form";
+import { Input, NumberInput } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 import { getUnitLabel } from "./product-function";
 
@@ -50,10 +44,7 @@ const AddToCartButton = ({
   if (type === "icon") {
     return (
       <IconButton
-        className={cn(
-          "z-20 size-10 sm:opacity-0 sm:group-hover:opacity-100",
-          className,
-        )}
+        className={cn("z-20 size-10 sm:opacity-0 sm:group-hover:opacity-100", className)}
         iconClassName={iconClassName}
         title="Ajouté au panier"
         onClick={onAddToCart}
@@ -91,9 +82,7 @@ export const CustomQuantityAddToCart = ({
       cart.addItem(
         {
           ...data,
-          imagesUrl: data.imagesUrl[0]
-            ? data.imagesUrl
-            : data.product.imagesUrl,
+          imagesUrl: data.imagesUrl[0] ? data.imagesUrl : data.product.imagesUrl,
         },
         qty,
       );
@@ -106,11 +95,7 @@ export const CustomQuantityAddToCart = ({
   return (
     <div className="flex items-center gap-2 tabular-nums">
       {customQuantity ? (
-        <CustomQuantity
-          id={data.id}
-          setCustomQuantity={setCustomQuantity}
-          handleQuantity={handleQuantity}
-        />
+        <CustomQuantity id={data.id} setCustomQuantity={setCustomQuantity} handleQuantity={handleQuantity} />
       ) : (
         <Select
           onValueChange={(value) => {
@@ -125,10 +110,7 @@ export const CustomQuantityAddToCart = ({
             handleQuantity(Number(value));
           }}
         >
-          <SelectTrigger
-            className="w-fit items-center justify-center text-xs tabular-nums"
-            classNameIcon="size-3"
-          >
+          <SelectTrigger className="w-fit items-center justify-center text-xs tabular-nums" classNameIcon="size-3">
             Quantité: {quantity}
           </SelectTrigger>
           <SelectContent className="z-[1200] w-fit min-w-4 tabular-nums">
@@ -136,11 +118,7 @@ export const CustomQuantityAddToCart = ({
               Supprimé
             </SelectItem>
             {[...Array(9)].map((_, i) => (
-              <SelectItem
-                className="py-0.5 text-xs"
-                key={i}
-                value={String(i + 1)}
-              >
+              <SelectItem className="py-0.5 text-xs" key={i} value={String(i + 1)}>
                 {i + 1}
               </SelectItem>
             ))}
@@ -188,10 +166,7 @@ const CustomQuantity = ({
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex items-end gap-2"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-end gap-2">
         <FormField
           control={form.control}
           name="quantity"
@@ -199,16 +174,12 @@ const CustomQuantity = ({
             <FormItem className="w-20">
               <FormMessage className="whitespace-nowrap" />
               <FormControl>
-                <Input placeholder="Quantité" className="w-20" {...field} />
+                <NumberInput placeholder="Quantité" className="w-20" {...field} />
               </FormControl>
             </FormItem>
           )}
         />
-        <Button
-          disabled={form.formState.isSubmitting}
-          className="ml-auto"
-          type="submit"
-        >
+        <Button disabled={form.formState.isSubmitting} className="ml-auto" type="submit">
           Valider
         </Button>
       </form>
@@ -258,10 +229,7 @@ export const BulkQuantity = ({
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-wrap items-end gap-4 pt-4"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-wrap items-end gap-4 pt-4">
         <FormField
           control={form.control}
           name="quantity"
@@ -275,22 +243,14 @@ export const BulkQuantity = ({
                   className="w-[70px]"
                   {...field}
                   value={field.value || ""}
-                  onChange={(e) =>
-                    field.onChange(e.target.value.replace(",", "."))
-                  }
+                  onChange={(e) => field.onChange(e.target.value.replace(",", "."))}
                 />
               </FormControl>
-              <span className="flex h-full items-center justify-center">
-                {getUnitLabel(product.unit).quantity}
-              </span>
+              <span className="flex h-full items-center justify-center">{getUnitLabel(product.unit).quantity}</span>
             </FormItem>
           )}
         />
-        <Button
-          variant="rounded"
-          className={cn("flex items-center gap-x-2 hover:scale-105", className)}
-          type="submit"
-        >
+        <Button variant="rounded" className={cn("flex items-center gap-x-2 hover:scale-105", className)} type="submit">
           {quantity ? "Modifier la quantité" : " Ajouter au panier"}
           <ShoppingCart className={cn("size-4", iconClassName)} />
         </Button>

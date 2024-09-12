@@ -12,6 +12,7 @@ export async function getAllUsers() {
     },
     include: {
       orders: {
+        where: { deletedAt: null },
         select: { id: true, dateOfPayment: true, dateOfShipping: true, totalPrice: true, invoiceEmail: true },
         orderBy: { dateOfShipping: "desc" },
       },

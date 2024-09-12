@@ -24,6 +24,7 @@ async function getDailyOrders(data: z.infer<typeof schema>) {
             gte: startDate,
             lte: endDate,
           },
+          deletedAt: null,
         },
         select: {
           customer: { select: { shippingAddress: true } },

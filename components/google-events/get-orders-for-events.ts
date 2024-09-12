@@ -13,6 +13,7 @@ export const getOrders = async ({ startDate, endDate }: { startDate: Date; endDa
           lte: endDate,
         },
         NOT: { shop: null },
+        deletedAt: null,
       },
       select: {
         id: true,

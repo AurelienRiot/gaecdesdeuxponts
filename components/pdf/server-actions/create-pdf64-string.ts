@@ -19,6 +19,7 @@ export async function createPDF64String(data: z.infer<typeof pdf64StringSchema>)
       const order = await prismadb.order.findUnique({
         where: {
           id: orderId,
+          deletedAt: null,
         },
         include: {
           orderItems: true,
@@ -92,6 +93,7 @@ export async function createMonthlyPDF64String(data: z.infer<typeof monthlyPdf64
         where: {
           id: { in: orderIds },
           dateOfShipping: { not: null },
+          deletedAt: null,
         },
         include: {
           orderItems: true,

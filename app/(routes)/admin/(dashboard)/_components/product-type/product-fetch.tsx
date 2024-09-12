@@ -16,6 +16,7 @@ const ProductsType = async ({ startDate, endDate }: { startDate: Date; endDate: 
           gte: startDate,
           lte: endDate,
         },
+        deletedAt: null,
       },
     },
     select: {

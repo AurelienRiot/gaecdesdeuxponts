@@ -16,6 +16,9 @@ export const DisplayMinimalTiptapEditor = React.forwardRef<HTMLDivElement, Displ
   ({ value, className, editorContentClassName, ...props }, ref) => {
     const editor = useMinimalTiptapEditor({
       value,
+      editable: false,
+      immediatelyRender: false,
+      onSelectionUpdate: () => {},
       ...props,
     });
 
@@ -24,13 +27,8 @@ export const DisplayMinimalTiptapEditor = React.forwardRef<HTMLDivElement, Displ
     }
 
     return (
-      <div ref={ref} className={cn("relative ", className)}>
-        <EditorContent
-          ref={ref}
-          readOnly
-          editor={editor}
-          className={cn("minimal-tiptap-editor", editorContentClassName)}
-        />
+      <div className={cn("relative select-text", className)}>
+        <EditorContent ref={ref} editor={editor} className={cn("minimal-tiptap-editor", editorContentClassName)} />
       </div>
     );
   },

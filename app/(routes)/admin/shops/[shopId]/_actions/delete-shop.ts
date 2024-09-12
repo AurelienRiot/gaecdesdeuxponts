@@ -19,6 +19,7 @@ async function deleteShop(data: z.infer<typeof schema>) {
       const orders = await prismadb.order.findMany({
         where: {
           shopId: id,
+          deletedAt: null,
         },
       });
 

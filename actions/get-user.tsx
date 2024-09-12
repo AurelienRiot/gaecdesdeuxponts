@@ -61,6 +61,9 @@ const GetUser = async () => {
     },
     include: {
       orders: {
+        where: {
+          deletedAt: null,
+        },
         orderBy: [
           {
             dateOfShipping: { sort: "desc", nulls: "first" },

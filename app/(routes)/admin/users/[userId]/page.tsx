@@ -30,6 +30,9 @@ const getUserPageData = unstable_cache(
         address: true,
         billingAddress: true,
         orders: {
+          where: {
+            deletedAt: null,
+          },
           orderBy: {
             createdAt: "desc",
           },

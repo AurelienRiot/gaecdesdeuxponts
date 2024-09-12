@@ -19,7 +19,7 @@ import { currencyFormatter } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import sendCheckoutEmail from "./_actions/send-chekout-email";
-import { OrdersColumn, filterableColumns, viewOptionsColumns, type OrderColumnType } from "./_components/order-column";
+import { OrdersColumn, type OrderColumnType } from "./_components/order-column";
 
 const PageOrderTable = () => {
   const { user } = useUserContext();

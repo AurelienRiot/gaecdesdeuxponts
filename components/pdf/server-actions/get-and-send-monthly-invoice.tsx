@@ -17,6 +17,7 @@ export async function getAndSendMonthlyInvoice(orderIds: string[]): Promise<Retu
     where: {
       id: { in: orderIds },
       dateOfShipping: { not: null },
+      deletedAt: null,
     },
     include: {
       orderItems: true,

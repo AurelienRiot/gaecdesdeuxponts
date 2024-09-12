@@ -18,6 +18,7 @@ const OrderFormPage = async ({
   const shippingOrders = await prismadb.order.findUnique({
     where: {
       id: orderId,
+      deletedAt: null,
     },
     select: {
       id: true,

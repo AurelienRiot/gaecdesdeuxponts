@@ -35,6 +35,7 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
         where: {
           id: data.orderId,
           userId: user.id,
+          deletedAt: null,
         },
         include: {
           orderItems: true,

@@ -11,6 +11,7 @@ export const fetchUser = async () => {
     },
     include: {
       orders: {
+        where: { deletedAt: null },
         orderBy: {
           createdAt: "desc",
         },

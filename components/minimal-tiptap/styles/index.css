@@ -166,9 +166,9 @@
   @apply cursor-col-resize;
 }
 
-.minimal-tiptap-editor .ProseMirror .selection {
+/* .minimal-tiptap-editor .ProseMirror .selection {
   @apply inline-block;
-}
+} */
 
 .minimal-tiptap-editor .ProseMirror .selection,
 .minimal-tiptap-editor .ProseMirror *::selection,

@@ -8,6 +8,7 @@ export const getOrdersByDateOfShipping = async ({ beginMonth, endMonth }: { begi
           gte: beginMonth,
           lt: endMonth,
         },
+        deletedAt: null,
       },
       select: {
         dateOfShipping: true,

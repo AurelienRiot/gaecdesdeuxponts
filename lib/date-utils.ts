@@ -99,29 +99,31 @@ export function getMonthName(monthNumber: number) {
 
 export const getRelativeDate = (date: Date) => {
   const currentDate = new Date();
+  const sameDay =
+    currentDate.getDate() === new Date(date).getDate() && currentDate.getMonth() === new Date(date).getMonth();
   const daysDifference = (new Date(date).getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24);
-  if (daysDifference > -1 && daysDifference < 1) {
+  if (sameDay) {
     return "Aujourd'hui";
   }
-  if (daysDifference >= 1 && daysDifference < 2) {
+  if (daysDifference > 0 && daysDifference < 2) {
     return "Demain";
   }
-  if (daysDifference < -1 && daysDifference > -2) {
+  if (daysDifference < 0 && daysDifference > -2) {
     return "Hier";
   }
   if (daysDifference >= 2) {
     return `dans ${Math.floor(daysDifference + 1)} jours`;
   }
-  if (daysDifference <= -2) {
-    return `Il y a ${Math.floor(Math.abs(daysDifference))} jours`;
-  }
+  // if (daysDifference <= -2) {
+  return `Il y a ${Math.floor(Math.abs(daysDifference))} jours`;
+  // }
 };
 
 export function getDaysInFuture(dates: Date[]) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const futureDates = dates.filter((date) => date.getTime() >= today.getTime());
+  const futureDates = dates.filter((date) => new Date(date).getTime() >= today.getTime());
 
   return futureDates;
 }

@@ -67,6 +67,7 @@ async function getUserOrders({ startDate, endDate }: { startDate: Date; endDate:
             gte: startDate,
             lte: endDate,
           },
+          deletedAt: null,
         },
       },
     },

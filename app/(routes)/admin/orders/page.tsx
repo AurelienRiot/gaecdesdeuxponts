@@ -48,11 +48,13 @@ const OrdersPage = async (context: {
               dateOfShipping: null,
             },
           ],
+          deletedAt: null,
         }
       : {
           id: {
             contains: id,
           },
+          deletedAt: null,
         },
     orderBy: [
       {
