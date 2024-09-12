@@ -74,9 +74,12 @@ function OrderCard({ order }: { order: OrderCardProps }) {
       <AnimateHeight display={isExpanded}>
         <CardContent className="py-2 px-4">
           <div className="space-y-2">
-            <Link href={order.shopId ? `/admin/shops/${order.shopId}` : "#"} className="font-bold">
-              {order.shopName}
-            </Link>
+            <div className="flex justify-between">
+              <Link href={order.shopId ? `/admin/shops/${order.shopId}` : "#"} className="font-bold">
+                {order.shopName}
+              </Link>
+              <p>{order.id}</p>
+            </div>
             <div>
               <h4 className="text-xs font-semibold">Produits :</h4>
               <ul className="text-xs space-y-0.5">

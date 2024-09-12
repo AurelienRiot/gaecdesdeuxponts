@@ -1,7 +1,7 @@
 "use client";
 
 import { LocationMarker } from "@/app/(routes)/(public)/ou-nous-trouver/_components/location-marker";
-import { Button, IconButton, buttonVariants } from "@/components/ui/button";
+import { Button, IconButton, LoadingButton, buttonVariants } from "@/components/ui/button";
 
 import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Modal } from "@/components/ui/modal";
@@ -23,8 +23,10 @@ import { toast } from "sonner";
 import "../../../(public)/ou-nous-trouver/_components/marker.css";
 import getDirection from "../_actions/get-direction";
 import AddressModal from "./address-modal";
-import { type Point, destination, directionSchema, origin, type DirectionFormValues } from "./direction-schema";
 import DatePicker from "./date-picker";
+import { destination, directionSchema, origin, type DirectionFormValues, type Point } from "./direction-schema";
+import getTodaysOrders from "../_actions/get-todays-orders";
+import AddressAutocomplete from "@/actions/adress-autocompleteFR";
 
 const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 
@@ -111,24 +113,13 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
               value={modalProps?.value}
             />
             <div className="space-y-4 relative pl-6">
-              <style jsx>{`
-                  .dotted-line {
-  background-image: url("${svgToDataUri(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" >
-  <circle cx="4" cy="4" r="4" fill="#E4E4E7" />
-</svg>`,
-  )}"); 
-  background-repeat: repeat-y; 
-}
-   `}</style>
-              <div className="dotted-line w-4 h-full top-0 left-0 absolute" />
-
+              <DottedLine />
               <FormField
                 control={form.control}
                 name="origin"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xl bold flex gap-1 justify-start items-center">
+                    <FormLabel className="text-xl bold flex gap-1 justify-start items-center relative">
                       <DatePicker usersAndShops={usersAndShops} />
                       Départ
                       <LocationMarker
@@ -140,6 +131,7 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
                           }
                         }}
                       />
+                      <TodaysOrders usersAndShops={usersAndShops} />
                     </FormLabel>
 
                     <FormControl>
@@ -157,11 +149,7 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
                   </FormItem>
                 )}
               />
-              <WaypointsForm
-                usersAndShops={usersAndShops}
-                setModalProps={setModalProps}
-                setOpenAddressModal={setOpenAddressModal}
-              />
+              <WaypointsForm usersAndShops={usersAndShops} setModalProps={setModalProps} />
               <FormField
                 control={form.control}
                 name="destination"
@@ -270,9 +258,7 @@ function SuccessModal({
 function WaypointsForm({
   usersAndShops,
   setModalProps,
-  setOpenAddressModal,
 }: {
-  setOpenAddressModal: (value: boolean) => void;
   usersAndShops: UserAndShop[];
   setModalProps: ({
     onValueChange,
@@ -418,3 +404,77 @@ const ButtonAddressModal = forwardRef<HTMLButtonElement, ButtonAddressModalProps
     );
   },
 );
+
+function DottedLine() {
+  return (
+    <>
+      <style jsx>{`
+    .dotted-line {
+      background-image: url("${svgToDataUri(
+        `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" >
+        <circle cx="4" cy="4" r="4" fill="#E4E4E7" />
+        </svg>`,
+      )}"); 
+      background-repeat: repeat-y; 
+      }
+      `}</style>
+      <div className="dotted-line w-4 h-full top-0 left-0 absolute" />
+    </>
+  );
+}
+
+function TodaysOrders({ usersAndShops }: { usersAndShops: UserAndShop[] }) {
+  const form = useFormContext<DirectionFormValues>();
+  const { serverAction, loading } = useServerAction(getTodaysOrders);
+
+  function handleOnClick() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    async function onSuccess(
+      result?: {
+        customer: { shippingAddress: string } | null;
+      }[],
+    ) {
+      if (!result) return;
+      const addresses: Point[] = await Promise.all(
+        result.map(async (order) => {
+          if (!order.customer || !order.customer.shippingAddress) {
+            return { label: "" };
+          }
+
+          const user = usersAndShops.find(
+            (user) =>
+              order.customer?.shippingAddress.includes(user.address) ||
+              user.address.includes(order.customer?.shippingAddress || ""),
+          );
+          let latitude = user?.latitude;
+          let longitude = user?.longitude;
+          if (!latitude || !longitude) {
+            const coordinates = await AddressAutocomplete(order.customer?.shippingAddress);
+            if (coordinates.length > 0) {
+              latitude = coordinates[0].coordinates[1];
+              longitude = coordinates[0].coordinates[0];
+            }
+          }
+          if (user) {
+            return { label: user.address, latitude, longitude };
+          }
+          return { label: order.customer?.shippingAddress, latitude, longitude };
+        }),
+      );
+      form.setValue("waypoints", addresses);
+    }
+    serverAction({ data: { date: today }, onSuccess });
+  }
+
+  return (
+    <LoadingButton
+      disabled={loading}
+      variant="outline"
+      className="w-fit text-sm px-2 py-1 absolute -top-0 border-dashed right-0 h-auto"
+      onClick={handleOnClick}
+    >
+      Commandes du jour
+    </LoadingButton>
+  );
+}

@@ -4,7 +4,6 @@ import CheckboxForm from "@/components/chekbox-form";
 import DeleteButton from "@/components/delete-button";
 import UploadImage from "@/components/images-upload/image-upload";
 import type { OptionsArray } from "@/components/product/product-function";
-import { LoadingButton } from "@/components/ui/button";
 import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";

@@ -1,7 +1,7 @@
 "use client";
 
 import AddressAutocomplete, { type Suggestion } from "@/actions/adress-autocompleteFR";
-import { Button } from "@/components/ui/button";
+import { Button, IconButton } from "@/components/ui/button";
 
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandListModal } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,7 @@ import { Modal } from "@/components/ui/modal";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import "leaflet/dist/leaflet.css";
-import { ChevronDown, ChevronsUpDown } from "lucide-react";
+import { ChevronDown, ChevronsUpDown, House, Tractor } from "lucide-react";
 import dynamicImport from "next/dynamic";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -57,6 +57,10 @@ const AddressModal = ({ usersAndShops, onValueChange, value, setIsOpen, isOpen }
         onClose={() => onClose(input)}
       >
         <div className="space-y-4">
+          <div className="flex gap-2">
+            <HouseSelect onSelect={onClose} />
+            <FarmSelect onSelect={onClose} />
+          </div>
           <AddressSelect usersAndShops={usersAndShops} onValueChange={onClose} />
           <AddressSearch onValueChange={onClose} />
           <MapModal onValueChange={onClose} />
@@ -77,6 +81,26 @@ const AddressModal = ({ usersAndShops, onValueChange, value, setIsOpen, isOpen }
     </>
   );
 };
+
+function FarmSelect({ onSelect }: { onSelect: (val: Point) => void }) {
+  return (
+    <IconButton
+      className="text-green-500"
+      Icon={Tractor}
+      onClick={() => onSelect({ label: "6 le Pont Robert 44290 Massérac" })}
+    />
+  );
+}
+
+function HouseSelect({ onSelect }: { onSelect: (val: Point) => void }) {
+  return (
+    <IconButton
+      className="text-blue-500"
+      Icon={House}
+      onClick={() => onSelect({ label: "Pont de l'Eau, 44460 Avessac, France" })}
+    />
+  );
+}
 
 function AddressSelect({
   usersAndShops,
