@@ -46,14 +46,6 @@ export const OrderClient: React.FC<OrderClientProps> = ({ initialData, initialDa
     setLoading(false);
   };
 
-  const handleTodayOrders = () => {
-    const today = new Date();
-    const startOfDay = new Date(today.setHours(0, 0, 0, 0)); // Start of today
-    const endOfDay = addHours(today, 24);
-
-    router.push(createDateOrderUrl({ from: startOfDay, to: endOfDay }));
-  };
-
   useEffect(() => {
     setData(initialData);
   }, [initialData]);

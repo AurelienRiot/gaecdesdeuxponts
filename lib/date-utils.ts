@@ -117,18 +117,21 @@ export const getRelativeDate = (date: Date) => {
   }
 };
 
-export function getNextDay(dates: Date[]) {
+export function getDaysInFuture(dates: Date[]) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   const futureDates = dates.filter((date) => date.getTime() >= today.getTime());
 
-  if (futureDates.length === 0) {
+  return futureDates;
+}
+
+export function getNextDay(dates: Date[]) {
+  if (dates.length === 0) {
     return null;
   }
-  const closestFutureDate = futureDates.reduce((a, b) => {
+  const closestFutureDate = dates.reduce((a, b) => {
     return a.getTime() < b.getTime() ? a : b;
   });
-
-  return { closestFutureDate, futureDates };
+  return closestFutureDate;
 }

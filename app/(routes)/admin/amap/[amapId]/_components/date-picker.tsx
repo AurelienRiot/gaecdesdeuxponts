@@ -7,7 +7,7 @@ import { Toggle } from "@/components/ui/toggle";
 import { dateFormatter, getDaysBetweenDates } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
 import { fr } from "date-fns/locale";
-import { forwardRef, useState } from "react";
+import { type Dispatch, type SetStateAction, forwardRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import type { AMAPFormValues } from "./amap-schema";
 
@@ -18,7 +18,7 @@ type FormDatePickerProps = Omit<CalendarProps, "disabled"> & {
   disabled?: boolean;
   setDate: (date: Date | undefined) => void;
   everyTwoWeek: boolean;
-  setEveryTwoWeek: (value: boolean) => void;
+  setEveryTwoWeek: Dispatch<SetStateAction<boolean>>;
 };
 
 const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
@@ -32,7 +32,7 @@ const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
     const endDate = form.watch("endDate");
     const day = form.watch("day");
 
-    function onSelectDate(selectedDate: Date | undefined) {
+    function onSelectDate(selectedDate: Date | undefined, isEveryTwoWeek: boolean) {
       if (!selectedDate) {
         return;
       }
@@ -45,9 +45,8 @@ const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
       const shippingDays = getDaysBetweenDates({ from: start, to: end, day });
 
       if (shippingDays) {
-        if (everyTwoWeek) {
+        if (isEveryTwoWeek) {
           const daysOfAbsence = shippingDays.filter((_, index) => index % 2 === 1);
-
           const remainingShippingDays = shippingDays.filter((_, index) => index % 2 !== 1);
 
           form.setValue("daysOfAbsence", daysOfAbsence);
@@ -63,16 +62,20 @@ const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
 
     return (
       <FormItem className={cn("w-64", className)}>
-        <FormLabel className="flex items-center justify-between gap-2">
+        <FormLabel
+          className="flex items-center justify-between gap-2 relative
+        "
+        >
           <span>{title}</span>
           {title === "Date de début" && (
             <Toggle
               aria-label="every two weeks"
-              className="text-xs p-1"
+              className="text-xs  p-1 absolute right-0 h-auto -top-2 "
               variant={"outline"}
               pressed={everyTwoWeek}
-              onPressedChange={() => {
-                setEveryTwoWeek(!everyTwoWeek);
+              onPressedChange={(p) => {
+                setEveryTwoWeek(p);
+                onSelectDate(date, p);
               }}
             >
               Toutes les deux semaines
@@ -104,7 +107,7 @@ const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
               // month={month}
               defaultMonth={date}
               locale={fr}
-              onSelect={onSelectDate}
+              onSelect={(date) => onSelectDate(date, everyTwoWeek)}
               startMonth={new Date()}
               endMonth={new Date(new Date().setFullYear(new Date().getFullYear() + 1, 11))}
               // modifiers={{

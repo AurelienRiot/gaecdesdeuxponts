@@ -4,7 +4,7 @@ import { ProductCell } from "@/components/table-custom-fuction/cell-orders";
 import { NameCell } from "@/components/table-custom-fuction/common-cell";
 import { FilterAllInclude, FilterOneInclude } from "@/components/table-custom-fuction/common-filter";
 import { Button } from "@/components/ui/button";
-import { dateFormatter, getNextDay, getRelativeDate } from "@/lib/date-utils";
+import { dateFormatter, getDaysInFuture, getNextDay, getRelativeDate } from "@/lib/date-utils";
 import { currencyFormatter } from "@/lib/utils";
 import type { DataTableFilterableColumn, DataTableViewOptionsColumn } from "@/types";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -32,19 +32,18 @@ export const columns: ColumnDef<AMAPColumn>[] = [
     accessorKey: "id",
     header: "Contrat AMAP",
     cell: ({ row }) => {
-      const nextDay = getNextDay(row.original.shippingDays);
+      const daysInfuture = getDaysInFuture(row.original.shippingDays);
+      const nextDay = getNextDay(daysInfuture);
 
       return (
         <Button asChild variant={"link"} className="px-0 font-bold flex flex-col justify-start h-auto">
           <Link href={`/admin/amap/${row.original.id}`}>
             {nextDay ? (
               <>
-                <p className="text-left whitespace-nowrap">
-                  Prochaine livraison {getRelativeDate(nextDay.closestFutureDate)}
-                </p>
+                <p className="text-left whitespace-nowrap">Prochaine livraison {getRelativeDate(nextDay)}</p>
                 <p>
-                  {nextDay.futureDates.length} livraison{nextDay.futureDates.length > 1 && "s"} restante
-                  {nextDay.futureDates.length > 1 && "s"}
+                  {daysInfuture.length} livraison{daysInfuture.length > 1 && "s"} restante
+                  {daysInfuture.length > 1 && "s"}
                 </p>
               </>
             ) : (
@@ -82,11 +81,12 @@ export const columns: ColumnDef<AMAPColumn>[] = [
     accessorKey: "shippingDays",
     header: "Prochaine livraison",
     cell: ({ row }) => {
-      const nextDay = getNextDay(row.original.shippingDays);
+      const daysInfuture = getDaysInFuture(row.original.shippingDays);
+      const nextDay = getNextDay(daysInfuture);
       if (!nextDay) {
         return <p>Toutes les livraisons sont passées</p>;
       }
-      return <p className="text-left whitespace-nowrap">{dateFormatter(nextDay.closestFutureDate, { days: true })}</p>;
+      return <p className="text-left whitespace-nowrap">{dateFormatter(nextDay, { days: true })}</p>;
     },
   },
   {
