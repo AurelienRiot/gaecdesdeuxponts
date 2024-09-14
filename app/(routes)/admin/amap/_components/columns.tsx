@@ -17,6 +17,7 @@ export type AMAPColumn = {
   name: string;
   // isPaid: boolean;
   shippingDays: Date[];
+  shippedDays: Date[];
   startDate: Date;
   endDate: Date;
   totalPrice: number;
@@ -49,6 +50,9 @@ export const columns: ColumnDef<AMAPColumn>[] = [
             ) : (
               "Aucune livraison"
             )}
+            <p>
+              {row.original.shippedDays.length} livraison{row.original.shippedDays.length > 1 && "s"} éffectuée
+            </p>
           </Link>
         </Button>
       );

@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import type { DateRange } from "react-day-picker";
 import { toast } from "sonner";
 import { columns, filterableColumns, viewOptionsColumns, type AMAPColumn } from "./columns";
+import { Drawer } from "vaul";
+import { dateFormatter } from "@/lib/date-utils";
 
 interface AMAPClientProps {
   initialData: AMAPColumn[];
@@ -64,6 +66,7 @@ export const AMAPClient: React.FC<AMAPClientProps> = ({ initialData, initialDate
           Valider
         </LoadingButton>
       </div>
+
       <SearchId />
       <Separator className="my-4" />
 
