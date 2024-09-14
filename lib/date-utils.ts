@@ -14,10 +14,10 @@ export const dateFormatter = (date: Date, options?: { hours?: boolean; days?: bo
   return formatInTimeZone(date, timeZone, "d MMMM yyyy", { locale: fr });
 };
 
-export const MIN_DAYS = 3;
+export const MIN_DAYS_FOR_PICK_UP = 3;
 
 export const isDateDisabled = (date: Date) => {
-  return date.getDay() === 0 || date < addDays(new Date(), MIN_DAYS);
+  return date.getDay() === 0 || date < addDays(new Date(), MIN_DAYS_FOR_PICK_UP);
 };
 
 export function formDateDayMonth(date: Date) {

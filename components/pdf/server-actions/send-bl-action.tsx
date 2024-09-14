@@ -8,7 +8,7 @@ import ShippingOrder from "../create-shipping";
 import { createPDFData } from "../pdf-data";
 import { transporter } from "@/lib/nodemailer";
 import { render } from "@react-email/render";
-import SendBLEmail from "@/components/email/send-bl";
+import { SendBLEmail } from "@/components/email/send-bl";
 import { dateFormatter } from "@/lib/date-utils";
 import { revalidateTag } from "next/cache";
 import createOrdersEvent from "@/components/google-events/create-orders-event";

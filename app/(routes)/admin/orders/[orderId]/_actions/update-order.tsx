@@ -4,7 +4,7 @@ import { checkAdmin } from "@/components/auth/checkAuth";
 import { createCustomer } from "@/components/pdf/pdf-data";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
-import { orderSchema, type OrderFormValues } from "../_components/order-shema";
+import { orderSchema, type OrderFormValues } from "../_components/order-schema";
 import createOrdersEvent from "@/components/google-events/create-orders-event";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";

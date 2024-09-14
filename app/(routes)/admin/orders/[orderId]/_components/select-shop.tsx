@@ -1,22 +1,14 @@
-import { Button } from "@/components/ui/button";
-import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import type { Shop } from "@prisma/client";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { useState } from "react";
-import { useFormContext } from "react-hook-form";
-import { toast } from "sonner";
-import type { OrderFormValues } from "./order-shema";
-import Image from "next/image";
-import { ScrollToTarget } from "@/lib/scroll-to-traget";
 import SelectSheet from "@/components/select-sheet";
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
+import { Button } from "@/components/ui/button";
+import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import type { Shop } from "@prisma/client";
+import { useFormContext } from "react-hook-form";
+import { toast } from "sonner";
+import type { OrderFormValues } from "./order-schema";
 
 const SelectShop = ({ shops }: { shops: Shop[] }) => {
   const form = useFormContext<OrderFormValues>();
-  const [open, setOpen] = useState(false);
   const shopId = form.watch("shopId");
   const shop = shops.find((shop) => shop.id === shopId);
 
@@ -31,7 +23,6 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
       return;
     }
     form.setValue("shopId", value);
-    setOpen(false);
   }
 
   return (

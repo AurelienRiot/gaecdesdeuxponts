@@ -11,7 +11,7 @@ type SelectSheetContextType = {
 
 const SelectSheetContext = React.createContext<SelectSheetContextType | undefined>(undefined);
 
-export function useSelectSheetContext() {
+function useSelectSheetContext() {
   const context = React.useContext(SelectSheetContext);
 
   if (context === undefined) {
@@ -43,29 +43,35 @@ function SelectSheet({
   triggerClassName?: string;
 }) {
   const [isOpen, setIsOpen] = React.useState(false);
+
   return (
-    <SelectSheetContext.Provider value={{ isOpen, setIsOpen }}>
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetTrigger asChild>
-          {typeof trigger === "string" ? (
-            <Button className={triggerClassName} variant="outline">
-              {trigger}
-            </Button>
-          ) : (
-            trigger
-          )}
-        </SheetTrigger>
-        <SheetContent side={"bottom"} className="pb-6">
-          <div className={cn("mx-auto w-full max-w-sm ", className)}>
-            <SheetHeader>
-              <SheetTitle>{title}</SheetTitle>
-              {!!description && <SheetDescription>{description}</SheetDescription>}
-            </SheetHeader>
-            <SelectSheetContent values={values} onSelected={onSelected} selectedValue={selectedValue} />
-          </div>
-        </SheetContent>
-      </Sheet>
-    </SelectSheetContext.Provider>
+    // <SelectSheetContext.Provider value={{ isOpen, setIsOpen }}>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <SheetTrigger asChild>
+        {typeof trigger === "string" ? (
+          <Button className={triggerClassName} variant="outline">
+            {trigger}
+          </Button>
+        ) : (
+          trigger
+        )}
+      </SheetTrigger>
+      <SheetContent side={"bottom"} className="pb-6">
+        <div className={cn("mx-auto w-full max-w-sm ", className)}>
+          <SheetHeader>
+            <SheetTitle>{title}</SheetTitle>
+            {/* {!!description && <SheetDescription>{description}</SheetDescription>} */}
+          </SheetHeader>
+          <SelectSheetContent
+            setIsOpen={setIsOpen}
+            values={values}
+            onSelected={onSelected}
+            selectedValue={selectedValue}
+          />
+        </div>
+      </SheetContent>
+    </Sheet>
+    // </SelectSheetContext.Provider>
   );
 }
 
@@ -73,10 +79,16 @@ function SelectSheetContent({
   values,
   onSelected,
   selectedValue,
-}: { onSelected: (selected: string) => void; values: ValueType[]; selectedValue?: string | null }) {
+  setIsOpen,
+}: {
+  onSelected: (selected: string) => void;
+  values: ValueType[];
+  selectedValue?: string | null;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const itemRefs = React.useRef<(HTMLButtonElement | null)[]>([]);
-  const { setIsOpen } = useSelectSheetContext();
+  // const { setIsOpen } = useSelectSheetContext();
 
   React.useEffect(() => {
     if (scrollRef.current && itemRefs.current[values.findIndex((value) => value.value === selectedValue)]) {

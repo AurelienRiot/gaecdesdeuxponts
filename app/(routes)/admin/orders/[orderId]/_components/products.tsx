@@ -12,7 +12,7 @@ import { ChevronsUpDown } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { GrPowerReset } from "react-icons/gr";
 import { toast } from "sonner";
-import type { OrderFormValues } from "./order-shema";
+import type { OrderFormValues } from "./order-schema";
 
 const negativeQuantityStyle =
   "bg-destructive hover:bg-destructive/90 hover:text-destructive-foreground text-destructive-foreground";

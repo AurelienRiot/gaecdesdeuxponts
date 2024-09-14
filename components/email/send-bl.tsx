@@ -21,7 +21,7 @@ SendBLEmail.PreviewProps = {
   id: "CM-27-6-24_04KYX",
 } as BillingEmailProps;
 
-export const SendBLBody = ({ date, baseUrl, id, email }: BillingEmailProps) => (
+const SendBLBody = ({ date, baseUrl, id, email }: BillingEmailProps) => (
   <>
     <Text className="text-left text-base">Bonjour,</Text>
 
@@ -45,5 +45,3 @@ export const SendBLBody = ({ date, baseUrl, id, email }: BillingEmailProps) => (
     <Text className="text-center text-base">Merci pour votre confiance.</Text>
   </>
 );
-
-export default SendBLEmail;

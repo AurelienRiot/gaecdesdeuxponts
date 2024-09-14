@@ -1,30 +1,7 @@
-"use client";
-
-import { MinimalTiptapEditor } from "@/components/minimal-tiptap";
-import type { Content } from "@tiptap/core";
-import { useState } from "react";
-
 export const dynamic = "force-static";
 const ColorsPage = () => {
-  const [value, setValue] = useState<Content>('<p class="text-node">Spécification test</p>');
-  console.log(value);
   return (
     <>
-      <div className="p-6">
-        <MinimalTiptapEditor
-          value={value}
-          onChange={setValue}
-          throttleDelay={2000}
-          className="w-full"
-          editorContentClassName="p-5"
-          output="html"
-          placeholder="Entrez votre texte ici"
-          immediatelyRender={false}
-          editable={true}
-          injectCSS={true}
-          editorClassName="focus:outline-none"
-        />
-      </div>
       <div className="grid grid-cols-2 gap-4 bg-black p-6 dark:bg-white">
         <div className="rounded-lg bg-background p-4">
           <h3 className="text-foreground">Background Color</h3>

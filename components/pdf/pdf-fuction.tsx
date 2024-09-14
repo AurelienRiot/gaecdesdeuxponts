@@ -4,8 +4,8 @@ import AmapPDF from "./create-amap";
 import Invoice from "./create-invoice";
 import MonthlyInvoice from "./create-monthly-invoice";
 import ShippingOrder from "./create-shipping";
-import { type AMAPType, createAMAPData, createMonthlyPDFData, createPDFData } from "./pdf-data";
 import AmapPDFForm from "./formulaire-amap";
+import { createAMAPData, createMonthlyPDFData, createPDFData, type AMAPType } from "./pdf-data";
 
 async function generatePdfSring64({
   data,
@@ -44,24 +44,4 @@ async function generatePdfSring64({
   return buffer.toString("base64");
 }
 
-function base64ToBlob(base64: string, contentType = "application/pdf", sliceSize = 512): Blob {
-  const byteCharacters = Buffer.from(base64, "base64").toString("binary");
-  const byteArrays: Uint8Array[] = [];
-
-  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-    const slice = byteCharacters.slice(offset, offset + sliceSize);
-
-    const byteNumbers = new Array(slice.length);
-    for (let i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i);
-    }
-
-    const byteArray = new Uint8Array(byteNumbers);
-    byteArrays.push(byteArray);
-  }
-  const blob = new Blob(byteArrays, { type: contentType });
-
-  return blob;
-}
-
-export { generatePdfSring64, base64ToBlob };
+export { generatePdfSring64 };

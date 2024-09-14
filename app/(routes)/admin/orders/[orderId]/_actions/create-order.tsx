@@ -6,7 +6,7 @@ import { createCustomer } from "@/components/pdf/pdf-data";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
-import { orderSchema, type OrderFormValues } from "../_components/order-shema";
+import { orderSchema, type OrderFormValues } from "../_components/order-schema";
 
 async function createOrder(data: OrderFormValues) {
   return await safeServerAction({

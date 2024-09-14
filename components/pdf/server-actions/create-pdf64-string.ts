@@ -10,7 +10,7 @@ const pdf64StringSchema = z.object({
   orderId: z.string(),
   type: z.union([z.literal("invoice"), z.literal("shipping")]),
 });
-export async function createPDF64String(data: z.infer<typeof pdf64StringSchema>) {
+async function createPDF64String(data: z.infer<typeof pdf64StringSchema>) {
   return await safeServerAction({
     data,
     schema: pdf64StringSchema,
@@ -47,7 +47,7 @@ export async function createPDF64String(data: z.infer<typeof pdf64StringSchema>)
 const amapPdf64StringSchema = z.object({
   orderId: z.string(),
 });
-export async function createAMAPPDF64String(data: z.infer<typeof amapPdf64StringSchema>) {
+async function createAMAPPDF64String(data: z.infer<typeof amapPdf64StringSchema>) {
   return await safeServerAction({
     data,
     schema: amapPdf64StringSchema,
@@ -83,7 +83,7 @@ const monthlyPdf64StringSchema = z.object({
   orderIds: z.array(z.string()),
 });
 
-export async function createMonthlyPDF64String(data: z.infer<typeof monthlyPdf64StringSchema>) {
+async function createMonthlyPDF64String(data: z.infer<typeof monthlyPdf64StringSchema>) {
   return await safeServerAction({
     data,
     schema: monthlyPdf64StringSchema,
@@ -128,3 +128,5 @@ export async function createMonthlyPDF64String(data: z.infer<typeof monthlyPdf64
     },
   });
 }
+
+export { createMonthlyPDF64String, createPDF64String, createAMAPPDF64String };

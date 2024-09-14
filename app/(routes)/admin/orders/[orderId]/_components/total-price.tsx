@@ -2,7 +2,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input";
 import { useFormContext } from "react-hook-form";
 import { useEffect } from "react";
-import type { OrderFormValues } from "./order-shema";
+import type { OrderFormValues } from "./order-schema";
 
 const TotalPrice = () => {
   const form = useFormContext<OrderFormValues>();

@@ -14,6 +14,7 @@ import type { AMAPOrderWithItems } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Product, Shop, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { deleteAMAP } from "../../_actions/delete-amap";
 import createAMAP from "../_actions/create-amap";
@@ -27,7 +28,7 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TotalPaid from "./total-paid";
 import TotalPrice from "./total-price";
-import { useState } from "react";
+import { DisplayAMAPOrder } from "@/components/pdf/button/display-amap-order";
 
 const START = new Date(1725314400000);
 const END = new Date(1734390000000);

@@ -1,13 +1,13 @@
 "use client";
 
 import { useToastPromise } from "@/components/ui/sonner";
-import { SendAMAP } from "../server-actions/send-amap";
 import useServerAction from "@/hooks/use-server-action";
-import { createAMAPPDF64String } from "../server-actions/create-pdf64-string";
-import { toast } from "sonner";
+import base64ToBlob from "@/lib/base-64-to-blob";
 import { saveAs } from "file-saver";
-import { base64ToBlob } from "../pdf-fuction";
-import PdfButton from "./pdf-button";
+import { toast } from "sonner";
+import { createAMAPPDF64String } from "../server-actions/create-pdf64-string";
+import { SendAMAP } from "../server-actions/send-amap-action";
+import { PdfButton } from "./pdf-button";
 
 export const DisplayAMAPOrder = ({ orderId, isSend }: { orderId: string; isSend: boolean }) => {
   const { toastServerAction, loading: sendBLLoading } = useToastPromise({
@@ -17,7 +17,7 @@ export const DisplayAMAPOrder = ({ orderId, isSend }: { orderId: string; isSend:
   });
   const { serverAction, loading: createPDF64StringLoading } = useServerAction(createAMAPPDF64String);
 
-  const onViewFile = async () => {
+  async function onViewFile() {
     function onSuccess(result?: string) {
       if (!result) {
         toast.error("Erreur");
@@ -28,9 +28,9 @@ export const DisplayAMAPOrder = ({ orderId, isSend }: { orderId: string; isSend:
       window.open(url, "_blank");
     }
     await serverAction({ data: { orderId }, onSuccess });
-  };
+  }
 
-  const onSaveFile = async () => {
+  async function onSaveFile() {
     function onSuccess(result?: string) {
       if (!result) {
         toast.error("Erreur");
@@ -40,7 +40,7 @@ export const DisplayAMAPOrder = ({ orderId, isSend }: { orderId: string; isSend:
       saveAs(blob, `Contrat AMAP ${orderId}.pdf`);
     }
     await serverAction({ data: { orderId }, onSuccess });
-  };
+  }
 
   const onSendFile = async (setSend: (send: boolean) => void) => {
     toastServerAction({ data: { orderId }, onSuccess: () => setSend(true) });

@@ -1,6 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import { headers } from "next/headers";
 import { OrderForm, type ProductFormProps } from "./_components/order-form";
+import { priorityMap } from "@/components/product/product-function";
 
 export const dynamic = "force-dynamic";
 const OrderFormPage = async ({
@@ -81,10 +82,17 @@ const OrderFormPage = async ({
         }
       : shippingOrders;
 
+  const sortedProducts = products.sort((a, b) => {
+    const aPriority = priorityMap[a.name] || Number.MAX_SAFE_INTEGER;
+    const bPriority = priorityMap[b.name] || Number.MAX_SAFE_INTEGER;
+
+    return aPriority - bPriority;
+  });
+
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <OrderForm products={products} initialData={initialData} users={users} shops={shops} referer={referer} />
+        <OrderForm products={sortedProducts} initialData={initialData} users={users} shops={shops} referer={referer} />
         {/* <OrderClient params={params} searchParams={searchParams} /> */}
       </div>
     </div>

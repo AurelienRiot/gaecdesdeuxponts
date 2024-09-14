@@ -2,7 +2,7 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { MIN_DAYS, dateFormatter, isDateDisabled } from "@/lib/date-utils";
+import { MIN_DAYS_FOR_PICK_UP, dateFormatter, isDateDisabled } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
 import { addMonths } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -70,7 +70,7 @@ const DatePicker = ({ className, date, shopId }: DatePickerProps) => {
             defaultMonth={
               date
                 ? date
-                : new Date().getDate() + MIN_DAYS >
+                : new Date().getDate() + MIN_DAYS_FOR_PICK_UP >
                     new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate()
                   ? addMonths(new Date(), 1)
                   : new Date()

@@ -6,7 +6,7 @@ import type { UserWithAddress } from "@/types";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import type { OrderFormValues } from "./order-shema";
+import type { OrderFormValues } from "./order-schema";
 
 export function getUserName(user: { name?: string | null; company?: string | null; email?: string | null }) {
   return user.company || user.name || user.email?.split("@")[0] || "";
@@ -49,7 +49,7 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
             title="Selectionner le client"
             trigger={
               name ? (
-                <Button variant="outline">
+                <Button variant="outline" className="w-full">
                   <NameWithImage name={name} image={image} />
                 </Button>
               ) : (

@@ -26,7 +26,7 @@ import confirmOrder from "../_actions/confirm-order";
 import createOrder from "../_actions/create-order";
 import updateOrder from "../_actions/update-order";
 import FormDatePicker from "./date-picker";
-import { orderSchema, type OrderFormValues } from "./order-shema";
+import { orderSchema, type OrderFormValues } from "./order-schema";
 import { ShippingProducts } from "./products";
 import SelectShop from "./select-shop";
 import SelectUser from "./select-user";

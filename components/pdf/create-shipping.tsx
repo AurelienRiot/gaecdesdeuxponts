@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 
-import { StyleSheet, Text, View, Svg, G, Path } from "@react-pdf/renderer";
+import { G, Path, StyleSheet, Svg, Text, View } from "@react-pdf/renderer";
 import Details from "./details";
 import MainDocument, { borderColor, foregroundColor, mainColor, tableRowsCount } from "./main-document";
 import type { PDFData } from "./pdf-data";

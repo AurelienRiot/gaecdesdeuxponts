@@ -5,11 +5,12 @@ import useServerAction from "@/hooks/use-server-action";
 import { saveAs } from "file-saver";
 import { toast } from "sonner";
 import { createPDF64String } from "../server-actions/create-pdf64-string";
-import { base64ToBlob } from "../pdf-fuction";
-import { sendFacture } from "../server-actions/send-facture";
-import PdfButton from "./pdf-button";
+import base64ToBlob from "@/lib/base-64-to-blob";
 
-export const DisplayInvoice = ({ orderId, isSend }: { orderId: string; isSend: boolean }) => {
+import { sendFacture } from "../server-actions/send-facture-action";
+import { PdfButton } from "./pdf-button";
+
+export function DisplayInvoice({ orderId, isSend }: { orderId: string; isSend: boolean }) {
   const { toastServerAction, loading: sendFactureLoading } = useToastPromise({
     serverAction: sendFacture,
     message: "Envoi de la facture",
@@ -53,4 +54,4 @@ export const DisplayInvoice = ({ orderId, isSend }: { orderId: string; isSend: b
       isSend={isSend}
     />
   );
-};
+}

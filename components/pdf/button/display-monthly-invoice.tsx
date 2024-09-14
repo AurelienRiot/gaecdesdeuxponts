@@ -6,9 +6,10 @@ import { saveAs } from "file-saver";
 import { toast } from "sonner";
 import type { monthlyOrdersType } from "../pdf-data";
 import { createMonthlyPDF64String } from "../server-actions/create-pdf64-string";
-import { base64ToBlob } from "../pdf-fuction";
-import { sendMonthlyInvoice } from "../server-actions/send-montly-invoice";
-import PdfButton from "./pdf-button";
+import base64ToBlob from "@/lib/base-64-to-blob";
+
+import { sendMonthlyInvoice } from "../server-actions/send-montly-invoice-action";
+import { PdfButton } from "./pdf-button";
 
 export const DisplayMonthlyInvoice = ({
   orders,

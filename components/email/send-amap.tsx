@@ -1,7 +1,7 @@
-import { Section, Text } from "@react-email/components";
-import MainBody, { ButtonRedirect } from "./common";
+import { Text } from "@react-email/components";
+import MainBody from "./common";
 
-export interface AMAPEmailProps {
+interface AMAPEmailProps {
   baseUrl: string;
   id: string;
   email: string;
@@ -9,7 +9,7 @@ export interface AMAPEmailProps {
   endDate: string;
 }
 
-export const SendAMAPEmail = ({ baseUrl, id, email, startDate, endDate }: AMAPEmailProps) => (
+const SendAMAPEmail = ({ baseUrl, id, email, startDate, endDate }: AMAPEmailProps) => (
   <MainBody baseUrl={baseUrl} previewText={`Votre contrat AMAP Laiterie du Pont Robert`}>
     <SendAMAPBody baseUrl={baseUrl} id={id} email={email} startDate={startDate} endDate={endDate} />
   </MainBody>
@@ -24,7 +24,7 @@ SendAMAPEmail.PreviewProps = {
   id: "CM-27-6-24_04KYX",
 } as AMAPEmailProps;
 
-export const SendAMAPBody = ({ baseUrl, id, email, startDate, endDate }: AMAPEmailProps) => (
+const SendAMAPBody = ({ baseUrl, id, email, startDate, endDate }: AMAPEmailProps) => (
   <>
     <Text className="text-left text-base">Bonjour,</Text>
 
