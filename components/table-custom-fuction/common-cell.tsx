@@ -1,6 +1,6 @@
 "use client";
 import useServerAction from "@/hooks/use-server-action";
-import { dateFormatter, getRelativeDate } from "@/lib/date-utils";
+import { dateFormatter } from "@/lib/date-utils";
 import type { ReturnTypeServerAction } from "@/lib/server-action";
 import type { Row } from "@tanstack/react-table";
 import Image from "next/image";
@@ -34,11 +34,7 @@ function NameCell({ image, name, url }: NameCellProps) {
     <Button asChild variant={url ? "link" : "ghost"} className="px-0">
       {url ? (
         <Link href={url}>
-          {image ? (
-            <Image src={image} alt={name} width={50} height={100} className="h-10 w-10  rounded-sm object-contain" />
-          ) : (
-            name
-          )}
+          <NameWithImage name={name} image={image} imageSize={50} />
         </Link>
       ) : (
         <span>{name}</span>
@@ -46,6 +42,23 @@ function NameCell({ image, name, url }: NameCellProps) {
     </Button>
   );
 }
+
+const NameWithImage = ({
+  name,
+  image,
+  imageSize = 16,
+}: { name: string; image?: string | null; imageSize?: number }) => (
+  <div className="flex items-center justify-start gap-4 w-full">
+    <Image
+      src={image ? image : "/skeleton-image.webp"}
+      alt="user"
+      width={imageSize * 2}
+      height={imageSize}
+      className="mr-2 object-contain rounded-sm bg-white"
+    />
+    {name}
+  </div>
+);
 
 type PhoneCellProps = {
   phone: string;
@@ -161,4 +174,4 @@ function NameWithImageCell<T>({
   );
 }
 
-export { CheckboxCell, DateCell, NameCell, NameWithImageCell, OptionsCell, PhoneCell, TextCell };
+export { CheckboxCell, DateCell, NameCell, NameWithImage, NameWithImageCell, OptionsCell, PhoneCell, TextCell };

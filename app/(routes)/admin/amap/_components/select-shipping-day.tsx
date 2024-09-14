@@ -26,7 +26,7 @@ function SelectShippingDay({
         }))}
         selectedValue={selectedShippingDay.toISOString()}
         onSelected={(value) => {
-          router.push(constructQueryString({ newParamKey: "shippingDay", newParamValue: value.value, searchParams }), {
+          router.push(constructQueryString({ newParamKey: "shippingDay", newParamValue: value, searchParams }), {
             scroll: false,
           });
         }}

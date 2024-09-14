@@ -1,14 +1,14 @@
 "use client";
 
 import OrderCard, { type OrderCardProps } from "@/components/display-orders/order-card";
+import SelectSheet from "@/components/select-sheet";
 import { Button, LoadingButton } from "@/components/ui/button";
 import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import NoResults from "@/components/ui/no-results";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { addDays, addHours, nextDay, startOfToday } from "date-fns";
+import { addDays, nextDay, startOfToday } from "date-fns";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -91,12 +91,12 @@ const selectDate = [
   { value: "tomorrow", label: "Demain" },
   { value: "tuesday", label: "Mardi prochain" },
   { value: "friday", label: "Vendredi prochain" },
-] as const;
+];
 
 function SelectDate() {
   const router = useRouter();
 
-  const handleValueChange = (value: (typeof selectDate)[number]["value"]) => {
+  const handleValueChange = (value: string) => {
     let startOfDay = new Date();
     let endOfDay = new Date();
 
@@ -118,25 +118,21 @@ function SelectDate() {
         endOfDay = addDays(startOfDay, 1);
         break;
       default:
+        toast.error("Erreur");
         return;
     }
-
-    router.push(createDateOrderUrl({ from: startOfDay, to: endOfDay }));
+    router.push(createDateOrderUrl({ from: startOfDay, to: endOfDay }), { scroll: false });
   };
 
   return (
-    <Select value={""} onValueChange={handleValueChange}>
-      <SelectTrigger className="w-40">
-        <SelectValue placeholder="Filtrer" />
-      </SelectTrigger>
-      <SelectContent side="top">
-        {selectDate.map(({ label, value }) => (
-          <SelectItem key={value} value={value}>
-            {label}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <SelectSheet
+      title="Selectionner le filtre à appliquer"
+      trigger={"Filtrer par date"}
+      values={selectDate}
+      onSelected={(value) => {
+        handleValueChange(value);
+      }}
+    />
   );
 }
 

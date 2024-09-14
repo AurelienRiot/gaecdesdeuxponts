@@ -11,11 +11,14 @@ import { toast } from "sonner";
 import type { OrderFormValues } from "./order-shema";
 import Image from "next/image";
 import { ScrollToTarget } from "@/lib/scroll-to-traget";
+import SelectSheet from "@/components/select-sheet";
+import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 
 const SelectShop = ({ shops }: { shops: Shop[] }) => {
   const form = useFormContext<OrderFormValues>();
   const [open, setOpen] = useState(false);
   const shopId = form.watch("shopId");
+  const shop = shops.find((shop) => shop.id === shopId);
 
   function onValueChange(value: string | undefined) {
     if (!value) {
@@ -49,43 +52,27 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
               À domicile
             </Button>
           </FormLabel>
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                key={shopId || "domicile"}
-                variant="outline"
-                role="combobox"
-                disabled={form.formState.isSubmitting}
-                className={cn("min-w-48 justify-between")}
-              >
-                {shops.find((shop) => shop.id === shopId)?.name || "À domicile"}
-                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent side="bottom" avoidCollisions={false} className="w-[200px] p-0">
-              <Command>
-                <CommandInput onFocus={() => ScrollToTarget("shop-input")} placeholder="Nom du magasin" />
-                <CommandList>
-                  {shops.map((shop) => (
-                    <CommandItem key={shop.id} value={shop.id} keywords={[shop.name]} onSelect={onValueChange}>
-                      <Check className={cn("mr-2 h-4 w-4", shopId === shop.id ? "opacity-100" : "opacity-0")} />
-                      {shop.imageUrl && (
-                        <Image
-                          src={shop.imageUrl}
-                          alt={shop.name}
-                          width={16}
-                          height={16}
-                          sizes="200px"
-                          className="mr-2 object-contain"
-                        />
-                      )}
-                      {shop.name}
-                    </CommandItem>
-                  ))}
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
+          <SelectSheet
+            triggerClassName="w-full"
+            title="Selectionner le lieu de retrait"
+            trigger={
+              shop ? (
+                <Button variant="outline">
+                  <NameWithImage name={shop.name} image={shop.imageUrl} />
+                </Button>
+              ) : (
+                "À domicile"
+              )
+            }
+            selectedValue={shopId}
+            values={shops.map((shop) => ({
+              label: <NameWithImage name={shop.name} image={shop.imageUrl} />,
+              value: shop.id,
+            }))}
+            onSelected={(value) => {
+              onValueChange(value);
+            }}
+          />
 
           <FormMessage />
         </FormItem>

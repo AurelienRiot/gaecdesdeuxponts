@@ -1,8 +1,8 @@
 "use client";
-import * as React from "react";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
-import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
+import * as React from "react";
+import { Button } from "./ui/button";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 
 type SelectSheetContextType = {
   isOpen: boolean;
@@ -10,13 +10,6 @@ type SelectSheetContextType = {
 };
 
 const SelectSheetContext = React.createContext<SelectSheetContextType | undefined>(undefined);
-
-const SelectSheetProvider: React.FC<{
-  children: React.ReactNode;
-}> = ({ children }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
-  return <SelectSheetContext.Provider value={{ isOpen, setIsOpen }}>{children}</SelectSheetContext.Provider>;
-};
 
 export function useSelectSheetContext() {
   const context = React.useContext(SelectSheetContext);
@@ -28,7 +21,7 @@ export function useSelectSheetContext() {
   return context;
 }
 
-type ValueType = { label: string | React.ReactNode; value: string; highlight?: boolean };
+type ValueType = { label: React.ReactNode; value: string; highlight?: boolean };
 
 function SelectSheet({
   values,
@@ -38,22 +31,29 @@ function SelectSheet({
   title,
   description,
   className,
+  triggerClassName,
 }: {
-  children?: React.ReactNode;
   trigger: React.ReactNode | string;
-  onSelected: (selected: ValueType) => void;
+  onSelected: (selected: string) => void;
   values: ValueType[];
-  selectedValue: string;
+  selectedValue?: string | null;
   title: string;
   description?: string;
   className?: string;
+  triggerClassName?: string;
 }) {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
     <SelectSheetContext.Provider value={{ isOpen, setIsOpen }}>
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
-          {typeof trigger === "string" ? <Button variant="outline">{trigger}</Button> : trigger}
+          {typeof trigger === "string" ? (
+            <Button className={triggerClassName} variant="outline">
+              {trigger}
+            </Button>
+          ) : (
+            trigger
+          )}
         </SheetTrigger>
         <SheetContent side={"bottom"} className="pb-6">
           <div className={cn("mx-auto w-full max-w-sm ", className)}>
@@ -73,7 +73,7 @@ function SelectSheetContent({
   values,
   onSelected,
   selectedValue,
-}: { onSelected: (selected: ValueType) => void; values: ValueType[]; selectedValue: string }) {
+}: { onSelected: (selected: string) => void; values: ValueType[]; selectedValue?: string | null }) {
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const itemRefs = React.useRef<(HTMLButtonElement | null)[]>([]);
   const { setIsOpen } = useSelectSheetContext();
@@ -95,6 +95,7 @@ function SelectSheetContent({
       <div ref={scrollRef} className="max-h-[35dvh] overflow-y-auto  flex flex-col gap-2 relative py-6">
         {values.map((value, index) => (
           <Button
+            style={{ touchAction: "pan-y" }}
             ref={(el) => {
               itemRefs.current[index] = el;
             }}
@@ -102,7 +103,7 @@ function SelectSheetContent({
             key={value.value}
             onClick={() => {
               setIsOpen(false);
-              onSelected(value);
+              onSelected(value.value);
             }}
           >
             {value.label}

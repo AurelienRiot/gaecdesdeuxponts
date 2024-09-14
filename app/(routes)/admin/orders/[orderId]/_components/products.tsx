@@ -1,17 +1,14 @@
 "use client";
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import SelectSheet from "@/components/select-sheet";
 import { Badge } from "@/components/ui/badge";
 import { Button, IconButton } from "@/components/ui/button";
-import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input, NumberInput } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ScrollToTarget } from "@/lib/scroll-to-traget";
+import { NumberInput } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import type { ProductWithMain, UserWithAddress } from "@/types";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { ChevronsUpDown } from "lucide-react";
-import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { GrPowerReset } from "react-icons/gr";
 import { toast } from "sonner";
@@ -202,8 +199,6 @@ const SelectProductName = ({
 }) => {
   const form = useFormContext<OrderFormValues>();
 
-  const [open, setOpen] = useState(false);
-
   function onValueChange(value: string) {
     const product = products.find((product) => product.id === value);
     if (!product) {
@@ -217,8 +212,6 @@ const SelectProductName = ({
     form.setValue(`orderItems.${productIndex}.unit`, product.unit);
     form.setValue(`orderItems.${productIndex}.description`, product.description);
     form.setValue(`orderItems.${productIndex}.price`, product.price);
-
-    setOpen(false);
   }
   return (
     <FormField
@@ -230,62 +223,59 @@ const SelectProductName = ({
             <span className="">{`Nom du produit ${productIndex + 1}`}</span>
           </FormLabel>
           <FormControl>
-            <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  disabled={form.formState.isSubmitting}
-                  className={cn(
-                    "w-full justify-between",
-                    field.value ? "" : "text-muted-foreground",
-                    quantity < 0 ? negativeQuantityStyle : "",
-                  )}
-                >
-                  {selectedProduct?.product.isPro && (
-                    <Badge variant="orange" className="mr-2">
-                      Pro
-                    </Badge>
-                  )}
-                  {field.value ? field.value : "Nom du produit"}
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent side="bottom" className="w-[200px] p-0" avoidCollisions={false}>
-                <Command>
-                  <CommandInput
-                    onFocus={() => ScrollToTarget(`product-${productIndex}`)}
-                    placeholder="Nom du produit"
-                  />
-                  <CommandList>
-                    {products
-                      .filter(
-                        (product) =>
-                          !user ||
-                          user.role === "trackOnlyUser" ||
-                          product.isArchived ||
-                          product.product.isArchived ||
-                          (user.role === "pro" ? product.product.isPro : !product.product.isPro),
-                      )
-                      .map((product) => (
-                        <CommandItem
-                          key={product.id}
-                          value={product.id}
-                          keywords={[product.name]}
-                          onSelect={onValueChange}
-                        >
-                          {product.product.isPro && (
-                            <Badge variant="orange" className="mr-2">
-                              Pro
-                            </Badge>
-                          )}
-                          {product.name}
-                        </CommandItem>
-                      ))}
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
+            <SelectSheet
+              triggerClassName="w-full"
+              title="Selectionner le produit"
+              trigger={
+                selectedProduct ? (
+                  <Button
+                    variant="outline"
+                    disabled={form.formState.isSubmitting}
+                    className={cn(
+                      "w-full flex gap-2",
+                      field.value ? "" : "text-muted-foreground",
+                      quantity < 0 ? negativeQuantityStyle : "",
+                    )}
+                  >
+                    {selectedProduct?.product.isPro && (
+                      <Badge variant="orange" className="mr-2">
+                        Pro
+                      </Badge>
+                    )}
+                    {field.value ? field.value : "Nom du produit"}
+                  </Button>
+                ) : (
+                  "Sélectionner le produit"
+                )
+              }
+              selectedValue={selectedProduct?.id}
+              values={products
+                .filter(
+                  (product) =>
+                    !user ||
+                    user.role === "trackOnlyUser" ||
+                    product.isArchived ||
+                    product.product.isArchived ||
+                    (user.role === "pro" ? product.product.isPro : !product.product.isPro),
+                )
+                .map((product) => ({
+                  label: (
+                    <>
+                      {" "}
+                      {product.product.isPro && (
+                        <Badge variant="orange" className="mr-2">
+                          Pro
+                        </Badge>
+                      )}
+                      {product.name}
+                    </>
+                  ),
+                  value: product.id,
+                }))}
+              onSelected={(value) => {
+                onValueChange(value);
+              }}
+            />
           </FormControl>
 
           <FormMessage />
