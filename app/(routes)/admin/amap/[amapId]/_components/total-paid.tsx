@@ -1,5 +1,5 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Input, NumberInput } from "@/components/ui/input";
 import { useFormContext } from "react-hook-form";
 import type { AMAPFormValues } from "./amap-schema";
 
@@ -15,7 +15,7 @@ const TotalPaid = () => {
           <FormLabel>Total payé</FormLabel>
           <span className={"absolute right-1 top-8 transform  text-muted-foreground"}>€</span>
           <FormControl>
-            <Input type="number" {...field} />
+            <NumberInput disabled={form.formState.isSubmitting} {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>

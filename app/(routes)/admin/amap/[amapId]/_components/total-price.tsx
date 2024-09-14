@@ -15,7 +15,7 @@ const TotalPrice = () => {
       return acc + (price || 0) * (quantity || 1);
     }, 0);
     form.setValue("totalPrice", Number((totalPrice * shippingDays.length).toFixed(2)));
-  }, [amapItems, form]);
+  }, [amapItems]);
 
   return (
     <FormField

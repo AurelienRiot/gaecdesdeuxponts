@@ -1,11 +1,11 @@
 import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import React from "react";
 import { cn } from "@/lib/utils";
-import ModalDay from "./(.)[day]/_components/modal-day";
+import SheetDay from "./(.)[day]/_components/sheet-day";
 
 const Loading = ({ className }: { className?: string }) => {
   return (
-    <ModalDay>
+    <SheetDay>
       <div className={cn("mt-20 flex min-h-0 flex-col flex-wrap items-center justify-center", className)}>
         <div className=" relative h-2  w-[40vw] overflow-hidden rounded border-2 bg-primary-foreground">
           <div className="absolute h-full animate-load-bar rounded bg-primary"></div>
@@ -22,7 +22,7 @@ const Loading = ({ className }: { className?: string }) => {
           </div>
         </div>
       </div>
-    </ModalDay>
+    </SheetDay>
   );
 };
 

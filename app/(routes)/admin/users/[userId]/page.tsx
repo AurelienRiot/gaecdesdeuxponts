@@ -109,13 +109,14 @@ const UserPage = async ({
       <div className="mb-8 flex-1 space-y-4">
         <UserForm initialData={user.formatedUser} incomplete={!!searchParams.incomplete} />
       </div>
-      <div>
-        <Heading title={`Facture mensuelle`} description="" />
-        <Separator className="my-4" />
-        {user.formatedUser.role === "pro" && (
+      {user.formatedUser.role === "pro" && (
+        <div>
+          <Heading title={`Facture mensuelle`} description="" />
+          <Separator className="my-4" />
+
           <MonthlyInvoice orders={user.montlyOrders.filter((order) => !!order) as monthlyOrdersType[]} />
-        )}
-      </div>
+        </div>
+      )}
       <div>
         <OrderTable data={user.formattedOrders} />
       </div>
