@@ -8,7 +8,7 @@ import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-shema";
 
-function getUserName(user: UserWithAddress) {
+export function getUserName(user: { name?: string | null; company?: string | null; email?: string | null }) {
   return user.company || user.name || user.email?.split("@")[0] || "";
 }
 
@@ -45,6 +45,7 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
         <FormItem className=" flex flex-col gap-2 ">
           <FormLabel id="user-input">Client</FormLabel>
           <SelectSheet
+            triggerClassName="w-full"
             title="Selectionner le client"
             trigger={
               name ? (

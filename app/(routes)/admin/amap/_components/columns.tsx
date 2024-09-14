@@ -106,7 +106,9 @@ export const columns: ColumnDef<AMAPColumn>[] = [
   {
     accessorKey: "shopName",
     header: "Nom de l'AMAP",
-    cell: ({ row }) => <NameCell name={row.original.shopName} url={`/admin/shops/${row.original.shopId}`} />,
+    cell: ({ row }) => (
+      <NameCell name={row.original.shopName} url={`/admin/shops/${row.original.shopId}`} displayImage={false} />
+    ),
     filterFn: FilterOneInclude,
   },
   {

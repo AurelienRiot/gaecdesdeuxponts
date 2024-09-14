@@ -27,14 +27,16 @@ type NameCellProps = {
   name: string;
   image?: string | null;
   url?: string;
+  imageSize?: number;
+  displayImage?: boolean;
 };
 
-function NameCell({ image, name, url }: NameCellProps) {
+function NameCell({ image, name, url, displayImage = true, imageSize = 32 }: NameCellProps) {
   return (
     <Button asChild variant={url ? "link" : "ghost"} className="px-0">
       {url ? (
         <Link href={url}>
-          <NameWithImage name={name} image={image} imageSize={50} />
+          <NameWithImage name={name} image={image} imageSize={imageSize} displayImage={displayImage} />
         </Link>
       ) : (
         <span>{name}</span>
@@ -43,19 +45,23 @@ function NameCell({ image, name, url }: NameCellProps) {
   );
 }
 
-const NameWithImage = ({
-  name,
-  image,
-  imageSize = 16,
-}: { name: string; image?: string | null; imageSize?: number }) => (
+const NameWithImage = ({ name, image, imageSize = 16, displayImage = true }: NameCellProps) => (
   <div className="flex items-center justify-start gap-4 w-full">
-    <Image
-      src={image ? image : "/skeleton-image.webp"}
-      alt="user"
-      width={imageSize * 2}
-      height={imageSize}
-      className="mr-2 object-contain rounded-sm bg-white"
-    />
+    {displayImage ? (
+      image ? (
+        <Image
+          src={image}
+          alt="user"
+          width={imageSize * 2}
+          height={imageSize}
+          className="mr-2 object-contain rounded-sm bg-white"
+        />
+      ) : (
+        <div className="size-6 rounded-full bg-gray-200 flex items-center justify-center shrink-0">
+          <span className="text-gray-600 font-semibold text-xs">{name.charAt(0)}</span>
+        </div>
+      )
+    ) : null}
     {name}
   </div>
 );

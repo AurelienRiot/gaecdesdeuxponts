@@ -15,6 +15,8 @@ import { useFormContext } from "react-hook-form";
 import { GrPowerReset } from "react-icons/gr";
 import { toast } from "sonner";
 import type { AMAPFormValues } from "./amap-schema";
+import SelectSheet from "@/components/select-sheet";
+import { ProductWithMain } from "@/types";
 
 const negativeQuantityStyle = "bg-destructive text-destructive-foreground";
 
@@ -103,7 +105,12 @@ function ProductName({
   return (
     <>
       <div className="flex flex-wrap items-center gap-4">
-        <SelectProductName products={products} productIndex={productIndex} quantity={quantity} />
+        <SelectProductName
+          selectedProduct={selectedProduct}
+          products={products}
+          productIndex={productIndex}
+          quantity={quantity}
+        />
         <FormField
           control={form.control}
           name={`amapItems.${productIndex}.price`}
@@ -182,14 +189,14 @@ const SelectProductName = ({
   productIndex,
   products,
   quantity,
+  selectedProduct,
 }: {
   productIndex: number;
   quantity: number;
   products: Product[];
+  selectedProduct?: Product;
 }) => {
   const form = useFormContext<AMAPFormValues>();
-
-  const [open, setOpen] = useState(false);
 
   function onValueChange(value: string) {
     const product = products.find((product) => product.id === value);
@@ -204,8 +211,6 @@ const SelectProductName = ({
     form.setValue(`amapItems.${productIndex}.name`, product.name);
     form.setValue(`amapItems.${productIndex}.price`, product.price);
     form.setValue(`amapItems.${productIndex}.quantity`, 1);
-
-    setOpen(false);
   }
 
   return (
@@ -218,7 +223,32 @@ const SelectProductName = ({
             <span className="">{`Nom du produit ${productIndex + 1}`}</span>
           </FormLabel>
           <FormControl>
-            <Popover open={open} onOpenChange={setOpen}>
+            <SelectSheet
+              triggerClassName="w-full"
+              title="Selectionner le produit"
+              trigger={
+                <Button
+                  variant="outline"
+                  disabled={form.formState.isSubmitting}
+                  className={cn(
+                    "w-full flex gap-2",
+                    field.value ? "" : "text-muted-foreground",
+                    quantity < 0 ? negativeQuantityStyle : "",
+                  )}
+                >
+                  {selectedProduct ? selectedProduct.name : "Nom du produit"}
+                </Button>
+              }
+              selectedValue={selectedProduct?.id}
+              values={products.map((product) => ({
+                label: product.name,
+                value: product.id,
+              }))}
+              onSelected={(value) => {
+                onValueChange(value);
+              }}
+            />
+            {/* <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
@@ -254,7 +284,7 @@ const SelectProductName = ({
                   </CommandList>
                 </Command>
               </PopoverContent>
-            </Popover>
+            </Popover> */}
           </FormControl>
 
           <FormMessage />

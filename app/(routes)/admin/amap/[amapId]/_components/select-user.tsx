@@ -1,21 +1,17 @@
+import SelectSheet from "@/components/select-sheet";
+import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Button } from "@/components/ui/button";
-import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ScrollToTarget } from "@/lib/scroll-to-traget";
-import { cn } from "@/lib/utils";
 import type { User } from "@prisma/client";
-import { Check, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
+import { getUserName } from "../../../orders/[orderId]/_components/select-user";
 import type { AMAPFormValues } from "./amap-schema";
 
 const SelectUser = ({ users }: { users: User[] }) => {
   const form = useFormContext<AMAPFormValues>();
   const router = useRouter();
-  const [open, setOpen] = useState(false);
   const userId = form.watch("userId");
   const name = (() => {
     const user = users.find((user) => user.id === userId);
@@ -35,7 +31,6 @@ const SelectUser = ({ users }: { users: User[] }) => {
       return;
     }
     form.setValue("userId", value);
-    setOpen(false);
   }
 
   return (
@@ -45,38 +40,28 @@ const SelectUser = ({ users }: { users: User[] }) => {
       render={({ field }) => (
         <FormItem className="w-48">
           <FormLabel id="user-input">Client</FormLabel>
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                ref={field.ref}
-                variant="outline"
-                role="combobox"
-                disabled={form.formState.isSubmitting}
-                className={cn("w-48 justify-between", field.value ? "" : "text-muted-foreground")}
-              >
-                {name ?? "Nom du client"}
-                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent side="bottom" avoidCollisions={false} className="w-[200px] p-0">
-              <Command>
-                <CommandInput placeholder="Nom du client" onFocus={() => ScrollToTarget("user-input")} />
-                <CommandList>
-                  {users.map((user) => (
-                    <CommandItem
-                      key={user.id}
-                      value={user.id}
-                      keywords={[user.name || "", user.email || "", user.company || ""]}
-                      onSelect={onValueChange}
-                    >
-                      <Check className={cn("mr-2 h-4 w-4", field.value === user.id ? "opacity-100" : "opacity-0")} />
-                      {user.company || user.name || user.email?.split("@")[0]}
-                    </CommandItem>
-                  ))}
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
+          <SelectSheet
+            triggerClassName="w-full"
+            title="Selectionner le client"
+            trigger={
+              name ? (
+                <Button variant="outline" className="w-full">
+                  <NameWithImage name={name} displayImage={false} />
+                </Button>
+              ) : (
+                "Nom de client"
+              )
+            }
+            selectedValue={userId}
+            values={users.map((user) => ({
+              label: <NameWithImage name={getUserName(user)} displayImage={false} />,
+              value: user.id,
+            }))}
+            onSelected={(value) => {
+              onValueChange(value);
+            }}
+          />
+
           <FormMessage />
         </FormItem>
       )}
