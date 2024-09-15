@@ -35,6 +35,7 @@ import TotalPrice from "./total-price";
 import { currencyFormatter } from "@/lib/utils";
 import Image from "next/image";
 import { getUserName } from "@/components/table-custom-fuction";
+import DateModal from "@/components/date-modal";
 
 export type ProductFormProps = {
   initialData:
@@ -120,6 +121,30 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
   };
 
   const onSubmit = async (data: OrderFormValues) => {
+    const nameCounts: Record<string, number> = {};
+    const duplicates = new Set<string>();
+
+    for (const product of data.orderItems) {
+      if (product.quantity > 0) {
+        const name = product.name;
+        if (nameCounts[name]) {
+          nameCounts[name]++;
+          duplicates.add(name);
+        } else {
+          nameCounts[name] = 1;
+        }
+      }
+    }
+    if (duplicates.size > 0) {
+      toast.error(
+        `Veuillez supprimer le${duplicates.size > 1 ? "s" : ""} produit${
+          duplicates.size > 1 ? "s" : ""
+        } en double : ${Array.from(duplicates).join(", ")}`,
+        { position: "top-center" },
+      );
+      return;
+    }
+
     const result = await confirm({
       title: "Confirmation de la commande",
       content: ModalDescription({
@@ -141,6 +166,24 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
       router.refresh();
     }
   };
+
+  function onNewOrder(date?: Date) {
+    if (!date) {
+      toast.error("Veuillez choisir une date");
+      return;
+    }
+    const dateOfPickUp = form.getValues("datePickUp");
+    const hours = dateOfPickUp.getHours();
+    const minutes = dateOfPickUp.getMinutes();
+    const seconds = dateOfPickUp.getSeconds();
+    const milliseconds = dateOfPickUp.getMilliseconds();
+    const urlParams = new URLSearchParams();
+    urlParams.set("dateOfShipping", new Date(date.setHours(hours, minutes, seconds, milliseconds)).toISOString());
+    urlParams.set("referer", referer);
+    urlParams.set("id", form.getValues("id"));
+    toast.success("Création d'une nouvelle commande", { position: "bottom-center" });
+    router.push(`/admin/orders/new?${urlParams.toString()}`);
+  }
 
   return (
     <>
@@ -244,16 +287,19 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
           )}
         </div>
       )}
+
       {!!initialData?.id && (
-        <Button asChild className=" w-fit">
-          <Link
-            onClick={() => toast.success("Création d'une nouvelle commande", { position: "bottom-center" })}
-            href={`/admin/orders/new?id=${encodeURIComponent(form.getValues("id"))}&referer=${encodeURIComponent(referer)}`}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Nouvelle commande
-          </Link>
-        </Button>
+        <DateModal
+          onValueChange={onNewOrder}
+          triggerClassName=" w-44 border-dashed border-2 text-primary"
+          trigger={
+            <>
+              {" "}
+              <Plus className="mr-2 h-4 w-4" />
+              Nouvelle commande
+            </>
+          }
+        />
       )}
       <br />
       <ButtonBackward

@@ -8,14 +8,17 @@ export const dynamic = "force-dynamic";
 const OrderFormPage = async ({
   params,
   searchParams,
-}: { params: { orderId: string }; searchParams: { id: string | undefined; referer: string | undefined } }) => {
+}: {
+  params: { orderId: string };
+  searchParams: { id: string | undefined; referer: string | undefined; dateOfShipping: string | undefined };
+}) => {
   const headersList = headers();
   const headerReferer = headersList.get("referer");
   const referer =
     !headerReferer || headerReferer.includes("/admin/orders/")
       ? decodeURIComponent(searchParams.referer || "/admin/orders")
       : headerReferer;
-
+  const dateOfShipping = searchParams.dateOfShipping ? new Date(searchParams.dateOfShipping) : undefined;
   const orderId = params.orderId === "new" ? decodeURIComponent(searchParams.id || "new") : params.orderId;
   const shippingOrders = await prismadb.order.findUnique({
     where: {
@@ -90,6 +93,7 @@ const OrderFormPage = async ({
     : params.orderId === "new"
       ? {
           ...shippingOrders,
+          dateOfShipping,
           orderItems: shippingOrders.orderItems.filter((item) => item.quantity > 0 && item.price > 0),
           id: null,
         }

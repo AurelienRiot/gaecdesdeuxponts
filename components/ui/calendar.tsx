@@ -79,7 +79,7 @@ function Calendar({
           }),
         ),
         nav: "flex items-start",
-        month_grid: "mt-4",
+        month_grid: "mt-4 mx-auto",
         week: "flex w-full mt-2",
         day: "p-0 size-8 text-sm flex-1 flex items-center justify-center has-[button]:hover:!bg-accent rounded-md has-[button]:hover:aria-selected:!bg-primary has-[button]:hover:text-accent-foreground has-[button]:hover:aria-selected:text-primary-foreground",
         day_button: cn(
