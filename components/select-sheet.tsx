@@ -21,9 +21,9 @@ function useSelectSheetContext() {
   return context;
 }
 
-type ValueType = { label: React.ReactNode; value: string; highlight?: boolean };
+type ValueType<T extends { key: string }> = { label: React.ReactNode; value: T; highlight?: boolean };
 
-function SelectSheet({
+function SelectSheet<T extends { key: string }>({
   values,
   onSelected,
   trigger,
@@ -34,8 +34,8 @@ function SelectSheet({
   triggerClassName,
 }: {
   trigger: React.ReactNode | string;
-  onSelected: (selected: string) => void;
-  values: ValueType[];
+  onSelected: (selected: T) => void;
+  values: ValueType<T>[];
   selectedValue?: string | null;
   title: string;
   description?: string;
@@ -60,7 +60,7 @@ function SelectSheet({
         <div className={cn("mx-auto w-full max-w-sm ", className)}>
           <SheetHeader>
             <SheetTitle>{title}</SheetTitle>
-            {/* {!!description && <SheetDescription>{description}</SheetDescription>} */}
+            {!!description && <SheetDescription>{description}</SheetDescription>}
           </SheetHeader>
           <SelectSheetContent
             setIsOpen={setIsOpen}
@@ -75,14 +75,14 @@ function SelectSheet({
   );
 }
 
-function SelectSheetContent({
+function SelectSheetContent<T extends { key: string }>({
   values,
   onSelected,
   selectedValue,
   setIsOpen,
 }: {
-  onSelected: (selected: string) => void;
-  values: ValueType[];
+  onSelected: (selected: T) => void;
+  values: ValueType<T>[];
   selectedValue?: string | null;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
@@ -91,8 +91,8 @@ function SelectSheetContent({
   // const { setIsOpen } = useSelectSheetContext();
 
   React.useEffect(() => {
-    if (scrollRef.current && itemRefs.current[values.findIndex((value) => value.value === selectedValue)]) {
-      const selectedItem = itemRefs.current[values.findIndex((value) => value.value === selectedValue)];
+    if (scrollRef.current && itemRefs.current[values.findIndex((value) => value.value.key === selectedValue)]) {
+      const selectedItem = itemRefs.current[values.findIndex((value) => value.value.key === selectedValue)];
       if (selectedItem) {
         selectedItem.scrollIntoView({
           behavior: "smooth",
@@ -111,8 +111,8 @@ function SelectSheetContent({
             ref={(el) => {
               itemRefs.current[index] = el;
             }}
-            variant={value.value === selectedValue ? "green" : value.highlight ? "secondary" : "outline"}
-            key={value.value}
+            variant={value.value.key === selectedValue ? "green" : value.highlight ? "secondary" : "outline"}
+            key={value.value.key}
             onClick={() => {
               setIsOpen(false);
               onSelected(value.value);

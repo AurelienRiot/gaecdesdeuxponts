@@ -3,15 +3,16 @@
 import AddressAutocomplete, { type Suggestion } from "@/actions/adress-autocompleteFR";
 import { Button, IconButton } from "@/components/ui/button";
 
+import SelectSheet from "@/components/select-sheet";
+import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandListModal } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import "leaflet/dist/leaflet.css";
-import { ChevronDown, ChevronsUpDown, House, Tractor } from "lucide-react";
+import { ChevronDown, House, Tractor } from "lucide-react";
 import dynamicImport from "next/dynamic";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { FaRegUser } from "react-icons/fa";
@@ -50,7 +51,7 @@ const AddressModal = ({ usersAndShops, onValueChange, value, setIsOpen, isOpen }
   return (
     <>
       <Modal
-        className="left-[50%] top-[25%] md:top-[50%] max-h-[90%] w-[90%] max-w-[700px]  rounded-sm "
+        className="left-[50%] top-[50%] max-h-[90%] w-[90%] max-w-[700px]  rounded-sm "
         title=""
         description=""
         isOpen={isOpen}
@@ -106,59 +107,25 @@ function AddressSelect({
   usersAndShops,
   onValueChange,
 }: { usersAndShops: UserAndShop[]; onValueChange: (address: Point) => void }) {
-  const [open, setOpen] = useState(false);
-
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          id="select-address"
-          // disabled={form.formState.isSubmitting}
-          className={cn("w-full justify-between pl-2")}
-        >
+    <SelectSheet
+      title="Selectionner l'adresse"
+      trigger={
+        <Button variant="outline" role="combobox" id="select-address" className={cn("w-full justify-between pl-2")}>
           <span className="flex items-center">
             <FaRegUser className="h-4 w-4 mr-2 inline" />
             Rechercher un client
           </span>
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
-      </PopoverTrigger>
-      <PopoverContent side="bottom" align="start" avoidCollisions={false} className=" z-[1200] p-0   ">
-        <Command>
-          <CommandInput
-            // onFocus={() => ScrollToTarget("select-address")}
-            placeholder="Nom du client"
-          />
-
-          <CommandListModal>
-            {usersAndShops.map((item) => (
-              <CommandItem
-                key={item.address}
-                value={item.address}
-                keywords={[item.label]}
-                onSelect={() => {
-                  onValueChange({ label: item.address, longitude: item.longitude, latitude: item.latitude });
-                  setOpen(false);
-                }}
-              >
-                {item.image && (
-                  <Image
-                    src={item.image}
-                    alt={item.label}
-                    width={16}
-                    height={16}
-                    className="mr-2 object-contain rounded-sm"
-                  />
-                )}
-                {item.label}
-              </CommandItem>
-            ))}
-          </CommandListModal>
-        </Command>
-      </PopoverContent>
-    </Popover>
+      }
+      values={usersAndShops.map((item) => ({
+        label: <NameWithImage name={item.label} image={item.image} />,
+        value: { key: item.address, longitude: item.longitude, latitude: item.latitude },
+      }))}
+      onSelected={(value) => {
+        onValueChange({ label: value.key, longitude: value.longitude, latitude: value.latitude });
+      }}
+    />
   );
 }
 

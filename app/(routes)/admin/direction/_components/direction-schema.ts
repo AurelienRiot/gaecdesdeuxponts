@@ -21,5 +21,6 @@ export const directionSchema = z.object({
 });
 export type Point = z.infer<typeof pointSchema>;
 export const origin: Point = { label: "6 le Pont Robert 44290 Massérac" };
-export const destination: Point = { label: "Pont de l'Eau, 44460 Avessac, France" };
+export const destination: Point = { label: "6 le Pont Robert 44290 Massérac" };
+// export const destination: Point = { label: "Pont de l'Eau, 44460 Avessac, France" };
 export type DirectionFormValues = z.infer<typeof directionSchema>;

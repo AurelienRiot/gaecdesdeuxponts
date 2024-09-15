@@ -1,3 +1,4 @@
+import { getUserName } from "@/components/table-custom-fuction";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Plus } from "lucide-react";
@@ -14,7 +15,7 @@ const UserPage = async () => {
 
   const userOrders = allUsers.map((user) => ({
     id: user.id,
-    name: user.company || user.name || "",
+    name: getUserName(user),
     role: user.role,
     image: user.image || "",
     orders: user.orders.filter(

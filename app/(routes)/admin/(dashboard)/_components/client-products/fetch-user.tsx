@@ -1,6 +1,7 @@
+import { getUserName } from "@/components/table-custom-fuction";
 import { dateMonthYear } from "@/lib/date-utils";
-import { UserProducts } from "./user-products";
 import prismadb from "@/lib/prismadb";
+import { UserProducts } from "./user-products";
 
 const MAX_PRODUCTS = 4;
 
@@ -26,7 +27,7 @@ const ClientProducts = async ({ startDate, endDate }: { startDate: Date; endDate
       );
 
     const { total, ...rest } = productQuantities;
-    return { name: user.company || user.name || user.email || "Anonyme", productQuantities: rest, total };
+    return { name: getUserName(user), productQuantities: rest, total };
   });
 
   return (

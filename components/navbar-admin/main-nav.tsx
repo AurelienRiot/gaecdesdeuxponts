@@ -3,8 +3,10 @@
 import { cn } from "@/lib/utils";
 import {
   Calendar,
+  CalendarCheck,
   LayoutDashboardIcon,
   ListOrderedIcon,
+  MapPin,
   PackageIcon,
   PhoneCallIcon,
   PresentationIcon,
@@ -105,6 +107,18 @@ export const SecondaryAdminRoutes = (pathname: string) => [
     label: "Produits",
     active: pathname.startsWith(`/admin/products`),
     Icone: PackageIcon,
+  },
+  {
+    href: `/admin/direction`,
+    label: "Direction",
+    active: pathname.startsWith(`/admin/direction`),
+    Icone: MapPin,
+  },
+  {
+    href: `/admin/calendar/${new Date().toISOString()}`,
+    label: "Aujourd'hui",
+    active: pathname.startsWith(`/admin/calendar/${new Date().toISOString()}`),
+    Icone: CalendarCheck,
   },
 ];
 

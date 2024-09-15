@@ -2,6 +2,7 @@ import prismadb from "@/lib/prismadb";
 import { headers } from "next/headers";
 import { OrderForm, type ProductFormProps } from "./_components/order-form";
 import { priorityMap } from "@/components/product/product-function";
+import { getUserName } from "@/components/table-custom-fuction";
 
 export const dynamic = "force-dynamic";
 const OrderFormPage = async ({
@@ -45,17 +46,27 @@ const OrderFormPage = async ({
       datePickUp: true,
     },
   });
-  const users = await prismadb.user.findMany({
-    where: {
-      NOT: {
-        role: { in: ["admin", "deleted", "readOnlyAdmin"] },
+  const users = await prismadb.user
+    .findMany({
+      where: {
+        NOT: {
+          role: { in: ["admin", "deleted", "readOnlyAdmin"] },
+        },
       },
-    },
-    include: {
-      address: true,
-      billingAddress: true,
-    },
-  });
+      include: {
+        address: true,
+        billingAddress: true,
+      },
+    })
+    .then((users) =>
+      users.sort((a, b) => {
+        const aName = getUserName(a);
+        const bName = getUserName(b);
+        return aName.localeCompare(bName, "fr", {
+          sensitivity: "base",
+        });
+      }),
+    );
 
   const products = await prismadb.product.findMany({
     where: {
@@ -70,7 +81,9 @@ const OrderFormPage = async ({
     },
   });
 
-  const shops = await prismadb.shop.findMany({});
+  const shops = await prismadb.shop
+    .findMany({})
+    .then((shops) => shops.sort((a, b) => (a.name || "").localeCompare(b.name || "", "fr", { sensitivity: "base" })));
 
   const initialData: ProductFormProps["initialData"] = !shippingOrders
     ? null

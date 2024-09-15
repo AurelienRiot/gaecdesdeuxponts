@@ -8,7 +8,6 @@ import { NumberInput } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import type { ProductWithMain, UserWithAddress } from "@/types";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
-import { ChevronsUpDown } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { GrPowerReset } from "react-icons/gr";
 import { toast } from "sonner";
@@ -270,10 +269,10 @@ const SelectProductName = ({
                       {product.name}
                     </>
                   ),
-                  value: product.id,
+                  value: { key: product.id },
                 }))}
               onSelected={(value) => {
-                onValueChange(value);
+                onValueChange(value.key);
               }}
             />
           </FormControl>

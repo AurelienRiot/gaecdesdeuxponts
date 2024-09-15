@@ -1,11 +1,12 @@
+import { getUnitLabel } from "@/components/product/product-function";
+import { getUserName } from "@/components/table-custom-fuction";
 import { createDatePickUp, createProduct, createStatus } from "@/components/table-custom-fuction/cell-orders";
 import prismadb from "@/lib/prismadb";
 import { currencyFormatter } from "@/lib/utils";
+import type { OrderItem } from "@prisma/client";
+import { addYears } from "date-fns";
 import type { DateRange } from "react-day-picker";
 import { OrderClient } from "./_components/client";
-import { addYears } from "date-fns";
-import { getUnitLabel } from "@/components/product/product-function";
-import type { OrderItem } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 
@@ -83,7 +84,7 @@ const OrdersPage = async (context: {
     id: order.id,
     image: order.user.image,
     userId: order.userId,
-    name: order.user.company || order.user.name || order.user.email || "",
+    name: getUserName(order.user),
     shippingDate: createDatePickUp({ dateOfShipping: order.dateOfShipping, datePickUp: order.datePickUp }),
     productsList: createProductList(order.orderItems),
     products: createProduct(order.orderItems),

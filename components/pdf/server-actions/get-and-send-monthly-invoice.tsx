@@ -8,6 +8,7 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import { revalidateTag } from "next/cache";
 import MonthlyInvoice from "../create-monthly-invoice";
 import { createMonthlyPDFData } from "../pdf-data";
+import { getUserName } from "@/components/table-custom-fuction";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 export async function getAndSendMonthlyInvoice(orderIds: string[]): Promise<ReturnTypeServerAction> {
@@ -48,7 +49,7 @@ export async function getAndSendMonthlyInvoice(orderIds: string[]): Promise<Retu
       message: "Le client n'existe pas, revalider la commande",
     };
   }
-  const name = orders[0].user?.company || orders[0].user?.name || orders[0].user.email || "";
+  const name = getUserName(orders[0].user);
 
   const date = dateMonthYear(orders.map((order) => order.dateOfShipping));
 

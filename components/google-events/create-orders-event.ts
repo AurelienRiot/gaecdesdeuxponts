@@ -1,4 +1,4 @@
-import { destination, origin } from "@/app/(routes)/admin/calendar/_components/direction-schema";
+import { destination, origin } from "@/app/(routes)/admin/direction/_components/direction-schema";
 import { calendarAPI } from "@/lib/api-google";
 import { dateFormatter, timeZone } from "@/lib/date-utils";
 import { createId } from "@/lib/id";

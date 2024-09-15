@@ -5,6 +5,7 @@ import prismadb from "@/lib/prismadb";
 import DownloadChart from "../dowload-chart";
 import PerUserItems from "./per-user-item";
 import { ProductChart } from "./product-chart";
+import { getUserName } from "@/components/table-custom-fuction";
 
 const ID = "quantite-produits";
 
@@ -28,7 +29,7 @@ const ProductsType = async ({ startDate, endDate }: { startDate: Date; endDate: 
 
   const itemsPerUser = orderItems.reduce(
     (acc, item) => {
-      const name = item.order.user.company || item.order.user.name || item.order.user.email || "Anonyme";
+      const name = getUserName(item.order.user);
       if (!acc[name]) {
         acc[name] = {};
       }

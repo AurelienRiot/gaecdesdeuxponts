@@ -3,9 +3,9 @@
 import { LocationMarker } from "@/app/(routes)/(public)/ou-nous-trouver/_components/location-marker";
 import { Button, IconButton, LoadingButton, buttonVariants } from "@/components/ui/button";
 
+import AddressAutocomplete from "@/actions/adress-autocompleteFR";
 import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Modal } from "@/components/ui/modal";
-import { Separator } from "@/components/ui/separator";
 import useScrollToHashOnMount from "@/hooks/use-scroll-to-hash";
 import useServerAction from "@/hooks/use-server-action";
 import { cn, svgToDataUri } from "@/lib/utils";
@@ -21,12 +21,11 @@ import { FaMapLocationDot } from "react-icons/fa6";
 import { GiPositionMarker } from "react-icons/gi";
 import { toast } from "sonner";
 import "../../../(public)/ou-nous-trouver/_components/marker.css";
-import getDirection from "../_actions/get-direction";
+import getDirection from "../../calendar/_actions/get-direction";
+import getTodaysOrders from "../../calendar/_actions/get-todays-orders";
 import AddressModal from "./address-modal";
 import DatePicker from "./date-picker";
 import { destination, directionSchema, origin, type DirectionFormValues, type Point } from "./direction-schema";
-import getTodaysOrders from "../_actions/get-todays-orders";
-import AddressAutocomplete from "@/actions/adress-autocompleteFR";
 
 const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 
@@ -49,7 +48,6 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
   }>();
   useScrollToHashOnMount();
 
-  const title = "Faire un trajet obtimisé";
   const action = "Obtenir le trajet obtimisé";
 
   const form = useForm<DirectionFormValues>({
@@ -90,104 +88,95 @@ export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] 
   }, [modalProps]);
 
   return (
-    <div className="space-y-6 pt-6 flex justify-center  w-full ">
-      <div className="mb-8  space-y-4 ">
-        <div id="opti" className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold tracking-tight text-center"> {title} </h2>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full relative space-y-8">
+        <SuccessModal
+          isOpen={open}
+          onClose={() => setOpen(false)}
+          usersAndShops={usersAndShops}
+          reorderedWaypoints={reorderedWaypoints}
+        />
+        <AddressModal
+          isOpen={openAddressModal}
+          setIsOpen={setOpenAddressModal}
+          onValueChange={modalProps?.onValueChange}
+          usersAndShops={usersAndShops}
+          value={modalProps?.value}
+        />
+        <div className="space-y-4 relative pl-6">
+          <DottedLine />
+          <FormField
+            control={form.control}
+            name="origin"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-xl bold flex gap-1 justify-start items-center relative">
+                  <DatePicker usersAndShops={usersAndShops} />
+                  Départ
+                  <LocationMarker
+                    onAddressFound={({ address, latitude, longitude }) => {
+                      if (address) {
+                        form.setValue("origin", { label: address, latitude, longitude });
+                      } else {
+                        toast.error("Erreur de localisation", { position: "top-center" });
+                      }
+                    }}
+                  />
+                  <TodaysOrders usersAndShops={usersAndShops} />
+                </FormLabel>
+
+                <FormControl>
+                  <ButtonAddressModal
+                    ref={field.ref}
+                    value={field.value}
+                    index={"origin"}
+                    usersAndShops={usersAndShops}
+                    onClick={() => {
+                      setModalProps(() => ({ onValueChange: field.onChange, value: field.value }));
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <WaypointsForm usersAndShops={usersAndShops} setModalProps={setModalProps} />
+          <FormField
+            control={form.control}
+            name="destination"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-xl bold">
+                  Destination
+                  <LocationMarker
+                    onAddressFound={({ address }) => {
+                      if (address) {
+                        field.onChange(address);
+                      } else {
+                        toast.error("Erreur de localisation", { position: "top-center" });
+                      }
+                    }}
+                  />
+                </FormLabel>
+                <FormControl>
+                  <ButtonAddressModal
+                    ref={field.ref}
+                    value={field.value}
+                    index={"destination"}
+                    usersAndShops={usersAndShops}
+                    onClick={() => {
+                      setModalProps(() => ({ onValueChange: field.onChange, value: field.value }));
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
-        <Separator />
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="w-full relative space-y-8">
-            <SuccessModal
-              isOpen={open}
-              onClose={() => setOpen(false)}
-              usersAndShops={usersAndShops}
-              reorderedWaypoints={reorderedWaypoints}
-            />
-            <AddressModal
-              isOpen={openAddressModal}
-              setIsOpen={setOpenAddressModal}
-              onValueChange={modalProps?.onValueChange}
-              usersAndShops={usersAndShops}
-              value={modalProps?.value}
-            />
-            <div className="space-y-4 relative pl-6">
-              <DottedLine />
-              <FormField
-                control={form.control}
-                name="origin"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-xl bold flex gap-1 justify-start items-center relative">
-                      <DatePicker usersAndShops={usersAndShops} />
-                      Départ
-                      <LocationMarker
-                        onAddressFound={({ address, latitude, longitude }) => {
-                          if (address) {
-                            form.setValue("origin", { label: address, latitude, longitude });
-                          } else {
-                            toast.error("Erreur de localisation", { position: "top-center" });
-                          }
-                        }}
-                      />
-                      <TodaysOrders usersAndShops={usersAndShops} />
-                    </FormLabel>
-
-                    <FormControl>
-                      <ButtonAddressModal
-                        ref={field.ref}
-                        value={field.value}
-                        index={"origin"}
-                        usersAndShops={usersAndShops}
-                        onClick={() => {
-                          setModalProps(() => ({ onValueChange: field.onChange, value: field.value }));
-                        }}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <WaypointsForm usersAndShops={usersAndShops} setModalProps={setModalProps} />
-              <FormField
-                control={form.control}
-                name="destination"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-xl bold">
-                      Destination
-                      <LocationMarker
-                        onAddressFound={({ address }) => {
-                          if (address) {
-                            field.onChange(address);
-                          } else {
-                            toast.error("Erreur de localisation", { position: "top-center" });
-                          }
-                        }}
-                      />
-                    </FormLabel>
-                    <FormControl>
-                      <ButtonAddressModal
-                        ref={field.ref}
-                        value={field.value}
-                        index={"destination"}
-                        usersAndShops={usersAndShops}
-                        onClick={() => {
-                          setModalProps(() => ({ onValueChange: field.onChange, value: field.value }));
-                        }}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <FormButton className="w-full">{action}</FormButton>
-          </form>
-        </Form>
-      </div>
-    </div>
+        <FormButton className="w-full">{action}</FormButton>
+      </form>
+    </Form>
   );
 };
 

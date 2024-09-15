@@ -58,10 +58,10 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
             selectedValue={shopId}
             values={shops.map((shop) => ({
               label: <NameWithImage name={shop.name} image={shop.imageUrl} />,
-              value: shop.id,
+              value: { key: shop.id },
             }))}
             onSelected={(value) => {
-              onValueChange(value);
+              onValueChange(value.key);
             }}
           />
 

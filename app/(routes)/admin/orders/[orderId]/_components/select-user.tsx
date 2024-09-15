@@ -1,4 +1,5 @@
 import SelectSheet from "@/components/select-sheet";
+import { getUserName } from "@/components/table-custom-fuction";
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -7,10 +8,6 @@ import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-schema";
-
-export function getUserName(user: { name?: string | null; company?: string | null; email?: string | null }) {
-  return user.company || user.name || user.email?.split("@")[0] || "";
-}
 
 const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
   const form = useFormContext<OrderFormValues>();
@@ -59,10 +56,10 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
             selectedValue={userId}
             values={users.map((user) => ({
               label: <NameWithImage name={getUserName(user)} image={user.image} />,
-              value: user.id,
+              value: { key: user.id },
             }))}
             onSelected={(value) => {
-              onValueChange(value);
+              onValueChange(value.key);
             }}
           />
 

@@ -2,19 +2,23 @@ import getOrders from "@/components/google-events/get-orders-for-events";
 import { Heading } from "@/components/ui/heading";
 import NoResults from "@/components/ui/no-results";
 import { Separator } from "@/components/ui/separator";
-import { dateFormatter } from "@/lib/date-utils";
+import { dateFormatter, timeZone } from "@/lib/date-utils";
 import { addHours } from "date-fns";
 import AMAPDescrition from "./_components/amap-description";
 import OrderDescriptions from "./_components/orders-description";
 import ProductDescrition from "./_components/products-description";
 import UpdateEvents from "./_components/update-events";
+import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 
 export const dynamic = "force-dynamic";
 
 const DayEventPage = async ({ params }: { params: { day: string | undefined } }) => {
   const paramDate = params.day ? new Date(decodeURIComponent(params.day)) : new Date();
-  const startDate = paramDate;
-  const endDate = addHours(startDate, 24);
+  const start = formatInTimeZone(paramDate, timeZone, "yyyy-MM-dd");
+  const end = formatInTimeZone(addHours(paramDate, 24), timeZone, "yyyy-MM-dd");
+
+  const startDate = fromZonedTime(start, timeZone);
+  const endDate = fromZonedTime(end, timeZone);
 
   const result = await getOrders({ startDate, endDate }).catch((error) => {
     console.log(error);

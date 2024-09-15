@@ -21,34 +21,16 @@ function SelectShippingDay({
         trigger={dateFormatter(selectedShippingDay, { days: true })}
         values={shippingDays.map((day) => ({
           label: dateFormatter(day, { days: true }),
-          value: day.toISOString(),
+          value: { key: day.toISOString() },
           highlight: day.toISOString() === nextDay.toISOString(),
         }))}
         selectedValue={selectedShippingDay.toISOString()}
         onSelected={(value) => {
-          router.push(constructQueryString({ newParamKey: "shippingDay", newParamValue: value, searchParams }), {
+          router.push(constructQueryString({ newParamKey: "shippingDay", newParamValue: value.key, searchParams }), {
             scroll: false,
           });
         }}
       />
-      {/* <Sheet open={open} onOpenChange={setOpen}>
-        <SheetTrigger asChild>
-          <Button variant="outline">{dateFormatter(selectedShippingDay, { days: true })}</Button>
-        </SheetTrigger>
-        <SheetContent side={"bottom"} className="pb-6">
-          <div className="mx-auto w-full max-w-sm ">
-            <SheetHeader>
-              <SheetTitle>Selectionner la date</SheetTitle>
-            </SheetHeader>
-            <DisplayDate
-              setOpen={setOpen}
-              shippingDays={shippingDays}
-              selectedShippingDay={selectedShippingDay}
-              nextDay={nextDay}
-            />
-          </div>
-        </SheetContent>
-      </Sheet> */}
     </>
   );
 }

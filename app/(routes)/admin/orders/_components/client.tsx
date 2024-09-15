@@ -87,10 +87,10 @@ export const OrderClient: React.FC<OrderClientProps> = ({ initialData, initialDa
 };
 
 const selectDate = [
-  { value: "today", label: "Aujourd'hui" },
-  { value: "tomorrow", label: "Demain" },
-  { value: "tuesday", label: "Mardi prochain" },
-  { value: "friday", label: "Vendredi prochain" },
+  { value: { key: "today" }, label: "Aujourd'hui" },
+  { value: { key: "tomorrow" }, label: "Demain" },
+  { value: { key: "tuesday" }, label: "Mardi prochain" },
+  { value: { key: "friday" }, label: "Vendredi prochain" },
 ];
 
 function SelectDate() {
@@ -130,7 +130,7 @@ function SelectDate() {
       trigger={"Filtrer par date"}
       values={selectDate}
       onSelected={(value) => {
-        handleValueChange(value);
+        handleValueChange(value.key);
       }}
     />
   );

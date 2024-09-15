@@ -1,11 +1,12 @@
 "use server";
 
 import prismadb from "@/lib/prismadb";
-import cloudinary from "cloudinary";
-import { checkAdmin, checkReadOnlyAdmin } from "../auth/checkAuth";
 import type { ReturnTypeServerAction } from "@/lib/server-action";
-import { z } from "zod";
 import safeServerAction from "@/lib/server-action";
+import cloudinary from "cloudinary";
+import { z } from "zod";
+import { checkAdmin, checkReadOnlyAdmin } from "../auth/checkAuth";
+import { getUserName } from "../table-custom-fuction";
 
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -168,7 +169,7 @@ async function deleteObject(data: z.infer<typeof deleteObjectSchema>) {
       });
 
       if (imagesUser.length > 0) {
-        const userNames = imagesUser.map((user) => user.name || user.company || user.email).join(", ");
+        const userNames = imagesUser.map((user) => getUserName(user)).join(", ");
         return {
           success: false,
           message: `L'image est utilisée par le magasin : ${userNames}`,

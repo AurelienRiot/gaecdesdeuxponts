@@ -34,6 +34,7 @@ import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
 import { currencyFormatter } from "@/lib/utils";
 import Image from "next/image";
+import { getUserName } from "@/components/table-custom-fuction";
 
 export type ProductFormProps = {
   initialData:
@@ -124,7 +125,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
       content: ModalDescription({
         date: data.dateOfShipping,
         items: data.orderItems,
-        name: user?.company || user?.name,
+        name: user ? getUserName(user) : "",
         image: user?.image,
       }),
     });

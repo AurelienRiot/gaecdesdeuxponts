@@ -5,7 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import useServerAction from "@/hooks/use-server-action";
 import { fr } from "date-fns/locale";
 import { useState } from "react";
-import getDailyOrders from "../_actions/get-daily-orders";
+import getDailyOrders from "../../calendar/_actions/get-daily-orders";
 import { useFormContext } from "react-hook-form";
 import type { DirectionFormValues, Point } from "./direction-schema";
 import type { UserAndShop } from "./direction-form";

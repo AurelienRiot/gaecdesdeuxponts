@@ -1,4 +1,5 @@
 import SelectSheet from "@/components/select-sheet";
+import { getUserName } from "@/components/table-custom-fuction";
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -6,7 +7,6 @@ import type { User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import { getUserName } from "../../../orders/[orderId]/_components/select-user";
 import type { AMAPFormValues } from "./amap-schema";
 
 const SelectUser = ({ users }: { users: User[] }) => {
@@ -15,7 +15,7 @@ const SelectUser = ({ users }: { users: User[] }) => {
   const userId = form.watch("userId");
   const name = (() => {
     const user = users.find((user) => user.id === userId);
-    return user?.company || user?.name || user?.email?.split("@")[0];
+    return user ? getUserName(user) : undefined;
   })();
 
   function onValueChange(value: string) {
@@ -55,10 +55,10 @@ const SelectUser = ({ users }: { users: User[] }) => {
             selectedValue={userId}
             values={users.map((user) => ({
               label: <NameWithImage name={getUserName(user)} displayImage={false} />,
-              value: user.id,
+              value: { key: user.id },
             }))}
             onSelected={(value) => {
-              onValueChange(value);
+              onValueChange(value.key);
             }}
           />
 

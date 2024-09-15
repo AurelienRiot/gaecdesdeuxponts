@@ -4,7 +4,7 @@ import { ListOrdered } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaMapLocationDot } from "react-icons/fa6";
-import { destination, origin } from "../../_components/direction-schema";
+import { destination, origin } from "../../../direction/_components/direction-schema";
 import DisplayAddress from "./display-address";
 import DisplayItem from "./display-item";
 

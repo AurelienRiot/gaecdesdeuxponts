@@ -10,6 +10,7 @@ import ClientProducts from "./_components/client-products/fetch-user";
 import ProductsType from "./_components/product-type/product-fetch";
 import SelectDate from "./_components/select-date";
 import { UserChart } from "./_components/user-chart";
+import { getUserName } from "@/components/table-custom-fuction";
 
 const MAX_ClIENTS = 9;
 
@@ -151,7 +152,7 @@ const ClientCount = async ({ startDate, endDate }: { startDate: Date; endDate: D
     },
   });
   const usersWithTotalSpent = users.map((user) => ({
-    name: user.company || user.name || user.email || "Anonyme",
+    name: getUserName(user),
     totalSpent: Number(user.orders.reduce((acc, order) => acc + order.totalPrice, 0).toFixed(2)),
   }));
   const topUsers = usersWithTotalSpent.sort((a, b) => b.totalSpent - a.totalSpent).slice(0, MAX_ClIENTS);

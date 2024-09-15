@@ -1,10 +1,11 @@
+import { getUserName } from "@/components/table-custom-fuction";
 import { createProduct, createProductList } from "@/components/table-custom-fuction/cell-orders";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import NoResults from "@/components/ui/no-results";
 import { Separator } from "@/components/ui/separator";
-import { getDaysInFuture, getNextDay } from "@/lib/date-utils";
 import prismadb from "@/lib/prismadb";
+import { setHours } from "date-fns";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import type { DateRange } from "react-day-picker";
@@ -12,7 +13,6 @@ import AmapCards from "./_components/amap-cards";
 import { AMAPClient } from "./_components/client";
 import type { AMAPColumn } from "./_components/columns";
 import SelectShippingDay from "./_components/select-shipping-day";
-import { setHours } from "date-fns";
 
 export const dynamic = "force-dynamic";
 
@@ -61,7 +61,7 @@ async function AMAPPage(context: {
   const formattedOrders: AMAPColumn[] = amapOrders.map((order) => ({
     id: order.id,
     userId: order.user.id,
-    name: order.user.company || order.user.name || order.user.email || "",
+    name: getUserName(order.user),
     shopName: order.shop.name,
     shopId: order.shop.id,
     totalPrice: order.totalPrice,

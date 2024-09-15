@@ -242,10 +242,10 @@ const SelectProductName = ({
               selectedValue={selectedProduct?.id}
               values={products.map((product) => ({
                 label: product.name,
-                value: product.id,
+                value: { key: product.id },
               }))}
               onSelected={(value) => {
-                onValueChange(value);
+                onValueChange(value.key);
               }}
             />
             {/* <Popover open={open} onOpenChange={setOpen}>

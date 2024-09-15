@@ -1,3 +1,4 @@
+import { getUserName } from "@/components/table-custom-fuction";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -16,7 +17,7 @@ interface CardUserProps {
 }
 
 const CardUser: React.FC<CardUserProps> = ({ user, className, status, display, orderLength }) => {
-  const name = user.company || user.name || user.email || "";
+  const name = getUserName(user);
 
   const role = !user.completed
     ? { label: "Incomplet", color: "text-destruction" }
