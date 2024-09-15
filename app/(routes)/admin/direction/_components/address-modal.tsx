@@ -1,22 +1,19 @@
 "use client";
 
-import AddressAutocomplete, { type Suggestion } from "@/actions/adress-autocompleteFR";
 import { Button, IconButton } from "@/components/ui/button";
 
+import SearchAddress from "@/components/search-address";
 import SelectSheet from "@/components/select-sheet";
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
-import { Command, CommandEmpty, CommandInput, CommandItem, CommandListModal } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import "leaflet/dist/leaflet.css";
-import { ChevronDown, House, Tractor } from "lucide-react";
+import { House, Tractor } from "lucide-react";
 import dynamicImport from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { FaRegUser } from "react-icons/fa";
-import { LuMapPin } from "react-icons/lu";
 import "../../../(public)/ou-nous-trouver/_components/marker.css";
 import type { UserAndShop } from "./direction-form";
 import type { DirectionFormValues, Point } from "./direction-schema";
@@ -63,7 +60,7 @@ const AddressModal = ({ usersAndShops, onValueChange, value, setIsOpen, isOpen }
             <FarmSelect onSelect={onClose} />
           </div>
           <AddressSelect usersAndShops={usersAndShops} onValueChange={onClose} />
-          <AddressSearch onValueChange={onClose} />
+          <SearchAddress onValueChange={onClose} />
           <MapModal onValueChange={onClose} />
           <Input
             placeholder="Adresse"
@@ -126,77 +123,6 @@ function AddressSelect({
         onValueChange({ label: value.key, longitude: value.longitude, latitude: value.latitude });
       }}
     />
-  );
-}
-
-function AddressSearch({ onValueChange }: { onValueChange: (address: Point) => void }) {
-  const [open, setOpen] = useState(false);
-  const [suggestions, setSuggestions] = useState([] as Suggestion[]);
-  const [query, setQuery] = useState("");
-
-  const setSearchTerm = async (value: string) => {
-    setQuery(value);
-    const temp = await AddressAutocomplete(value).catch((e) => {
-      console.log(e);
-      return [];
-    });
-    setSuggestions(temp);
-  };
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          id={"search-address"}
-          variant="outline"
-          role="combobox"
-          onClick={() => setOpen((open) => !open)}
-          className={cn(" justify-between w-full  pl-2 items-center")}
-        >
-          <span className="flex items-center">
-            <LuMapPin className="h-4 w-4 mr-2 " />
-            Rechercher une adresse
-          </span>
-          <ChevronDown className="ml-2 h-4 w-4 shrink-0 " />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-full p-0 z-[1200]" side="bottom" align="start">
-        <Command loop shouldFilter={false} className="w-full">
-          <CommandInput
-            // onFocus={() => ScrollToTarget("search-address")}
-            placeholder="Entrer l'adresse..."
-            className="h-9 w-full"
-            value={query}
-            onValueChange={(e) => {
-              setSearchTerm(e);
-              setOpen(true);
-            }}
-          />
-          <CommandListModal className="w-full">
-            {query.length > 3 && <CommandEmpty>Adresse introuvable</CommandEmpty>}
-            {suggestions.map((suggestion, index) => (
-              <CommandItem
-                className="cursor-pointer
-                          bg-popover  text-popover-foreground w-full"
-                value={suggestion.label + index}
-                key={suggestion.label}
-                onSelect={() => {
-                  onValueChange({
-                    label: suggestion.label,
-                    longitude: suggestion.coordinates[0],
-                    latitude: suggestion.coordinates[1],
-                  });
-
-                  setOpen(false);
-                }}
-              >
-                {suggestion.label}
-              </CommandItem>
-            ))}
-          </CommandListModal>
-        </Command>
-      </PopoverContent>
-    </Popover>
   );
 }
 

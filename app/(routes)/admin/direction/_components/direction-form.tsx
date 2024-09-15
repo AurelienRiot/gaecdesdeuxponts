@@ -439,10 +439,10 @@ function TodaysOrders({ usersAndShops }: { usersAndShops: UserAndShop[] }) {
           let latitude = user?.latitude;
           let longitude = user?.longitude;
           if (!latitude || !longitude) {
-            const coordinates = await AddressAutocomplete(order.customer?.shippingAddress);
-            if (coordinates.length > 0) {
-              latitude = coordinates[0].coordinates[1];
-              longitude = coordinates[0].coordinates[0];
+            const suggestions = await AddressAutocomplete(order.customer?.shippingAddress);
+            if (suggestions.length > 0) {
+              latitude = suggestions[0].latitude;
+              longitude = suggestions[0].longitude;
             }
           }
           if (user) {

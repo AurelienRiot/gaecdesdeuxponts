@@ -21,18 +21,20 @@ async function CalendarPage({ searchParams }: { searchParams: { date: string | u
   });
 
   return (
-    <div className="max-w-[90vw] md:max-w-[500px] mx-auto">
-      <div className=" space-y-4 p-8  pt-2   w-full">
-        <Heading
-          title={`Calendrier des commandes`}
-          description="Liste des commandes"
-          className=" w-fit  text-center mx-auto"
-        />
+    <>
+      <div className="max-w-[90vw] md:max-w-[500px] mx-auto">
+        <div className=" space-y-4 p-8  pt-2   w-full">
+          <Heading
+            title={`Calendrier des commandes`}
+            description="Liste des commandes"
+            className=" w-fit  text-center mx-auto"
+          />
 
-        <Separator />
+          <Separator />
+        </div>
+        <OrdersCalendar month={month} orderDates={[...orderDates].map((date) => new Date(date))} />
       </div>
-      <OrdersCalendar month={month} orderDates={[...orderDates].map((date) => new Date(date))} />
-    </div>
+    </>
   );
 }
 

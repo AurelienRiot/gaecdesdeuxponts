@@ -13,7 +13,7 @@ function SheetDay({ date, children }: { date?: Date; children: React.ReactNode }
       onOpenChange={() => {
         router.back();
       }}
-      modal={true}
+      modal
     >
       <SheetContent
         aria-describedby={`Résumer des commandes`}

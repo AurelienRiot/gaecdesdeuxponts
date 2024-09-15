@@ -1,18 +1,16 @@
 "use client";
-import AddressAutocomplete, { type Suggestion } from "@/actions/adress-autocompleteFR";
+import type { Suggestion } from "@/actions/adress-autocompleteFR";
 import { cn } from "@/lib/utils";
-import { ChevronDown } from "lucide-react";
 import { useState, type InputHTMLAttributes } from "react";
 import { useFormContext } from "react-hook-form";
 import type * as RPNInput from "react-phone-number-input";
 import type * as z from "zod";
 import { AnimateHeight } from "./animations/animate-size";
+import SearchAddress from "./search-address";
 import { Button } from "./ui/button";
-import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "./ui/command";
 import { FloatingInput, FloatingLabel } from "./ui/floating-label-input";
 import { FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { CountriesList, CountrySelect, isCountry } from "./ui/phone-input";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Switch } from "./ui/switch";
 import { defaultAddress, type addressSchema } from "./zod-schema/address-schema";
 import type { billingAddressSchema } from "./zod-schema/billing-address-schema";
@@ -26,23 +24,24 @@ export const BillingAddressForm = ({ className }: AdressFormProps) => {
     billingAddress: z.infer<typeof billingAddressSchema>;
   }>();
   const billingAddress = form.watch("billingAddress");
-  const [open, setOpen] = useState(false);
-  const [suggestions, setSuggestions] = useState([] as Suggestion[]);
-  const [query, setQuery] = useState("");
   const [filter, setFilter] = useState(billingAddress?.country?.toUpperCase() === "FR" || !billingAddress);
 
-  const setSearchTerm = async (value: string) => {
-    setQuery(value);
-    const temp = await AddressAutocomplete(value).catch((e) => {
-      console.log(e);
-      return [];
+  function onValueChange(suggestion: Suggestion) {
+    form.setValue("billingAddress", {
+      label: suggestion.label,
+      city: suggestion.city,
+      country: billingAddress?.country || "FR",
+      line1: suggestion.line1,
+      line2: billingAddress?.line2,
+      postalCode: suggestion.postal_code,
+      state: suggestion.state,
     });
-    setSuggestions(temp);
-  };
+    form.clearErrors("billingAddress");
+  }
 
   return (
     <div className={cn("-mb-8 space-y-4 ", className)}>
-      <div className="-mb-1 flex items-center gap-2">
+      <div className="-mb-2 flex items-center gap-2">
         <p className="text-sm font-medium leading-none">Même adresse de facturation</p>
         <Switch
           onCheckedChange={(check) => {
@@ -58,98 +57,37 @@ export const BillingAddressForm = ({ className }: AdressFormProps) => {
             name={"billingAddress"}
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <Popover open={open} onOpenChange={setOpen}>
-                  <FormControl>
-                    <div className="relative items-start space-y-2 text-sm">
-                      <div className="flex items-center gap-2">
-                        <Button
-                          type="button"
-                          variant={"outline"}
-                          className={filter ? "hover:bg-green-500/50" : "bg-green-500 hover:bg-green-500"}
-                          onClick={() => {
-                            setFilter(false);
-                            form.setValue("billingAddress.country", "FR");
-                          }}
-                        >
-                          Autres
-                        </Button>
-                        <Button
-                          type="button"
-                          variant={"outline"}
-                          className={!filter ? "hover:bg-green-500/50" : "bg-green-500 hover:bg-green-500"}
-                          onClick={() => {
-                            setFilter(true);
-                            form.setValue("billingAddress.country", "FR");
-                          }}
-                        >
-                          France
-                        </Button>
-                      </div>
-                      <AnimateHeight display={filter} className="p-1">
-                        <PopoverTrigger asChild>
-                          <Button
-                            ref={field.ref}
-                            variant="outline"
-                            role="combobox"
-                            onClick={() => setOpen((open) => !open)}
-                            disabled={!filter || form.formState.isSubmitting}
-                            className={cn(
-                              " justify-between active:scale-100 w-full",
-                              billingAddress.label && "font-normal text-muted-foreground ",
-                            )}
-                          >
-                            Rechercher votre adresse
-                            <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                          </Button>
-                        </PopoverTrigger>
-                      </AnimateHeight>
-                    </div>
-                  </FormControl>
-                  <PopoverContent className=" p-0" side="bottom" align="start">
-                    <Command loop shouldFilter={false}>
-                      <CommandInput
-                        placeholder="Entrer l'adresse..."
-                        className="h-9 "
-                        value={query}
-                        onValueChange={(e) => {
-                          setSearchTerm(e);
-                          if (query.length < 3) {
-                            form.setValue("billingAddress.label", "");
-                          }
-                          setOpen(true);
+                <FormControl>
+                  <div className="relative items-start space-y-2 text-sm">
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant={"outline"}
+                        className={filter ? "hover:bg-green-500/50" : "bg-green-500 hover:bg-green-500"}
+                        onClick={() => {
+                          setFilter(false);
+                          form.setValue("billingAddress.country", "FR");
                         }}
-                      />
-                      <CommandList>
-                        {query.length > 3 && <CommandEmpty>Adresse introuvable</CommandEmpty>}
-                        {suggestions.map((suggestion, index) => (
-                          <CommandItem
-                            className="cursor-pointer
-                      bg-popover  text-popover-foreground"
-                            value={suggestion.label + index}
-                            key={suggestion.label}
-                            onSelect={() => {
-                              console.log(billingAddress);
-
-                              form.setValue("billingAddress", {
-                                label: suggestion.label,
-                                city: suggestion.city,
-                                country: billingAddress.country,
-                                line1: suggestion.line1,
-                                line2: billingAddress.line2,
-                                postalCode: suggestion.postal_code,
-                                state: suggestion.state,
-                              });
-                              form.clearErrors("billingAddress");
-                              setOpen(false);
-                            }}
-                          >
-                            {suggestion.label}
-                          </CommandItem>
-                        ))}
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
+                      >
+                        Autres
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={"outline"}
+                        className={!filter ? "hover:bg-green-500/50" : "bg-green-500 hover:bg-green-500"}
+                        onClick={() => {
+                          setFilter(true);
+                          form.setValue("billingAddress.country", "FR");
+                        }}
+                      >
+                        France
+                      </Button>
+                    </div>
+                    <AnimateHeight display={filter} className="p-1">
+                      <SearchAddress ref={field.ref} onValueChange={onValueChange} />
+                    </AnimateHeight>
+                  </div>
+                </FormControl>
               </FormItem>
             )}
           />

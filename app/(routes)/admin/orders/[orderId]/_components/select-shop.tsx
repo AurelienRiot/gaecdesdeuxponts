@@ -30,7 +30,7 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
       control={form.control}
       name="shopId"
       render={({ field }) => (
-        <FormItem className="w-48">
+        <FormItem className="flex flex-col gap-2">
           <FormLabel id="shop-input" className="flex items-center justify-between gap-2">
             <span>Lieu de retrait/livraison</span>
             <Button

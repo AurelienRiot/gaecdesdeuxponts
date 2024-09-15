@@ -1,3 +1,4 @@
+import AddressAutocomplete from "@/actions/adress-autocompleteFR";
 import { Icons } from "@/components/icons";
 import { IconButton } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -5,11 +6,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import useServerAction from "@/hooks/use-server-action";
 import { fr } from "date-fns/locale";
 import { useState } from "react";
-import getDailyOrders from "../../calendar/_actions/get-daily-orders";
 import { useFormContext } from "react-hook-form";
-import type { DirectionFormValues, Point } from "./direction-schema";
+import getDailyOrders from "../../calendar/_actions/get-daily-orders";
 import type { UserAndShop } from "./direction-form";
-import AddressAutocomplete from "@/actions/adress-autocompleteFR";
+import type { DirectionFormValues, Point } from "./direction-schema";
 
 const DatePicker = ({ usersAndShops }: { usersAndShops: UserAndShop[] }) => {
   const [open, setOpen] = useState(false);
@@ -38,10 +38,10 @@ const DatePicker = ({ usersAndShops }: { usersAndShops: UserAndShop[] }) => {
           let latitude = user?.latitude;
           let longitude = user?.longitude;
           if (!latitude || !longitude) {
-            const coordinates = await AddressAutocomplete(order.customer?.shippingAddress);
-            if (coordinates.length > 0) {
-              latitude = coordinates[0].coordinates[1];
-              longitude = coordinates[0].coordinates[0];
+            const suggestions = await AddressAutocomplete(order.customer?.shippingAddress);
+            if (suggestions.length > 0) {
+              latitude = suggestions[0].latitude;
+              longitude = suggestions[0].longitude;
             }
           }
           if (user) {

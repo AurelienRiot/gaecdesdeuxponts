@@ -1,28 +1,5 @@
-import z from "zod";
 import ky from "ky";
-interface Feature {
-  type: "Feature";
-  geometry: {
-    type: "Point";
-    coordinates: [number, number];
-  };
-  properties: {
-    label: string;
-    score: number;
-    housenumber: string;
-    id: string;
-    type: "housenumber";
-    name: string;
-    postcode: string;
-    citycode: string;
-    x: number;
-    y: number;
-    city: string;
-    context: string;
-    importance: number;
-    street: string;
-  };
-}
+import z from "zod";
 
 const fetchResponceSchema = z.object({
   features: z.array(
@@ -55,7 +32,8 @@ export type Suggestion = {
   line1: string;
   postal_code: string;
   state: string;
-  coordinates: number[];
+  latitude: number;
+  longitude: number;
 };
 
 const AddressAutocomplete = async (value: string): Promise<Suggestion[]> => {
@@ -74,7 +52,8 @@ const AddressAutocomplete = async (value: string): Promise<Suggestion[]> => {
     line1: feature.properties.name,
     postal_code: feature.properties.postcode,
     state: feature.properties.context.split(", ").at(-1) as string,
-    coordinates: feature.geometry.coordinates,
+    longitude: feature.geometry.coordinates[0],
+    latitude: feature.geometry.coordinates[1],
   }));
   return suggestions;
 };
@@ -105,7 +84,8 @@ export const LocationAutocomplete = async ({
       line1: feature.properties.name,
       postal_code: feature.properties.postcode,
       state: feature.properties.context.split(", ").at(-1) as string,
-      coordinates: feature.geometry.coordinates,
+      longitude: feature.geometry.coordinates[0],
+      latitude: feature.geometry.coordinates[1],
     }));
     return suggestions;
   } catch (e) {

@@ -1,94 +1,23 @@
-import AddressAutocomplete, { type Suggestion } from "@/actions/adress-autocompleteFR";
-import { Button } from "@/components/ui/button";
-import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import type { Suggestion } from "@/actions/adress-autocompleteFR";
 import { haversine } from "@/lib/math";
-import { cn } from "@/lib/utils";
 import type { Shop } from "@prisma/client";
-import { ChevronDown } from "lucide-react";
-import { type Dispatch, type SetStateAction, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import SearchAddress from "../search-address";
 
-interface AddressInputProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+type AddressInputProps = {
   setSortedShops: Dispatch<SetStateAction<Shop[]>>;
   setCoordinates: Dispatch<SetStateAction<{ long: number | undefined; lat: number | undefined }>>;
   shops: Shop[];
-}
+  className?: string;
+};
 
-export const AddressInput = ({ setSortedShops, setCoordinates, shops, className, ...props }: AddressInputProps) => {
-  const [suggestions, setSuggestions] = useState([] as Suggestion[]);
-  const [query, setQuery] = useState("");
-  const [open, setOpen] = useState(false);
+export const AddressInput = ({ setSortedShops, setCoordinates, shops, className }: AddressInputProps) => {
+  function onSelectAddress(address: Suggestion) {
+    setSortedShops(sortShops({ lat: address.latitude, long: address.longitude, shops }));
+    setCoordinates({ lat: address.latitude, long: address.longitude });
+  }
 
-  const setSearchTerm = async (value: string) => {
-    setQuery(() => value);
-    const temp = await AddressAutocomplete(value).catch((e) => {
-      console.log(e);
-      return [];
-    });
-    setSuggestions(() => temp);
-  };
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          onClick={() => setOpen((open) => !open)}
-          className={cn(
-            " justify-between active:scale-100 ",
-            !query && "font-normal text-muted-foreground ",
-            className,
-          )}
-          {...props}
-        >
-          {" Rechercher votre adresse"}
-          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-fit p-0" side="bottom" align="start">
-        <Command shouldFilter={false} loop>
-          <CommandInput
-            placeholder="Entrer l'adresse..."
-            className="h-9 "
-            value={query}
-            onValueChange={async (e) => {
-              await setSearchTerm(e);
-              const coordinates = {
-                long: suggestions[0]?.coordinates?.[0],
-                lat: suggestions[0]?.coordinates?.[1],
-              };
-
-              setSortedShops(sortShops({ lat: coordinates.lat, long: coordinates.long, shops }));
-              setCoordinates(coordinates);
-            }}
-          />
-          <CommandList>
-            {query.length > 3 && <CommandEmpty>Adresse introuvable</CommandEmpty>}
-            {suggestions.map((address, index) => (
-              <CommandItem
-                className="cursor-pointer
-                          bg-popover  text-popover-foreground"
-                value={String(index)}
-                key={address.label}
-                onSelect={() => {
-                  const coordinates = {
-                    long: address.coordinates[0],
-                    lat: address.coordinates[1],
-                  };
-                  setSortedShops(sortShops({ lat: coordinates.lat, long: coordinates.long, shops }));
-                  setCoordinates(coordinates);
-                  setOpen(false);
-                }}
-              >
-                {address.label}
-              </CommandItem>
-            ))}
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  );
+  return <SearchAddress onValueChange={onSelectAddress} triggerClassName={className} />;
 };
 
 export const sortShops = ({

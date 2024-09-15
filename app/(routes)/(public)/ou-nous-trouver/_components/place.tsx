@@ -34,7 +34,7 @@ const PlacePicker = ({
         coordinates={coordinates}
       />
       <div className="flex flex-wrap items-center justify-start gap-2">
-        <AddressInput setSortedShops={setSortedShops} setCoordinates={setCoordinates} shops={shops} />
+        <AddressInput className="w-52" setSortedShops={setSortedShops} setCoordinates={setCoordinates} shops={shops} />
         <NameInput setSortedShops={setSortedShops} shops={shops} className="w-fit" />
       </div>
 

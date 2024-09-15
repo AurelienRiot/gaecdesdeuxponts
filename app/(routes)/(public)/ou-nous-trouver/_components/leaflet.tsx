@@ -33,7 +33,7 @@ const Leaflet = ({
       <MapFocus
         shops={shops}
         setSortedShops={setSortedShops}
-        className="absolute left-12 top-3  w-fit items-center bg-transparent"
+        className="absolute left-12 top-3 "
         setCoordinates={setCoordinates}
       />
       {shops.map((shop) => (
