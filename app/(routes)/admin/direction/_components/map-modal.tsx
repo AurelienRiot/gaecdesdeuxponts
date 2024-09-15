@@ -57,8 +57,8 @@ function MapClickHandler({ onValueChange }: { onValueChange: (address: Point) =>
     }
     onValueChange({
       label: address[0].label,
-      latitude: address[0].coordinates[1],
-      longitude: address[0].coordinates[0],
+      latitude: address[0].latitude,
+      longitude: address[0].longitude,
     });
   });
 
