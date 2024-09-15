@@ -32,16 +32,21 @@ export function DatePickerWithRange({
         <PopoverTrigger asChild>
           <Button
             variant={"outline"}
-            className={cn("max-w-[300px] justify-start text-left font-normal", !date && "text-muted-foreground")}
+            className={cn("max-w-[300px]  w-fit justify-start text-left font-normal", !date && "text-muted-foreground")}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
             {date?.from ? (
               date.to ? (
                 <>
-                  {dateFormatter(date.from)} - {dateFormatter(date.to)}
+                  <span className="hidden sm:inline">
+                    {dateFormatter(date.from)} - {dateFormatter(date.to)}
+                  </span>
+                  <span className="inline sm:hidden">
+                    {`${date.from.getDate()}/${date.from.getMonth()}/${date.from.getFullYear()} - ${date.to.getDate()}/${date.to.getMonth()}/${date.to.getFullYear()}`}
+                  </span>
                 </>
               ) : (
-                dateFormatter(date.from)
+                <span>dateFormatter(date.from)</span>
               )
             ) : (
               <span>Choisir une date</span>

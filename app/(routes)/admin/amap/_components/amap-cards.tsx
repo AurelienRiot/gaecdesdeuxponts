@@ -77,7 +77,7 @@ function AmapCards({
             </ul>
           </div>
           <Label
-            className="flex items-center flex-col gap-4 cursor-pointer border p-2 rounded-sm"
+            className="flex items-center flex-col gap-4 cursor-pointer border p-2 rounded-sm bg-secondary"
             htmlFor={`validate-${id}`}
           >
             <span className="text-sm font-bold"> Valider la livraison</span>

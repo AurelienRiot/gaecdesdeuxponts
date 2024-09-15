@@ -55,7 +55,7 @@ export const AMAPClient: React.FC<AMAPClientProps> = ({ initialData, initialDate
   const userNames = [...new Set(initialData.map((order) => order.name))];
   return (
     <>
-      <div className="flex flex-col gap-4 sm:flex-row">
+      <div className="flex flex-wrap gap-4 ">
         <DatePickerWithRange
           date={dateRange}
           setDate={setDateRange}

@@ -61,7 +61,7 @@ export const OrderClient: React.FC<OrderClientProps> = ({ initialData, initialDa
       </div>
 
       <Separator className="mb-4" />
-      <div className="flex flex-col gap-4 sm:flex-row">
+      <div className="flex flex-wrap gap-4 ">
         <DatePickerWithRange
           date={dateRange}
           setDate={setDateRange}
