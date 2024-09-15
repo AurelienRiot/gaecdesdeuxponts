@@ -13,8 +13,9 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export interface ConfirmOptions {
-  title?: React.ReactNode;
-  description?: React.ReactNode;
+  title?: string;
+  description?: string;
+  content?: React.ReactNode;
   confirmText?: string;
   cancelText?: string;
   icon?: React.ReactNode;
@@ -38,6 +39,7 @@ export const ConfirmContext = React.createContext<ConfirmContextType | undefined
 const baseDefaultOptions: ConfirmOptions = {
   title: "",
   description: "",
+  content: "",
   confirmText: "Confirmer",
   cancelText: "Annuler",
   confirmButton: {},
@@ -57,6 +59,7 @@ const ConfirmDialogContent: React.FC<{
   const {
     title,
     description,
+    content,
     cancelButton,
     confirmButton,
     confirmText,
@@ -83,6 +86,7 @@ const ConfirmDialogContent: React.FC<{
             </AlertDialogTitle>
           )}
           {description && <AlertDialogDescription {...alertDialogDescription}>{description}</AlertDialogDescription>}
+          <div>{content}</div>
         </AlertDialogHeader>
         <AlertDialogFooter {...alertDialogFooter}>
           {customActions ? (

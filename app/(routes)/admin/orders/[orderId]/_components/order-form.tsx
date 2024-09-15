@@ -121,7 +121,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
   const onSubmit = async (data: OrderFormValues) => {
     const result = await confirm({
       title: "Confirmation de la commande",
-      description: ModalDescription({
+      content: ModalDescription({
         date: data.dateOfShipping,
         items: data.orderItems,
         name: user?.company || user?.name,

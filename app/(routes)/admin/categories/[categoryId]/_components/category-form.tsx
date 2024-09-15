@@ -3,7 +3,7 @@
 import DeleteButton from "@/components/delete-button";
 import UploadImage from "@/components/images-upload/image-upload";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
-import { Button, LoadingButton } from "@/components/ui/button";
+import { LoadingButton } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
@@ -18,7 +18,6 @@ import deleteCategorie from "../../_actions/delete-categorie";
 import createCategory from "../_actions/create-category";
 import updateCategory from "../_actions/update-category";
 import { schema, type CategoryFormValues } from "./category-schema";
-import { useConfirm } from "@/components/ui/confirm-dialog";
 
 interface CategoryFormProps {
   initialData: Category | null;

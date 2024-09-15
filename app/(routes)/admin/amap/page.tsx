@@ -12,6 +12,7 @@ import AmapCards from "./_components/amap-cards";
 import { AMAPClient } from "./_components/client";
 import type { AMAPColumn } from "./_components/columns";
 import SelectShippingDay from "./_components/select-shipping-day";
+import { setHours } from "date-fns";
 
 export const dynamic = "force-dynamic";
 
@@ -110,8 +111,17 @@ function NextShipping({ formattedOrders, shippingDay }: { formattedOrders: AMAPC
   );
   const arrayShippingDays = Array.from(allShippingDays)
     .map((shippingDay) => new Date(shippingDay))
-    .sort((a, b) => a.getTime() - b.getTime());
-  const nextDay = getNextDay(getDaysInFuture(arrayShippingDays));
+    .sort((a, b) => b.getTime() - a.getTime());
+
+  const today = new Date();
+  setHours(today, 23);
+  const nextDay = (() => {
+    for (const date of arrayShippingDays) {
+      if (date.getTime() <= today.getTime()) {
+        return date;
+      }
+    }
+  })();
 
   if (!nextDay) {
     return <NoResults />;
