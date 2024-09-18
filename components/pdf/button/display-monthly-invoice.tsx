@@ -18,8 +18,8 @@ export const DisplayMonthlyInvoice = ({
   orders: monthlyOrdersType[];
   isSend: boolean;
 }) => {
-  const { serverAction, loading: createMonthlyPDF64StringLoading } = useServerAction(createMonthlyPDF64String);
-  const { toastServerAction, loading: sendFactureLoading } = useToastPromise({
+  const { serverAction, loading } = useServerAction(createMonthlyPDF64String);
+  const { toastServerAction, loading: toastLoading } = useToastPromise({
     serverAction: sendMonthlyInvoice,
     message: "Envoi de la facture mensuelle",
     errorMessage: "Envoi de la facture mensuelle annulé",
@@ -58,7 +58,7 @@ export const DisplayMonthlyInvoice = ({
 
   return (
     <PdfButton
-      disabled={createMonthlyPDF64StringLoading || sendFactureLoading}
+      disabled={loading || toastLoading}
       onViewFile={onViewFile}
       onSaveFile={onSaveFile}
       onSendFile={onSendFile}

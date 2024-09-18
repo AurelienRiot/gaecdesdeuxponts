@@ -2,7 +2,7 @@ import prismadb from "@/lib/prismadb";
 import { getUnitLabel } from "../product/product-function";
 import { addDays } from "date-fns";
 
-export const getOrders = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
+export const getAllOrders = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
   // return dummieDate;
   const [orders, amapOrders] = await Promise.all([
     prismadb.order.findMany({
@@ -26,9 +26,6 @@ export const getOrders = async ({ startDate, endDate }: { startDate: Date; endDa
     prismadb.aMAPOrder
       .findMany({
         where: {
-          startDate: {
-            lte: startDate,
-          },
           endDate: {
             gte: addDays(new Date(), -1), // new Date(),
           },
@@ -128,7 +125,7 @@ export const getOrders = async ({ startDate, endDate }: { startDate: Date; endDa
   return { productQuantities, formattedOrders, groupedAMAPOrders };
 };
 
-export default getOrders;
+export default getAllOrders;
 
 const dummieDate = {
   productQuantities: [

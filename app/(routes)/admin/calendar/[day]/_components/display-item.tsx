@@ -1,9 +1,9 @@
-import type getOrders from "@/components/google-events/get-orders-for-events";
+import type getAllOrders from "@/components/google-events/get-orders-for-events";
 import { LuMilk } from "react-icons/lu";
 import { PiPackageDuotone } from "react-icons/pi";
 import { TbMilk } from "react-icons/tb";
 
-function DisplayItem({ items }: { items: Awaited<ReturnType<typeof getOrders>>["productQuantities"] }) {
+function DisplayItem({ items }: { items: Awaited<ReturnType<typeof getAllOrders>>["productQuantities"] }) {
   return (
     <div className="mt-2 space-y-2">
       {items.map((item) => (

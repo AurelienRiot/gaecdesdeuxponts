@@ -58,7 +58,7 @@ function AmapCards({
         </Button>
       </CardHeader>
       <CardContent className="w-full px-4">
-        <div className="flex justify-between">
+        <div className="grid grid-cols-2">
           <div className="space-y-2">
             <h4 className="text-xs font-semibold">Produits :</h4>
             <ul className="text-xs space-y-0.5">

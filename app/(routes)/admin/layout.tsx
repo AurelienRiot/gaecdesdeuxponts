@@ -7,7 +7,7 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative h-full pb-16 ">
+    <div className="relative h-full pb-20 md:pb-0 ">
       {/* <AdminColorSchema /> */}
       <Navbar />
       {children}

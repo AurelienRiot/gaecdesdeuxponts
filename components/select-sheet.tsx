@@ -104,7 +104,7 @@ function SelectSheetContent<T extends { key: string }>({
 
   return (
     <div className="relative">
-      <div ref={scrollRef} className="max-h-[35dvh] overflow-y-auto  flex flex-col gap-2 relative py-6">
+      <div ref={scrollRef} className="max-h-[50dvh] overflow-y-auto  flex flex-col gap-2 relative py-8">
         {values.map((value, index) => (
           <Button
             style={{ touchAction: "pan-y" }}
@@ -122,7 +122,7 @@ function SelectSheetContent<T extends { key: string }>({
           </Button>
         ))}
       </div>
-      <div className="inset-0 absolute from-background to-background bg-[linear-gradient(to_bottom,_var(--tw-gradient-from)_0%,_transparent_15%,_transparent_85%,_var(--tw-gradient-to)_100%)] pointer-events-none select-none" />
+      <div className="inset-0 absolute from-background to-background bg-[linear-gradient(to_bottom,_var(--tw-gradient-from)_0%,_transparent_10%,_transparent_90%,_var(--tw-gradient-to)_100%)] pointer-events-none select-none" />
     </div>
   );
 }

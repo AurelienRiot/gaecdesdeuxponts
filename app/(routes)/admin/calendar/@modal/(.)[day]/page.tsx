@@ -1,4 +1,4 @@
-import getOrders from "@/components/google-events/get-orders-for-events";
+import getAllOrders from "@/components/google-events/get-orders-for-events";
 import NoResults from "@/components/ui/no-results";
 import { dateFormatter, timeZone } from "@/lib/date-utils";
 import { addHours } from "date-fns";
@@ -33,7 +33,7 @@ async function IntercepteDayPage({ params }: { params: { day: string | undefined
 export default IntercepteDayPage;
 
 async function DescriptionEvents({ startDate, endDate }: { startDate: Date; endDate: Date }) {
-  const result = await getOrders({ startDate, endDate }).catch((error) => {
+  const result = await getAllOrders({ startDate, endDate }).catch((error) => {
     console.log(error);
   });
   if (!result) {

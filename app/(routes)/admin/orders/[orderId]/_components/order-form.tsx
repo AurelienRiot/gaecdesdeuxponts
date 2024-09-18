@@ -1,9 +1,10 @@
 "use client";
+import DateModal from "@/components/date-modal";
 import DeleteButton from "@/components/delete-button";
 import { DisplayInvoice } from "@/components/pdf/button/display-invoice";
 import { DisplayShippingOrder } from "@/components/pdf/button/display-shipping-order";
+import { getUserName } from "@/components/table-custom-fuction";
 import { Button, LoadingButton } from "@/components/ui/button";
-import ButtonBackward from "@/components/ui/button-backward";
 import { useConfirm } from "@/components/ui/confirm-dialog";
 import { Form, FormField } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
@@ -13,11 +14,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import useServerAction from "@/hooks/use-server-action";
 import { dateFormatter } from "@/lib/date-utils";
 import { createId } from "@/lib/id";
+import { currencyFormatter } from "@/lib/utils";
 import type { ProductWithMain, UserWithAddress } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Shop } from "@prisma/client";
 import { CalendarIcon, Plus, UserIcon } from "lucide-react";
-import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -32,10 +34,6 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
-import { currencyFormatter } from "@/lib/utils";
-import Image from "next/image";
-import { getUserName } from "@/components/table-custom-fuction";
-import DateModal from "@/components/date-modal";
 
 export type ProductFormProps = {
   initialData:
@@ -71,13 +69,18 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
     defaultValues: {
       id: initialData?.id || createId("order"),
       totalPrice: initialData?.totalPrice,
-      dateOfPayment: initialData?.dateOfPayment,
-      dateOfShipping:
-        initialData?.dateOfShipping || initialData?.datePickUp || new Date(new Date().setHours(10, 0, 0, 0)),
+      dateOfPayment: initialData?.dateOfPayment ? new Date(initialData.dateOfPayment) : undefined,
+      dateOfShipping: initialData?.dateOfShipping
+        ? new Date(initialData.dateOfShipping)
+        : initialData?.datePickUp
+          ? new Date(initialData.datePickUp)
+          : new Date(new Date().setHours(10, 0, 0, 0)),
       dateOfEdition: new Date(),
       userId: initialData?.userId || "",
       shopId: initialData?.shopId || "",
-      datePickUp: initialData?.datePickUp || new Date(new Date().setHours(10, 0, 0, 0)),
+      datePickUp: initialData?.datePickUp
+        ? new Date(initialData.datePickUp)
+        : new Date(new Date().setHours(10, 0, 0, 0)),
       orderItems: initialData?.orderItems.map((product) => ({
         itemId: product.itemId,
         unit: product.unit,
@@ -107,7 +110,6 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
   const onConfirm = async () => {
     function onSuccess() {
       router.replace(`/admin/orders/${initialData?.id}?referer=${encodeURIComponent(referer)}#button-container`);
-      router.refresh();
     }
     if (!initialData?.id) {
       toast.error("Une erreur est survenue");
@@ -163,7 +165,6 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
         : await createOrderAction({ data, toastOptions: { position: "top-center" } });
 
       router.replace(`/admin/orders/${data.id}?referer=${encodeURIComponent(referer)}#button-container`);
-      router.refresh();
     }
   };
 
@@ -182,7 +183,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
     urlParams.set("referer", referer);
     urlParams.set("id", form.getValues("id"));
     toast.success("Création d'une nouvelle commande", { position: "bottom-center" });
-    router.push(`/admin/orders/new?${urlParams.toString()}`);
+    router.replace(`/admin/orders/new?${urlParams.toString()}`);
   }
 
   return (
@@ -195,7 +196,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
             data={{ id: initialData.id, dateOfShipping: initialData.dateOfShipping }}
             isSubmitting={form.formState.isSubmitting}
             onSuccess={() => {
-              router.push(referer);
+              router.replace(referer);
               router.refresh();
             }}
           />
@@ -264,13 +265,13 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
       {!!initialData?.id && !!initialData.dateOfEdition && (
         <div id="button-container" className="space-y-4">
           {user?.role === "pro" && (
-            <div>
+            <div className="space-y-2">
               <Label>Bon de livraison</Label>
               <DisplayShippingOrder orderId={form.getValues("id")} isSend={!!initialData.shippingEmail} />
             </div>
           )}
           {user?.role === "user" && (
-            <div>
+            <div className="space-y-2">
               <Label>Facture</Label>
               <DisplayInvoice orderId={form.getValues("id")} isSend={!!initialData.invoiceEmail} />
             </div>
@@ -301,13 +302,6 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
           }
         />
       )}
-      <br />
-      <ButtonBackward
-        onClick={() => {
-          router.push(referer);
-          router.refresh();
-        }}
-      />
     </>
   );
 };

@@ -1,40 +1,54 @@
-import { getOrdersByDateOfShipping } from "@/app/(routes)/admin/calendar/_functions/get-orders";
+import { getOrdersByDate } from "@/app/(routes)/admin/calendar/_functions/get-orders";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import { addHours } from "date-fns";
-import OrdersCalendar from "./_components/orders-calendar";
-import { getAMAPOrders } from "./_functions/get-amap-orders";
+import { ONE_DAY } from "@/lib/date-utils";
+import { addDays } from "date-fns";
+import { Plus } from "lucide-react";
+import Link from "next/link";
+import { Suspense } from "react";
+import TodayFocus from "./_components/date-focus";
+import EventPage from "./_components/events-page";
+import UpdateEvent from "./_components/update-page";
+import { getGroupedAMAPOrders } from "./_functions/get-amap-orders";
 
 export const dynamic = "force-dynamic";
 
-async function CalendarPage({ searchParams }: { searchParams: { date: string | undefined } }) {
-  const month = addHours(searchParams.date ? new Date(decodeURIComponent(searchParams.date)) : new Date(), 2);
+const from = new Date(new Date().getTime() - 14 * ONE_DAY);
+const to = addDays(new Date(), 30);
 
-  const beginMonth = new Date(new Date(month.getFullYear(), month.getMonth(), 1).setHours(0, 0, 0, 0));
-  const endMonth = new Date(new Date(month.getFullYear(), month.getMonth() + 1, 1).setHours(0, 0, 0, 0));
-
-  const { orderDates } = await Promise.all([
-    getOrdersByDateOfShipping({ beginMonth, endMonth }),
-    getAMAPOrders({ beginMonth, endMonth }),
-  ]).then(([orderDates, amapDates]) => {
-    return { orderDates: new Set(orderDates.concat(amapDates)) };
+async function CalendarPage() {
+  const dateArray = new Array((to.getTime() - from.getTime()) / ONE_DAY).fill(0).map((_, index) => {
+    return new Date(from.getTime() + index * ONE_DAY).toISOString().split("T")[0];
   });
 
+  const [orders, amapOrders] = await Promise.all([getOrdersByDate({ from, to }), getGroupedAMAPOrders()]);
+
   return (
-    <>
-      <div className="max-w-[90vw] md:max-w-[500px] mx-auto">
-        <div className=" space-y-4 p-8  pt-2   w-full">
+    <div className=" flex flex-col gap-2 relative" style={{ height: `calc(100dvh - 80px)` }}>
+      <Link
+        href="/admin/orders/new"
+        className="absolute top-4 right-4 p-2 border bg-green-500 rounded-full cursor-pointer"
+      >
+        <Plus className="size-4 text-green-100 stroke-[3]" />
+      </Link>
+      <div className="max-w-[90vw] md:max-w-[500px] mx-auto ">
+        <div className=" space-y-4 p-8  py-2   w-full">
           <Heading
             title={`Calendrier des commandes`}
             description="Liste des commandes"
             className=" w-fit  text-center mx-auto"
           />
-
-          <Separator />
+          <Separator />{" "}
         </div>
-        <OrdersCalendar month={month} orderDates={[...orderDates].map((date) => new Date(date))} />
       </div>
-    </>
+      <Suspense fallback={<div>Loading...</div>}>
+        <EventPage orders={orders} amapOrders={amapOrders} dateArray={dateArray} />
+      </Suspense>
+      <div className="flex justify-between p-4 ">
+        <UpdateEvent />
+        <TodayFocus />
+      </div>
+    </div>
   );
 }
 

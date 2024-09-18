@@ -114,12 +114,6 @@ export const SecondaryAdminRoutes = (pathname: string) => [
     active: pathname.startsWith(`/admin/direction`),
     Icone: MapPin,
   },
-  {
-    href: `/admin/calendar/${new Date().toISOString()}`,
-    label: "Aujourd'hui",
-    active: pathname.startsWith(`/admin/calendar/${new Date().toISOString()}`),
-    Icone: CalendarCheck,
-  },
 ];
 
 export const adminRoutes = (pathname: string) => [...MainAdminRoutes(pathname), ...SecondaryAdminRoutes(pathname)];

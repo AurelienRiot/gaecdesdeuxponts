@@ -1,18 +1,16 @@
+import { getRelativeDate } from "@/lib/date-utils";
 import type { OrderWithItemsAndShop } from "@/types";
 import type { AMAPItem, OrderItem, Shop } from "@prisma/client";
 import type { Row } from "@tanstack/react-table";
 import { CheckCircle, CreditCard, Package, Search, Truck } from "lucide-react";
 import Link from "next/link";
-import { FaCheckCircle, FaFileInvoiceDollar, FaShippingFast } from "react-icons/fa";
-import { PiHourglassLowFill } from "react-icons/pi";
+import { FaFileInvoiceDollar } from "react-icons/fa";
 import { ShopCard } from "../display-shops/shop-card";
 import { getUnitLabel } from "../product/product-function";
+import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { NameCell } from "./common-cell";
-import { getRelativeDate } from "@/lib/date-utils";
-import { Badge } from "../ui/badge";
 
 type ProductCellProps = {
   products: string;

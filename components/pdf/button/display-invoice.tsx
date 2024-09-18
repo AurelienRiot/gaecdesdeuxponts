@@ -11,12 +11,12 @@ import { sendFacture } from "../server-actions/send-facture-action";
 import { PdfButton } from "./pdf-button";
 
 export function DisplayInvoice({ orderId, isSend }: { orderId: string; isSend: boolean }) {
-  const { toastServerAction, loading: sendFactureLoading } = useToastPromise({
+  const { toastServerAction, loading: toastLoading } = useToastPromise({
     serverAction: sendFacture,
     message: "Envoi de la facture",
     errorMessage: "Envoi de la facture annulé",
   });
-  const { serverAction, loading: createPDF64StringLoading } = useServerAction(createPDF64String);
+  const { serverAction, loading } = useServerAction(createPDF64String);
   const onViewFile = async () => {
     function onSuccess(result?: string) {
       if (!result) {
@@ -47,7 +47,7 @@ export function DisplayInvoice({ orderId, isSend }: { orderId: string; isSend: b
   };
   return (
     <PdfButton
-      disabled={sendFactureLoading || createPDF64StringLoading}
+      disabled={loading || toastLoading}
       onViewFile={onViewFile}
       onSaveFile={onSaveFile}
       onSendFile={onSendFile}

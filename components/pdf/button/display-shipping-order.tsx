@@ -10,7 +10,7 @@ import { SendBL } from "../server-actions/send-bl-action";
 import { PdfButton } from "./pdf-button";
 
 export function DisplayShippingOrder({ orderId, isSend }: { orderId: string; isSend: boolean }) {
-  const { toastServerAction } = useToastPromise({
+  const { toastServerAction, loading: toastLoading } = useToastPromise({
     serverAction: SendBL,
     message: "Envoi du BL",
     errorMessage: "Envoi du BL annulé",
@@ -48,7 +48,7 @@ export function DisplayShippingOrder({ orderId, isSend }: { orderId: string; isS
 
   return (
     <PdfButton
-      disabled={loading}
+      disabled={loading || toastLoading}
       onViewFile={onViewFile}
       onSaveFile={onSaveFile}
       onSendFile={onSendFile}

@@ -1,4 +1,4 @@
-import type getOrders from "@/components/google-events/get-orders-for-events";
+import type getAllOrders from "@/components/google-events/get-orders-for-events";
 import { Button } from "@/components/ui/button";
 import { ListOrdered } from "lucide-react";
 import Image from "next/image";
@@ -12,7 +12,7 @@ const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 
 function OrderDescriptions({
   formattedOrders,
-}: { formattedOrders: Awaited<ReturnType<typeof getOrders>>["formattedOrders"] }) {
+}: { formattedOrders: Awaited<ReturnType<typeof getAllOrders>>["formattedOrders"] }) {
   if (formattedOrders.length === 0) {
     return null;
   }
@@ -66,7 +66,7 @@ function OrderDescriptions({
 
 function DirectionUrl({
   formattedOrders,
-}: { formattedOrders: Awaited<ReturnType<typeof getOrders>>["formattedOrders"] }) {
+}: { formattedOrders: Awaited<ReturnType<typeof getAllOrders>>["formattedOrders"] }) {
   const uniqueShippingAddresses = [...new Set(formattedOrders.map((order) => `${order.shippingAddress}`))];
 
   const directionString = `${googleDirectioUrl}/${origin.label}/${uniqueShippingAddresses.join("/")}/${destination.label}`;

@@ -1,14 +1,13 @@
-import type getOrders from "@/components/google-events/get-orders-for-events";
+import type getAllOrders from "@/components/google-events/get-orders-for-events";
 import Image from "next/image";
 import Link from "next/link";
 
-import { BiMap } from "react-icons/bi";
-import DisplayItem from "./display-item";
 import DisplayAddress from "./display-address";
+import DisplayItem from "./display-item";
 
 function AMAPDescrition({
   groupedAMAPOrders,
-}: { groupedAMAPOrders: Awaited<ReturnType<typeof getOrders>>["groupedAMAPOrders"] }) {
+}: { groupedAMAPOrders: Awaited<ReturnType<typeof getAllOrders>>["groupedAMAPOrders"] }) {
   if (Object.keys(groupedAMAPOrders).length === 0) {
     return null;
   }

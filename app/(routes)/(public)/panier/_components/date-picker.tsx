@@ -61,7 +61,7 @@ const DatePicker = ({ className, date, shopId }: DatePickerProps) => {
             />
           </Button>
         </PopoverTrigger>
-        <PopoverContent align="start" className="absolute w-auto p-0">
+        <PopoverContent align="start" className="absolute w-auto p-0 ">
           <Calendar
             mode="single"
             className="p-3"

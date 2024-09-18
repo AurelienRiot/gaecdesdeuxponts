@@ -6,7 +6,7 @@ import { addHours } from "date-fns";
 import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 import deleteEvent from "./delete-events";
 import getEventsList from "./get-events-list";
-import getOrders from "./get-orders-for-events";
+import getAllOrders from "./get-orders-for-events";
 
 const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 
@@ -67,7 +67,7 @@ export default async function createOrdersEvent(data: { date: Date }) {
 }
 
 async function createDescription({ startDate, endDate }: { startDate: Date; endDate: Date }) {
-  const { productQuantities, formattedOrders, groupedAMAPOrders } = await getOrders({ startDate, endDate });
+  const { productQuantities, formattedOrders, groupedAMAPOrders } = await getAllOrders({ startDate, endDate });
   if (productQuantities.length === 0) return null;
   // "<font color='red'> Aucune commande </font>";
 
@@ -79,7 +79,7 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
           order.orderItems
             .map((item) => `<strong>${item.name}</strong> : ${item.quantity}${item.unit || ""}`)
             .join("<br />") +
-          `<br /><a href="https://maps.google.com/?q=${order.address}">Addresse</a><br />`,
+          `<br /><a href="https://maps.google.com/?q=${order.address}">Adresse</a><br />`,
       )
       .join("<br />") + "<br />";
 

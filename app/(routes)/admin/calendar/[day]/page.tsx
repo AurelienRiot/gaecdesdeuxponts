@@ -1,4 +1,4 @@
-import getOrders from "@/components/google-events/get-orders-for-events";
+import getAllOrders from "@/components/google-events/get-orders-for-events";
 import { Heading } from "@/components/ui/heading";
 import NoResults from "@/components/ui/no-results";
 import { Separator } from "@/components/ui/separator";
@@ -13,6 +13,9 @@ import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 export const dynamic = "force-dynamic";
 
 const DayEventPage = async ({ params }: { params: { day: string | undefined } }) => {
+  if (params.day === "today") {
+    params.day = new Date().toISOString();
+  }
   const paramDate = params.day ? new Date(decodeURIComponent(params.day)) : new Date();
   const start = formatInTimeZone(paramDate, timeZone, "yyyy-MM-dd");
   const end = formatInTimeZone(addHours(paramDate, 24), timeZone, "yyyy-MM-dd");
@@ -20,7 +23,7 @@ const DayEventPage = async ({ params }: { params: { day: string | undefined } })
   const startDate = fromZonedTime(start, timeZone);
   const endDate = fromZonedTime(end, timeZone);
 
-  const result = await getOrders({ startDate, endDate }).catch((error) => {
+  const result = await getAllOrders({ startDate, endDate }).catch((error) => {
     console.log(error);
   });
 
@@ -41,7 +44,7 @@ const DayEventPage = async ({ params }: { params: { day: string | undefined } })
 
 export default DayEventPage;
 
-function DescriptionEvents({ result, date }: { result: Awaited<ReturnType<typeof getOrders>>; date: Date }) {
+function DescriptionEvents({ result, date }: { result: Awaited<ReturnType<typeof getAllOrders>>; date: Date }) {
   const { formattedOrders, groupedAMAPOrders, productQuantities } = result;
 
   if (productQuantities.length === 0) {
