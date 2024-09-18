@@ -6,9 +6,7 @@ import { addDays } from "date-fns";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
-import TodayFocus from "./_components/date-focus";
 import EventPage from "./_components/events-page";
-import UpdateEvent from "./_components/update-page";
 import { getGroupedAMAPOrders } from "./_functions/get-amap-orders";
 
 export const dynamic = "force-dynamic";
@@ -44,10 +42,6 @@ async function CalendarPage() {
       <Suspense fallback={<div>Loading...</div>}>
         <EventPage orders={orders} amapOrders={amapOrders} dateArray={dateArray} />
       </Suspense>
-      <div className="flex justify-between p-4 ">
-        <UpdateEvent />
-        <TodayFocus />
-      </div>
     </div>
   );
 }

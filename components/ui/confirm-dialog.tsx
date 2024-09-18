@@ -85,7 +85,9 @@ const ConfirmDialogContent: React.FC<{
               {title}
             </AlertDialogTitle>
           )}
-          {description && <AlertDialogDescription {...alertDialogDescription}>{description}</AlertDialogDescription>}
+          <AlertDialogDescription className={!description ? "sr-only" : ""} {...alertDialogDescription}>
+            {description}
+          </AlertDialogDescription>
           <div>{content}</div>
         </AlertDialogHeader>
         <AlertDialogFooter {...alertDialogFooter}>

@@ -47,7 +47,7 @@ export type ProductFormProps = {
 
 export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, users, shops, referer }) => {
   const router = useRouter();
-  const prevDateOfShipping = initialData?.dateOfShipping;
+  const prevDateOfShipping = initialData?.dateOfShipping ? new Date(initialData.dateOfShipping) : undefined;
   const confirm = useConfirm();
   const { serverAction: createOrderAction } = useServerAction(createOrder);
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
@@ -156,6 +156,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
         image: user?.image,
       }),
     });
+    console.log(initialData?.id, prevDateOfShipping);
     if (result) {
       initialData?.id
         ? await updateOrderAction({
@@ -193,9 +194,13 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
         {initialData?.id && (
           <DeleteButton
             action={deleteOrder}
-            data={{ id: initialData.id, dateOfShipping: initialData.dateOfShipping }}
+            data={{
+              id: initialData.id,
+              dateOfShipping: initialData.dateOfShipping ? new Date(initialData.dateOfShipping) : undefined,
+            }}
             isSubmitting={form.formState.isSubmitting}
             onSuccess={() => {
+              console.log(referer);
               router.replace(referer);
               router.refresh();
             }}
