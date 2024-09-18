@@ -101,31 +101,43 @@ export const getAllOrders = async ({ startDate, endDate }: { startDate: Date; en
   //   }
   // }
 
-  const productQuantities = orders
-    .flatMap((order) =>
-      order.orderItems.map((item) => ({
-        itemId: item.itemId,
-        name: item.name,
-        quantity: item.quantity,
-        unit: getUnitLabel(item.unit).quantity,
-      })),
-    )
-    .concat(Object.values(groupedAMAPOrders).flatMap((order) => order.orderItems.map((item) => item)))
-    .reduce((acc: { itemId: string; name: string; quantity: number; unit: string | null }[], curr) => {
-      const existing = acc.find((item) => item.name === curr.name);
-      if (curr.quantity < 0) return acc;
-      if (existing) {
-        existing.quantity += curr.quantity;
-      } else {
-        acc.push(curr);
-      }
-      return acc;
-    }, []);
+  const productQuantities = getProductQuantities(
+    orders
+      .flatMap((order) =>
+        order.orderItems.map((item) => ({
+          itemId: item.itemId,
+          name: item.name,
+          quantity: item.quantity,
+          unit: getUnitLabel(item.unit).quantity,
+        })),
+      )
+      .concat(Object.values(groupedAMAPOrders).flatMap((order) => order.orderItems.map((item) => item))),
+  );
 
   return { productQuantities, formattedOrders, groupedAMAPOrders };
 };
 
 export default getAllOrders;
+
+export type ProductQuantities = {
+  itemId: string;
+  name: string;
+  quantity: number;
+  unit: string;
+};
+
+export function getProductQuantities(productQuantities: ProductQuantities[]): ProductQuantities[] {
+  return productQuantities.reduce((acc: ProductQuantities[], curr) => {
+    const existing = acc.find((item) => item.name === curr.name);
+    if (curr.quantity < 0) return acc;
+    if (existing) {
+      existing.quantity += curr.quantity;
+    } else {
+      acc.push(curr);
+    }
+    return acc;
+  }, []);
+}
 
 const dummieDate = {
   productQuantities: [

@@ -1,5 +1,7 @@
 "use client";
 import type { OrderCardProps } from "@/components/display-orders/order-card";
+import { getProductQuantities } from "@/components/google-events/get-orders-for-events";
+import { getUnitLabel } from "@/components/product/product-function";
 import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
 import { debounce } from "@/lib/debounce";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -8,9 +10,8 @@ import type { getGroupedAMAPOrders } from "../_functions/get-amap-orders";
 import TodayFocus from "./date-focus";
 import DisplayAmap from "./display-amap";
 import DisplayOrder from "./display-order";
+import SummarizeProducts from "./summarize-products";
 import UpdatePage from "./update-page";
-import { getUnitLabel } from "@/components/product/product-function";
-import ProductDescription from "../[day]/_components/products-description";
 
 type EventsPageProps = {
   orders: OrderCardProps[];
@@ -110,45 +111,39 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
           }));
           const orderData = orders.filter((order) => getLocalIsoString(order.shippingDate) === date);
 
-          const productQuantities = orderData
-            .flatMap((order) =>
-              order.productsList.map((item) => ({
-                itemId: item.name,
-                name: item.name,
-                quantity: Number(item.quantity || 1),
-                unit: getUnitLabel(item.unit).quantity,
-              })),
-            )
-            .concat(
-              amapData.flatMap(
-                (shop) =>
-                  shop.order?.items.map((item) => ({
-                    itemId: item.itemId,
-                    name: item.name,
-                    quantity: item.totalQuantity,
-                    unit: getUnitLabel(item.unit).quantity,
-                  })) || [],
+          const productQuantities = getProductQuantities(
+            orderData
+              .flatMap((order) =>
+                order.productsList.map((item) => ({
+                  itemId: item.name,
+                  name: item.name,
+                  quantity: Number(item.quantity || 1),
+                  unit: getUnitLabel(item.unit).quantity,
+                })),
+              )
+              .concat(
+                amapData.flatMap(
+                  (shop) =>
+                    shop.order?.items.map((item) => ({
+                      itemId: item.itemId,
+                      name: item.name,
+                      quantity: item.totalQuantity,
+                      unit: getUnitLabel(item.unit).quantity,
+                    })) || [],
+                ),
               ),
-            )
-            .reduce((acc: { name: string; quantity: number; itemId: string; unit: string }[], curr) => {
-              const existing = acc.find((item) => item.name === curr.name);
-              if (curr.quantity < 0) return acc;
-              if (existing) {
-                existing.quantity += curr.quantity;
-              } else {
-                acc.push(curr);
-              }
-              return acc;
-            }, []);
+          );
           return (
             <div
               ref={isFocused ? currentDateRef : null}
               key={date}
-              className="flex-shrink-0  w-full max-w-xs h-full space-2"
+              className="flex-shrink-0  w-full max-w-xs h-full space-y-2"
             >
-              <h2 className="text-xl font-semibold">{dateFormatter(new Date(date), { days: true })}</h2>
-              <ul className="space-y-4 overflow-y-auto h-full" style={{ height: `calc(100% - 28px)` }}>
-                {productQuantities.length > 0 && <ProductDescription productQuantities={productQuantities} />}
+              <h2 className="text-xl font-semibold capitalize text-center">
+                {dateFormatter(new Date(date), { days: true })}
+              </h2>
+              <ul className="space-y-4 overflow-y-auto h-full" style={{ height: `calc(100% - 36px)` }}>
+                {productQuantities.length > 0 && <SummarizeProducts productQuantities={productQuantities} />}
                 <DisplayAmap amapOrders={amapData} />
                 {orderData.length === 0 ? (
                   <p>Aucune commande</p>

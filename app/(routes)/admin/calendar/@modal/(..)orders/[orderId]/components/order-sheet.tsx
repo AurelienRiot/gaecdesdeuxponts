@@ -16,15 +16,18 @@ function OrderSheet({ orderId, children }: { orderId?: string; children: React.R
     >
       <SheetContent
         aria-describedby={`Modifier la commande ${orderId}`}
-        className="overflow-y-scroll w-[90%] sm:max-w-sm md:max-w-md space-y-6"
+        className="overflow-y-scroll w-[90%] sm:max-w-sm md:max-w-md "
       >
-        <SheetHeader className="sr-only">
-          <SheetTitle>
-            <span>Commande n°{orderId}</span>
-          </SheetTitle>
-          <SheetDescription className="">Modifier la commande</SheetDescription>
-        </SheetHeader>
-        {children}
+        {" "}
+        <div className="space-y-6 w-full">
+          <SheetHeader className="sr-only">
+            <SheetTitle>
+              <span>Commande n°{orderId}</span>
+            </SheetTitle>
+            <SheetDescription className="">Modifier la commande</SheetDescription>
+          </SheetHeader>
+          {children}
+        </div>
       </SheetContent>
     </Sheet>
   );

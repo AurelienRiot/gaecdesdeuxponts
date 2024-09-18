@@ -22,10 +22,10 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className }) => {
   return (
     <Card className={cn("w-full max-w-sm ", className)}>
       <CardHeader
-        className="flex  items-center justify-start py-2 px-4 cursor-pointer"
+        className="flex items-center justify-start py-2 px-4 cursor-pointer "
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <div className="flex items-center  gap-y-2 gap-x-6 flex-wrap justify-center">
+        <div className="grid grid-cols-11  items-center w-full">
           <Link
             onClick={(e) => {
               // e.nativeEvent.stopImmediatePropagation();
@@ -33,7 +33,7 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className }) => {
             }}
             // href={`/admin/users/${order.userId}`}
             href={"#"}
-            className="flex items-center gap-2 "
+            className="flex col-span-5 items-center gap-2 "
           >
             {order.image ? (
               <Image src={order.image} alt={order.name} width={24} height={24} className="rounded-sm object-contain" />
@@ -44,22 +44,15 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className }) => {
             )}
             <span className="font-medium text-xs truncate">{order.name}</span>
           </Link>
-          {/* <div className="text-xs text-gray-500 whitespace-nowrap flex items-center font-semibold">
-        <Calendar className="h-3 w-3  mr-2" />
-        <span className="capitalize">{shippingDate}</span>
-        </div> */}
-          <Link
-            onClick={(e) => {
-              // e.nativeEvent.stopImmediatePropagation();
-              e.stopPropagation();
-            }}
-            // href={`/admin/orders/${order.id}`}
-            href={"#"}
-          >
-            <StatusCell status={order.status} />
-          </Link>
+
+          <StatusCell status={order.status} className="col-span-5 justify-center" />
+          <div className="flex justify-end">
+            <ChevronDown
+              data-state={isExpanded}
+              className="h-4 w-4 data-[state=true]:rotate-180 transition-transform duration-500"
+            />
+          </div>
         </div>
-        {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
       </CardHeader>
       <AnimateHeight display={isExpanded}>
         <CardContent className="py-2 px-4">
