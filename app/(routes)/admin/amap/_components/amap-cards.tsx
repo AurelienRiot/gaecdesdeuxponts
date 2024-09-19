@@ -4,10 +4,10 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import useServerAction from "@/hooks/use-server-action";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { setShippedDay } from "../_actions/set-shipped-day";
-import { cn } from "@/lib/utils";
 
 function AmapCards({
   id,
@@ -62,7 +62,7 @@ function AmapCards({
           <span className="font-medium text-xs ">{name}</span>
         </Link>
 
-        <div className="col-span-2 text-xs flex items-center justify-start">
+        <div className="col-span-2 text-xs flex items-center justify-center text-center">
           <span>{shopName}</span>
         </div>
 

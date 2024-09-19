@@ -13,12 +13,10 @@ export const dynamic = "force-dynamic";
 
 const from = new Date(new Date().getTime() - 14 * ONE_DAY);
 const to = addDays(new Date(), 30);
-
+const dateArray = new Array((to.getTime() - from.getTime()) / ONE_DAY).fill(0).map((_, index) => {
+  return new Date(from.getTime() + index * ONE_DAY).toISOString().split("T")[0];
+});
 async function CalendarPage() {
-  const dateArray = new Array((to.getTime() - from.getTime()) / ONE_DAY).fill(0).map((_, index) => {
-    return new Date(from.getTime() + index * ONE_DAY).toISOString().split("T")[0];
-  });
-
   const [orders, amapOrders] = await Promise.all([getOrdersByDate({ from, to }), getGroupedAMAPOrders()]);
 
   return (

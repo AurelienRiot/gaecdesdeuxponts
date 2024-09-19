@@ -4,6 +4,7 @@ import { PiBasket, PiFarm } from "react-icons/pi";
 import { LuCigarette, LuCoffee } from "react-icons/lu";
 import { GiBread } from "react-icons/gi";
 import { IoRestaurantSharp } from "react-icons/io5";
+import { FaConciergeBell } from "react-icons/fa";
 
 const tagOptions: Option[] = [
   { label: "Bar", value: "bar", Icon: MdLocalBar },
@@ -14,6 +15,7 @@ const tagOptions: Option[] = [
   { label: "Boulangerie", value: "boulangerie", Icon: GiBread },
   { label: "AMAP", value: "amap", Icon: PiBasket },
   { label: "Restaurant", value: "restaurant", Icon: IoRestaurantSharp },
+  { label: "Traiteur", value: "caterer", Icon: FaConciergeBell },
 ];
 
 type TagsMultipleSelectorProps = {

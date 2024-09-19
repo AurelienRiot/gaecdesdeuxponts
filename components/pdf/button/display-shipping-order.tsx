@@ -1,11 +1,18 @@
 "use client";
 
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import { useToastPromise } from "@/components/ui/sonner";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import useServerAction from "@/hooks/use-server-action";
 import base64ToBlob from "@/lib/base-64-to-blob";
+import { dateFormatter } from "@/lib/date-utils";
+import { currencyFormatter } from "@/lib/utils";
 import { saveAs } from "file-saver";
+import { CalendarIcon, UserIcon } from "lucide-react";
+import Image from "next/image";
 import { toast } from "sonner";
 import { createPDF64String } from "../server-actions/create-pdf64-string";
+import getOrderForConfirmation from "../server-actions/get-order-for-confirmation";
 import { SendBL } from "../server-actions/send-bl-action";
 import { PdfButton } from "./pdf-button";
 
@@ -16,6 +23,8 @@ export function DisplayShippingOrder({ orderId, isSend }: { orderId: string; isS
     errorMessage: "Envoi du BL annulé",
   });
   const { serverAction, loading } = useServerAction(createPDF64String);
+  const { serverAction: orderAction, loading: loading2 } = useServerAction(getOrderForConfirmation);
+  const confirm = useConfirm();
 
   const onViewFile = async () => {
     function onSuccess(result?: string) {
@@ -43,12 +52,30 @@ export function DisplayShippingOrder({ orderId, isSend }: { orderId: string; isS
   };
 
   const onSendFile = async (setSend: (send: boolean) => void) => {
+    const order = await orderAction({ data: { orderId } });
+    if (!order) {
+      toast.error("Erreur");
+      return;
+    }
+    const result = await confirm({
+      title: "Confirmation de la commande",
+      content: ModalDescription({
+        date: order.dateOfShipping,
+        email: order.customer?.email,
+        items: order.orderItems,
+        name: order.customer?.name,
+        image: order.user?.image,
+      }),
+    });
+    if (!result) {
+      return;
+    }
     toastServerAction({ data: { orderId }, onSuccess: () => setSend(true) });
   };
 
   return (
     <PdfButton
-      disabled={loading || toastLoading}
+      disabled={loading || toastLoading || loading2}
       onViewFile={onViewFile}
       onSaveFile={onSaveFile}
       onSendFile={onSendFile}
@@ -56,3 +83,74 @@ export function DisplayShippingOrder({ orderId, isSend }: { orderId: string; isS
     />
   );
 }
+
+const ModalDescription = ({
+  name,
+  date,
+  items,
+  image,
+  email,
+}: {
+  name?: string | null;
+  image?: string | null;
+  date?: Date | null;
+  email?: string;
+  items: { name: string; price: number; quantity: number; itemId: string }[];
+}) => {
+  if (!name) {
+    return "Aucun utilisateur selectioné";
+  }
+  return (
+    <div>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 gap-y-4  text-muted-foreground">
+        <div className="flex gap-2 items-center ">
+          {image ? (
+            <Image src={image} width={20} height={20} alt={name} className="object-contain rounded-sm " />
+          ) : (
+            <UserIcon className="w-5 h-5" />
+          )}
+          <span className="font-semibold">{name}</span>
+        </div>
+        <div className="flex items-center gap-2 text-md">
+          <CalendarIcon className="w-4 h-4" />
+          {date ? (
+            <span className="font-bold">{dateFormatter(date, { days: true })}</span>
+          ) : (
+            <span className="font-bold text-destructive">Aucune date de livraison</span>
+          )}
+        </div>
+      </div>
+      <div className="my-4 relative ">
+        <span className="mb-2">{email}</span>
+        <div className="overflow-y-auto h-full max-h-[35dvh] pb-4">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-left">Produit</TableHead>
+                <TableHead className="text-right">Quantité</TableHead>
+                <TableHead className="text-right">Prix</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="text-sm">
+              {items.map((item, index) => (
+                <TableRow
+                  key={item.itemId + index}
+                  className={
+                    item.quantity < 0
+                      ? "text-destructive-foreground bg-destructive hover:bg-destructive/90 rounded-sm"
+                      : "bg-gray-600 hover:bg-gray-400  text-white rounded-sm"
+                  }
+                >
+                  <TableCell className="font-medium p-2">{item.name}</TableCell>
+                  <TableCell className="text-right text-base p-2">{item.quantity}</TableCell>
+                  <TableCell className="text-right p-2">{currencyFormatter.format(item.price)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background from-90% pointer-events-none translate-y-1" />
+      </div>
+    </div>
+  );
+};
