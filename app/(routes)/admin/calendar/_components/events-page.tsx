@@ -4,7 +4,7 @@ import { getUnitLabel } from "@/components/product/product-function";
 import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
 import { debounce } from "@/lib/debounce";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { getGroupedAMAPOrders } from "../_functions/get-amap-orders";
 import type { CalendarOrdersType } from "../_functions/get-orders";
 import TodayFocus from "./date-focus";
@@ -12,6 +12,10 @@ import DisplayAmap from "./display-amap";
 import DisplayOrder from "./display-order";
 import SummarizeProducts from "./summarize-products";
 import UpdatePage from "./update-page";
+import Image from "next/image";
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
+import { Modal } from "@/components/ui/modal";
+import { Button } from "@/components/ui/button";
 
 type EventsPageProps = {
   orders: CalendarOrdersType[];
@@ -25,6 +29,8 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
   const initialScrollRef = useRef<boolean>(false); // Tracks if initial scroll has been done
   const containerRef = useRef<HTMLDivElement>(null);
   const currentDateRef = useRef<HTMLDivElement>(null);
+  const [user, setUser] = useState<CalendarOrdersType["user"]>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Extract the initial focus date from search parameters or default to today
   const initialFocusDate = useRef<string>(searchParams.get("day") || getLocalIsoString(new Date()));
@@ -150,7 +156,16 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
                 {orderData.length === 0 ? (
                   <p className="text-center">Aucune commande</p>
                 ) : (
-                  orderData.map((order) => <DisplayOrder key={order.id} order={order} />)
+                  orderData.map((order) => (
+                    <DisplayOrder
+                      key={order.id}
+                      order={order}
+                      onOpenModal={() => {
+                        setUser(order.user);
+                        setIsModalOpen(true);
+                      }}
+                    />
+                  ))
                 )}
               </ul>
             </div>
@@ -161,6 +176,82 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
         <UpdatePage />
         <TodayFocus />
       </div>
+      <UserModal open={isModalOpen} onClose={() => setIsModalOpen(false)} user={user} />
     </>
   );
 }
+
+function UserModal({ open, onClose, user }: { open: boolean; onClose: () => void; user?: CalendarOrdersType["user"] }) {
+  const router = useRouter();
+  return (
+    <Modal title="Information du client" isOpen={open} onClose={onClose}>
+      {user ? (
+        <>
+          <UserInfo user={user} />
+          <div className="flex justify-between gap-4">
+            <Button variant={"outline"} className="w-full" onClick={onClose}>
+              Fermer
+            </Button>
+            <Button
+              variant={"green"}
+              className="w-full"
+              onClick={() => {
+                onClose();
+                router.push(`/admin/users/${user.id}`);
+              }}
+            >
+              Consulter
+            </Button>
+          </div>
+        </>
+      ) : (
+        <>
+          <p>Aucun client sélectionné</p>
+          <Button variant={"outline"} className="w-full" onClick={onClose}>
+            Fermer
+          </Button>
+        </>
+      )}
+    </Modal>
+  );
+}
+const InfoItem = ({ label, value }: { label: string; value: string | null | undefined }) =>
+  value ? (
+    <div className="mb-4">
+      <h3 className="text-sm font-medium text-gray-500">{label}</h3>
+      {label === "Notes" ? (
+        <AutosizeTextarea className="border-0 focus-visible:ring-0" readOnly value={value} />
+      ) : (
+        <p className="mt-1 text-sm text-gray-900">{value}</p>
+      )}
+    </div>
+  ) : null;
+
+const UserInfo = ({ user }: { user: CalendarOrdersType["user"] }) => (
+  <div className="px-4 py-5 ">
+    <div className="flex items-center mb-4 gap-4">
+      {user.image ? (
+        <Image
+          src={user.image}
+          alt={user.name || "Unknown User"}
+          width={48}
+          height={48}
+          className="rounded-sm object-contain"
+        />
+      ) : (
+        <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
+          <span className="text-gray-600 font-semibold text-xs">{user.name?.charAt(0)}</span>
+        </div>
+      )}
+      <div>
+        <h2 className="text-lg font-semibold">{user.name || "Unknown User"}</h2>
+        <p className="text-sm text-gray-500">{user.email}</p>
+      </div>
+    </div>
+    <div className="max-h-[40dvh] overflow-y-auto px-4">
+      <InfoItem label="Entreprise" value={user.company} />
+      <InfoItem label="Adresse" value={user.address} />
+      <InfoItem label="Notes" value={user.notes} />
+    </div>
+  </div>
+);

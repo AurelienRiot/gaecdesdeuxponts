@@ -58,7 +58,7 @@ export function DisplayShippingOrder({ orderId, isSend }: { orderId: string; isS
       return;
     }
     const result = await confirm({
-      title: "Confirmation de la commande",
+      title: "Confirmation de l'envoi du BL",
       content: ModalDescription({
         date: order.dateOfShipping,
         email: order.customer?.email,
@@ -101,8 +101,8 @@ const ModalDescription = ({
     return "Aucun utilisateur selectioné";
   }
   return (
-    <div>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 gap-y-4  text-muted-foreground">
+    <>
+      <div className="flex flex-col justify-center items-center gap-2 mt-2  text-muted-foreground">
         <div className="flex gap-2 items-center ">
           {image ? (
             <Image src={image} width={20} height={20} alt={name} className="object-contain rounded-sm " />
@@ -119,9 +119,9 @@ const ModalDescription = ({
             <span className="font-bold text-destructive">Aucune date de livraison</span>
           )}
         </div>
+        <span className="mb-2">{email}</span>
       </div>
       <div className="my-4 relative ">
-        <span className="mb-2">{email}</span>
         <div className="overflow-y-auto h-full max-h-[35dvh] pb-4">
           <Table>
             <TableHeader>
@@ -151,6 +151,6 @@ const ModalDescription = ({
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background from-90% pointer-events-none translate-y-1" />
       </div>
-    </div>
+    </>
   );
 };
