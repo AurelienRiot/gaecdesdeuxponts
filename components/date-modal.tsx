@@ -41,13 +41,16 @@ const DateModal = React.forwardRef<HTMLButtonElement, DateModalProps>(
             )}
           </Button>
         </SheetTrigger>
-        <SheetContent side={"bottom"} className={cn("pb-6 h-[400px] 6", className)}>
+        <SheetContent
+          side={"bottom"}
+          className={cn("pb-16 max-h-[75dvh] gap-10 flex flex-col justify-between ", className)}
+        >
           <SheetHeader className="mx-auto w-full max-w-sm ">
             <SheetTitle className="text-center">{"Selectionner une date"}</SheetTitle>
           </SheetHeader>
           <Calendar
             mode="single"
-            className="p-3 mx-auto w-full max-w-[275px] "
+            className="p-3 mx-auto w-full max-w-[275px] scale-125 "
             captionLayout="label"
             selected={value}
             defaultMonth={value ? value : defaultMonth}
