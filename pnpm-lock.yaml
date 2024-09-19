@@ -103,7 +103,7 @@ importers:
         version: 2.7.2(@tiptap/pm@2.7.2)
       '@tiptap/extension-code-block-lowlight':
         specifier: ^2.7.2
-        version: 2.7.2(@tiptap/core@2.7.2(@tiptap/pm@2.7.2))(@tiptap/extension-code-block@2.7.2(@tiptap/core@2.7.2(@tiptap/pm@2.7.2))(@tiptap/pm@2.7.2))(@tiptap/pm@2.7.2)(highlight.js@11.10.0)(lowlight@3.1.0)
+        version: 2.7.2(@tiptap/core@2.7.2(@tiptap/pm@2.7.2))(@tiptap/extension-code-block@2.7.2(@tiptap/core@2.7.2(@tiptap/pm@2.7.2))(@tiptap/pm@2.7.2))(@tiptap/pm@2.7.2)(highlight.js@11.9.0)(lowlight@3.1.0)
       '@tiptap/extension-color':
         specifier: ^2.7.2
         version: 2.7.2(@tiptap/core@2.7.2(@tiptap/pm@2.7.2))(@tiptap/extension-text-style@2.7.2(@tiptap/core@2.7.2(@tiptap/pm@2.7.2)))
@@ -166,7 +166,7 @@ importers:
         version: 0.4.2
       framer-motion:
         specifier: ^11.5.5
-        version: 11.5.5(@emotion/is-prop-valid@0.8.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 11.5.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       googleapis:
         specifier: ^144.0.0
         version: 144.0.0
@@ -7518,12 +7518,12 @@ snapshots:
     dependencies:
       '@tiptap/core': 2.7.2(@tiptap/pm@2.7.2)
 
-  '@tiptap/extension-code-block-lowlight@2.7.2(@tiptap/core@2.7.2(@tiptap/pm@2.7.2))(@tiptap/extension-code-block@2.7.2(@tiptap/core@2.7.2(@tiptap/pm@2.7.2))(@tiptap/pm@2.7.2))(@tiptap/pm@2.7.2)(highlight.js@11.10.0)(lowlight@3.1.0)':
+  '@tiptap/extension-code-block-lowlight@2.7.2(@tiptap/core@2.7.2(@tiptap/pm@2.7.2))(@tiptap/extension-code-block@2.7.2(@tiptap/core@2.7.2(@tiptap/pm@2.7.2))(@tiptap/pm@2.7.2))(@tiptap/pm@2.7.2)(highlight.js@11.9.0)(lowlight@3.1.0)':
     dependencies:
       '@tiptap/core': 2.7.2(@tiptap/pm@2.7.2)
       '@tiptap/extension-code-block': 2.7.2(@tiptap/core@2.7.2(@tiptap/pm@2.7.2))(@tiptap/pm@2.7.2)
       '@tiptap/pm': 2.7.2
-      highlight.js: 11.10.0
+      highlight.js: 11.9.0
       lowlight: 3.1.0
 
   '@tiptap/extension-code-block@2.7.2(@tiptap/core@2.7.2(@tiptap/pm@2.7.2))(@tiptap/pm@2.7.2)':
@@ -8670,7 +8670,7 @@ snapshots:
 
   fraction.js@4.3.7: {}
 
-  framer-motion@11.5.5(@emotion/is-prop-valid@0.8.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  framer-motion@11.5.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       tslib: 2.7.0
     optionalDependencies:
