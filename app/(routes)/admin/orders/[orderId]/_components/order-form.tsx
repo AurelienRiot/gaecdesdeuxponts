@@ -164,7 +164,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
     urlParams.set("dateOfShipping", new Date(date.setHours(hours, minutes, seconds, milliseconds)).toISOString());
     urlParams.set("referer", referer);
     urlParams.set("id", form.getValues("id"));
-    toast.success("Création d'une nouvelle commande", { position: "bottom-center" });
+    toast.success("Création d'une nouvelle commande", { position: "top-center" });
     router.replace(`/admin/orders/new?${urlParams.toString()}`);
   }
 

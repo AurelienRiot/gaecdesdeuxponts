@@ -172,10 +172,10 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
           );
         })}
       </div>{" "}
-      <div className="flex justify-between p-4 ">
+      {/* <div className="flex justify-between p-4 ">
         <UpdatePage />
         <TodayFocus />
-      </div>
+      </div> */}
       <UserModal open={isModalOpen} onClose={() => setIsModalOpen(false)} user={user} />
     </>
   );
