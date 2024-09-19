@@ -127,7 +127,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
                   </FormItem>
                 )}
               />
-              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
+              <div className="flex flex-wrap gap-8 ">
                 <FormField
                   control={form.control}
                   name="name"

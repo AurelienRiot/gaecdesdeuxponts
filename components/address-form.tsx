@@ -35,7 +35,7 @@ export const AddressForm = ({ className }: AdressFormProps) => {
   }
 
   return (
-    <div className={cn("-mb-8 space-y-4 ", className)}>
+    <div className={cn("-mb-8 space-y-4 w-full max-w-[350px]", className)}>
       <FormField
         control={form.control}
         name={"address"}

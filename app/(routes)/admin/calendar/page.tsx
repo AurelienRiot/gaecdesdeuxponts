@@ -3,7 +3,7 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { ONE_DAY } from "@/lib/date-utils";
 import { addDays } from "date-fns";
-import { Plus } from "lucide-react";
+import { Package, Plus, User } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import EventPage from "./_components/events-page";
@@ -23,9 +23,17 @@ async function CalendarPage() {
     <div className=" flex flex-col gap-2 relative" style={{ height: `calc(100dvh - 80px)` }}>
       <Link
         href="/admin/orders/new"
-        className="absolute top-4 right-4 p-2 border bg-green-500 rounded-full cursor-pointer"
+        className="absolute top-4 right-4 p-2 border bg-green-500 rounded-full cursor-pointer flex gap-2"
       >
         <Plus className="size-4 text-green-100 stroke-[3]" />
+        <Package className="size-4 text-green-100 stroke-[3]" />
+      </Link>
+      <Link
+        href="/admin/users/new"
+        className="absolute top-4 left-4 p-2 border bg-blue-500 rounded-full cursor-pointer flex gap-2"
+      >
+        <Plus className="size-4 text-green-100 stroke-[3]" />
+        <User className="size-4 text-green-100 stroke-[3]" />
       </Link>
       <div className="max-w-[90vw] md:max-w-[500px] mx-auto ">
         <div className=" space-y-4 p-8  py-2   w-full">
