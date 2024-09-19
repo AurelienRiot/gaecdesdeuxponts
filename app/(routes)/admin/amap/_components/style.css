@@ -1,0 +1,10 @@
+
+@page {
+  size: A4;
+  margin: 0.5in;
+}
+
+/* Ensure each page starts on a new page */
+.page-break {
+  page-break-after: always;
+}

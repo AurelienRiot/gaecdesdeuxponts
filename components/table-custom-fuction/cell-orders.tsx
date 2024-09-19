@@ -1,18 +1,17 @@
+import { getRelativeDate } from "@/lib/date-utils";
 import type { OrderWithItemsAndShop } from "@/types";
 import type { AMAPItem, OrderItem, Shop } from "@prisma/client";
 import type { Row } from "@tanstack/react-table";
 import { CheckCircle, CreditCard, Package, Search, Truck } from "lucide-react";
 import Link from "next/link";
-import { FaCheckCircle, FaFileInvoiceDollar, FaShippingFast } from "react-icons/fa";
-import { PiHourglassLowFill } from "react-icons/pi";
+import { FaFileInvoiceDollar } from "react-icons/fa";
 import { ShopCard } from "../display-shops/shop-card";
 import { getUnitLabel } from "../product/product-function";
+import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { NameCell } from "./common-cell";
-import { getRelativeDate } from "@/lib/date-utils";
-import { Badge } from "../ui/badge";
+import { cn } from "@/lib/utils";
 
 type ProductCellProps = {
   products: string;
@@ -181,53 +180,57 @@ const statusArray = createStatusArray([...status]);
 
 type StatusCellProps = {
   status: Status;
+  className?: string;
 };
 
-function StatusCell({ status }: StatusCellProps) {
-  const getStatusIcon = (status: Status) => {
-    switch (status) {
-      case "En cours de validation":
-        return (
-          <Badge variant="secondary" className={`bg-yellow-500 hover:bg-yellow-500/90 text-white text-xs px-2 py-0.5`}>
-            {<Package className="h-3 w-3" />}
-            <span className="ml-1 text-[10px]">{status}</span>
-          </Badge>
-        );
+const statusConfig: Record<
+  Status,
+  {
+    icon: JSX.Element;
+    color: string;
+    hoverColor: string;
+  }
+> = {
+  ["En cours de validation"]: {
+    icon: <Package className="h-3 w-3" />,
+    color: "bg-yellow-500",
+    hoverColor: "hover:bg-yellow-500/90",
+  },
+  ["Commande validée"]: {
+    icon: <CheckCircle className="h-3 w-3" />,
+    color: "bg-teal-500",
+    hoverColor: "hover:bg-teal-500/90",
+  },
+  ["Commande livrée"]: {
+    icon: <Truck className="h-3 w-3" />,
+    color: "bg-blue-500",
+    hoverColor: "hover:bg-blue-500/90",
+  },
+  ["En cours de paiement"]: {
+    icon: <CreditCard className="h-3 w-3" />,
+    color: "bg-orange-500",
+    hoverColor: "hover:bg-orange-500/90",
+  },
+  ["Commande Payée"]: {
+    icon: <FaFileInvoiceDollar className="h-3 w-3" />,
+    color: "bg-green-500",
+    hoverColor: "hover:bg-green-500/90",
+  },
+};
 
-      case "Commande validée":
-        return (
-          <Badge variant="secondary" className={`bg-teal-500 hover:bg-teal-500/90 text-white text-xs px-2 py-0.5`}>
-            {<CheckCircle className="h-3 w-3" />}
-            <span className="ml-1 text-[10px]">{status}</span>
-          </Badge>
-        );
-      case "Commande livrée":
-        return (
-          <Badge variant="secondary" className={`bg-blue-500 hover:bg-blue-500/90 text-white text-xs px-2 py-0.5`}>
-            {<Truck className="h-3 w-3" />}
-            <span className="ml-1 text-[10px]">{status}</span>
-          </Badge>
-        );
-      case "En cours de paiement":
-        return (
-          <Badge variant="secondary" className={`bg-orange-500 hover:bg-orange-500/90 text-white text-xs px-2 py-0.5`}>
-            {<CreditCard className="h-3 w-3" />}
-            <span className="ml-1 text-[10px]">{status}</span>
-          </Badge>
-        );
-      case "Commande Payée":
-        return (
-          <Badge
-            variant="secondary"
-            className={`bg-green-500 hover:bg-green-500/90  text-primary-foreground hovertext-xs px-2 py-0.5`}
-          >
-            {<FaFileInvoiceDollar className="h-3 w-3" />}
-            <span className="ml-1 text-[10px]">{status}</span>
-          </Badge>
-        );
-    }
-  };
-  return <div className="flex gap-2 sm:gap-4">{getStatusIcon(status)}</div>;
+function StatusCell({ status, className }: StatusCellProps) {
+  const { icon, color, hoverColor } = statusConfig[status];
+  return (
+    <div className={cn("flex gap-2 sm:gap-4", className)}>
+      <Badge
+        variant="secondary"
+        className={cn(color, hoverColor, "text-white text-xs px-2 py-0.5 flex items-center space-x-1")}
+      >
+        {icon}
+        <span className="text-[10px]">{status}</span>
+      </Badge>
+    </div>
+  );
 }
 
 function createDatePickUp({ dateOfShipping, datePickUp }: { datePickUp: Date; dateOfShipping: Date | null }) {

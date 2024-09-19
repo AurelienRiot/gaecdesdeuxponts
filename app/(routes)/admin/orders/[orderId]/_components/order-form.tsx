@@ -1,23 +1,19 @@
 "use client";
+import DateModal from "@/components/date-modal";
 import DeleteButton from "@/components/delete-button";
 import { DisplayInvoice } from "@/components/pdf/button/display-invoice";
 import { DisplayShippingOrder } from "@/components/pdf/button/display-shipping-order";
 import { Button, LoadingButton } from "@/components/ui/button";
-import ButtonBackward from "@/components/ui/button-backward";
-import { useConfirm } from "@/components/ui/confirm-dialog";
 import { Form, FormField } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import useServerAction from "@/hooks/use-server-action";
-import { dateFormatter } from "@/lib/date-utils";
 import { createId } from "@/lib/id";
 import type { ProductWithMain, UserWithAddress } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Shop } from "@prisma/client";
-import { CalendarIcon, Plus, UserIcon } from "lucide-react";
-import Link from "next/link";
+import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -32,10 +28,6 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
-import { currencyFormatter } from "@/lib/utils";
-import Image from "next/image";
-import { getUserName } from "@/components/table-custom-fuction";
-import DateModal from "@/components/date-modal";
 
 export type ProductFormProps = {
   initialData:
@@ -49,8 +41,7 @@ export type ProductFormProps = {
 
 export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, users, shops, referer }) => {
   const router = useRouter();
-  const prevDateOfShipping = initialData?.dateOfShipping;
-  const confirm = useConfirm();
+  const prevDateOfShipping = initialData?.dateOfShipping ? new Date(initialData.dateOfShipping) : undefined;
   const { serverAction: createOrderAction } = useServerAction(createOrder);
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
   const { serverAction: confirmOrderAction, loading } = useServerAction(confirmOrder);
@@ -71,13 +62,18 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
     defaultValues: {
       id: initialData?.id || createId("order"),
       totalPrice: initialData?.totalPrice,
-      dateOfPayment: initialData?.dateOfPayment,
-      dateOfShipping:
-        initialData?.dateOfShipping || initialData?.datePickUp || new Date(new Date().setHours(10, 0, 0, 0)),
+      dateOfPayment: initialData?.dateOfPayment ? new Date(initialData.dateOfPayment) : undefined,
+      dateOfShipping: initialData?.dateOfShipping
+        ? new Date(initialData.dateOfShipping)
+        : initialData?.datePickUp
+          ? new Date(initialData.datePickUp)
+          : new Date(new Date().setHours(10, 0, 0, 0)),
       dateOfEdition: new Date(),
       userId: initialData?.userId || "",
       shopId: initialData?.shopId || "",
-      datePickUp: initialData?.datePickUp || new Date(new Date().setHours(10, 0, 0, 0)),
+      datePickUp: initialData?.datePickUp
+        ? new Date(initialData.datePickUp)
+        : new Date(new Date().setHours(10, 0, 0, 0)),
       orderItems: initialData?.orderItems.map((product) => ({
         itemId: product.itemId,
         unit: product.unit,
@@ -107,7 +103,6 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
   const onConfirm = async () => {
     function onSuccess() {
       router.replace(`/admin/orders/${initialData?.id}?referer=${encodeURIComponent(referer)}#button-container`);
-      router.refresh();
     }
     if (!initialData?.id) {
       toast.error("Une erreur est survenue");
@@ -145,26 +140,14 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
       return;
     }
 
-    const result = await confirm({
-      title: "Confirmation de la commande",
-      content: ModalDescription({
-        date: data.dateOfShipping,
-        items: data.orderItems,
-        name: user ? getUserName(user) : "",
-        image: user?.image,
-      }),
-    });
-    if (result) {
-      initialData?.id
-        ? await updateOrderAction({
-            data: { ...data, prevDateOfShipping },
-            toastOptions: { position: "top-center" },
-          })
-        : await createOrderAction({ data, toastOptions: { position: "top-center" } });
+    initialData?.id
+      ? await updateOrderAction({
+          data: { ...data, prevDateOfShipping },
+          toastOptions: { position: "top-center" },
+        })
+      : await createOrderAction({ data, toastOptions: { position: "top-center" } });
 
-      router.replace(`/admin/orders/${data.id}?referer=${encodeURIComponent(referer)}#button-container`);
-      router.refresh();
-    }
+    router.replace(`/admin/orders/${data.id}?referer=${encodeURIComponent(referer)}#button-container`);
   };
 
   function onNewOrder(date?: Date) {
@@ -182,7 +165,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
     urlParams.set("referer", referer);
     urlParams.set("id", form.getValues("id"));
     toast.success("Création d'une nouvelle commande", { position: "bottom-center" });
-    router.push(`/admin/orders/new?${urlParams.toString()}`);
+    router.replace(`/admin/orders/new?${urlParams.toString()}`);
   }
 
   return (
@@ -192,10 +175,13 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
         {initialData?.id && (
           <DeleteButton
             action={deleteOrder}
-            data={{ id: initialData.id, dateOfShipping: initialData.dateOfShipping }}
+            data={{
+              id: initialData.id,
+              dateOfShipping: initialData.dateOfShipping ? new Date(initialData.dateOfShipping) : undefined,
+            }}
             isSubmitting={form.formState.isSubmitting}
             onSuccess={() => {
-              router.push(referer);
+              router.replace(referer);
               router.refresh();
             }}
           />
@@ -231,7 +217,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
                 <FormDatePicker {...field} date={field.value} onSelectDate={field.onChange} title="Date de livraison" />
               )}
             />
-            {user?.role !== "pro" && (
+            {user?.role !== "pro" && user?.role !== "trackOnlyUser" && (
               <FormField
                 control={form.control}
                 name="dateOfPayment"
@@ -264,13 +250,13 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
       {!!initialData?.id && !!initialData.dateOfEdition && (
         <div id="button-container" className="space-y-4">
           {user?.role === "pro" && (
-            <div>
+            <div className="space-y-2">
               <Label>Bon de livraison</Label>
               <DisplayShippingOrder orderId={form.getValues("id")} isSend={!!initialData.shippingEmail} />
             </div>
           )}
           {user?.role === "user" && (
-            <div>
+            <div className="space-y-2">
               <Label>Facture</Label>
               <DisplayInvoice orderId={form.getValues("id")} isSend={!!initialData.invoiceEmail} />
             </div>
@@ -301,73 +287,6 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
           }
         />
       )}
-      <br />
-      <ButtonBackward
-        onClick={() => {
-          router.push(referer);
-          router.refresh();
-        }}
-      />
     </>
-  );
-};
-
-const ModalDescription = ({
-  name,
-  date,
-  items,
-  image,
-}: { name?: string | null; image?: string | null; date?: Date | null; items: OrderFormValues["orderItems"] }) => {
-  if (!name) {
-    return "Aucun utilisateur selectioné";
-  }
-  return (
-    <div>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 gap-y-4  text-muted-foreground">
-        <div className="flex gap-2 items-center ">
-          {image ? (
-            <Image src={image} width={20} height={20} alt={name} className="object-contain rounded-sm " />
-          ) : (
-            <UserIcon className="w-5 h-5" />
-          )}
-          <span className="font-semibold">{name}</span>
-        </div>
-        <div className="flex items-center gap-2 text-md">
-          <CalendarIcon className="w-4 h-4" />
-          {date ? (
-            <span className="font-bold">{dateFormatter(date, { days: true })}</span>
-          ) : (
-            <span className="font-bold text-destructive">Aucune date de livraison</span>
-          )}
-        </div>
-      </div>
-      <div className="space-y-4 py-4">
-        <div>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-left">Produit</TableHead>
-                  <TableHead className="text-right">Quantité</TableHead>
-                  <TableHead className="text-right">Prix</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {items.map((item, index) => (
-                  <TableRow
-                    key={item.itemId + index}
-                    className={item.quantity < 0 ? "text-destructive-foreground bg-destructive rounded-sm" : ""}
-                  >
-                    <TableCell className="font-medium">{item.name}</TableCell>
-                    <TableCell className="text-right text-lg">{item.quantity}</TableCell>
-                    <TableCell className="text-right">{currencyFormatter.format(item.price)}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </div>
-      </div>
-    </div>
   );
 };

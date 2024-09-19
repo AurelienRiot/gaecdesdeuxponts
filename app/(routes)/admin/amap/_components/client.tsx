@@ -12,31 +12,30 @@ import { toast } from "sonner";
 import { columns, filterableColumns, viewOptionsColumns, type AMAPColumn } from "./columns";
 import { Drawer } from "vaul";
 import { dateFormatter } from "@/lib/date-utils";
+import DateModal from "@/components/date-modal";
 
 interface AMAPClientProps {
   initialData: AMAPColumn[];
-  initialDateRange: DateRange;
+  endDate: Date;
 }
 
-export const AMAPClient: React.FC<AMAPClientProps> = ({ initialData, initialDateRange }) => {
+export const AMAPClient: React.FC<AMAPClientProps> = ({ initialData, endDate }) => {
   const [data, setData] = useState<AMAPColumn[]>(initialData);
-  const [dateRange, setDateRange] = useState<DateRange | undefined>(initialDateRange);
+  const [date, setDate] = useState<Date | undefined>(endDate);
   const [loading, setLoading] = useState(false);
-  const pathName = usePathname();
   const router = useRouter();
 
   const handleChangeDate = async () => {
     setLoading(true);
-    if (!dateRange?.from || !dateRange?.to) {
+    if (!date) {
       setLoading(false);
       toast.error("Veuillez choisir une date");
       return;
     }
     const queryParams = new URLSearchParams({
-      from: dateRange.from.toISOString(),
-      to: dateRange.to.toISOString(),
+      date: date.toISOString(),
     }).toString();
-    router.push(`${pathName}?${queryParams}`);
+    router.push(`?${queryParams}`);
 
     setLoading(false);
   };
@@ -56,9 +55,9 @@ export const AMAPClient: React.FC<AMAPClientProps> = ({ initialData, initialDate
   return (
     <>
       <div className="flex flex-wrap gap-4 ">
-        <DatePickerWithRange
-          date={dateRange}
-          setDate={setDateRange}
+        <DateModal
+          value={date}
+          onValueChange={(value) => setDate(value)}
           startMonth={new Date(2024, 0)}
           endMonth={new Date(new Date().getFullYear() + 1, 11)}
         />

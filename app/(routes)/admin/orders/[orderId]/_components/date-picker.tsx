@@ -68,7 +68,7 @@ const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
               />
             </Button>
           </PopoverTrigger>
-          <PopoverContent align="start" className="absolute w-auto p-0">
+          <PopoverContent align="start" className="absolute w-auto p-0  z-[1300]">
             <Calendar
               {...props}
               mode="single"

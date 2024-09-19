@@ -4,6 +4,7 @@ import { AddressForm } from "@/components/address-form";
 import { BillingAddressForm } from "@/components/billing-address-form";
 import CheckboxForm from "@/components/chekbox-form";
 import InputImageModal from "@/components/images-upload/image-modal";
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import ButtonBackward from "@/components/ui/button-backward";
 import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
@@ -18,7 +19,6 @@ import { useForm } from "react-hook-form";
 import createUser from "../_actions/create-user";
 import SelectRole from "./select-role";
 import { schema, type UserFormValues } from "./user-schema";
-import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 
 export const CreateUserForm = () => {
   const { serverAction } = useServerAction(createUser);
@@ -56,7 +56,7 @@ export const CreateUserForm = () => {
   const onSubmit = async (data: UserFormValues) => {
     data.name = data.name.trim();
     function onSuccess() {
-      router.push(`/admin/users`);
+      router.back();
       router.refresh();
     }
     await serverAction({ data, onSuccess });
@@ -90,7 +90,7 @@ export const CreateUserForm = () => {
                 </FormItem>
               )}
             />
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
+            <div className="flex flex-wrap gap-8 ">
               <FormField
                 control={form.control}
                 name="name"

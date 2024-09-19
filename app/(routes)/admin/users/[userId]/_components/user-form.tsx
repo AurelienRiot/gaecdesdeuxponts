@@ -77,7 +77,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
   const onSubmit = async (data: UserFormValues) => {
     data.name = data.name.trim();
     function onSuccess() {
-      router.push(`/admin/users`);
+      router.back();
       router.refresh();
     }
     await serverAction({ data, onSuccess });
@@ -127,7 +127,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
                   </FormItem>
                 )}
               />
-              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
+              <div className="flex flex-wrap gap-8 ">
                 <FormField
                   control={form.control}
                   name="name"

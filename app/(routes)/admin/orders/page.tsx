@@ -1,9 +1,7 @@
-import { getUnitLabel } from "@/components/product/product-function";
-import { getUserName } from "@/components/table-custom-fuction";
+import { createProductList, getUserName } from "@/components/table-custom-fuction";
 import { createDatePickUp, createProduct, createStatus } from "@/components/table-custom-fuction/cell-orders";
 import prismadb from "@/lib/prismadb";
 import { currencyFormatter } from "@/lib/utils";
-import type { OrderItem } from "@prisma/client";
 import { addYears } from "date-fns";
 import type { DateRange } from "react-day-picker";
 import { OrderClient } from "./_components/client";
@@ -64,21 +62,6 @@ const OrdersPage = async (context: {
       { datePickUp: "desc" },
     ],
   });
-
-  function createProductList(items: OrderItem[]) {
-    return items.map((item) => {
-      const name = item.name;
-      if (item.quantity !== 1) {
-        return {
-          name,
-          price: item.price,
-          quantity: `${item.quantity}`,
-          unit: getUnitLabel(item.unit).quantity || undefined,
-        };
-      }
-      return { name, price: item.price, quantity: "", unit: undefined };
-    });
-  }
 
   const formattedOrders = orders.map((order) => ({
     id: order.id,

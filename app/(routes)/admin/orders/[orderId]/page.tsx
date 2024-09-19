@@ -1,8 +1,10 @@
-import prismadb from "@/lib/prismadb";
+import ButtonBackward from "@/components/ui/button-backward";
 import { headers } from "next/headers";
-import { OrderForm, type ProductFormProps } from "./_components/order-form";
-import { priorityMap } from "@/components/product/product-function";
-import { getUserName } from "@/components/table-custom-fuction";
+import { OrderForm } from "./_components/order-form";
+import getShippingOrder from "./_functions.ts/get-order";
+import getProductsForOrders from "./_functions.ts/get-products-for-orders";
+import getShopsForOrders from "./_functions.ts/get-shops-for-orders";
+import getUsersForOrders from "./_functions.ts/get-users-for-orders";
 
 export const dynamic = "force-dynamic";
 const OrderFormPage = async ({
@@ -20,97 +22,19 @@ const OrderFormPage = async ({
       : headerReferer;
   const dateOfShipping = searchParams.dateOfShipping ? new Date(searchParams.dateOfShipping) : undefined;
   const orderId = params.orderId === "new" ? decodeURIComponent(searchParams.id || "new") : params.orderId;
-  const shippingOrders = await prismadb.order.findUnique({
-    where: {
-      id: orderId,
-      deletedAt: null,
-    },
-    select: {
-      id: true,
-      totalPrice: true,
-      dateOfPayment: true,
-      dateOfShipping: true,
-      dateOfEdition: true,
-      invoiceEmail: true,
-      shippingEmail: true,
-      orderItems: {
-        select: {
-          name: true,
-          itemId: true,
-          unit: true,
-          price: true,
-          quantity: true,
-          categoryName: true,
-          description: true,
-        },
-      },
-      userId: true,
-      shopId: true,
-      datePickUp: true,
-    },
-  });
-  const users = await prismadb.user
-    .findMany({
-      where: {
-        NOT: {
-          role: { in: ["admin", "deleted", "readOnlyAdmin"] },
-        },
-      },
-      include: {
-        address: true,
-        billingAddress: true,
-      },
-    })
-    .then((users) =>
-      users.sort((a, b) => {
-        const aName = getUserName(a);
-        const bName = getUserName(b);
-        return aName.localeCompare(bName, "fr", {
-          sensitivity: "base",
-        });
-      }),
-    );
 
-  const products = await prismadb.product.findMany({
-    where: {
-      product: {
-        categoryName: {
-          not: "Produits AMAP",
-        },
-      },
-    },
-    include: {
-      product: true,
-    },
-  });
-
-  const shops = await prismadb.shop
-    .findMany({})
-    .then((shops) => shops.sort((a, b) => (a.name || "").localeCompare(b.name || "", "fr", { sensitivity: "base" })));
-
-  const initialData: ProductFormProps["initialData"] = !shippingOrders
-    ? null
-    : params.orderId === "new"
-      ? {
-          ...shippingOrders,
-          dateOfShipping,
-          orderItems: shippingOrders.orderItems.filter((item) => item.quantity > 0 && item.price > 0),
-          id: null,
-        }
-      : shippingOrders;
-
-  const sortedProducts = products.sort((a, b) => {
-    const aPriority = priorityMap[a.name] || Number.MAX_SAFE_INTEGER;
-    const bPriority = priorityMap[b.name] || Number.MAX_SAFE_INTEGER;
-
-    return aPriority - bPriority;
-  });
-
+  const [products, shops, users, initialData] = await Promise.all([
+    getProductsForOrders(),
+    getShopsForOrders(),
+    getUsersForOrders(),
+    getShippingOrder(orderId, dateOfShipping, params.orderId === "new"),
+  ]);
   return (
     <div className="flex-col">
-      <div className="flex-1 space-y-4 p-8 pt-6">
-        <OrderForm products={sortedProducts} initialData={initialData} users={users} shops={shops} referer={referer} />
+      <div className="flex-1 space-y-6 p-8 pt-6">
+        <OrderForm products={products} initialData={initialData} users={users} shops={shops} referer={referer} />
         {/* <OrderClient params={params} searchParams={searchParams} /> */}
+        <ButtonBackward url={referer} className="block" />
       </div>
     </div>
   );

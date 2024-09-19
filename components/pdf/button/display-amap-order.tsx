@@ -10,12 +10,12 @@ import { SendAMAP } from "../server-actions/send-amap-action";
 import { PdfButton } from "./pdf-button";
 
 export const DisplayAMAPOrder = ({ orderId, isSend }: { orderId: string; isSend: boolean }) => {
-  const { toastServerAction, loading: sendBLLoading } = useToastPromise({
+  const { toastServerAction, loading: toastLoading } = useToastPromise({
     serverAction: SendAMAP,
     message: "Envoi du contrat",
     errorMessage: "Envoi du contrat annulé",
   });
-  const { serverAction, loading: createPDF64StringLoading } = useServerAction(createAMAPPDF64String);
+  const { serverAction, loading } = useServerAction(createAMAPPDF64String);
 
   async function onViewFile() {
     function onSuccess(result?: string) {
@@ -48,7 +48,7 @@ export const DisplayAMAPOrder = ({ orderId, isSend }: { orderId: string; isSend:
 
   return (
     <PdfButton
-      disabled={sendBLLoading || createPDF64StringLoading}
+      disabled={loading || toastLoading}
       onViewFile={onViewFile}
       onSaveFile={onSaveFile}
       onSendFile={onSendFile}

@@ -3,6 +3,7 @@ import { addDays } from "date-fns/addDays";
 import { fr } from "date-fns/locale";
 
 export const timeZone = "Europe/Paris";
+export const ONE_DAY = 24 * 60 * 60 * 1000;
 
 export const dateFormatter = (date: Date, options?: { hours?: boolean; days?: boolean; customFormat?: string }) => {
   if (options?.customFormat) return formatInTimeZone(date, timeZone, options.customFormat, { locale: fr });
@@ -24,6 +25,10 @@ export function formDateDayMonth(date: Date) {
   return `${date.getDate()} ${new Date(2024, date.getMonth(), 1).toLocaleString("fr", {
     month: "short",
   })}`;
+}
+
+export function getLocalIsoString(date: Date) {
+  return formatInTimeZone(date, timeZone, "yyyy-MM-dd");
 }
 
 export const dateMonthYear = (dates: (Date | null)[]) => {
@@ -99,24 +104,33 @@ export function getMonthName(monthNumber: number) {
 
 export const getRelativeDate = (date: Date) => {
   const currentDate = new Date();
+
+  // Calculate the absolute difference in days, rounding to the nearest integer
+  const daysDifference = Math.round((new Date(date).getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+
+  // Check if the date is the same as the current date
   const sameDay =
-    currentDate.getDate() === new Date(date).getDate() && currentDate.getMonth() === new Date(date).getMonth();
-  const daysDifference = (new Date(date).getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24);
+    currentDate.getDate() === new Date(date).getDate() &&
+    currentDate.getMonth() === new Date(date).getMonth() &&
+    currentDate.getFullYear() === new Date(date).getFullYear();
+
   if (sameDay) {
     return "Aujourd'hui";
   }
-  if (daysDifference > 0 && daysDifference < 2) {
+
+  // Handle cases for tomorrow, yesterday, and other ranges
+  if (daysDifference === 1) {
     return "Demain";
   }
-  if (daysDifference < 0 && daysDifference > -2) {
+  if (daysDifference === -1) {
     return "Hier";
   }
-  if (daysDifference >= 2) {
-    return `dans ${Math.floor(daysDifference + 1)} jours`;
+  if (daysDifference > 1) {
+    return `dans ${daysDifference} jours`;
   }
-  // if (daysDifference <= -2) {
-  return `Il y a ${Math.floor(Math.abs(daysDifference))} jours`;
-  // }
+  if (daysDifference < -1) {
+    return `Il y a ${Math.abs(daysDifference)} jours`;
+  }
 };
 
 export function getDaysInFuture(dates: Date[]) {

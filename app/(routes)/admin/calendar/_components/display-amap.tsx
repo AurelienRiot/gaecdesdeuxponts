@@ -33,10 +33,10 @@ const DisplayAmap: React.FC<DisplayAmapProps> = ({ amapOrders, className }) => {
     return (
       <Card key={order.shopName} className={cn("w-full max-w-sm ", className)}>
         <CardHeader
-          className="flex  items-center justify-start py-2 px-4 cursor-pointer"
+          className="grid grid-cols-8   items-center  py-2 px-4 cursor-pointer"
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          <div className="flex items-center gap-2 ">
+          <div className="flex items-center gap-2 col-span-7">
             {order.shopImageUrl ? (
               <Image
                 src={order.shopImageUrl}
@@ -62,7 +62,12 @@ const DisplayAmap: React.FC<DisplayAmapProps> = ({ amapOrders, className }) => {
         >
           <StatusCell status={order.status} />
         </Link> */}
-          {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          <div className="flex justify-end">
+            <ChevronDown
+              data-state={isExpanded}
+              className="h-4 w-4 data-[state=true]:rotate-180 transition-transform duration-500"
+            />
+          </div>
         </CardHeader>
         <AnimateHeight display={isExpanded}>
           <CardContent className="py-2 px-4">

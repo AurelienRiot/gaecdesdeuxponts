@@ -15,7 +15,6 @@ async function getTodaysOrders(data: z.infer<typeof schema>) {
     getUser: checkReadOnlyAdmin,
     schema: schema,
     serverAction: async ({ date }) => {
-      console.log(date);
       const startDate = date;
       const endDate = addHours(date, 24);
 
@@ -27,12 +26,12 @@ async function getTodaysOrders(data: z.infer<typeof schema>) {
           },
           deletedAt: null,
           shippingEmail: null,
+          OR: [{ shopId: null }, { shopId: "" }],
         },
         select: {
           customer: { select: { shippingAddress: true } },
         },
       });
-
       if (orders.length === 0) {
         return { success: false, message: "Aucune commande n'a été trouvée" };
       }

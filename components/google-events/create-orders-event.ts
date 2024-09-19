@@ -1,12 +1,13 @@
 import { destination, origin } from "@/app/(routes)/admin/direction/_components/direction-schema";
 import { calendarAPI } from "@/lib/api-google";
-import { dateFormatter, timeZone } from "@/lib/date-utils";
+import { dateFormatter, getLocalIsoString, timeZone } from "@/lib/date-utils";
 import { createId } from "@/lib/id";
 import { addHours } from "date-fns";
 import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 import deleteEvent from "./delete-events";
 import getEventsList from "./get-events-list";
-import getOrders from "./get-orders-for-events";
+import getAllOrders from "./get-orders-for-events";
+import { numberFormat2Decimals } from "@/lib/utils";
 
 const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 
@@ -67,8 +68,8 @@ export default async function createOrdersEvent(data: { date: Date }) {
 }
 
 async function createDescription({ startDate, endDate }: { startDate: Date; endDate: Date }) {
-  const { productQuantities, formattedOrders, groupedAMAPOrders } = await getOrders({ startDate, endDate });
-  if (productQuantities.length === 0) return null;
+  const { productQuantities, formattedOrders, groupedAMAPOrders } = await getAllOrders({ startDate, endDate });
+  if (productQuantities.aggregateProducts.length === 0) return null;
   // "<font color='red'> Aucune commande </font>";
 
   const amapOrdersDescription =
@@ -79,15 +80,22 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
           order.orderItems
             .map((item) => `<strong>${item.name}</strong> : ${item.quantity}${item.unit || ""}`)
             .join("<br />") +
-          `<br /><a href="https://maps.google.com/?q=${order.address}">Addresse</a><br />`,
+          `<br /><a href="https://maps.google.com/?q=${order.address}">Adresse</a><br />`,
       )
       .join("<br />") + "<br />";
 
-  const header = `<h2><a href="${process.env.NEXT_PUBLIC_URL}/admin/calendar/${startDate.toISOString()}">Voir les commandes sur le site</a></h2> <br /><h3><font color='green'>Résumer des produits </font></h3>`;
+  const header = `<h2><a href="${process.env.NEXT_PUBLIC_URL}/admin/calendar/${getLocalIsoString(startDate)}">Voir les commandes sur le site</a></h2> <br /><h3><font color='green'>Résumer des produits </font></h3>`;
+  const totaleQuantity =
+    productQuantities.totaleQuantity
+      .map((item) => `<strong>${item.name}</strong> : ${numberFormat2Decimals(item.quantity)}${item.unit || ""}`)
+      .join("<br />") + "<br />";
 
   const productDescriptions =
-    productQuantities
-      .map((item) => `<strong>${item.name}</strong> : ${item.quantity}${item.unit || ""}`)
+    productQuantities.aggregateProducts
+      .map(
+        (item) =>
+          `<strong>${item.name}</strong> : ${numberFormat2Decimals(item.quantity)}${item.unit || ""} ${item.name.includes("Casier") ? ` (${Math.round(item.quantity * 12)})` : ""}`,
+      )
       .join("<br />") + "<br />";
 
   const orderDescriptions =
@@ -110,5 +118,5 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
       ? ""
       : `<strong><a  href="${googleDirectioUrl}/${origin.label}/${uniqueShippingAddresses.join("/")}/${destination.label}">Voir le parcours</a></strong> <br /><br />`;
 
-  return header + productDescriptions + amapOrdersDescription + orderDescriptions;
+  return header + totaleQuantity + productDescriptions + amapOrdersDescription + orderDescriptions;
 }

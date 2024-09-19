@@ -20,7 +20,6 @@ const LoginPage = async (context: {
 }) => {
   const callbackUrl = decodeURI(context.searchParams.callbackUrl ?? `${baseUrl}/dashboard-user`);
   const user = await getBasicUser();
-  console.log(callbackUrl);
   if (user) {
     if (user.role === "deleted" || user.role === "trackOnlyUser") {
       return <Logout callbackUrl={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`} />;

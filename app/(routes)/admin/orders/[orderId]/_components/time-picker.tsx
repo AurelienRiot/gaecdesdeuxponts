@@ -1,3 +1,4 @@
+"use client";
 import { generateTimeOptions } from "@/app/(routes)/(public)/panier/_components/time-picker";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
@@ -16,7 +17,6 @@ type HourPickerProps = {
 
 const TimePicker = ({ className, date, setDate }: HourPickerProps) => {
   const [open, setOpen] = useState(false);
-
   const timeOptions = generateTimeOptions(date);
   return (
     <div className={cn("space-y-2", className)}>
@@ -34,7 +34,7 @@ const TimePicker = ({ className, date, setDate }: HourPickerProps) => {
             <Icons.Clock className="ml-auto h-4 w-4" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
+        <PopoverContent className="w-[200px] p-0  z-[1300]">
           <Command>
             <CommandList>
               <CommandGroup>

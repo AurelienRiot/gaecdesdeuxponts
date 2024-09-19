@@ -10,7 +10,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui
 
 type DateModalProps = Omit<CalendarProps, "mode"> & {
   value?: Date;
-  onValueChange: (value?: Date) => void;
+  onValueChange?: (value?: Date) => void;
   triggerClassName?: string;
   trigger?: React.ReactNode;
 };
@@ -41,7 +41,7 @@ const DateModal = React.forwardRef<HTMLButtonElement, DateModalProps>(
             )}
           </Button>
         </SheetTrigger>
-        <SheetContent side={"bottom"} className={cn("pb-6 h-[400px]", className)}>
+        <SheetContent side={"bottom"} className={cn("pb-6 h-[400px] 6", className)}>
           <SheetHeader className="mx-auto w-full max-w-sm ">
             <SheetTitle className="text-center">{"Selectionner une date"}</SheetTitle>
           </SheetHeader>
@@ -53,7 +53,7 @@ const DateModal = React.forwardRef<HTMLButtonElement, DateModalProps>(
             defaultMonth={value ? value : defaultMonth}
             locale={fr}
             onSelect={(date) => {
-              onValueChange(date);
+              onValueChange?.(date);
               setIsOpen(false);
             }}
             startMonth={new Date(new Date().getFullYear(), new Date().getMonth())}

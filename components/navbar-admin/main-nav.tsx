@@ -44,10 +44,10 @@ export function MainNav({ className }: React.HTMLAttributes<HTMLElement>) {
 
 export const MainAdminRoutes = (pathname: string) => [
   {
-    href: `/admin/calendar`,
-    label: "Calendrier",
-    active: pathname.startsWith(`/admin/calendar`),
-    Icone: Calendar,
+    href: `/admin/direction`,
+    label: "Direction",
+    active: pathname.startsWith(`/admin/direction`),
+    Icone: MapPin,
   },
   {
     href: `/admin/amap`,
@@ -55,27 +55,26 @@ export const MainAdminRoutes = (pathname: string) => [
     active: pathname.startsWith(`/admin/amap`),
     Icone: ShoppingBasket,
   },
-
   {
-    href: `/admin/orders`,
-    label: "Commandes",
-    active: pathname.startsWith(`/admin/orders`),
-    Icone: ListOrderedIcon,
+    href: `/admin/calendar`,
+    label: "Calendrier",
+    active: pathname.startsWith(`/admin/calendar`),
+    Icone: Calendar,
   },
-  {
-    href: `/admin/users`,
-    label: "Clients",
-    active: pathname.startsWith(`/admin/users`),
-    Icone: Users,
-  },
-];
-
-export const SecondaryAdminRoutes = (pathname: string) => [
   {
     href: `/admin`,
     label: "Résumé",
     active: pathname === `/admin`,
     Icone: LayoutDashboardIcon,
+  },
+];
+
+export const SecondaryAdminRoutes = (pathname: string) => [
+  {
+    href: `/admin/users`,
+    label: "Clients",
+    active: pathname.startsWith(`/admin/users`),
+    Icone: Users,
   },
   {
     href: `/`,
@@ -108,17 +107,12 @@ export const SecondaryAdminRoutes = (pathname: string) => [
     active: pathname.startsWith(`/admin/products`),
     Icone: PackageIcon,
   },
+
   {
-    href: `/admin/direction`,
-    label: "Direction",
-    active: pathname.startsWith(`/admin/direction`),
-    Icone: MapPin,
-  },
-  {
-    href: `/admin/calendar/${new Date().toISOString()}`,
-    label: "Aujourd'hui",
-    active: pathname.startsWith(`/admin/calendar/${new Date().toISOString()}`),
-    Icone: CalendarCheck,
+    href: `/admin/orders`,
+    label: "Commandes",
+    active: pathname.startsWith(`/admin/orders`),
+    Icone: ListOrderedIcon,
   },
 ];
 
