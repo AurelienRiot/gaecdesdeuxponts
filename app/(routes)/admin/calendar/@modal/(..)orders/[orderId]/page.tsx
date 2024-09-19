@@ -21,11 +21,10 @@ async function IntercepteOrderPage({
   const headerReferer = headersList.get("referer");
   const referer =
     !headerReferer || headerReferer.includes("/admin/orders/")
-      ? decodeURIComponent(searchParams.referer || "/admin/orders")
+      ? decodeURIComponent(searchParams.referer || "/admin/calendar")
       : headerReferer;
   const dateOfShipping = searchParams.dateOfShipping ? new Date(searchParams.dateOfShipping) : undefined;
   const orderId = params.orderId === "new" ? decodeURIComponent(searchParams.id || "new") : params.orderId;
-
   return (
     <OrderSheet orderId={params.orderId}>
       <Suspense fallback={<Loading />}>

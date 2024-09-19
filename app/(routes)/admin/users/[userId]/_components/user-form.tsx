@@ -77,7 +77,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
   const onSubmit = async (data: UserFormValues) => {
     data.name = data.name.trim();
     function onSuccess() {
-      router.push(`/admin/users`);
+      router.back();
       router.refresh();
     }
     await serverAction({ data, onSuccess });
