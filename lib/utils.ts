@@ -7,6 +7,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function numberFormat2Decimals(value: number) {
+  return new Intl.NumberFormat("fr-FR", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(value);
+}
+
 export const currencyFormatter = (() => {
   const formatFunction = new Intl.NumberFormat("fr-FR", {
     style: "currency",

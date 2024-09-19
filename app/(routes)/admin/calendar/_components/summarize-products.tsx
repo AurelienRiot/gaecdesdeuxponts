@@ -1,21 +1,21 @@
 import { AnimateHeight } from "@/components/animations/animate-size";
-import type { ProductQuantities } from "@/components/google-events/get-orders-for-events";
+import type { ProductQuantities, extractProductQuantities } from "@/components/google-events/get-orders-for-events";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { cn, numberFormat2Decimals } from "@/lib/utils";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
-import DisplayItem from "../[day]/_components/display-item";
+import DisplayItem from "./display-item";
 
 function SummarizeProducts({
   productQuantities,
   className,
-}: { productQuantities: ProductQuantities[]; className?: string }) {
+}: { productQuantities: ReturnType<typeof extractProductQuantities>; className?: string }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <Card className={cn("w-full max-w-sm ", className)}>
       <CardHeader
-        className="flex bg-blue-100 dark:bg-blue-800 items-center justify-between p-2 py-0 cursor-pointer flex-row"
+        className="flex bg-green-200 dark:bg-green-800 items-center justify-between p-2 py-0 cursor-pointer flex-row"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <h2 className=" font-bold  p-2 rounded-md">Résumé des produits</h2>
@@ -25,7 +25,13 @@ function SummarizeProducts({
         />
       </CardHeader>
       <AnimateHeight display={isExpanded}>
-        <CardContent className="py-2 px-4 bg-gradient-to-b from-blue-100 dark:from-blue-800 to-transparent to-5%">
+        <CardContent className="py-2 px-4 bg-gradient-to-b from-green-200 dark:from-green-800 to-transparent to-5% space-y-4">
+          {productQuantities.totaleQuantity.map((item) => (
+            <p key={item.name} className="font-bold">
+              {item.name} : {numberFormat2Decimals(item.quantity)}
+              {item.unit}
+            </p>
+          ))}
           <DisplayItem items={productQuantities} />
         </CardContent>
       </AnimateHeight>

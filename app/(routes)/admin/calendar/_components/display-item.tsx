@@ -1,26 +1,31 @@
 import type getAllOrders from "@/components/google-events/get-orders-for-events";
+import { numberFormat2Decimals } from "@/lib/utils";
 import { LuMilk } from "react-icons/lu";
 import { PiPackageDuotone } from "react-icons/pi";
 import { TbMilk } from "react-icons/tb";
+import { BsBasketFill } from "react-icons/bs";
 
 function DisplayItem({ items }: { items: Awaited<ReturnType<typeof getAllOrders>>["productQuantities"] }) {
   return (
     <div className="mt-2 space-y-2">
-      {items.map((item) => (
+      {items.aggregateProducts.map((item) => (
         <div key={item.itemId} className="flex gap-1 items-center justify-start ">
           {/* Icône conditionnelle selon le type de produit */}
           {item.name.includes("bouteille") ? (
             <LuMilk className="h-5 w-5 text-blue-500" />
           ) : item.name.includes("bidon") ? (
             <TbMilk className="h-5 w-5 text-green-500" />
+          ) : item.name.includes("Casier") ? (
+            <BsBasketFill className="h-5 w-5 text-red-500" />
           ) : (
             <PiPackageDuotone className="h-5 w-5 text-gray-500" />
           )}
           <p className="text-sm col-span-7 font-medium text-gray-700">{item.name}</p>
           <p>:</p>
           <p className=" text-gray-500">
-            {item.quantity}
+            {numberFormat2Decimals(item.quantity)}
             {item.unit || ""}
+            {item.name.includes("Casier") ? ` (${Math.round(item.quantity * 12)})` : ""}
           </p>
         </div>
       ))}

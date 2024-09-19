@@ -1,6 +1,6 @@
 "use client";
 import type { OrderCardProps } from "@/components/display-orders/order-card";
-import { getProductQuantities } from "@/components/google-events/get-orders-for-events";
+import { extractProductQuantities } from "@/components/google-events/get-orders-for-events";
 import { getUnitLabel } from "@/components/product/product-function";
 import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
 import { debounce } from "@/lib/debounce";
@@ -111,7 +111,7 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
           }));
           const orderData = orders.filter((order) => getLocalIsoString(order.shippingDate) === date);
 
-          const productQuantities = getProductQuantities(
+          const productQuantities = extractProductQuantities(
             orderData
               .flatMap((order) =>
                 order.productsList.map((item) => ({
@@ -143,10 +143,12 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
                 {dateFormatter(new Date(date), { days: true })}
               </h2>
               <ul className="space-y-4 overflow-y-auto h-full" style={{ height: `calc(100% - 36px)` }}>
-                {productQuantities.length > 0 && <SummarizeProducts productQuantities={productQuantities} />}
+                {productQuantities.aggregateProducts.length > 0 && (
+                  <SummarizeProducts productQuantities={productQuantities} />
+                )}
                 <DisplayAmap amapOrders={amapData} />
                 {orderData.length === 0 ? (
-                  <p>Aucune commande</p>
+                  <p className="text-center">Aucune commande</p>
                 ) : (
                   orderData.map((order) => <DisplayOrder key={order.id} order={order} />)
                 )}
