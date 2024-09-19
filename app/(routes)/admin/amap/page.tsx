@@ -4,49 +4,40 @@ import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import NoResults from "@/components/ui/no-results";
 import { Separator } from "@/components/ui/separator";
+import { dateFormatter } from "@/lib/date-utils";
 import prismadb from "@/lib/prismadb";
-import { setHours } from "date-fns";
+import { addDays, setHours } from "date-fns";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import type { DateRange } from "react-day-picker";
 import AmapCards from "./_components/amap-cards";
 import { AMAPClient } from "./_components/client";
 import type { AMAPColumn } from "./_components/columns";
+import * as Dynamic from "next/dynamic";
+const DownloadCards = Dynamic.default(() => import("./_components/dowload-cards"), {
+  ssr: false,
+});
 import SelectShippingDay from "./_components/select-shipping-day";
+import "./_components/style.css";
 
 export const dynamic = "force-dynamic";
 
 async function AMAPPage(context: {
   searchParams: {
-    from: string | undefined;
-    to: string | undefined;
+    date: string | undefined;
     id: string | undefined;
     shippingDay: string | undefined;
   };
 }) {
   const id = context.searchParams.id;
 
-  let from: Date;
-  let to: Date;
-  if (context.searchParams.from && context.searchParams.to) {
-    from = new Date(context.searchParams.from);
-    to = new Date(context.searchParams.to);
-  } else {
-    from = new Date(new Date().getTime() - 6 * 30 * 24 * 60 * 60 * 1000);
-    to = new Date(new Date().getTime() + 2 * 30 * 24 * 60 * 60 * 1000);
-  }
-
-  const dateRange: DateRange = {
-    from: from,
-    to: to,
-  };
+  const date = context.searchParams.date;
+  const endDate = addDays(date ? new Date(date) : new Date(), -1);
 
   const amapOrders = await prismadb.aMAPOrder.findMany({
     where: !id
       ? {
-          startDate: {
-            gte: dateRange.from,
-            lte: dateRange.to,
+          endDate: {
+            gte: endDate,
           },
         }
       : {
@@ -77,6 +68,9 @@ async function AMAPPage(context: {
 
   return (
     <div className="space-y-4 p-8 pt-6">
+      <NextShipping formattedOrders={formattedOrders} shippingDay={context.searchParams.shippingDay} />
+
+      <Separator />
       <div className="flex flex-col items-center justify-between sm:flex-row">
         <Heading title={`Contrat AMAP (${amapOrders.length})`} description="Liste des différents contrats AMAP" />
 
@@ -93,12 +87,8 @@ async function AMAPPage(context: {
           </Link>
         </Button>
       </div>
-
       <Separator />
-      <AMAPClient initialData={formattedOrders} initialDateRange={dateRange} />
-      <Separator />
-
-      <NextShipping formattedOrders={formattedOrders} shippingDay={context.searchParams.shippingDay} />
+      <AMAPClient initialData={formattedOrders} endDate={endDate} />
     </div>
   );
 }
@@ -134,19 +124,73 @@ function NextShipping({ formattedOrders, shippingDay }: { formattedOrders: AMAPC
 
   return (
     <>
-      <Heading title={`Commande pour la prochaine livraison`} description={""} />
-      <SelectShippingDay shippingDays={arrayShippingDays} selectedShippingDay={selectedShippingDay} nextDay={nextDay} />
+      <Heading title={`Commande pour la prochaine livraison`} description={""} />{" "}
+      <div className="flex flex-wrap gap-2">
+        <SelectShippingDay
+          shippingDays={arrayShippingDays}
+          selectedShippingDay={selectedShippingDay}
+          nextDay={nextDay}
+        />
+        <DownloadCards className="size-10" date={dateFormatter(selectedShippingDay, { days: true })} />
+      </div>
       <div className="flex flex-wrap justify-center  gap-4">
         {ordersForNextShipping.map((order) => (
           <AmapCards
             shippedDay={selectedShippingDay}
             shipped={order.shippedDays.some((shippingDay) => shippingDay.getTime() === selectedShippingDay.getTime())}
             id={order.id}
+            shopName={order.shopName}
             name={order.name}
             productsList={order.productsList}
             userId={order.userId}
-            key={order.id}
+            key={`${order.id}-${selectedShippingDay.toISOString()}`}
           />
+        ))}
+      </div>
+      <CardsForDowload ordersForNextShipping={ordersForNextShipping} selectedShippingDay={selectedShippingDay} />
+    </>
+  );
+}
+const splitOrdersIntoPages = (orders: AMAPColumn[], cardsPerPage: number) => {
+  const pages = [];
+  for (let i = 0; i < orders.length; i += cardsPerPage) {
+    pages.push(orders.slice(i, i + cardsPerPage));
+  }
+  return pages;
+};
+const cardsPerPage = 10;
+function CardsForDowload({
+  ordersForNextShipping,
+  selectedShippingDay,
+}: { ordersForNextShipping: AMAPColumn[]; selectedShippingDay: Date }) {
+  const pages = splitOrdersIntoPages(ordersForNextShipping, cardsPerPage);
+
+  return (
+    <>
+      <div id="amap-cards" className=" w-[800px] p-4  bg-white hidden ">
+        <h1 className="text-3xl font-bold text-center">
+          Commandes AMAP du {dateFormatter(selectedShippingDay, { days: true })}
+        </h1>
+        {pages.map((pageOrders, pageIndex) => (
+          <div key={pageIndex} className="page-break mt-20">
+            <div className="flex flex-wrap justify-center gap-4 mx-auto items-center">
+              {pageOrders.map((order, index) => (
+                <AmapCards
+                  className="max-w-[45%] h-fit"
+                  shippedDay={selectedShippingDay}
+                  shipped={order.shippedDays.some(
+                    (shippingDay) => shippingDay.getTime() === selectedShippingDay.getTime(),
+                  )}
+                  id={order.id}
+                  shopName={order.shopName}
+                  name={order.name}
+                  productsList={order.productsList}
+                  userId={order.userId}
+                  key={`${order.id}-${pageIndex}-${index}`}
+                />
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     </>
