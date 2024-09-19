@@ -23,7 +23,7 @@ export async function middleware(req: NextRequest) {
         return redirectToLogin(req);
       }
       if (role === "admin" || role === "readOnlyAdmin") {
-        return NextResponse.redirect(new URL("/admin/orders", req.url));
+        return NextResponse.redirect(new URL("/admin/calendar", req.url));
       }
       if (path.startsWith("/dashboard-user/produits-pro")) {
         if (role !== "pro") {

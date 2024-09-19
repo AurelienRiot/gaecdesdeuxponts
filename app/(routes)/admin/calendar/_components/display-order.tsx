@@ -114,7 +114,7 @@ const InfoItem = ({ label, value }: { label: string; value: string | null | unde
     <div className="mb-4">
       <h3 className="text-sm font-medium text-gray-500">{label}</h3>
       {label === "Notes" ? (
-        <AutosizeTextarea readOnly value={value} />
+        <AutosizeTextarea className="border-0 focus-visible:ring-0" readOnly value={value} />
       ) : (
         <p className="mt-1 text-sm text-gray-900">{value}</p>
       )}
