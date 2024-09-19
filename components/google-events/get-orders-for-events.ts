@@ -140,14 +140,7 @@ const aggregationRules: { match: RegExp; aggregateTo: string }[] = [
   },
 ];
 
-type AggregatedProducts = {
-  name: string;
-  itemId: string;
-  unit: string;
-  quantity: number;
-};
-
-function getAggregateProducts(products: ProductQuantities[]): AggregatedProducts[] {
+function getAggregateProducts(products: ProductQuantities[]): ProductQuantities[] {
   const aggregatedMap: Map<string, { quantity: number; itemId: string; unit: string }> = new Map();
 
   for (const product of products) {
@@ -188,7 +181,7 @@ function getAggregateProducts(products: ProductQuantities[]): AggregatedProducts
   }
 
   // Convert the aggregated map to an array of ProductQuantities
-  const aggregatedProducts: AggregatedProducts[] = [];
+  const aggregatedProducts: ProductQuantities[] = [];
 
   for (const [name, { quantity, itemId, unit }] of aggregatedMap.entries()) {
     aggregatedProducts.push({
@@ -203,7 +196,7 @@ function getAggregateProducts(products: ProductQuantities[]): AggregatedProducts
 }
 
 export function extractProductQuantities(productQuantities: ProductQuantities[]): {
-  aggregateProducts: AggregatedProducts[];
+  aggregateProducts: ProductQuantities[];
   totaleQuantity: { name: string; quantity: number; unit: string }[];
 } {
   const aggregateProducts = getAggregateProducts(productQuantities);

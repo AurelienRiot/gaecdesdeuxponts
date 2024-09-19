@@ -1,5 +1,4 @@
 "use client";
-import type { OrderCardProps } from "@/components/display-orders/order-card";
 import { extractProductQuantities } from "@/components/google-events/get-orders-for-events";
 import { getUnitLabel } from "@/components/product/product-function";
 import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
@@ -7,6 +6,7 @@ import { debounce } from "@/lib/debounce";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
 import type { getGroupedAMAPOrders } from "../_functions/get-amap-orders";
+import type { CalendarOrdersType } from "../_functions/get-orders";
 import TodayFocus from "./date-focus";
 import DisplayAmap from "./display-amap";
 import DisplayOrder from "./display-order";
@@ -14,7 +14,7 @@ import SummarizeProducts from "./summarize-products";
 import UpdatePage from "./update-page";
 
 type EventsPageProps = {
-  orders: OrderCardProps[];
+  orders: CalendarOrdersType[];
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
   dateArray: string[];
 };

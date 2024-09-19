@@ -1,14 +1,16 @@
 import type getAllOrders from "@/components/google-events/get-orders-for-events";
 import { numberFormat2Decimals } from "@/lib/utils";
+import { BsBasketFill } from "react-icons/bs";
 import { LuMilk } from "react-icons/lu";
 import { PiPackageDuotone } from "react-icons/pi";
 import { TbMilk } from "react-icons/tb";
-import { BsBasketFill } from "react-icons/bs";
 
-function DisplayItem({ items }: { items: Awaited<ReturnType<typeof getAllOrders>>["productQuantities"] }) {
+function DisplayItem({
+  items,
+}: { items: Awaited<ReturnType<typeof getAllOrders>>["productQuantities"]["aggregateProducts"] }) {
   return (
     <div className="mt-2 space-y-2">
-      {items.aggregateProducts.map((item) => (
+      {items.map((item) => (
         <div key={item.itemId} className="flex gap-1 items-center justify-start ">
           {/* Icône conditionnelle selon le type de produit */}
           {item.name.includes("bouteille") ? (

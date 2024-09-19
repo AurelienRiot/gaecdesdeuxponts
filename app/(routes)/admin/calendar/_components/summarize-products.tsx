@@ -1,8 +1,8 @@
 import { AnimateHeight } from "@/components/animations/animate-size";
-import type { ProductQuantities, extractProductQuantities } from "@/components/google-events/get-orders-for-events";
+import type { extractProductQuantities } from "@/components/google-events/get-orders-for-events";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn, numberFormat2Decimals } from "@/lib/utils";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import DisplayItem from "./display-item";
 
@@ -32,7 +32,7 @@ function SummarizeProducts({
               {item.unit}
             </p>
           ))}
-          <DisplayItem items={productQuantities} />
+          <DisplayItem items={productQuantities.aggregateProducts} />
         </CardContent>
       </AnimateHeight>
     </Card>

@@ -1,17 +1,18 @@
 import { AnimateHeight } from "@/components/animations/animate-size";
-import type { OrderCardProps } from "@/components/display-orders/order-card";
 import { StatusCell } from "@/components/table-custom-fuction/cell-orders";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getRelativeDate } from "@/lib/date-utils";
-import { cn, currencyFormatter } from "@/lib/utils";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import type { CalendarOrdersType } from "../_functions/get-orders";
+import DisplayItem from "./display-item";
 
 interface DisplayOrderProps {
-  order: OrderCardProps;
+  order: CalendarOrdersType;
   className?: string;
 }
 
@@ -65,16 +66,7 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className }) => {
             </div>
             <div>
               <h4 className="text-xs font-semibold">Produits :</h4>
-              <ul className="text-xs space-y-0.5">
-                {order.productsList.map((product, index) => (
-                  <li key={index} className="flex justify-between">
-                    <span>
-                      {product.name} ({product.unit ? `${product.quantity}${product.unit}` : `x${product.quantity}`})
-                    </span>
-                    <span>{currencyFormatter.format(product.price)}</span>
-                  </li>
-                ))}
-              </ul>
+              <DisplayItem items={order.productsList} />
             </div>
             <div className="flex justify-between items-center">
               <div>
