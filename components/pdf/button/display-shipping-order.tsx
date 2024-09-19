@@ -137,8 +137,8 @@ const ModalDescription = ({
                   key={item.itemId + index}
                   className={
                     item.quantity < 0
-                      ? "text-destructive-foreground bg-destructive hover:bg-destructive/90 rounded-sm"
-                      : "bg-gray-600 hover:bg-gray-400  text-white rounded-sm"
+                      ? " bg-red-300 hover:bg-red-100 text-black rounded-sm"
+                      : "bg-green-300 hover:bg-green-100 rounded-sm text-black"
                   }
                 >
                   <TableCell className="font-medium p-2">{item.name}</TableCell>

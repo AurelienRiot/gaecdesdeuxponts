@@ -22,7 +22,7 @@ import { GiPositionMarker } from "react-icons/gi";
 import { toast } from "sonner";
 import "../../../(public)/ou-nous-trouver/_components/marker.css";
 import getDirection from "../../calendar/_actions/get-direction";
-import getTodaysOrders from "../../calendar/_actions/get-todays-orders";
+import getTodaysOrders from "../_actions/get-todays-orders";
 import AddressModal from "./address-modal";
 import DatePicker from "./date-picker";
 import { destination, directionSchema, origin, type DirectionFormValues, type Point } from "./direction-schema";

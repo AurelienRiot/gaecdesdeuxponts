@@ -218,7 +218,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
                 <FormDatePicker {...field} date={field.value} onSelectDate={field.onChange} title="Date de livraison" />
               )}
             />
-            {user?.role !== "pro" && (
+            {user?.role !== "pro" && user?.role !== "trackOnlyUser" && (
               <FormField
                 control={form.control}
                 name="dateOfPayment"
