@@ -13,7 +13,7 @@ const AuthLink = forwardRef<HTMLAnchorElement, AnchorHTMLAttributes<HTMLAnchorEl
       <Button variant={"outline"} className={cn("text-base", className)}>
         <Link
           {...props}
-          href={!session.data ? "/login" : session.data.user.role === "admin" ? "/admin/orders" : "/dashboard-user"}
+          href={!session.data ? "/login" : session.data.user.role === "admin" ? "/admin/calendar" : "/dashboard-user"}
           ref={ref}
           prefetch={false}
         >
