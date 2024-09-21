@@ -44,12 +44,11 @@ const DateModal = React.forwardRef<HTMLButtonElement, DateModalProps>(
         </SheetTrigger>
         <SheetContent
           side={"bottom"}
-          className={cn("pb-16 max-h-[75dvh] gap-6 flex flex-col justify-between ", className)}
+          className={cn("pb-16 max-h-[90dvh] gap-14 flex flex-col justify-between ", className)}
         >
           <SheetHeader className="mx-auto w-full max-w-sm ">
             <SheetTitle className="text-center">{"Selectionner une date"}</SheetTitle>
           </SheetHeader>
-          <QuickButtons onValueChange={onValueChange} />
           <Calendar
             mode="single"
             className="p-3 mx-auto w-full max-w-[275px] scale-125 "
@@ -63,8 +62,12 @@ const DateModal = React.forwardRef<HTMLButtonElement, DateModalProps>(
             }}
             startMonth={new Date(new Date().getFullYear(), new Date().getMonth())}
             endMonth={new Date(new Date().getFullYear() + 2, 11)}
+            classNames={{
+              today: "bg-green-300 ",
+            }}
             {...props}
           />
+          <QuickButtons onValueChange={onValueChange} />
         </SheetContent>
       </Sheet>
     );
@@ -77,7 +80,7 @@ export default DateModal;
 
 function QuickButtons({ onValueChange }: { onValueChange?: (value?: Date) => void }) {
   return (
-    <div className="flex justify-center gap-4 mb-8">
+    <div className="flex justify-center gap-4">
       <Button
         variant="secondary"
         className="text-xs sm:text-sm"

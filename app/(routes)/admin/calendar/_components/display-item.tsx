@@ -1,4 +1,5 @@
 import type getAllOrders from "@/components/google-events/get-orders-for-events";
+import { nanoid } from "@/lib/id";
 import { cn, numberFormat2Decimals } from "@/lib/utils";
 import { BsBasketFill } from "react-icons/bs";
 import { LuMilk } from "react-icons/lu";
@@ -11,7 +12,7 @@ function DisplayItem({
   return (
     <div className="mt-2 space-y-2">
       {items.map((item) => (
-        <div key={item.itemId} className={"flex gap-1 items-center justify-start "}>
+        <div key={nanoid()} className={"flex gap-1 items-center justify-start "}>
           {/* Icône conditionnelle selon le type de produit */}
           {item.name.includes("bouteille") ? (
             <LuMilk className="h-5 w-5 text-blue-500" />

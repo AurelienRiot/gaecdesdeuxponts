@@ -12,6 +12,7 @@ import { useFormContext } from "react-hook-form";
 import { GrPowerReset } from "react-icons/gr";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-schema";
+import SelectSheetWithTabs, { sortProductByTabType } from "@/components/select-sheet-with-tabs";
 
 const negativeQuantityStyle =
   "bg-destructive hover:bg-destructive/90 hover:text-destructive-foreground text-destructive-foreground";
@@ -212,6 +213,16 @@ const SelectProductName = ({
     form.setValue(`orderItems.${productIndex}.description`, product.description);
     form.setValue(`orderItems.${productIndex}.price`, product.price);
   }
+  const groupedProducts = sortProductByTabType(
+    products.filter(
+      (product) =>
+        !user ||
+        user.role === "trackOnlyUser" ||
+        product.isArchived ||
+        product.product.isArchived ||
+        (user.role === "pro" ? product.product.isPro : !product.product.isPro),
+    ),
+  );
   return (
     <FormField
       control={form.control}
@@ -222,7 +233,7 @@ const SelectProductName = ({
             <span className="">{`Nom du produit ${productIndex + 1}`}</span>
           </FormLabel>
           <FormControl>
-            <SelectSheet
+            <SelectSheetWithTabs
               triggerClassName="w-full"
               title="Selectionner le produit"
               trigger={
@@ -248,29 +259,11 @@ const SelectProductName = ({
                 )
               }
               selectedValue={selectedProduct?.id}
-              values={products
-                .filter(
-                  (product) =>
-                    !user ||
-                    user.role === "trackOnlyUser" ||
-                    product.isArchived ||
-                    product.product.isArchived ||
-                    (user.role === "pro" ? product.product.isPro : !product.product.isPro),
-                )
-                .map((product) => ({
-                  label: (
-                    <>
-                      {" "}
-                      {product.product.isPro && (
-                        <Badge variant="orange" className="mr-2">
-                          Pro
-                        </Badge>
-                      )}
-                      {product.name}
-                    </>
-                  ),
-                  value: { key: product.id },
-                }))}
+              tabsValues={groupedProducts}
+              tabs={[
+                { value: "favories", label: "Favoris" },
+                { value: "others", label: "Autres" },
+              ]}
               onSelected={(value) => {
                 onValueChange(value.key);
               }}

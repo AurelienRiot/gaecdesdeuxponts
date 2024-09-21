@@ -5,6 +5,7 @@ import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { schema, type AMAPFormValues } from "../_components/amap-schema";
 import { revalidateTag } from "next/cache";
+import createOrdersEvent from "@/components/google-events/create-orders-event";
 
 async function createAMAP(data: AMAPFormValues) {
   return await safeServerAction({
@@ -51,12 +52,10 @@ async function createAMAP(data: AMAPFormValues) {
         },
       });
 
-      // if (data.dateOfShipping) {
-      //   const event = await createOrdersEvent({ date: data.dateOfShipping });
-      //   if (!event.success) {
-      //     console.log(event.message);
-      //   }
-      // }
+      const event = await createOrdersEvent({ date: startDate });
+      if (!event.success) {
+        console.log(event.message);
+      }
       revalidateTag("amap-orders");
       return {
         success: true,

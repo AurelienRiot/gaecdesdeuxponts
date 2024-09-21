@@ -7,11 +7,11 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
 import {
   DayPicker,
-  type DropdownProps,
   labelNext,
   labelPrevious,
   useDayPicker,
   type DayPickerProps,
+  type DropdownProps,
 } from "react-day-picker";
 import { ScrollArea } from "./scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
@@ -44,7 +44,7 @@ function Calendar({
         from: props.startMonth ? props.startMonth.getFullYear() : currentYear - Math.floor(yearRange / 2 - 1),
         to: props.endMonth ? props.endMonth.getFullYear() : currentYear + Math.ceil(yearRange / 2),
       };
-    }, [yearRange]),
+    }, [yearRange, props.endMonth, props.startMonth]),
   );
 
   const { onNextClick, onPrevClick, startMonth, endMonth } = props;

@@ -8,6 +8,9 @@ import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-schema";
+import type { Role, User } from "@prisma/client";
+import { useCallback } from "react";
+import SelectSheetWithTabs, { sortUserByRole } from "@/components/select-sheet-with-tabs";
 
 const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
   const form = useFormContext<OrderFormValues>();
@@ -34,6 +37,8 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
     form.setValue("userId", value);
   }
 
+  const sortedUsers = useCallback(() => sortUserByRole(users), [users]);
+
   return (
     <FormField
       control={form.control}
@@ -41,7 +46,7 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
       render={({ field }) => (
         <FormItem className=" flex flex-col gap-2 ">
           <FormLabel id="user-input">Client</FormLabel>
-          <SelectSheet
+          <SelectSheetWithTabs
             triggerClassName="w-full"
             title="Selectionner le client"
             trigger={
@@ -54,10 +59,12 @@ const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
               )
             }
             selectedValue={userId}
-            values={users.map((user) => ({
-              label: <NameWithImage name={getUserName(user)} image={user.image} />,
-              value: { key: user.id },
-            }))}
+            tabs={[
+              { value: "pro", label: "Professionnel" },
+              { value: "user", label: "Particulier" },
+              { value: "trackOnlyUser", label: "Suivie uniquement" },
+            ]}
+            tabsValues={sortedUsers()}
             onSelected={(value) => {
               onValueChange(value.key);
             }}

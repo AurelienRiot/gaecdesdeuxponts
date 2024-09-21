@@ -3,23 +3,7 @@ import { cn } from "@/lib/utils";
 import * as React from "react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
-
-type SelectSheetContextType = {
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-const SelectSheetContext = React.createContext<SelectSheetContextType | undefined>(undefined);
-
-function useSelectSheetContext() {
-  const context = React.useContext(SelectSheetContext);
-
-  if (context === undefined) {
-    throw new Error("useSelectSheetContext must be used within a SelectSheetContext.Provider");
-  }
-
-  return context;
-}
+import { ScrollArea } from "./ui/scroll-area";
 
 type ValueType<T extends { key: string }> = { label: React.ReactNode; value: T; highlight?: boolean };
 
@@ -104,24 +88,27 @@ function SelectSheetContent<T extends { key: string }>({
 
   return (
     <div className="relative">
-      <div ref={scrollRef} className="max-h-[50dvh] overflow-y-auto  flex flex-col gap-2 relative py-8">
-        {values.map((value, index) => (
-          <Button
-            style={{ touchAction: "pan-y" }}
-            ref={(el) => {
-              itemRefs.current[index] = el;
-            }}
-            variant={value.value.key === selectedValue ? "green" : value.highlight ? "secondary" : "outline"}
-            key={value.value.key}
-            onClick={() => {
-              setIsOpen(false);
-              onSelected(value.value);
-            }}
-          >
-            {value.label}
-          </Button>
-        ))}
-      </div>
+      <ScrollArea ref={scrollRef} className="max-h-[50dvh] overflow-y-auto relative py-8">
+        {" "}
+        <div className=" flex flex-col gap-2 ">
+          {values.map((value, index) => (
+            <Button
+              style={{ touchAction: "pan-y" }}
+              ref={(el) => {
+                itemRefs.current[index] = el;
+              }}
+              variant={value.value.key === selectedValue ? "green" : value.highlight ? "secondary" : "outline"}
+              key={value.value.key}
+              onClick={() => {
+                setIsOpen(false);
+                onSelected(value.value);
+              }}
+            >
+              {value.label}
+            </Button>
+          ))}
+        </div>
+      </ScrollArea>
       <div className="inset-0 absolute from-background to-background bg-[linear-gradient(to_bottom,_var(--tw-gradient-from)_0%,_transparent_10%,_transparent_90%,_var(--tw-gradient-to)_100%)] pointer-events-none select-none" />
     </div>
   );
