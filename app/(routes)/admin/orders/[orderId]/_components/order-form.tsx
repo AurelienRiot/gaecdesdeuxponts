@@ -60,7 +60,7 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, u
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(orderSchema),
     defaultValues: {
-      id: initialData?.id || createId("order"),
+      id: initialData?.id || createId("order", initialData?.dateOfShipping),
       totalPrice: initialData?.totalPrice,
       dateOfPayment: initialData?.dateOfPayment ? new Date(initialData.dateOfPayment) : undefined,
       dateOfShipping: initialData?.dateOfShipping
