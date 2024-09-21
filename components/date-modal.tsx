@@ -7,6 +7,7 @@ import { Icons } from "./icons";
 import { Button } from "./ui/button";
 import { Calendar, type CalendarProps } from "./ui/calendar";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
+import { addDays } from "date-fns";
 
 type DateModalProps = Omit<CalendarProps, "mode"> & {
   value?: Date;
@@ -43,11 +44,12 @@ const DateModal = React.forwardRef<HTMLButtonElement, DateModalProps>(
         </SheetTrigger>
         <SheetContent
           side={"bottom"}
-          className={cn("pb-16 max-h-[75dvh] gap-10 flex flex-col justify-between ", className)}
+          className={cn("pb-16 max-h-[75dvh] gap-6 flex flex-col justify-between ", className)}
         >
           <SheetHeader className="mx-auto w-full max-w-sm ">
             <SheetTitle className="text-center">{"Selectionner une date"}</SheetTitle>
           </SheetHeader>
+          <QuickButtons onValueChange={onValueChange} />
           <Calendar
             mode="single"
             className="p-3 mx-auto w-full max-w-[275px] scale-125 "
@@ -62,18 +64,6 @@ const DateModal = React.forwardRef<HTMLButtonElement, DateModalProps>(
             startMonth={new Date(new Date().getFullYear(), new Date().getMonth())}
             endMonth={new Date(new Date().getFullYear() + 2, 11)}
             {...props}
-            // modifiers={{
-            //   full: fullDays,
-            //   partiallyFull: partiallyFullDays,
-            //   free: freeDays,
-            // }}
-            // modifiersStyles={{
-            //   full: fullDaysStyle,
-            //   partiallyFull: partiallyFullDaysStyle,
-            //   free: freeDaysStyle,
-            // }}
-            // onDayClick={handleDayClick}
-            // footer={GetFooterMessage(isDayAvailable)}
           />
         </SheetContent>
       </Sheet>
@@ -84,3 +74,39 @@ const DateModal = React.forwardRef<HTMLButtonElement, DateModalProps>(
 DateModal.displayName = "DateModal";
 
 export default DateModal;
+
+function QuickButtons({ onValueChange }: { onValueChange?: (value?: Date) => void }) {
+  return (
+    <div className="flex justify-center gap-4 mb-8">
+      <Button
+        variant="secondary"
+        className="text-xs sm:text-sm"
+        onClick={() => onValueChange?.(addDays(new Date(), 1))} // Tomorrow
+      >
+        Demain
+      </Button>
+      <Button
+        variant="secondary"
+        className="text-xs sm:text-sm"
+        onClick={() => {
+          const nextThursday = new Date();
+          nextThursday.setDate(nextThursday.getDate() + ((2 - nextThursday.getDay() + 7) % 7 || 7));
+          onValueChange?.(nextThursday);
+        }}
+      >
+        Mardi prochain
+      </Button>
+      <Button
+        variant="secondary"
+        className="text-xs sm:text-sm"
+        onClick={() => {
+          const nextFriday = new Date();
+          nextFriday.setDate(nextFriday.getDate() + ((5 - nextFriday.getDay() + 7) % 7 || 7));
+          onValueChange?.(nextFriday);
+        }}
+      >
+        Vendredi prochain
+      </Button>
+    </div>
+  );
+}

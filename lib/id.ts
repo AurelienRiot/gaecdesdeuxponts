@@ -6,6 +6,7 @@ const reducedAlphabet = customAlphabet("abcdefghijklmnopqrstuv0123456789", 17);
 export const IdType = ["category", "product", "user", "shop", "mainProduct", "order", "amap", "command"] as const;
 
 export function createId(type: (typeof IdType)[number], date?: Date | null) {
+  const newDate = date ? new Date(date) : new Date();
   switch (type) {
     case "category":
       return `CT_${nanoid(7)}`;
@@ -18,7 +19,7 @@ export function createId(type: (typeof IdType)[number], date?: Date | null) {
     case "mainProduct":
       return `MP_${nanoid(7)}`;
     case "order":
-      return `CM_${(date || new Date()).getDate()}-${(date || new Date()).getMonth() + 1}-${(date || new Date()).getFullYear() % 100}_${nanoid(5)}`;
+      return `CM_${newDate.getDate()}-${newDate.getMonth() + 1}-${newDate.getFullYear() % 100}_${nanoid(5)}`;
     case "amap":
       return `AM_${nanoid(7)}`;
     case "command":

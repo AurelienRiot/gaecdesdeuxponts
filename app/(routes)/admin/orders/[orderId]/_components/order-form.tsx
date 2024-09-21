@@ -37,9 +37,10 @@ export type ProductFormProps = {
   shops: Shop[];
   users: UserWithAddress[];
   referer: string;
+  className?: string;
 };
 
-export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, users, shops, referer }) => {
+export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, users, shops, referer, className }) => {
   const router = useRouter();
   const prevDateOfShipping = initialData?.dateOfShipping ? new Date(initialData.dateOfShipping) : undefined;
   const { serverAction: createOrderAction } = useServerAction(createOrder);

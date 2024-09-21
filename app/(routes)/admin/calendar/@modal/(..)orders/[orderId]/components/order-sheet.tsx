@@ -19,7 +19,7 @@ function OrderSheet({ orderId, children }: { orderId?: string; children: React.R
         className="overflow-y-scroll w-[90%] sm:max-w-sm md:max-w-md "
       >
         {" "}
-        <div className="space-y-6 w-full">
+        <div className="space-y-6 w-full pb-6">
           <SheetHeader className="sr-only">
             <SheetTitle>
               <span>Commande n°{orderId}</span>

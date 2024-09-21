@@ -18,6 +18,7 @@ export const getAllOrders = async ({ startDate, endDate }: { startDate: Date; en
       select: {
         id: true,
         shippingEmail: true,
+        shop: { select: { address: true } },
         orderItems: { select: { itemId: true, name: true, quantity: true, unit: true } },
         customer: { select: { shippingAddress: true } },
         user: { select: { company: true, email: true, image: true, name: true, id: true } },
@@ -80,7 +81,7 @@ export const getAllOrders = async ({ startDate, endDate }: { startDate: Date; en
   const formattedOrders = orders.map((order) => ({
     id: order.id,
     customerId: order.user.id,
-    shippingAddress: order.customer?.shippingAddress,
+    shippingAddress: order.shop?.address || order.customer?.shippingAddress,
     shippingEmail: order.shippingEmail,
     name: order.user?.name,
     company: order.user?.company,
