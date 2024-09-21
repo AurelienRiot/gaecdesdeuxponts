@@ -87,7 +87,10 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
   const header = `<h2><a href="${process.env.NEXT_PUBLIC_URL}/admin/calendar/${getLocalIsoString(startDate)}">Voir les commandes sur le site</a></h2> <br /><h3><font color='green'>Résumer des produits </font></h3>`;
   const totaleQuantity =
     productQuantities.totaleQuantity
-      .map((item) => `<strong>${item.name}</strong> : ${numberFormat2Decimals(item.quantity)}${item.unit || ""}`)
+      .map(
+        (item) =>
+          `<font color='purple'><strong>${item.name}</strong> : ${numberFormat2Decimals(item.quantity)}${item.unit || ""}</font>`,
+      )
       .join("<br />") + "<br />";
 
   const productDescriptions =
@@ -118,5 +121,5 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
       ? ""
       : `<strong><a  href="${googleDirectioUrl}/${origin.label}/${uniqueShippingAddresses.join("/")}/${destination.label}">Voir le parcours</a></strong> <br /><br />`;
 
-  return header + totaleQuantity + productDescriptions + amapOrdersDescription + orderDescriptions;
+  return header + totaleQuantity + "<br />" + productDescriptions + amapOrdersDescription + orderDescriptions;
 }

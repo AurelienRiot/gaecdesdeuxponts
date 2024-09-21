@@ -107,7 +107,7 @@ function NextShipping({ formattedOrders, shippingDay }: { formattedOrders: AMAPC
   setHours(today, 23);
   const nextDay = (() => {
     for (const date of arrayShippingDays) {
-      if (date.getTime() <= today.getTime()) {
+      if (date.getTime() <= addDays(today, 4).getTime()) {
         return date;
       }
     }

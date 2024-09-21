@@ -123,7 +123,7 @@ type CreateOrderType = {
 async function createOrder({ totalPrice, productsWithQuantity, shopId, user, datePickUp }: CreateOrderType) {
   const order = await prismadb.order.create({
     data: {
-      id: createId("order"),
+      id: createId("order", datePickUp),
       totalPrice,
       orderItems: {
         create: productsWithQuantity.map((product) => ({

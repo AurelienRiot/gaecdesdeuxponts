@@ -28,7 +28,6 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TotalPaid from "./total-paid";
 import TotalPrice from "./total-price";
-import { DisplayAMAPOrder } from "@/components/pdf/button/display-amap-order";
 
 const START = new Date(1725314400000);
 const END = new Date(1734390000000);
@@ -93,7 +92,7 @@ export const AMAPForm: React.FC<AMAPFormProps> = ({ initialData, users, shops, p
 
   const onSubmit = async (data: AMAPFormValues) => {
     function onSuccess() {
-      router.push(`/admin/amap/${data.id}#button-container`);
+      router.push(`/admin/amap`);
       router.refresh();
     }
     initialData ? await updateAMAPAction({ data, onSuccess }) : await createAMAPAction({ data, onSuccess });

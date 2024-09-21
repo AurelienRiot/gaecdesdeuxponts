@@ -16,6 +16,7 @@ import Image from "next/image";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 type EventsPageProps = {
   orders: CalendarOrdersType[];
@@ -249,9 +250,30 @@ const UserInfo = ({ user }: { user: CalendarOrdersType["user"] }) => (
       </div>
     </div>
     <div className="max-h-[40dvh] overflow-y-auto px-4">
-      <InfoItem label="Entreprise" value={user.company} />
-      <InfoItem label="Adresse" value={user.address} />
-      <InfoItem label="Notes" value={user.notes} />
+      {user.company ? (
+        <div className="mb-4">
+          <h3 className="text-sm font-medium text-gray-500">Entreprise</h3>
+
+          <p className="mt-1 text-sm text-gray-900">{user.company}</p>
+        </div>
+      ) : null}
+      {user.address ? (
+        <div className="mb-4">
+          <h3 className="text-sm font-medium text-gray-500">Adresse</h3>
+          <Button asChild variant={"link"} className="mt-1 text-sm p-0 text-blue-700">
+            <Link href={`https://www.google.com/maps/search/?api=1&query=${user.address}`} target="_blank">
+              {user.address}
+            </Link>
+          </Button>
+        </div>
+      ) : null}
+      {user.notes ? (
+        <div className="mb-4">
+          <h3 className="text-sm font-medium text-gray-500">Notes</h3>
+
+          <AutosizeTextarea className="border-0 focus-visible:ring-0" readOnly value={user.notes} />
+        </div>
+      ) : null}
     </div>
   </div>
 );
