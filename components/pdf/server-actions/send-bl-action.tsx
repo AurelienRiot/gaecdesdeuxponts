@@ -57,6 +57,13 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
         };
       }
 
+      if (order.customer.email.includes("acompleter")) {
+        return {
+          success: false,
+          message: "Le client n'a pas d'email, revalider la commande aprés avoir changé son email",
+        };
+      }
+
       const pdfBuffer = await renderToBuffer(<ShippingOrder pdfData={createPDFData(order)} />);
 
       await transporter.sendMail({

@@ -57,6 +57,13 @@ export async function sendFacture(data: z.infer<typeof factureSchema>) {
         };
       }
 
+      if (order.customer.email.includes("acompleter")) {
+        return {
+          success: false,
+          message: "Le client n'a pas d'email, revalider la commande aprés avoir changé son email",
+        };
+      }
+
       const pdfBuffer = await renderToBuffer(
         <Invoice dataInvoice={createPDFData(order)} isPaid={!!order.dateOfPayment} />,
       );

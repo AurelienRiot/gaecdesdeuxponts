@@ -55,10 +55,17 @@ export async function getAndSendMonthlyInvoice(orderIds: string[]): Promise<Retu
 
   const pdfBuffer = await renderToBuffer(<MonthlyInvoice data={createMonthlyPDFData(orders)} isPaid={false} />);
 
+  if (!orders[0].customer || orders[0].customer.email.includes("acompleter")) {
+    return {
+      success: false,
+      message: "Le client n'a pas d'email, revalider la commande aprés avoir changé son email",
+    };
+  }
+
   try {
     await transporter.sendMail({
       from: "laiteriedupontrobert@gmail.com",
-      to: orders[0].customer?.email,
+      to: orders[0].customer.email,
       // to: "pub.demystify390@passmail.net",
       subject: `Facture Mensuelle ${date}  - Laiterie du Pont Robert`,
       html: await render(
