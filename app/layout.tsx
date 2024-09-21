@@ -24,13 +24,14 @@ export const metadata: Metadata = {
     "Ferme Massérac",
     "Lait bio Loire-Atlantique",
     "Lait cru Loire-Atlantique",
+    "Du lait au beurre, le goût du meilleur !",
   ],
   title: {
     default: "Laiterie du Pont Robert",
     template: `%s | Laiterie du Pont Robert`,
   },
   description:
-    "Venez chercher votre lait cru, frais et bio directement dans notre ferme à Massérac, aux heures de la traite 8h30-9h30/18h-19h du lundi au samedi",
+    "Du lait au beurre, le goût du meilleur ! Venez chercher votre lait cru, frais et bio directement dans notre ferme à Massérac, aux heures de la traite 8h30-9h30/18h-19h du lundi au samedi",
   openGraph: {
     images: [
       "https://www.laiteriedupontrobert.fr/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fferme.77874bf1.webp&w=3840&q=75",
