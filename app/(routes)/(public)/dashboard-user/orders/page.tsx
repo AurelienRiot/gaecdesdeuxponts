@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { useUserContext } from "@/context/user-context";
 import useServerAction from "@/hooks/use-server-action";
-import { getMonthName } from "@/lib/date-utils";
+import { getMonthNumber } from "@/lib/date-utils";
 import { currencyFormatter } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
@@ -61,7 +61,7 @@ const PageOrderTable = () => {
     }
 
     sendCheckoutEmail();
-  }, []);
+  }, [searchParams.get, serverAction, user?.orders]);
 
   const yearSet = new Set(formattedOrders.map((order) => new Date(order.createdAt).getFullYear()));
   const yearArray = Array.from(yearSet);
@@ -88,7 +88,7 @@ const FilterOrders = ({ formattedOrders, yearArray }: { formattedOrders: OrderCo
   return (
     <div className="w-full space-y-4 p-6">
       <Heading
-        title={`Commandes de ${getMonthName(search.month)} ${search.year} (${filteredOrders.length})`}
+        title={`Commandes de ${getMonthNumber(search.month)} ${search.year} (${filteredOrders.length})`}
         description="Résumé des commandes"
       />
       <Separator />
@@ -127,7 +127,7 @@ function SearchOrders({
           <SelectContent>
             {Array.from({ length: 12 }).map((_, index) => (
               <SelectItem key={index} value={index.toString()} className="capitalize">
-                {getMonthName(index)}
+                {getMonthNumber(index)}
               </SelectItem>
             ))}
           </SelectContent>

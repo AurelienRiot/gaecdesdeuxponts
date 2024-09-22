@@ -28,8 +28,9 @@ async function getTodaysOrders(data: z.infer<typeof schema>) {
           shippingEmail: null,
           OR: [{ shopId: null }, { shopId: "" }],
         },
+
         select: {
-          customer: { select: { shippingAddress: true } },
+          user: { select: { address: true } },
         },
       });
       if (orders.length === 0) {

@@ -1,5 +1,3 @@
-"use client";
-
 import { Button, LoadingButton } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import useIsComponentMounted from "@/hooks/use-mounted";

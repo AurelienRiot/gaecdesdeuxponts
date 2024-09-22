@@ -47,7 +47,7 @@ const UploadImage = forwardRef<HTMLDivElement, UploadImageProps>(
         await listFilesAction({ data: {}, onSuccess });
       };
       fetchFiles();
-    }, []);
+    }, [listFilesAction]);
 
     return (
       <div ref={ref} className="justify-left flex flex-col gap-4 p-4">
@@ -191,7 +191,10 @@ function InputImage({ selectedFiles, setSelectedFiles, multipleImages, setAllFil
         e.preventDefault();
       }}
     >
-      <label className="relative flex w-fit cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-6 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700">
+      <label
+        htmlFor="file-input"
+        className="relative flex w-fit cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-6 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
+      >
         <div
           data-state={loading}
           className="absolute right-1/2 top-1/2 hidden -translate-y-1/2 translate-x-1/2 data-[state=true]:block"
@@ -209,6 +212,7 @@ function InputImage({ selectedFiles, setSelectedFiles, multipleImages, setAllFil
           </p>
         </div>
         <Input
+          id="file-input"
           accept={FILES_TYPES.join(", ")}
           type="file"
           className="hidden"

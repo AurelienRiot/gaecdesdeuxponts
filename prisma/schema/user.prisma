@@ -43,6 +43,7 @@ model User {
   role             Role @default(user)
   orders           Order[]
   amapOrders       AMAPOrder[]
+  invoices         Invoice[]
   accounts         Account[]
   sessions         Session[]
   address          Address? 
@@ -80,6 +81,8 @@ model Address {
   state      String?
   postalCode String?
   country    String?
+  latitude   Float?
+  longitude  Float?
   userId     String  @unique  
   user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now()) 
@@ -99,6 +102,8 @@ model BillingAddress {
   state      String
   postalCode String
   country    String
+  latitude   Float?
+  longitude  Float?
   userId     String   @unique
   user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now()) 

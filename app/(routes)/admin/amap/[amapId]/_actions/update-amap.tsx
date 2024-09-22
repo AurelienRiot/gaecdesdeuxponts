@@ -59,10 +59,20 @@ async function updateAMAP(data: AMAPFormValues) {
           },
         },
       });
-
-      const event = await createOrdersEvent({ date: startDate });
-      if (!event.success) {
-        console.log(event.message);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const nextDayShippingDay = (() => {
+        for (const date of shippingDays.sort((a, b) => b.getTime() - a.getTime())) {
+          if (date.getTime() <= today.getTime()) {
+            return date;
+          }
+        }
+      })();
+      if (nextDayShippingDay) {
+        const event = await createOrdersEvent({ date: nextDayShippingDay });
+        if (!event.success) {
+          console.log(event.message);
+        }
       }
       revalidateTag("amap-orders");
       return {

@@ -35,8 +35,17 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     function onSuccess() {
       router.refresh();
     }
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const nextShippingDay = (() => {
+      for (const date of data.shippingDays) {
+        if (date.getTime() <= today.getTime()) {
+          return date;
+        }
+      }
+    })();
     await serverAction({
-      data: { id: data.id, shippingDays: data.shippingDays },
+      data: { id: data.id, nextShippingDay },
       onSuccess,
       onFinally: () => setOpen(false),
     });

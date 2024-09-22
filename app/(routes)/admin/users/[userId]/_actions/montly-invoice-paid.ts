@@ -19,18 +19,18 @@ async function montlyInvoicePaid(data: z.infer<typeof schema>) {
     getUser: checkAdmin,
     serverAction: async (data) => {
       const { date, orderIds, isPaid } = data;
-      await prismadb.order.updateMany({
-        where: {
-          id: {
-            in: orderIds,
-          },
-        },
-        data: {
-          dateOfPayment: isPaid ? date : null,
-        },
-      });
+      // await prismadb.order.updateMany({
+      //   where: {
+      //     id: {
+      //       in: orderIds,
+      //     },
+      //   },
+      //   data: {
+      //     dateOfPayment: isPaid ? date : null,
+      //   },
+      // });
 
-      revalidateTag("orders");
+      // revalidateTag("orders");
 
       return {
         success: true,

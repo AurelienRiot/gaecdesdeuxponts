@@ -1,14 +1,24 @@
 import { dateFormatter, dateMonthYear, getDaysBetweenDates } from "@/lib/date-utils";
 import { addressFormatter, formatFrenchPhoneNumber } from "@/lib/utils";
-import type { AMAPOrderWithItems, FullOrder, UserWithAddress } from "@/types";
-import type { Customer } from "@prisma/client";
+import type { AMAPOrderWithItems, FullOrder, FullOrderWithInvoicePayment, UserWithAddress } from "@/types";
 
-export const createCustomer = (user: UserWithAddress) => {
+type CustomerForOrder = {
+  name: string;
+  company?: string | null;
+  customerId: string;
+  shippingAddress: string;
+  facturationAddress: string;
+  phone?: string | null;
+  email: string;
+};
+
+export const createCustomer = (user: UserWithAddress): CustomerForOrder => {
   const shippingAddress = user.address ? addressFormatter(user.address, true) : "";
   const facturationAddress = user.billingAddress ? addressFormatter(user.billingAddress, true) : shippingAddress;
   return {
+    name: user.name || "",
     customerId: user.id,
-    name: user.company ? `${user.name} - ${user.company}` : user.name || "",
+    company: user.company,
     email: user.email || "",
     phone: formatFrenchPhoneNumber(user.phone),
     shippingAddress,
@@ -16,11 +26,13 @@ export const createCustomer = (user: UserWithAddress) => {
   };
 };
 
-export const createDataOrder = (order: FullOrder): DataOrder => {
+export const createDataOrder = (order: FullOrderWithInvoicePayment): DataOrder => {
   return {
     id: order.id,
     dateOfEdition: dateFormatter(order.dateOfEdition || new Date()),
-    dateOfPayment: order.dateOfPayment ? dateFormatter(order.dateOfPayment) : null,
+    dateOfPayment: order.invoiceOrder[0]?.invoice.dateOfPayment
+      ? dateFormatter(order.invoiceOrder[0].invoice.dateOfPayment)
+      : null,
     dateOfShipping: order.dateOfShipping ? dateFormatter(order.dateOfShipping) : null,
     items: order.orderItems.map((item) => ({
       id: item.itemId,
@@ -47,25 +59,13 @@ export type DataOrder = {
 };
 
 export type PDFData = {
-  customer: Customer;
+  customer: CustomerForOrder;
   order: DataOrder;
 };
 
-export const createPDFData = (order: FullOrder): PDFData => {
-  if (!order.customer) {
-    order.customer = {
-      id: "clvurl15d000cn7yjhkdo7wo2",
-      orderId: "7-6-2024-0sUttHF",
-      customerId: "clvurl15d000cn7yjhkdo7wo2",
-      name: "Anonyme",
-      email: "",
-      phone: "",
-      shippingAddress: "",
-      facturationAddress: "",
-    };
-  }
+export const createPDFData = (order: FullOrderWithInvoicePayment): PDFData => {
   return {
-    customer: order.customer,
+    customer: createCustomer(order.user),
     order: createDataOrder(order),
   };
 };
@@ -81,20 +81,17 @@ export type monthlyOrdersType = {
 
 export type MonthlyPDFDataType = {
   date: string;
-  customer: Customer;
+  customer: CustomerForOrder;
   orders: DataOrder[];
 };
 
-export const createMonthlyPDFData = (orders: FullOrder[]): MonthlyPDFDataType => {
+export const createMonthlyPDFData = (orders: FullOrderWithInvoicePayment[]): MonthlyPDFDataType => {
   if (!orders[0].dateOfShipping) {
     throw new Error("Date invalide");
   }
   const date = dateMonthYear(orders.map((order) => order.dateOfShipping));
 
-  const customer = orders[orders.length - 1].customer;
-  if (!customer) {
-    throw new Error("Customer not found");
-  }
+  const customer = createCustomer(orders[orders.length - 1].user);
 
   const monthlyPDFData = {
     date,
@@ -106,14 +103,13 @@ export const createMonthlyPDFData = (orders: FullOrder[]): MonthlyPDFDataType =>
 
 export const pdfData: PDFData = {
   customer: {
-    id: "CM_5-9-24_ZNIPY",
-    name: "Pub Demystify - des",
+    name: "Pub Demystify",
+    company: "Gaec des deux ponts",
     customerId: "CS_2R374KQ",
     shippingAddress: "Avenue deis PORTISOL, 83600, Fréjus, FR",
     facturationAddress: "venelle Koad ar Runig, 29470, Plougastel-Daoulas, FR",
     phone: "+33356452546",
     email: "pub.demystify390@passmail.net",
-    orderId: "CM_5-9-24_ZNIPY",
   },
   order: {
     id: "CM_5-9-24_ZNIPY",
@@ -153,14 +149,13 @@ export const pdfData: PDFData = {
 export const monthlyPDFData: MonthlyPDFDataType = {
   date: "juin 2024",
   customer: {
-    id: "clx5ubreg000tt35lvpqjzlqs",
-    name: "Pub Demystify - des",
+    name: "Pub Demystify",
+    company: "Gaec des deux ponts",
     customerId: "clvurl15d000cn7yjhkdo7wo2",
     shippingAddress: "Avenue deis PORTISOL, 83600, Fréjus, FR",
     facturationAddress: "venelle Koad ar Runig, 29470, Plougastel-Daoulas, FR",
     phone: "+33356452546",
     email: "pub.demystify390@passmail.net",
-    orderId: "7-6-2024-0sUttHF",
   },
   orders: [
     // {
@@ -236,13 +231,13 @@ export const createDataAMAPOrder = (order: AMAPOrderWithItems): AMAPType["contra
 
 export const createAMAPData = (order: AMAPOrderWithItems, user: UserWithAddress): AMAPType => {
   return {
-    customer: { ...createCustomer(user), orderId: order.id, id: user.id },
+    customer: createCustomer(user),
     contrat: createDataAMAPOrder(order),
   };
 };
 
 export type AMAPType = {
-  customer: Customer;
+  customer: CustomerForOrder;
   contrat: {
     id: string;
     dateOfEdition: Date;
@@ -263,14 +258,12 @@ export type AMAPType = {
 
 export const AMAPData: AMAPType = {
   customer: {
-    id: "clx5ubreg000tt35lvpqjzlqs",
     name: "Nom :",
     customerId: "CS_JTF0B99",
     shippingAddress: "Adresse :",
     facturationAddress: "Adresse :",
     phone: "Tél :",
     email: "email :",
-    orderId: "CA-0sUttHF",
   },
   contrat: {
     id: "CA-0sUttHF",

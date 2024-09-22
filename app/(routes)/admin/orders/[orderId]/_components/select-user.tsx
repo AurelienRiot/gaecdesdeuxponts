@@ -1,16 +1,14 @@
-import SelectSheet from "@/components/select-sheet";
+import SelectSheetWithTabs, { sortUserByRole } from "@/components/select-sheet-with-tabs";
 import { getUserName } from "@/components/table-custom-fuction";
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import type { UserWithAddress } from "@/types";
 import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-schema";
-import type { Role, User } from "@prisma/client";
-import { useCallback } from "react";
-import SelectSheetWithTabs, { sortUserByRole } from "@/components/select-sheet-with-tabs";
 
 const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
   const form = useFormContext<OrderFormValues>();

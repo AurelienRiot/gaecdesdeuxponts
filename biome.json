@@ -8,7 +8,6 @@
   "organizeImports": {
     "enabled": false
   },
-
   "linter": {
     "enabled": true,
     "rules": {
@@ -19,7 +18,8 @@
       },
       "a11y": {
         "noSvgWithoutTitle": "off",
-        "noAriaHiddenOnFocusable": "off"
+        "noAriaHiddenOnFocusable": "off",
+        "useSemanticElements": "off"
       },
       "suspicious": {
         "noArrayIndexKey": "off",

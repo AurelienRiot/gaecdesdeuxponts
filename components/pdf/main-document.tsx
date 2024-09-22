@@ -93,7 +93,10 @@ const billStyles = StyleSheet.create({
 const BillTo = ({ customer }: { customer: PDFData["customer"] }) => (
   <View style={billStyles.headerContainer}>
     <Text style={billStyles.billTo}>À :</Text>
-    {!!customer.name && <Text>{customer.name}</Text>}
+    <Text>
+      {customer.name}
+      {customer.company ? ` - ${customer.company}` : ""}
+    </Text>
     {!!customer.facturationAddress && <Text>{customer.facturationAddress}</Text>}
     {!!customer.phone && <Text>{customer.phone}</Text>}
     {!!customer.email && <Text>{customer.email}</Text>}

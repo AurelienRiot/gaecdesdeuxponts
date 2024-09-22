@@ -95,7 +95,7 @@ export function getDayName(dayNumber: number) {
   return new Intl.DateTimeFormat("fr-FR", { weekday: "long" }).format(date);
 }
 
-export function getMonthName(monthNumber: number) {
+export function getMonthNumber(monthNumber: number) {
   const date = new Date();
   date.setMonth(monthNumber); // Set month to the given month number
 

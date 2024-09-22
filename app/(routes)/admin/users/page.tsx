@@ -30,8 +30,10 @@ const UserPage = async () => {
     return { length: user.orders.length, id: user.id };
   });
   const statusArray: { status: UserStatus; id: string; display: boolean }[] = userOrders.map((user) => {
-    const invoiceNotSend = user.orders.every((order) => !order.invoiceEmail || order.dateOfPayment);
-    const dateOfPayment = user.orders.every((order) => order.dateOfPayment);
+    const invoiceNotSend = user.orders.every(
+      (order) => !order.invoiceOrder[0]?.invoice.invoiceEmail || order.invoiceOrder[0]?.invoice.dateOfPayment,
+    );
+    const dateOfPayment = user.orders.every((order) => order.invoiceOrder[0]?.invoice.dateOfPayment);
     const status = dateOfPayment ? "paid" : invoiceNotSend ? "not send" : "unpaid";
     return { status, id: user.id, display: user.role === "pro" && user.orders.length > 0 };
   });
@@ -39,7 +41,7 @@ const UserPage = async () => {
   const proUserWithOrders = userOrders
     .map((user) => ({
       ...user,
-      orders: user.orders.filter((order) => !order.dateOfPayment),
+      orders: user.orders.filter((order) => !order.invoiceOrder[0]?.invoice.dateOfPayment),
     }))
     .filter((user) => user.role === "pro" && user.orders.length > 0);
 

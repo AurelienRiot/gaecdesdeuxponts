@@ -6,12 +6,14 @@ const pointSchema = z.object({
     .number()
     .min(-90, { message: "Entrez une latitude valide" })
     .max(90, { message: "Entrez une latitude valide" })
-    .optional(),
+    .optional()
+    .nullable(),
   longitude: z.coerce
     .number()
     .min(-180, { message: "Entrez une longitude valide" })
     .max(180, { message: "Entrez une longitude valide" })
-    .optional(),
+    .optional()
+    .nullable(),
 });
 
 export const directionSchema = z.object({

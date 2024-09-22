@@ -1,7 +1,7 @@
 import { AnimateHeight } from "@/components/animations/animate-size";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 

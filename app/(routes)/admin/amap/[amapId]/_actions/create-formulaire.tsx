@@ -14,14 +14,12 @@ async function createAMAPFormulaire(data: AMAPFormulaireValues) {
     serverAction: async ({ amapItems, daysOfAbsence, shippingDays, startDate, endDate, shopId }) => {
       const AMAPData: AMAPType = {
         customer: {
-          id: "",
           name: "Nom :",
           customerId: "",
           shippingAddress: "Adresse :",
           facturationAddress: "Adresse :",
           phone: "Tél :",
           email: "email :",
-          orderId: "",
         },
         contrat: {
           id: "",

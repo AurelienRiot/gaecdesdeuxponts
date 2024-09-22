@@ -1,6 +1,6 @@
 "use client";
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
-import SelectSheet from "@/components/select-sheet";
+import SelectSheetWithTabs, { sortProductByTabType } from "@/components/select-sheet-with-tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button, IconButton } from "@/components/ui/button";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -12,7 +12,6 @@ import { useFormContext } from "react-hook-form";
 import { GrPowerReset } from "react-icons/gr";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-schema";
-import SelectSheetWithTabs, { sortProductByTabType } from "@/components/select-sheet-with-tabs";
 
 const negativeQuantityStyle =
   "bg-destructive hover:bg-destructive/90 hover:text-destructive-foreground text-destructive-foreground";

@@ -1,4 +1,4 @@
-import type { AMAPOrderWithItemsAndUser, FullOrder } from "@/types";
+import type { AMAPOrderWithItemsAndUser, FullOrderWithInvoicePayment } from "@/types";
 import { renderToBuffer } from "@react-pdf/renderer";
 import AmapPDF from "./create-amap";
 import Invoice from "./create-invoice";
@@ -12,22 +12,24 @@ async function generatePdfSring64({
   type,
 }:
   | {
-      data: FullOrder;
+      data: FullOrderWithInvoicePayment;
       type: "invoice" | "shipping";
     }
-  | { data: FullOrder[]; type: "monthly" }
+  | { data: FullOrderWithInvoicePayment[]; type: "monthly" }
   | { data: AMAPOrderWithItemsAndUser; type: "amap" }
   | { data: AMAPType; type: "formulaire" }): Promise<string> {
   let buffer: Buffer;
   switch (type) {
     case "invoice":
-      buffer = await renderToBuffer(<Invoice dataInvoice={createPDFData(data)} isPaid={!!data.dateOfPayment} />);
+      buffer = await renderToBuffer(
+        <Invoice dataInvoice={createPDFData(data)} isPaid={!!data.invoiceOrder[0]?.invoice.dateOfPayment} />,
+      );
       break;
     case "shipping":
       buffer = await renderToBuffer(<ShippingOrder pdfData={createPDFData(data)} />);
       break;
     case "monthly": {
-      const isPaid = data.every((order) => !!order.dateOfPayment);
+      const isPaid = data.every((order) => !!order.invoiceOrder[0]?.invoice.dateOfPayment);
       buffer = await renderToBuffer(<MonthlyInvoice data={createMonthlyPDFData(data)} isPaid={isPaid} />);
       break;
     }

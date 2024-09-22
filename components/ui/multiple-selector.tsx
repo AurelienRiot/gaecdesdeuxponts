@@ -229,7 +229,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
 
     useEffect(() => {
       /** If `onSearch` is provided, do not trigger options updated. */
-      if (!arrayOptions || onSearch) {
+      if (!arrayOptions || onSearch || !arrayDefaultOptions) {
         return;
       }
       const newOption = transToGroupOption(arrayOptions || [], groupBy);

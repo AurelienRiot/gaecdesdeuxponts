@@ -81,7 +81,7 @@ function OrderNumber({ data }: { data: DetailsProps }) {
   return (
     <View style={noStyles.invoiceDateContainer}>
       <Text style={noStyles.label}>N° de commande : </Text>
-      <Text style={noStyles.invoiceDate}>{data.pdfData.customer?.orderId}</Text>
+      <Text style={noStyles.invoiceDate}>{data.pdfData.order.id}</Text>
     </View>
   );
 }

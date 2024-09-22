@@ -1,22 +1,20 @@
 "use client";
 import { extractProductQuantities } from "@/components/google-events/get-orders-for-events";
 import { getUnitLabel } from "@/components/product/product-function";
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
+import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
 import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
 import { debounce } from "@/lib/debounce";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { getGroupedAMAPOrders } from "../_functions/get-amap-orders";
 import type { CalendarOrdersType } from "../_functions/get-orders";
-import TodayFocus from "./date-focus";
 import DisplayAmap from "./display-amap";
 import DisplayOrder from "./display-order";
 import SummarizeProducts from "./summarize-products";
-import UpdatePage from "./update-page";
-import Image from "next/image";
-import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
-import { Modal } from "@/components/ui/modal";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 type EventsPageProps = {
   orders: CalendarOrdersType[];
@@ -90,7 +88,7 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
   }, [dateArray, router]);
 
   // Debounced Scroll Handler to Optimize Performance
-  const debouncedHandleScroll = useCallback(debounce(handleScroll, 300), [handleScroll]);
+  const debouncedHandleScroll = useCallback(debounce(handleScroll, 300), []);
 
   // Attach Scroll Event Listener
   useEffect(() => {

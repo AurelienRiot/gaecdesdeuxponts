@@ -226,6 +226,7 @@ export const FancySwitch = React.forwardRef<HTMLDivElement, FancySwitchProps>(
           <div
             key={index}
             ref={(el) => refCallback(el, index)}
+            //
             role="radio"
             aria-checked={index === activeIndex}
             tabIndex={index === activeIndex ? 0 : -1}

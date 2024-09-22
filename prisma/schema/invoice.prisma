@@ -1,0 +1,66 @@
+model Invoice {
+  id         Int @unique @id @default(autoincrement())
+  orders InvoiceOrder[]
+  totalPrice Float 
+  dateOfPayment       DateTime?
+  dateOfEdition       DateTime?
+  invoiceEmail           DateTime?
+  customerId     Int?  @unique
+  customer       Customer? 
+  userId     String  
+  user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deletedAt   DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+
+}
+
+model InvoiceOrder {
+   id Int @unique @id @default(autoincrement())
+   orderId String @unique
+   order    Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  invoiceOrderItems InvoiceOrderItem[]
+  invoiceId Int
+  invoice   Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  totalPrice Float 
+  dateOfShipping      DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+ @@index([invoiceId])
+  @@index([orderId])
+}
+
+model InvoiceOrderItem {
+  id           Int @unique @id @default(autoincrement())
+  itemId       String
+  price        Float
+  tax          Float @default(1.055)  
+  quantity     Float @default(1)
+  unit         String?
+  name         String
+  categoryName String
+  description  String @db.VarChar(1000)
+  invoiceOrderId      Int
+  invoiceOrder        InvoiceOrder @relation(fields: [invoiceOrderId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceOrderId])
+}
+
+model Customer { 
+  id Int @unique @id @default(autoincrement())
+  name String
+  company String?
+  userId String
+  shippingAddress String
+  facturationAddress String
+  phone String?
+  email String
+
+  invoiceId Int @unique
+  invoice Invoice @relation(fields: [invoiceId], references: [id],onDelete: Cascade)
+
+  @@index([invoiceId])
+}

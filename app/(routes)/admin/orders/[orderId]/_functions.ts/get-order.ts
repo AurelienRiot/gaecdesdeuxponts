@@ -1,6 +1,6 @@
 import prismadb from "@/lib/prismadb";
 import { unstable_cache } from "next/cache";
-import type { ProductFormProps } from "../_components/order-form";
+import type { OrderFormProps } from "../_components/order-form";
 
 const getShippingOrder = unstable_cache(
   async (orderId: string, dateOfShipping?: Date, newOrder?: boolean) => {
@@ -12,10 +12,8 @@ const getShippingOrder = unstable_cache(
       select: {
         id: true,
         totalPrice: true,
-        dateOfPayment: true,
         dateOfShipping: true,
         dateOfEdition: true,
-        invoiceEmail: true,
         shippingEmail: true,
         orderItems: {
           select: {
@@ -31,9 +29,13 @@ const getShippingOrder = unstable_cache(
         userId: true,
         shopId: true,
         datePickUp: true,
+        invoiceOrder: {
+          select: { invoice: { select: { invoiceEmail: true, dateOfPayment: true } } },
+          orderBy: { createdAt: "desc" },
+        },
       },
     });
-    const initialData: ProductFormProps["initialData"] = !shippingOrders
+    const initialData: OrderFormProps["initialData"] = !shippingOrders
       ? null
       : newOrder
         ? {
@@ -42,7 +44,11 @@ const getShippingOrder = unstable_cache(
             orderItems: shippingOrders.orderItems.filter((item) => item.quantity > 0 && item.price > 0),
             id: null,
           }
-        : shippingOrders;
+        : {
+            ...shippingOrders,
+            dateOfPayment: shippingOrders.invoiceOrder[0].invoice.dateOfPayment,
+            invoiceEmail: shippingOrders.invoiceOrder[0].invoice.invoiceEmail,
+          };
     return initialData;
   },
   ["getShippingOrder"],

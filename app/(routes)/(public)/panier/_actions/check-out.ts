@@ -1,13 +1,11 @@
 "use server";
 
 import { getUserWithAdress } from "@/actions/get-user";
-import { createCustomer } from "@/components/pdf/pdf-data";
 import { getUnitLabel } from "@/components/product/product-function";
 import { isDateDisabled } from "@/lib/date-utils";
 import { createId } from "@/lib/id";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
-import { addDelay } from "@/lib/utils";
 import type { ProductWithMain, UserWithAddress } from "@/types";
 import { revalidatePath, revalidateTag } from "next/cache";
 import * as z from "zod";
@@ -139,9 +137,6 @@ async function createOrder({ totalPrice, productsWithQuantity, shopId, user, dat
       userId: user.id,
       shopId: shopId === "domicile" ? null : shopId,
       datePickUp,
-      customer: {
-        create: createCustomer(user),
-      },
     },
     // include: {
     //   shop: true,

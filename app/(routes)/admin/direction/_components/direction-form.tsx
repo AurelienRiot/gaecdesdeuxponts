@@ -8,8 +8,9 @@ import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMess
 import { Modal } from "@/components/ui/modal";
 import useScrollToHashOnMount from "@/hooks/use-scroll-to-hash";
 import useServerAction from "@/hooks/use-server-action";
-import { cn, svgToDataUri } from "@/lib/utils";
+import { addressFormatter, cn, svgToDataUri } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { Address } from "@prisma/client";
 import "leaflet/dist/leaflet.css";
 import { Plus, X } from "lucide-react";
 import Image from "next/image";
@@ -421,25 +422,22 @@ function TodaysOrders({ usersAndShops }: { usersAndShops: UserAndShop[] }) {
     today.setHours(0, 0, 0, 0);
     async function onSuccess(
       result?: {
-        customer: { shippingAddress: string } | null;
+        user: { address: Address | null };
       }[],
     ) {
       if (!result) return;
       const addresses: Point[] = await Promise.all(
         result.map(async (order) => {
-          if (!order.customer || !order.customer.shippingAddress) {
+          const address = addressFormatter(order.user.address);
+          if (!address) {
             return { label: "" };
           }
 
-          const user = usersAndShops.find(
-            (user) =>
-              order.customer?.shippingAddress.includes(user.address) ||
-              user.address.includes(order.customer?.shippingAddress || ""),
-          );
-          let latitude = user?.latitude;
-          let longitude = user?.longitude;
+          const user = usersAndShops.find((user) => address.includes(user.address) || user.address.includes(address));
+          let latitude = user?.latitude || order.user.address?.latitude;
+          let longitude = user?.longitude || order.user.address?.longitude;
           if (!latitude || !longitude) {
-            const suggestions = await AddressAutocomplete(order.customer?.shippingAddress);
+            const suggestions = await AddressAutocomplete(address);
             if (suggestions.length > 0) {
               latitude = suggestions[0].latitude;
               longitude = suggestions[0].longitude;
@@ -448,7 +446,7 @@ function TodaysOrders({ usersAndShops }: { usersAndShops: UserAndShop[] }) {
           if (user) {
             return { label: user.address, latitude, longitude };
           }
-          return { label: order.customer?.shippingAddress, latitude, longitude };
+          return { label: address, latitude, longitude };
         }),
       );
       form.setValue("waypoints", addresses);

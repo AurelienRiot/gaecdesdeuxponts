@@ -1,7 +1,7 @@
 import { authOptions } from "@/components/auth/authOptions";
 import prismadb from "@/lib/prismadb";
+import { UserWithOrdersAndAdress } from "@/types";
 import { getServerSession } from "next-auth";
-import { unstable_cache } from "next/cache";
 
 export const getSessionUser = async () => {
   const session = await getServerSession(authOptions);
@@ -48,6 +48,8 @@ export const getUserWithAdress = async () => {
   return user;
 };
 
+export type GetUserReturnType = Awaited<ReturnType<typeof GetUser>>;
+
 const GetUser = async () => {
   const sessionUser = await getSessionUser();
 
@@ -73,7 +75,11 @@ const GetUser = async () => {
         include: {
           orderItems: true,
           shop: true,
-          customer: true,
+          user: true,
+          invoiceOrder: {
+            select: { invoice: { select: { invoiceEmail: true, dateOfPayment: true } } },
+            orderBy: { createdAt: "desc" },
+          },
         },
       },
 

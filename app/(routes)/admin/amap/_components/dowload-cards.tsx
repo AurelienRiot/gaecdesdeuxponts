@@ -3,8 +3,8 @@
 import { IconButton } from "@/components/ui/button";
 import html2pdf from "html2pdf.js";
 import { Download } from "lucide-react";
+import "./style.css";
 import { toast } from "sonner";
-import { saveAs } from "file-saver";
 
 function DownloadCards({ className, date }: { date: string; className?: string }) {
   const downloadChart = async () => {

@@ -39,6 +39,10 @@ const getUserPageData = unstable_cache(
           include: {
             orderItems: true,
             shop: true,
+            invoiceOrder: {
+              select: { invoice: { select: { invoiceEmail: true, dateOfPayment: true } } },
+              orderBy: { createdAt: "desc" },
+            },
           },
         },
       },
@@ -51,9 +55,9 @@ const getUserPageData = unstable_cache(
         orderId: order.id,
         month: order.dateOfShipping.getMonth() + 1,
         year: order.dateOfShipping.getFullYear(),
-        invoiceEmail: order.invoiceEmail,
-        isPaid: !!order.dateOfPayment,
-        dateOfPayment: order.dateOfPayment,
+        invoiceEmail: order.invoiceOrder[0]?.invoice.invoiceEmail,
+        isPaid: !!order.invoiceOrder[0]?.invoice.dateOfPayment,
+        dateOfPayment: order.invoiceOrder[0]?.invoice.dateOfPayment,
       };
     });
 
@@ -65,12 +69,12 @@ const getUserPageData = unstable_cache(
     const formattedOrders: OrderColumn[] = (user?.orders || []).map((order) => ({
       id: order.id,
       shippingEmail: order.shippingEmail,
-      invoiceEmail: order.invoiceEmail,
+      invoiceEmail: order.invoiceOrder[0]?.invoice.invoiceEmail,
       products: createProduct(order.orderItems),
       productsList: createProductList(order.orderItems),
       datePickUp: createDatePickUp({ dateOfShipping: order.dateOfShipping, datePickUp: order.datePickUp }),
       status: createStatus(order),
-      isPaid: !!order.dateOfPayment,
+      isPaid: !!order.invoiceOrder[0]?.invoice.dateOfPayment,
       totalPrice: currencyFormatter.format(order.totalPrice),
       createdAt: order.createdAt,
       shopName: order.shop?.name || "Livraison à domicile",

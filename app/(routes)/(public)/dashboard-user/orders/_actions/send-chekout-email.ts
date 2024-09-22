@@ -9,7 +9,7 @@ import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { currencyFormatter } from "@/lib/utils";
-import type { FullOrder } from "@/types";
+import type { FullOrderWithInvoicePayment } from "@/types";
 import { render } from "@react-email/render";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { format } from "date-fns";
@@ -40,7 +40,8 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
         include: {
           orderItems: true,
           shop: true,
-          customer: true,
+          user: { include: { address: true, billingAddress: true } },
+          invoiceOrder: { select: { invoice: { select: { invoiceEmail: true, dateOfPayment: true } } } },
         },
       });
 
@@ -124,7 +125,7 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
   });
 }
 
-async function generatePdf(order: FullOrder) {
+async function generatePdf(order: FullOrderWithInvoicePayment) {
   const pdfData = createPDFData(order);
   const pdfBuffer = await renderToBuffer(Order({ data: pdfData }));
   return pdfBuffer;

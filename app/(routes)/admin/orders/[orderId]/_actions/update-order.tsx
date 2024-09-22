@@ -1,13 +1,12 @@
 "use server";
 
 import { checkAdmin } from "@/components/auth/checkAuth";
-import { createCustomer } from "@/components/pdf/pdf-data";
+import createOrdersEvent from "@/components/google-events/create-orders-event";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
-import { orderSchema, type OrderFormValues } from "../_components/order-schema";
-import createOrdersEvent from "@/components/google-events/create-orders-event";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
+import { orderSchema, type OrderFormValues } from "../_components/order-schema";
 
 async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date | null }) {
   return await safeServerAction({
@@ -42,7 +41,7 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
           userId: userId,
           totalPrice: totalPrice,
           dateOfShipping: dateOfShipping,
-          dateOfPayment: dateOfPayment,
+          // dateOfPayment: dateOfPayment,
           dateOfEdition: dateOfEdition || new Date(),
           datePickUp: datePickUp,
           shopId: shopId,
@@ -64,22 +63,6 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
       });
 
       await Promise.all([
-        (async () => {
-          const customer = createCustomer(shippingOrder.user);
-          await prismadb.order.update({
-            where: {
-              id: id,
-            },
-            data: {
-              customer: {
-                upsert: {
-                  create: customer,
-                  update: customer,
-                },
-              },
-            },
-          });
-        })(),
         (async () => {
           if (dateOfShipping) {
             await createOrdersEvent({ date: dateOfShipping });

@@ -10,12 +10,10 @@ import {
 } from "@/components/table-custom-fuction/cell-orders";
 import { DateCell, NameCell } from "@/components/table-custom-fuction/common-cell";
 import { FilterAllInclude, FilterOneInclude } from "@/components/table-custom-fuction/common-filter";
-import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
 import { DatePickUpHeader, ShopNameHeader } from "@/components/table-custom-fuction/header-orders";
-import type { DataTableFilterableColumn, DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
+import type { DataTableFilterableColumn, DataTableViewOptionsColumn } from "@/types";
 import type { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
-import { getRelativeDate } from "@/lib/date-utils";
 
 export type OrderColumn = {
   id: string;

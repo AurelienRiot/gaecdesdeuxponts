@@ -56,7 +56,7 @@ async function setShippedDay(data: z.infer<typeof deleteSchema>) {
           });
       }
 
-      revalidateTag("amap-orders");
+      // revalidateTag("amap-orders");
 
       return {
         success: true,

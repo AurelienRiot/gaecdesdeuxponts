@@ -33,20 +33,17 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
         include: {
           orderItems: true,
           shop: true,
-          customer: true,
+          user: { include: { address: true, billingAddress: true } },
+          invoiceOrder: {
+            select: { invoice: { select: { invoiceEmail: true, dateOfPayment: true } } },
+            orderBy: { createdAt: "desc" },
+          },
         },
       });
       if (!order) {
         return {
           success: false,
           message: "La commande n'existe pas",
-        };
-      }
-
-      if (!order.customer) {
-        return {
-          success: false,
-          message: "Le client n'existe pas, revalider la commande",
         };
       }
 
@@ -57,7 +54,7 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
         };
       }
 
-      if (order.customer.email.includes("acompleter")) {
+      if (!order.user.email || order.user.email.includes("acompleter")) {
         return {
           success: false,
           message: "Le client n'a pas d'email, revalider la commande aprés avoir changé son email",
@@ -68,14 +65,14 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
 
       await transporter.sendMail({
         from: "laiteriedupontrobert@gmail.com",
-        to: order.customer.email,
+        to: order.user.email,
         subject: "Bon de livraison - Laiterie du Pont Robert",
         html: await render(
           SendBLEmail({
             date: dateFormatter(order.dateOfShipping),
             baseUrl,
             id: order.id,
-            email: order.customer.email,
+            email: order.user.email,
           }),
         ),
         attachments: [

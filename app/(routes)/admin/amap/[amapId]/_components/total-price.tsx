@@ -1,7 +1,6 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useFormContext } from "react-hook-form";
 import { useEffect } from "react";
+import { useFormContext } from "react-hook-form";
 import type { AMAPFormValues } from "./amap-schema";
 
 const TotalPrice = () => {
@@ -15,7 +14,7 @@ const TotalPrice = () => {
       return acc + (price || 0) * (quantity || 1);
     }, 0);
     form.setValue("totalPrice", Number((totalPrice * shippingDays.length).toFixed(2)));
-  }, [amapItems]);
+  }, [amapItems, form.setValue, shippingDays]);
 
   return (
     <FormField

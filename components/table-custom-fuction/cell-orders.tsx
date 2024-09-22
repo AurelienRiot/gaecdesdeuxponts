@@ -161,11 +161,17 @@ const status = [
 
 type Status = (typeof status)[number];
 
-function createStatus(order: OrderWithItemsAndShop): Status {
-  if (order.dateOfPayment) return "Commande Payée";
-  if (order.invoiceEmail) return "En cours de paiement";
-  if (order.shippingEmail) return "Commande livrée";
-  if (order.dateOfEdition) return "Commande validée";
+type OrderForStatus = {
+  dateOfEdition?: Date | null;
+  shippingEmail?: Date | null;
+  invoiceOrder: { invoice: { invoiceEmail?: Date | null; dateOfPayment?: Date | null } }[];
+};
+
+function createStatus({ dateOfEdition, invoiceOrder, shippingEmail }: OrderForStatus): Status {
+  if (invoiceOrder[0]?.invoice.dateOfPayment) return "Commande Payée";
+  if (invoiceOrder[0]?.invoice.invoiceEmail) return "En cours de paiement";
+  if (shippingEmail) return "Commande livrée";
+  if (dateOfEdition) return "Commande validée";
   return "En cours de validation";
 }
 

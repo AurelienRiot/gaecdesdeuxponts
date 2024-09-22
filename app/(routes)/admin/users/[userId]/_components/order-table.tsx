@@ -5,7 +5,7 @@ import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { getMonthName } from "@/lib/date-utils";
+import { getMonthNumber } from "@/lib/date-utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { columns, filterableColumns, viewOptionsColumns, type OrderColumn } from "./order-column";
 
@@ -48,7 +48,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({ data }) => {
   return (
     <>
       <Heading
-        title={`Commandes de ${getMonthName(search.month)} ${search.year} (${filteredOrders.length})`}
+        title={`Commandes de ${getMonthNumber(search.month)} ${search.year} (${filteredOrders.length})`}
         description="Gérez les commandes"
       />
       <Separator className="my-4" />
@@ -90,7 +90,7 @@ function SearchOrders({
           <SelectContent>
             {Array.from({ length: 12 }).map((_, index) => (
               <SelectItem key={index} value={index.toString()} className="capitalize">
-                {getMonthName(index)}
+                {getMonthNumber(index)}
               </SelectItem>
             ))}
           </SelectContent>

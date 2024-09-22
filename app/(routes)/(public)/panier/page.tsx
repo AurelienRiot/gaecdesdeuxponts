@@ -3,7 +3,6 @@ import type { Shop } from "@prisma/client";
 import { Suspense } from "react";
 import CartItems from "./_components/cart-items";
 import Summary from "./_components/summary";
-import { addDelay } from "@/lib/utils";
 
 export const dynamic = "force-static";
 

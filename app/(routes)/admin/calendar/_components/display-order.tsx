@@ -66,11 +66,11 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, onOpenMod
         <AnimateHeight display={isExpanded}>
           <CardContent className="py-2 px-4">
             <div className="space-y-2">
-              <div className="flex justify-between">
+              <div className="flex justify-left">
                 <Link href={order.shopId ? `/admin/shops/${order.shopId}` : "#"} className="font-bold">
                   {order.shopName}
                 </Link>
-                <p>{order.id}</p>
+                {/* <p>{order.id}</p> */}
               </div>
               <div>
                 <h4 className="text-xs font-semibold">Produits :</h4>

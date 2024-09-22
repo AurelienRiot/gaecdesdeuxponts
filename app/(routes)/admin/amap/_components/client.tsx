@@ -1,18 +1,14 @@
 "use client";
 
+import DateModal from "@/components/date-modal";
 import { Button, LoadingButton } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table/data-table";
-import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import type { DateRange } from "react-day-picker";
 import { toast } from "sonner";
 import { columns, filterableColumns, viewOptionsColumns, type AMAPColumn } from "./columns";
-import { Drawer } from "vaul";
-import { dateFormatter } from "@/lib/date-utils";
-import DateModal from "@/components/date-modal";
 
 interface AMAPClientProps {
   initialData: AMAPColumn[];

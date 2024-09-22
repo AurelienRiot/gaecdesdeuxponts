@@ -69,7 +69,7 @@ export interface UserWithAddress extends User {
   billingAddress: BillingAddress | null;
 }
 export interface UserWithOrdersAndAdress extends User {
-  orders: FullOrder[];
+  orders: OrderWithItemsAndShop[];
   address: Address | null;
   billingAddress: BillingAddress | null;
 }
@@ -80,12 +80,14 @@ export interface OrderWithItemsAndShop extends Order {
 }
 
 export interface FullOrder extends OrderWithItemsAndShop {
-  customer: Customer | null;
-}
-
-export interface OrderWithItemsAndUserAndShop extends OrderWithItemsAndShop {
   user: UserWithAddress;
 }
+export interface FullOrderWithInvoicePayment extends FullOrder {
+  invoiceOrder: { invoice: { dateOfPayment: Date | null; invoiceEmail: Date | null } }[];
+}
+// export interface OrderWithItemsAndUserAndShop extends OrderWithItemsAndShop {
+//   u
+// }
 
 export interface MainProductWithProducts extends MainProduct {
   products: ProductWithOptions[];

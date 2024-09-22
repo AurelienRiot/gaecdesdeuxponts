@@ -26,3 +26,10 @@ export function createId(type: (typeof IdType)[number], date?: Date | null) {
       return `commandes${reducedAlphabet()}`;
   }
 }
+
+export function createInvoiceId(date: Date, previousId?: string) {
+  const year = date.getFullYear();
+  const previousNumber = previousId ? Number(previousId.split("_")[2]) : 1;
+  const newNumber = previousNumber + 1;
+  return `FA_${year}_${newNumber.toString().padStart(3, "0")}`;
+}

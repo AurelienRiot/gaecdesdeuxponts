@@ -10,7 +10,9 @@ const AutoCloseSheet = ({
   const pathName = usePathname();
   const searchParams = useSearchParams();
   useEffect(() => {
-    setIsOpen(false);
+    if (pathName && searchParams) {
+      setIsOpen(false);
+    }
   }, [pathName, searchParams, setIsOpen]);
 
   return null;

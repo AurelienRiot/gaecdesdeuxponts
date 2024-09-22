@@ -29,9 +29,9 @@ import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
 
-export type ProductFormProps = {
+export type OrderFormProps = {
   initialData:
-    | (Omit<OrderFormValues, "id"> & { id: string | null; invoiceEmail: Date | null; shippingEmail: Date | null })
+    | (Omit<OrderFormValues, "id"> & { id: string | null; invoiceEmail?: Date | null; shippingEmail: Date | null })
     | null;
   products: ProductWithMain[];
   shops: Shop[];
@@ -40,7 +40,7 @@ export type ProductFormProps = {
   className?: string;
 };
 
-export const OrderForm: React.FC<ProductFormProps> = ({ initialData, products, users, shops, referer, className }) => {
+export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, users, shops, referer, className }) => {
   const router = useRouter();
   const prevDateOfShipping = initialData?.dateOfShipping ? new Date(initialData.dateOfShipping) : undefined;
   const { serverAction: createOrderAction } = useServerAction(createOrder);

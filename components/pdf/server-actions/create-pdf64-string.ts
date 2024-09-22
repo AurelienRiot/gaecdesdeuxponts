@@ -24,7 +24,11 @@ async function createPDF64String(data: z.infer<typeof pdf64StringSchema>) {
         include: {
           orderItems: true,
           shop: true,
-          customer: true,
+          user: { include: { address: true, billingAddress: true } },
+          invoiceOrder: {
+            select: { invoice: { select: { invoiceEmail: true, dateOfPayment: true } } },
+            orderBy: { createdAt: "desc" },
+          },
         },
       });
       if (!order) {
@@ -98,7 +102,11 @@ async function createMonthlyPDF64String(data: z.infer<typeof monthlyPdf64StringS
         include: {
           orderItems: true,
           shop: true,
-          customer: true,
+          user: { include: { address: true, billingAddress: true } },
+          invoiceOrder: {
+            select: { invoice: { select: { invoiceEmail: true, dateOfPayment: true } } },
+            orderBy: { createdAt: "desc" },
+          },
         },
         orderBy: {
           dateOfShipping: "asc",

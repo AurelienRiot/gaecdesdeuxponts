@@ -57,13 +57,18 @@ export function DisplayShippingOrder({ orderId, isSend }: { orderId: string; isS
       toast.error("Erreur");
       return;
     }
+    if (!order.user.email) {
+      toast.error("Le client n'a pas d'email");
+      return;
+    }
     const result = await confirm({
       title: "Confirmation de l'envoi du BL",
       content: ModalDescription({
         date: order.dateOfShipping,
-        email: order.customer?.email,
+        email: order.user.email,
         items: order.orderItems,
-        name: order.customer?.name,
+        name: order.user.name,
+        company: order.user.company,
         image: order.user?.image,
       }),
     });
@@ -86,12 +91,14 @@ export function DisplayShippingOrder({ orderId, isSend }: { orderId: string; isS
 
 const ModalDescription = ({
   name,
+  company,
   date,
   items,
   image,
   email,
 }: {
   name?: string | null;
+  company?: string | null;
   image?: string | null;
   date?: Date | null;
   email?: string;
@@ -109,7 +116,7 @@ const ModalDescription = ({
           ) : (
             <UserIcon className="w-5 h-5" />
           )}
-          <span className="font-semibold">{name}</span>
+          <span className="font-semibold">{company || name}</span>
         </div>
         <div className="flex items-center gap-2 text-md">
           <CalendarIcon className="w-4 h-4" />

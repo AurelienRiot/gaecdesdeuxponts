@@ -18,7 +18,10 @@ export const getOrdersByDate = async ({ from, to }: { from: Date; to: Date }) =>
       orderItems: true,
       shop: true,
       user: { include: { address: true, billingAddress: true } },
-      customer: true,
+      invoiceOrder: {
+        select: { invoice: { select: { invoiceEmail: true, dateOfPayment: true } } },
+        orderBy: { createdAt: "desc" },
+      },
     },
   });
   const formattedOrders: CalendarOrdersType[] = orders

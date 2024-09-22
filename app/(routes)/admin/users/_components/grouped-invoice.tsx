@@ -22,9 +22,13 @@ type GroupedInvoiceProps = {
     orders: {
       id: string;
       totalPrice: number;
-      dateOfPayment: Date | null;
+      invoiceOrder: {
+        invoice: {
+          dateOfPayment: Date | null;
+          invoiceEmail: Date | null;
+        };
+      }[];
       dateOfShipping: Date | null;
-      invoiceEmail: Date | null;
     }[];
   }[];
 };
@@ -37,7 +41,7 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
     proUserWithOrders.reduce(
       (acc, user) => {
         acc[user.id] = user.orders
-          .map((order) => (!order.invoiceEmail ? order.id : null))
+          .map((order) => (!order.invoiceOrder[0].invoice.invoiceEmail ? order.id : null))
           .filter((id): id is string => id !== null);
         return acc;
       },
@@ -133,7 +137,7 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
         <Accordion type="multiple" className="relative  flex w-full flex-col gap-4">
           {proUserWithOrders.map((user, index) => {
             const ordersId = orderIdsRecord[user.id];
-            const invoiceSend = user.orders.every((order) => order.invoiceEmail);
+            const invoiceSend = user.orders.every((order) => order.invoiceOrder[0].invoice.invoiceEmail);
             const totalPrice = user.orders.reduce((acc, order) => acc + order.totalPrice, 0);
             return (
               <AccordionItem key={index} value={user.name} className="relative">
@@ -194,7 +198,9 @@ function GroupedInvoicePage({ proUserWithOrders }: GroupedInvoiceProps) {
                             {dateFormatter(order.dateOfShipping || new Date())} :{" "}
                             {currencyFormatter.format(order.totalPrice)}{" "}
                           </span>
-                          {order.invoiceEmail ? <MailCheck className="size-4 inline ml-2 text-green-500" /> : null}
+                          {order.invoiceOrder[0].invoice.invoiceEmail ? (
+                            <MailCheck className="size-4 inline ml-2 text-green-500" />
+                          ) : null}
                         </label>
                       </li>
                     ))}

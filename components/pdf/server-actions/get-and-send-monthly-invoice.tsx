@@ -23,8 +23,18 @@ export async function getAndSendMonthlyInvoice(orderIds: string[]): Promise<Retu
     include: {
       orderItems: true,
       shop: true,
-      customer: true,
-      user: { select: { name: true, company: true, email: true } },
+      user: { include: { address: true, billingAddress: true } },
+      invoiceOrder: {
+        select: {
+          invoice: {
+            select: {
+              invoiceEmail: true,
+              dateOfPayment: true,
+            },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+      },
     },
     orderBy: {
       dateOfShipping: "asc",
@@ -43,19 +53,13 @@ export async function getAndSendMonthlyInvoice(orderIds: string[]): Promise<Retu
     };
   }
 
-  if (!orders[0].customer) {
-    return {
-      success: false,
-      message: "Le client n'existe pas, revalider la commande",
-    };
-  }
   const name = getUserName(orders[0].user);
 
   const date = dateMonthYear(orders.map((order) => order.dateOfShipping));
 
   const pdfBuffer = await renderToBuffer(<MonthlyInvoice data={createMonthlyPDFData(orders)} isPaid={false} />);
 
-  if (!orders[0].customer || orders[0].customer.email.includes("acompleter")) {
+  if (!orders[0].user.email || orders[0].user.email.includes("acompleter")) {
     return {
       success: false,
       message: "Le client n'a pas d'email, revalider la commande aprés avoir changé son email",
@@ -65,14 +69,14 @@ export async function getAndSendMonthlyInvoice(orderIds: string[]): Promise<Retu
   try {
     await transporter.sendMail({
       from: "laiteriedupontrobert@gmail.com",
-      to: orders[0].customer.email,
+      to: orders[0].user.email,
       // to: "pub.demystify390@passmail.net",
       subject: `Facture Mensuelle ${date}  - Laiterie du Pont Robert`,
       html: await render(
         SendMonthlyInvoiceEmail({
           date,
           baseUrl,
-          email: orders[0].customer.email,
+          email: orders[0].user.email,
         }),
       ),
       attachments: [
@@ -84,14 +88,14 @@ export async function getAndSendMonthlyInvoice(orderIds: string[]): Promise<Retu
       ],
     });
 
-    await prismadb.order.updateMany({
-      where: {
-        id: { in: orders.map((order) => order.id) },
-      },
-      data: {
-        invoiceEmail: new Date(),
-      },
-    });
+    // await prismadb.order.updateMany({
+    //   where: {
+    //     id: { in: orders.map((order) => order.id) },
+    //   },
+    //   data: {
+    //     invoiceEmail: new Date(),
+    //   },
+    // });
     revalidateTag("orders");
   } catch (error) {
     return {

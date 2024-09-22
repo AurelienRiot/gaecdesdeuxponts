@@ -4,6 +4,8 @@ import { IconButton } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import useServerAction from "@/hooks/use-server-action";
+import { addressFormatter } from "@/lib/utils";
+import type { Address } from "@prisma/client";
 import { fr } from "date-fns/locale";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -20,25 +22,22 @@ const DatePicker = ({ usersAndShops }: { usersAndShops: UserAndShop[] }) => {
     setOpen(false);
     async function onSuccess(
       result?: {
-        customer: { shippingAddress: string } | null;
+        user: { address: Address | null };
       }[],
     ) {
       if (!result) return;
       const addresses: Point[] = await Promise.all(
         result.map(async (order) => {
-          if (!order.customer || !order.customer.shippingAddress) {
+          const address = addressFormatter(order.user.address);
+          if (!address) {
             return { label: "" };
           }
 
-          const user = usersAndShops.find(
-            (user) =>
-              order.customer?.shippingAddress.includes(user.address) ||
-              user.address.includes(order.customer?.shippingAddress || ""),
-          );
-          let latitude = user?.latitude;
-          let longitude = user?.longitude;
+          const user = usersAndShops.find((user) => address.includes(user.address) || user.address.includes(address));
+          let latitude = user?.latitude || order.user.address?.latitude;
+          let longitude = user?.longitude || order.user.address?.longitude;
           if (!latitude || !longitude) {
-            const suggestions = await AddressAutocomplete(order.customer?.shippingAddress);
+            const suggestions = await AddressAutocomplete(address);
             if (suggestions.length > 0) {
               latitude = suggestions[0].latitude;
               longitude = suggestions[0].longitude;
@@ -47,7 +46,7 @@ const DatePicker = ({ usersAndShops }: { usersAndShops: UserAndShop[] }) => {
           if (user) {
             return { label: user.address, latitude, longitude };
           }
-          return { label: order.customer?.shippingAddress, latitude, longitude };
+          return { label: address, latitude, longitude };
         }),
       );
       form.setValue("waypoints", addresses);

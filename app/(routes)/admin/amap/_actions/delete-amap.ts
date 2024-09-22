@@ -1,5 +1,6 @@
 "use server";
 import { checkAdmin } from "@/components/auth/checkAuth";
+import createOrdersEvent from "@/components/google-events/create-orders-event";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
@@ -7,7 +8,7 @@ import { z } from "zod";
 
 const deleteSchema = z.object({
   id: z.string().optional(),
-  shippingDays: z.array(z.date()),
+  nextShippingDay: z.date().optional().nullable(),
 });
 
 async function deleteAMAP(data: z.infer<typeof deleteSchema>) {
@@ -15,7 +16,7 @@ async function deleteAMAP(data: z.infer<typeof deleteSchema>) {
     data,
     schema: deleteSchema,
     getUser: checkAdmin,
-    serverAction: async ({ id, shippingDays }) => {
+    serverAction: async ({ id, nextShippingDay }) => {
       await prismadb.aMAPOrder
         .delete({
           where: { id },
@@ -28,12 +29,12 @@ async function deleteAMAP(data: z.infer<typeof deleteSchema>) {
           };
         });
 
-      // if (dateOfShipping) {
-      //   const event = await createOrdersEvent({ date: dateOfShipping });
-      //   if (!event.success) {
-      //     console.log(event.message);
-      //   }
-      // }
+      if (nextShippingDay) {
+        const event = await createOrdersEvent({ date: nextShippingDay });
+        if (!event.success) {
+          console.log(event.message);
+        }
+      }
       revalidateTag("amap-orders");
 
       return {

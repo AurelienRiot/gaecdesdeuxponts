@@ -80,7 +80,7 @@ const AmapPDF = ({ data }: { data: AMAPType }) => {
 
   const numberOfMonths = getNumberOfMonths(data.contrat.startDate, data.contrat.endDate);
   return (
-    <Document title={`Contrat AMAP ${data.customer.orderId}`}>
+    <Document title={`Contrat AMAP ${data.contrat.id}`}>
       <Page size="A4" style={AMAPStyle.page}>
         <View style={AMAPStyle.header}>
           <Company />

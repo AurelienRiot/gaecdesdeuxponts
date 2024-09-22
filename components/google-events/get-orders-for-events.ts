@@ -2,6 +2,7 @@ import prismadb from "@/lib/prismadb";
 import { getUnitLabel } from "../product/product-function";
 import { addDays } from "date-fns";
 import { Option } from "@prisma/client";
+import { addressFormatter } from "@/lib/utils";
 
 export const getAllOrders = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
   // return dummieDate;
@@ -20,8 +21,7 @@ export const getAllOrders = async ({ startDate, endDate }: { startDate: Date; en
         shippingEmail: true,
         shop: { select: { address: true } },
         orderItems: { select: { itemId: true, name: true, quantity: true, unit: true } },
-        customer: { select: { shippingAddress: true } },
-        user: { select: { company: true, email: true, image: true, name: true, id: true } },
+        user: { select: { company: true, email: true, image: true, name: true, id: true, address: true } },
       },
     }),
 
@@ -81,7 +81,7 @@ export const getAllOrders = async ({ startDate, endDate }: { startDate: Date; en
   const formattedOrders = orders.map((order) => ({
     id: order.id,
     customerId: order.user.id,
-    shippingAddress: order.shop?.address || order.customer?.shippingAddress,
+    shippingAddress: order.shop?.address || addressFormatter(order.user?.address),
     shippingEmail: order.shippingEmail,
     name: order.user?.name,
     company: order.user?.company,

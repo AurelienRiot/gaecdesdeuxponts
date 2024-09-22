@@ -8,16 +8,15 @@ import { dateFormatter } from "@/lib/date-utils";
 import prismadb from "@/lib/prismadb";
 import { addDays, setHours } from "date-fns";
 import { Plus } from "lucide-react";
+import * as Dynamic from "next/dynamic";
 import Link from "next/link";
 import AmapCards from "./_components/amap-cards";
 import { AMAPClient } from "./_components/client";
 import type { AMAPColumn } from "./_components/columns";
-import * as Dynamic from "next/dynamic";
+import SelectShippingDay from "./_components/select-shipping-day";
 const DownloadCards = Dynamic.default(() => import("./_components/dowload-cards"), {
   ssr: false,
 });
-import SelectShippingDay from "./_components/select-shipping-day";
-import "./_components/style.css";
 
 export const dynamic = "force-dynamic";
 
@@ -131,7 +130,7 @@ function NextShipping({ formattedOrders, shippingDay }: { formattedOrders: AMAPC
           selectedShippingDay={selectedShippingDay}
           nextDay={nextDay}
         />
-        <DownloadCards className="size-10" date={dateFormatter(selectedShippingDay, { days: true })} />
+        {/* <DownloadCards className="size-10" date={dateFormatter(selectedShippingDay, { days: true })} /> */}
       </div>
       <div className="flex flex-wrap justify-center  gap-4">
         {ordersForNextShipping.map((order) => (
