@@ -21,6 +21,7 @@ export const getOrdersByDate = async ({ from, to }: { from: Date; to: Date }) =>
       invoiceOrder: {
         select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
         orderBy: { createdAt: "desc" },
+        where: { invoice: { deletedAt: null } },
       },
     },
   });

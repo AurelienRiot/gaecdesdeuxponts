@@ -12,6 +12,8 @@ export type OptionsArray = {
   values: string[];
 }[];
 
+export const biocoopProducts = ["Lait cru bio 1L", "Bouteille verre 1L"];
+
 export function hasOptionWithValue<T extends { name: string; value: string }[]>(options: T, value: string): boolean {
   return options.some((option) => option.value === value);
 }

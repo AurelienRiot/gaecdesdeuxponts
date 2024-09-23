@@ -20,6 +20,7 @@ export async function getProUsersWithOrders() {
           invoiceOrder: {
             select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
             orderBy: { createdAt: "desc" },
+            where: { invoice: { deletedAt: null } },
           },
         },
         orderBy: { dateOfShipping: "desc" },

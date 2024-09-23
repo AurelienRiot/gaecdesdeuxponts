@@ -27,6 +27,7 @@ async function createPDF64String(data: z.infer<typeof pdf64StringSchema>) {
           invoiceOrder: {
             select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
             orderBy: { createdAt: "desc" },
+            where: { invoice: { deletedAt: null } },
           },
         },
       });

@@ -42,6 +42,7 @@ export async function createProduct(data: ProductFormValues) {
                 description: product.description,
                 price: product.price || 0,
                 unit: product.unit,
+                tax: product.tax,
                 isFeatured: product.isFeatured,
                 isArchived: product.isArchived,
                 imagesUrl: product.imagesUrl,

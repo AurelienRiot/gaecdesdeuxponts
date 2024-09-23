@@ -122,7 +122,7 @@ const FacturationDate = ({ data }: { data: DetailsProps }) =>
   data.title === "Facture" || data.title === "Facture mensuelle"
     ? !!data.pdfData.dateOfPayment && (
         <View style={noStyles.invoiceDateContainer}>
-          <Text style={noStyles.label}>Date de payement : </Text>
+          <Text style={noStyles.label}>Date de paiement : </Text>
           <Text style={noStyles.invoiceDate}>{data.pdfData.dateOfPayment}</Text>
         </View>
       )

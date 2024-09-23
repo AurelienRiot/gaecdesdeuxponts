@@ -4,7 +4,7 @@ import type { ProductWithMain } from "@/types";
 import type { Role, User } from "@prisma/client";
 import { TabsContent } from "@radix-ui/react-tabs";
 import * as React from "react";
-import { priorityMap } from "./product/product-function";
+import { biocoopProducts, priorityMap } from "./product/product-function";
 import { getUserName } from "./table-custom-fuction";
 import { NameWithImage } from "./table-custom-fuction/common-cell";
 import { Badge } from "./ui/badge";
@@ -184,12 +184,16 @@ export function sortUserByRole(users: User[]) {
   return groupedRoles;
 }
 
-type ProductTabType = "favories" | "others";
+type ProductTabType = "favories" | "others" | "biocoop";
 
 export function sortProductByTabType(products: ProductWithMain[]) {
   const groupedRoles = products.reduce(
     (acc, product) => {
-      const tab = priorityMap[product.name] ? "favories" : "others";
+      const tab = biocoopProducts.includes(product.name)
+        ? "biocoop"
+        : priorityMap[product.name]
+          ? "favories"
+          : "others";
       let group = acc.find((item) => item.tab === tab);
       if (!group) {
         group = { values: [], tab };

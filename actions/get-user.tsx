@@ -78,6 +78,7 @@ const GetUser = async () => {
           user: true,
           invoiceOrder: {
             select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
+            where: { invoice: { deletedAt: null } },
             orderBy: { createdAt: "desc" },
           },
         },

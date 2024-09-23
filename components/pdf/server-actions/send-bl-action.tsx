@@ -37,6 +37,7 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
           invoiceOrder: {
             select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
             orderBy: { createdAt: "desc" },
+            where: { invoice: { deletedAt: null } },
           },
         },
       });

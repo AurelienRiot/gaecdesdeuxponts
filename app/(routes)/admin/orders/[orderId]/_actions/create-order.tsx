@@ -23,13 +23,14 @@ async function createOrder(data: OrderFormValues) {
           datePickUp,
           shopId,
           orderItems: {
-            create: orderItems.map(({ categoryName, description, itemId, name, price, quantity, unit }) => {
+            create: orderItems.map(({ categoryName, description, itemId, name, price, quantity, unit, tax }) => {
               return {
                 itemId,
                 price,
                 quantity,
                 unit,
                 name,
+                tax,
                 categoryName,
                 description,
               };

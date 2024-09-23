@@ -41,7 +41,10 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
           orderItems: true,
           shop: true,
           user: { include: { address: true, billingAddress: true } },
-          invoiceOrder: { select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } } },
+          invoiceOrder: {
+            select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
+            where: { invoice: { deletedAt: null } },
+          },
         },
       });
 

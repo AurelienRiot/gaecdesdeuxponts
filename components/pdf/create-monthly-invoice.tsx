@@ -2,9 +2,10 @@ import { Fragment } from "react";
 
 import { StyleSheet, Text, View } from "@react-pdf/renderer";
 import Details from "./details";
-import MainDocument, { borderColor, foregroundColor, mainColor, tableRowsCount } from "./main-document";
+import MainDocument, { borderColor, tableRowsCount } from "./main-document";
 import PaidWatermark from "./paid-watermark";
-import type { MonthlyPDFDataType } from "./pdf-data";
+import type { DataOrder, MonthlyPDFDataType } from "./pdf-data";
+import { InvoiceTableBlankSpace, InvoiceTableFooter, InvoiceTableHeader, InvoiceTableRow } from "./table";
 
 // Create Document Component
 const MonthlyInvoice = ({
@@ -20,7 +21,7 @@ const MonthlyInvoice = ({
     details={<Details pdfData={data} title={`Facture mensuelle`} />}
   >
     <Fragment>
-      <ShippingItemsTable data={data} />
+      <ShippingItemsTable orders={data.orders} />
       {isPaid && <PaidWatermark />}
     </Fragment>
   </MainDocument>
@@ -38,7 +39,7 @@ const itemsTableStyles = StyleSheet.create({
   },
 });
 
-function chunkOrdersByLines(orders: MonthlyPDFDataType["orders"], totalLines: number) {
+function chunkOrdersByLines(orders: DataOrder[], totalLines: number) {
   const maxLinesFirstChunk = 15;
   const maxLinesOtherChunks = 28;
   const chunks = [];
@@ -73,18 +74,20 @@ function chunkOrdersByLines(orders: MonthlyPDFDataType["orders"], totalLines: nu
   return chunks;
 }
 
-const ShippingItemsTable = ({ data }: { data: MonthlyPDFDataType }) => {
-  const totalLines = data.orders.reduce((acc, order) => acc + order.items.length + 1, 0);
-  const chunks = chunkOrdersByLines(data.orders, totalLines);
+const ShippingItemsTable = ({ orders }: { orders: DataOrder[] }) => {
+  const totalLines = orders.reduce((acc, order) => acc + order.items.length + 1, 0);
+  const chunks = chunkOrdersByLines(orders, totalLines);
+
+  const { totalHT, totalTTC } = calculateOverallTotals(orders);
 
   if (chunks.length === 1) {
     return (
       <View style={itemsTableStyles.tableContainer}>
-        <ShippingTableHeader />
-        <ShippingTableRow orders={chunks[0]} />
+        <InvoiceTableHeader />
+        <MonthlyInvoiceTableRow orders={chunks[0]} />
 
-        <ShippingTableBlankSpace rowsCount={tableRowsCount - totalLines} />
-        <InvoiceTableFooter orders={data.orders} />
+        <InvoiceTableBlankSpace rowsCount={tableRowsCount - totalLines} />
+        <InvoiceTableFooter totalHT={totalHT} totalTTC={totalTTC} />
       </View>
     );
   }
@@ -92,83 +95,25 @@ const ShippingItemsTable = ({ data }: { data: MonthlyPDFDataType }) => {
   return (
     <>
       <View style={[itemsTableStyles.tableContainer, { marginBottom: 50 }]}>
-        <ShippingTableHeader />
-        <ShippingTableRow orders={chunk1} />
+        <InvoiceTableHeader />
+        <MonthlyInvoiceTableRow orders={chunk1} />
 
-        <ShippingTableBlankSpace rowsCount={tableRowsCount - totalLines} />
+        <InvoiceTableBlankSpace rowsCount={tableRowsCount - totalLines} />
       </View>
       {chunks.map((chunk, index) => {
         const marginTop = index === chunks.length - 1 ? 0 : 50;
         return (
           <View key={chunk[0].id} break style={[itemsTableStyles.tableContainer, { marginTop }]}>
-            <ShippingTableHeader />
-            <ShippingTableRow orders={chunk} />
+            <InvoiceTableHeader />
+            <MonthlyInvoiceTableRow orders={chunk} />
 
-            {index === chunks.length - 1 && <InvoiceTableFooter orders={data.orders} />}
+            {index === chunks.length - 1 && <InvoiceTableFooter totalHT={totalHT} totalTTC={totalTTC} />}
           </View>
         );
       })}
     </>
   );
 };
-
-const tableHeaderStyles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    borderBottomColor: borderColor,
-    backgroundColor: mainColor,
-    color: foregroundColor,
-    borderBottomWidth: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    height: 24,
-    textAlign: "center",
-    fontWeight: "bold",
-    flexGrow: 1,
-  },
-  description: {
-    width: "40%",
-    height: "100%",
-    paddingTop: 4,
-    borderRightColor: borderColor,
-    borderRightWidth: 1,
-  },
-  unit: {
-    width: "20%",
-    height: "100%",
-    paddingTop: 4,
-    borderRightColor: borderColor,
-    borderRightWidth: 1,
-  },
-  qty: {
-    width: "10%",
-    height: "100%",
-    paddingTop: 4,
-    borderRightColor: borderColor,
-    borderRightWidth: 1,
-  },
-  totalHT: {
-    width: "15%",
-    height: "100%",
-    paddingTop: 4,
-    borderRightColor: borderColor,
-    borderRightWidth: 1,
-  },
-  totalTTC: {
-    paddingTop: 4,
-    height: "100%",
-    width: "15%",
-  },
-});
-const ShippingTableHeader = () => (
-  <View style={tableHeaderStyles.container}>
-    <Text style={tableHeaderStyles.description}>Description</Text>
-    <Text style={tableHeaderStyles.unit}>Prix unitaire HT ( € )</Text>
-    <Text style={tableHeaderStyles.qty}>Qte</Text>
-    <Text style={tableHeaderStyles.totalHT}>Total HT ( € )</Text>
-    <Text style={tableHeaderStyles.totalTTC}>Total TTC ( € )</Text>
-  </View>
-);
 
 const tableRowStyles = StyleSheet.create({
   row: {
@@ -187,40 +132,12 @@ const tableRowStyles = StyleSheet.create({
     flexWrap: "wrap",
     fontWeight: "bold",
   },
-  description: {
-    width: "40%",
-    textAlign: "left",
-    paddingLeft: 8,
-    paddingRight: 8,
-    flexWrap: "wrap",
-  },
-
-  unit: {
-    width: "20%",
-    textAlign: "right",
-    paddingRight: 8,
-  },
-  qty: {
-    width: "10%",
-    textAlign: "right",
-    paddingRight: 8,
-  },
-  totalHT: {
-    width: "15%",
-    textAlign: "right",
-    paddingRight: 8,
-  },
-  totalTTC: {
-    width: "15%",
-    textAlign: "right",
-    paddingRight: 8,
-  },
 });
 
-const ShippingTableRow = ({
+const MonthlyInvoiceTableRow = ({
   orders,
 }: {
-  orders: MonthlyPDFDataType["orders"] | undefined;
+  orders: DataOrder[] | undefined;
 }) => {
   if (!orders) return null;
   return (
@@ -230,104 +147,26 @@ const ShippingTableRow = ({
           <View style={tableRowStyles.row}>
             <Text style={tableRowStyles.order}>{`Commande n° ${order.id} du ${order.dateOfShipping} `}</Text>
           </View>
-          {order.items.map((item, i) => (
-            <View style={tableRowStyles.row} key={i}>
-              <Text style={tableRowStyles.description}>{item.desc}</Text>
-              <Text style={tableRowStyles.unit}>{(item.priceTTC / 1.055).toFixed(2)}</Text>
-              <Text style={tableRowStyles.qty}>{item.qty}</Text>
-              <Text style={tableRowStyles.totalHT}>{((item.priceTTC / 1.055) * item.qty).toFixed(2)}</Text>
-
-              <Text style={tableRowStyles.totalTTC}>{(item.priceTTC * item.qty).toFixed(2)}</Text>
-            </View>
-          ))}
+          <InvoiceTableRow key={i} items={order.items} />
         </Fragment>
       ))}
     </Fragment>
   );
 };
 
-const tableBlankSpaceStyles = StyleSheet.create({
-  row: {
-    flexDirection: "row",
-    borderBottomColor: borderColor,
-    borderBottomWidth: 1,
-    alignItems: "center",
-    height: 24,
-    // fontStyle: "bold",
-    color: "white",
-  },
-  description: {
-    width: "60%",
-  },
-  qty: {
-    width: "10%",
-  },
-  rate: {
-    width: "15%",
-  },
-  amount: {
-    width: "15%",
-  },
-});
+function calculateOverallTotals(orders: DataOrder[]) {
+  let totalTTC = 0;
+  let totalHT = 0;
 
-const ShippingTableBlankSpace = ({ rowsCount }: { rowsCount: number }) => {
-  const blankRows = rowsCount > 0 ? Array(rowsCount).fill(0) : [];
-  const rows = blankRows.map((x, i) => (
-    <View style={tableBlankSpaceStyles.row} key={`BR${i}`}>
-      <Text style={tableBlankSpaceStyles.description}>-</Text>
-      <Text style={tableBlankSpaceStyles.qty}>-</Text>
-      <Text style={tableBlankSpaceStyles.rate}>-</Text>
-      <Text style={tableBlankSpaceStyles.amount}>-</Text>
-    </View>
-  ));
-  return <Fragment>{rows}</Fragment>;
-};
+  for (const order of orders) {
+    for (const item of order.items) {
+      totalTTC += item.priceTTC * item.qty;
+      totalHT += (item.priceTTC * item.qty) / item.tax;
+    }
+  }
 
-const tableFooterStyles = StyleSheet.create({
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    height: 24,
-    fontSize: 12,
-    // fontStyle: "bold",
-  },
-  description: {
-    width: "85%",
-    textAlign: "right",
-    paddingRight: 8,
-  },
-  total: {
-    width: "15%",
-    textAlign: "right",
-    paddingRight: 8,
-  },
-});
-
-const InvoiceTableFooter = ({
-  orders,
-}: {
-  orders: MonthlyPDFDataType["orders"];
-}) => {
-  const totalHT = orders
-    .map((order) => (order.totalPrice || 0) / 1.055)
-    .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-  const totalTTC = orders
-    .map((order) => order.totalPrice || 0)
-    .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-  return (
-    <>
-      <View style={tableFooterStyles.row}>
-        <Text style={tableFooterStyles.description}>TOTAL HT ( € )</Text>
-        <Text style={tableFooterStyles.total}> {totalHT.toFixed(2)}</Text>
-      </View>
-      <View style={tableFooterStyles.row}>
-        <Text style={tableFooterStyles.description}>TVA 5,5% ( € )</Text>
-        <Text style={tableFooterStyles.total}> {(totalTTC - totalHT).toFixed(2)}</Text>
-      </View>
-      <View style={tableFooterStyles.row}>
-        <Text style={tableFooterStyles.description}>TOTAL TTC ( € )</Text>
-        <Text style={tableFooterStyles.total}>{totalTTC.toFixed(2)}</Text>
-      </View>
-    </>
-  );
-};
+  return {
+    totalTTC,
+    totalHT,
+  };
+}

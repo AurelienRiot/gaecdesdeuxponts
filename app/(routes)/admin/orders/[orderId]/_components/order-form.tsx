@@ -80,6 +80,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
         itemId: product.itemId,
         unit: product.unit,
         price: product.price,
+        tax: product.tax,
         quantity: product.quantity,
         name: product.name,
         categoryName: product.categoryName,
@@ -89,6 +90,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
           itemId: "",
           unit: "",
           price: undefined,
+          tax: 1.055,
           quantity: 1,
           name: "",
           categoryName: "",
@@ -240,7 +242,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
 
           <TotalPrice />
 
-          {initialData?.invoiceId ? (
+          {!initialData?.invoiceId ? (
             <LoadingButton
               disabled={form.formState.isSubmitting}
               className="ml-auto bg-green-600 hover:bg-green-800"
@@ -249,7 +251,9 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
               {action}
             </LoadingButton>
           ) : (
-            "Impossible de modifier le commande aprés avoir éditer la facture"
+            <p className="text-destructive font-bold">
+              Impossible de modifier le commande aprés avoir éditée la facture
+            </p>
           )}
         </form>
       </Form>

@@ -10,7 +10,7 @@ import { Input, NumberInput } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { createId } from "@/lib/id";
-import { cn } from "@/lib/utils";
+import { cn, getPercentage } from "@/lib/utils";
 import { Unit } from "@prisma/client";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { Check, ChevronLeft, ChevronRight, ChevronsDown, ChevronsUp, ChevronsUpDown, X } from "lucide-react";
@@ -42,6 +42,7 @@ export const ProductWithOptions = ({
       isArchived: false,
       isFeatured: false,
       imagesUrl: [],
+      tax: 1.055,
       options: products[0].options.map((option) => ({
         index: option.index,
         name: option.name,
@@ -172,7 +173,6 @@ function ProductName({
     form.setValue("products", newProducts as ProductFormValues["products"]);
     setListChanges((prev) => prev + 1);
   };
-
   return (
     <>
       <div id={`product-${productIndex}`} className="flex flex-wrap gap-4">
@@ -216,6 +216,36 @@ function ProductName({
               <span className="absolute right-1 top-[44px] transform -translate-y-1/2 text-muted-foreground">€</span>
               <FormControl>
                 <NumberInput disabled={form.formState.isSubmitting} placeholder="9,99" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name={`products.${productIndex}.tax`}
+          render={({ field }) => (
+            <FormItem className="w-20 relative">
+              <FormLabel>TVA</FormLabel>
+              <FormControl>
+                <Select
+                  disabled={form.formState.isSubmitting}
+                  onValueChange={field.onChange}
+                  value={String(field.value)}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selectionner l'unité" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {["1", "1.055", "1.2"].map((unit) => (
+                      <SelectItem key={unit} value={unit}>
+                        {getPercentage(Number(unit))}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage />
             </FormItem>

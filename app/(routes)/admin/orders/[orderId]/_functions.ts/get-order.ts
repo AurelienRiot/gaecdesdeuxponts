@@ -20,6 +20,7 @@ const getShippingOrder = unstable_cache(
             name: true,
             itemId: true,
             unit: true,
+            tax: true,
             price: true,
             quantity: true,
             categoryName: true,
@@ -31,6 +32,7 @@ const getShippingOrder = unstable_cache(
         datePickUp: true,
         invoiceOrder: {
           select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
+          where: { invoice: { deletedAt: null } },
           orderBy: { createdAt: "desc" },
         },
       },
@@ -46,9 +48,9 @@ const getShippingOrder = unstable_cache(
           }
         : {
             ...shippingOrders,
-            invoiceId: shippingOrders.invoiceOrder[0].invoice.id,
-            dateOfPayment: shippingOrders.invoiceOrder[0].invoice.dateOfPayment,
-            invoiceEmail: shippingOrders.invoiceOrder[0].invoice.invoiceEmail,
+            invoiceId: shippingOrders.invoiceOrder[0]?.invoice.id,
+            dateOfPayment: shippingOrders.invoiceOrder[0]?.invoice.dateOfPayment,
+            invoiceEmail: shippingOrders.invoiceOrder[0]?.invoice.invoiceEmail,
           };
     return initialData;
   },

@@ -33,6 +33,7 @@ export const ShippingProducts = ({
         unit: "",
         price: 0,
         quantity: 1,
+        tax: 1.055,
         name: "",
         categoryName: "",
         description: "",
@@ -209,6 +210,7 @@ const SelectProductName = ({
     form.setValue(`orderItems.${productIndex}.categoryName`, product.product.categoryName);
     form.setValue(`orderItems.${productIndex}.itemId`, product.id);
     form.setValue(`orderItems.${productIndex}.unit`, product.unit);
+    form.setValue(`orderItems.${productIndex}.tax`, product.tax);
     form.setValue(`orderItems.${productIndex}.description`, product.description);
     form.setValue(`orderItems.${productIndex}.price`, product.price);
   }
@@ -261,6 +263,7 @@ const SelectProductName = ({
               tabsValues={groupedProducts}
               tabs={[
                 { value: "favories", label: "Favoris" },
+                { value: "biocoop", label: "Biocoop" },
                 { value: "others", label: "Autres" },
               ]}
               onSelected={(value) => {

@@ -5,6 +5,7 @@ const orderItemSchema = z.object({
   unit: z.string().optional().nullable(),
   price: z.coerce.number(),
   quantity: z.coerce.number(),
+  tax: z.coerce.number(),
   name: z.string().min(1, { message: "Le nom est requis" }),
   categoryName: z.string().min(0, { message: "La catégorie est requise" }),
   description: z.string().min(0, { message: "La description est requise" }),

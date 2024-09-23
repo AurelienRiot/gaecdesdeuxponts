@@ -76,15 +76,15 @@ export type DataOrder = {
   dateOfShipping: string;
   dateOfPayment?: string | null;
   totalPrice: number;
-  items: {
-    id: string;
-    desc: string;
-    qty: number;
-    tax: number;
-    priceTTC: number;
-  }[];
+  items: ItemDataOrder[];
 };
-
+export type ItemDataOrder = {
+  id: string;
+  desc: string;
+  qty: number;
+  tax: number;
+  priceTTC: number;
+};
 export type PDFData = {
   customer: CustomerForOrder;
   order: DataOrder;
@@ -180,7 +180,7 @@ export const pdfData: PDFData = {
       {
         id: "PR_LRBL182",
         desc: "Fromage blanc",
-        tax: 1.055,
+        tax: 1,
         priceTTC: 10,
         qty: 3,
       },
@@ -239,14 +239,14 @@ export const invoicePDFData: InvoicePDFDate = {
       {
         id: "clx5wkbeh001at35leiz5khp8",
         desc: "Crème liquide 25cl",
-        tax: 1.055,
+        tax: 1,
         priceTTC: 2,
         qty: 1,
       },
       {
         id: "clx5wkbeh001bt35lkoc4e6ro",
         desc: "Crème liquide 1L",
-        tax: 1.055,
+        tax: 1.2,
         priceTTC: 8,
         qty: 1,
       },

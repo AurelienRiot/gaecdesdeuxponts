@@ -12,6 +12,7 @@ const productSchema = z.object({
   name: z.string().min(1, { message: "Le nom est requis" }),
   description: z.string(),
   price: z.coerce.number({ message: "Le prix doit être un nombre", invalid_type_error: "Le prix doit être un nombre" }),
+  tax: z.coerce.number({ message: "La taxe doit être un nombre", invalid_type_error: "La taxe doit être un nombre" }),
   unit: z.enum(["centgramme", "Kilogramme", "Litre"]).optional(),
   isFeatured: z.boolean().default(false),
   isArchived: z.boolean().default(false),

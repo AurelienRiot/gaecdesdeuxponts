@@ -211,9 +211,6 @@ function GroupedInvoicePage({ proUserWithOrders }: { proUserWithOrders: UserWith
                                 {dateFormatter(order.dateOfShipping || new Date())} :{" "}
                                 {currencyFormatter.format(order.totalPrice)}{" "}
                               </span>
-                              {/* {order.invoiceOrder[0].invoice.invoiceEmail ? (
-                            <MailCheck className="size-4 inline ml-2 text-green-500" />
-                          ) : null} */}
                             </label>
                           </li>
                         ))}
