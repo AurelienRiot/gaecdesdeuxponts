@@ -49,7 +49,6 @@ const getShippingOrder = unstable_cache(
         : {
             ...shippingOrders,
             invoiceId: shippingOrders.invoiceOrder[0]?.invoice.id,
-            dateOfPayment: shippingOrders.invoiceOrder[0]?.invoice.dateOfPayment,
             invoiceEmail: shippingOrders.invoiceOrder[0]?.invoice.invoiceEmail,
           };
     return initialData;
