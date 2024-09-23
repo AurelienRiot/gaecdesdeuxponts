@@ -36,7 +36,7 @@ export function DisplayShippingOrder({ orderId, isSend }: { orderId: string; isS
       const url = URL.createObjectURL(blob);
       window.open(url, "_blank");
     }
-    await serverAction({ data: { orderId, type: "shipping" }, onSuccess });
+    await serverAction({ data: { orderId }, onSuccess });
   };
 
   const onSaveFile = async () => {
@@ -48,7 +48,7 @@ export function DisplayShippingOrder({ orderId, isSend }: { orderId: string; isS
       const blob = base64ToBlob(result);
       saveAs(blob, `Bon de livraison ${orderId}.pdf`);
     }
-    await serverAction({ data: { orderId, type: "shipping" }, onSuccess });
+    await serverAction({ data: { orderId }, onSuccess });
   };
 
   const onSendFile = async (setSend: (send: boolean) => void) => {

@@ -4,6 +4,8 @@ import prismadb from "@/lib/prismadb";
 import { addDays } from "date-fns/addDays";
 import { unstable_cache } from "next/cache";
 import type { AMAPColumn } from "../../amap/_components/columns";
+import { getUnitLabel } from "@/components/product/product-function";
+import type { ProductQuantities } from "@/components/google-events/get-orders-for-events";
 
 export const getAMAPOrders = unstable_cache(
   async ({ from, to }: { from: Date; to: Date }) => {
@@ -74,12 +76,7 @@ export const getGroupedAMAPOrders = unstable_cache(
         imageUrl: string | null;
         shippingDays: {
           [dateStr: string]: {
-            [itemId: string]: {
-              itemId: string;
-              name: string;
-              unit?: string | null;
-              totalQuantity: number;
-            };
+            [itemId: string]: ProductQuantities;
           };
         };
       };
@@ -108,12 +105,12 @@ export const getGroupedAMAPOrders = unstable_cache(
             groupedData[shopName].shippingDays[dateStr][itemId] = {
               itemId,
               name,
-              unit,
-              totalQuantity: 0,
+              unit: getUnitLabel(unit).quantity,
+              quantity: 0,
             };
           }
 
-          groupedData[shopName].shippingDays[dateStr][itemId].totalQuantity += quantity;
+          groupedData[shopName].shippingDays[dateStr][itemId].quantity += quantity;
         }
       }
     }

@@ -97,7 +97,7 @@ const BillTo = ({ customer }: { customer: PDFData["customer"] }) => (
       {customer.name}
       {customer.company ? ` - ${customer.company}` : ""}
     </Text>
-    {!!customer.facturationAddress && <Text>{customer.facturationAddress}</Text>}
+    {!!customer.billingAddress && <Text>{customer.billingAddress}</Text>}
     {!!customer.phone && <Text>{customer.phone}</Text>}
     {!!customer.email && <Text>{customer.email}</Text>}
   </View>

@@ -26,6 +26,8 @@ const PageOrderTable = () => {
   const { serverAction } = useServerAction(sendCheckoutEmail);
 
   const searchParams = useSearchParams();
+  const orderId = searchParams.get("orderId");
+  const order = user?.orders.find((order) => order.id === orderId);
 
   if (!user) {
     return (
@@ -51,17 +53,15 @@ const PageOrderTable = () => {
 
   useEffect(() => {
     async function sendCheckoutEmail() {
-      const orderId = searchParams.get("orderId");
       if (orderId) {
-        const order = user?.orders.find((order) => order.id === searchParams.get("orderId"));
-        if (order && !order.orderEmail) {
+        if (order && !order?.orderEmail) {
           await serverAction({ data: { orderId } });
         }
       }
     }
 
     sendCheckoutEmail();
-  }, [searchParams.get, serverAction, user?.orders]);
+  }, [orderId, order, serverAction]);
 
   const yearSet = new Set(formattedOrders.map((order) => new Date(order.createdAt).getFullYear()));
   const yearArray = Array.from(yearSet);

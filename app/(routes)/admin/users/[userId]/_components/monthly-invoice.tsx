@@ -1,6 +1,6 @@
 "use client";
 import { Icons } from "@/components/icons";
-import { DisplayMonthlyInvoice } from "@/components/pdf/button/display-monthly-invoice";
+// import { DisplayMonthlyInvoice } from "@/components/pdf/button/display-monthly-invoice";
 import type { monthlyOrdersType } from "@/components/pdf/pdf-data";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -69,7 +69,7 @@ const MonthlyInvoice = ({ orders }: { orders: monthlyOrdersType[] }) => {
             ))}
           </SelectContent>
         </Select>
-        <DisplayMonthlyInvoice orders={selectedOrders} isSend={emailSend} />
+        {/* <DisplayMonthlyInvoice orders={selectedOrders} isSend={emailSend} /> */}
       </div>
       <FacturationDate
         isPaid={isPaid}

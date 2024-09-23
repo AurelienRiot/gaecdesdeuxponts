@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "@react-pdf/renderer";
 import Details from "./details";
 import MainDocument, { borderColor, foregroundColor, mainColor, tableRowsCount } from "./main-document";
 import PaidWatermark from "./paid-watermark";
-import type { PDFData } from "./pdf-data";
+import type { InvoicePDFDate } from "./pdf-data";
 
 // Create Document Component
 const Invoice = ({
@@ -12,7 +12,7 @@ const Invoice = ({
   isPaid,
 }: {
   isPaid: boolean;
-  dataInvoice: PDFData;
+  dataInvoice: InvoicePDFDate;
 }) => (
   <MainDocument
     customer={dataInvoice.customer}
@@ -38,7 +38,7 @@ const itemsTableStyles = StyleSheet.create({
   },
 });
 
-const InvoiceItemsTable = ({ invoice }: { invoice: PDFData }) => (
+const InvoiceItemsTable = ({ invoice }: { invoice: InvoicePDFDate }) => (
   <View style={itemsTableStyles.tableContainer}>
     <InvoiceTableHeader />
     <InvoiceTableRow items={invoice.order.items} />
@@ -145,7 +145,7 @@ const tableRowStyles = StyleSheet.create({
   },
 });
 
-const InvoiceTableRow = ({ items }: { items: PDFData["order"]["items"] }) => {
+const InvoiceTableRow = ({ items }: { items: InvoicePDFDate["order"]["items"] }) => {
   const rows = items.map((item, i) => (
     <View style={tableRowStyles.row} key={i}>
       <Text style={tableRowStyles.description}>{item.desc}</Text>
@@ -219,7 +219,7 @@ const tableFooterStyles = StyleSheet.create({
 const InvoiceTableFooter = ({
   items,
 }: {
-  items: PDFData["order"]["items"];
+  items: InvoicePDFDate["order"]["items"];
 }) => {
   const totalHT = items
     .map((item) => (item.qty * item.priceTTC) / 1.055)

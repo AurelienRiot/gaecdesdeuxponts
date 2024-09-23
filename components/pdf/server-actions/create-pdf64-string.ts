@@ -8,14 +8,13 @@ import { dateMonthYear } from "@/lib/date-utils";
 
 const pdf64StringSchema = z.object({
   orderId: z.string(),
-  type: z.union([z.literal("invoice"), z.literal("shipping")]),
 });
 async function createPDF64String(data: z.infer<typeof pdf64StringSchema>) {
   return await safeServerAction({
     data,
     schema: pdf64StringSchema,
     getUser: checkReadOnlyAdmin,
-    serverAction: async ({ orderId, type }) => {
+    serverAction: async ({ orderId }) => {
       const order = await prismadb.order.findUnique({
         where: {
           id: orderId,
@@ -26,7 +25,7 @@ async function createPDF64String(data: z.infer<typeof pdf64StringSchema>) {
           shop: true,
           user: { include: { address: true, billingAddress: true } },
           invoiceOrder: {
-            select: { invoice: { select: { invoiceEmail: true, dateOfPayment: true } } },
+            select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
             orderBy: { createdAt: "desc" },
           },
         },
@@ -38,7 +37,7 @@ async function createPDF64String(data: z.infer<typeof pdf64StringSchema>) {
         };
       }
 
-      const base64String = await generatePdfSring64({ data: order, type: type });
+      const base64String = await generatePdfSring64({ data: order, type: "shipping" });
       return {
         success: true,
         message: "",
@@ -83,58 +82,45 @@ async function createAMAPPDF64String(data: z.infer<typeof amapPdf64StringSchema>
   });
 }
 
-const monthlyPdf64StringSchema = z.object({
-  orderIds: z.array(z.string()),
+const invoicePDF64StringSchema = z.object({
+  invoiceId: z.string(),
 });
 
-async function createMonthlyPDF64String(data: z.infer<typeof monthlyPdf64StringSchema>) {
+async function createInvoicePDF64String(data: z.infer<typeof invoicePDF64StringSchema>) {
   return await safeServerAction({
     data,
-    schema: monthlyPdf64StringSchema,
+    schema: invoicePDF64StringSchema,
     getUser: checkReadOnlyAdmin,
-    serverAction: async ({ orderIds }) => {
-      const orders = await prismadb.order.findMany({
+    serverAction: async ({ invoiceId }) => {
+      const fullInvoice = await prismadb.invoice.findUnique({
         where: {
-          id: { in: orderIds },
-          dateOfShipping: { not: null },
+          id: invoiceId,
           deletedAt: null,
         },
         include: {
-          orderItems: true,
-          shop: true,
-          user: { include: { address: true, billingAddress: true } },
-          invoiceOrder: {
-            select: { invoice: { select: { invoiceEmail: true, dateOfPayment: true } } },
-            orderBy: { createdAt: "desc" },
+          customer: true,
+          orders: {
+            include: { invoiceOrderItems: true },
           },
         },
-        orderBy: {
-          dateOfShipping: "asc",
-        },
       });
-      if (orders.length === 0) {
+      if (!fullInvoice) {
         return {
           success: false,
-          message: "Aucune commande pour ce mois",
+          message: "La facture n'existe pas",
         };
       }
-      if (!orders[0].dateOfShipping) {
-        return {
-          success: false,
-          message: "Aucune commande pour ce mois",
-        };
-      }
+      const type = fullInvoice.orders.length === 1 ? "single" : "monthly";
+      const date = dateMonthYear(fullInvoice.orders.map((order) => order.dateOfShipping));
 
-      const date = dateMonthYear(orders.map((order) => order.dateOfShipping));
-
-      const base64String = await generatePdfSring64({ data: orders, type: "monthly" });
+      const base64String = await generatePdfSring64({ data: fullInvoice, type });
       return {
         success: true,
         message: "",
-        data: { base64String, date },
+        data: { base64String, date, type },
       };
     },
   });
 }
 
-export { createMonthlyPDF64String, createPDF64String, createAMAPPDF64String };
+export { createInvoicePDF64String, createPDF64String, createAMAPPDF64String };

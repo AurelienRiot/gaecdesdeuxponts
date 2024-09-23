@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { PiInvoice } from "react-icons/pi";
 
 export function MainNav({ className }: React.HTMLAttributes<HTMLElement>) {
   const pathname = usePathname();
@@ -113,6 +114,12 @@ export const SecondaryAdminRoutes = (pathname: string) => [
     label: "Commandes",
     active: pathname.startsWith(`/admin/orders`),
     Icone: ListOrderedIcon,
+  },
+  {
+    href: `/admin/invoices`,
+    label: "Factures",
+    active: pathname.startsWith(`/admin/invoices`),
+    Icone: PiInvoice,
   },
 ];
 

@@ -1,7 +1,7 @@
 import { dateFormatter } from "@/lib/date-utils";
 import { StyleSheet, Text, View } from "@react-pdf/renderer";
 import { mainColor } from "./main-document";
-import type { AMAPType, MonthlyPDFDataType, PDFData } from "./pdf-data";
+import type { AMAPType, InvoicePDFDate, MonthlyPDFDataType, PDFData } from "./pdf-data";
 
 const detailsStyles = StyleSheet.create({
   container: {
@@ -12,9 +12,10 @@ const detailsStyles = StyleSheet.create({
 
 type DetailsProps =
   | {
-      title: "Facture" | "Bon de commande" | "Bon de livraison";
+      title: "Bon de commande" | "Bon de livraison";
       pdfData: PDFData;
     }
+  | { title: "Facture"; pdfData: InvoicePDFDate }
   | {
       title: "Facture mensuelle";
       pdfData: MonthlyPDFDataType;
@@ -52,7 +53,7 @@ function CustomerNumber({ data }: { data: DetailsProps }) {
   return (
     <View style={noStyles.invoiceDateContainer}>
       <Text style={noStyles.label}>N° de client : </Text>
-      <Text style={noStyles.invoiceDate}>{data.pdfData.customer.customerId}</Text>
+      <Text style={noStyles.invoiceDate}>{data.pdfData.customer.userId}</Text>
     </View>
   );
 }
@@ -60,9 +61,25 @@ function CustomerNumber({ data }: { data: DetailsProps }) {
 function OrderNumber({ data }: { data: DetailsProps }) {
   if (data.title === "Facture mensuelle") {
     return (
-      <View style={noStyles.invoiceDateContainer}>
-        <Text style={noStyles.label}>{data.pdfData.date} </Text>
-      </View>
+      <>
+        <View style={noStyles.invoiceDateContainer}>
+          <Text style={noStyles.label}>{data.pdfData.date} </Text>
+        </View>
+        <View style={noStyles.invoiceDateContainer}>
+          <Text style={noStyles.label}>N° de facture : </Text>
+          <Text style={noStyles.invoiceDate}>{data.pdfData.invoiceId}</Text>
+        </View>
+      </>
+    );
+  }
+  if (data.title === "Facture") {
+    return (
+      <>
+        <View style={noStyles.invoiceDateContainer}>
+          <Text style={noStyles.label}>N° de facture : </Text>
+          <Text style={noStyles.invoiceDate}>{data.pdfData.invoiceId}</Text>
+        </View>
+      </>
     );
   }
   if (data.title === "Contrat AMAP") {
@@ -102,21 +119,21 @@ const headingStyles = StyleSheet.create({
 });
 
 const FacturationDate = ({ data }: { data: DetailsProps }) =>
-  data.title === "Facture"
-    ? !!data.pdfData.order.dateOfPayment && (
+  data.title === "Facture" || data.title === "Facture mensuelle"
+    ? !!data.pdfData.dateOfPayment && (
         <View style={noStyles.invoiceDateContainer}>
-          <Text style={noStyles.label}>Date de facturation : </Text>
-          <Text style={noStyles.invoiceDate}>{data.pdfData.order.dateOfPayment}</Text>
+          <Text style={noStyles.label}>Date de payement : </Text>
+          <Text style={noStyles.invoiceDate}>{data.pdfData.dateOfPayment}</Text>
         </View>
       )
     : null;
 
 function EditionDate({ data }: { data: DetailsProps }) {
-  if (data.title === "Facture mensuelle") {
+  if (data.title === "Facture mensuelle" || data.title === "Facture") {
     return (
       <View style={noStyles.invoiceDateContainer}>
         <Text style={noStyles.label}>{"Date d'édition :"} </Text>
-        <Text style={noStyles.invoiceDate}>{dateFormatter(new Date())}</Text>
+        <Text style={noStyles.invoiceDate}>{data.pdfData.dateOfEdition}</Text>
       </View>
     );
   }

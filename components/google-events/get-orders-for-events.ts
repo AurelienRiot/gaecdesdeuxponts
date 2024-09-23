@@ -1,8 +1,7 @@
 import prismadb from "@/lib/prismadb";
-import { getUnitLabel } from "../product/product-function";
-import { addDays } from "date-fns";
-import { Option } from "@prisma/client";
 import { addressFormatter } from "@/lib/utils";
+import { addDays } from "date-fns";
+import { getUnitLabel } from "../product/product-function";
 
 export const getAllOrders = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
   // return dummieDate;
@@ -80,7 +79,7 @@ export const getAllOrders = async ({ startDate, endDate }: { startDate: Date; en
 
   const formattedOrders = orders.map((order) => ({
     id: order.id,
-    customerId: order.user.id,
+    userId: order.user.id,
     shippingAddress: order.shop?.address || addressFormatter(order.user?.address),
     shippingEmail: order.shippingEmail,
     name: order.user?.name,
@@ -257,7 +256,7 @@ const dummieDate = {
   formattedOrders: [
     {
       id: "CM_27-8-24_BPZOQ",
-      customerId: "CS_DRMIGXM",
+      userId: "CS_DRMIGXM",
       shippingAddress: "6 Rue de Plessé, 44460, Avessac, FR",
       name: "Éric et Aline Pecquery - Proxi l'épicerie du village AVESSAC",
       company: "Proxi l'épicerie du village AVESSAC",
@@ -266,12 +265,14 @@ const dummieDate = {
         {
           itemId: "PR_7dud9y",
           name: "Lait cru bouteille plastique",
+          tax: 1.055,
           quantity: 5,
           unit: null,
         },
         {
           itemId: "PR_lppxu7",
           name: "Lait pasteurisé entier bouteille verre",
+          tax: 1.055,
           quantity: 4,
           unit: null,
         },
@@ -288,6 +289,7 @@ const dummieDate = {
         {
           itemId: "PR_K7PBWYK",
           name: "Lait cru bio bidon 2L",
+          tax: 1.055,
           quantity: 4,
           unit: null,
         },

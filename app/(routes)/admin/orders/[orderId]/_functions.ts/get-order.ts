@@ -30,7 +30,7 @@ const getShippingOrder = unstable_cache(
         shopId: true,
         datePickUp: true,
         invoiceOrder: {
-          select: { invoice: { select: { invoiceEmail: true, dateOfPayment: true } } },
+          select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
           orderBy: { createdAt: "desc" },
         },
       },
@@ -46,6 +46,7 @@ const getShippingOrder = unstable_cache(
           }
         : {
             ...shippingOrders,
+            invoiceId: shippingOrders.invoiceOrder[0].invoice.id,
             dateOfPayment: shippingOrders.invoiceOrder[0].invoice.dateOfPayment,
             invoiceEmail: shippingOrders.invoiceOrder[0].invoice.invoiceEmail,
           };

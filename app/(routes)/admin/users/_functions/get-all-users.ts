@@ -1,6 +1,6 @@
 import prismadb from "@/lib/prismadb";
 
-export async function getAllUsers() {
+export async function getProUsersWithOrders() {
   return await prismadb.user.findMany({
     where: {
       NOT: {
@@ -18,7 +18,7 @@ export async function getAllUsers() {
           dateOfShipping: true,
           totalPrice: true,
           invoiceOrder: {
-            select: { invoice: { select: { invoiceEmail: true, dateOfPayment: true } } },
+            select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
             orderBy: { createdAt: "desc" },
           },
         },

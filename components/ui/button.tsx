@@ -94,10 +94,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps & ButtonIconProps
 Button.displayName = "Button";
 
 const LoadingButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, disabled, children, type, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, disabled, children, type = "button", ...props }, ref) => {
     return (
       <button
-        type={type ?? "button"}
+        type={type}
         className={cn(buttonVariants({ variant, size, className }))}
         disabled={disabled}
         ref={ref}

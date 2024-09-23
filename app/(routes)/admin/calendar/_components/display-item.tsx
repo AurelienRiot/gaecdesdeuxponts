@@ -1,4 +1,4 @@
-import type getAllOrders from "@/components/google-events/get-orders-for-events";
+import type { ProductQuantities } from "@/components/google-events/get-orders-for-events";
 import { nanoid } from "@/lib/id";
 import { cn, numberFormat2Decimals } from "@/lib/utils";
 import { BsBasketFill } from "react-icons/bs";
@@ -6,9 +6,7 @@ import { LuMilk } from "react-icons/lu";
 import { PiPackageDuotone } from "react-icons/pi";
 import { TbMilk } from "react-icons/tb";
 
-function DisplayItem({
-  items,
-}: { items: Awaited<ReturnType<typeof getAllOrders>>["productQuantities"]["aggregateProducts"] }) {
+function DisplayItem({ items }: { items: ProductQuantities[] }) {
   return (
     <div className="mt-2 space-y-2">
       {items.map((item) => (

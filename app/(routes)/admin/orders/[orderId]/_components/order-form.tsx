@@ -28,6 +28,7 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
+import { DisplayCreateInvoice } from "@/components/pdf/button/display-create-invoice";
 
 export type OrderFormProps = {
   initialData:
@@ -239,13 +240,17 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
 
           <TotalPrice />
 
-          <LoadingButton
-            disabled={form.formState.isSubmitting}
-            className="ml-auto bg-green-600 hover:bg-green-800"
-            type="submit"
-          >
-            {action}
-          </LoadingButton>
+          {initialData?.invoiceId ? (
+            <LoadingButton
+              disabled={form.formState.isSubmitting}
+              className="ml-auto bg-green-600 hover:bg-green-800"
+              type="submit"
+            >
+              {action}
+            </LoadingButton>
+          ) : (
+            "Impossible de modifier le commande aprés avoir éditer la facture"
+          )}
         </form>
       </Form>
       {!!initialData?.id && !!initialData.dateOfEdition && (
@@ -253,13 +258,17 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
           {user?.role === "pro" && (
             <div className="space-y-2">
               <Label>Bon de livraison</Label>
-              <DisplayShippingOrder orderId={form.getValues("id")} isSend={!!initialData.shippingEmail} />
+              <DisplayShippingOrder orderId={initialData.id} isSend={!!initialData.shippingEmail} />
             </div>
           )}
           {user?.role === "user" && (
             <div className="space-y-2">
               <Label>Facture</Label>
-              <DisplayInvoice orderId={form.getValues("id")} isSend={!!initialData.invoiceEmail} />
+              {initialData.invoiceId ? (
+                <DisplayInvoice invoiceId={initialData.invoiceId} isSend={!!initialData.invoiceEmail} />
+              ) : (
+                <DisplayCreateInvoice orderIds={[initialData.id]} />
+              )}
             </div>
           )}
           {user?.role === "trackOnlyUser" && (

@@ -201,7 +201,7 @@ export function Consommateur({ customer }: { customer: AMAPType["customer"] }) {
     <View style={AMAPStyle.container}>
       <Text style={AMAPStyle.title}>Consommateur.trice</Text>
       {!!customer.name && <Text>{customer.name}</Text>}
-      {!!customer.facturationAddress && <Text>{customer.facturationAddress}</Text>}
+      {!!customer.billingAddress && <Text>{customer.billingAddress}</Text>}
       {!!customer.phone && <Text>{customer.phone}</Text>}
       {!!customer.email && <Text>{customer.email}</Text>}
     </View>

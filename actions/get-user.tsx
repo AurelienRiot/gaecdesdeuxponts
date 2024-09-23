@@ -77,7 +77,7 @@ const GetUser = async () => {
           shop: true,
           user: true,
           invoiceOrder: {
-            select: { invoice: { select: { invoiceEmail: true, dateOfPayment: true } } },
+            select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
             orderBy: { createdAt: "desc" },
           },
         },

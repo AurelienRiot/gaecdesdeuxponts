@@ -15,9 +15,9 @@ async function createAMAPFormulaire(data: AMAPFormulaireValues) {
       const AMAPData: AMAPType = {
         customer: {
           name: "Nom :",
-          customerId: "",
+          userId: "",
           shippingAddress: "Adresse :",
-          facturationAddress: "Adresse :",
+          billingAddress: "Adresse :",
           phone: "Tél :",
           email: "email :",
         },

@@ -1,11 +1,17 @@
-import type { AMAPOrderWithItemsAndUser, FullOrderWithInvoicePayment } from "@/types";
+import type { AMAPOrderWithItemsAndUser, FullInvoice, FullOrderWithInvoicePayment } from "@/types";
 import { renderToBuffer } from "@react-pdf/renderer";
 import AmapPDF from "./create-amap";
 import Invoice from "./create-invoice";
 import MonthlyInvoice from "./create-monthly-invoice";
 import ShippingOrder from "./create-shipping";
 import AmapPDFForm from "./formulaire-amap";
-import { createAMAPData, createMonthlyPDFData, createPDFData, type AMAPType } from "./pdf-data";
+import {
+  createAMAPData,
+  createInvoicePDFData,
+  createMonthlyInvoicePDFData,
+  createPDFData,
+  type AMAPType,
+} from "./pdf-data";
 
 async function generatePdfSring64({
   data,
@@ -13,24 +19,23 @@ async function generatePdfSring64({
 }:
   | {
       data: FullOrderWithInvoicePayment;
-      type: "invoice" | "shipping";
+      type: "shipping";
     }
-  | { data: FullOrderWithInvoicePayment[]; type: "monthly" }
+  | { data: FullInvoice; type: "single" | "monthly" }
   | { data: AMAPOrderWithItemsAndUser; type: "amap" }
   | { data: AMAPType; type: "formulaire" }): Promise<string> {
   let buffer: Buffer;
   switch (type) {
-    case "invoice":
-      buffer = await renderToBuffer(
-        <Invoice dataInvoice={createPDFData(data)} isPaid={!!data.invoiceOrder[0]?.invoice.dateOfPayment} />,
-      );
+    case "single":
+      buffer = await renderToBuffer(<Invoice dataInvoice={createInvoicePDFData(data)} isPaid={!!data.dateOfPayment} />);
       break;
     case "shipping":
       buffer = await renderToBuffer(<ShippingOrder pdfData={createPDFData(data)} />);
       break;
     case "monthly": {
-      const isPaid = data.every((order) => !!order.invoiceOrder[0]?.invoice.dateOfPayment);
-      buffer = await renderToBuffer(<MonthlyInvoice data={createMonthlyPDFData(data)} isPaid={isPaid} />);
+      buffer = await renderToBuffer(
+        <MonthlyInvoice data={createMonthlyInvoicePDFData(data)} isPaid={!!data.dateOfPayment} />,
+      );
       break;
     }
     case "amap": {

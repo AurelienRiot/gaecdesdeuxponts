@@ -14,7 +14,7 @@ const AMAPFormPage = async ({ params }: { params: { amapId: string } }) => {
         amapItems: true,
       },
     }),
-    prismadb.user.findMany({ where: { role: "user" } }),
+    prismadb.user.findMany({ where: { role: { in: ["user", "trackOnlyUser"] } } }),
     await prismadb.shop.findMany({ where: { type: "amap" }, orderBy: { createdAt: "desc" } }),
     prismadb.product.findMany({ where: { productName: "Produits AMAP" } }),
   ]);

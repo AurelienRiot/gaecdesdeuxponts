@@ -76,7 +76,6 @@ function chunkOrdersByLines(orders: MonthlyPDFDataType["orders"], totalLines: nu
 const ShippingItemsTable = ({ data }: { data: MonthlyPDFDataType }) => {
   const totalLines = data.orders.reduce((acc, order) => acc + order.items.length + 1, 0);
   const chunks = chunkOrdersByLines(data.orders, totalLines);
-  console.log(chunks);
 
   if (chunks.length === 1) {
     return (

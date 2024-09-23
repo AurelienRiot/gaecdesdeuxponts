@@ -1,28 +1,34 @@
 import { dateFormatter, dateMonthYear, getDaysBetweenDates } from "@/lib/date-utils";
 import { addressFormatter, formatFrenchPhoneNumber } from "@/lib/utils";
-import type { AMAPOrderWithItems, FullOrder, FullOrderWithInvoicePayment, UserWithAddress } from "@/types";
+import type {
+  AMAPOrderWithItems,
+  FullInvoice,
+  FullOrderWithInvoicePayment,
+  InvoiceOrderWithItems,
+  UserWithAddress,
+} from "@/types";
 
 type CustomerForOrder = {
   name: string;
   company?: string | null;
-  customerId: string;
+  userId: string;
   shippingAddress: string;
-  facturationAddress: string;
+  billingAddress: string;
   phone?: string | null;
   email: string;
 };
 
 export const createCustomer = (user: UserWithAddress): CustomerForOrder => {
   const shippingAddress = user.address ? addressFormatter(user.address, true) : "";
-  const facturationAddress = user.billingAddress ? addressFormatter(user.billingAddress, true) : shippingAddress;
+  const billingAddress = user.billingAddress ? addressFormatter(user.billingAddress, true) : shippingAddress;
   return {
     name: user.name || "",
-    customerId: user.id,
+    userId: user.id,
     company: user.company,
     email: user.email || "",
     phone: formatFrenchPhoneNumber(user.phone),
     shippingAddress,
-    facturationAddress,
+    billingAddress,
   };
 };
 
@@ -33,11 +39,31 @@ export const createDataOrder = (order: FullOrderWithInvoicePayment): DataOrder =
     dateOfPayment: order.invoiceOrder[0]?.invoice.dateOfPayment
       ? dateFormatter(order.invoiceOrder[0].invoice.dateOfPayment)
       : null,
-    dateOfShipping: order.dateOfShipping ? dateFormatter(order.dateOfShipping) : null,
+    dateOfShipping: order.dateOfShipping ? dateFormatter(order.dateOfShipping) : dateFormatter(order.datePickUp),
     items: order.orderItems.map((item) => ({
       id: item.itemId,
       desc: item.name,
+      tax: item.tax,
       priceTTC: item.price,
+      qty: item.quantity,
+    })),
+    totalPrice: order.totalPrice,
+  };
+};
+
+export const createInvoiceDataOrder = (order: InvoiceOrderWithItems): DataOrder => {
+  if (!order.dateOfShipping) {
+    throw new Error("Date de livraison incorrect");
+  }
+  return {
+    id: order.orderId,
+    dateOfEdition: dateFormatter(order.dateOfShipping),
+    dateOfShipping: dateFormatter(order.dateOfShipping),
+    items: order.invoiceOrderItems.map((item) => ({
+      id: item.itemId,
+      desc: item.name,
+      priceTTC: item.price,
+      tax: item.tax,
       qty: item.quantity,
     })),
     totalPrice: order.totalPrice,
@@ -47,13 +73,14 @@ export const createDataOrder = (order: FullOrderWithInvoicePayment): DataOrder =
 export type DataOrder = {
   id: string;
   dateOfEdition: string;
-  dateOfShipping: string | null;
-  dateOfPayment: string | null;
+  dateOfShipping: string;
+  dateOfPayment?: string | null;
   totalPrice: number;
   items: {
     id: string;
     desc: string;
     qty: number;
+    tax: number;
     priceTTC: number;
   }[];
 };
@@ -81,33 +108,65 @@ export type monthlyOrdersType = {
 
 export type MonthlyPDFDataType = {
   date: string;
+  invoiceId: string;
+  dateOfEdition: string;
+  dateOfPayment?: string | null;
   customer: CustomerForOrder;
   orders: DataOrder[];
 };
 
-export const createMonthlyPDFData = (orders: FullOrderWithInvoicePayment[]): MonthlyPDFDataType => {
-  if (!orders[0].dateOfShipping) {
+export type InvoicePDFDate = {
+  invoiceId: string;
+  dateOfEdition: string;
+  dateOfPayment?: string | null;
+  customer: CustomerForOrder;
+  order: DataOrder;
+};
+export const createInvoicePDFData = (invoice: FullInvoice): InvoicePDFDate => {
+  if (!invoice.orders[0].dateOfShipping) {
     throw new Error("Date invalide");
   }
-  const date = dateMonthYear(orders.map((order) => order.dateOfShipping));
 
-  const customer = createCustomer(orders[orders.length - 1].user);
+  if (!invoice.customer) {
+    throw new Error("Client invalide");
+  }
+  const customer = invoice.customer;
+  return {
+    dateOfEdition: dateFormatter(invoice.dateOfEdition),
+    dateOfPayment: invoice.dateOfPayment ? dateFormatter(invoice.dateOfPayment) : null,
+    invoiceId: invoice.id,
+    customer,
+    order: createInvoiceDataOrder(invoice.orders[0]),
+  };
+};
+export const createMonthlyInvoicePDFData = (invoice: FullInvoice): MonthlyPDFDataType => {
+  if (!invoice.orders[0].dateOfShipping) {
+    throw new Error("Date invalide");
+  }
 
-  const monthlyPDFData = {
+  const date = dateMonthYear(invoice.orders.map((order) => order.dateOfShipping));
+
+  if (!invoice.customer) {
+    throw new Error("Client invalide");
+  }
+  const customer = invoice.customer;
+  return {
+    invoiceId: invoice.id,
+    dateOfEdition: dateFormatter(invoice.dateOfEdition),
+    dateOfPayment: invoice.dateOfPayment ? dateFormatter(invoice.dateOfPayment) : null,
     date,
     customer,
-    orders: orders.map(createDataOrder),
+    orders: invoice.orders.map(createInvoiceDataOrder),
   };
-  return monthlyPDFData;
 };
 
 export const pdfData: PDFData = {
   customer: {
     name: "Pub Demystify",
     company: "Gaec des deux ponts",
-    customerId: "CS_2R374KQ",
+    userId: "CS_2R374KQ",
     shippingAddress: "Avenue deis PORTISOL, 83600, Fréjus, FR",
-    facturationAddress: "venelle Koad ar Runig, 29470, Plougastel-Daoulas, FR",
+    billingAddress: "venelle Koad ar Runig, 29470, Plougastel-Daoulas, FR",
     phone: "+33356452546",
     email: "pub.demystify390@passmail.net",
   },
@@ -121,24 +180,80 @@ export const pdfData: PDFData = {
       {
         id: "PR_LRBL182",
         desc: "Fromage blanc",
+        tax: 1.055,
         priceTTC: 10,
         qty: 3,
       },
       {
         id: "PR_LRBL182",
         desc: "Crème liquide 25cl",
+        tax: 1.055,
         priceTTC: 2,
         qty: 1,
       },
       {
         id: "PR_LRBL182",
         desc: "Crème liquide 1L",
+        tax: 1.055,
         priceTTC: 8,
         qty: 1,
       },
       {
         id: "PR_LRBL182",
         desc: "Crème liquide 50cl",
+        tax: 1.055,
+        priceTTC: 4,
+        qty: 1,
+      },
+    ],
+  },
+};
+
+export const invoicePDFData: InvoicePDFDate = {
+  invoiceId: "7-6-2024-0sUttHF",
+  dateOfEdition: "8 juin 2024",
+  dateOfPayment: "19 juin 2024",
+  customer: {
+    name: "Pub Demystify",
+    company: "Gaec des deux ponts",
+    userId: "clvurl15d000cn7yjhkdo7wo2",
+    shippingAddress: "Avenue deis PORTISOL, 83600, Fréjus, FR",
+    billingAddress: "venelle Koad ar Runig, 29470, Plougastel-Daoulas, FR",
+    phone: "+33356452546",
+    email: "pub.demystify390@passmail.net",
+  },
+  order: {
+    id: "7-6-2024-0sUttHF",
+    dateOfEdition: "8 juin 2024",
+    dateOfPayment: "19 juin 2024",
+    dateOfShipping: "4 juin 2024",
+    totalPrice: 44,
+    items: [
+      {
+        id: "clx5wkbeh0019t35l3aby38q6",
+        desc: "Fromage blanc",
+        tax: 1.055,
+        priceTTC: 10,
+        qty: 3,
+      },
+      {
+        id: "clx5wkbeh001at35leiz5khp8",
+        desc: "Crème liquide 25cl",
+        tax: 1.055,
+        priceTTC: 2,
+        qty: 1,
+      },
+      {
+        id: "clx5wkbeh001bt35lkoc4e6ro",
+        desc: "Crème liquide 1L",
+        tax: 1.055,
+        priceTTC: 8,
+        qty: 1,
+      },
+      {
+        id: "clx5wkbeh001ct35lidijjyz4",
+        desc: "Crème liquide 50cl",
+        tax: 1.055,
         priceTTC: 4,
         qty: 1,
       },
@@ -148,12 +263,15 @@ export const pdfData: PDFData = {
 
 export const monthlyPDFData: MonthlyPDFDataType = {
   date: "juin 2024",
+  invoiceId: "7-6-2024-0sUttHF",
+  dateOfEdition: "8 juin 2024",
+  dateOfPayment: "19 juin 2024",
   customer: {
     name: "Pub Demystify",
     company: "Gaec des deux ponts",
-    customerId: "clvurl15d000cn7yjhkdo7wo2",
+    userId: "clvurl15d000cn7yjhkdo7wo2",
     shippingAddress: "Avenue deis PORTISOL, 83600, Fréjus, FR",
-    facturationAddress: "venelle Koad ar Runig, 29470, Plougastel-Daoulas, FR",
+    billingAddress: "venelle Koad ar Runig, 29470, Plougastel-Daoulas, FR",
     phone: "+33356452546",
     email: "pub.demystify390@passmail.net",
   },
@@ -202,6 +320,7 @@ export const monthlyPDFData: MonthlyPDFDataType = {
         {
           id: "clx5wkbeh0019t35l3aby38q6",
           desc: "Fromage blanc",
+          tax: 1.055,
           priceTTC: 10,
           qty: 3,
         },
@@ -259,9 +378,9 @@ export type AMAPType = {
 export const AMAPData: AMAPType = {
   customer: {
     name: "Nom :",
-    customerId: "CS_JTF0B99",
+    userId: "CS_JTF0B99",
     shippingAddress: "Adresse :",
-    facturationAddress: "Adresse :",
+    billingAddress: "Adresse :",
     phone: "Tél :",
     email: "email :",
   },

@@ -1,9 +1,9 @@
 import { checkAdmin } from "@/components/auth/checkAuth";
-import { getAndSendMonthlyInvoice } from "@/components/pdf/server-actions/get-and-send-monthly-invoice";
+import { sendInvoice } from "@/components/pdf/server-actions/create-and-send-invoice";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-const groupedMonthlyInvoiceSchema = z.array(z.string());
+const groupedMonthlyInvoiceSchema = z.object({ invoiceId: z.string() });
 
 export async function POST(req: Request) {
   try {
@@ -23,14 +23,16 @@ export async function POST(req: Request) {
       });
     }
 
-    const montlyInvoice = await getAndSendMonthlyInvoice(validatedData.data);
-    return montlyInvoice.success
-      ? new NextResponse(montlyInvoice.message, {
-          status: 200,
-        })
-      : new NextResponse(montlyInvoice.message, {
-          status: 500,
-        });
+    const response = await sendInvoice(validatedData.data.invoiceId);
+
+    if (!response.success) {
+      return new NextResponse(response.message, {
+        status: 500,
+      });
+    }
+    return new NextResponse(response.message, {
+      status: 200,
+    });
   } catch (error) {
     console.log("[GROUPED_INVOICE]", error);
     return new NextResponse("Erreur", {

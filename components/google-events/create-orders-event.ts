@@ -107,7 +107,7 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
       : formattedOrders
           .map(
             (order) =>
-              `<a href="${process.env.NEXT_PUBLIC_URL}/admin/users/${order.customerId}">${order.company ? order.company : order.name}</a><br /><strong><a href="${process.env.NEXT_PUBLIC_URL}/admin/orders/${order.id}"><font color='${order.shippingEmail ? "green" : "red"}'>${order.shippingEmail ? "BL envoyé" : "Acceder à la commande"} </font></a></strong> <br />` +
+              `<a href="${process.env.NEXT_PUBLIC_URL}/admin/users/${order.userId}">${order.company ? order.company : order.name}</a><br /><strong><a href="${process.env.NEXT_PUBLIC_URL}/admin/orders/${order.id}"><font color='${order.shippingEmail ? "green" : "red"}'>${order.shippingEmail ? "BL envoyé" : "Acceder à la commande"} </font></a></strong> <br />` +
               order.orderItems
                 .map((item) => `<strong>${item.name}</strong> : ${item.quantity}${item.unit || ""}`)
                 .join("<br />") +

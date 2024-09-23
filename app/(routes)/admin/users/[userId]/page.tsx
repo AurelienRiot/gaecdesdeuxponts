@@ -40,7 +40,7 @@ const getUserPageData = unstable_cache(
             orderItems: true,
             shop: true,
             invoiceOrder: {
-              select: { invoice: { select: { invoiceEmail: true, dateOfPayment: true } } },
+              select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
               orderBy: { createdAt: "desc" },
             },
           },

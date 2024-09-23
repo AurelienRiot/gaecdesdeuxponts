@@ -12,24 +12,13 @@ async function createOrder(data: OrderFormValues) {
     schema: orderSchema,
     data,
     getUser: checkAdmin,
-    serverAction: async ({
-      datePickUp,
-      id,
-      orderItems,
-      totalPrice,
-      userId,
-      dateOfEdition,
-      dateOfPayment,
-      dateOfShipping,
-      shopId,
-    }) => {
+    serverAction: async ({ datePickUp, id, orderItems, totalPrice, userId, dateOfEdition, dateOfShipping, shopId }) => {
       await prismadb.order.create({
         data: {
           id,
           totalPrice,
           userId,
           dateOfShipping,
-          // dateOfPayment,
           dateOfEdition,
           datePickUp,
           shopId,

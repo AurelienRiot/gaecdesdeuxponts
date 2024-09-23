@@ -4,6 +4,9 @@ import type {
   Address,
   BillingAddress,
   Customer,
+  Invoice,
+  InvoiceOrder,
+  InvoiceOrderItem,
   MainProduct,
   Option as OptionType,
   Order,
@@ -83,11 +86,8 @@ export interface FullOrder extends OrderWithItemsAndShop {
   user: UserWithAddress;
 }
 export interface FullOrderWithInvoicePayment extends FullOrder {
-  invoiceOrder: { invoice: { dateOfPayment: Date | null; invoiceEmail: Date | null } }[];
+  invoiceOrder: { invoice: { id: string; dateOfPayment: Date | null; invoiceEmail: Date | null } }[];
 }
-// export interface OrderWithItemsAndUserAndShop extends OrderWithItemsAndShop {
-//   u
-// }
 
 export interface MainProductWithProducts extends MainProduct {
   products: ProductWithOptions[];
@@ -99,4 +99,12 @@ export interface AMAPOrderWithItems extends AMAPOrder {
 
 export interface AMAPOrderWithItemsAndUser extends AMAPOrderWithItems {
   user: UserWithAddress;
+}
+
+export interface FullInvoice extends Invoice {
+  customer: Customer | null;
+  orders: InvoiceOrderWithItems[];
+}
+export interface InvoiceOrderWithItems extends InvoiceOrder {
+  invoiceOrderItems: InvoiceOrderItem[];
 }

@@ -1,9 +1,12 @@
 import { AnimateHeight } from "@/components/animations/animate-size";
+import type { ProductQuantities } from "@/components/google-events/get-orders-for-events";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import DisplayItem from "./display-item";
+import { nanoid } from "@/lib/id";
 
 interface DisplayAmapProps {
   amapOrders: {
@@ -12,12 +15,7 @@ interface DisplayAmapProps {
     order:
       | {
           date: string;
-          items: {
-            itemId: string;
-            name: string;
-            unit?: string | null | undefined;
-            totalQuantity: number;
-          }[];
+          items: ProductQuantities[];
         }
       | undefined;
   }[];
@@ -75,14 +73,7 @@ const DisplayAmap: React.FC<DisplayAmapProps> = ({ amapOrders, className }) => {
               <div>
                 <h4 className="text-xs font-semibold">Produits :</h4>
                 <ul className="text-xs space-y-0.5">
-                  {order.order.items.map((product, index) => (
-                    <li key={index} className="flex justify-between">
-                      <span>
-                        {product.name} (
-                        {product.unit ? `${product.totalQuantity}${product.unit}` : `x${product.totalQuantity}`})
-                      </span>
-                    </li>
-                  ))}
+                  <DisplayItem key={nanoid()} items={order.order.items} />
                 </ul>
               </div>
               {/* <div className="flex justify-between items-center">

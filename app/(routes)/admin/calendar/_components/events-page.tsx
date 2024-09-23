@@ -132,8 +132,8 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
                     shop.order?.items.map((item) => ({
                       itemId: item.itemId,
                       name: item.name,
-                      quantity: item.totalQuantity,
-                      unit: getUnitLabel(item.unit).quantity,
+                      quantity: item.quantity,
+                      unit: item.unit,
                     })) || [],
                 ),
               ),
