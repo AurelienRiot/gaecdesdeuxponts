@@ -1,4 +1,3 @@
-import type { monthlyOrdersType } from "@/components/pdf/pdf-data";
 import {
   createDatePickUp,
   createProduct,
@@ -8,14 +7,11 @@ import {
 import ButtonBackward from "@/components/ui/button-backward";
 import prismadb from "@/lib/prismadb";
 import { currencyFormatter } from "@/lib/utils";
-import MonthlyInvoice from "./_components/monthly-invoice";
+import { unstable_cache } from "next/cache";
+import { CreateUserForm } from "./_components/create-user-form";
 import type { OrderColumn } from "./_components/order-column";
 import { OrderTable } from "./_components/order-table";
 import { UserForm } from "./_components/user-form";
-import { CreateUserForm } from "./_components/create-user-form";
-import { Heading } from "@/components/ui/heading";
-import { Separator } from "@/components/ui/separator";
-import { unstable_cache } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
@@ -50,18 +46,6 @@ const getUserPageData = unstable_cache(
     });
     if (!user) return null;
 
-    const montlyOrders: (monthlyOrdersType | null)[] = user.orders.map((order) => {
-      if (!order.dateOfShipping) return null;
-      return {
-        orderId: order.id,
-        month: order.dateOfShipping.getMonth() + 1,
-        year: order.dateOfShipping.getFullYear(),
-        invoiceEmail: order.invoiceOrder[0]?.invoice.invoiceEmail,
-        isPaid: !!order.invoiceOrder[0]?.invoice.dateOfPayment,
-        dateOfPayment: order.invoiceOrder[0]?.invoice.dateOfPayment,
-      };
-    });
-
     const formatedUser = {
       ...user,
       orders: [],
@@ -81,7 +65,7 @@ const getUserPageData = unstable_cache(
       shopName: order.shop?.name || "Livraison à domicile",
       shopId: order.shop?.id || "",
     }));
-    return { formatedUser, montlyOrders, formattedOrders };
+    return { formatedUser, formattedOrders };
   },
   ["getUserPageData"],
   { revalidate: 60 * 60 * 10, tags: ["users", "orders", "amap-orders"] },
@@ -114,14 +98,7 @@ const UserPage = async ({
       <div className="mb-8 flex-1 space-y-4">
         <UserForm initialData={user.formatedUser} incomplete={!!searchParams.incomplete} />
       </div>
-      {user.formatedUser.role === "pro" && (
-        <div>
-          <Heading title={`Facture mensuelle`} description="" />
-          <Separator className="my-4" />
 
-          <MonthlyInvoice orders={user.montlyOrders.filter((order) => !!order) as monthlyOrdersType[]} />
-        </div>
-      )}
       <div>
         <OrderTable data={user.formattedOrders} />
       </div>

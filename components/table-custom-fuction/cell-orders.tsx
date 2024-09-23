@@ -156,7 +156,7 @@ const status = [
   "Commande validée",
   "Commande livrée",
   "En cours de paiement",
-  "Commande Payée",
+  "Payé",
 ] as const;
 
 type Status = (typeof status)[number];
@@ -168,7 +168,7 @@ type OrderForStatus = {
 };
 
 function createStatus({ dateOfEdition, invoiceOrder, shippingEmail }: OrderForStatus): Status {
-  if (invoiceOrder[0]?.invoice.dateOfPayment) return "Commande Payée";
+  if (invoiceOrder[0]?.invoice.dateOfPayment) return "Payé";
   if (invoiceOrder[0]?.invoice.invoiceEmail) return "En cours de paiement";
   if (shippingEmail) return "Commande livrée";
   if (dateOfEdition) return "Commande validée";
@@ -217,7 +217,7 @@ const statusConfig: Record<
     color: "bg-orange-500",
     hoverColor: "hover:bg-orange-500/90",
   },
-  ["Commande Payée"]: {
+  ["Payé"]: {
     icon: <FaFileInvoiceDollar className="h-3 w-3" />,
     color: "bg-green-500",
     hoverColor: "hover:bg-green-500/90",

@@ -56,7 +56,9 @@ export async function sendInvoice(invoiceId: string): Promise<ReturnTypeServerAc
   try {
     const pdfBuffer =
       type === "monthly"
-        ? await renderToBuffer(<MonthlyInvoice data={createMonthlyInvoicePDFData(fullInvoice)} isPaid={false} />)
+        ? await renderToBuffer(
+            <MonthlyInvoice data={createMonthlyInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
+          )
         : await renderToBuffer(
             <Invoice dataInvoice={createInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
           );

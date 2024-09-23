@@ -105,10 +105,6 @@ export const viewOptionsColumns: DataTableViewOptionsColumn<InvoiceColumn>[] = [
     title: "Email envoyé",
   },
   {
-    id: "totalPrice",
-    title: "Sujet",
-  },
-  {
     id: "createdAt",
     title: "Date de création",
   },

@@ -21,16 +21,10 @@ interface UseDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
 }
 
-export function useDataTable<TData, TValue>({
-  data,
-  columns,
-}: UseDataTableProps<TData, TValue>) {
+export function useDataTable<TData, TValue>({ data, columns }: UseDataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -45,7 +39,7 @@ export function useDataTable<TData, TValue>({
     },
     enableRowSelection: true,
     initialState: {
-      pagination: { pageSize: 10 },
+      pagination: { pageSize: 20 },
     },
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,

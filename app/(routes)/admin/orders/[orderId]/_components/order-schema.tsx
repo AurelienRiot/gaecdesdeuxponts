@@ -15,7 +15,6 @@ export const orderSchema = z.object({
   id: z.string().min(1),
   invoiceId: z.string().optional().nullable(),
   totalPrice: z.number(),
-  dateOfPayment: z.date().optional().nullable(),
   dateOfShipping: z.date().optional().nullable(),
   dateOfEdition: z.date().optional().nullable(),
   userId: z.string().min(1, { message: "L'utilisateur est requis" }),

@@ -49,7 +49,7 @@ async function InvoiceTableServer() {
     name: invoice.customer ? getUserName(invoice.customer) : "Non renseigné",
     userId: invoice.customer?.userId,
     totalPrice: currencyFormatter.format(invoice.totalPrice),
-    status: invoice.dateOfPayment ? "Commande Payée" : "En cours de paiement",
+    status: invoice.dateOfPayment ? "Payé" : "En cours de paiement",
     emailSend: !!invoice.invoiceEmail,
     createdAt: invoice.createdAt,
   }));

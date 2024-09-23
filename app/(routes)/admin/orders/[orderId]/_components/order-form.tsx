@@ -1,6 +1,7 @@
 "use client";
 import DateModal from "@/components/date-modal";
 import DeleteButton from "@/components/delete-button";
+import { DisplayCreateInvoice } from "@/components/pdf/button/display-create-invoice";
 import { DisplayInvoice } from "@/components/pdf/button/display-invoice";
 import { DisplayShippingOrder } from "@/components/pdf/button/display-shipping-order";
 import { Button, LoadingButton } from "@/components/ui/button";
@@ -28,7 +29,6 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
-import { DisplayCreateInvoice } from "@/components/pdf/button/display-create-invoice";
 
 export type OrderFormProps = {
   initialData:
@@ -64,7 +64,6 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
     defaultValues: {
       id: initialData?.id || createId("order", initialData?.dateOfShipping),
       totalPrice: initialData?.totalPrice,
-      dateOfPayment: initialData?.dateOfPayment ? new Date(initialData.dateOfPayment) : undefined,
       dateOfShipping: initialData?.dateOfShipping
         ? new Date(initialData.dateOfShipping)
         : initialData?.datePickUp
@@ -221,20 +220,6 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
                 <FormDatePicker {...field} date={field.value} onSelectDate={field.onChange} title="Date de livraison" />
               )}
             />
-            {user?.role !== "pro" && user?.role !== "trackOnlyUser" && (
-              <FormField
-                control={form.control}
-                name="dateOfPayment"
-                render={({ field }) => (
-                  <FormDatePicker
-                    {...field}
-                    date={field.value}
-                    onSelectDate={field.onChange}
-                    title="Date de paiement"
-                  />
-                )}
-              />
-            )}
 
             <SelectShop shops={shops} />
           </div>

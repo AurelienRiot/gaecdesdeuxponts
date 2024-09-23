@@ -8,6 +8,20 @@ import { useState } from "react";
 import deleteInvoice from "../_actions/delete-invoice";
 import type { InvoiceColumn } from "./columns";
 import { useConfirm } from "@/components/ui/confirm-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Copy, Edit, MoreHorizontal, Send, Trash } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { useToastPromise } from "@/components/ui/sonner";
+import { sendInvoiceAction } from "@/components/pdf/server-actions/create-send-invoice-action";
+import validateInvoice from "../_actions/validate-invoice";
+import { MdPaid } from "react-icons/md";
 
 interface CellActionProps {
   data: InvoiceColumn;
@@ -16,6 +30,12 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
   const { serverAction, loading } = useServerAction(deleteInvoice);
+  const { serverAction: validateInvoiceAction, loading: validateLoading } = useServerAction(validateInvoice);
+  const { toastServerAction, loading: toastLoading } = useToastPromise({
+    serverAction: sendInvoiceAction,
+    message: "Facture envoyée",
+    errorMessage: "Erreur lors de l'envoi de la facture",
+  });
   const confirm = useConfirm();
 
   const onDelete = async () => {
@@ -35,11 +55,55 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     });
   };
 
+  function onSendEmail() {
+    toastServerAction({ data: { invoiceId: data.id }, onSuccess: () => router.refresh() });
+  }
+
+  function onPaid() {
+    validateInvoiceAction({
+      data: { id: data.id, isPaid: data.status !== "Payé" },
+      onSuccess: () => router.refresh(),
+    });
+  }
+
+  const onCopy = (id: string) => {
+    navigator.clipboard.writeText(id);
+    toast.success("Id du produit copié");
+  };
+
   return (
     <>
-      {/* <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} /> */}
-
-      <TrashButton disabled={loading} variant="destructive" size="sm" onClick={onDelete} iconClassName="size-6" />
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="p-0">
+            <span className="sr-only w-0">Ouvrir le menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Action</DropdownMenuLabel>
+          <DropdownMenuItem onClick={() => onCopy(data.id)} className="cursor-copy">
+            <Copy className="mr-2 h-4 w-4" />
+            Copier Id
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push(`/admin/products/${data.id}`)}>
+            <Edit className="mr-2 h-4 w-4" />
+            Modifier
+          </DropdownMenuItem>
+          <DropdownMenuItem disabled={loading || toastLoading} onClick={onSendEmail}>
+            <Send className="mr-2 h-4 w-4" />
+            Envoyer par mail
+          </DropdownMenuItem>
+          <DropdownMenuItem disabled={loading || validateLoading} onClick={onPaid}>
+            <MdPaid className="mr-2 h-4 w-4" />
+            {data.status === "Payé" ? "Annuler le paiement" : "Valider le paiement"}
+          </DropdownMenuItem>
+          <DropdownMenuItem disabled={loading} onClick={onDelete}>
+            <Trash className="mr-2 h-4 w-4" />
+            Supprimer
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </>
   );
 };
