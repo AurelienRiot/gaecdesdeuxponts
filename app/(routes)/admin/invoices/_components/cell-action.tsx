@@ -55,7 +55,15 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     });
   };
 
-  function onSendEmail() {
+  async function onSendEmail() {
+    const result = await confirm({
+      title: "Confirmation de l'envoi de la facture",
+      description: "Etes-vous sur de vouloir envoyer cette facture ?",
+    });
+    if (!result) {
+      return;
+    }
+
     toastServerAction({ data: { invoiceId: data.id }, onSuccess: () => router.refresh() });
   }
 

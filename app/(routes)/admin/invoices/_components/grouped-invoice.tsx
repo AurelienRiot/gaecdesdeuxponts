@@ -122,7 +122,7 @@ function GroupedInvoicePage({ proUserWithOrders }: { proUserWithOrders: UserWith
     <>
       <Button onClick={() => setShowModal(true)}> Envoie groupé de facture </Button>
       <Modal
-        className="left-[50%] top-[50%] lining-nums max-h-[90%] w-[90%] max-w-[700px] overflow-y-scroll rounded-md"
+        className="left-[50%] top-[50%] lining-nums max-h-[90%] w-[90%] max-w-[700px] "
         title={`Envoie groupé de facture (${orderIdsArray.length})`}
         isOpen={showModal}
         onClose={() => setShowModal(false)}

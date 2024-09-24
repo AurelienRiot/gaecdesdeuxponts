@@ -22,6 +22,7 @@ async function validateInvoice(data: z.infer<typeof schema>) {
         },
         data: {
           dateOfPayment: isPaid ? new Date() : null,
+          dateOfEdition: new Date(),
         },
         select: {
           id: true,
