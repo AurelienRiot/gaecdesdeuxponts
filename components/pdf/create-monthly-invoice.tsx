@@ -6,6 +6,7 @@ import MainDocument, { borderColor, tableRowsCount } from "./main-document";
 import PaidWatermark from "./paid-watermark";
 import type { DataOrder, MonthlyPDFDataType } from "./pdf-data";
 import { InvoiceTableBlankSpace, InvoiceTableFooter, InvoiceTableHeader, InvoiceTableRow } from "./table";
+import { dateFormatter } from "@/lib/date-utils";
 
 // Create Document Component
 const MonthlyInvoice = ({
@@ -14,18 +15,24 @@ const MonthlyInvoice = ({
 }: {
   isPaid: boolean;
   data: MonthlyPDFDataType;
-}) => (
-  <MainDocument
-    customer={data.customer}
-    title={`Facture mensuelle ${data.date}`}
-    details={<Details pdfData={data} title={`Facture mensuelle`} />}
-  >
-    <Fragment>
-      <ShippingItemsTable orders={data.orders} />
-      {isPaid && <PaidWatermark />}
-    </Fragment>
-  </MainDocument>
-);
+}) => {
+  data.orders.sort((a, b) => a.dateOfShipping.getTime() - b.dateOfShipping.getTime());
+  for (const order of data.orders) {
+    order.items.sort((a, b) => a.desc.localeCompare(b.desc));
+  }
+  return (
+    <MainDocument
+      customer={data.customer}
+      title={`Facture mensuelle ${data.date}`}
+      details={<Details pdfData={data} title={`Facture mensuelle`} />}
+    >
+      <Fragment>
+        <ShippingItemsTable orders={data.orders} />
+        {isPaid && <PaidWatermark />}
+      </Fragment>
+    </MainDocument>
+  );
+};
 
 export default MonthlyInvoice;
 
@@ -145,7 +152,9 @@ const MonthlyInvoiceTableRow = ({
       {orders.map((order, i) => (
         <Fragment key={i}>
           <View style={tableRowStyles.row}>
-            <Text style={tableRowStyles.order}>{`Commande n° ${order.id} du ${order.dateOfShipping} `}</Text>
+            <Text
+              style={tableRowStyles.order}
+            >{`Commande n° ${order.id} du ${dateFormatter(order.dateOfShipping)} `}</Text>
           </View>
           <InvoiceTableRow key={i} items={order.items} />
         </Fragment>

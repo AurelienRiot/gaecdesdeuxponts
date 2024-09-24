@@ -6,31 +6,37 @@ import MainDocument, { borderColor, foregroundColor, mainColor, tableRowsCount }
 import type { PDFData } from "./pdf-data";
 import { ShippingTableStyles } from "./table";
 import { SVGSignature } from "./signature";
+import { dateFormatter } from "@/lib/date-utils";
 
 // Create Document Component
-const ShippingOrder = ({ pdfData }: { pdfData: PDFData }) => (
-  <MainDocument
-    customer={pdfData.customer}
-    title={`Bon de livraison ${pdfData.order.id}`}
-    details={<Details pdfData={pdfData} title="Bon de livraison" />}
-  >
-    <Fragment>
-      <ShippingItemsTable pdfData={pdfData} />
-      <Signature dateOfShipping={pdfData.order.dateOfShipping} />
-    </Fragment>
-  </MainDocument>
-);
+const ShippingOrder = ({ pdfData }: { pdfData: PDFData }) => {
+  return (
+    <MainDocument
+      customer={pdfData.customer}
+      title={`Bon de livraison ${pdfData.order.id}`}
+      details={<Details pdfData={pdfData} title="Bon de livraison" />}
+    >
+      <Fragment>
+        <ShippingItemsTable pdfData={pdfData} />
+        <Signature dateOfShipping={dateFormatter(pdfData.order.dateOfShipping)} />
+      </Fragment>
+    </MainDocument>
+  );
+};
 
 export default ShippingOrder;
 
-const ShippingItemsTable = ({ pdfData }: { pdfData: PDFData }) => (
-  <View style={ShippingTableStyles.tableContainer}>
-    <ShippingTableHeader />
-    <ShippingTableRow items={pdfData.order.items} />
-    <ShippingTableBlankSpace rowsCount={tableRowsCount - pdfData.order.items.length} />
-  </View>
-);
+const ShippingItemsTable = ({ pdfData }: { pdfData: PDFData }) => {
+  const items = pdfData.order.items.sort((a, b) => a.desc.localeCompare(b.desc));
 
+  return (
+    <View style={ShippingTableStyles.tableContainer}>
+      <ShippingTableHeader />
+      <ShippingTableRow items={items} />
+      <ShippingTableBlankSpace rowsCount={tableRowsCount - items.length} />
+    </View>
+  );
+};
 const ShippingTableHeader = () => (
   <View style={ShippingTableStyles.container}>
     <Text style={ShippingTableStyles.ref}>Reférence produit</Text>

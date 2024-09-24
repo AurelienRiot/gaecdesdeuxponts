@@ -39,7 +39,7 @@ export const createDataOrder = (order: FullOrderWithInvoicePayment): DataOrder =
     dateOfPayment: order.invoiceOrder[0]?.invoice.dateOfPayment
       ? dateFormatter(order.invoiceOrder[0].invoice.dateOfPayment)
       : null,
-    dateOfShipping: order.dateOfShipping ? dateFormatter(order.dateOfShipping) : dateFormatter(order.datePickUp),
+    dateOfShipping: order.dateOfShipping ?? order.datePickUp,
     items: order.orderItems.map((item) => ({
       id: item.itemId,
       desc: item.name,
@@ -58,7 +58,7 @@ export const createInvoiceDataOrder = (order: InvoiceOrderWithItems): DataOrder 
   return {
     id: order.orderId,
     dateOfEdition: dateFormatter(order.dateOfShipping),
-    dateOfShipping: dateFormatter(order.dateOfShipping),
+    dateOfShipping: order.dateOfShipping,
     items: order.invoiceOrderItems.map((item) => ({
       id: item.itemId,
       desc: item.name,
@@ -73,7 +73,7 @@ export const createInvoiceDataOrder = (order: InvoiceOrderWithItems): DataOrder 
 export type DataOrder = {
   id: string;
   dateOfEdition: string;
-  dateOfShipping: string;
+  dateOfShipping: Date;
   dateOfPayment?: string | null;
   totalPrice: number;
   items: ItemDataOrder[];
@@ -174,7 +174,7 @@ export const pdfData: PDFData = {
     id: "CM_5-9-24_ZNIPY",
     dateOfEdition: "8 juin 2024",
     dateOfPayment: "19 juin 2024",
-    dateOfShipping: "4 juin 2024",
+    dateOfShipping: new Date("2024-06-08"),
     totalPrice: 44,
     items: [
       {
@@ -226,7 +226,7 @@ export const invoicePDFData: InvoicePDFDate = {
     id: "7-6-2024-0sUttHF",
     dateOfEdition: "8 juin 2024",
     dateOfPayment: "19 juin 2024",
-    dateOfShipping: "4 juin 2024",
+    dateOfShipping: new Date("2024-06-08"),
     totalPrice: 44,
     items: [
       {
@@ -314,7 +314,7 @@ export const monthlyPDFData: MonthlyPDFDataType = {
       id: "7-6-2024-0sUttHF",
       dateOfEdition: "8 juin 2024",
       dateOfPayment: "19 juin 2024",
-      dateOfShipping: "4 juin 2024",
+      dateOfShipping: new Date("2024-06-08"),
       totalPrice: 44,
       items: [
         {

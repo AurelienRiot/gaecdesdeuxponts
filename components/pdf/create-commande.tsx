@@ -7,17 +7,20 @@ import type { ItemDataOrder, PDFData } from "./pdf-data";
 import { InvoiceTableBlankSpace, InvoiceTableFooter, InvoiceTableHeader, InvoiceTableRow } from "./table";
 
 // Create Document Component
-const Order = ({ data }: { data: PDFData }) => (
-  <MainDocument
-    customer={data.customer}
-    title={`Bon de commande ${data.order.id}`}
-    details={<Details pdfData={data} title="Bon de commande" />}
-  >
-    <Fragment>
-      <InvoiceItemsTable items={data.order.items} />
-    </Fragment>
-  </MainDocument>
-);
+const Order = ({ data }: { data: PDFData }) => {
+  const items = data.order.items.sort((a, b) => a.desc.localeCompare(b.desc));
+  return (
+    <MainDocument
+      customer={data.customer}
+      title={`Bon de commande ${data.order.id}`}
+      details={<Details pdfData={data} title="Bon de commande" />}
+    >
+      <Fragment>
+        <InvoiceItemsTable items={items} />
+      </Fragment>
+    </MainDocument>
+  );
+};
 
 export default Order;
 

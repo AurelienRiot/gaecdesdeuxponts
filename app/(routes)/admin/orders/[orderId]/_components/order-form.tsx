@@ -3,7 +3,7 @@ import DateModal from "@/components/date-modal";
 import DeleteButton from "@/components/delete-button";
 import { DisplayCreateInvoice } from "@/components/pdf/button/display-create-invoice";
 import { DisplayInvoice } from "@/components/pdf/button/display-invoice";
-import { DisplayShippingOrder } from "@/components/pdf/button/display-shipping-order";
+import { DisplayShippingOrder, ModalDescription } from "@/components/pdf/button/display-shipping-order";
 import { Button, LoadingButton } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
@@ -29,10 +29,20 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
+import validateInvoice from "../../../invoices/_actions/validate-invoice";
+import { createInvoiceAction } from "@/components/pdf/server-actions/create-send-invoice-action";
+import getOrderForConfirmation from "@/components/pdf/server-actions/get-order-for-confirmation";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 
 export type OrderFormProps = {
   initialData:
-    | (Omit<OrderFormValues, "id"> & { id: string | null; invoiceEmail?: Date | null; shippingEmail: Date | null })
+    | (Omit<OrderFormValues, "id"> & {
+        id: string | null;
+        invoiceId?: string | null;
+        invoiceEmail?: Date | null;
+        shippingEmail: Date | null;
+        dateOfPayment?: Date | null;
+      })
     | null;
   products: ProductWithMain[];
   shops: Shop[];
@@ -47,6 +57,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
   const { serverAction: createOrderAction } = useServerAction(createOrder);
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
   const { serverAction: confirmOrderAction, loading } = useServerAction(confirmOrder);
+  const { serverAction: validateInvoiceAction, loading: validateLoading } = useServerAction(validateInvoice);
 
   const title = initialData?.id
     ? { label: "Modifier la commande", color: "text-blue-500" }
@@ -104,19 +115,36 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
   const user = userId ? users.find((user) => user.id === userId) : null;
 
   const onConfirm = async () => {
-    function onSuccess() {
-      router.replace(`/admin/orders/${initialData?.id}?referer=${encodeURIComponent(referer)}#button-container`);
-    }
     if (!initialData?.id) {
       toast.error("Une erreur est survenue");
       return;
     }
+
+    function onSuccess() {
+      router.replace(`/admin/orders/${initialData?.id}?referer=${encodeURIComponent(referer)}#button-container`);
+    }
+
     await confirmOrderAction({
       data: { id: initialData.id, confirm: !initialData.shippingEmail },
       onSuccess,
       toastOptions: { position: "top-center" },
     });
+    if (!initialData?.id) {
+      toast.error("Une erreur est survenue");
+      return;
+    }
   };
+
+  function onPaid() {
+    if (!initialData?.invoiceId) {
+      toast.error("Une erreur est survenue");
+      return;
+    }
+    validateInvoiceAction({
+      data: { id: initialData?.invoiceId, isPaid: !initialData.dateOfPayment },
+      onSuccess: () => router.refresh(),
+    });
+  }
 
   const onSubmit = async (data: OrderFormValues) => {
     const nameCounts: Record<string, number> = {};
@@ -175,7 +203,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
     <>
       <div className="flex items-center justify-between">
         <Heading className={title.color} title={title.label} description={""} />
-        {initialData?.id && (
+        {initialData?.id && !initialData?.invoiceId && (
           <DeleteButton
             action={deleteOrder}
             data={{
@@ -229,7 +257,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
 
           {!initialData?.invoiceId ? (
             <LoadingButton
-              disabled={form.formState.isSubmitting}
+              disabled={form.formState.isSubmitting || loading || validateLoading}
               className="ml-auto bg-green-600 hover:bg-green-800"
               type="submit"
             >
@@ -244,31 +272,58 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
       </Form>
       {!!initialData?.id && !!initialData.dateOfEdition && (
         <div id="button-container" className="space-y-4">
-          {user?.role === "pro" && (
+          {user?.role === "pro" ? (
             <div className="space-y-2">
               <Label>Bon de livraison</Label>
-              <DisplayShippingOrder orderId={initialData.id} isSend={!!initialData.shippingEmail} />
+              <DisplayShippingOrder
+                disabled={form.formState.isSubmitting || loading || validateLoading}
+                orderId={initialData.id}
+                isSend={!!initialData.shippingEmail}
+              />
             </div>
-          )}
-          {user?.role === "user" && (
-            <div className="space-y-2">
-              <Label>Facture</Label>
-              {initialData.invoiceId ? (
-                <DisplayInvoice invoiceId={initialData.invoiceId} isSend={!!initialData.invoiceEmail} />
-              ) : (
-                <DisplayCreateInvoice orderIds={[initialData.id]} />
+          ) : (
+            <div className="space-y-4">
+              {(user?.role === "trackOnlyUser" || !initialData.shippingEmail) && (
+                <Button
+                  onClick={onConfirm}
+                  disabled={form.formState.isSubmitting || loading || validateLoading}
+                  variant={initialData.shippingEmail ? "destructive" : "default"}
+                  className="w-fit block"
+                >
+                  {initialData.shippingEmail ? "Annuler la livraison" : "Confirmer la livraison"}
+                </Button>
+              )}
+              {user?.role === "user" && initialData.shippingEmail && (
+                <>
+                  <Label>Facture</Label>
+
+                  {initialData.invoiceId ? (
+                    <>
+                      <DisplayInvoice
+                        disabled={form.formState.isSubmitting || loading || validateLoading}
+                        onSendClassName="inline-flex"
+                        onViewClassName="hidden"
+                        invoiceId={initialData.invoiceId}
+                        isSend={!!initialData.invoiceEmail}
+                      />
+                      <Button
+                        onClick={onPaid}
+                        disabled={form.formState.isSubmitting || loading || validateLoading}
+                        variant={initialData.dateOfPayment ? "destructive" : "default"}
+                        className="w-fit"
+                      >
+                        {initialData.dateOfPayment ? "Annuler le paiement" : "Valider le paiement"}
+                      </Button>
+                    </>
+                  ) : (
+                    <DisplayCreateInvoice
+                      disabled={form.formState.isSubmitting || loading || validateLoading}
+                      orderIds={[initialData.id]}
+                    />
+                  )}
+                </>
               )}
             </div>
-          )}
-          {user?.role === "trackOnlyUser" && (
-            <Button
-              onClick={onConfirm}
-              disabled={form.formState.isSubmitting || loading}
-              variant={initialData.shippingEmail ? "destructive" : "default"}
-              className="w-fit"
-            >
-              {initialData.shippingEmail ? "Annuler la livraison" : "Confirmer la livraison"}
-            </Button>
           )}
         </div>
       )}

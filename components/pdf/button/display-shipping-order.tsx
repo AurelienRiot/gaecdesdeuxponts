@@ -16,7 +16,11 @@ import getOrderForConfirmation from "../server-actions/get-order-for-confirmatio
 import { SendBL } from "../server-actions/send-bl-action";
 import { PdfButton } from "./pdf-button";
 
-export function DisplayShippingOrder({ orderId, isSend }: { orderId: string; isSend: boolean }) {
+export function DisplayShippingOrder({
+  orderId,
+  isSend,
+  disabled,
+}: { orderId: string; isSend: boolean; disabled?: boolean }) {
   const { toastServerAction, loading: toastLoading } = useToastPromise({
     serverAction: SendBL,
     message: "Envoi du BL",
@@ -80,7 +84,7 @@ export function DisplayShippingOrder({ orderId, isSend }: { orderId: string; isS
 
   return (
     <PdfButton
-      disabled={loading || toastLoading || loading2}
+      disabled={loading || toastLoading || loading2 || disabled}
       onViewFile={onViewFile}
       onSaveFile={onSaveFile}
       onSendFile={onSendFile}
@@ -89,7 +93,7 @@ export function DisplayShippingOrder({ orderId, isSend }: { orderId: string; isS
   );
 }
 
-const ModalDescription = ({
+export const ModalDescription = ({
   name,
   company,
   date,

@@ -9,8 +9,23 @@ import { createInvoicePDF64String } from "../server-actions/create-pdf64-string"
 
 import { sendInvoiceAction } from "../server-actions/create-send-invoice-action";
 import { PdfButton } from "./pdf-button";
+import { cn } from "@/lib/utils";
 
-export function DisplayInvoice({ invoiceId, isSend }: { invoiceId: string; isSend: boolean }) {
+export function DisplayInvoice({
+  invoiceId,
+  isSend,
+  onSendClassName,
+  onSaveClassName,
+  onViewClassName,
+  disabled,
+}: {
+  invoiceId: string;
+  isSend: boolean;
+  onSendClassName?: string;
+  onSaveClassName?: string;
+  onViewClassName?: string;
+  disabled?: boolean;
+}) {
   const { toastServerAction, loading: toastLoading } = useToastPromise({
     serverAction: sendInvoiceAction,
     message: "Envoi de la facture",
@@ -51,14 +66,14 @@ export function DisplayInvoice({ invoiceId, isSend }: { invoiceId: string; isSen
   };
   return (
     <PdfButton
-      disabled={loading || toastLoading}
+      disabled={loading || toastLoading || disabled}
       onViewFile={onViewFile}
       onSaveFile={onSaveFile}
       onSendFile={onSendFile}
       isSend={isSend}
-      onSendClassName="hidden"
-      onSaveClassName="inline-flex"
-      onViewClassName="inline-flex"
+      onSendClassName={cn("hidden", onSendClassName)}
+      onSaveClassName={cn("inline-flex", onSaveClassName)}
+      onViewClassName={cn("inline-flex", onViewClassName)}
     />
   );
 }

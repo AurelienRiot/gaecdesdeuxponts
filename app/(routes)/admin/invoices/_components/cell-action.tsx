@@ -68,7 +68,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
-    toast.success("Id du produit copié");
+    toast.success("N° de facture copié");
   };
 
   return (
@@ -85,10 +85,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuItem onClick={() => onCopy(data.id)} className="cursor-copy">
             <Copy className="mr-2 h-4 w-4" />
             Copier Id
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push(`/admin/products/${data.id}`)}>
-            <Edit className="mr-2 h-4 w-4" />
-            Modifier
           </DropdownMenuItem>
           <DropdownMenuItem disabled={loading || toastLoading} onClick={onSendEmail}>
             <Send className="mr-2 h-4 w-4" />

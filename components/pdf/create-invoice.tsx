@@ -14,18 +14,21 @@ const Invoice = ({
 }: {
   isPaid: boolean;
   dataInvoice: InvoicePDFDate;
-}) => (
-  <MainDocument
-    customer={dataInvoice.customer}
-    title={`Facture ${dataInvoice.order.id}`}
-    details={<Details pdfData={dataInvoice} title="Facture" />}
-  >
-    <Fragment>
-      <InvoiceItemsTable items={dataInvoice.order.items} />
-      {isPaid && <PaidWatermark />}
-    </Fragment>
-  </MainDocument>
-);
+}) => {
+  const items = dataInvoice.order.items.sort((a, b) => a.desc.localeCompare(b.desc));
+  return (
+    <MainDocument
+      customer={dataInvoice.customer}
+      title={`Facture ${dataInvoice.order.id}`}
+      details={<Details pdfData={dataInvoice} title="Facture" />}
+    >
+      <Fragment>
+        <InvoiceItemsTable items={items} />
+        {isPaid && <PaidWatermark />}
+      </Fragment>
+    </MainDocument>
+  );
+};
 
 export default Invoice;
 

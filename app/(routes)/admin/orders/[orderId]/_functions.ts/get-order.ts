@@ -37,6 +37,7 @@ const getShippingOrder = unstable_cache(
         },
       },
     });
+    console.log(shippingOrders?.invoiceOrder);
     const initialData: OrderFormProps["initialData"] = !shippingOrders
       ? null
       : newOrder
@@ -50,6 +51,7 @@ const getShippingOrder = unstable_cache(
             ...shippingOrders,
             invoiceId: shippingOrders.invoiceOrder[0]?.invoice.id,
             invoiceEmail: shippingOrders.invoiceOrder[0]?.invoice.invoiceEmail,
+            dateOfPayment: shippingOrders.invoiceOrder[0]?.invoice.dateOfPayment,
           };
     return initialData;
   },

@@ -13,7 +13,6 @@ const orderItemSchema = z.object({
 
 export const orderSchema = z.object({
   id: z.string().min(1),
-  invoiceId: z.string().optional().nullable(),
   totalPrice: z.number(),
   dateOfShipping: z.date().optional().nullable(),
   dateOfEdition: z.date().optional().nullable(),
