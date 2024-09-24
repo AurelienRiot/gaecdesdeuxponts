@@ -34,6 +34,7 @@ export const getOrdersByDate = async ({ from, to }: { from: Date; to: Date }) =>
         email: order.user.email,
         company: order.user.company,
         image: order.user.image,
+        phone: order.user.phone,
         address: addressFormatter(order.user.address),
         notes: order.user.notes,
         id: order.user.id,
@@ -62,6 +63,7 @@ export type CalendarOrdersType = {
     id: string;
     name?: string | null;
     email?: string | null;
+    phone?: string | null;
     company?: string | null;
     image?: string | null;
     address?: string | null;

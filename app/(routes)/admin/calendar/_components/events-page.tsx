@@ -15,6 +15,7 @@ import type { CalendarOrdersType } from "../_functions/get-orders";
 import DisplayAmap from "./display-amap";
 import DisplayOrder from "./display-order";
 import SummarizeProducts from "./summarize-products";
+import { formatFrenchPhoneNumber } from "@/lib/utils";
 
 type EventsPageProps = {
   orders: CalendarOrdersType[];
@@ -214,17 +215,6 @@ function UserModal({ open, onClose, user }: { open: boolean; onClose: () => void
     </Modal>
   );
 }
-const InfoItem = ({ label, value }: { label: string; value: string | null | undefined }) =>
-  value ? (
-    <div className="mb-4">
-      <h3 className="text-sm font-medium text-gray-500">{label}</h3>
-      {label === "Notes" ? (
-        <AutosizeTextarea className="border-0 focus-visible:ring-0" readOnly value={value} />
-      ) : (
-        <p className="mt-1 text-sm text-gray-900">{value}</p>
-      )}
-    </div>
-  ) : null;
 
 const UserInfo = ({ user }: { user: CalendarOrdersType["user"] }) => (
   <div className="px-4 py-5 ">
@@ -243,16 +233,17 @@ const UserInfo = ({ user }: { user: CalendarOrdersType["user"] }) => (
         </div>
       )}
       <div>
-        <h2 className="text-lg font-semibold">{user.name || "Unknown User"}</h2>
+        <h2 className="text-lg font-semibold">{user.company || user.name || "Unknown User"}</h2>
         <p className="text-sm text-gray-500">{user.email}</p>
+        {!!user.phone && <p>{formatFrenchPhoneNumber(user.phone)}</p>}
       </div>
     </div>
     <div className="max-h-[40dvh] overflow-y-auto px-4">
       {user.company ? (
         <div className="mb-4">
-          <h3 className="text-sm font-medium text-gray-500">Entreprise</h3>
+          <h3 className="text-sm font-medium text-gray-500">Nom</h3>
 
-          <p className="mt-1 text-sm text-gray-900">{user.company}</p>
+          <p className="mt-1 text-sm text-gray-900">{user.name}</p>
         </div>
       ) : null}
       {user.address ? (
