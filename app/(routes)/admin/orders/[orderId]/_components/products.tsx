@@ -219,9 +219,9 @@ const SelectProductName = ({
       (product) =>
         !user ||
         user.role === "trackOnlyUser" ||
-        product.isArchived ||
-        product.product.isArchived ||
-        (user.role === "pro" ? product.product.isPro : !product.product.isPro),
+        // product.isArchived ||
+        // product.product.isArchived ||
+        (user.role === "pro" ? true : !product.product.isPro),
     ),
   );
   return (

@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@/lib/utils";
+import { cn, roundToDecimals } from "@/lib/utils";
 import type { ProductWithMain } from "@/types";
 import type { Role, User } from "@prisma/client";
 import { TabsContent } from "@radix-ui/react-tabs";
@@ -75,11 +75,15 @@ function SelectSheetWithTabs<V extends { key: string }, T extends string>({
           </SheetHeader>
           <Tabs value={currentTab} onValueChange={setCurrentTab} className="h-full w-full space-y-4">
             <TabsList className="flex w-full gap-2 overflow-x-auto">
-              {tabs.map((tab) => (
-                <TabsTrigger key={tab.value} value={tab.value}>
-                  {tab.label}
-                </TabsTrigger>
-              ))}
+              {tabs.map((tab) => {
+                const selectedValues = tabsValues.find((value) => value.tab === tab.value)?.values;
+                if (!selectedValues || selectedValues.length === 0) return null;
+                return (
+                  <TabsTrigger key={tab.value} value={tab.value}>
+                    {tab.label}
+                  </TabsTrigger>
+                );
+              })}
             </TabsList>
 
             <SelectContent
@@ -116,7 +120,7 @@ function SelectContent<V extends { key: string }, T extends string>({
   React.useEffect(() => {
     const tabValues = tabsValues.find((value) => value.values.some((v) => v.value.key === selectedValue));
     if (!tabValues || tabValues?.tab !== currentTab) {
-      setTimeout(() => scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" }), 0);
+      setTimeout(() => scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" }), 400);
       return;
     }
     if (scrollRef.current && selectedValue) {
@@ -128,31 +132,35 @@ function SelectContent<V extends { key: string }, T extends string>({
             block: "center",
           });
         }
-      }, 0);
+      }, 400);
     }
   }, [selectedValue, tabsValues, currentTab]);
 
   return (
     <div className="relative">
       <ScrollArea ref={scrollRef} className="max-h-[50dvh]  overflow-y-auto pt-4  py-8">
-        {tabsValues.map((tabValues) => (
-          <TabsContent key={tabValues.tab} value={tabValues.tab} className=" w-full flex flex-col gap-2 relative ">
-            {tabValues.values.map((value, index) => (
-              <Button
-                style={{ touchAction: "pan-y" }}
-                id={value.value.key}
-                variant={value.value.key === selectedValue ? "green" : value.highlight ? "secondary" : "outline"}
-                key={value.value.key + index}
-                onClick={() => {
-                  setIsOpen(false);
-                  onSelected(value.value);
-                }}
-              >
-                {value.label}
-              </Button>
-            ))}
-          </TabsContent>
-        ))}
+        {tabsValues.map(
+          (tabValues) =>
+            tabValues.values.length > 0 && (
+              <TabsContent key={tabValues.tab} value={tabValues.tab} className=" w-full flex flex-col gap-2 relative ">
+                {tabValues.values.map((value, index) => (
+                  <Button
+                    style={{ touchAction: "pan-y" }}
+                    id={value.value.key}
+                    className="h-fit"
+                    variant={value.value.key === selectedValue ? "green" : value.highlight ? "secondary" : "outline"}
+                    key={value.value.key + index}
+                    onClick={() => {
+                      setIsOpen(false);
+                      onSelected(value.value);
+                    }}
+                  >
+                    {value.label}
+                  </Button>
+                ))}
+              </TabsContent>
+            ),
+        )}
       </ScrollArea>
       <div className="inset-0 absolute from-background to-background bg-[linear-gradient(to_bottom,_var(--tw-gradient-from)_0%,_transparent_10%,_transparent_90%,_var(--tw-gradient-to)_100%)] pointer-events-none select-none" />
     </div>
@@ -203,15 +211,19 @@ export function sortProductByTabType(products: ProductWithMain[]) {
       // Add the user's ID and label to the group's values
       group.values.push({
         label: (
-          <>
-            {" "}
-            {product.product.isPro && (
-              <Badge variant="orange" className="mr-2">
-                Pro
-              </Badge>
-            )}
-            {product.name}
-          </>
+          <div className="flex flex-col gap-2">
+            <div>
+              {product.product.isPro && (
+                <Badge variant="orange" className="mr-2">
+                  Pro
+                </Badge>
+              )}
+              <span className="font-bold ">{product.name}</span>
+            </div>
+            <p className="ml-2">
+              {` ${roundToDecimals(product.price, 2)}€ TTC (${roundToDecimals(product.price / product.tax, 2)}€ HT)`}
+            </p>
+          </div>
         ),
         value: { key: product.id },
       });

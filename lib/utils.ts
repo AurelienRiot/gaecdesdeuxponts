@@ -28,6 +28,10 @@ export const currencyFormatter = (() => {
   };
 })();
 
+export function roundToDecimals(number: number, decimals: number) {
+  return Math.round(number * 10 ** decimals) / 10 ** decimals;
+}
+
 export function getPercentage(tax: number) {
   return `${(tax * 100) % 100}%`;
 }

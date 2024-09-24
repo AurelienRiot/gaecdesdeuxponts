@@ -113,20 +113,21 @@ function Calendar({
 
           return (
             <Select value={value != null ? value.toString() : ""} onValueChange={handleChange}>
-              <SelectTrigger className="pr-1.5 ring-0 focus:ring-0 w-fit focus:ring-offset-0 ">
+              <SelectTrigger className="pr-1.5 ring-0 focus:ring-0 w-fit focus:ring-offset-0 capitalize">
                 <SelectValue>{selected?.label}</SelectValue>
               </SelectTrigger>
-              <SelectContent position="popper" className="z-[1200]">
-                <ScrollArea className=" max-h-60 overflow-y-auto">
-                  {options.map((option, id) => (
-                    <SelectItem
-                      key={`${option.value}-${id}`}
-                      value={option.value != null ? option.value.toString() : `default-value-${id}`}
-                    >
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </ScrollArea>
+              <SelectContent position="popper" className="z-[1200] max-h-60">
+                {/* <ScrollArea className="  overflow-y-auto"> */}
+                {options.map((option, id) => (
+                  <SelectItem
+                    key={`${option.value}-${id}`}
+                    value={option.value != null ? option.value.toString() : `default-value-${id}`}
+                    className="capitalize"
+                  >
+                    {option.label}
+                  </SelectItem>
+                ))}
+                {/* </ScrollArea> */}
               </SelectContent>
             </Select>
           );
@@ -189,7 +190,7 @@ function Calendar({
             <nav className={cn("flex items-center", className)} {...props}>
               <Button
                 variant="outline"
-                className="absolute left-0 h-7 w-7 bg-transparent p-0 opacity-80 hover:opacity-100"
+                className="absolute left-0 h-7 w-7 bg-transparent p-0 opacity-80 hover:opacity-100 "
                 type="button"
                 tabIndex={isPreviousDisabled ? undefined : -1}
                 disabled={isPreviousDisabled}
@@ -205,7 +206,7 @@ function Calendar({
 
               <Button
                 variant="outline"
-                className="absolute right-0 h-7 w-7 bg-transparent p-0 opacity-80 hover:opacity-100"
+                className="absolute right-0 h-7 w-7 bg-transparent p-0 opacity-80 hover:opacity-100 "
                 type="button"
                 tabIndex={isNextDisabled ? undefined : -1}
                 disabled={isNextDisabled}

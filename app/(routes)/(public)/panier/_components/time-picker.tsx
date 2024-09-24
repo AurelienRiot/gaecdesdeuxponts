@@ -8,6 +8,7 @@ import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { makeCartUrl } from "./summary";
+import { fr } from "date-fns/locale";
 
 type HourPickerProps = {
   className?: string;
@@ -48,7 +49,7 @@ const TimePicker = ({ className, date, shopId }: HourPickerProps) => {
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button variant="outline" role="combobox" aria-expanded={open} className="w-[240px] justify-between">
-              {date.toLocaleTimeString([], {
+              {date.toLocaleTimeString("fr-FR", {
                 hour: "2-digit",
                 minute: "2-digit",
               })}
@@ -61,7 +62,7 @@ const TimePicker = ({ className, date, shopId }: HourPickerProps) => {
                 <CommandGroup>
                   {timeOptions.map((time) => {
                     const dateValue = time.toISOString();
-                    const displayDate = time.toLocaleTimeString([], {
+                    const displayDate = time.toLocaleTimeString("fr-FR", {
                       hour: "2-digit",
                       minute: "2-digit",
                     });
