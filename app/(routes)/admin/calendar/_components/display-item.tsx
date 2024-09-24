@@ -12,11 +12,11 @@ function DisplayItem({ items }: { items: ProductQuantities[] }) {
       {items.map((item) => (
         <div key={nanoid()} className={"flex gap-1 items-center justify-start "}>
           {/* Icône conditionnelle selon le type de produit */}
-          {item.name.includes("bouteille") ? (
+          {item.name.toLowerCase().includes("bouteille") ? (
             <LuMilk className="h-5 w-5 text-blue-500" />
-          ) : item.name.includes("bidon") ? (
+          ) : item.name.toLowerCase().includes("bidon") ? (
             <TbMilk className="h-5 w-5 text-green-500" />
-          ) : item.name.includes("Casier") ? (
+          ) : item.name.toLowerCase().includes("casier") ? (
             <BsBasketFill className="h-5 w-5 text-red-500" />
           ) : (
             <PiPackageDuotone className="h-5 w-5 text-gray-500" />
@@ -28,7 +28,7 @@ function DisplayItem({ items }: { items: ProductQuantities[] }) {
           <p className={item.quantity < 0 ? "text-red-500" : " text-gray-500"}>
             {numberFormat2Decimals(item.quantity)}
             {item.unit || ""}
-            {item.name.includes("Casier") ? ` (${Math.round(item.quantity * 12)})` : ""}
+            {item.name.toLowerCase().includes("casier") ? ` (${Math.round(item.quantity * 12)})` : ""}
           </p>
         </div>
       ))}

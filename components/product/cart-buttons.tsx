@@ -110,7 +110,7 @@ export const CustomQuantityAddToCart = ({
             handleQuantity(Number(value));
           }}
         >
-          <SelectTrigger className="w-fit items-center justify-center text-xs tabular-nums" classNameIcon="size-3">
+          <SelectTrigger className="w-fit items-center justify-center text-xs tabular-nums">
             Quantité: {quantity}
           </SelectTrigger>
           <SelectContent className="z-[1200] w-fit min-w-4 tabular-nums">
