@@ -12,6 +12,10 @@ export async function middleware(req: NextRequest) {
     const role = token.role;
     const path = req.nextUrl.pathname;
 
+    if (path === "/" && (role === "admin" || role === "readOnlyAdmin")) {
+      return NextResponse.redirect(new URL("/admin/calendar", req.url));
+    }
+
     if (path.startsWith("/admin")) {
       if (role !== "admin" && role !== "readOnlyAdmin") {
         return redirectToLogin(req);
@@ -40,7 +44,8 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/dashboard-user/:path*"],
+  // matcher: ["/admin/:path*", "/dashboard-user/:path*"],
+  matcher: ["/:path*"],
 };
 
 const redirectToLogin = (req: NextRequest) =>

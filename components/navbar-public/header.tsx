@@ -15,14 +15,8 @@ const PublicHeader = () => {
         <MobileNav>
           <MainNav orientation="vertical" className="mt-10" />
         </MobileNav>
-        <Link href="/" className="hidden min-[380px]:block">
-          <Image
-            alt="Logo"
-            className="h-16 w-auto rounded-md"
-            src="/logo-rect.webp"
-            width={155.86}
-            height={56}
-          />
+        <Link href="/prevent-redirect" className="hidden min-[380px]:block">
+          <Image alt="Logo" className="h-16 w-auto rounded-md" src="/logo-rect.webp" width={155.86} height={56} />
         </Link>
         <Image
           alt="Logo Agriculture-biologique"

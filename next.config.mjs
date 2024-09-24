@@ -68,6 +68,10 @@ const nextConfig = {
         destination: "/",
       },
       {
+        source: "/prevent-redirect",
+        destination: "/",
+      },
+      {
         source: "/ingest/static/:path*",
         destination: "https://eu-assets.i.posthog.com/static/:path*",
       },
