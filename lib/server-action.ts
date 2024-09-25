@@ -1,4 +1,8 @@
+import { headers } from "next/headers";
 import type { z } from "zod";
+import { rateLimit } from "./rate-limit";
+import { getSessionUser } from "@/actions/get-user";
+import { getToken } from "next-auth/jwt";
 
 export type ReturnTypeServerAction<R = undefined, E = undefined> =
   | {
@@ -39,6 +43,16 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E, U>({
 }: SafeServerActionType<D, R, E, U>): Promise<ReturnTypeServerAction<R, E>> {
   console.time("Total Execution Time");
 
+  const isRateLimited = await rateLimit();
+  if (isRateLimited) {
+    console.timeEnd("Total Execution Time");
+
+    return {
+      success: false,
+      message: "Trop de requêtes. Veuillez reessayer plus tard",
+    };
+  }
+
   const validatedData = schema.safeParse(data);
   if (!validatedData.success) {
     console.timeEnd("Total Execution Time");
@@ -58,7 +72,7 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E, U>({
     console.timeEnd("Total Execution Time");
     return {
       success: false,
-      message: "Vous devez être authentifier avec un compte admin",
+      message: "Vous devez être authentifier pour continuer",
     };
   }
 

@@ -29,7 +29,7 @@ async function validateOTP(data: z.infer<typeof optSchema>) {
       if (verificationToken.expires.getTime() < new Date().getTime()) {
         return {
           success: false,
-          message: "Le code a expire",
+          message: "Le code à expire",
           errorData: "refresh",
         };
       }

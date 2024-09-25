@@ -133,7 +133,7 @@ export const CardInfo = ({ description, type }: { description: string; type: str
     type === "sell"
       ? "Acheter nos produits"
       : type === "product"
-        ? "Acheter les produits fait avec notre lait"
+        ? "Acheter les produits fais avec notre lait"
         : type === "amap"
           ? "Commander nos produits laitiers"
           : "Acheter nos produits ainsi que les produits fait avec notre lait";

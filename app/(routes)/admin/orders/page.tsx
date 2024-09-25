@@ -12,7 +12,6 @@ const OrdersPage = async (context: {
   searchParams: { from: string | undefined; to: string | undefined; id: string | undefined };
 }) => {
   const id = context.searchParams.id;
-
   let from: Date;
   let to: Date;
   if (context.searchParams.from && context.searchParams.to) {
