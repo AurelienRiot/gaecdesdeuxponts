@@ -4,14 +4,16 @@ import prismadb from "@/lib/prismadb";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import type { User } from "@prisma/client";
 import { render } from "@react-email/render";
+import { customAlphabet } from "nanoid";
 import type { NextAuthOptions } from "next-auth";
-import EmailProvider from "next-auth/providers/email";
+import EmailProvider, { type SendVerificationRequestParams } from "next-auth/providers/email";
 import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
-import WelcomeEmail from "../email/welcome";
 import { revalidateTag } from "next/cache";
+import WelcomeEmail from "../email/welcome";
 
-const baseUrl = process.env.NEXT_PUBLIC_URL as string;
+const baseUrl = process.env.NEXT_PUBLIC_URL;
 const expirationTime = 5 * 60 * 1000;
+const secret = process.env.NEXTAUTH_SECRET;
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -23,15 +25,8 @@ export const authOptions: NextAuthOptions = {
   },
   providers: [
     EmailProvider({
-      sendVerificationRequest: async ({ identifier: email, url }) => {
-        await transporter.sendMail({
-          from: "laiteriedupontrobert@gmail.com",
-          to: email,
-          text: `Bienvenue sur Laiterie du Pont Robert. Connectez-vous en cliquant ici : ${url}`,
-          subject: "Connexion à votre compte ",
-          html: await render(WelcomeEmail({ url, baseUrl })),
-        });
-      },
+      sendVerificationRequest,
+      maxAge: 12 * 60,
     }),
     GoogleProvider({
       allowDangerousEmailAccountLinking: true,
@@ -108,3 +103,34 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
+
+async function sendVerificationRequest({ identifier, url, token }: SendVerificationRequestParams) {
+  const otp = customAlphabet("0123456789", 6)();
+  const hashToken = await createHashToken(token);
+  setTimeout(async () => {
+    await prismadb.verificationToken.update({
+      where: { token: hashToken },
+      data: {
+        otp,
+        url,
+      },
+    });
+  }, 500);
+
+  await transporter.sendMail({
+    from: "laiteriedupontrobert@gmail.com",
+    to: identifier,
+    text: `Bienvenue sur Laiterie du Pont Robert. Voici votre code unique : ${otp}`,
+    subject: `Connexion à votre compte. Voici votre code unique : ${otp} - Laiterie du Pont Robert`,
+    html: await render(WelcomeEmail({ otp, baseUrl })),
+  });
+}
+
+export async function createHashToken(message: string) {
+  const data = new TextEncoder().encode(message + secret);
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hash))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("")
+    .toString();
+}

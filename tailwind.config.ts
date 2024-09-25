@@ -253,6 +253,10 @@ module.exports = {
           "95%": { display: "block", opacity: "1", visibility: "visible" },
           "100%": { display: "none", visibility: "hidden", opacity: "0" },
         },
+        "caret-blink": {
+          "0%,70%,100%": { opacity: "1" },
+          "20%,50%": { opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -274,6 +278,8 @@ module.exports = {
         aurora: "aurora 60s linear infinite",
         scroll: "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
         heartbeat: "heartbeat 2s infinite ease-in-out",
+
+        "caret-blink": "caret-blink 1.25s ease-out infinite",
       },
     },
   },

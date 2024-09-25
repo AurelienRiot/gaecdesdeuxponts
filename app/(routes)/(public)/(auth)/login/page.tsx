@@ -68,7 +68,7 @@ function ErrorDisplay({ error }: { error: string | undefined }) {
     case "Verification":
       return (
         <p className=" font-bold text-sm text-destructive">
-          Le lien est expiré ou invalide, veuillez entrer votre addresse email.
+          Le code est expiré ou invalide, veuillez entrer votre addresse email.
           <br />
           {"Vérifier qu'il s'agit du dernier email envoyé."}
         </p>

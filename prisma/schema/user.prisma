@@ -66,6 +66,8 @@ enum Role {
 model VerificationToken {
   identifier String
   token      String   @unique
+  otp        String?
+  url        String?
   expires    DateTime
 
   @@unique([identifier, token])

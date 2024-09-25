@@ -1,30 +1,49 @@
-import { Section, Text } from "@react-email/components";
+import { Section, Text, Heading } from "@react-email/components";
 import MainBody, { ButtonRedirect } from "./common";
 
 export interface WelcomeEmailProps {
-	url: string;
-	baseUrl: string;
+  otp: string;
+  baseUrl: string;
 }
 
-export const WelcomeEmail = ({ url, baseUrl }: WelcomeEmailProps) => (
-	<MainBody baseUrl={baseUrl} previewText="Bienvenue ! Cliquez ici pour vous connecter et passer commande">
-		<WelcomeBody url={url} />
-	</MainBody>
+export const WelcomeEmail = ({ otp, baseUrl }: WelcomeEmailProps) => (
+  <MainBody
+    baseUrl={baseUrl}
+    previewText={`Bienvenue ! Entrez votre code unique ${otp} pour vous connecter et passer commande`}
+  >
+    <WelcomeBody otp={otp} />
+  </MainBody>
 );
 
 export default WelcomeEmail;
 
 WelcomeEmail.PreviewProps = {
-	url: "https://www.laiteriedupontrobert.fr",
-	baseUrl: "https://www.laiteriedupontrobert.fr",
+  otp: "123456",
+  baseUrl: "https://www.laiteriedupontrobert.fr",
 } as WelcomeEmailProps;
 
-const WelcomeBody = ({ url }: { url: string }) => (
-	<>
-		<Text className="text-center text-base">Bonjour,</Text>
-		<Text className="text-center text-base">Bienvenue sur Laiterie du Pont Robert</Text>
-		<Section className="text-center">
-			<ButtonRedirect href={url} text="Connectez-vous en cliquant ici" />
-		</Section>
-	</>
+const WelcomeBody = ({ otp }: { otp: string }) => (
+  <>
+    <Text className="text-center text-base">Bonjour,</Text>
+    <Text className="text-center text-base">Bienvenue sur Laiterie du Pont Robert</Text>
+    <OTPEmail otp={otp} />
+  </>
 );
+
+function OTPEmail({ otp }: { otp: string }) {
+  return (
+    <Section className="py-6 px-8">
+      <Heading className="text-xl font-bold text-gray-800 mb-4">Vérifiez votre adresse e-mail</Heading>
+      <Text className="text-sm text-gray-800 mb-3">
+        Merci de vous être inscrit sur notre site. Pour confirmer que c’est bien vous, veuillez saisir le code de
+        vérification suivant lorsque vous y êtes invité. Si vous n'êtes pas à l'origine de cette demande, vous pouvez
+        ignorer ce message en toute sécurité.
+      </Text>
+      <Section className="flex items-center justify-center">
+        <Text className="text-center font-bold text-sm text-gray-800">Code de verification</Text>
+        <Text className="text-center font-bold text-4xl my-2 text-gray-800">{otp}</Text>
+        <Text className="text-center text-sm text-gray-800">(Ce code est valide pour 10 minutes)</Text>
+      </Section>
+    </Section>
+  );
+}

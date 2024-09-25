@@ -8,7 +8,6 @@ import { type AnchorHTMLAttributes, forwardRef } from "react";
 const AuthLink = forwardRef<HTMLAnchorElement, AnchorHTMLAttributes<HTMLAnchorElement>>(
   ({ className, ...props }, ref) => {
     const session = useSession();
-
     return (
       <Button variant={"outline"} className={cn("text-base", className)}>
         <Link

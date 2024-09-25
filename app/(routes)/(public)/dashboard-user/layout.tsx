@@ -3,6 +3,7 @@ import { UserProvider } from "@/context/user-context";
 import GetUser from "@/actions/get-user";
 import type React from "react";
 import { ProfilNavBar } from "./nav-components";
+import { Logout } from "@/components/auth/auth";
 
 export default async function Layout({
   children,
@@ -10,6 +11,9 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const data = await GetUser();
+  if (!data) {
+    return <Logout />;
+  }
 
   return (
     <UserProvider data={data}>
