@@ -1,3 +1,4 @@
+import type { Role } from "@prisma/client";
 import { getToken } from "next-auth/jwt";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -9,7 +10,7 @@ export async function middleware(req: NextRequest) {
     return redirectToLogin(req);
   }
   try {
-    const role = token.role;
+    const role = token.role as Role;
     const path = req.nextUrl.pathname;
 
     if (path === "/" && (role === "admin" || role === "readOnlyAdmin")) {
@@ -44,8 +45,7 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // matcher: ["/admin/:path*", "/dashboard-user/:path*"],
-  matcher: ["/:path*"],
+  matcher: ["/admin/:path*", "/dashboard-user/:path*", "/"],
 };
 
 const redirectToLogin = (req: NextRequest) =>
