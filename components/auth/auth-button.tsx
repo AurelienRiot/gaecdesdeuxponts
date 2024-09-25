@@ -125,7 +125,9 @@ export const EmailButton = ({ callbackUrl }: { callbackUrl: string }) => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-md">Entrer votre email pour vous connecter</FormLabel>
+                    <FormLabel className="text-md">
+                      Entrer votre email pour recevoir le code unique et vous connecter
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="email"
@@ -148,7 +150,7 @@ export const EmailButton = ({ callbackUrl }: { callbackUrl: string }) => {
               className="mt-4 w-full transition-transform duration-200 ease-linear active:scale-95"
               size="lg"
             >
-              {"   Recevoir le lien  "}
+              {"   Recevoir le code  "}
             </LoadingButton>
           </form>
         </Form>
@@ -198,7 +200,7 @@ function OPTForm({ email }: { email: string }) {
           name="otp"
           render={({ field }) => (
             <FormItem className="text-center mx-auto space-y-4">
-              <FormLabel className="text-2xl">Code de verification</FormLabel>
+              <FormLabel className="text-2xl">Code de vérification</FormLabel>
               <FormControl>
                 <InputOTP
                   disabled={form.formState.isSubmitting}

@@ -120,7 +120,7 @@ async function sendVerificationRequest({ identifier, url, token }: SendVerificat
   await transporter.sendMail({
     from: "laiteriedupontrobert@gmail.com",
     to: identifier,
-    text: `Bienvenue sur Laiterie du Pont Robert. Voici votre code unique : ${otp}`,
+    text: `Bienvenue sur la Laiterie du Pont Robert. Voici votre code unique : ${otp}`,
     subject: `Connexion à votre compte. Voici votre code unique : ${otp} - Laiterie du Pont Robert`,
     html: await render(WelcomeEmail({ otp, baseUrl })),
   });
