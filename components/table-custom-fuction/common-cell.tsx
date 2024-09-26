@@ -57,8 +57,11 @@ const NameWithImage = ({ name, image, imageSize = 16, displayImage = true }: Nam
           className="mr-2 object-contain rounded-sm bg-white"
         />
       ) : (
-        <div className="size-6 rounded-full bg-gray-200 flex items-center justify-center shrink-0">
-          <span className="text-gray-600 font-semibold text-xs">{name.charAt(0)}</span>
+        <div
+          style={{ width: imageSize * 2, height: imageSize * 2 }}
+          className=" rounded-full bg-gray-200 flex items-center justify-center shrink-0 "
+        >
+          <span className="text-gray-600 font-semibold text-xs no-underline">{name.charAt(0)}</span>
         </div>
       )
     ) : null}

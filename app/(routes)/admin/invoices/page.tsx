@@ -52,5 +52,5 @@ async function InvoiceTableServer() {
     emailSend: !!invoice.invoiceEmail,
     createdAt: invoice.createdAt,
   }));
-  return <InvoiceTable data={formattedInvoices} />;
+  return <InvoiceTable data={formattedInvoices.sort((a, b) => (a.status === "En cours de paiement" ? -1 : 1))} />;
 }

@@ -54,7 +54,7 @@ export const columns: ColumnDef<InvoiceColumn>[] = [
   {
     accessorKey: "emailSend",
     header: "Email envoyé",
-    cell: ({ row }) => <Checkbox checked={row.original.emailSend} />,
+    cell: ({ row }) => <Checkbox checked={row.original.emailSend} className="cursor-default" />,
   },
 
   {

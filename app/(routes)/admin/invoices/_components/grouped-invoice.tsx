@@ -1,25 +1,31 @@
 "use client";
 
 import { getUserName } from "@/components/table-custom-fuction";
+import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button, LoadingButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Modal } from "@/components/ui/modal";
+import useServerAction from "@/hooks/use-server-action";
 import { dateFormatter } from "@/lib/date-utils";
 import { currencyFormatter } from "@/lib/utils";
 import ky, { type HTTPError, type TimeoutError } from "ky";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import type { UserWithOrdersForInvoices } from "../_functions/get-users-with-orders";
 import createGroupedMonthlyInvoice from "../_actions/send-grouped-monthly-invoice";
-import useServerAction from "@/hooks/use-server-action";
-import { useRouter } from "next/navigation";
+import type { UserWithOrdersForInvoices } from "../_functions/get-users-with-orders";
 
 const createOrderIdsRecord = (proUserWithOrders: UserWithOrdersForInvoices) =>
   proUserWithOrders.reduce(
     (acc, user) => {
-      acc[user.id] = user.orders.map((order) => order.id);
+      acc[user.id] = user.orders
+        .filter((order) => {
+          const currentDate = new Date();
+          const orderDate = order.dateOfShipping ? new Date(order.dateOfShipping) : new Date();
+          return orderDate.getTime() < new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getTime();
+        })
+        .map((order) => order.id);
       return acc;
     },
     {} as Record<string, string[]>,
@@ -165,22 +171,7 @@ function GroupedInvoicePage({ proUserWithOrders }: { proUserWithOrders: UserWith
                   />{" "}
                 </label>
                 <AccordionTrigger className="ml-8 lining-nums">
-                  <div>
-                    {!!user.image && (
-                      <Image
-                        width={24}
-                        height={24}
-                        src={user.image}
-                        alt={name}
-                        className="rounded-sm object-contain inline mr-2"
-                      />
-                    )}
-                    {name},{" "}
-                    <span className="text-gray-500">
-                      {ordersId?.length} commandes ({currencyFormatter.format(totalPrice)})
-                    </span>
-                    {/* {invoiceSend ? <MailCheck className="size-4 inline ml-2 text-green-500" /> : null} */}
-                  </div>
+                  <NameWithImage name={name} image={user.image} imageSize={12} />
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="space-y-4  py-2 text-sm  ">
@@ -226,18 +217,18 @@ function GroupedInvoicePage({ proUserWithOrders }: { proUserWithOrders: UserWith
           <LoadingButton
             disabled={loading}
             variant={"shine"}
-            className="w-fit  from-green-600 via-green-600/80 to-green-600"
-            onClick={() => sendInvoices(true)}
-          >
-            Créer et envoyer les factures
-          </LoadingButton>
-          <LoadingButton
-            disabled={loading}
-            variant={"shine"}
             className=" w-fit  from-blue-600 via-blue-600/80 to-blue-600"
             onClick={() => sendInvoices(false)}
           >
             Créer les factures
+          </LoadingButton>
+          <LoadingButton
+            disabled={loading}
+            variant={"shine"}
+            className="w-fit  from-green-600 via-green-600/80 to-green-600"
+            onClick={() => sendInvoices(true)}
+          >
+            Créer et envoyer les factures
           </LoadingButton>
         </div>
       </Modal>
