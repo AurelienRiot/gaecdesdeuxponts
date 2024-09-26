@@ -21,6 +21,7 @@ const Invoice = ({
       customer={dataInvoice.customer}
       title={`Facture ${dataInvoice.order.id}`}
       details={<Details pdfData={dataInvoice} title="Facture" />}
+      invoice
     >
       <Fragment>
         <InvoiceItemsTable items={items} />

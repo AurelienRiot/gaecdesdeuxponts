@@ -25,6 +25,7 @@ const MonthlyInvoice = ({
       customer={data.customer}
       title={`Facture mensuelle ${data.date}`}
       details={<Details pdfData={data} title={`Facture mensuelle`} />}
+      invoice
     >
       <Fragment>
         <ShippingItemsTable orders={data.orders} />

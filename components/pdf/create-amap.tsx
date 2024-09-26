@@ -2,7 +2,7 @@ import { Document, Link, Page, StyleSheet, Text, View } from "@react-pdf/rendere
 import { format, getISOWeek } from "date-fns";
 import { Fragment } from "react";
 import Details from "./details";
-import { Company, InvoiceThankYouMsg, borderColor, foregroundColor, mainColor } from "./main-document";
+import { Company, ThankYouMsg, borderColor, foregroundColor, mainColor } from "./main-document";
 import type { AMAPType } from "./pdf-data";
 import { groupedDatesByMonth } from "@/lib/date-utils";
 
@@ -449,7 +449,7 @@ function DateDistribution({ shippingDate }: { shippingDate: Date[] }) {
           </Text>
         ))}
       </View>
-      <InvoiceThankYouMsg />
+      <ThankYouMsg />
     </View>
   );
 }

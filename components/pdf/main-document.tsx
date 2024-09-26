@@ -54,11 +54,13 @@ const MainDocument = ({
   children,
   details,
   customer,
+  invoice,
 }: {
   title: string;
   children: JSX.Element;
   details: JSX.Element;
   customer: PDFData["customer"];
+  invoice?: boolean;
 }) => (
   <Document title={title}>
     <Page size="A4" style={MainStyles.page}>
@@ -75,7 +77,7 @@ const MainDocument = ({
         render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`}
         fixed
       />
-      <InvoiceThankYouMsg />
+      {invoice ? <InvoiceThankYouMsg /> : <ThankYouMsg />}
     </Page>
   </Document>
 );
@@ -153,10 +155,22 @@ const thankYouMsgStyles = StyleSheet.create({
   },
 });
 
-export const InvoiceThankYouMsg = () => (
+export const ThankYouMsg = () => (
   <View style={thankYouMsgStyles.titleContainer}>
     <Text style={thankYouMsgStyles.reportTitle}>Merci de votre confiance</Text>
     <Text style={thankYouMsgStyles.iban}>IBAN : FR76 1360 6000 6846 3201 0973 614, Code Bic : AGRIFRPP836</Text>
+    <Text style={thankYouMsgStyles.iban}>Siret : 844 554 147 00018 ,N° TVA intracom : FR46844554147</Text>
+  </View>
+);
+
+const InvoiceThankYouMsg = () => (
+  <View style={thankYouMsgStyles.titleContainer}>
+    <Text style={thankYouMsgStyles.reportTitle}>Merci de votre confiance,</Text>
+    <Text style={thankYouMsgStyles.iban}>
+      Modalités de paiement : Virement bancaire (IBAN : FR76 1360 6000 6846 3201 0973 614, Code Bic : AGRIFRPP836) ou
+      chèque à l'ordre du Gaec des deux ponts. Conditions de paiement : 30 jours fin de mois.
+    </Text>
+    <Text style={thankYouMsgStyles.iban}>Pénalités de retard : 10% du montant total en cas de retard de paiement</Text>
     <Text style={thankYouMsgStyles.iban}>Siret : 844 554 147 00018 ,N° TVA intracom : FR46844554147</Text>
   </View>
 );
