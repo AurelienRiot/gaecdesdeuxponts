@@ -13,7 +13,7 @@ export async function middleware(req: NextRequest) {
     const path = req.nextUrl.pathname;
 
     if (path === "/" && token?.role !== "admin" && token?.role !== "readOnlyAdmin") {
-      return NextResponse.next();
+      return NextResponse.redirect(new URL("/prevent-redirect", req.url));
     }
 
     if (!token || token.exp * 1000 < today) {
