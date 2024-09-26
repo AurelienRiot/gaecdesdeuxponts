@@ -6,6 +6,7 @@ import type { User } from "@prisma/client";
 import { CalendarClock, Check, Package, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import DisplayRole from "./dispaly-role";
 
 export type UserStatus = "paid" | "unpaid" | "not send";
 interface CardUserProps {
@@ -48,7 +49,7 @@ const CardUser: React.FC<CardUserProps> = ({ user, className, status, display, o
         </CardHeader>
         <CardContent className="text-center p-2  rounded-md w-fit mx-auto         ">
           <div className="flex flex-col items-center justify-center gap-1 font-bold rounded-md">
-            <p className={role.color}>{role.label}</p>
+            <DisplayRole user={user} />
             <p className="flex gap-2 items-center justify-center">
               {" "}
               {orderLength} <Package className="h-4 w-4" />

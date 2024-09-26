@@ -38,7 +38,7 @@ const UserPage = async () => {
   });
 
   return (
-    <div className="m-4 space">
+    <div className="m-4">
       <div className="flex flex-col items-center justify-between sm:flex-row gap-y-2">
         <Heading title={`Clients (${allUsers.length})`} description="Liste des clients" />
         {/* <GroupedInvoicePage proUserWithOrders={proUserWithOrders} /> */}

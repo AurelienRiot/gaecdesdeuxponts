@@ -8,8 +8,8 @@ import { Clipboard, ClipboardCheck, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { forwardRef, useState } from "react";
 import { useFormStatus } from "react-dom";
-import changeEmail from "../_actions/change-email";
 import { toast } from "sonner";
+import changeEmail from "../_actions/change-email";
 
 function MailForm({ email, id }: { email: string | null; id: string }) {
   const [display, setDisplay] = useState(false);

@@ -1,13 +1,13 @@
 "use client";
 import { dateFormatter } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
+import { addDays } from "date-fns";
 import { fr } from "date-fns/locale";
 import * as React from "react";
 import { Icons } from "./icons";
 import { Button } from "./ui/button";
 import { Calendar, type CalendarProps } from "./ui/calendar";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
-import { addDays } from "date-fns";
 
 type DateModalProps = Omit<CalendarProps, "mode"> & {
   value?: Date;
