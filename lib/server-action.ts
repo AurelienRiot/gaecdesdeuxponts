@@ -1,8 +1,8 @@
-import { headers } from "next/headers";
+import { checkUser } from "@/components/auth/checkAuth";
+import type { Session } from "next-auth";
 import type { z } from "zod";
 import { rateLimit } from "./rate-limit";
-import { getSessionUser } from "@/actions/get-user";
-import { getToken } from "next-auth/jwt";
+import type { Role } from "@prisma/client";
 
 export type ReturnTypeServerAction<R = undefined, E = undefined> =
   | {
@@ -16,34 +16,36 @@ export type ReturnTypeServerAction<R = undefined, E = undefined> =
       errorData?: E;
     };
 
-type BaseServerActionType<D extends z.ZodTypeAny, U> = {
+type BaseServerActionType<D extends z.ZodTypeAny> = {
   schema: D;
+  roles?: Role[];
   data: z.infer<D>;
-  getUser: () => Promise<U | null>;
 };
 
-type SafeServerActionType<D extends z.ZodTypeAny, R, E, U> = BaseServerActionType<D, U> &
+type SafeServerActionType<D extends z.ZodTypeAny, R, E> = BaseServerActionType<D> &
   (
     | {
         ignoreCheckUser?: false;
-        serverAction: (data: z.infer<D>, user: U) => Promise<ReturnTypeServerAction<R, E>>;
+        serverAction: (data: z.infer<D>, user: Session["user"]) => Promise<ReturnTypeServerAction<R, E>>;
       }
     | {
         ignoreCheckUser: true;
-        serverAction: (data: z.infer<D>, user: U | null) => Promise<ReturnTypeServerAction<R, E>>;
+        serverAction: (data: z.infer<D>, user: Session["user"] | null) => Promise<ReturnTypeServerAction<R, E>>;
       }
   );
 
-async function safeServerAction<D extends z.ZodTypeAny, R, E, U>({
-  schema,
-  serverAction,
-  ignoreCheckUser,
+async function safeServerAction<D extends z.ZodTypeAny, R, E>({
   data,
-  getUser,
-}: SafeServerActionType<D, R, E, U>): Promise<ReturnTypeServerAction<R, E>> {
+  serverAction,
+  schema,
+  ignoreCheckUser,
+  roles,
+}: SafeServerActionType<D, R, E>): Promise<ReturnTypeServerAction<R, E>> {
   console.time("Total Execution Time");
 
-  const isRateLimited = await rateLimit();
+  const user = await checkUser();
+
+  const isRateLimited = await rateLimit(user?.role);
   if (isRateLimited) {
     console.timeEnd("Total Execution Time");
 
@@ -61,14 +63,13 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E, U>({
       message: validatedData.error.issues[0].message,
     };
   }
-  const user = await getUser();
   if (ignoreCheckUser) {
     const result = await serverAction(data, user);
     console.timeEnd("Total Execution Time");
     return result;
   }
 
-  if (!user) {
+  if (!user || !roles?.includes(user.role)) {
     console.timeEnd("Total Execution Time");
     return {
       success: false,

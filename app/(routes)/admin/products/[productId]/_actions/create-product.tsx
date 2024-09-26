@@ -1,6 +1,5 @@
 "use server";
 
-import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
@@ -10,7 +9,7 @@ export async function createProduct(data: ProductFormValues) {
   return await safeServerAction({
     data,
     schema: mainProductSchema,
-    getUser: checkAdmin,
+    roles: ["admin"],
     serverAction: async (data) => {
       const { id, name, imagesUrl, categoryName, productSpecs, isArchived, isPro, products } = data;
       const sameProduct = await prismadb.mainProduct.findUnique({

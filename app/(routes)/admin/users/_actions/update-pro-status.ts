@@ -1,6 +1,5 @@
 "use server";
 
-import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
@@ -15,7 +14,7 @@ async function updateProStatus(data: z.infer<typeof schema>) {
   return await safeServerAction({
     data,
     schema,
-    getUser: checkAdmin,
+    roles: ["admin"],
     serverAction: async (data) => {
       const { id, check } = data;
       if (check === "indeterminate") {

@@ -7,14 +7,22 @@ const secret = process.env.NEXTAUTH_SECRET;
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
 export async function middleware(req: NextRequest) {
-  const token = (await getToken({ req, secret })) as (JWT & { exp: number }) | null;
-  const today = new Date().getTime();
-  if (!token || token.exp * 1000 < today) {
-    return redirectToLogin(req);
-  }
   try {
-    const role = token.role as Role;
+    const token = (await getToken({ req, secret })) as (JWT & { exp: number }) | null;
+    const today = new Date().getTime();
     const path = req.nextUrl.pathname;
+
+    if (path === "/") {
+      if (token?.role === "admin" || token?.role === "readOnlyAdmin") {
+        return NextResponse.redirect(new URL("/admin/calendar", req.url));
+      }
+      return NextResponse.next();
+    }
+
+    if (!token || token.exp * 1000 < today) {
+      return redirectToLogin(req);
+    }
+    const role = token.role as Role;
     if (new Date(token.tokenExpires).getTime() < today) {
       const apiResponse = await fetch(`${baseUrl}/api/auth`, {
         method: "GET",
@@ -33,14 +41,9 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL(`/login?callbackUrl=${encodeURIComponent(req.url)}`, req.url));
       }
       const { role: dbRole } = (await apiResponse.json()) as { role: string };
-      console.log("Trigger middleware", dbRole, role, token.tokenExpires, new Date());
       if (dbRole !== role) {
         return redirectToLogin(req);
       }
-    }
-
-    if (path === "/" && (role === "admin" || role === "readOnlyAdmin")) {
-      return NextResponse.redirect(new URL("/admin/calendar", req.url));
     }
 
     if (path.startsWith("/admin")) {

@@ -118,15 +118,15 @@ export const EmailButton = ({ callbackUrl }: { callbackUrl: string }) => {
     <>
       {!success && (
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-md">
             <div className="grid w-full items-center gap-1.5">
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-md">
-                      Entrer votre email pour recevoir le code unique et vous connecter
+                  <FormItem className="space-y-6 text-center">
+                    <FormLabel className="text-2xl px-4">
+                      Entrez votre email pour recevoir le code unique pour vous connecter
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -157,13 +157,13 @@ export const EmailButton = ({ callbackUrl }: { callbackUrl: string }) => {
       )}
 
       <motion.div initial={{ scale: 0 }} animate={success ? { scale: 1 } : { scale: 0 }} transition={{ duration: 0.3 }}>
-        <OPTForm email={email} />
+        <OPTForm email={email} setSuccess={setSuccess} />
       </motion.div>
     </>
   );
 };
 
-function OPTForm({ email }: { email: string }) {
+function OPTForm({ email, setSuccess }: { email: string; setSuccess: React.Dispatch<React.SetStateAction<boolean>> }) {
   const router = useRouter();
   const { serverAction } = useServerAction(validateOTP);
   const form = useForm<z.infer<typeof optSchema>>({
@@ -181,14 +181,16 @@ function OPTForm({ email }: { email: string }) {
     function onSuccess(url?: string) {
       if (!url) {
         toast.error("Erreur, veuillez reessayer");
-        router.refresh();
+        setSuccess(false);
         return;
       }
       router.push(url);
-      router.refresh();
     }
     function onError(errorData?: string) {
-      if (errorData) router.refresh();
+      if (errorData) {
+        form.resetField("otp");
+        setSuccess(false);
+      }
     }
     await serverAction({ data, onSuccess, onError });
   }

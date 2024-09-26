@@ -1,6 +1,5 @@
 "use server";
 
-import { checkAdmin } from "@/components/auth/checkAuth";
 import createOrdersEvent from "@/components/google-events/create-orders-event";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
@@ -14,7 +13,7 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
       prevDateOfShipping: z.date().optional().nullable(),
     }),
     data,
-    getUser: checkAdmin,
+    roles: ["admin"],
     serverAction: async ({
       datePickUp,
       id,

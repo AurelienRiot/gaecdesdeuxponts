@@ -1,5 +1,4 @@
 "use server";
-import { checkReadOnlyAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { addHours } from "date-fns";
@@ -12,8 +11,8 @@ const schema = z.object({
 async function getTodaysOrders(data: z.infer<typeof schema>) {
   return await safeServerAction({
     data,
-    getUser: checkReadOnlyAdmin,
-    schema: schema,
+    schema,
+    roles: ["admin", "readOnlyAdmin"],
     serverAction: async ({ date }) => {
       const startDate = date;
       const endDate = addHours(date, 24);

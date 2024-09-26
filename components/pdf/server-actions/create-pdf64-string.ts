@@ -1,10 +1,9 @@
 "use server";
-import { checkReadOnlyAdmin } from "@/components/auth/checkAuth";
+import { dateMonthYear } from "@/lib/date-utils";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { z } from "zod";
 import { generatePdfSring64 } from "../pdf-fuction";
-import { dateMonthYear } from "@/lib/date-utils";
 
 const pdf64StringSchema = z.object({
   orderId: z.string(),
@@ -13,7 +12,7 @@ async function createPDF64String(data: z.infer<typeof pdf64StringSchema>) {
   return await safeServerAction({
     data,
     schema: pdf64StringSchema,
-    getUser: checkReadOnlyAdmin,
+    roles: ["admin", "readOnlyAdmin"],
     serverAction: async ({ orderId }) => {
       const order = await prismadb.order.findUnique({
         where: {
@@ -55,7 +54,7 @@ async function createAMAPPDF64String(data: z.infer<typeof amapPdf64StringSchema>
   return await safeServerAction({
     data,
     schema: amapPdf64StringSchema,
-    getUser: checkReadOnlyAdmin,
+    roles: ["admin", "readOnlyAdmin"],
     serverAction: async ({ orderId }) => {
       const order = await prismadb.aMAPOrder.findUnique({
         where: {
@@ -91,7 +90,7 @@ async function createInvoicePDF64String(data: z.infer<typeof invoicePDF64StringS
   return await safeServerAction({
     data,
     schema: invoicePDF64StringSchema,
-    getUser: checkReadOnlyAdmin,
+    roles: ["admin", "readOnlyAdmin"],
     serverAction: async ({ invoiceId }) => {
       const fullInvoice = await prismadb.invoice.findUnique({
         where: {
@@ -124,4 +123,4 @@ async function createInvoicePDF64String(data: z.infer<typeof invoicePDF64StringS
   });
 }
 
-export { createInvoicePDF64String, createPDF64String, createAMAPPDF64String };
+export { createAMAPPDF64String, createInvoicePDF64String, createPDF64String };

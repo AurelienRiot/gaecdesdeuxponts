@@ -1,9 +1,8 @@
 "use server";
-import { checkAdmin } from "@/components/auth/checkAuth";
+import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { z } from "zod";
 import { createInvoice, sendInvoice } from "./create-and-send-invoice";
-import prismadb from "@/lib/prismadb";
 
 const createInvoiceSchema = z.object({
   orderIds: z.array(z.string()),
@@ -14,7 +13,7 @@ export async function createInvoiceAction(data: z.infer<typeof createInvoiceSche
   return await safeServerAction({
     data,
     schema: createInvoiceSchema,
-    getUser: checkAdmin,
+    roles: ["admin"],
     serverAction: async ({ orderIds, sendEmail }) => {
       // await addDelay(2000);
       const previousInvoice = await prismadb.invoice.findFirst({
@@ -48,7 +47,7 @@ export async function sendInvoiceAction(data: z.infer<typeof monthlyInvoiceSchem
   return await safeServerAction({
     data,
     schema: monthlyInvoiceSchema,
-    getUser: checkAdmin,
+    roles: ["admin"],
     serverAction: async ({ invoiceId }) => {
       // await addDelay(2000);
       return await sendInvoice(invoiceId);

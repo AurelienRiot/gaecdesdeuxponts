@@ -4,7 +4,6 @@ import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { render } from "@react-email/render";
-import { checkUser } from "../auth/checkAuth";
 import ContactSend from "../email/contact-send";
 import { bugReportSchema, type BugReportValues } from "./bug-report-schema";
 
@@ -12,8 +11,6 @@ const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 async function createBugReport(data: BugReportValues) {
   return await safeServerAction({
     schema: bugReportSchema,
-    getUser: checkUser,
-    ignoreCheckUser: true,
     data,
     serverAction: async (data, user) => {
       const contact = await prismadb.contact.create({

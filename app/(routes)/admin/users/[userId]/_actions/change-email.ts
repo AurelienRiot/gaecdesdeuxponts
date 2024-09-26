@@ -1,6 +1,5 @@
 "use server";
 
-import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { addDelay } from "@/lib/utils";
@@ -16,7 +15,7 @@ async function changeEmail(data: z.infer<typeof schema>) {
   return await safeServerAction({
     data,
     schema,
-    getUser: checkAdmin,
+    roles: ["admin"],
     serverAction: async ({ email, id }) => {
       await addDelay(2000);
       const user = await prismadb.user.findUnique({

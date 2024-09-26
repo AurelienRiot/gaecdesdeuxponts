@@ -47,16 +47,15 @@ export const authOptions: NextAuthOptions = {
       const newToken = { ...token };
       if (!trigger) {
         if (!newToken.tokenExpires || new Date(newToken.tokenExpires) < new Date()) {
-          console.log("Token expire");
           const dbUser = await prismadb.user.findUnique({
             where: { id: newToken.id },
-            select: { id: true, name: true, role: true },
+            select: { id: true, name: true, role: true, company: true },
           });
           if (!dbUser) {
             newToken.role = "deleted";
           } else {
             newToken.id = dbUser.id;
-            newToken.name = dbUser.name;
+            newToken.name = `${dbUser.name}${dbUser.company ? ` - ${dbUser.company}` : ""}`;
             newToken.role = dbUser.role;
             newToken.tokenExpires = new Date(Date.now() + expirationTime);
           }
@@ -75,18 +74,17 @@ export const authOptions: NextAuthOptions = {
         }
         const dbUser = await prismadb.user.findUnique({
           where: { email: u.email as string },
-          select: { id: true, name: true, role: true },
+          select: { id: true, name: true, role: true, company: true },
         });
         if (!dbUser) {
           newToken.role = "deleted";
         } else {
           newToken.id = dbUser.id;
-          newToken.name = dbUser.name;
+          newToken.name = `${dbUser.name}${dbUser.company ? ` - ${dbUser.company}` : ""}`;
           newToken.role = dbUser.role;
           newToken.tokenExpires = new Date(Date.now() + expirationTime);
         }
       }
-      console.log({ roleAuth: newToken.role, exp: newToken.tokenExpires });
       return Promise.resolve(newToken);
     },
     session: async ({ session, token }) => {

@@ -1,6 +1,5 @@
 "use server";
 
-import { getUserWithAdress } from "@/actions/get-user";
 import { getUnitLabel } from "@/components/product/product-function";
 import { isDateDisabled } from "@/lib/date-utils";
 import { createId } from "@/lib/id";
@@ -9,6 +8,20 @@ import safeServerAction from "@/lib/server-action";
 import type { ProductWithMain, UserWithAddress } from "@/types";
 import { revalidatePath, revalidateTag } from "next/cache";
 import * as z from "zod";
+
+export const getUserWithAdress = async (id: string) => {
+  const user = await prismadb.user.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      address: true,
+      billingAddress: true,
+    },
+  });
+
+  return user;
+};
 
 const checkOutSchema = z.object({
   date: z.date().refine((date) => !isDateDisabled(date), {
@@ -40,10 +53,15 @@ type CheckOutProps = z.infer<typeof checkOutSchema>;
 export const createCheckOut = async (data: CheckOutProps) =>
   await safeServerAction({
     data,
-    getUser: getUserWithAdress,
     schema: checkOutSchema,
-    serverAction: async (data, user) => {
-      const { itemsWithQuantities, date, shopId } = data;
+    serverAction: async ({ itemsWithQuantities, date, shopId }, { id }) => {
+      const user = await getUserWithAdress(id);
+      if (!user) {
+        return {
+          success: false,
+          message: "Utilisateur introuvable",
+        };
+      }
       const productIds = itemsWithQuantities.map((item) => item.id);
 
       try {

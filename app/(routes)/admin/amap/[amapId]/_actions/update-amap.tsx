@@ -1,17 +1,16 @@
 "use server";
 
-import { checkAdmin } from "@/components/auth/checkAuth";
+import createOrdersEvent from "@/components/google-events/create-orders-event";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
-import { schema, type AMAPFormValues } from "../_components/amap-schema";
 import { revalidateTag } from "next/cache";
-import createOrdersEvent from "@/components/google-events/create-orders-event";
+import { schema, type AMAPFormValues } from "../_components/amap-schema";
 
 async function updateAMAP(data: AMAPFormValues) {
   return await safeServerAction({
     schema: schema,
     data,
-    getUser: checkAdmin,
+    roles: ["admin"],
     serverAction: async ({
       id,
       amapItems,

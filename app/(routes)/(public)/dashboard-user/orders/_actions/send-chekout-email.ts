@@ -29,7 +29,6 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
   return await safeServerAction({
     data,
     schema,
-    getUser: getSessionUser,
     serverAction: async (data, user) => {
       const order = await prismadb.order.findUnique({
         where: {

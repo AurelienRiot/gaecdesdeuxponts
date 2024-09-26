@@ -8,7 +8,6 @@ async function validateOTP(data: z.infer<typeof optSchema>) {
   return await safeServerAction({
     data,
     schema: optSchema,
-    getUser: async () => {},
     ignoreCheckUser: true,
     serverAction: async ({ otp, email }) => {
       const verificationToken = await prismadb.verificationToken.findFirst({

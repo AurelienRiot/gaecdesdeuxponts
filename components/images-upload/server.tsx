@@ -5,7 +5,7 @@ import type { ReturnTypeServerAction } from "@/lib/server-action";
 import safeServerAction from "@/lib/server-action";
 import cloudinary from "cloudinary";
 import { z } from "zod";
-import { checkAdmin, checkReadOnlyAdmin } from "../auth/checkAuth";
+import { checkReadOnlyAdmin } from "../auth/checkAuth";
 import { getUserName } from "../table-custom-fuction";
 
 cloudinary.v2.config({
@@ -99,7 +99,7 @@ const deleteObjectSchema = z.object({
 async function deleteObject(data: z.infer<typeof deleteObjectSchema>) {
   return await safeServerAction({
     schema: deleteObjectSchema,
-    getUser: checkAdmin,
+    roles: ["admin"],
     data,
     serverAction: async (data) => {
       const { publicID } = data;

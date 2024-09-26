@@ -23,7 +23,7 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
   return await safeServerAction({
     data,
     schema: BLSchema,
-    getUser: checkAdmin,
+    roles: ["admin"],
     serverAction: async (data) => {
       const { orderId } = data;
       const order = await prismadb.order.findUnique({

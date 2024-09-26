@@ -1,5 +1,4 @@
 "use server";
-import { checkAdmin } from "@/components/auth/checkAuth";
 import SendAMAPEmail from "@/components/email/send-amap";
 import { dateFormatter } from "@/lib/date-utils";
 import { transporter } from "@/lib/nodemailer";
@@ -21,7 +20,7 @@ export async function SendAMAP(data: z.infer<typeof AMAPSchema>) {
   return await safeServerAction({
     data,
     schema: AMAPSchema,
-    getUser: checkAdmin,
+    roles: ["admin"],
     serverAction: async ({ orderId }) => {
       const order = await prismadb.aMAPOrder.findUnique({
         where: {

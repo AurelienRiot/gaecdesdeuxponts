@@ -13,8 +13,8 @@ const schema = z.object({
 async function getOrdersForTheDay(data: z.infer<typeof schema>) {
   return await safeServerAction({
     data,
-    getUser: checkReadOnlyAdmin,
     schema: schema,
+    roles: ["admin", "readOnlyAdmin"],
     serverAction: async ({ date }) => {
       const startDate = date;
       const endDate = addHours(date, 24);

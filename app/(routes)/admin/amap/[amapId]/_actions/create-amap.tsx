@@ -11,7 +11,7 @@ async function createAMAP(data: AMAPFormValues) {
   return await safeServerAction({
     schema: schema,
     data,
-    getUser: checkAdmin,
+    roles: ["admin"],
     serverAction: async ({
       id,
       amapItems,

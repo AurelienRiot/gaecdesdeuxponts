@@ -1,5 +1,4 @@
 "use server";
-import { checkAdmin } from "@/components/auth/checkAuth";
 import { createInvoice } from "@/components/pdf/server-actions/create-and-send-invoice";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
@@ -11,7 +10,7 @@ export default async function createGroupedMonthlyInvoice(data: z.infer<typeof g
   return await safeServerAction({
     data,
     schema: groupedMonthlyInvoiceSchema,
-    getUser: checkAdmin,
+    roles: ["admin"],
     serverAction: async (orderArray) => {
       const previousInvoice = await prismadb.invoice.findFirst({
         orderBy: { createdAt: "desc" },

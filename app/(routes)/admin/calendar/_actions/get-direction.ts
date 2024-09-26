@@ -8,8 +8,8 @@ import { directionSchema, type DirectionFormValues } from "../../direction/_comp
 async function getDirection(data: DirectionFormValues) {
   return await safeServerAction({
     data,
-    getUser: checkReadOnlyAdmin,
     schema: directionSchema,
+    roles: ["admin", "readOnlyAdmin"],
     serverAction: async ({ destination, origin, waypoints }) => {
       const orderedWaipoints = await directionGoogle({
         origin: origin.label,

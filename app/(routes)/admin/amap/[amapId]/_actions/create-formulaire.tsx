@@ -1,6 +1,5 @@
 "use server";
 
-import { checkAdmin } from "@/components/auth/checkAuth";
 import type { AMAPType } from "@/components/pdf/pdf-data";
 import { generatePdfSring64 } from "@/components/pdf/pdf-fuction";
 import safeServerAction from "@/lib/server-action";
@@ -10,7 +9,7 @@ async function createAMAPFormulaire(data: AMAPFormulaireValues) {
   return await safeServerAction({
     schema: schema,
     data,
-    getUser: checkAdmin,
+    roles: ["admin"],
     serverAction: async ({ amapItems, daysOfAbsence, shippingDays, startDate, endDate, shopId }) => {
       const AMAPData: AMAPType = {
         customer: {

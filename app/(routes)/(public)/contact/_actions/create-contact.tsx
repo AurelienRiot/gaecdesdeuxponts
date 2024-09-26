@@ -13,7 +13,6 @@ const baseUrl = process.env.NEXT_PUBLIC_URL as string;
 
 const createContact = async (data: ContactFormValues) =>
   await safeServerAction({
-    getUser: getSessionUser,
     data,
     ignoreCheckUser: true,
     schema: formSchema,

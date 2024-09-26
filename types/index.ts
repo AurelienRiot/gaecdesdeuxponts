@@ -12,6 +12,7 @@ import type {
   Order,
   OrderItem,
   Product,
+  Role,
   Shop,
   User,
 } from "@prisma/client";
@@ -108,3 +109,5 @@ export interface FullInvoice extends Invoice {
 export interface InvoiceOrderWithItems extends InvoiceOrder {
   invoiceOrderItems: InvoiceOrderItem[];
 }
+
+export type ExtendedRole = Role | "unauthenticated";

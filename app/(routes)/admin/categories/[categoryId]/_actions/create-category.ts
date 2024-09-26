@@ -10,7 +10,7 @@ async function createCategory(data: CategoryFormValues) {
   return await safeServerAction({
     data,
     schema,
-    getUser: checkAdmin,
+    roles: ["admin"],
     serverAction: async (data) => {
       const { imageUrl, name, description } = data;
       const sameCategory = await prismadb.category.findUnique({

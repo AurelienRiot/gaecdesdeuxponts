@@ -24,7 +24,7 @@ const checkReadOnlyAdmin = async () => {
 const checkUser = async () => {
   const session = await getServerSession(authOptions);
   if (!session || !session.user || !session.user.email) {
-    return false;
+    return null;
   }
 
   return session.user;

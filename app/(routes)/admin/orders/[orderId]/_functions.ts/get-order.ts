@@ -37,7 +37,6 @@ const getShippingOrder = unstable_cache(
         },
       },
     });
-    console.log(shippingOrders?.invoiceOrder);
     const initialData: OrderFormProps["initialData"] = !shippingOrders
       ? null
       : newOrder

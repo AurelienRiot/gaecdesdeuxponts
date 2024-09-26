@@ -7,11 +7,9 @@ import prismadb from "@/lib/prismadb";
 import { defaultAddress } from "@/components/zod-schema/address-schema";
 import { revalidateTag } from "next/cache";
 
-async function getUser() {
-  const user = await getSessionUser();
-  if (!user) return null;
+async function getUser(id: string) {
   return await prismadb.user.findUnique({
-    where: { id: user.id },
+    where: { id },
     select: { billingAddress: true, id: true },
   });
 }
@@ -19,10 +17,15 @@ async function getUser() {
 async function updateUser(data: UserFormValues) {
   return await safeServerAction({
     data,
-    getUser,
     schema: formSchema,
-    serverAction: async (data, user) => {
-      const { address, billingAddress, company, name, phone } = data;
+    serverAction: async ({ address, billingAddress, company, name, phone }, { id }) => {
+      const user = await getUser(id);
+      if (!user) {
+        return {
+          success: false,
+          message: "Utilisateur introuvable",
+        };
+      }
       await prismadb.user.update({
         where: {
           id: user.id,

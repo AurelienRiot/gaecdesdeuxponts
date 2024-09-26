@@ -1,7 +1,6 @@
-import { decode } from "next-auth/jwt";
-import { cookies, headers } from "next/headers";
+import { getSessionUser } from "@/actions/get-user";
+import { headers } from "next/headers";
 
-const secret = process.env.NEXTAUTH_SECRET;
 const idToRequestCount = new Map<string, number>(); // keeps track of individual users
 const rateLimiter = {
   windowStart: Date.now(),
@@ -9,17 +8,11 @@ const rateLimiter = {
   maxRequests: 5,
 };
 
-export const rateLimit = async () => {
+export const rateLimit = async (role?: string | null) => {
   const ip = headers().get("x-forwarded-for") ?? headers().get("remote-addr") ?? "unknown";
-  const tokenEncoded = cookies().get("__Secure-next-auth.session-token")?.value;
-  try {
-    if (tokenEncoded) {
-      const token = await decode({ token: tokenEncoded, secret });
-      if (token?.role === "admin" || token?.role === "readOnlyAdmin") {
-        return false;
-      }
-    }
-  } catch (error) {}
+  if (role === "admin" || role === "readOnlyAdmin") {
+    return false;
+  }
 
   // Check and update current window
   const now = Date.now();

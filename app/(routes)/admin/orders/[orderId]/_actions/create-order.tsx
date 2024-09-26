@@ -1,6 +1,5 @@
 "use server";
 
-import { checkAdmin } from "@/components/auth/checkAuth";
 import createOrdersEvent from "@/components/google-events/create-orders-event";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
@@ -11,7 +10,7 @@ async function createOrder(data: OrderFormValues) {
   return await safeServerAction({
     schema: orderSchema,
     data,
-    getUser: checkAdmin,
+    roles: ["admin"],
     serverAction: async ({ datePickUp, id, orderItems, totalPrice, userId, dateOfEdition, dateOfShipping, shopId }) => {
       await prismadb.order.create({
         data: {

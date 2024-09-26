@@ -25,7 +25,7 @@ const LoginPage = async (context: {
       return <Logout callbackUrl={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`} />;
     }
 
-    if (user.role !== "admin" && callbackUrl.includes("/admin")) {
+    if (user.role !== "admin" && user.role !== "readOnlyAdmin" && callbackUrl.includes("/admin")) {
       return <Logout callbackUrl={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}&error=admin`} />;
     }
     if (user.role !== "pro" && callbackUrl.includes("/dashboard-user/produits-pro")) {
