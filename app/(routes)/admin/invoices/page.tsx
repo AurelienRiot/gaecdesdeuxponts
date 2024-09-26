@@ -8,13 +8,13 @@ import { Suspense } from "react";
 import type { InvoiceColumn } from "./_components/columns";
 import GroupedInvoicePage from "./_components/grouped-invoice";
 import InvoiceTable from "./_components/table";
-import { getProUsersWithOrders } from "./_functions/get-pro-users-with-orders";
+import { getUsersWithOrders } from "./_functions/get-users-with-orders";
 
 async function InvoicesPage() {
   return (
     <div className="space-y-4 p-6">
       <div className="flex justify-between flex-wrap items-center">
-        <Heading title={`Factures`} description="Gérer les factures mensuelles des professionnels" />
+        <Heading title={`Factures`} description="Gérer les factures mensuelles" />
 
         <Suspense fallback={<Button disabled> Envoie groupé de facture </Button>}>
           <GroupedInvoice />
@@ -31,7 +31,7 @@ async function InvoicesPage() {
 export default InvoicesPage;
 
 async function GroupedInvoice() {
-  const allUsers = await getProUsersWithOrders();
+  const allUsers = await getUsersWithOrders();
   return <GroupedInvoicePage proUserWithOrders={allUsers} />;
 }
 

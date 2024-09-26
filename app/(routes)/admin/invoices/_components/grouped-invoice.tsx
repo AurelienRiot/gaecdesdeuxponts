@@ -11,7 +11,7 @@ import ky, { type HTTPError, type TimeoutError } from "ky";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import type { UserWithOrdersForInvoices } from "../_functions/get-pro-users-with-orders";
+import type { UserWithOrdersForInvoices } from "../_functions/get-users-with-orders";
 import createGroupedMonthlyInvoice from "../_actions/send-grouped-monthly-invoice";
 import useServerAction from "@/hooks/use-server-action";
 import { useRouter } from "next/navigation";

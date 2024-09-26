@@ -1,11 +1,11 @@
 import prismadb from "@/lib/prismadb";
 
-export type UserWithOrdersForInvoices = Awaited<ReturnType<typeof getProUsersWithOrders>>;
+export type UserWithOrdersForInvoices = Awaited<ReturnType<typeof getUsersWithOrders>>;
 
-export async function getProUsersWithOrders() {
+export async function getUsersWithOrders() {
   return await prismadb.user.findMany({
     where: {
-      role: "pro",
+      role: { in: ["pro", "user"] },
       orders: {
         some: {
           deletedAt: null,

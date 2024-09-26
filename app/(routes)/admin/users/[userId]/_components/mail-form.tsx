@@ -4,14 +4,16 @@ import { Button, buttonVariants, type ButtonProps } from "@/components/ui/button
 import { Input } from "@/components/ui/input";
 import useServerAction from "@/hooks/use-server-action";
 import { cn } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
+import { Clipboard, ClipboardCheck, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { forwardRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import changeEmail from "../_actions/change-email";
+import { toast } from "sonner";
 
 function MailForm({ email, id }: { email: string | null; id: string }) {
   const [display, setDisplay] = useState(false);
+  const [copied, setCopied] = useState(false);
   const { serverAction } = useServerAction(changeEmail);
   const router = useRouter();
 
@@ -25,9 +27,22 @@ function MailForm({ email, id }: { email: string | null; id: string }) {
       },
     });
   }
+
+  const handleCopy = () => {
+    if (email) {
+      navigator.clipboard.writeText(email);
+      toast.success("Email copié", { position: "top-center" });
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1000 * 60);
+    }
+  };
+
   return (
     <div className="py-4 space-y-4">
-      <p className="font-bold">{email}</p>
+      <button type="button" onClick={handleCopy} className="font-bold flex gap-2 items-center">
+        {copied ? <ClipboardCheck className="size-4 text-green-500" /> : <Clipboard className="size-4 " />}
+        <span>{email}</span>
+      </button>
       <Button
         className={email?.includes("acompleter") ? "font-bold text-destructive" : ""}
         onClick={() => setDisplay(!display)}
@@ -35,8 +50,13 @@ function MailForm({ email, id }: { email: string | null; id: string }) {
         Changer l'email
       </Button>
       {display && (
-        <form className="flex gap-4" action={onSumbit}>
-          <Input type={"email"} name="email" className="max-w-xs" placeholder="Entrez la nouvelle adresse email" />
+        <form className="flex flex-wrap gap-4" action={onSumbit}>
+          <Input
+            type={"email"}
+            name="email"
+            className="w-full sm:max-w-xs"
+            placeholder="Entrez la nouvelle adresse email"
+          />
           <LoadingButton type="submit">Valider</LoadingButton>
         </form>
       )}
