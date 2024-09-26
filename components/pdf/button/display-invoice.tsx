@@ -5,11 +5,11 @@ import useServerAction from "@/hooks/use-server-action";
 import base64ToBlob from "@/lib/base-64-to-blob";
 import { saveAs } from "file-saver";
 import { toast } from "sonner";
-import { createInvoicePDF64String } from "../server-actions/create-pdf64-string";
+import { createInvoicePDF64StringAction } from "../server-actions/pdf64-string-actions";
 
+import { cn } from "@/lib/utils";
 import { sendInvoiceAction } from "../server-actions/create-send-invoice-action";
 import { PdfButton } from "./pdf-button";
-import { cn } from "@/lib/utils";
 
 export function DisplayInvoice({
   invoiceId,
@@ -31,7 +31,7 @@ export function DisplayInvoice({
     message: "Envoi de la facture",
     errorMessage: "Envoi de la facture annulé",
   });
-  const { serverAction, loading } = useServerAction(createInvoicePDF64String);
+  const { serverAction, loading } = useServerAction(createInvoicePDF64StringAction);
   const onViewFile = async () => {
     function onSuccess(result?: { base64String: string; date: string; type: string }) {
       if (!result) {

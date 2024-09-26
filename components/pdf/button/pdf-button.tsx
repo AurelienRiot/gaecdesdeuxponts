@@ -9,22 +9,24 @@ export function PdfButton({
   onSendFile,
   disabled,
   isSend,
+  className,
   onSendClassName,
   onViewClassName,
   onSaveClassName,
 }: {
   onViewFile: () => void;
   onSaveFile: () => void;
-  onSendFile: (setSend: (send: boolean) => void) => void;
+  onSendFile?: (setSend: (send: boolean) => void) => void;
   disabled?: boolean;
-  isSend: boolean;
+  isSend?: boolean;
+  className?: string;
   onSendClassName?: string;
   onViewClassName?: string;
   onSaveClassName?: string;
 }) {
   const [send, setSend] = useState(isSend);
   return (
-    <div className="flex flex-wrap gap-1">
+    <div className={cn("flex flex-wrap gap-1", className)}>
       <Button
         onClick={onViewFile}
         type="button"
@@ -44,11 +46,13 @@ export function PdfButton({
 
         {"Télecharger"}
       </Button>
-      <Button onClick={() => onSendFile(setSend)} type="button" disabled={disabled} className={onSendClassName}>
-        {disabled && <Spinner className="h-5 w-5 mr-2" />}
+      {onSendFile ? (
+        <Button onClick={() => onSendFile(setSend)} type="button" disabled={disabled} className={onSendClassName}>
+          {disabled && <Spinner className="h-5 w-5 mr-2" />}
 
-        {send ? "Renvoyer par mail" : "Envoyer par mail"}
-      </Button>
+          {send ? "Renvoyer par mail" : "Envoyer par mail"}
+        </Button>
+      ) : null}
     </div>
   );
 }

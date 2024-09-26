@@ -37,7 +37,7 @@ async function validateInvoice(data: z.infer<typeof schema>) {
 
       return {
         success: true,
-        message: "Facture supprimée",
+        message: isPaid ? "La facture est validée" : "La facture est annulée",
       };
     },
   });

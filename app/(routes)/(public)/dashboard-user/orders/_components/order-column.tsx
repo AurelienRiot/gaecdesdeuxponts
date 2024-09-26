@@ -1,5 +1,6 @@
 "use client";
 
+import { DisplayUserShippingOrder } from "@/components/pdf/button/display-user-shipping-order";
 import {
   ProductCell,
   ShopNameCell,
@@ -13,6 +14,7 @@ import { DatePickUpHeader, ShopNameHeader } from "@/components/table-custom-fuct
 import type { DataTableFilterableColumn, DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
 import type { Shop } from "@prisma/client";
 import type { ColumnDef } from "@tanstack/react-table";
+import { useSession } from "next-auth/react";
 
 export type OrderColumnType = {
   id: string;
@@ -22,24 +24,50 @@ export type OrderColumnType = {
   status: Status;
   productsList: { name: string; quantity?: string; unit?: string }[];
   createdAt: Date;
+  delivered: boolean;
   shopName: string;
   shop?: Shop;
 };
 export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
+  {
+    accessorKey: "status",
+    header: "N° de commande",
+    cell: ({ row }) => (
+      <div className="flex flex-col justify-center items-start gap-2">
+        <span className="whitespace-nowrap">{row.original.id}</span>
+        <StatusCell status={row.original.status} />
+      </div>
+    ),
+  },
   {
     accessorKey: "products",
     header: "Produits",
     cell: ProductCell,
   },
   {
-    accessorKey: "id",
+    accessorKey: "totalPrice",
     header: "Prix total",
     cell: ({ row }) => row.original.totalPrice,
   },
   {
-    accessorKey: "status",
-    header: "Statut",
-    cell: ({ row }) => <StatusCell status={row.original.status} />,
+    accessorKey: "delivered",
+    header: () => {
+      const session = useSession();
+      if (session?.data?.user.role !== "pro") {
+        return null;
+      }
+      return "Bon de livraison";
+    },
+    cell: ({ row }) => {
+      const session = useSession();
+      if (session.data?.user?.role !== "pro") {
+        return null;
+      }
+      if (row.original.delivered) {
+        return <DisplayUserShippingOrder orderId={row.original.id} />;
+      }
+      return "Commande en attente de livraison";
+    },
     filterFn: FilterOneInclude,
   },
   {
@@ -47,11 +75,11 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
     header: DatePickUpHeader,
     cell: ({ row }) => <DateCell date={row.original.datePickUp} />,
   },
-  {
-    accessorKey: "shopName",
-    header: ShopNameHeader,
-    cell: ({ row }) => <ShopNameCell shopName={row.original.shopName} shop={row.original.shop} />,
-  },
+  // {
+  //   accessorKey: "shopName",
+  //   header: ShopNameHeader,
+  //   cell: ({ row }) => <ShopNameCell shopName={row.original.shopName} shop={row.original.shop} />,
+  // },
 ];
 
 export const filterableColumns = (): DataTableFilterableColumn<OrderColumnType>[] => {

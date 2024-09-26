@@ -11,8 +11,8 @@ import { saveAs } from "file-saver";
 import { CalendarIcon, UserIcon } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
-import { createPDF64String } from "../server-actions/create-pdf64-string";
 import getOrderForConfirmation from "../server-actions/get-order-for-confirmation";
+import { createShippingPDF64StringAction } from "../server-actions/pdf64-string-actions";
 import { SendBL } from "../server-actions/send-bl-action";
 import { PdfButton } from "./pdf-button";
 
@@ -26,17 +26,17 @@ export function DisplayShippingOrder({
     message: "Envoi du BL",
     errorMessage: "Envoi du BL annulé",
   });
-  const { serverAction, loading } = useServerAction(createPDF64String);
+  const { serverAction, loading } = useServerAction(createShippingPDF64StringAction);
   const { serverAction: orderAction, loading: loading2 } = useServerAction(getOrderForConfirmation);
   const confirm = useConfirm();
 
   const onViewFile = async () => {
-    function onSuccess(result?: string) {
+    function onSuccess(result?: { base64String: string; userId: string }) {
       if (!result) {
         toast.error("Erreur");
         return;
       }
-      const blob = base64ToBlob(result);
+      const blob = base64ToBlob(result.base64String);
       const url = URL.createObjectURL(blob);
       window.open(url, "_blank");
     }
@@ -44,12 +44,12 @@ export function DisplayShippingOrder({
   };
 
   const onSaveFile = async () => {
-    function onSuccess(result?: string) {
+    function onSuccess(result?: { base64String: string; userId: string }) {
       if (!result) {
         toast.error("Erreur");
         return;
       }
-      const blob = base64ToBlob(result);
+      const blob = base64ToBlob(result.base64String);
       saveAs(blob, `Bon de livraison ${orderId}.pdf`);
     }
     await serverAction({ data: { orderId }, onSuccess });

@@ -5,7 +5,7 @@ import useServerAction from "@/hooks/use-server-action";
 import base64ToBlob from "@/lib/base-64-to-blob";
 import { saveAs } from "file-saver";
 import { toast } from "sonner";
-import { createAMAPPDF64String } from "../server-actions/create-pdf64-string";
+import { createAMAPPDF64StringAction } from "../server-actions/pdf64-string-actions";
 import { SendAMAP } from "../server-actions/send-amap-action";
 import { PdfButton } from "./pdf-button";
 
@@ -15,7 +15,7 @@ export const DisplayAMAPOrder = ({ orderId, isSend }: { orderId: string; isSend:
     message: "Envoi du contrat",
     errorMessage: "Envoi du contrat annulé",
   });
-  const { serverAction, loading } = useServerAction(createAMAPPDF64String);
+  const { serverAction, loading } = useServerAction(createAMAPPDF64StringAction);
 
   async function onViewFile() {
     function onSuccess(result?: string) {

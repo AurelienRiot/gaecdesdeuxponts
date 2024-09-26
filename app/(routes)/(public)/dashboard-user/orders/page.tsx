@@ -48,6 +48,7 @@ const PageOrderTable = () => {
     datePickUp: createDatePickUp({ dateOfShipping: order.dateOfShipping, datePickUp: order.datePickUp }),
     shopName: order.shop?.name || "Livraison à domicile",
     shop: order.shop || undefined,
+    delivered: !!order.invoiceOrder?.[0]?.invoice?.id || !!order.shippingEmail,
     createdAt: order.createdAt,
   }));
 

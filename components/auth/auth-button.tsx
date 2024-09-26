@@ -118,14 +118,14 @@ export const EmailButton = ({ callbackUrl }: { callbackUrl: string }) => {
     <>
       {!success && (
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-md">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-sm">
             <div className="grid w-full items-center gap-1.5">
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem className="space-y-6 text-center">
-                    <FormLabel className="text-2xl px-4">
+                    <FormLabel className="text-2xl ">
                       Entrez votre email pour recevoir le code unique pour vous connecter
                     </FormLabel>
                     <FormControl>

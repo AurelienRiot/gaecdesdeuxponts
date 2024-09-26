@@ -164,12 +164,12 @@ type Status = (typeof status)[number];
 type OrderForStatus = {
   dateOfEdition?: Date | null;
   shippingEmail?: Date | null;
-  invoiceOrder: { invoice: { invoiceEmail?: Date | null; dateOfPayment?: Date | null } }[];
+  invoiceOrder: { invoice: { id?: string | null; dateOfPayment?: Date | null } }[];
 };
 
 function createStatus({ dateOfEdition, invoiceOrder, shippingEmail }: OrderForStatus): Status {
   if (invoiceOrder[0]?.invoice.dateOfPayment) return "Payé";
-  if (invoiceOrder[0]?.invoice.invoiceEmail) return "En cours de paiement";
+  if (invoiceOrder[0]?.invoice.id) return "En cours de paiement";
   if (shippingEmail) return "Commande livrée";
   if (dateOfEdition) return "Commande validée";
   return "En cours de validation";
