@@ -48,7 +48,6 @@ async function DisplayOrderForm({
   dateOfShipping,
   newOrder,
 }: { orderId: string; dateOfShipping?: Date; referer: string; newOrder?: boolean }) {
-  await addDelay(3000);
   const [products, shops, users, initialData] = await Promise.all([
     getProductsForOrders(),
     getShopsForOrders(),

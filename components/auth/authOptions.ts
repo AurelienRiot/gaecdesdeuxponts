@@ -12,7 +12,7 @@ import { revalidateTag } from "next/cache";
 import WelcomeEmail from "../email/welcome";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
-const expirationTime = 5 * 60 * 1000;
+const expirationTime = 10 * 60 * 1000;
 const secret = process.env.NEXTAUTH_SECRET;
 
 export const authOptions: NextAuthOptions = {
@@ -44,19 +44,21 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     jwt: async ({ token, user, trigger }) => {
+      const newToken = { ...token };
       if (!trigger) {
-        if (!token.tokenExpires || new Date(token.tokenExpires) < new Date()) {
+        if (!newToken.tokenExpires || new Date(newToken.tokenExpires) < new Date()) {
+          console.log("Token expire");
           const dbUser = await prismadb.user.findUnique({
-            where: { id: token.id },
+            where: { id: newToken.id },
             select: { id: true, name: true, role: true },
           });
           if (!dbUser) {
-            token.role = "deleted";
+            newToken.role = "deleted";
           } else {
-            token.id = dbUser.id;
-            token.name = dbUser.name;
-            token.role = dbUser.role;
-            token.tokenExpires = new Date(Date.now() + expirationTime);
+            newToken.id = dbUser.id;
+            newToken.name = dbUser.name;
+            newToken.role = dbUser.role;
+            newToken.tokenExpires = new Date(Date.now() + expirationTime);
           }
         }
       }
@@ -76,19 +78,20 @@ export const authOptions: NextAuthOptions = {
           select: { id: true, name: true, role: true },
         });
         if (!dbUser) {
-          token.role = "deleted";
+          newToken.role = "deleted";
         } else {
-          token.id = dbUser.id;
-          token.name = dbUser.name;
-          token.role = dbUser.role;
-          token.tokenExpires = new Date(Date.now() + expirationTime);
+          newToken.id = dbUser.id;
+          newToken.name = dbUser.name;
+          newToken.role = dbUser.role;
+          newToken.tokenExpires = new Date(Date.now() + expirationTime);
         }
       }
-      return token;
+      console.log({ roleAuth: newToken.role, exp: newToken.tokenExpires });
+      return Promise.resolve(newToken);
     },
     session: async ({ session, token }) => {
       if (token) {
-        return {
+        return Promise.resolve({
           ...session,
           user: {
             ...session.user,
@@ -97,9 +100,9 @@ export const authOptions: NextAuthOptions = {
             role: token.role,
             tokenExpires: token.tokenExpires,
           },
-        };
+        });
       }
-      return session;
+      return Promise.resolve(session);
     },
   },
 };

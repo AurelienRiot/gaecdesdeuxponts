@@ -1,4 +1,4 @@
-import { getBasicUser } from "@/actions/get-user";
+import { getBasicUser, getSessionUser } from "@/actions/get-user";
 import { Logout } from "@/components/auth/auth";
 import { EmailButton, GoogleButton } from "@/components/auth/auth-button";
 import type { Metadata } from "next";
@@ -19,7 +19,7 @@ const LoginPage = async (context: {
   searchParams: { callbackUrl: string | undefined; error: string | undefined };
 }) => {
   const callbackUrl = decodeURI(context.searchParams.callbackUrl ?? `${baseUrl}/dashboard-user`);
-  const user = await getBasicUser();
+  const user = await getSessionUser();
   if (user) {
     if (user.role === "deleted" || user.role === "trackOnlyUser") {
       return <Logout callbackUrl={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`} />;

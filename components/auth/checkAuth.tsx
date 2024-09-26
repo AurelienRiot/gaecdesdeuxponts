@@ -4,7 +4,6 @@ import prismadb from "@/lib/prismadb";
 
 const checkAdmin = async () => {
   const session = await getServerSession(authOptions);
-
   if (!session || !session.user || session.user.role !== "admin") {
     return false;
   }

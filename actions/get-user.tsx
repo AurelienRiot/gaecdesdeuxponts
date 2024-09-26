@@ -1,6 +1,5 @@
 import { authOptions } from "@/components/auth/authOptions";
 import prismadb from "@/lib/prismadb";
-import { UserWithOrdersAndAdress } from "@/types";
 import { getServerSession } from "next-auth";
 
 export const getSessionUser = async () => {
