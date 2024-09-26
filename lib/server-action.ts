@@ -39,7 +39,7 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E>({
   serverAction,
   schema,
   ignoreCheckUser,
-  roles,
+  roles = ["admin", "readOnlyAdmin", "user", "pro"],
 }: SafeServerActionType<D, R, E>): Promise<ReturnTypeServerAction<R, E>> {
   console.time("Total Execution Time");
 
@@ -69,7 +69,7 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E>({
     return result;
   }
 
-  if (!user || !roles?.includes(user.role)) {
+  if (!user || !roles.includes(user.role)) {
     console.timeEnd("Total Execution Time");
     return {
       success: false,
