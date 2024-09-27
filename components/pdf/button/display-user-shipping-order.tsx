@@ -34,5 +34,5 @@ export function DisplayUserShippingOrder({ orderId }: { orderId: string }) {
     await serverAction({ data: { pdfId: orderId }, onSuccess });
   };
 
-  return <PdfButton disabled={loading} onViewFile={onViewFile} onSaveFile={onSaveFile} />;
+  return <PdfButton onSaveClassName="inline-flex" disabled={loading} onViewFile={onViewFile} onSaveFile={onSaveFile} />;
 }

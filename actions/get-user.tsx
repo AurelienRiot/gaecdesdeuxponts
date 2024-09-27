@@ -64,7 +64,7 @@ const GetUser = async () => {
       invoices: {
         where: { deletedAt: null },
         orderBy: { createdAt: "desc" },
-        include: { orders: { select: { id: true } } },
+        include: { orders: { select: { id: true, dateOfShipping: true } } },
       },
       orders: {
         where: {

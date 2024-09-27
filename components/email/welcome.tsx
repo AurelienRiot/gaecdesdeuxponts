@@ -1,5 +1,5 @@
-import { Section, Text, Heading } from "@react-email/components";
-import MainBody, { ButtonRedirect } from "./common";
+import { Heading, Section, Text } from "@react-email/components";
+import MainBody from "./common";
 
 export interface WelcomeEmailProps {
   otp: string;

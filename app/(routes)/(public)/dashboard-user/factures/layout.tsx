@@ -1,5 +1,10 @@
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Factures",
+};
 
 function InvoiceLayout({ children }: { children: React.ReactNode }) {
   return (

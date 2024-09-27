@@ -11,7 +11,7 @@ export type InvoiceColumnType = {
   totalPrice: string;
   totalOrders: number;
   status: Status;
-  createdAt: Date;
+  date: string;
 };
 export const InvoiceColumn: ColumnDef<InvoiceColumnType>[] = [
   {
@@ -34,13 +34,12 @@ export const InvoiceColumn: ColumnDef<InvoiceColumnType>[] = [
     header: "Prix total",
     cell: ({ row }) => (
       <span className="font-bold lining-nums">
-        {row.original.totalPrice} {`(${row.original.totalOrders} commande${row.original.totalOrders > 1 ? "s" : ""})`}
+        {row.original.totalPrice} {row.original.totalOrders > 1 ? `(${row.original.totalOrders} commandes)` : ""}
       </span>
     ),
   },
   {
-    accessorKey: "createdAt",
-    header: CreatedAtHeader,
-    cell: ({ row }) => <DateCell date={row.original.createdAt} />,
+    accessorKey: "date",
+    header: "Date",
   },
 ];

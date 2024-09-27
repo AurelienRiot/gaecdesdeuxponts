@@ -1,12 +1,11 @@
 "use client";
 import { IconButton } from "@/components/ui/button";
 import { useUserContext } from "@/context/user-context";
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ChevronLeft, CircleUserRound, Package, Settings, Store, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { FaFileInvoice } from "react-icons/fa";
-import { PiInvoice } from "react-icons/pi";
 import { TbFileInvoice } from "react-icons/tb";
 
 const ProfilNavBar = () => {
@@ -20,7 +19,7 @@ const ProfilNavBar = () => {
 
   return (
     <>
-      <div
+      <aside
         className={
           " absolute bottom-0 left-0 top-0 z-20 flex  h-full flex-col items-center justify-start gap-4 overflow-hidden  rounded-r-md bg-background p-4 shadow-lg transition-all duration-500 "
         }
@@ -45,7 +44,7 @@ const ProfilNavBar = () => {
               }}
               data-state={open}
               className={
-                "justify-left relative flex w-[200px] items-center gap-2 rounded-md px-4 py-2 transition-all duration-500 hover:opacity-50 data-[state=false]:w-[50px]"
+                "justify-left relative flex w-[200px] items-center gap-2 rounded-md px-4 py-2 transition-all duration-500 group data-[state=false]:w-[50px]"
               }
             >
               {active && (
@@ -53,10 +52,15 @@ const ProfilNavBar = () => {
                   layoutId="clickedbutton"
                   data-state={open}
                   transition={{ type: "spring", bounce: 0.3, duration: 0.5 }}
-                  className={"absolute inset-0 rounded-md bg-gray-200 data-[state=true]:ml-2 dark:bg-zinc-800 "}
+                  className={"absolute z-[-1] inset-0 rounded-md bg-gray-200 data-[state=true]:ml-2 dark:bg-zinc-800 "}
                 />
               )}
-              <Icon className="relative size-4 shrink-0 " />
+              <Icon
+                className={cn(
+                  "relative size-4 transition-colors shrink-0 group-hover:text-green-500",
+                  active ? "text-green-500" : "",
+                )}
+              />
               <span
                 data-state={open}
                 className="relative whitespace-nowrap transition-all data-[state=false]:opacity-0"
@@ -66,7 +70,7 @@ const ProfilNavBar = () => {
             </button>
           );
         })}
-      </div>
+      </aside>
       {!user?.name && (pathname === "/dashboard-user" || pathname === "/dashboard-user/commandes") && (
         <NewMessageUser expand={open} />
       )}

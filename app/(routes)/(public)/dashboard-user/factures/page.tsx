@@ -5,6 +5,7 @@ import { DataTable } from "@/components/ui/data-table/data-table";
 import { useUserContext } from "@/context/user-context";
 import { currencyFormatter } from "@/lib/utils";
 import { InvoiceColumn, type InvoiceColumnType } from "./_components/invoice-column";
+import { dateFormatter, dateMonthYear } from "@/lib/date-utils";
 
 const PageOrderTable = () => {
   const { user } = useUserContext();
@@ -19,7 +20,10 @@ const PageOrderTable = () => {
     totalPrice: currencyFormatter.format(invoice.totalPrice),
     status: invoice.dateOfPayment ? "Payé" : "En attente de paiement",
     emailSend: !!invoice.invoiceEmail,
-    createdAt: invoice.createdAt,
+    date:
+      invoice.orders.length > 1
+        ? dateMonthYear(invoice.orders.map((order) => order.dateOfShipping))
+        : dateFormatter(invoice.dateOfEdition),
   }));
 
   return <DataTable data={formattedInvoices} columns={InvoiceColumn} />;

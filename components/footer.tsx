@@ -6,16 +6,9 @@ const Footer = ({ className }: { className?: string }) => {
   const currentYear = new Date().getFullYear();
   return (
     <>
-      <footer
-        className={cn(
-          "space-y-2 border-t bg-neutral-800 pb-20 text-neutral-50 sm:pb-6 print:hidden",
-          className,
-        )}
-      >
+      <footer className={cn("space-y-2 border-t bg-neutral-800 pb-20 text-neutral-50 sm:pb-6 print:hidden", className)}>
         <div className="mx-auto pb-2 pt-10">
-          <p className="text-center text-xs">
-            &copy; {currentYear} Laiterie du Pont Robert. Tous droits réservés.
-          </p>
+          <p className="text-center text-xs">&copy; {currentYear} Laiterie du Pont Robert. Tous droits réservés.</p>
         </div>
         <nav className="space-y-2">
           <ul className="flex flex-col justify-center gap-6 text-center sm:flex-row">

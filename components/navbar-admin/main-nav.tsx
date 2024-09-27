@@ -3,9 +3,9 @@
 import { cn } from "@/lib/utils";
 import {
   Calendar,
-  CalendarCheck,
   LayoutDashboardIcon,
   ListOrderedIcon,
+  LogOut,
   MapPin,
   PackageIcon,
   PhoneCallIcon,
@@ -120,6 +120,12 @@ export const SecondaryAdminRoutes = (pathname: string) => [
     label: "Factures",
     active: pathname.startsWith(`/admin/invoices`),
     Icone: PiInvoice,
+  },
+  {
+    href: `/logout`,
+    label: "Se deconnecter",
+    active: false,
+    Icone: LogOut,
   },
 ];
 

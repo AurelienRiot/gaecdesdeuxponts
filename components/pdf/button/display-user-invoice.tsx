@@ -40,5 +40,5 @@ export function DisplayUserInvoice({
     await serverAction({ data: { pdfId: invoiceId }, onSuccess });
   };
 
-  return <PdfButton disabled={loading} onViewFile={onViewFile} onSaveFile={onSaveFile} />;
+  return <PdfButton onSaveClassName="inline-flex" disabled={loading} onViewFile={onViewFile} onSaveFile={onSaveFile} />;
 }

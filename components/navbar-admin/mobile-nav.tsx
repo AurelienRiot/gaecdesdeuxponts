@@ -34,7 +34,7 @@ function AutresButton() {
   const pathName = usePathname();
   const [open, setOpen] = useState(false);
 
-  const secondaryRoutes = SecondaryAdminRoutes(pathName);
+  const secondaryRoutes = SecondaryAdminRoutes(pathName).reverse();
 
   return (
     <>
