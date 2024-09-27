@@ -136,7 +136,9 @@ function GroupedInvoicePage({ proUserWithOrders }: { proUserWithOrders: UserWith
         <Accordion type="multiple" className="relative  flex w-full flex-col gap-4">
           {proUserWithOrders.map((user, index) => {
             const ordersId = orderIdsRecord[user.id];
-            const totalPrice = user.orders.reduce((acc, order) => acc + order.totalPrice, 0);
+            const totalPrice = user.orders
+              .filter((order) => ordersId.includes(order.id)) // Only include orders in ordersId
+              .reduce((acc, order) => acc + order.totalPrice, 0);
             const name = getUserName(user);
             const groupedOrders = user.orders.reduce(
               (acc, order) => {
@@ -170,8 +172,20 @@ function GroupedInvoicePage({ proUserWithOrders }: { proUserWithOrders: UserWith
                     }
                   />{" "}
                 </label>
-                <AccordionTrigger className="ml-8 lining-nums">
+                {/* <AccordionTrigger className="ml-8 lining-nums">
                   <NameWithImage name={name} image={user.image} imageSize={12} />
+                </AccordionTrigger> */}
+                <AccordionTrigger className="ml-8 lining-nums">
+                  <div className="flex gap-2">
+                    <NameWithImage name={name} image={user.image} imageSize={12} />
+                    <p className="text-gray-500 flex gap-2 ">
+                      <span>{ordersId?.length} </span>
+                      <span>commandes</span>
+
+                      <span>({currencyFormatter.format(totalPrice)})</span>
+                    </p>
+                    {/* {invoiceSend ? <MailCheck className="size-4 inline ml-2 text-green-500" /> : null} */}
+                  </div>
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="space-y-4  py-2 text-sm  ">
