@@ -31,7 +31,7 @@ export const InvoiceColumn: ColumnDef<InvoiceColumnType>[] = [
   },
   {
     accessorKey: "totalPrice",
-    header: "Prix total",
+    header: "Prix total (TTC)",
     cell: ({ row }) => (
       <span className="font-bold lining-nums">
         {row.original.totalPrice} {row.original.totalOrders > 1 ? `(${row.original.totalOrders} commandes)` : ""}

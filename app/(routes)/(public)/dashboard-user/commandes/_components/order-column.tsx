@@ -39,7 +39,7 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
   },
   {
     accessorKey: "totalPrice",
-    header: "Prix total",
+    header: "Prix total (TTC)",
     cell: ({ row }) => row.original.totalPrice,
   },
   {
