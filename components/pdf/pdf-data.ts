@@ -8,7 +8,7 @@ import type {
   UserWithAddress,
 } from "@/types";
 
-type CustomerForOrder = {
+type CustomerForPDF = {
   name: string;
   company?: string | null;
   userId: string;
@@ -18,7 +18,7 @@ type CustomerForOrder = {
   email: string;
 };
 
-export const createCustomer = (user: UserWithAddress): CustomerForOrder => {
+export const createCustomer = (user: UserWithAddress): CustomerForPDF => {
   const shippingAddress = user.address ? addressFormatter(user.address, true) : "";
   const billingAddress = user.billingAddress ? addressFormatter(user.billingAddress, true) : shippingAddress;
   return {
@@ -86,7 +86,7 @@ export type ItemDataOrder = {
   priceTTC: number;
 };
 export type PDFData = {
-  customer: CustomerForOrder;
+  customer: CustomerForPDF;
   order: DataOrder;
 };
 
@@ -111,7 +111,7 @@ export type MonthlyPDFDataType = {
   invoiceId: string;
   dateOfEdition: string;
   dateOfPayment?: string | null;
-  customer: CustomerForOrder;
+  customer: CustomerForPDF;
   orders: DataOrder[];
 };
 
@@ -119,7 +119,7 @@ export type InvoicePDFDate = {
   invoiceId: string;
   dateOfEdition: string;
   dateOfPayment?: string | null;
-  customer: CustomerForOrder;
+  customer: CustomerForPDF;
   order: DataOrder;
 };
 export const createInvoicePDFData = (invoice: FullInvoice): InvoicePDFDate => {
@@ -310,7 +310,7 @@ export const monthlyPDFData: MonthlyPDFDataType = {
     //   ],
     // },
 
-    ...Array.from({ length: 15 }, (_, i) => ({
+    ...Array.from({ length: 7 }, (_, i) => ({
       id: "7-6-2024-0sUttHF",
       dateOfEdition: "8 juin 2024",
       dateOfPayment: "19 juin 2024",
@@ -356,7 +356,7 @@ export const createAMAPData = (order: AMAPOrderWithItems, user: UserWithAddress)
 };
 
 export type AMAPType = {
-  customer: CustomerForOrder;
+  customer: CustomerForPDF;
   contrat: {
     id: string;
     dateOfEdition: Date;

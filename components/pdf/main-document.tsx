@@ -99,7 +99,15 @@ const BillTo = ({ customer }: { customer: PDFData["customer"] }) => (
       {customer.name}
       {customer.company ? ` - ${customer.company}` : ""}
     </Text>
-    {!!customer.billingAddress && <Text>{customer.billingAddress}</Text>}
+    {!!customer.billingAddress && customer.shippingAddress === customer.billingAddress ? (
+      <Text>{customer.billingAddress}</Text>
+    ) : (
+      <>
+        <Text>Adresse de facturation : {customer.billingAddress}</Text>
+        <Text>Adresse de livraison : {customer.shippingAddress}</Text>
+      </>
+    )}
+
     {!!customer.phone && <Text>{customer.phone}</Text>}
     {!!customer.email && <Text>{customer.email}</Text>}
   </View>
@@ -150,7 +158,7 @@ const thankYouMsgStyles = StyleSheet.create({
     textTransform: "uppercase",
   },
   iban: {
-    fontSize: 10,
+    fontSize: 8,
     textAlign: "left",
   },
 });
