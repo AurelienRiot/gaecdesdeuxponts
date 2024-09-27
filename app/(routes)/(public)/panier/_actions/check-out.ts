@@ -111,7 +111,7 @@ export const createCheckOut = async (data: CheckOutProps) =>
           shopId,
         });
 
-        revalidatePath("/dashboard-user/orders");
+        revalidatePath("/dashboard-user/commandes");
 
         return {
           success: true,

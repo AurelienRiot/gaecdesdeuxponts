@@ -99,7 +99,7 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
         toast.error("Erreur");
         return;
       }
-      router.push(`/dashboard-user/orders?orderId=${result.orderId}`);
+      router.push(`/dashboard-user/commandes?orderId=${result.orderId}`);
       await addDelay(500);
       cart.removeAll();
       // await sendEmail({ data: { orderId: result.orderId } });

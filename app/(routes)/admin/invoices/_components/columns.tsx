@@ -15,6 +15,7 @@ export type InvoiceColumn = {
   image?: string | null;
   userId?: string;
   totalPrice: string;
+  totalOrders: number;
   status: Status;
   emailSend: boolean;
   createdAt: Date;
@@ -50,6 +51,11 @@ export const columns: ColumnDef<InvoiceColumn>[] = [
   {
     accessorKey: "totalPrice",
     header: "Prix total",
+    cell: ({ row }) => (
+      <span className="font-bold lining-nums">
+        {row.original.totalPrice} {`(${row.original.totalOrders} commande${row.original.totalOrders > 1 ? "s" : ""})`}
+      </span>
+    ),
   },
   {
     accessorKey: "emailSend",

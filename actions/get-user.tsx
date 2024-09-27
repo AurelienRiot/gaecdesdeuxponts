@@ -61,6 +61,11 @@ const GetUser = async () => {
       id: sessionUser.id,
     },
     include: {
+      invoices: {
+        where: { deletedAt: null },
+        orderBy: { createdAt: "desc" },
+        include: { orders: { select: { id: true } } },
+      },
       orders: {
         where: {
           deletedAt: null,

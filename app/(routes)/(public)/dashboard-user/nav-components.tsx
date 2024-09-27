@@ -5,6 +5,9 @@ import { motion } from "framer-motion";
 import { ChevronLeft, CircleUserRound, Package, Settings, Store, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import { FaFileInvoice } from "react-icons/fa";
+import { PiInvoice } from "react-icons/pi";
+import { TbFileInvoice } from "react-icons/tb";
 
 const ProfilNavBar = () => {
   const [open, setOpen] = useState(false);
@@ -64,7 +67,7 @@ const ProfilNavBar = () => {
           );
         })}
       </div>
-      {!user?.name && (pathname === "/dashboard-user" || pathname === "/dashboard-user/orders") && (
+      {!user?.name && (pathname === "/dashboard-user" || pathname === "/dashboard-user/commandes") && (
         <NewMessageUser expand={open} />
       )}
     </>
@@ -124,14 +127,19 @@ export const ProfilRoutes = [
     href: "/dashboard-user",
   },
   {
-    title: "Conmmandes",
+    title: "Commandes",
     Icon: Package,
-    href: "/dashboard-user/orders",
+    href: "/dashboard-user/commandes",
+  },
+  {
+    title: "Factures",
+    Icon: TbFileInvoice,
+    href: "/dashboard-user/factures",
   },
   {
     title: "Modifier votre profil",
     Icon: Settings,
-    href: "/dashboard-user/settings",
+    href: "/dashboard-user/parametres",
   },
 ];
 

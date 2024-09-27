@@ -19,7 +19,7 @@ export function createId(type: (typeof IdType)[number], date?: Date | null) {
     case "mainProduct":
       return `MP_${nanoid(7)}`;
     case "order":
-      return `CM_${newDate.getDate()}-${newDate.getMonth() + 1}-${newDate.getFullYear() % 100}_${nanoid(5)}`;
+      return `CM_${newDate.getDate().toString().padStart(2, "0")}-${(newDate.getMonth() + 1).toString().padStart(2, "0")}-${newDate.getFullYear() % 100}_${nanoid(5)}`;
     case "amap":
       return `AM_${nanoid(7)}`;
     case "command":

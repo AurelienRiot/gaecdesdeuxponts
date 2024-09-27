@@ -155,7 +155,7 @@ const status = [
   "En cours de validation",
   "Commande validée",
   "Commande livrée",
-  "En cours de paiement",
+  "En attente de paiement",
   "Payé",
 ] as const;
 
@@ -169,7 +169,7 @@ type OrderForStatus = {
 
 function createStatus({ dateOfEdition, invoiceOrder, shippingEmail }: OrderForStatus): Status {
   if (invoiceOrder[0]?.invoice.dateOfPayment) return "Payé";
-  if (invoiceOrder[0]?.invoice.id) return "En cours de paiement";
+  if (invoiceOrder[0]?.invoice.id) return "En attente de paiement";
   if (shippingEmail) return "Commande livrée";
   if (dateOfEdition) return "Commande validée";
   return "En cours de validation";
@@ -212,7 +212,7 @@ const statusConfig: Record<
     color: "bg-blue-500",
     hoverColor: "hover:bg-blue-500/90",
   },
-  ["En cours de paiement"]: {
+  ["En attente de paiement"]: {
     icon: <CreditCard className="h-3 w-3" />,
     color: "bg-orange-500",
     hoverColor: "hover:bg-orange-500/90",

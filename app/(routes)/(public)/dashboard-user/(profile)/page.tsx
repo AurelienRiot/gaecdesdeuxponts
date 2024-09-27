@@ -48,7 +48,7 @@ const ProfilTab = async () => {
       </div>
 
       <Button asChild variant={"expandIcon"} iconPlacement="right" Icon={PencilLine}>
-        <Link href="/dashboard-user/settings">Modifier votre profil</Link>
+        <Link href="/dashboard-user/parametres">Modifier votre profil</Link>
       </Button>
     </div>
   );

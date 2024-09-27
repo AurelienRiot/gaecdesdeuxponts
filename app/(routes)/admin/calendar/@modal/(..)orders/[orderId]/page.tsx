@@ -7,7 +7,6 @@ import { headers } from "next/headers";
 import { Suspense } from "react";
 import Loading from "../../_loading";
 import OrderSheet from "./components/order-sheet";
-import { addDelay } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 

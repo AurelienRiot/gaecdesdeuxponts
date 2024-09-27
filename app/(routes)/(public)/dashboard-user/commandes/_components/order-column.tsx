@@ -1,11 +1,13 @@
 "use client";
 
+import { DisplayUserShippingOrder } from "@/components/pdf/button/display-user-shipping-order";
 import { ProductCell, StatusCell, statusArray, type Status } from "@/components/table-custom-fuction/cell-orders";
 import { DateCell } from "@/components/table-custom-fuction/common-cell";
 import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
 import type { DataTableFilterableColumn, DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
 import type { Shop } from "@prisma/client";
 import type { ColumnDef } from "@tanstack/react-table";
+import { useSession } from "next-auth/react";
 
 export type OrderColumnType = {
   id: string;
@@ -40,27 +42,26 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
     header: "Prix total",
     cell: ({ row }) => row.original.totalPrice,
   },
-  // {
-  //   accessorKey: "delivered",
-  //   header: () => {
-  //     const session = useSession();
-  //     if (session?.data?.user.role !== "pro") {
-  //       return null;
-  //     }
-  //     return "Bon de livraison";
-  //   },
-  //   cell: ({ row }) => {
-  //     const session = useSession();
-  //     if (session.data?.user?.role !== "pro") {
-  //       return null;
-  //     }
-  //     if (row.original.delivered) {
-  //       return <DisplayUserShippingOrder orderId={row.original.id} />;
-  //     }
-  //     return "Commande en attente de livraison";
-  //   },
-  //   filterFn: FilterOneInclude,
-  // },
+  {
+    accessorKey: "delivered",
+    header: () => {
+      const session = useSession();
+      if (session?.data?.user.role !== "pro") {
+        return null;
+      }
+      return "Bon de livraison";
+    },
+    cell: ({ row }) => {
+      const session = useSession();
+      if (session.data?.user?.role !== "pro") {
+        return null;
+      }
+      if (row.original.delivered) {
+        return <DisplayUserShippingOrder orderId={row.original.id} />;
+      }
+      return "Commande en attente de livraison";
+    },
+  },
   {
     accessorKey: "datePickUp",
     header: DatePickUpHeader,

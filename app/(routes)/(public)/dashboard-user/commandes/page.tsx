@@ -34,7 +34,7 @@ const PageOrderTable = () => {
       <div className="w-full space-y-4 p-6">
         <Heading title={`Commandes `} description="Résumé des commandes" />
         <Separator />
-        <DataTableSkeleton columnCount={6} filterableColumnCount={2} searchableColumnCount={1} />
+        <DataTableSkeleton columnCount={5} />
       </div>
     );
   }

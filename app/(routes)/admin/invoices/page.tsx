@@ -38,7 +38,8 @@ async function GroupedInvoice() {
 async function InvoiceTableServer() {
   const invoices = await prismadb.invoice.findMany({
     where: { deletedAt: null },
-    include: { customer: true, user: { select: { image: true } } },
+
+    include: { orders: { select: { id: true } }, customer: true, user: { select: { image: true } } },
     orderBy: { createdAt: "desc" },
   });
 
@@ -47,10 +48,11 @@ async function InvoiceTableServer() {
     image: invoice.user?.image,
     name: invoice.customer ? getUserName(invoice.customer) : "Non renseigné",
     userId: invoice.customer?.userId,
+    totalOrders: invoice.orders.length,
     totalPrice: currencyFormatter.format(invoice.totalPrice),
-    status: invoice.dateOfPayment ? "Payé" : "En cours de paiement",
+    status: invoice.dateOfPayment ? "Payé" : "En attente de paiement",
     emailSend: !!invoice.invoiceEmail,
     createdAt: invoice.createdAt,
   }));
-  return <InvoiceTable data={formattedInvoices.sort((a, b) => (a.status === "En cours de paiement" ? -1 : 1))} />;
+  return <InvoiceTable data={formattedInvoices.sort((a, b) => (a.status === "En attente de paiement" ? -1 : 1))} />;
 }

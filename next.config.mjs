@@ -72,6 +72,10 @@ const nextConfig = {
         destination: "/",
       },
       {
+        source: "/dashboard-user/orders",
+        destination: "/dashboard-user/commandes",
+      },
+      {
         source: "/ingest/static/:path*",
         destination: "https://eu-assets.i.posthog.com/static/:path*",
       },

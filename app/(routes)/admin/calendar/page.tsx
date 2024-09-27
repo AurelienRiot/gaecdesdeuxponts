@@ -11,9 +11,10 @@ import { getGroupedAMAPOrders } from "./_functions/get-amap-orders";
 
 export const dynamic = "force-dynamic";
 
-const from = new Date(new Date().getTime() - 14 * ONE_DAY);
+const from = new Date(new Date().getTime() - 10 * ONE_DAY);
 const to = addDays(new Date(), 30);
-const dateArray = new Array((to.getTime() - from.getTime()) / ONE_DAY).fill(0).map((_, index) => {
+const arrayLength = Math.round((to.getTime() - from.getTime()) / ONE_DAY);
+const dateArray = new Array(arrayLength).fill(0).map((_, index) => {
   return new Date(from.getTime() + index * ONE_DAY).toISOString().split("T")[0];
 });
 async function CalendarPage() {

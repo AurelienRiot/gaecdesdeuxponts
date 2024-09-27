@@ -172,9 +172,7 @@ function GroupedInvoicePage({ proUserWithOrders }: { proUserWithOrders: UserWith
                     }
                   />{" "}
                 </label>
-                {/* <AccordionTrigger className="ml-8 lining-nums">
-                  <NameWithImage name={name} image={user.image} imageSize={12} />
-                </AccordionTrigger> */}
+
                 <AccordionTrigger className="ml-8 lining-nums">
                   <div className="flex gap-2">
                     <NameWithImage name={name} image={user.image} imageSize={12} />
@@ -184,16 +182,35 @@ function GroupedInvoicePage({ proUserWithOrders }: { proUserWithOrders: UserWith
 
                       <span>({currencyFormatter.format(totalPrice)})</span>
                     </p>
-                    {/* {invoiceSend ? <MailCheck className="size-4 inline ml-2 text-green-500" /> : null} */}
                   </div>
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="space-y-4  py-2 text-sm  ">
                     {Object.entries(groupedOrders).map(([monthYear, orders], index) => (
                       <ul key={`${monthYear}-${orders[0].id}`}>
-                        {monthYear}
+                        <label
+                          htmlFor={`${monthYear}-${orders[0].id}`}
+                          className="mx-4 flex gap-2 justify-start
+                       items-center cursor-pointer"
+                        >
+                          <Checkbox
+                            id={`${monthYear}-${orders[0].id}`}
+                            checked={orders.some((order) => ordersId?.includes(order.id))} // Check if any order of the month is selected
+                            onCheckedChange={(check) =>
+                              setOrderIdsRecord((prev) => {
+                                const updatedOrders = check
+                                  ? [...new Set([...prev[user.id], ...orders.map((order) => order.id)])] // Add all orders of the month
+                                  : prev[user.id].filter((id) => !orders.map((order) => order.id).includes(id)); // Remove all orders of the month
+                                return { ...prev, [user.id]: updatedOrders };
+                              })
+                            }
+                            className="mr-2"
+                          />
+                          <span>{monthYear}</span>
+                        </label>
+
                         {orders.map((order, pointIndex) => (
-                          <li key={order.id}>
+                          <li key={order.id} className="pl-4">
                             <label
                               htmlFor={order.id}
                               className="mx-4 flex gap-2 justify-start
