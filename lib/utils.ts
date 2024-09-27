@@ -109,3 +109,9 @@ export function isDesktopSafari() {
 export function isMobile() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
+
+export async function devOnly(fn: () => void) {
+  if (process.env.NODE_ENV === "development") {
+    await fn();
+  }
+}

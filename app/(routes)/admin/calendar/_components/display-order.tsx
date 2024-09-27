@@ -1,11 +1,11 @@
 "use client";
 import { AnimateHeight } from "@/components/animations/animate-size";
 import { StatusCell } from "@/components/table-custom-fuction/cell-orders";
-import { Button } from "@/components/ui/button";
+import { Button, IconButton } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getRelativeDate } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
-import { ChevronDown } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -16,9 +16,10 @@ interface DisplayOrderProps {
   order: CalendarOrdersType;
   onOpenModal: () => void;
   className?: string;
+  newOrder?: boolean;
 }
 
-const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, onOpenModal }) => {
+const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, onOpenModal, newOrder }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const relativeDate = getRelativeDate(order.shippingDate);
 
@@ -26,9 +27,10 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, onOpenMod
     <>
       <Card className={cn("w-full max-w-sm ", className)}>
         <CardHeader
-          className="flex items-center justify-start py-2 px-4 cursor-pointer "
+          className="flex relative items-center justify-start py-2 px-4 cursor-pointer "
           onClick={() => setIsExpanded(!isExpanded)}
         >
+          {newOrder && <IconButton className="size-4 p-0.5 text-green-500 absolute top-0.5 left-0.5 " Icon={Check} />}
           <div className="grid grid-cols-11  items-center w-full">
             <button
               type="button"

@@ -16,6 +16,7 @@ import DisplayAmap from "./display-amap";
 import DisplayOrder from "./display-order";
 import SummarizeProducts from "./summarize-products";
 import { formatFrenchPhoneNumber } from "@/lib/utils";
+import { addDays } from "date-fns";
 
 type EventsPageProps = {
   orders: CalendarOrdersType[];
@@ -156,16 +157,25 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
                 {orderData.length === 0 ? (
                   <p className="text-center">Aucune commande</p>
                 ) : (
-                  orderData.map((order) => (
-                    <DisplayOrder
-                      key={order.id}
-                      order={order}
-                      onOpenModal={() => {
-                        setUser(order.user);
-                        setIsModalOpen(true);
-                      }}
-                    />
-                  ))
+                  orderData.map((order, index) => {
+                    const newOrder = orders.some((nextOrder) => {
+                      return (
+                        nextOrder.user.id === order.user.id &&
+                        addDays(new Date(date), 1).getTime() < nextOrder.shippingDate.getTime()
+                      );
+                    });
+                    return (
+                      <DisplayOrder
+                        key={order.id}
+                        order={order}
+                        newOrder={newOrder}
+                        onOpenModal={() => {
+                          setUser(order.user);
+                          setIsModalOpen(true);
+                        }}
+                      />
+                    );
+                  })
                 )}
               </ul>
             </div>
