@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ChevronLeft, CircleUserRound, Package, Settings, Store, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import { TbFileInvoice } from "react-icons/tb";
 
 const ProfilNavBar = () => {
@@ -13,6 +13,9 @@ const ProfilNavBar = () => {
   const pathname = usePathname();
   const { user } = useUserContext();
   const router = useRouter();
+  const [visible, setVisible] = useState(
+    !user?.name && (pathname === "/dashboard-user" || pathname === "/dashboard-user/commandes"),
+  );
 
   // const routes = user?.role === "pro" ? ProfilProRoutes : ProfilRoutes;
   const routes = ProfilRoutes;
@@ -71,15 +74,17 @@ const ProfilNavBar = () => {
           );
         })}
       </aside>
-      {!user?.name && (pathname === "/dashboard-user" || pathname === "/dashboard-user/commandes") && (
-        <NewMessageUser expand={open} />
-      )}
+
+      <NewMessageUser expand={open} visible={visible} setVisible={setVisible} />
     </>
   );
 };
 
-function NewMessageUser({ expand }: { expand?: boolean }) {
-  const [visible, setVisible] = useState(true);
+function NewMessageUser({
+  expand,
+  visible,
+  setVisible,
+}: { expand?: boolean; visible?: boolean; setVisible: Dispatch<SetStateAction<boolean>> }) {
   return (
     <>
       <style jsx>{`
@@ -102,7 +107,7 @@ function NewMessageUser({ expand }: { expand?: boolean }) {
         data-state={visible}
         data-expand={expand}
         className={
-          "bubble data-[state=false]:opacity-0 data-[expand=true]:left-36 transition-all duration-500 rounded-xl absolute top-24 left-14 z-30 bg-green-500/95   text-center p-5 "
+          "bubble data-[state=false]:opacity-0 data-[expand=true]:left-36 transition-all duration-500 rounded-xl absolute top-40 left-14 z-30 bg-green-500/95   text-center p-5 "
         }
       >
         Compléter votre profile{" "}
