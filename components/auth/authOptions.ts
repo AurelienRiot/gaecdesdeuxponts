@@ -10,6 +10,7 @@ import EmailProvider, { type SendVerificationRequestParams } from "next-auth/pro
 import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
 import { revalidateTag } from "next/cache";
 import WelcomeEmail from "../email/welcome";
+import { sendOTP } from "../email";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 const expirationTime = 10 * 60 * 1000;
@@ -118,13 +119,7 @@ async function sendVerificationRequest({ identifier, url, token }: SendVerificat
     });
   }, 500);
 
-  await transporter.sendMail({
-    from: "laiteriedupontrobert@gmail.com",
-    to: identifier,
-    text: `Bienvenue sur la Laiterie du Pont Robert. Voici votre code unique : ${otp}`,
-    subject: `Connexion à votre compte. Voici votre code unique : ${otp} - Laiterie du Pont Robert`,
-    html: await render(WelcomeEmail({ otp, baseUrl })),
-  });
+  await sendOTP(otp, identifier);
 }
 
 export async function createHashToken(message: string) {

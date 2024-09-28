@@ -68,6 +68,15 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
         from: "laiteriedupontrobert@gmail.com",
         to: order.user.email,
         subject: "Bon de livraison - Laiterie du Pont Robert",
+        text: await render(
+          SendBLEmail({
+            date: dateFormatter(order.dateOfShipping),
+            baseUrl,
+            id: order.id,
+            email: order.user.email,
+          }),
+          { plainText: true },
+        ),
         html: await render(
           SendBLEmail({
             date: dateFormatter(order.dateOfShipping),

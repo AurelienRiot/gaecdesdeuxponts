@@ -70,6 +70,14 @@ export async function sendInvoice(invoiceId: string): Promise<ReturnTypeServerAc
         type === "monthly"
           ? `Facture Mensuelle ${date}  - Laiterie du Pont Robert`
           : `Facture ${fullInvoice.id} - Laiterie du Pont Robert`,
+      text: await render(
+        SendMonthlyInvoiceEmail({
+          date,
+          baseUrl,
+          email: fullInvoice.customer.email,
+        }),
+        { plainText: true },
+      ),
       html: await render(
         SendMonthlyInvoiceEmail({
           date,

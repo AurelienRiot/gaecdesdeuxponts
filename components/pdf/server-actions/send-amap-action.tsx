@@ -47,6 +47,16 @@ export async function SendAMAP(data: z.infer<typeof AMAPSchema>) {
         from: "laiteriedupontrobert@gmail.com",
         to: pdfData.customer.email,
         subject: "Bon de livraison - Laiterie du Pont Robert",
+        text: await render(
+          SendAMAPEmail({
+            startDate: dateFormatter(order.startDate),
+            endDate: dateFormatter(order.endDate),
+            baseUrl,
+            id: order.id,
+            email: pdfData.customer.email,
+          }),
+          { plainText: true },
+        ),
         html: await render(
           SendAMAPEmail({
             startDate: dateFormatter(order.startDate),
