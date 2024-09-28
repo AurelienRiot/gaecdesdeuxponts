@@ -67,7 +67,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }: UserFormProps
             }
           : null,
       );
-      router.push("/dashboard-user");
+      router.push("/profile");
     }
     await serverAction({ data, onSuccess });
   };
@@ -99,7 +99,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }: UserFormProps
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nom</FormLabel>
+                  <FormLabel className={field.value ? "text-primary" : "text-destructive"}>Nom</FormLabel>
                   <FormControl>
                     <Input disabled={form.formState.isSubmitting} placeholder="Nom" {...field} />
                   </FormControl>

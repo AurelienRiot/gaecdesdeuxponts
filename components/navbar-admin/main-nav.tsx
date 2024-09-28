@@ -78,7 +78,7 @@ export const SecondaryAdminRoutes = (pathname: string) => [
     Icone: Users,
   },
   {
-    href: `/prevent-redirect`,
+    href: `/acceuil`,
     label: "Accueil",
     active: false,
     Icone: PresentationIcon,

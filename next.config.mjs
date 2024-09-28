@@ -68,12 +68,20 @@ const nextConfig = {
         destination: "/",
       },
       {
-        source: "/prevent-redirect",
+        source: "/acceuil",
         destination: "/",
       },
       {
         source: "/dashboard-user/orders",
-        destination: "/dashboard-user/commandes",
+        destination: "/profile/commandes",
+      },
+      {
+        source: "/dashboard-user",
+        destination: "/profile",
+      },
+      {
+        source: "/dashboard-user/:path((?!orders$).*)",
+        destination: "/profile/:path*",
       },
       {
         source: "/ingest/static/:path*",

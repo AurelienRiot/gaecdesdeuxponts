@@ -10,6 +10,8 @@ import GroupedInvoicePage from "./_components/grouped-invoice";
 import InvoiceTable from "./_components/table";
 import { getUsersWithOrders } from "./_functions/get-users-with-orders";
 
+export const dynamic = "force-dynamic";
+
 async function InvoicesPage() {
   return (
     <div className="space-y-4 p-6">
@@ -54,5 +56,34 @@ async function InvoiceTableServer() {
     emailSend: !!invoice.invoiceEmail,
     createdAt: invoice.createdAt,
   }));
-  return <InvoiceTable data={formattedInvoices.sort((a, b) => (a.status === "En attente de paiement" ? -1 : 1))} />;
+  return (
+    <InvoiceTable
+      data={formattedInvoices.sort((a, b) => {
+        const targetStatus = "En attente de paiement";
+
+        // Check if 'a' or 'b' has the target status
+        const aIsTarget = a.status === targetStatus;
+        const bIsTarget = b.status === targetStatus;
+
+        if (aIsTarget && !bIsTarget) {
+          // 'a' has target status and 'b' does not => 'a' comes first
+          return -1;
+        }
+        if (!aIsTarget && bIsTarget) {
+          // 'b' has target status and 'a' does not => 'b' comes first
+          return 1;
+        }
+        if (aIsTarget && bIsTarget) {
+          // Both have target status => sort by 'createdAt' ascending
+          const dateA = new Date(a.createdAt).getTime();
+          const dateB = new Date(b.createdAt).getTime();
+          return dateB - dateA; // Earlier date comes first
+        }
+        // Neither has target status => sort by 'createdAt' descending (optional)
+        const dateA = new Date(a.createdAt).getTime();
+        const dateB = new Date(b.createdAt).getTime();
+        return dateB - dateA; // Later date comes first
+      })}
+    />
+  );
 }

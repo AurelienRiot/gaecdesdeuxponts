@@ -40,7 +40,7 @@ const BillingBody = ({ date, price, baseUrl, id }: BillingEmailProps) => (
         Retrouver la facture et les informations de votre commande dans votre espace client
       </Text>
 
-      <ButtonRedirect href={`${baseUrl}/dashboard-user/commandes`} text="Voir ma commande" />
+      <ButtonRedirect href={`${baseUrl}/profile/commandes`} text="Voir ma commande" />
     </Section>
 
     <Text className="text-center text-base ">

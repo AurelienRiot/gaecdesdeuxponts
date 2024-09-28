@@ -13,7 +13,7 @@ export async function middleware(req: NextRequest) {
     const path = req.nextUrl.pathname;
 
     if (path === "/" && token?.role !== "admin" && token?.role !== "readOnlyAdmin") {
-      return NextResponse.redirect(new URL(baseUrl+"/prevent-redirect", req.url));
+      return NextResponse.redirect(new URL(baseUrl + "/acceuil", req.url));
     }
 
     if (!token || token.exp * 1000 < today) {
@@ -52,14 +52,14 @@ export async function middleware(req: NextRequest) {
       }
     }
 
-    if (path.startsWith("/dashboard-user")) {
+    if (path.startsWith("/profile")) {
       if (!["user", "pro", "admin", "readOnlyAdmin"].includes(role)) {
         return redirectToLogin(req);
       }
       if (role === "admin" || role === "readOnlyAdmin") {
         return NextResponse.redirect(new URL("/admin/calendar", req.url));
       }
-      if (path.startsWith("/dashboard-user/produits-pro")) {
+      if (path.startsWith("/profile/produits-pro")) {
         if (role !== "pro") {
           return redirectToLogin(req);
         }
@@ -74,7 +74,7 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/dashboard-user/:path*", "/"],
+  matcher: ["/admin/:path*", "/profile/:path*", "/"],
 };
 
 const redirectToLogin = (req: NextRequest) =>

@@ -18,7 +18,7 @@ export function hasOptionWithValue<T extends { name: string; value: string }[]>(
   return options.some((option) => option.value === value);
 }
 export function makeCategoryUrl(categoryName: string, isPro: boolean) {
-  return isPro ? `/dashboard-user/produits-pro/category/${categoryName}` : `/category/${categoryName}`;
+  return isPro ? `/profile/produits-pro/category/${categoryName}` : `/category/${categoryName}`;
 }
 
 export function makeOptionsUrl(options: Option[], parsing?: boolean) {

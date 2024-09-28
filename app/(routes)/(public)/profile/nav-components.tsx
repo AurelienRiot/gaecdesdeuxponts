@@ -13,9 +13,7 @@ const ProfilNavBar = () => {
   const pathname = usePathname();
   const { user } = useUserContext();
   const router = useRouter();
-  const [visible, setVisible] = useState(
-    !user?.name && (pathname === "/dashboard-user" || pathname === "/dashboard-user/commandes"),
-  );
+  const [visible, setVisible] = useState(!user?.name && (pathname === "/profile" || pathname === "/profile/commandes"));
 
   // const routes = user?.role === "pro" ? ProfilProRoutes : ProfilRoutes;
   const routes = ProfilRoutes;
@@ -123,7 +121,7 @@ function NewMessageUser({
 }
 
 const isActiveRoute = (href: string, pathname: string): boolean => {
-  if (href === "/dashboard-user") {
+  if (href === "/profile") {
     return pathname === href;
   }
   return pathname.startsWith(href);
@@ -133,22 +131,22 @@ export const ProfilRoutes = [
   {
     title: "Profile",
     Icon: CircleUserRound,
-    href: "/dashboard-user",
+    href: "/profile",
   },
   {
     title: "Commandes",
     Icon: Package,
-    href: "/dashboard-user/commandes",
+    href: "/profile/commandes",
   },
   {
     title: "Factures",
     Icon: TbFileInvoice,
-    href: "/dashboard-user/factures",
+    href: "/profile/factures",
   },
   {
     title: "Modifier votre profile",
     Icon: Settings,
-    href: "/dashboard-user/parametres",
+    href: "/profile/parametres",
   },
 ];
 
@@ -157,7 +155,7 @@ const ProfilProRoutes = [
   {
     title: "Produits Pro",
     Icon: Store,
-    href: "/dashboard-user/produits-pro",
+    href: "/profile/produits-pro",
   },
 ];
 

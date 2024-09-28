@@ -15,9 +15,7 @@ interface CategoryPageProps {
   };
 }
 
-export async function generateMetadata({
-  params,
-}: CategoryPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const categoryName = decodeURIComponent(params.categoryName);
   const category = await getProCategoryByName(categoryName);
 
@@ -44,9 +42,7 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
   }
 
   if (products.length === 1) {
-    redirect(
-      `/dashboard-user/produits-pro/category/${category.name}/product/${products[0].name}`,
-    );
+    redirect(`/profile/produits-pro/category/${category.name}/product/${products[0].name}`);
   }
 
   await addDelay(2000);

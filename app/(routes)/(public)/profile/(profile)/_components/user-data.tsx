@@ -45,7 +45,7 @@ export const ProButton = () => {
   return (
     user?.role === "pro" && (
       <Button asChild>
-        <Link href="/dashboard-user/produits-pro">Accès Pro</Link>
+        <Link href="/profile/produits-pro">Accès Pro</Link>
       </Button>
     )
   );

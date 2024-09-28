@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
 const LoginPage = async (context: {
   searchParams: { callbackUrl: string | undefined; error: string | undefined };
 }) => {
-  const callbackUrl = decodeURI(context.searchParams.callbackUrl ?? `${baseUrl}/dashboard-user`);
+  const callbackUrl = decodeURI(context.searchParams.callbackUrl ?? `${baseUrl}/profile`);
   const user = await getSessionUser();
   if (user) {
     if (user.role === "deleted" || user.role === "trackOnlyUser") {
@@ -28,8 +28,8 @@ const LoginPage = async (context: {
     if (user.role !== "admin" && user.role !== "readOnlyAdmin" && callbackUrl.includes("/admin")) {
       return <Logout callbackUrl={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}&error=admin`} />;
     }
-    if (user.role !== "pro" && callbackUrl.includes("/dashboard-user/produits-pro")) {
-      return <Logout callbackUrl={`/login?callbackUrl=${encodeURIComponent("/dashboard-user")}&error=pro`} />;
+    if (user.role !== "pro" && callbackUrl.includes("/profile/produits-pro")) {
+      return <Logout callbackUrl={`/login?callbackUrl=${encodeURIComponent("/profile")}&error=pro`} />;
     }
     return redirect(callbackUrl);
   }
