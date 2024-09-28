@@ -11,7 +11,7 @@ const roleType: OptionObject[] = [
   { value: "trackOnlyUser", label: "Suivie uniquement" },
 ];
 
-function SelectRole({ display }: { display: boolean }) {
+function SelectRole({ display }: { display?: boolean }) {
   const form = useFormContext<UserFormValues>();
   return (
     <FormField

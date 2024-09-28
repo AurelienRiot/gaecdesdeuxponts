@@ -93,10 +93,16 @@ const UserPage = async ({
     );
   }
 
+  const incomplete =
+    !!searchParams.incomplete ||
+    user.formatedUser.email?.includes("acompleter") ||
+    !user.formatedUser.name ||
+    user.formatedUser.name?.includes("acompleter");
+
   return (
     <div className="space-y-6 p-8 pt-6">
       <div className="mb-8 flex-1 space-y-4">
-        <UserForm initialData={user.formatedUser} incomplete={!!searchParams.incomplete} />
+        <UserForm initialData={user.formatedUser} incomplete={incomplete} />
       </div>
 
       <div>

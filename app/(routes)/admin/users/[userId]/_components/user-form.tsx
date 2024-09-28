@@ -27,7 +27,7 @@ import { schema, type UserFormValues } from "./user-schema";
 
 interface UserFormProps {
   initialData: UserWithOrdersAndAdress;
-  incomplete: boolean;
+  incomplete?: boolean;
 }
 
 export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) => {
