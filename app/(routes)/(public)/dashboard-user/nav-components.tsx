@@ -131,7 +131,7 @@ const isActiveRoute = (href: string, pathname: string): boolean => {
 
 export const ProfilRoutes = [
   {
-    title: "Profil",
+    title: "Profile",
     Icon: CircleUserRound,
     href: "/dashboard-user",
   },
@@ -146,7 +146,7 @@ export const ProfilRoutes = [
     href: "/dashboard-user/factures",
   },
   {
-    title: "Modifier votre profil",
+    title: "Modifier votre profile",
     Icon: Settings,
     href: "/dashboard-user/parametres",
   },

@@ -13,7 +13,7 @@ export const UserName = () => {
     <Skeleton className="h-6 w-40" />
   ) : (
     <>
-      <span>{user.name || "Compléter votre profil"}</span>
+      <span>{user.name || "Compléter votre profile"}</span>
       {user?.role === "pro" && <span>{user.company ? ` - ${user.company}` : ""}</span>}
     </>
   );

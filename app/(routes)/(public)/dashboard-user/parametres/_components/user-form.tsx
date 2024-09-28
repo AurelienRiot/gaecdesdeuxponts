@@ -34,7 +34,7 @@ interface UserFormProps {
 
 export const UserForm: React.FC<UserFormProps> = ({ initialData }: UserFormProps) => {
   const { serverAction } = useServerAction(updateUser);
-  const title = initialData.name ? "Modifier votre profil" : "Completer votre  profil";
+  const title = initialData.name ? "Modifier votre profile" : "Completer votre  profile";
   const action = "Enregistrer les modifications";
 
   const form = useForm<UserFormValues>({

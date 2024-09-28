@@ -7,8 +7,8 @@ import Link from "next/link";
 import { UserAddress, UserEmail, UserName, UserPhone } from "./_components/user-data";
 
 export const metadata: Metadata = {
-  title: "Profil utilisateur",
-  description: "Profil utilisateur Laiterie du Pont Robert",
+  title: "Profile utilisateur",
+  description: "Profile utilisateur Laiterie du Pont Robert",
 };
 
 const ProfilTab = async () => {
@@ -48,7 +48,7 @@ const ProfilTab = async () => {
       </div>
 
       <Button asChild variant={"expandIcon"} iconPlacement="right" Icon={PencilLine}>
-        <Link href="/dashboard-user/parametres">Modifier votre profil</Link>
+        <Link href="/dashboard-user/parametres">Modifier votre profile</Link>
       </Button>
     </div>
   );

@@ -165,7 +165,7 @@ export const CreateUserForm = () => {
                     onCheckedChange={field.onChange}
                     disabled={form.formState.isSubmitting}
                     title="Profile complet"
-                    description="Indique si le profil de l'utilisateur est complet."
+                    description="Indique si le profile de l'utilisateur est complet."
                   />
                 )}
               />
