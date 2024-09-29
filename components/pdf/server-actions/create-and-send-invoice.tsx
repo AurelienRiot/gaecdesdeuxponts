@@ -1,6 +1,6 @@
 import SendMonthlyInvoiceEmail from "@/components/email/send-monthly-invoice";
 import { getUserName } from "@/components/table-custom-fuction";
-import { dateMonthYear } from "@/lib/date-utils";
+import { dateFormatter, dateMonthYear } from "@/lib/date-utils";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import type { ReturnTypeServerAction } from "@/lib/server-action";
@@ -71,7 +71,7 @@ export async function sendInvoice(invoiceId: string): Promise<ReturnTypeServerAc
         subject:
           type === "monthly"
             ? `Facture Mensuelle ${date}  - Laiterie du Pont Robert`
-            : `Facture ${fullInvoice.id} - Laiterie du Pont Robert`,
+            : `Facture du ${dateFormatter(fullInvoice.dateOfEdition)} - Laiterie du Pont Robert`,
         text: await render(
           SendMonthlyInvoiceEmail({
             date,

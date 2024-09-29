@@ -1,4 +1,4 @@
-import { priorityMap } from "@/components/product/product-function";
+import { priorityMap } from "@/components/product";
 import prismadb from "@/lib/prismadb";
 import { unstable_cache } from "next/cache";
 
