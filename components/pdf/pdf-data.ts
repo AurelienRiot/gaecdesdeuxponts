@@ -91,8 +91,11 @@ export type PDFData = {
 };
 
 export const createPDFData = (order: FullOrderWithInvoicePayment): PDFData => {
+  if (!order.customer) {
+    throw new Error("Client invalide");
+  }
   return {
-    customer: createCustomer(order.user),
+    customer: order.customer,
     order: createDataOrder(order),
   };
 };

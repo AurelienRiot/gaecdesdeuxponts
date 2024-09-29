@@ -42,7 +42,8 @@ export async function createShippingPDF64String(orderId: string) {
     include: {
       orderItems: true,
       shop: true,
-      user: { include: { address: true, billingAddress: true } },
+      // user: { include: { address: true, billingAddress: true } },
+      customer: true,
       invoiceOrder: {
         select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
         orderBy: { createdAt: "desc" },
@@ -56,11 +57,17 @@ export async function createShippingPDF64String(orderId: string) {
       message: "La commande n'existe pas",
     };
   }
+  if (!order.customer) {
+    return {
+      success: false,
+      message: "Erreur de client",
+    };
+  }
 
   const base64String = await generatePdfSring64({ data: order, type: "shipping" });
   return {
     success: true,
     message: "",
-    data: { base64String, userId: order.user.id, delivered: !!order.shippingEmail },
+    data: { base64String, userId: order.customer.userId, delivered: !!order.shippingEmail },
   };
 }

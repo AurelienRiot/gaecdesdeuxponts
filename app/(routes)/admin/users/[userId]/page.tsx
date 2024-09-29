@@ -68,7 +68,7 @@ const getUserPageData = unstable_cache(
     return { formatedUser, formattedOrders };
   },
   ["getUserPageData"],
-  { revalidate: 60 * 60 * 10, tags: ["users", "orders", "amap-orders"] },
+  { revalidate: 60 * 60 * 10, tags: ["users", "orders", "amap-orders", "invoices", "notifications"] },
 );
 
 const UserPage = async ({

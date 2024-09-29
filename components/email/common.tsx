@@ -33,7 +33,7 @@ const MainBody = ({
         <Container className="mx-auto my-[40px] max-w-2xl rounded border border-solid border-[#eaeaea] p-[20px]">
           {children}
           <Footer baseUrl={baseUrl} />
-          {notifications && <Notification />}
+          {notifications && <Notification baseUrl={baseUrl} />}
         </Container>
       </Body>
     </Tailwind>
@@ -60,21 +60,16 @@ const Footer = ({ baseUrl }: { baseUrl: string }) => (
   </>
 );
 
-const Notification = () => (
+const Notification = ({ baseUrl }: { baseUrl: string }) => (
   <Text className="text-left text-xs">
     Vous pouvez désactiver l'envoi de mails pour les bons de livraison et les factures sur votre profil sur le site.
-    <a
-      href="https://www.laiteriedupontrobert.fr/profile"
-      target="_blank"
-      rel="noreferrer"
-      className="text-blue-500 underline"
-    >
+    <a href={`${baseUrl}/profile`} target="_blank" rel="noreferrer" className="text-blue-500 underline">
       Désactiver
     </a>
     .
     <br />
     Si le lien ne fonctionne pas, copiez et collez cette URL dans votre navigateur:
-    <span className="text-blue-500 underline">https://www.laiteriedupontrobert.fr/profile</span>
+    <span className="text-blue-500 underline">{`${baseUrl}/profile`}</span>
   </Text>
 );
 

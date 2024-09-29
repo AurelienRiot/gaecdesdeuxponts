@@ -13,6 +13,7 @@ import type {
   OrderItem,
   Product,
   Role,
+  ShippingCustomer,
   Shop,
   User,
 } from "@prisma/client";
@@ -84,7 +85,7 @@ export interface OrderWithItemsAndShop extends Order {
 }
 
 export interface FullOrder extends OrderWithItemsAndShop {
-  user: UserWithAddress;
+  customer: ShippingCustomer | null;
 }
 export interface FullOrderWithInvoicePayment extends FullOrder {
   invoiceOrder: { invoice: { id: string; dateOfPayment: Date | null; invoiceEmail: Date | null } }[];

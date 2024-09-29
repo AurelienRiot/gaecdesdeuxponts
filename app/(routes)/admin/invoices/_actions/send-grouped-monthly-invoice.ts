@@ -46,6 +46,7 @@ export default async function createGroupedMonthlyInvoice(data: z.infer<typeof g
 
       revalidateTag("invoices");
       revalidateTag("orders");
+      revalidateTag("users");
       return allSuccess
         ? { success: true, message: "Toutes les factures ont été créées", data: allIds }
         : { success: false, message: "Une erreur est survenue lors de la création des factures", data: allIds };

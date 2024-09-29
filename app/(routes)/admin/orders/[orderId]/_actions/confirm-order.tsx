@@ -17,7 +17,7 @@ async function confirmOrder(data: z.infer<typeof confirmOrderSchema>) {
     data,
     roles: ["admin"],
     serverAction: async ({ confirm, id }) => {
-      const order = await prismadb.order.update({
+      await prismadb.order.update({
         where: {
           id,
         },

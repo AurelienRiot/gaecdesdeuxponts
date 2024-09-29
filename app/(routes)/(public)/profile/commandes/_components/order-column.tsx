@@ -4,6 +4,7 @@ import { DisplayUserShippingOrder } from "@/components/pdf/button/display-user-s
 import { ProductCell, StatusCell, statusArray, type Status } from "@/components/table-custom-fuction/cell-orders";
 import { DateCell } from "@/components/table-custom-fuction/common-cell";
 import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
+import { useUserContext } from "@/context/user-context";
 import type { DataTableFilterableColumn, DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
 import type { Shop } from "@prisma/client";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -45,15 +46,15 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
   {
     accessorKey: "delivered",
     header: () => {
-      const session = useSession();
-      if (session?.data?.user.role !== "pro") {
+      const { user } = useUserContext();
+      if (user?.role !== "pro") {
         return null;
       }
       return "Bon de livraison";
     },
     cell: ({ row }) => {
-      const session = useSession();
-      if (session.data?.user?.role !== "pro") {
+      const { user } = useUserContext();
+      if (user?.role !== "pro") {
         return null;
       }
       if (row.original.delivered) {

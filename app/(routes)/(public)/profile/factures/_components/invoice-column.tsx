@@ -2,8 +2,6 @@
 
 import { DisplayUserInvoice } from "@/components/pdf/button/display-user-invoice";
 import { StatusCell, type Status } from "@/components/table-custom-fuction/cell-orders";
-import { DateCell } from "@/components/table-custom-fuction/common-cell";
-import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
 import type { ColumnDef } from "@tanstack/react-table";
 
 export type InvoiceColumnType = {

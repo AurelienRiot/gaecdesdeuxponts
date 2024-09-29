@@ -35,6 +35,8 @@ async function deleteInvoice(data: z.infer<typeof schema>) {
       }
       revalidateTag("invoices");
       revalidateTag("orders");
+      revalidateTag("users");
+
       return {
         success: true,
         message: "Facture supprimée",

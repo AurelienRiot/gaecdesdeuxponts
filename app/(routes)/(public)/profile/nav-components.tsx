@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ChevronLeft, CircleUserRound, Package, Settings, Store, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { type Dispatch, type SetStateAction, useState } from "react";
+import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 import { TbFileInvoice } from "react-icons/tb";
 
 const ProfilNavBar = () => {

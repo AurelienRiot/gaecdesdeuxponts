@@ -1,5 +1,6 @@
 "use server";
 
+import { createCustomer } from "@/components/pdf/pdf-data";
 import { getUnitLabel } from "@/components/product/product-function";
 import { isDateDisabled } from "@/lib/date-utils";
 import { createId } from "@/lib/id";
@@ -161,6 +162,13 @@ async function createOrder({ totalPrice, productsWithQuantity, shopId, user, dat
     //   orderItems: true,
     //   customer: true,
     // },
+  });
+  const customer = createCustomer(user);
+  await prismadb.shippingCustomer.create({
+    data: {
+      orderId: order.id,
+      ...customer,
+    },
   });
   revalidateTag("orders");
 

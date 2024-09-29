@@ -33,7 +33,8 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
         include: {
           orderItems: true,
           shop: true,
-          user: { include: { address: true, billingAddress: true, notifications: true } },
+          user: { include: { notifications: true } },
+          customer: true,
           invoiceOrder: {
             select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
             orderBy: { createdAt: "desc" },
