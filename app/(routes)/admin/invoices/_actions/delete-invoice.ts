@@ -2,6 +2,7 @@
 
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const schema = z.object({
@@ -32,7 +33,8 @@ async function deleteInvoice(data: z.infer<typeof schema>) {
           message: "Une erreur est survenue",
         };
       }
-
+      revalidateTag("invoices");
+      revalidateTag("orders");
       return {
         success: true,
         message: "Facture supprimée",

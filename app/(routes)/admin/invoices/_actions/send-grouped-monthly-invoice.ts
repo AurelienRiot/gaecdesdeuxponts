@@ -2,6 +2,7 @@
 import { createInvoice } from "@/components/pdf/server-actions/create-and-send-invoice";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const groupedMonthlyInvoiceSchema = z.array(z.array(z.string()));
@@ -43,6 +44,8 @@ export default async function createGroupedMonthlyInvoice(data: z.infer<typeof g
 
       const allIds = monthlyInvoices.map((invoice) => invoice.data);
 
+      revalidateTag("invoices");
+      revalidateTag("orders");
       return allSuccess
         ? { success: true, message: "Toutes les factures ont été créées", data: allIds }
         : { success: false, message: "Une erreur est survenue lors de la création des factures", data: allIds };
