@@ -74,7 +74,7 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/profile/:path*", "/"],
+  matcher: ["/admin/:path*", "/profile/:path*"],
 };
 
 const redirectToLogin = (req: NextRequest) =>
