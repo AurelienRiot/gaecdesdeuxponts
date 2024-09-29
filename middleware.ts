@@ -12,9 +12,9 @@ export async function middleware(req: NextRequest) {
     const today = new Date().getTime();
     const path = req.nextUrl.pathname;
 
-    if (path === "/" && token?.role !== "admin" && token?.role !== "readOnlyAdmin") {
-      return NextResponse.redirect(new URL(baseUrl + "/acceuil", req.url));
-    }
+    // if (path === "/" && token?.role !== "admin" && token?.role !== "readOnlyAdmin") {
+    //   return NextResponse.redirect(new URL(baseUrl + "/acceuil", req.url));
+    // }
 
     if (!token || token.exp * 1000 < today) {
       return redirectToLogin(req);
@@ -43,9 +43,9 @@ export async function middleware(req: NextRequest) {
       }
     }
 
-    if (path === "/" && (role === "admin" || role === "readOnlyAdmin")) {
-      return NextResponse.redirect(new URL("/admin/calendar", req.url));
-    }
+    // if (path === "/" && (role === "admin" || role === "readOnlyAdmin")) {
+    //   return NextResponse.redirect(new URL("/admin/calendar", req.url));
+    // }
     if (path.startsWith("/admin")) {
       if (role !== "admin" && role !== "readOnlyAdmin") {
         return redirectToLogin(req);
