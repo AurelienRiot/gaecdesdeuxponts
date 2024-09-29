@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
     background_color: "#FAFAFA",
     display: "standalone",
     scope: "/",
-    start_url: "/",
+    start_url: "/profile",
     name: "Laiterie du Pont Robert",
     short_name: "Laiterie du Pont Robert",
     description:

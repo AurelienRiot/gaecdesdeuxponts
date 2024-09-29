@@ -1,11 +1,12 @@
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import CheckboxForm from "@/components/chekbox-form";
 import InputImageModal from "@/components/images-upload/image-modal";
-import { getUnitLabel, hasOptionWithValue, type OptionsArray } from "@/components/product/product-function";
+import type { OptionsArray } from "@/components/product";
+import { getUnitLabel, hasOptionWithValue } from "@/components/product/product-function";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button, IconButton } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input, NumberInput } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -14,12 +15,11 @@ import { cn, getPercentage } from "@/lib/utils";
 import { Unit } from "@prisma/client";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { Check, ChevronLeft, ChevronRight, ChevronsDown, ChevronsUp, ChevronsUpDown, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import OptionValueForm from "./options-values-form";
 import type { ProductFormValues } from "./product-schema";
-import CheckboxForm from "@/components/chekbox-form";
-import { useRouter } from "next/navigation";
 
 export const ProductWithOptions = ({
   optionsArray,

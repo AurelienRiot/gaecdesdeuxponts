@@ -4,7 +4,7 @@ import type { ProductWithMain } from "@/types";
 import type { Role, User } from "@prisma/client";
 import { TabsContent } from "@radix-ui/react-tabs";
 import * as React from "react";
-import { biocoopProducts, priorityMap } from "./product/product-function";
+import { biocoopProducts, DisplayProductIcon, priorityMap } from "./product";
 import { getUserName } from "./table-custom-fuction";
 import { NameWithImage } from "./table-custom-fuction/common-cell";
 import { Badge } from "./ui/badge";
@@ -212,12 +212,13 @@ export function sortProductByTabType(products: ProductWithMain[]) {
       group.values.push({
         label: (
           <div className="flex flex-col gap-2">
-            <div>
+            <div className="flex items-center justify-center gap-2">
               {product.product.isPro && (
                 <Badge variant="orange" className="mr-2">
                   Pro
                 </Badge>
               )}
+              <DisplayProductIcon name={product.name} />
               <span className="font-bold ">{product.name}</span>
             </div>
             <p className="ml-2">
