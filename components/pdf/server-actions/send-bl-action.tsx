@@ -33,7 +33,7 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
         include: {
           orderItems: true,
           shop: true,
-          user: { include: { address: true, billingAddress: true } },
+          user: { include: { address: true, billingAddress: true, notifications: true } },
           invoiceOrder: {
             select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
             orderBy: { createdAt: "desc" },
@@ -62,37 +62,40 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
         };
       }
 
-      const pdfBuffer = await renderToBuffer(<ShippingOrder pdfData={createPDFData(order)} />);
+      if (!order.user.notifications || order.user.notifications.sendShippingEmail) {
+        const pdfBuffer = await renderToBuffer(<ShippingOrder pdfData={createPDFData(order)} />);
 
-      await transporter.sendMail({
-        from: "laiteriedupontrobert@gmail.com",
-        to: order.user.email,
-        subject: "Bon de livraison - Laiterie du Pont Robert",
-        text: await render(
-          SendBLEmail({
-            date: dateFormatter(order.dateOfShipping),
-            baseUrl,
-            id: order.id,
-            email: order.user.email,
-          }),
-          { plainText: true },
-        ),
-        html: await render(
-          SendBLEmail({
-            date: dateFormatter(order.dateOfShipping),
-            baseUrl,
-            id: order.id,
-            email: order.user.email,
-          }),
-        ),
-        attachments: [
-          {
-            filename: `Bon de livraison ${order.id}.pdf`,
-            content: pdfBuffer,
-            contentType: "application/pdf",
-          },
-        ],
-      });
+        await transporter.sendMail({
+          from: "laiteriedupontrobert@gmail.com",
+          to: order.user.email,
+          subject: "Bon de livraison - Laiterie du Pont Robert",
+          text: await render(
+            SendBLEmail({
+              date: dateFormatter(order.dateOfShipping),
+              baseUrl,
+              id: order.id,
+              email: order.user.email,
+            }),
+            { plainText: true },
+          ),
+          html: await render(
+            SendBLEmail({
+              date: dateFormatter(order.dateOfShipping),
+              baseUrl,
+              id: order.id,
+              email: order.user.email,
+            }),
+          ),
+          attachments: [
+            {
+              filename: `Bon de livraison ${order.id}.pdf`,
+              content: pdfBuffer,
+              contentType: "application/pdf",
+            },
+          ],
+        });
+      }
+
       await prismadb.order.update({
         where: {
           id: order.id,
@@ -101,7 +104,7 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
           shippingEmail: new Date(),
         },
       });
-      await createOrdersEvent({ date: order.dateOfShipping });
+      createOrdersEvent({ date: order.dateOfShipping });
       revalidateTag("orders");
 
       return {

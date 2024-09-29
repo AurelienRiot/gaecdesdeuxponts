@@ -23,6 +23,7 @@ export async function sendInvoice(invoiceId: string): Promise<ReturnTypeServerAc
     },
     include: {
       customer: true,
+      user: { include: { notifications: true } },
       orders: { include: { invoiceOrderItems: true }, orderBy: { dateOfShipping: "asc" } },
     },
   });
@@ -54,45 +55,47 @@ export async function sendInvoice(invoiceId: string): Promise<ReturnTypeServerAc
   const type = fullInvoice.orders.length === 1 ? "single" : "monthly";
 
   try {
-    const pdfBuffer =
-      type === "monthly"
-        ? await renderToBuffer(
-            <MonthlyInvoice data={createMonthlyInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
-          )
-        : await renderToBuffer(
-            <Invoice dataInvoice={createInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
-          );
-    await transporter.sendMail({
-      from: "laiteriedupontrobert@gmail.com",
-      to: fullInvoice.customer.email,
-      // to: "pub.demystify390@passmail.net",
-      subject:
+    if (!fullInvoice.user.notifications || fullInvoice.user.notifications.sendInvoiceEmail) {
+      const pdfBuffer =
         type === "monthly"
-          ? `Facture Mensuelle ${date}  - Laiterie du Pont Robert`
-          : `Facture ${fullInvoice.id} - Laiterie du Pont Robert`,
-      text: await render(
-        SendMonthlyInvoiceEmail({
-          date,
-          baseUrl,
-          email: fullInvoice.customer.email,
-        }),
-        { plainText: true },
-      ),
-      html: await render(
-        SendMonthlyInvoiceEmail({
-          date,
-          baseUrl,
-          email: fullInvoice.customer.email,
-        }),
-      ),
-      attachments: [
-        {
-          filename: type === "monthly" ? `Facture mensuelle ${date}.pdf` : `Facture ${fullInvoice.id}`,
-          content: pdfBuffer,
-          contentType: "application/pdf",
-        },
-      ],
-    });
+          ? await renderToBuffer(
+              <MonthlyInvoice data={createMonthlyInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
+            )
+          : await renderToBuffer(
+              <Invoice dataInvoice={createInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
+            );
+      await transporter.sendMail({
+        from: "laiteriedupontrobert@gmail.com",
+        to: fullInvoice.customer.email,
+        // to: "pub.demystify390@passmail.net",
+        subject:
+          type === "monthly"
+            ? `Facture Mensuelle ${date}  - Laiterie du Pont Robert`
+            : `Facture ${fullInvoice.id} - Laiterie du Pont Robert`,
+        text: await render(
+          SendMonthlyInvoiceEmail({
+            date,
+            baseUrl,
+            email: fullInvoice.customer.email,
+          }),
+          { plainText: true },
+        ),
+        html: await render(
+          SendMonthlyInvoiceEmail({
+            date,
+            baseUrl,
+            email: fullInvoice.customer.email,
+          }),
+        ),
+        attachments: [
+          {
+            filename: type === "monthly" ? `Facture mensuelle ${date}.pdf` : `Facture ${fullInvoice.id}`,
+            content: pdfBuffer,
+            contentType: "application/pdf",
+          },
+        ],
+      });
+    }
 
     await prismadb.invoice.update({
       where: {

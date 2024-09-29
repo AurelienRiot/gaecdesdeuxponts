@@ -50,6 +50,7 @@ model User {
   billingAddress   BillingAddress? 
   messages         Contact[]
   comments         Comment[]
+  notifications     Notification? 
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt 
 }
@@ -71,6 +72,17 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Notification {
+    id         Int  @unique @id @default(autoincrement())
+  sendShippingEmail Boolean @default(true)
+  sendInvoiceEmail  Boolean @default(true)
+  userId String @unique
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+
 }
 
 

@@ -3,7 +3,7 @@ import type { Option, Unit } from "@prisma/client";
 
 export const priorityMap: { [key: string]: number } = {
   "Lait cru bouteille verre 1L consignée": 1,
-  "Lait cru vrac": 3,
+  "Lait cru bidon 5L": 3,
   "Consigne bouteille verre 1L": 4,
   "Lait cru bouteille verre 1L": 2,
 };

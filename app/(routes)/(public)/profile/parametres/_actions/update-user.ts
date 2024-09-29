@@ -1,11 +1,10 @@
 "use server";
 
-import safeServerAction from "@/lib/server-action";
-import { type UserFormValues, formSchema } from "../_components/form-schema";
-import { getSessionUser } from "@/actions/get-user";
-import prismadb from "@/lib/prismadb";
 import { defaultAddress } from "@/components/zod-schema/address-schema";
+import prismadb from "@/lib/prismadb";
+import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
+import { type UserFormValues, formSchema } from "../_components/form-schema";
 
 async function getUser(id: string) {
   return await prismadb.user.findUnique({

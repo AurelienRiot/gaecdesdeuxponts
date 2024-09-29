@@ -26,28 +26,28 @@ export const ShippingTableStyles = StyleSheet.create({
     flexGrow: 1,
   },
   ref: {
-    width: "30%",
+    width: "25%",
     height: "100%",
     paddingTop: 4,
     borderRightColor: borderColor,
     borderRightWidth: 1,
   },
   description: {
-    width: "40%",
+    width: "45%",
     height: "100%",
     paddingTop: 4,
     borderRightColor: borderColor,
     borderRightWidth: 1,
   },
   qty: {
-    width: "10%",
+    width: "8%",
     height: "100%",
     paddingTop: 4,
     borderRightColor: borderColor,
     borderRightWidth: 1,
   },
   price: {
-    width: "20%",
+    width: "22%",
     height: "100%",
     paddingTop: 4,
   },
@@ -62,14 +62,14 @@ export const ShippingTableStyles = StyleSheet.create({
   },
 
   refItem: {
-    width: "30%",
+    width: "25%",
     textAlign: "left",
     paddingLeft: 8,
     paddingRight: 8,
     flexWrap: "wrap",
   },
   descriptionItem: {
-    width: "40%",
+    width: "45%",
     textAlign: "left",
     paddingLeft: 8,
     paddingRight: 8,
@@ -77,12 +77,12 @@ export const ShippingTableStyles = StyleSheet.create({
   },
 
   qtyItem: {
-    width: "10%",
+    width: "8%",
     textAlign: "right",
     paddingRight: 8,
   },
   priceItem: {
-    width: "20%",
+    width: "22%",
     textAlign: "right",
     paddingRight: 8,
   },

@@ -1,11 +1,10 @@
-import { getSessionUser } from "@/actions/get-user";
 import { headers } from "next/headers";
 
 const idToRequestCount = new Map<string, number>(); // keeps track of individual users
 const rateLimiter = {
   windowStart: Date.now(),
   windowSize: 2 * 60 * 1000, // Milliseconds (2 minute)
-  maxRequests: 5,
+  maxRequests: 10,
 };
 
 export const rateLimit = async (role?: string | null) => {

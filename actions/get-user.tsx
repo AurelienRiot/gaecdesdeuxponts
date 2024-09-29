@@ -1,4 +1,5 @@
 import { authOptions } from "@/components/auth/authOptions";
+import { DefaultNotifications, defaultNotifications } from "@/components/user";
 import prismadb from "@/lib/prismadb";
 import { getServerSession } from "next-auth";
 
@@ -61,6 +62,7 @@ const GetUser = async () => {
       id: sessionUser.id,
     },
     include: {
+      notifications: true,
       invoices: {
         where: { deletedAt: null },
         orderBy: { createdAt: "desc" },
@@ -92,8 +94,17 @@ const GetUser = async () => {
       billingAddress: true,
     },
   });
+  if (!user?.notifications) {
+    console.log("creating default notifications");
+    await prismadb.notification.create({
+      data: {
+        userId: sessionUser.id,
+      },
+    });
+  }
+  const notifications = user?.notifications || defaultNotifications;
 
-  return user;
+  return { ...user, notifications };
 };
 
 export default GetUser;

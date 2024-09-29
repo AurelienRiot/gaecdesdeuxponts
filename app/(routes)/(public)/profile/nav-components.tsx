@@ -105,7 +105,7 @@ function NewMessageUser({
         data-state={visible}
         data-expand={expand}
         className={
-          "bubble data-[state=false]:opacity-0 data-[expand=true]:left-36 transition-all duration-500 rounded-xl absolute top-40 left-14 z-30 bg-green-500/95   text-center p-5 "
+          "bubble data-[state=false]:hidden data-[expand=true]:left-36 transition-all duration-500 rounded-xl absolute top-40 left-14 z-30 bg-green-500/95   text-center p-5 "
         }
       >
         Compléter votre profile{" "}

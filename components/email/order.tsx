@@ -1,7 +1,7 @@
 import { Section, Text } from "@react-email/components";
 import MainBody, { ButtonRedirect } from "./common";
 
-const OrderEmail = ({ date, baseUrl, price, id }: BillingEmailProps) => (
+const OrderEmail = ({ date, baseUrl, price, id }: OrderEmailProps) => (
   <MainBody baseUrl={baseUrl} previewText={`Votre commande d'un montant de ${price}`}>
     <OrderBody price={price} baseUrl={baseUrl} date={date} id={id} />
   </MainBody>
@@ -13,16 +13,16 @@ OrderEmail.PreviewProps = {
   price: "50€",
   email: "admin@admin.fr",
   id: "FA_123456789",
-} as BillingEmailProps;
+} as OrderEmailProps;
 
-interface BillingEmailProps {
+interface OrderEmailProps {
   baseUrl: string;
   date: string;
   price: string;
   id: string;
 }
 
-const OrderBody = ({ date, price, baseUrl, id }: BillingEmailProps) => (
+const OrderBody = ({ date, price, baseUrl, id }: OrderEmailProps) => (
   <>
     <Text className="text-left text-base">Bonjour,</Text>
 

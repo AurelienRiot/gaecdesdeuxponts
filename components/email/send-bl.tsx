@@ -1,15 +1,15 @@
 import { Section, Text } from "@react-email/components";
 import MainBody, { ButtonRedirect } from "./common";
 
-export interface BillingEmailProps {
+export interface BLEmailProps {
   baseUrl: string;
   date: string;
   id: string;
   email: string;
 }
 
-export const SendBLEmail = ({ date, baseUrl, id, email }: BillingEmailProps) => (
-  <MainBody baseUrl={baseUrl} previewText={`Votre bon de livraison Laiterie du Pont Robert`}>
+export const SendBLEmail = ({ date, baseUrl, id, email }: BLEmailProps) => (
+  <MainBody baseUrl={baseUrl} previewText={`Votre bon de livraison Laiterie du Pont Robert`} notifications>
     <SendBLBody baseUrl={baseUrl} date={date} id={id} email={email} />
   </MainBody>
 );
@@ -19,9 +19,9 @@ SendBLEmail.PreviewProps = {
   baseUrl: "https://www.laiteriedupontrobert.fr",
   email: "admin@admin.fr",
   id: "CM-27-6-24_04KYX",
-} as BillingEmailProps;
+} as BLEmailProps;
 
-const SendBLBody = ({ date, baseUrl, id, email }: BillingEmailProps) => (
+const SendBLBody = ({ date, baseUrl, id, email }: BLEmailProps) => (
   <>
     <Text className="text-left text-base">Bonjour,</Text>
 

@@ -1,8 +1,8 @@
 import { Section, Text } from "@react-email/components";
 import MainBody, { ButtonRedirect } from "./common";
 
-const SendFactureEmail = ({ date, baseUrl, price, id, email }: BillingEmailProps) => (
-  <MainBody baseUrl={baseUrl} previewText={`Votre commande d'un montant de ${price}`}>
+const SendFactureEmail = ({ date, baseUrl, price, id, email }: FactureEmailProps) => (
+  <MainBody baseUrl={baseUrl} previewText={`Votre commande d'un montant de ${price}`} notifications>
     <SendFactureBody price={price} baseUrl={baseUrl} date={date} id={id} email={email} />
   </MainBody>
 );
@@ -13,9 +13,9 @@ SendFactureEmail.PreviewProps = {
   price: "50€",
   email: "admin@admin.fr",
   id: "CM-27-6-24_04KYX",
-} as BillingEmailProps;
+} as FactureEmailProps;
 
-interface BillingEmailProps {
+interface FactureEmailProps {
   baseUrl: string;
   date: string;
   price: string;
@@ -23,7 +23,7 @@ interface BillingEmailProps {
   id: string;
 }
 
-const SendFactureBody = ({ date, price, baseUrl, id, email }: BillingEmailProps) => (
+const SendFactureBody = ({ date, price, baseUrl, id, email }: FactureEmailProps) => (
   <>
     <Text className="text-left text-base">Bonjour,</Text>
 

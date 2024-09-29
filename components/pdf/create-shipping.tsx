@@ -1,12 +1,12 @@
 import { Fragment } from "react";
 
-import { G, Path, StyleSheet, Svg, Text, View } from "@react-pdf/renderer";
-import Details from "./details";
-import MainDocument, { borderColor, foregroundColor, mainColor, tableRowsCount } from "./main-document";
-import type { PDFData } from "./pdf-data";
-import { ShippingTableStyles } from "./table";
-import { SVGSignature } from "./signature";
 import { dateFormatter } from "@/lib/date-utils";
+import { StyleSheet, Text, View } from "@react-pdf/renderer";
+import Details from "./details";
+import MainDocument, { tableRowsCount } from "./main-document";
+import type { PDFData } from "./pdf-data";
+import { SVGSignature } from "./signature";
+import { ShippingTableStyles } from "./table";
 
 // Create Document Component
 const ShippingOrder = ({ pdfData }: { pdfData: PDFData }) => {
@@ -42,7 +42,7 @@ const ShippingTableHeader = () => (
     <Text style={ShippingTableStyles.ref}>Reférence produit</Text>
     <Text style={ShippingTableStyles.description}>Description</Text>
     <Text style={ShippingTableStyles.qty}>Qte</Text>
-    <Text style={ShippingTableStyles.price}>Prix HT (€)</Text>
+    <Text style={ShippingTableStyles.price}>Prix unitaire HT (€)</Text>
   </View>
 );
 

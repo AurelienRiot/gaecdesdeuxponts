@@ -2,7 +2,7 @@ import { Section, Text } from "@react-email/components";
 import MainBody, { ButtonRedirect } from "./common";
 
 const SendMonthlyInvoiceEmail = ({ date, baseUrl, email }: MonthlyInvoiceProps) => (
-  <MainBody baseUrl={baseUrl} previewText={`Votre facture mensuelle de ${date}`}>
+  <MainBody baseUrl={baseUrl} previewText={`Votre facture mensuelle de ${date}`} notifications>
     <SendMonthlyInvoiceBody baseUrl={baseUrl} date={date} email={email} />
   </MainBody>
 );
