@@ -9,6 +9,7 @@ import type { InvoiceColumn } from "./_components/columns";
 import GroupedInvoicePage from "./_components/grouped-invoice";
 import InvoiceTable from "./_components/table";
 import { getUsersWithOrders } from "./_functions/get-users-with-orders";
+import { dateFormatter, dateMonthYear } from "@/lib/date-utils";
 
 export const dynamic = "force-dynamic";
 
@@ -41,7 +42,11 @@ async function InvoiceTableServer() {
   const invoices = await prismadb.invoice.findMany({
     where: { deletedAt: null },
 
-    include: { orders: { select: { id: true } }, customer: true, user: { select: { image: true } } },
+    include: {
+      orders: { select: { id: true, dateOfShipping: true } },
+      customer: true,
+      user: { select: { image: true } },
+    },
     orderBy: { createdAt: "desc" },
   });
 
@@ -54,6 +59,10 @@ async function InvoiceTableServer() {
     totalPrice: currencyFormatter.format(invoice.totalPrice),
     status: invoice.dateOfPayment ? "Payé" : "En attente de paiement",
     emailSend: !!invoice.invoiceEmail,
+    date:
+      invoice.orders.length > 1
+        ? dateMonthYear(invoice.orders.map((order) => order.dateOfShipping))
+        : dateFormatter(invoice.dateOfEdition),
     createdAt: invoice.createdAt,
   }));
   return (

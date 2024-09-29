@@ -209,20 +209,26 @@ export function extractProductQuantities(productQuantities: ProductQuantities[])
     return acc;
   }, 0);
 
-  return { aggregateProducts, totaleQuantity: [{ name: "lait cru", quantity: totaleLiters, unit: "L" }] };
+  return {
+    aggregateProducts,
+    totaleQuantity: [{ name: "lait cru", quantity: Number(totaleLiters.toFixed(1)), unit: "L" }],
+  };
 }
 
 function extractLiters(productName: string): number | null {
   try {
     if (productName.includes("vrac")) return 1;
-    const regex = /\b\d+([.,]\d+)?\s?(L|liter|litre|liters|litres)\b/i;
+    const regex = /\b(\d+([.,]\d+)?\s?(L|liter|litre|liters|litres|cl))\b/i;
     const match = productName.match(regex);
     if (match) {
-      const numberString = match[0]
-        .replace(/[Ll]iter(s)?/i, "")
+      const numberString = match[1]
+        .replace(/[Ll]iter(s)?|cl/i, "")
         .trim()
         .replace(",", ".");
-      const number = Number.parseFloat(numberString);
+      let number = Number.parseFloat(numberString);
+      if (match[3].toLowerCase() === "cl") {
+        number /= 100; // Convert centiliters to liters
+      }
       return Number.isNaN(number) ? null : number;
     }
     return null;

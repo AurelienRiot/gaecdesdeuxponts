@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   description: "Profile utilisateur Laiterie du Pont Robert",
 };
 
+export const dynamic = "force-static";
+
 const ProfilTab = async () => {
   return (
     <div className="w-full space-y-10 p-6">

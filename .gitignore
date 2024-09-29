@@ -42,7 +42,8 @@ next-env.d.ts
 .react-email
 
 # database
-backup
+/backup
+/prisma/scripts/*
 
 # to avoid caching pwa files
 
