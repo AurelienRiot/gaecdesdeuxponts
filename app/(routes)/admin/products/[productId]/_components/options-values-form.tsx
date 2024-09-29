@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import type { OptionsArray } from "@/components/product/product-function";
+import type { OptionsArray } from "@/components/product";
 import type { ProductFormValues } from "./product-schema";
 
 const OptionValueForm = ({
