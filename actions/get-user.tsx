@@ -62,7 +62,7 @@ const GetUser = async () => {
       id: sessionUser.id,
     },
     include: {
-      notifications: true,
+      notifications: { select: { sendInvoiceEmail: true, sendShippingEmail: true } },
       invoices: {
         where: { deletedAt: null },
         orderBy: { createdAt: "desc" },
@@ -94,17 +94,17 @@ const GetUser = async () => {
       billingAddress: true,
     },
   });
-  if (!user?.notifications) {
+  if (user && !user.notifications) {
     console.log("creating default notifications");
     await prismadb.notification.create({
       data: {
         userId: sessionUser.id,
       },
     });
+    user.notifications = defaultNotifications;
   }
-  const notifications = user?.notifications || defaultNotifications;
 
-  return { ...user, notifications };
+  return user;
 };
 
 export default GetUser;
