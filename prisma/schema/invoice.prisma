@@ -5,7 +5,6 @@ model Invoice {
   dateOfPayment DateTime?
   dateOfEdition DateTime
   invoiceEmail  DateTime?
-  customerId    Int?  @unique
   customer      Customer? 
   userId        String  
   user          User @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -10,6 +10,7 @@ model Order {
   user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
   shopId     String? 
   shop       Shop? @relation(fields: [shopId], references: [id])
+  customer      ShippingCustomer? 
   invoiceOrder  InvoiceOrder[]
   datePickUp DateTime
   deletedAt   DateTime?
@@ -36,6 +37,21 @@ model OrderItem {
   description  String @db.VarChar(1000)
   orderId      String
   order        Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+model ShippingCustomer {
+   id              Int @unique @id @default(autoincrement())
+  name            String
+  company         String?
+  userId          String
+  shippingAddress String
+  billingAddress  String
+  phone           String?
+  email           String
+  orderId       String @unique
+  order         Order @relation(fields: [orderId], references: [id],onDelete: Cascade)
 
   @@index([orderId])
 }
