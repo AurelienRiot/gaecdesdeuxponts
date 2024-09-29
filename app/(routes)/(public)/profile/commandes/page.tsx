@@ -24,7 +24,6 @@ import { OrdersColumn, type OrderColumnType } from "./_components/order-column";
 const PageOrderTable = () => {
   const { user } = useUserContext();
   const { serverAction } = useServerAction(sendCheckoutEmail);
-
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
   const order = user?.orders.find((order) => order.id === orderId);

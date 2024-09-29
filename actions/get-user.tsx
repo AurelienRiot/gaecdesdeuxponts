@@ -1,5 +1,5 @@
 import { authOptions } from "@/components/auth/authOptions";
-import { DefaultNotifications, defaultNotifications } from "@/components/user";
+import { type DefaultNotifications, defaultNotifications } from "@/components/user";
 import prismadb from "@/lib/prismadb";
 import { getServerSession } from "next-auth";
 
@@ -101,10 +101,9 @@ const GetUser = async () => {
         userId: sessionUser.id,
       },
     });
-    user.notifications = defaultNotifications;
   }
 
-  return user;
+  return user ? { ...user, notifications: user.notifications ? user.notifications : defaultNotifications } : null;
 };
 
 export default GetUser;

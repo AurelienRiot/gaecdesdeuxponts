@@ -2,11 +2,10 @@
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { useUserContext } from "@/context/user-context";
 import useServerAction from "@/hooks/use-server-action";
-import { useState } from "react";
 import changeInvoice from "../_actions/change-invoice";
 import changeShipping from "../_actions/change-shipping";
-import { UserContext, useUserContext } from "@/context/user-context";
 
 function NotificationsCheckbox() {
   const { user, setUser } = useUserContext();
