@@ -18,6 +18,7 @@ export type InvoiceColumn = {
   totalOrders: number;
   status: Status;
   emailSend: boolean;
+  date: string;
   createdAt: Date;
 };
 
@@ -64,9 +65,8 @@ export const columns: ColumnDef<InvoiceColumn>[] = [
   },
 
   {
-    accessorKey: "createdAt",
-    header: CreatedAtHeader,
-    cell: ({ row }) => <DateCell date={row.original.createdAt} />,
+    accessorKey: "date",
+    header: "Date",
   },
   {
     id: "actions",

@@ -14,8 +14,10 @@ const AMAPFormPage = async ({ params }: { params: { amapId: string } }) => {
         amapItems: true,
       },
     }),
-    prismadb.user.findMany({ where: { role: { in: ["user", "trackOnlyUser"] } } }),
-    await prismadb.shop.findMany({ where: { type: "amap" }, orderBy: { createdAt: "desc" } }),
+    prismadb.user.findMany({ where: { role: { in: ["user", "trackOnlyUser"] } }, orderBy: { createdAt: "asc" } }),
+    (await prismadb.shop.findMany({ where: { type: "amap" } })).sort((a, b) =>
+      (a.name || "").localeCompare(b.name || ""),
+    ),
     prismadb.product.findMany({ where: { productName: "Produits AMAP" } }),
   ]);
   if (params.amapId === "formulaire") {

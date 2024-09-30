@@ -22,7 +22,7 @@ const productIcons = [
   { label: "lait cru bio 1l", Icon: Icons.CowMilk, color: "fill-blue-500" },
   { label: "lait cru vrac", Icon: Icons.CowMilk, color: "fill-blue-500" },
   { label: "bouteille", Icon: LuMilk, color: "text-gray-500" },
-  { label: "bidon", Icon: TbMilk, color: "text-green-500" },
+  { label: "bidon", Icon: TbMilk, color: "text-green-700" },
   { label: "casier", Icon: BsBasketFill, color: "text-red-500" },
 ];
 
