@@ -22,7 +22,7 @@ const getOrderForConfirmation = async (data: z.infer<typeof orderForConfirmation
         select: {
           dateOfShipping: true,
           orderItems: { select: { itemId: true, name: true, quantity: true, price: true } },
-          user: { select: { image: true, name: true, email: true, company: true } },
+          user: { select: { id: true, image: true, name: true, email: true, company: true, completed: true } },
         },
       });
       if (!order) {

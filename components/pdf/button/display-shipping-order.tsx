@@ -10,6 +10,7 @@ import { currencyFormatter } from "@/lib/utils";
 import { saveAs } from "file-saver";
 import { CalendarIcon, UserIcon } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import getOrderForConfirmation from "../server-actions/get-order-for-confirmation";
 import { createShippingPDF64StringAction } from "../server-actions/pdf64-string-actions";
@@ -28,6 +29,7 @@ export function DisplayShippingOrder({
   });
   const { serverAction, loading } = useServerAction(createShippingPDF64StringAction);
   const { serverAction: orderAction, loading: loading2 } = useServerAction(getOrderForConfirmation);
+  const router = useRouter();
   const confirm = useConfirm();
 
   const onViewFile = async () => {
@@ -63,6 +65,12 @@ export function DisplayShippingOrder({
     }
     if (!order.user.email) {
       toast.error("Le client n'a pas d'email");
+      return;
+    }
+
+    if (!order.user.completed) {
+      router.push(`/admin/users/${order.user.id}?incomplete=true`);
+      toast.error("Utilisateur incomplet", { position: "top-center" });
       return;
     }
     const result = await confirm({

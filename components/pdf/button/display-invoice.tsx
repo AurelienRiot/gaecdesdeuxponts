@@ -10,6 +10,7 @@ import { createInvoicePDF64StringAction } from "../server-actions/pdf64-string-a
 import { cn } from "@/lib/utils";
 import { sendInvoiceAction } from "../server-actions/create-send-invoice-action";
 import { PdfButton } from "./pdf-button";
+import { useRouter } from "next/navigation";
 
 export function DisplayInvoice({
   invoiceId,
@@ -31,6 +32,7 @@ export function DisplayInvoice({
     message: "Envoi de la facture",
     errorMessage: "Envoi de la facture annulé",
   });
+  const router = useRouter();
   const { serverAction, loading } = useServerAction(createInvoicePDF64StringAction);
   const onViewFile = async () => {
     function onSuccess(result?: { base64String: string; date: string; type: string }) {
@@ -62,7 +64,14 @@ export function DisplayInvoice({
   };
 
   const onSendFile = async (setSend: (send: boolean) => void) => {
-    toastServerAction({ data: { invoiceId }, onSuccess: () => setSend(true) });
+    function onError(result?: { incomplete: boolean; userId: string }) {
+      if (result?.incomplete) {
+        router.push(`/admin/users/${result.userId}?incomplete=true`);
+        toast.error("Utilisateur incomplet", { position: "top-center" });
+        return;
+      }
+    }
+    toastServerAction({ data: { invoiceId }, onSuccess: () => setSend(true), onError });
   };
   return (
     <PdfButton

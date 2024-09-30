@@ -20,14 +20,6 @@ interface CardUserProps {
 const CardUser: React.FC<CardUserProps> = ({ user, className, status, display, orderLength }) => {
   const name = getUserName(user);
 
-  const role = !user.completed
-    ? { label: "Incomplet", color: "text-destruction" }
-    : user.role === "pro"
-      ? { label: "Professionnel", color: "text-green-500" }
-      : user.role === "user"
-        ? { label: "Particulier", color: "text-blue-500" }
-        : { label: "Suivie seulement", color: "text-purple-500" };
-
   return (
     <>
       <Card className={cn("flex h-full relative w-[150px] sm:w-[200px] flex-col justify-between ", className)}>

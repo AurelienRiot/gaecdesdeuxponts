@@ -13,7 +13,7 @@ import { createInvoicePDFData, createMonthlyInvoicePDFData } from "../pdf-data";
 import Invoice from "../create-invoice";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
-export async function sendInvoice(invoiceId: string): Promise<ReturnTypeServerAction> {
+export async function sendInvoice(invoiceId: string) {
   // await addDelay(3000);
   // return { success: true, message: `Facture envoyée ${orderIds[0]}` };
   const fullInvoice = await prismadb.invoice.findUnique({
@@ -45,10 +45,11 @@ export async function sendInvoice(invoiceId: string): Promise<ReturnTypeServerAc
 
   const date = dateMonthYear(fullInvoice.orders.map((order) => order.dateOfShipping));
 
-  if (!fullInvoice.customer.email || fullInvoice.customer.email.includes("acompleter")) {
+  if (!fullInvoice.customer.email || fullInvoice.customer.email.includes("acompleter") || !fullInvoice.user.completed) {
     return {
       success: false,
       message: "Le client n'a pas d'email, revalider la commande aprés avoir changé son email",
+      errorData: { incomplete: true, userId: fullInvoice.user.id },
     };
   }
 

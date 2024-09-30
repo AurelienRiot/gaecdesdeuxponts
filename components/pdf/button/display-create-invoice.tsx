@@ -8,17 +8,26 @@ import { useConfirm } from "@/components/ui/confirm-dialog";
 import getOrderForConfirmation from "../server-actions/get-order-for-confirmation";
 import { toast } from "sonner";
 import { ModalDescription } from "./display-shipping-order";
+import { useRouter } from "next/navigation";
 
 export const DisplayCreateInvoice = ({ orderIds, disabled }: { orderIds: string[]; disabled?: boolean }) => {
   const { serverAction, loading } = useServerAction(createInvoiceAction);
   const { serverAction: orderAction, loading: loading2 } = useServerAction(getOrderForConfirmation);
   const confirm = useConfirm();
 
+  const router = useRouter();
+
   const onCreateInvoice = async (sendEmail: boolean) => {
     if (orderIds.length === 1) {
       const order = await orderAction({ data: { orderId: orderIds[0] } });
       if (!order) {
         toast.error("Erreur");
+        return;
+      }
+
+      if (!order.user.completed) {
+        router.push(`/admin/users/${order.user.id}?incomplete=true`);
+        toast.error("Utilisateur incomplet", { position: "top-center" });
         return;
       }
 

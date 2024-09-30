@@ -25,11 +25,11 @@ const SelectUser = ({ users }: { users: User[] }) => {
       toast.error("Utilisateur introuvable");
       return;
     }
-    if (!user.completed) {
-      router.push(`/admin/users/${user.id}?incomplete=true`);
-      toast.error("Utilisateur incomplet", { position: "top-center" });
-      return;
-    }
+    // if (!user.completed) {
+    //   router.push(`/admin/users/${user.id}?incomplete=true`);
+    //   toast.error("Utilisateur incomplet", { position: "top-center" });
+    //   return;
+    // }
     form.setValue("userId", value);
   }
 
