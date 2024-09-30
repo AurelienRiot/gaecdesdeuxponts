@@ -33,7 +33,10 @@ const DatePicker = ({ usersAndShops }: { usersAndShops: UserAndShop[] }) => {
             return { label: "" };
           }
 
-          const user = usersAndShops.find((user) => address.includes(user.address) || user.address.includes(address));
+          const user = usersAndShops.find(
+            (user) => user.address && (address.includes(user.address) || user.address.includes(address)),
+          );
+          console.log(user?.label);
           let latitude = user?.latitude || order.user.address?.latitude;
           let longitude = user?.longitude || order.user.address?.longitude;
           if (!latitude || !longitude) {

@@ -4,7 +4,7 @@ import { unstable_cache } from "next/cache";
 export const getSearchUsers = unstable_cache(
   async () => {
     return await prismadb.user.findMany({
-      where: { role: { notIn: ["readOnlyAdmin", "admin", "deleted"] } },
+      where: { role: { notIn: ["readOnlyAdmin", "admin", "deleted", "user"] } },
       orderBy: {
         updatedAt: "desc",
       },

@@ -426,6 +426,7 @@ function TodaysOrders({ usersAndShops }: { usersAndShops: UserAndShop[] }) {
       }[],
     ) {
       if (!result) return;
+
       const addresses: Point[] = await Promise.all(
         result.map(async (order) => {
           const address = addressFormatter(order.user.address);
@@ -433,7 +434,10 @@ function TodaysOrders({ usersAndShops }: { usersAndShops: UserAndShop[] }) {
             return { label: "" };
           }
 
-          const user = usersAndShops.find((user) => address.includes(user.address) || user.address.includes(address));
+          const user = usersAndShops.find(
+            (user) => user.address && (address.includes(user.address) || user.address.includes(address)),
+          );
+
           let latitude = user?.latitude || order.user.address?.latitude;
           let longitude = user?.longitude || order.user.address?.longitude;
           if (!latitude || !longitude) {
