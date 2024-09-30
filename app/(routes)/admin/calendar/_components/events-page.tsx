@@ -9,7 +9,7 @@ import { debounce } from "@/lib/debounce";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { getGroupedAMAPOrders } from "../_functions/get-amap-orders";
 import type { CalendarOrdersType } from "../_functions/get-orders";
 import DisplayAmap from "./display-amap";
@@ -17,6 +17,8 @@ import DisplayOrder from "./display-order";
 import SummarizeProducts from "./summarize-products";
 import { formatFrenchPhoneNumber } from "@/lib/utils";
 import { addDays } from "date-fns";
+import TodayFocus from "./date-focus";
+import UpdatePage from "./update-page";
 
 type EventsPageProps = {
   orders: CalendarOrdersType[];
@@ -32,12 +34,13 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
   const currentDateRef = useRef<HTMLDivElement>(null);
   const [user, setUser] = useState<CalendarOrdersType["user"]>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const dayParam = searchParams.get("day");
 
   // Extract the initial focus date from search parameters or default to today
-  const initialFocusDate = useRef<string>(searchParams.get("day") || getLocalIsoString(new Date()));
+  const initialFocusDate = useRef<string>(dayParam || getLocalIsoString(new Date()));
 
   // Handle Initial Scroll to Center the Focus Date
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (containerRef.current && currentDateRef.current && !initialScrollRef.current) {
       const container = containerRef.current;
       const currentDateElement = currentDateRef.current;
@@ -90,7 +93,7 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
   }, [dateArray, router]);
 
   // Debounced Scroll Handler to Optimize Performance
-  const debouncedHandleScroll = useCallback(debounce(handleScroll, 300), []);
+  const debouncedHandleScroll = useCallback(debounce(handleScroll, 250), []);
 
   // Attach Scroll Event Listener
   useEffect(() => {
@@ -104,6 +107,30 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
       debouncedHandleScroll.cancel(); // Cancel any pending debounced calls on unmount
     };
   }, [debouncedHandleScroll]);
+
+  // Adjust scroll when the searchParam "day" changes
+  useEffect(() => {
+    if (dayParam && containerRef.current) {
+      const container = containerRef.current;
+      const dateIndex = dateArray.indexOf(dayParam);
+      if (dateIndex !== -1) {
+        const currentDateElement = container.children[dateIndex] as HTMLElement;
+        if (currentDateElement) {
+          const containerWidth = container.clientWidth;
+          const elementOffsetLeft = currentDateElement.offsetLeft;
+          const elementWidth = currentDateElement.clientWidth;
+
+          // Calculate the position to scroll so that the current date is centered
+          const scrollPosition = elementOffsetLeft - containerWidth / 2 + elementWidth / 2;
+
+          container.scrollTo({
+            left: scrollPosition,
+            behavior: "smooth", // Optional: adds smooth scrolling
+          });
+        }
+      }
+    }
+  }, [dayParam, dateArray]);
 
   return (
     <>
@@ -183,8 +210,8 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
         })}
       </div>{" "}
       <div className="flex justify-between p-4 ">
-        {/* <UpdatePage /> */}
-        {/* <TodayFocus /> */}
+        <UpdatePage />
+        <TodayFocus />
       </div>
       <UserModal open={isModalOpen} onClose={() => setIsModalOpen(false)} user={user} />
     </>

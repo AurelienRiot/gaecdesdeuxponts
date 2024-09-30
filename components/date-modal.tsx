@@ -67,7 +67,7 @@ const DateModal = React.forwardRef<HTMLButtonElement, DateModalProps>(
             }}
             {...props}
           />
-          <QuickButtons onValueChange={onValueChange} />
+          <QuickButtons onValueChange={onValueChange} setOpen={setIsOpen} />
         </SheetContent>
       </Sheet>
     );
@@ -78,13 +78,19 @@ DateModal.displayName = "DateModal";
 
 export default DateModal;
 
-function QuickButtons({ onValueChange }: { onValueChange?: (value?: Date) => void }) {
+function QuickButtons({
+  onValueChange,
+  setOpen,
+}: { onValueChange?: (value?: Date) => void; setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
   return (
     <div className="flex justify-center gap-4">
       <Button
         variant="secondary"
         className="text-xs sm:text-sm"
-        onClick={() => onValueChange?.(addDays(new Date(), 1))} // Tomorrow
+        onClick={() => {
+          onValueChange?.(addDays(new Date(), 1));
+          setOpen(false);
+        }} // Tomorrow
       >
         Demain
       </Button>
@@ -95,6 +101,7 @@ function QuickButtons({ onValueChange }: { onValueChange?: (value?: Date) => voi
           const nextThursday = new Date();
           nextThursday.setDate(nextThursday.getDate() + ((2 - nextThursday.getDay() + 7) % 7 || 7));
           onValueChange?.(nextThursday);
+          setOpen(false);
         }}
       >
         Mardi prochain
@@ -106,6 +113,7 @@ function QuickButtons({ onValueChange }: { onValueChange?: (value?: Date) => voi
           const nextFriday = new Date();
           nextFriday.setDate(nextFriday.getDate() + ((5 - nextFriday.getDay() + 7) % 7 || 7));
           onValueChange?.(nextFriday);
+          setOpen(false);
         }}
       >
         Vendredi prochain

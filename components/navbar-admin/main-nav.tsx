@@ -45,11 +45,12 @@ export function MainNav({ className }: React.HTMLAttributes<HTMLElement>) {
 
 export const MainAdminRoutes = (pathname: string) => [
   {
-    href: `/admin/direction`,
-    label: "Direction",
-    active: pathname.startsWith(`/admin/direction`),
-    Icone: MapPin,
+    href: `/admin/invoices`,
+    label: "Factures",
+    active: pathname.startsWith(`/admin/invoices`),
+    Icone: PiInvoice,
   },
+
   {
     href: `/admin/amap`,
     label: "AMAP",
@@ -63,20 +64,21 @@ export const MainAdminRoutes = (pathname: string) => [
     Icone: Calendar,
   },
   {
-    href: `/admin`,
-    label: "Résumé",
-    active: pathname === `/admin`,
-    Icone: LayoutDashboardIcon,
-  },
-];
-
-export const SecondaryAdminRoutes = (pathname: string) => [
-  {
     href: `/admin/users`,
     label: "Clients",
     active: pathname.startsWith(`/admin/users`),
     Icone: Users,
   },
+];
+
+export const SecondaryAdminRoutes = (pathname: string) => [
+  {
+    href: `/admin`,
+    label: "Résumé",
+    active: pathname === `/admin`,
+    Icone: LayoutDashboardIcon,
+  },
+
   {
     href: `/`,
     label: "Accueil",
@@ -116,10 +118,10 @@ export const SecondaryAdminRoutes = (pathname: string) => [
     Icone: ListOrderedIcon,
   },
   {
-    href: `/admin/invoices`,
-    label: "Factures",
-    active: pathname.startsWith(`/admin/invoices`),
-    Icone: PiInvoice,
+    href: `/admin/direction`,
+    label: "Direction",
+    active: pathname.startsWith(`/admin/direction`),
+    Icone: MapPin,
   },
   {
     href: `/logout`,
