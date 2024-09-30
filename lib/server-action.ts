@@ -20,6 +20,7 @@ type BaseServerActionType<D extends z.ZodTypeAny> = {
   schema: D;
   roles?: Role[];
   data: z.infer<D>;
+  rateLimited?: boolean;
 };
 
 type SafeServerActionType<D extends z.ZodTypeAny, R, E> = BaseServerActionType<D> &
@@ -40,19 +41,22 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E>({
   schema,
   ignoreCheckUser,
   roles = ["admin", "readOnlyAdmin", "user", "pro"],
+  rateLimited,
 }: SafeServerActionType<D, R, E>): Promise<ReturnTypeServerAction<R, E>> {
   console.time("Total Execution Time");
 
   const user = await checkUser();
 
-  const isRateLimited = await rateLimit(user?.role);
-  if (isRateLimited) {
-    console.timeEnd("Total Execution Time");
+  if (rateLimited) {
+    const isRateLimited = await rateLimit(user?.role);
+    if (isRateLimited) {
+      console.timeEnd("Total Execution Time");
 
-    return {
-      success: false,
-      message: "Trop de requêtes. Veuillez reessayer plus tard",
-    };
+      return {
+        success: false,
+        message: "Trop de requêtes. Veuillez reessayer plus tard",
+      };
+    }
   }
 
   const validatedData = schema.safeParse(data);

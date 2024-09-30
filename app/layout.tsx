@@ -38,7 +38,6 @@ export const metadata: Metadata = {
       "https://www.laiteriedupontrobert.fr/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fposter.d2c91e30.webp&w=3840&q=75",
     ],
   },
-  manifest: "/manifest.json",
 };
 
 const fontSans = FontSans({
