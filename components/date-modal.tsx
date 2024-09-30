@@ -82,8 +82,13 @@ function QuickButtons({
   onValueChange,
   setOpen,
 }: { onValueChange?: (value?: Date) => void; setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
+  const nextThursday = new Date();
+  nextThursday.setDate(nextThursday.getDate() + ((2 - nextThursday.getDay() + 7) % 7 || 7));
+  const nextFriday = new Date();
+  nextFriday.setDate(nextFriday.getDate() + ((5 - nextFriday.getDay() + 7) % 7 || 7));
+  // const reverse = nextThursday.getTime() > nextFriday.getTime();
   return (
-    <div className="flex justify-center gap-4">
+    <div className="flex justify-center gap-4 items-center">
       <Button
         variant="secondary"
         className="text-xs sm:text-sm"
@@ -94,30 +99,33 @@ function QuickButtons({
       >
         Demain
       </Button>
-      <Button
-        variant="secondary"
-        className="text-xs sm:text-sm"
-        onClick={() => {
-          const nextThursday = new Date();
-          nextThursday.setDate(nextThursday.getDate() + ((2 - nextThursday.getDay() + 7) % 7 || 7));
-          onValueChange?.(nextThursday);
-          setOpen(false);
-        }}
+      <div
+        className={cn(
+          "flex gap-4 items-center justify-center",
+          // reverse ? "flex-row-reverse" : "flex-row"
+        )}
       >
-        Mardi prochain
-      </Button>
-      <Button
-        variant="secondary"
-        className="text-xs sm:text-sm"
-        onClick={() => {
-          const nextFriday = new Date();
-          nextFriday.setDate(nextFriday.getDate() + ((5 - nextFriday.getDay() + 7) % 7 || 7));
-          onValueChange?.(nextFriday);
-          setOpen(false);
-        }}
-      >
-        Vendredi prochain
-      </Button>
+        <Button
+          variant="secondary"
+          className="text-xs sm:text-sm"
+          onClick={() => {
+            onValueChange?.(nextThursday);
+            setOpen(false);
+          }}
+        >
+          Mardi prochain
+        </Button>
+        <Button
+          variant="secondary"
+          className="text-xs sm:text-sm"
+          onClick={() => {
+            onValueChange?.(nextFriday);
+            setOpen(false);
+          }}
+        >
+          Vendredi prochain
+        </Button>
+      </div>
     </div>
   );
 }

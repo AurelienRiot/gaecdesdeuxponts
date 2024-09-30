@@ -8,6 +8,8 @@ import NoResults from "@/components/ui/no-results";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 interface CategoryPageProps {
   params: {
     categoryName: string;
