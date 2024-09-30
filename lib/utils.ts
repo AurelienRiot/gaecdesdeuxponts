@@ -110,8 +110,9 @@ export function isMobile() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
-export async function devOnly(fn: () => void) {
+export async function devOnly<T>(fn: () => Promise<T>) {
   if (process.env.NODE_ENV === "development") {
-    await fn();
+    return await fn();
   }
+  return null;
 }
