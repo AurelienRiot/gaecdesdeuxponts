@@ -5,7 +5,7 @@ import { DisplayCreateInvoice } from "@/components/pdf/button/display-create-inv
 import { DisplayInvoice } from "@/components/pdf/button/display-invoice";
 import { DisplayShippingOrder, ModalDescription } from "@/components/pdf/button/display-shipping-order";
 import { Button, LoadingButton } from "@/components/ui/button";
-import { Form, FormField } from "@/components/ui/form";
+import { Form, FormButton, FormField } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -87,6 +87,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
         ? new Date(initialData.datePickUp)
         : new Date(new Date().setHours(10, 0, 0, 0)),
       orderItems: initialData?.orderItems.map((product) => ({
+        id: product.id,
         itemId: product.itemId,
         unit: product.unit,
         price: product.price,
@@ -97,6 +98,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
         description: product.description,
       })) || [
         {
+          id: createId("orderItem"),
           itemId: "",
           unit: "",
           price: undefined,
@@ -256,13 +258,13 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
           <TotalPrice />
 
           {!initialData?.invoiceId ? (
-            <LoadingButton
-              disabled={form.formState.isSubmitting || loading || validateLoading}
+            <FormButton
+              disabled={loading || validateLoading}
               className="ml-auto bg-green-600 hover:bg-green-800"
               type="submit"
             >
               {action}
-            </LoadingButton>
+            </FormButton>
           ) : (
             <p className="text-destructive font-bold">
               Impossible de modifier le commande aprés avoir éditée la facture

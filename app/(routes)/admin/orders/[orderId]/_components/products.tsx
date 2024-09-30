@@ -12,6 +12,8 @@ import { useFormContext } from "react-hook-form";
 import { GrPowerReset } from "react-icons/gr";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-schema";
+import { LuPackageMinus } from "react-icons/lu";
+import { createId } from "@/lib/id";
 
 const negativeQuantityStyle =
   "bg-destructive hover:bg-destructive/90 hover:text-destructive-foreground text-destructive-foreground";
@@ -25,11 +27,13 @@ export const ShippingProducts = ({
 }) => {
   const form = useFormContext<OrderFormValues>();
   const items = form.watch("orderItems");
+  console.log(items);
 
   const addProduct = () => {
     if (items.every((item) => item.itemId)) {
       const newItems = {
         itemId: "",
+        id: createId("orderItem"),
         unit: "",
         price: 0,
         quantity: 1,
@@ -54,10 +58,7 @@ export const ShippingProducts = ({
           <FormControl>
             <div className="space-y-4">
               {items.map((item, productIndex) => (
-                <div
-                  key={`${item.itemId} ${productIndex}`}
-                  className="w-fit rounded-md p-4 pb-4 thin-scrollbar bg-chart1/50 even:bg-chart2/50"
-                >
+                <div key={item.id} className="w-fit rounded-md p-4 pb-4 thin-scrollbar bg-chart1/50 even:bg-chart2/50">
                   <ProductName user={user} products={products} productIndex={productIndex} />
                 </div>
               ))}
@@ -98,6 +99,19 @@ function ProductName({
     const newItems = items.filter((_, index) => index !== productIndex);
     form.setValue("orderItems", newItems);
   };
+
+  function addNegativeProduct() {
+    if (selectedProduct) {
+      const newItem = {
+        ...items[productIndex],
+        id: createId("orderItem"),
+        quantity: -1,
+      };
+      console.log(newItem);
+      const newItems = [...items.slice(0, productIndex + 1), newItem, ...items.slice(productIndex + 1)];
+      form.setValue("orderItems", newItems);
+    }
+  }
 
   return (
     <>
@@ -150,15 +164,26 @@ function ProductName({
           control={form.control}
           name={`orderItems.${productIndex}.quantity`}
           render={({ field }) => (
-            <FormItem className="w-16">
-              <FormLabel className="flex h-8 items-center justify-between gap-2">
-                <span className="">Quantité</span>
+            <FormItem className="w-24">
+              <FormLabel className="flex items-center justify-between gap-2 ">
+                <span>Quantité</span>
+
+                <IconButton
+                  Icon={LuPackageMinus}
+                  className="border-dashed p-2 text-destructive bg-destructive-foreground"
+                  iconClassName="size-3"
+                  onClick={() => addNegativeProduct()}
+                  type="button"
+                />
               </FormLabel>
+              {/* <FormLabel className="flex h-8 items-center justify-between gap-2">
+                <span className="">Quantité</span>
+              </FormLabel> */}
 
               <FormControl>
                 <NumberInput
                   disabled={form.formState.isSubmitting}
-                  className={quantity < 0 ? negativeQuantityStyle : ""}
+                  className={cn(quantity < 0 ? negativeQuantityStyle : "", "text-right ")}
                   placeholder="9,99"
                   {...field}
                 />
@@ -199,7 +224,7 @@ const SelectProductName = ({
 }) => {
   const form = useFormContext<OrderFormValues>();
 
-  function onValueChange(value: string) {
+  function onSelectedProduct(value: string) {
     const product = products.find((product) => product.id === value);
     if (!product) {
       toast.error("Produit introuvable");
@@ -265,7 +290,7 @@ const SelectProductName = ({
                 { value: "others", label: "Autres" },
               ]}
               onSelected={(value) => {
-                onValueChange(value.key);
+                onSelectedProduct(value.key);
               }}
             />
           </FormControl>

@@ -1,6 +1,7 @@
 import * as z from "zod";
 
 const orderItemSchema = z.object({
+  id: z.string(),
   itemId: z.string(),
   unit: z.string().optional().nullable(),
   price: z.coerce.number(),
