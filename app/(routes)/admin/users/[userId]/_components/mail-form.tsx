@@ -10,23 +10,13 @@ import { forwardRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
 import changeEmail from "../_actions/change-email";
+import { Modal } from "@/components/ui/modal";
+import { Label } from "@/components/ui/label";
+import { DialogFooter } from "@/components/ui/dialog";
 
 function MailForm({ email, id }: { email: string | null; id: string }) {
   const [display, setDisplay] = useState(false);
   const [copied, setCopied] = useState(false);
-  const { serverAction } = useServerAction(changeEmail);
-  const router = useRouter();
-
-  async function onSumbit(formData: FormData) {
-    const email = formData.get("email") as string;
-    serverAction({
-      data: { email, id },
-      onSuccess: () => {
-        router.refresh();
-        setDisplay(false);
-      },
-    });
-  }
 
   const handleCopy = () => {
     if (email) {
@@ -49,22 +39,49 @@ function MailForm({ email, id }: { email: string | null; id: string }) {
       >
         Changer l'email
       </Button>
-      {display && (
-        <form className="flex flex-wrap gap-4" action={onSumbit}>
-          <Input
-            type={"email"}
-            name="email"
-            className="w-full sm:max-w-xs"
-            placeholder="Entrez la nouvelle adresse email"
-          />
-          <LoadingButton type="submit">Valider</LoadingButton>
-        </form>
-      )}
+      <EmailModal id={id} openModal={display} onClose={() => setDisplay(false)} />
     </div>
   );
 }
 
 export default MailForm;
+
+function EmailModal({ id, onClose, openModal }: { id: string; onClose: () => void; openModal: boolean }) {
+  const { serverAction } = useServerAction(changeEmail);
+  const router = useRouter();
+
+  async function onSumbit(formData: FormData) {
+    const email = formData.get("email") as string;
+
+    serverAction({
+      data: { email, id },
+      onSuccess: () => {
+        router.refresh();
+        onClose();
+      },
+    });
+  }
+  return (
+    <Modal
+      title="Changer l'email"
+      description="Entrez le nouvel email ci-dessous. Cliquez sur sauvegarder une fois terminé."
+      isOpen={openModal}
+      onClose={onClose}
+    >
+      <form action={onSumbit} className="space-y-4">
+        <div className="space-y-4">
+          <Label htmlFor="email" className="text-right">
+            Email
+          </Label>
+          <Input name="email" id="email" placeholder="exemple@email.fr" className="col-span-3" />
+        </div>
+        <DialogFooter>
+          <LoadingButton type="submit">Mettre à jour l'email</LoadingButton>
+        </DialogFooter>
+      </form>
+    </Modal>
+  );
+}
 
 const LoadingButton = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, disabled, children, ...props }, ref) => {

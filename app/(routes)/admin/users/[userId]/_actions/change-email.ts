@@ -1,14 +1,14 @@
 "use server";
 
+import { emailSchema } from "@/components/zod-schema";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
-import { addDelay } from "@/lib/utils";
 import { revalidateTag } from "next/cache";
 import * as z from "zod";
 
 const schema = z.object({
   id: z.string(),
-  email: z.string().email(),
+  email: emailSchema,
 });
 
 async function changeEmail(data: z.infer<typeof schema>) {
@@ -17,7 +17,6 @@ async function changeEmail(data: z.infer<typeof schema>) {
     schema,
     roles: ["admin"],
     serverAction: async ({ email, id }) => {
-      await addDelay(2000);
       const user = await prismadb.user.findUnique({
         where: {
           id,

@@ -8,14 +8,21 @@ function useServerAction<D, R, E = undefined>(action: (data: D) => Promise<Retur
   const serverAction = useCallback(
     async ({
       data,
-      toastOptions,
+      toastOptions = { position: "top-center" },
       onSuccess,
       onError,
       onFinally,
     }: {
       data: D;
       onFinally?: () => void;
-      onError?: (e?: E | undefined) => void;
+      onError?: (
+        errorData?: E,
+        zodError?: {
+          [x: string]: string[] | undefined;
+          [x: number]: string[] | undefined;
+          [x: symbol]: string[] | undefined;
+        },
+      ) => void;
       onSuccess?: (result?: R) => void;
       toastOptions?: ExternalToast;
     }) => {
@@ -24,7 +31,7 @@ function useServerAction<D, R, E = undefined>(action: (data: D) => Promise<Retur
       return await action(data)
         .then(async (result) => {
           if (!result.success) {
-            await onError?.(result.errorData);
+            await onError?.(result.errorData, result.zodError);
             result.message ? toast.error(result.message, toastOptions) : null;
             return;
           }

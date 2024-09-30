@@ -14,6 +14,11 @@ export type ReturnTypeServerAction<R = undefined, E = undefined> =
       success: false;
       message: string;
       errorData?: E;
+      zodError?: {
+        [x: string]: string[] | undefined;
+        [x: number]: string[] | undefined;
+        [x: symbol]: string[] | undefined;
+      };
     };
 
 type BaseServerActionType<D extends z.ZodTypeAny> = {
@@ -65,6 +70,7 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E>({
     return {
       success: false,
       message: validatedData.error.issues[0].message,
+      zodError: validatedData.error.flatten().fieldErrors,
     };
   }
   if (ignoreCheckUser) {

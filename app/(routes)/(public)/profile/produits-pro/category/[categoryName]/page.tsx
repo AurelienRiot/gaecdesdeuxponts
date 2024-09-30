@@ -45,8 +45,6 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
     redirect(`/profile/produits-pro/category/${category.name}/product/${products[0].name}`);
   }
 
-  await addDelay(2000);
-
   return (
     <Container>
       <Billboard category={category} />
