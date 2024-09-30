@@ -24,7 +24,6 @@ export const rateLimit = async (role?: string | null) => {
 
   // Check and update current request limits
   const currentRequestCount = idToRequestCount.get(ip) ?? 0;
-  console.log(currentRequestCount, rateLimiter.maxRequests);
   if (currentRequestCount >= rateLimiter.maxRequests) return true;
   idToRequestCount.set(ip, currentRequestCount + 1);
 

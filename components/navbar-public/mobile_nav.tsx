@@ -23,7 +23,7 @@ const MobileNav = ({ children }: { children: React.ReactNode }) => {
         <SheetContent side={"left"} className=" w-[90vw] overflow-x-visible px-2 py-8 xs:px-6">
           <SheetHeader>
             <SheetTitle className="flex flex-wrap items-center justify-center gap-4">
-              <Link href="/acceuil">
+              <Link href="/">
                 <Image alt="Logo" className="h-16 w-auto rounded-md" src="/logo-rect.webp" width={186} height={56} />
               </Link>
               <Image
