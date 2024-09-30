@@ -7,7 +7,7 @@ import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 import deleteEvent from "./delete-events";
 import getEventsList from "./get-events-list";
 import getAllOrders from "./get-orders-for-events";
-import { numberFormat2Decimals } from "@/lib/utils";
+import { devOnly, numberFormat2Decimals } from "@/lib/utils";
 
 const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 
@@ -17,6 +17,13 @@ export default async function createOrdersEvent(data: { date: Date }) {
 
   const startDate = fromZonedTime(start, timeZone);
   const endDate = fromZonedTime(end, timeZone);
+
+  await devOnly(async () => {
+    const start2 = new Date(addHours(data.date, 2).setHours(0, 0, 0, 0));
+    const end2 = addHours(start2, 24);
+    console.log({ start2, end2 });
+    console.log({ startDate, endDate });
+  });
 
   // console.log({ date: data.date, startDate, endDate });
   // return { success: true, message: "Agenda mise à jour" };
