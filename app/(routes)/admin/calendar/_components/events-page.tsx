@@ -86,8 +86,7 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
       }
     });
 
-    if (closestDate && closestDate !== initialFocusDate.current) {
-      // Update the search parameter without triggering the initial scroll
+    if (closestDate) {
       router.replace(`?day=${closestDate}`);
     }
   }, [dateArray, router]);

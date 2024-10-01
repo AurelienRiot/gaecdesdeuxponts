@@ -1,3 +1,4 @@
+import { isValidPhoneNumber } from "libphonenumber-js";
 import { z } from "zod";
 
 const emailSchema = z
@@ -17,7 +18,16 @@ const optSchema = z.object({
       invalid_type_error: "Le code unique doit être de 6 chiffres",
     })
     .regex(/^\d{6}$/, { message: "Le code unique doit être de 6 chiffres" }),
-  email: z.string().email().trim().toLowerCase(),
+  email: emailSchema,
 });
 
-export { emailSchema, nameSchema, optSchema };
+const phoneSchema = z.string({ invalid_type_error: "Entrer un numéro de téléphone" }).refine(
+  (value) => {
+    return value === "" || isValidPhoneNumber(value);
+  },
+  {
+    message: "Le numéro de téléphone n'est pas valide",
+  },
+);
+
+export { emailSchema, nameSchema, optSchema, phoneSchema };
