@@ -1,11 +1,17 @@
 import { authOptions } from "@/components/auth/authOptions";
-import { type DefaultNotifications, defaultNotifications } from "@/components/user";
+import { defaultNotifications } from "@/components/user";
 import prismadb from "@/lib/prismadb";
-import { getServerSession } from "next-auth";
+import { addDelay } from "@/lib/utils";
+import { getServerSession, type Session } from "next-auth";
 
 export const getSessionUser = async () => {
-  const session = await getServerSession(authOptions);
+  let session: Session | null;
+  session = await getServerSession(authOptions);
 
+  if (!session) {
+    await addDelay(500);
+    session = await getServerSession(authOptions);
+  }
   if (!session || !session.user || !session.user.id) {
     return null;
   }
@@ -52,7 +58,7 @@ export type GetUserReturnType = Awaited<ReturnType<typeof GetUser>>;
 
 const GetUser = async () => {
   const sessionUser = await getSessionUser();
-
+  console.log({ sessionUser });
   if (!sessionUser) {
     return null;
   }
