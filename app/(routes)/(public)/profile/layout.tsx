@@ -11,10 +11,10 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const data = await GetUser();
-  console.log(data);
-  // if (!data) {
-  //   return <Logout />;
-  // }
+  console.log({ data });
+  if (!data) {
+    return <Logout />;
+  }
 
   return (
     <UserProvider data={data}>

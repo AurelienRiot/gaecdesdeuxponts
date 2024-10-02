@@ -15,7 +15,6 @@ export async function middleware(req: NextRequest) {
     // if (path === "/" && token?.role !== "admin" && token?.role !== "readOnlyAdmin") {
     //   return NextResponse.redirect(new URL(baseUrl + "/acceuil", req.url));
     // }
-    console.log(token);
     if (!token || token.exp * 1000 < today) {
       console.log(token ? `exp: ${token.exp * 1000 < today}` : "No token provided");
       return redirectToLogin(req);

@@ -41,6 +41,7 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     jwt: async ({ token, user, trigger }) => {
+      console.log({ token, user, trigger });
       const newToken = { ...token };
       if (!trigger) {
         if (!newToken.tokenExpires || new Date(newToken.tokenExpires) < new Date()) {
@@ -82,11 +83,11 @@ export const authOptions: NextAuthOptions = {
           newToken.tokenExpires = new Date(Date.now() + expirationTime);
         }
       }
-      return Promise.resolve(newToken);
+      return newToken;
     },
     session: async ({ session, token }) => {
       if (token) {
-        return Promise.resolve({
+        return {
           ...session,
           user: {
             ...session.user,
@@ -95,9 +96,9 @@ export const authOptions: NextAuthOptions = {
             role: token.role,
             tokenExpires: token.tokenExpires,
           },
-        });
+        };
       }
-      return Promise.resolve(session);
+      return session;
     },
   },
 };
