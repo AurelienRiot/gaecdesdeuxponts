@@ -116,7 +116,7 @@ async function sendVerificationRequest({ identifier, url, token }: SendVerificat
     });
   }, 500);
 
-  if (process.env.NODE_ENV === "production") await sendOTP(otp, identifier);
+  await sendOTP(otp, identifier);
 }
 
 export async function createHashToken(message: string) {

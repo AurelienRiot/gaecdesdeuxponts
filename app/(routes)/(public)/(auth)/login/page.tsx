@@ -1,4 +1,4 @@
-import { getBasicUser, getSessionUser } from "@/actions/get-user";
+import { getSessionUser } from "@/actions/get-user";
 import { Logout } from "@/components/auth/auth";
 import { EmailButton, GoogleButton } from "@/components/auth/auth-button";
 import type { Metadata } from "next";

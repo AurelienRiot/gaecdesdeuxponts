@@ -4,13 +4,8 @@ import prismadb from "@/lib/prismadb";
 import { getServerSession } from "next-auth";
 
 export const getSessionUser = async () => {
-  // let session: Session | null;
   const session = await getServerSession(authOptions);
 
-  // if (!session) {
-  //   await addDelay(500);
-  //   session = await getServerSession(authOptions);
-  // }
   if (!session || !session.user || !session.user.id) {
     return null;
   }
@@ -57,7 +52,6 @@ export type GetUserReturnType = Awaited<ReturnType<typeof GetUser>>;
 
 const GetUser = async () => {
   const sessionUser = await getSessionUser();
-  console.log({ sessionUser });
   if (!sessionUser) {
     return null;
   }
