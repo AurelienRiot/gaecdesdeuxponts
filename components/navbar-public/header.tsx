@@ -30,7 +30,7 @@ const PublicHeader = () => {
       <MainNav className="hidden lg:block" />
       <div className={"flex items-center sm:gap-x-4 sm:pr-2"}>
         <AuthLink className="hidden sm:block" />
-        <ThemeToggle />
+        {/* <ThemeToggle /> */}
         <CartButton />
       </div>
     </header>

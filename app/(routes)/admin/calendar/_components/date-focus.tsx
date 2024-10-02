@@ -25,6 +25,8 @@ function TodayFocus({ className }: { className?: string }) {
       modifiers={{
         disabled: (date) => isDateDisabled(date),
       }}
+      startMonth={new Date(new Date().getFullYear(), new Date().getMonth() - 1)}
+      endMonth={new Date(new Date().getFullYear(), new Date().getMonth() + 1)}
     />
   );
 }
