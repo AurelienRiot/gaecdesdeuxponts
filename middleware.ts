@@ -17,9 +17,10 @@ export async function middleware(req: NextRequest) {
     // }
 
     if (!token || token.exp * 1000 < today) {
+      console.log(token ? `exp: ${token.exp * 1000 < today}` : "No token provided");
       return redirectToLogin(req);
     }
-    const role = token.role as Role;
+    const role = token.role;
     if (new Date(token.tokenExpires).getTime() < today) {
       const apiResponse = await fetch(`${baseUrl}/api/auth`, {
         method: "GET",
@@ -39,6 +40,7 @@ export async function middleware(req: NextRequest) {
       }
       const { role: dbRole } = (await apiResponse.json()) as { role: string };
       if (dbRole !== role) {
+        console.log("DB role:", dbRole, "Token role:", role);
         return redirectToLogin(req);
       }
     }

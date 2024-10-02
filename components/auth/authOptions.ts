@@ -1,18 +1,14 @@
 import { createId } from "@/lib/id";
-import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import type { User } from "@prisma/client";
-import { render } from "@react-email/render";
 import { customAlphabet } from "nanoid";
 import type { NextAuthOptions } from "next-auth";
 import EmailProvider, { type SendVerificationRequestParams } from "next-auth/providers/email";
 import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
 import { revalidateTag } from "next/cache";
-import WelcomeEmail from "../email/welcome";
 import { sendOTP } from "../email";
 
-const baseUrl = process.env.NEXT_PUBLIC_URL;
 const expirationTime = 10 * 60 * 1000;
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -119,7 +115,7 @@ async function sendVerificationRequest({ identifier, url, token }: SendVerificat
     });
   }, 500);
 
-  await sendOTP(otp, identifier);
+  if (process.env.NODE_ENV !== "development") sendOTP(otp, identifier);
 }
 
 export async function createHashToken(message: string) {
