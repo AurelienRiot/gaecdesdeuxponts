@@ -139,28 +139,34 @@ function SelectContent<V extends { key: string }, T extends string>({
   return (
     <div className="relative">
       <ScrollArea ref={scrollRef} className="max-h-[50dvh]  overflow-y-auto pt-4  py-8">
-        {tabsValues.map(
-          (tabValues) =>
-            tabValues.values.length > 0 && (
-              <TabsContent key={tabValues.tab} value={tabValues.tab} className=" w-full flex flex-col gap-2 relative ">
-                {tabValues.values.map((value, index) => (
-                  <Button
-                    style={{ touchAction: "pan-y" }}
-                    id={value.value.key}
-                    className="h-fit"
-                    variant={value.value.key === selectedValue ? "green" : value.highlight ? "secondary" : "outline"}
-                    key={value.value.key + index}
-                    onClick={() => {
-                      setIsOpen(false);
-                      onSelected(value.value);
-                    }}
-                  >
-                    {value.label}
-                  </Button>
-                ))}
-              </TabsContent>
-            ),
-        )}
+        <>
+          {tabsValues.map(
+            (tabValues) =>
+              tabValues.values.length > 0 && (
+                <TabsContent
+                  key={tabValues.tab}
+                  value={tabValues.tab}
+                  className=" w-full flex flex-col gap-2 relative "
+                >
+                  {tabValues.values.map((value, index) => (
+                    <Button
+                      style={{ touchAction: "pan-y" }}
+                      id={value.value.key}
+                      className="h-fit"
+                      variant={value.value.key === selectedValue ? "green" : value.highlight ? "secondary" : "outline"}
+                      key={value.value.key + index}
+                      onClick={() => {
+                        setIsOpen(false);
+                        onSelected(value.value);
+                      }}
+                    >
+                      {value.label}
+                    </Button>
+                  ))}
+                </TabsContent>
+              ),
+          )}
+        </>
       </ScrollArea>
       <div className="inset-0 absolute from-background to-background bg-[linear-gradient(to_bottom,_var(--tw-gradient-from)_0%,_transparent_10%,_transparent_90%,_var(--tw-gradient-to)_100%)] pointer-events-none select-none" />
     </div>

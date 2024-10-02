@@ -11,7 +11,7 @@ const ClientProducts = async ({ startDate, endDate }: { startDate: Date; endDate
     ...user,
     orders: user.orders.map((order) => ({
       ...order,
-      orderItems: order.orderItems.filter((item) => item.quantity >= 0 && item.price >= 0),
+      orderItems: order.orderItems.filter((item) => item.price >= 0),
     })),
   }));
 
@@ -83,10 +83,14 @@ async function getUserOrders({ startDate, endDate }: { startDate: Date; endDate:
       },
     },
     select: {
-      orders: { where: { dateOfShipping: { gte: startDate, lte: endDate } }, select: { orderItems: true } },
+      orders: {
+        where: { dateOfShipping: { gte: startDate, lte: endDate }, deletedAt: null },
+        select: { orderItems: true },
+      },
       name: true,
       company: true,
       email: true,
+      id: true,
     },
   });
   return users;

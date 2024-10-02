@@ -130,13 +130,14 @@ const ClientCount = async ({ startDate, endDate }: { startDate: Date; endDate: D
             gte: startDate,
             lte: endDate,
           },
+          deletedAt: null,
         },
       },
     },
     select: {
       orders: {
         where: { dateOfShipping: { gte: startDate, lte: endDate }, deletedAt: null },
-        select: { totalPrice: true },
+        select: { totalPrice: true, orderItems: true },
       },
       name: true,
       company: true,
@@ -144,11 +145,16 @@ const ClientCount = async ({ startDate, endDate }: { startDate: Date; endDate: D
     },
   });
   const usersWithTotalSpent = users
-    .map((user) => ({
-      name: getUserName(user),
-      totalSpent: Number(user.orders.reduce((acc, order) => acc + order.totalPrice, 0).toFixed(2)),
-    }))
-    .filter((user) => user.totalSpent > 0)
+    .map((user) => {
+      const totalItems = user.orders.flatMap((order) => order.orderItems);
+      const rawMilk = totalItems.filter((item) => item.name.toLowerCase().includes("lait cru"));
+      const priceMinusConsigne = getPriceMinusConsigne(rawMilk);
+      return {
+        name: getUserName(user),
+        totalSpent: Number(priceMinusConsigne.toFixed(2)),
+      };
+    })
+    .filter((user) => user.totalSpent !== 0)
     .sort((a, b) => b.totalSpent - a.totalSpent);
   // const topUsers = usersWithTotalSpent.sort((a, b) => b.totalSpent - a.totalSpent).slice(0, MAX_ClIENTS);
   // const otherTotalSpent = usersWithTotalSpent.slice(MAX_ClIENTS).reduce((acc, user) => acc + user.totalSpent, 0);
@@ -178,7 +184,6 @@ const ProductTotal = async ({ startDate, endDate }: { startDate: Date; endDate: 
       {} as Record<string, number>,
     ),
   ).map(([name, total]) => ({ name, total }));
-  console.log(totalProducts);
   // const topUsers = usersWithTotalSpent.sort((a, b) => b.totalSpent - a.totalSpent).slice(0, MAX_ClIENTS);
   // const otherTotalSpent = usersWithTotalSpent.slice(MAX_ClIENTS).reduce((acc, user) => acc + user.totalSpent, 0);
 
