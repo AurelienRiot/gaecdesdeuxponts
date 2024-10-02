@@ -65,23 +65,23 @@ const nextConfig = {
     return [
       {
         source: "/qr-code",
-        destination: "https://www.laiteriedupontrobert.fr/",
+        destination: "/",
       },
       {
         source: "/acceuil",
-        destination: "https://www.laiteriedupontrobert.fr/",
+        destination: "/",
       },
       {
         source: "/dashboard-user/orders",
-        destination: "https://www.laiteriedupontrobert.fr/profile/commandes",
+        destination: "/profile/commandes",
       },
       {
         source: "/dashboard-user",
-        destination: "https://www.laiteriedupontrobert.fr/profile",
+        destination: "/profile",
       },
       {
         source: "/dashboard-user/:path((?!orders$).*)",
-        destination: "https://www.laiteriedupontrobert.fr/profile/:path*",
+        destination: "/profile/:path*",
       },
       {
         source: "/ingest/static/:path*",
