@@ -9,9 +9,9 @@ export const getTotalOrders = unstable_cache(
           gte: startDate,
           lte: endDate,
         },
-        shippingEmail: {
-          not: null,
-        },
+        // shippingEmail: {
+        //   not: null,
+        // },
         deletedAt: null,
       },
       select: {
