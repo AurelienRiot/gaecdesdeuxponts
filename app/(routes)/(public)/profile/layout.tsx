@@ -12,9 +12,9 @@ export default async function Layout({
 }) {
   const data = await GetUser();
   console.log({ data });
-  if (!data) {
-    return <Logout />;
-  }
+  // if (!data) {
+  //   return <Logout />;
+  // }
 
   return (
     <UserProvider data={data}>
