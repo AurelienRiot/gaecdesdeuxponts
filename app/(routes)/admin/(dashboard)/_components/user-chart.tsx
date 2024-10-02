@@ -1,6 +1,6 @@
 "use client";
 
-import { LabelList, Pie, PieChart } from "recharts";
+import { Bar, BarChart, LabelList, Pie, PieChart, XAxis, YAxis } from "recharts";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
@@ -9,10 +9,10 @@ import DownloadChart from "./dowload-chart";
 const ID = "camember-clients";
 
 export function UserChart({
-  pieData,
+  chartData,
   monthYear,
 }: {
-  pieData: {
+  chartData: {
     name: string;
     totalSpent: number;
   }[];
@@ -30,6 +30,87 @@ export function UserChart({
   return (
     <>
       <Card id={ID} className=" w-full max-w-xl">
+        <CardHeader>
+          <CardTitle className="flex justify-between">
+            Total des paiements par clients
+            <DownloadChart id={ID} />
+          </CardTitle>
+
+          <CardDescription className="capitalize">{monthYear}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {chartData.length > 0 ? (
+            <ChartContainer
+              className="w-full   pb-0"
+              style={{ height: `${25 + chartData.length * 75}px` }}
+              config={chartConfig}
+            >
+              <BarChart
+                accessibilityLayer
+                data={chartData}
+                layout="vertical"
+                margin={{
+                  top: 10,
+                  left: 14,
+                }}
+                barCategoryGap={10}
+              >
+                <YAxis
+                  dataKey="name"
+                  type="category"
+                  tickLine={false}
+                  tickMargin={5}
+                  className="text-[10px] sm:text-xs"
+                  axisLine={false}
+                  hide
+                  // tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label}
+                />
+                <XAxis dataKey="totalSpent" type="number" hide />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                {/* <ChartLegend content={<ChartLegendContent />} /> */}
+                {/* {Object.entries(chartConfig).map(([key, { label, color }], index) => {
+                const isLast = index === Object.entries(chartConfig).length - 1;
+                const isFirst = index === 0;
+                return ( */}
+                <Bar
+                  dataKey={"totalSpent"}
+                  layout="vertical"
+                  stackId="a"
+                  fill={`hsl(var(--chart-1))`}
+                  radius={[4, 4, 4, 4]}
+                >
+                  <LabelList
+                    position="insideTopLeft"
+                    style={{ transform: "translateY(-20px)", fontWeight: "bold" }}
+                    dataKey="name"
+                    fill="hsla(var(--foreground))"
+                    width={300}
+                  />
+                  <LabelList
+                    dataKey={"totalSpent"}
+                    position="center"
+                    fill="white"
+                    className="tabular-nums font-bold"
+                    fontSize={14}
+                    formatter={(value: string) => `${value} €`}
+                  />
+                </Bar>
+                {/* );
+              })} */}
+              </BarChart>
+            </ChartContainer>
+          ) : (
+            <div className="flex justify-center items-center h-full">Aucune Commande</div>
+          )}
+        </CardContent>
+        {/* <CardFooter className="flex-col items-start gap-2 text-sm">
+        <div className="flex gap-2 font-medium leading-none">
+          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+        </div>
+        <div className="leading-none text-muted-foreground">Showing total visitors for the last 6 months</div>
+      </CardFooter> */}
+      </Card>
+      {/* <Card id={ID} className=" w-full max-w-xl">
         <CardHeader>
           <CardTitle className="flex justify-between">
             Clients
@@ -79,13 +160,7 @@ export function UserChart({
                         dominantBaseline={props.dominantBaseline}
                         fill="hsla(var(--foreground))"
                       >
-                        {/* {left || right
-                        ? (payload.name as string).split(" ").map((word, index) => (
-                            <tspan x={right ? props.x - 10 : props.x} y={`${index * 20 + props.y}`} key={index}>
-                              {word}
-                            </tspan>
-                          ))
-                        : payload.name} */}
+                 
                         {payload.name}
                       </text>
                     );
@@ -107,13 +182,8 @@ export function UserChart({
             <div className="w-full h-full flex items-center justify-center">Aucun client</div>
           )}
         </CardContent>
-        {/* <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none">
-        Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">Showing total visitors for the last 6 months</div>
-      </CardFooter> */}
-      </Card>
+      
+      </Card> */}
     </>
   );
 }

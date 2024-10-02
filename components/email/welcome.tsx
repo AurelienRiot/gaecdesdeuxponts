@@ -32,7 +32,7 @@ const WelcomeBody = ({ otp }: { otp: string }) => (
 
 function OTPEmail({ otp }: { otp: string }) {
   return (
-    <Section className="py-6 px-8">
+    <Section className="py-6 px-8 mx-auto ">
       <Heading className="text-xl font-bold text-gray-800 mb-4">Vérifiez votre adresse e-mail</Heading>
       <Text className="text-sm text-gray-800 mb-3">
         Merci de vous être inscrit sur notre site. Pour confirmer que c’est bien vous, veuillez saisir le code de

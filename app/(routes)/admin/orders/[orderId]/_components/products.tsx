@@ -27,7 +27,6 @@ export const ShippingProducts = ({
 }) => {
   const form = useFormContext<OrderFormValues>();
   const items = form.watch("orderItems");
-  console.log(items);
 
   const addProduct = () => {
     if (items.every((item) => item.itemId)) {

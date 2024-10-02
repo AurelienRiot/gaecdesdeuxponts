@@ -3,32 +3,41 @@ import { dateMonthYear } from "@/lib/date-utils";
 import prismadb from "@/lib/prismadb";
 import { UserProducts } from "./user-products";
 
-const MAX_PRODUCTS = 4;
+const MAX_PRODUCTS = 9;
 
 const ClientProducts = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
   const users = await getUserOrders({ startDate, endDate });
+  const filteredUsers = users.map((user) => ({
+    ...user,
+    orders: user.orders.map((order) => ({
+      ...order,
+      orderItems: order.orderItems.filter((item) => item.quantity >= 0 && item.price >= 0),
+    })),
+  }));
 
-  const topProducts = getTopProducts(users);
+  const topProducts = getTopProducts(filteredUsers);
 
-  const userProductQuantities = users.map((user) => {
-    const productQuantities = user.orders
-      .flatMap((order) => order.orderItems)
-      .reduce(
-        (acc, item) => {
-          if (topProducts.includes(item.name)) {
-            acc[item.name] = (acc[item.name] || 0) + item.quantity;
-          } else {
-            acc[`${"Autres"}`] = (acc[`${"Autres"}`] || 0) + item.quantity;
-          }
-          acc.total = (acc.total || 0) + item.quantity; // Calculate total quantity for each user
-          return acc;
-        },
-        {} as Record<string, number>,
-      );
+  const userProductQuantities = filteredUsers
+    .map((user) => {
+      const productQuantities = user.orders
+        .flatMap((order) => order.orderItems)
+        .reduce(
+          (acc, item) => {
+            if (topProducts.includes(item.name)) {
+              acc[item.name] = (acc[item.name] || 0) + item.quantity;
+            } else {
+              acc[`${"Autres"}`] = (acc[`${"Autres"}`] || 0) + item.quantity;
+            }
+            acc.total = (acc.total || 0) + item.quantity; // Calculate total quantity for each user
+            return acc;
+          },
+          {} as Record<string, number>,
+        );
 
-    const { total, ...rest } = productQuantities;
-    return { name: getUserName(user), productQuantities: rest, total };
-  });
+      const { total, ...rest } = productQuantities;
+      return { name: getUserName(user), productQuantities: rest, total };
+    })
+    .sort((a, b) => b.total - a.total);
 
   return (
     <UserProducts chartData={userProductQuantities} productName={topProducts} monthYear={dateMonthYear([startDate])} />
@@ -41,6 +50,7 @@ function getTopProducts(users: Awaited<ReturnType<typeof getUserOrders>>) {
       order.orderItems.flatMap((item) => ({ name: item.name, quantity: item.quantity })),
     );
   });
+
   const groupedProducts = productsWithQuantities.reduce(
     (acc, item) => {
       if (!acc[item.name]) {

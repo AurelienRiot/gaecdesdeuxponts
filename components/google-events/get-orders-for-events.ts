@@ -2,6 +2,7 @@ import prismadb from "@/lib/prismadb";
 import { addressFormatter } from "@/lib/utils";
 import { addDays } from "date-fns";
 import { getUnitLabel } from "../product/product-function";
+import { getTotalMilk } from "../product";
 
 export const getAllOrders = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
   // return dummieDate;
@@ -200,42 +201,12 @@ export function extractProductQuantities(productQuantities: ProductQuantities[])
   totaleQuantity: { name: string; quantity: number; unit: string }[];
 } {
   const aggregateProducts = getAggregateProducts(productQuantities);
-  const totaleLiters = aggregateProducts.reduce((acc, curr) => {
-    const liter = extractLiters(curr.name);
-    const coef = curr.name.includes("Casier") ? 12 : 1;
-    if (liter) {
-      return acc + liter * curr.quantity * coef;
-    }
-    return acc;
-  }, 0);
+  const totaleLiters = getTotalMilk(aggregateProducts);
 
   return {
     aggregateProducts,
     totaleQuantity: [{ name: "lait cru", quantity: Number(totaleLiters.toFixed(1)), unit: "L" }],
   };
-}
-
-function extractLiters(productName: string): number | null {
-  try {
-    if (productName.includes("vrac")) return 1;
-    const regex = /\b(\d+([.,]\d+)?\s?(L|liter|litre|liters|litres|cl))\b/i;
-    const match = productName.match(regex);
-    if (match) {
-      const numberString = match[1]
-        .replace(/[Ll]iter(s)?|cl/i, "")
-        .trim()
-        .replace(",", ".");
-      let number = Number.parseFloat(numberString);
-      if (match[3].toLowerCase() === "cl") {
-        number /= 100; // Convert centiliters to liters
-      }
-      return Number.isNaN(number) ? null : number;
-    }
-    return null;
-  } catch (error) {
-    console.error(`Error extracting liters from "${productName}":`, error);
-    return null;
-  }
 }
 
 const dummieDate = {

@@ -41,7 +41,6 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     jwt: async ({ token, user, trigger }) => {
-      console.log({ token, user, trigger });
       const newToken = { ...token };
       if (!trigger) {
         if (!newToken.tokenExpires || new Date(newToken.tokenExpires) < new Date()) {
