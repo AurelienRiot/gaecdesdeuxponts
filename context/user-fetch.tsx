@@ -1,29 +1,6 @@
 "use server";
-import { authOptions } from "@/components/auth/authOptions";
-import prismadb from "@/lib/prismadb";
-import { getServerSession } from "next-auth";
+import GetUser from "@/actions/get-user";
 
 export const fetchUser = async () => {
-  const session = await getServerSession(authOptions);
-  const user = await prismadb.user.findUnique({
-    where: {
-      id: session?.user?.id,
-    },
-    include: {
-      orders: {
-        where: { deletedAt: null },
-        orderBy: {
-          createdAt: "desc",
-        },
-        include: {
-          orderItems: true,
-          shop: true,
-        },
-      },
-
-      address: true,
-      billingAddress: true,
-    },
-  });
-  return user;
+  return await GetUser();
 };

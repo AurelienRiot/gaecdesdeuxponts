@@ -1,6 +1,7 @@
 "use client";
 import type { GetUserReturnType } from "@/actions/get-user";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { fetchUser } from "./user-fetch";
 
 type UserContextType = {
   user: GetUserReturnType | null;
@@ -11,9 +12,17 @@ export const UserContext = createContext<UserContextType | undefined>(undefined)
 
 export const UserProvider: React.FC<{
   children: React.ReactNode;
-  data: GetUserReturnType | null;
-}> = ({ children, data }) => {
-  const [user, setUser] = useState<GetUserReturnType | null>(data);
+}> = ({ children }) => {
+  const [user, setUser] = useState<GetUserReturnType | null>(null);
+
+  useEffect(() => {
+    async function getInitialUser() {
+      const user = await fetchUser();
+      setUser(user);
+    }
+    getInitialUser();
+  }, []);
+
   return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
 };
 

@@ -1,17 +1,16 @@
 import { authOptions } from "@/components/auth/authOptions";
 import { defaultNotifications } from "@/components/user";
 import prismadb from "@/lib/prismadb";
-import { addDelay } from "@/lib/utils";
-import { getServerSession, type Session } from "next-auth";
+import { getServerSession } from "next-auth";
 
 export const getSessionUser = async () => {
-  let session: Session | null;
-  session = await getServerSession(authOptions);
+  // let session: Session | null;
+  const session = await getServerSession(authOptions);
 
-  if (!session) {
-    await addDelay(500);
-    session = await getServerSession(authOptions);
-  }
+  // if (!session) {
+  //   await addDelay(500);
+  //   session = await getServerSession(authOptions);
+  // }
   if (!session || !session.user || !session.user.id) {
     return null;
   }
