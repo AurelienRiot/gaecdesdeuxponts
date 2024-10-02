@@ -35,6 +35,8 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
   const [user, setUser] = useState<CalendarOrdersType["user"]>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dayParam = searchParams.get("day");
+  const dateIndex = dayParam ? dateArray.indexOf(dayParam) : null;
+  const refresh = searchParams.get("refresh");
 
   // Extract the initial focus date from search parameters or default to today
   const initialFocusDate = useRef<string>(dayParam || getLocalIsoString(new Date()));
@@ -92,7 +94,7 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
   }, [dateArray, router]);
 
   // Debounced Scroll Handler to Optimize Performance
-  const debouncedHandleScroll = useCallback(debounce(handleScroll, 250), []);
+  const debouncedHandleScroll = useCallback(debounce(handleScroll, 300), []);
 
   // Attach Scroll Event Listener
   useEffect(() => {
@@ -109,9 +111,8 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
 
   // Adjust scroll when the searchParam "day" changes
   useEffect(() => {
-    if (dayParam && containerRef.current) {
+    if (dateIndex && containerRef.current && refresh) {
       const container = containerRef.current;
-      const dateIndex = dateArray.indexOf(dayParam);
       if (dateIndex !== -1) {
         const currentDateElement = container.children[dateIndex] as HTMLElement;
         if (currentDateElement) {
@@ -129,7 +130,7 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
         }
       }
     }
-  }, [dayParam, dateArray]);
+  }, [dateIndex, refresh]);
 
   return (
     <>
@@ -142,7 +143,12 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
             shopImageUrl: order.shopImageUrl,
             order: order.shippingDays.find((shippingDay) => getLocalIsoString(new Date(shippingDay.date)) === date),
           }));
-          const orderData = orders.filter((order) => getLocalIsoString(order.shippingDate) === date);
+          const orderData = orders
+            .filter((order) => getLocalIsoString(order.shippingDate) === date)
+            .sort((a, b) => {
+              if (a.status === "Commande livrée") return 1;
+              return -1;
+            });
 
           const productQuantities = extractProductQuantities(
             orderData

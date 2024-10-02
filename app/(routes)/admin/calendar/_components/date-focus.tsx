@@ -20,7 +20,7 @@ function TodayFocus({ className }: { className?: string }) {
       triggerClassName="text-primary border-dashed w-fit"
       onValueChange={(date) => {
         if (!date) return;
-        router.replace(`?day=${getLocalIsoString(date)}`);
+        router.replace(`?day=${getLocalIsoString(date)}&refresh=true`);
       }}
       modifiers={{
         disabled: (date) => isDateDisabled(date),

@@ -214,7 +214,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
             }}
             isSubmitting={form.formState.isSubmitting}
             onSuccess={() => {
-              router.replace(referer);
+              router.back();
               router.refresh();
             }}
           />

@@ -1,17 +1,16 @@
 "use server";
-import { checkAdmin } from "@/components/auth/checkAuth";
+import { SendBLEmail } from "@/components/email/send-bl";
+import createOrdersEvent from "@/components/google-events/create-orders-event";
+import { dateFormatter } from "@/lib/date-utils";
+import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
+import { render } from "@react-email/render";
 import { renderToBuffer } from "@react-pdf/renderer";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import ShippingOrder from "../create-shipping";
 import { createPDFData } from "../pdf-data";
-import { transporter } from "@/lib/nodemailer";
-import { render } from "@react-email/render";
-import { SendBLEmail } from "@/components/email/send-bl";
-import { dateFormatter } from "@/lib/date-utils";
-import { revalidateTag } from "next/cache";
-import createOrdersEvent from "@/components/google-events/create-orders-event";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
@@ -24,8 +23,7 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
     data,
     schema: BLSchema,
     roles: ["admin"],
-    serverAction: async (data) => {
-      const { orderId } = data;
+    serverAction: async ({ orderId }) => {
       const order = await prismadb.order.findUnique({
         where: {
           id: orderId,
@@ -64,37 +62,39 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
       }
 
       if (!order.user.notifications || order.user.notifications.sendShippingEmail) {
-        const pdfBuffer = await renderToBuffer(<ShippingOrder pdfData={createPDFData(order)} />);
+        if (process.env.NODE_ENV === "production") {
+          const pdfBuffer = await renderToBuffer(<ShippingOrder pdfData={createPDFData(order)} />);
 
-        await transporter.sendMail({
-          from: "laiteriedupontrobert@gmail.com",
-          to: order.user.email,
-          subject: "Bon de livraison - Laiterie du Pont Robert",
-          text: await render(
-            SendBLEmail({
-              date: dateFormatter(order.dateOfShipping),
-              baseUrl,
-              id: order.id,
-              email: order.user.email,
-            }),
-            { plainText: true },
-          ),
-          html: await render(
-            SendBLEmail({
-              date: dateFormatter(order.dateOfShipping),
-              baseUrl,
-              id: order.id,
-              email: order.user.email,
-            }),
-          ),
-          attachments: [
-            {
-              filename: `Bon de livraison ${order.id}.pdf`,
-              content: pdfBuffer,
-              contentType: "application/pdf",
-            },
-          ],
-        });
+          await transporter.sendMail({
+            from: "laiteriedupontrobert@gmail.com",
+            to: order.user.email,
+            subject: "Bon de livraison - Laiterie du Pont Robert",
+            text: await render(
+              SendBLEmail({
+                date: dateFormatter(order.dateOfShipping),
+                baseUrl,
+                id: order.id,
+                email: order.user.email,
+              }),
+              { plainText: true },
+            ),
+            html: await render(
+              SendBLEmail({
+                date: dateFormatter(order.dateOfShipping),
+                baseUrl,
+                id: order.id,
+                email: order.user.email,
+              }),
+            ),
+            attachments: [
+              {
+                filename: `Bon de livraison ${order.id}.pdf`,
+                content: pdfBuffer,
+                contentType: "application/pdf",
+              },
+            ],
+          });
+        }
       }
 
       await prismadb.order.update({
