@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils";
 import type { Category } from "@prisma/client";
 import { motion, useMotionValue } from "framer-motion";
-import {type Dispatch, type SetStateAction, useEffect, useRef, useState } from "react";
+import { type Dispatch, type SetStateAction, useEffect, useRef, useState } from "react";
 import { ProductCard } from "./nos-produits";
 
 const ONE_SECOND = 1000;
@@ -46,7 +46,7 @@ export const SwipeCarousel = ({
   }, []);
 
   useEffect(() => {
-    if (containerRef.current) {
+    if (containerRef.current && categories?.length) {
       setContainerWidth(containerRef.current.offsetWidth);
     }
   }, [categories?.length]);
@@ -91,10 +91,7 @@ export const SwipeCarousel = ({
   };
 
   return (
-    <div
-      ref={containerRef}
-      className={cn("relative overflow-hidden  py-8", className)}
-    >
+    <div ref={containerRef} className={cn("relative overflow-hidden  py-8", className)}>
       <motion.div
         drag="x"
         dragConstraints={{
@@ -136,11 +133,7 @@ export const SwipeCarousel = ({
         ))}
       </motion.div>
 
-      <Dots
-        imgIndex={imgIndex}
-        setImgIndex={setImgIndex}
-        categories={categories}
-      />
+      <Dots imgIndex={imgIndex} setImgIndex={setImgIndex} categories={categories} />
     </div>
   );
 };
@@ -159,14 +152,12 @@ const Dots = ({
       {categories.map((_, idx) => {
         return (
           <button
-          type="button"
+            type="button"
             aria-label={`Image ${idx + 1} sur ${categories.length}`}
             key={idx}
             onClick={() => setImgIndex(idx)}
             className={`h-3 w-3 rounded-full transition-colors ${
-              idx === imgIndex
-                ? "bg-neutral-500 dark:bg-neutral-300"
-                : "bg-neutral-300 dark:bg-neutral-500"
+              idx === imgIndex ? "bg-neutral-500 dark:bg-neutral-300" : "bg-neutral-300 dark:bg-neutral-500"
             }`}
           />
         );

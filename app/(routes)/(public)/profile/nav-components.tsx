@@ -12,8 +12,17 @@ const ProfilNavBar = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const { user } = useUserContext();
+  const userName = user ? user.name : undefined;
   const router = useRouter();
-  const [visible, setVisible] = useState(!user?.name && (pathname === "/profile" || pathname === "/profile/commandes"));
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (userName || userName === undefined) {
+      setVisible(false);
+    } else {
+      setVisible(true);
+    }
+  }, [userName]);
 
   // const routes = user?.role === "pro" ? ProfilProRoutes : ProfilRoutes;
   const routes = ProfilRoutes;
