@@ -54,47 +54,48 @@ export async function sendInvoice(invoiceId: string) {
 
   try {
     if (!fullInvoice.user.notifications || fullInvoice.user.notifications.sendInvoiceEmail) {
-      if (process.env.NODE_ENV === "production") {
-        const pdfBuffer =
+      // if (process.env.NODE_ENV === "production") {
+      const pdfBuffer =
+        type === "monthly"
+          ? await renderToBuffer(
+              <MonthlyInvoice data={createMonthlyInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
+            )
+          : await renderToBuffer(
+              <Invoice dataInvoice={createInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
+            );
+      await transporter.sendMail({
+        from: "laiteriedupontrobert@gmail.com",
+        to: fullInvoice.customer.email,
+        // to: "pub.demystify390@passmail.net",
+        cc: fullInvoice.user.ccInvoice,
+        subject:
           type === "monthly"
-            ? await renderToBuffer(
-                <MonthlyInvoice data={createMonthlyInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
-              )
-            : await renderToBuffer(
-                <Invoice dataInvoice={createInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
-              );
-        await transporter.sendMail({
-          from: "laiteriedupontrobert@gmail.com",
-          to: fullInvoice.customer.email,
-          // to: "pub.demystify390@passmail.net",
-          subject:
-            type === "monthly"
-              ? `Facture Mensuelle ${date}  - Laiterie du Pont Robert`
-              : `Facture du ${dateFormatter(fullInvoice.dateOfEdition)} - Laiterie du Pont Robert`,
-          text: await render(
-            SendMonthlyInvoiceEmail({
-              date,
-              baseUrl,
-              email: fullInvoice.customer.email,
-            }),
-            { plainText: true },
-          ),
-          html: await render(
-            SendMonthlyInvoiceEmail({
-              date,
-              baseUrl,
-              email: fullInvoice.customer.email,
-            }),
-          ),
-          attachments: [
-            {
-              filename: type === "monthly" ? `Facture mensuelle ${date}.pdf` : `Facture ${fullInvoice.id}`,
-              content: pdfBuffer,
-              contentType: "application/pdf",
-            },
-          ],
-        });
-      }
+            ? `Facture Mensuelle ${date}  - Laiterie du Pont Robert`
+            : `Facture du ${dateFormatter(fullInvoice.dateOfEdition)} - Laiterie du Pont Robert`,
+        text: await render(
+          SendMonthlyInvoiceEmail({
+            date,
+            baseUrl,
+            email: fullInvoice.customer.email,
+          }),
+          { plainText: true },
+        ),
+        html: await render(
+          SendMonthlyInvoiceEmail({
+            date,
+            baseUrl,
+            email: fullInvoice.customer.email,
+          }),
+        ),
+        attachments: [
+          {
+            filename: type === "monthly" ? `Facture mensuelle ${date}.pdf` : `Facture ${fullInvoice.id}`,
+            content: pdfBuffer,
+            contentType: "application/pdf",
+          },
+        ],
+      });
+      // }
     }
 
     await prismadb.invoice.update({

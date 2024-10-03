@@ -24,6 +24,7 @@ import updateUser from "../_actions/update-user";
 import MailForm from "./mail-form";
 import SelectRole from "./select-role";
 import { schema, type UserFormValues } from "./user-schema";
+import CcInvoiceForm from "./cc-invoice-form";
 
 interface UserFormProps {
   initialData: UserWithOrdersAndAdress;
@@ -49,6 +50,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
       image: initialData.image || "",
       company: initialData.company || "",
       phone: initialData.phone || "",
+      ccInvoice: initialData.ccInvoice,
       role: ["user", "pro", "trackOnlyUser"].includes(initialData.role) ? (initialData.role as "user") : "user",
       notes: initialData.notes || "",
       address: {
@@ -200,6 +202,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
                   )}
                 />
                 <SelectRole display={open} />
+                <CcInvoiceForm />
                 <FormField
                   control={form.control}
                   name="completed"

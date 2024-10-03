@@ -17,7 +17,6 @@ export const dynamic = "force-dynamic";
 
 const getUserPageData = unstable_cache(
   async (id: string | undefined) => {
-    console.log(id);
     const user = await prismadb.user.findUnique({
       where: {
         id,

@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form";
 import createUser from "../_actions/create-user";
 import SelectRole from "./select-role";
 import { schema, type UserFormValues } from "./user-schema";
+import CcInvoiceForm from "./cc-invoice-form";
 
 export const CreateUserForm = () => {
   const { serverAction } = useServerAction(createUser);
@@ -38,6 +39,7 @@ export const CreateUserForm = () => {
       completed: true,
       phone: "",
       role: "pro",
+      ccInvoice: [],
       address: {
         label: "",
         city: "",
@@ -55,6 +57,7 @@ export const CreateUserForm = () => {
 
   const onSubmit = async (data: UserFormValues) => {
     data.name = data.name.trim();
+    // console.log(data);
     function onSuccess() {
       router.back();
       router.refresh();
@@ -186,6 +189,7 @@ export const CreateUserForm = () => {
                   </FormItem>
                 )}
               />
+              <CcInvoiceForm />
               <AddressForm />
               <BillingAddressForm />
             </div>

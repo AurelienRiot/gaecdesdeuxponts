@@ -50,7 +50,8 @@ model User {
   billingAddress   BillingAddress? 
   messages         Contact[]
   comments         Comment[]
-  notifications     Notification? 
+  notifications    Notification? 
+  ccInvoice        String[]
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt 
 }
