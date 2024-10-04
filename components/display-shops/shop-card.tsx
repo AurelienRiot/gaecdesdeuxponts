@@ -82,7 +82,7 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
               </Link>
             )}
             {!!shop.website && (
-              <Link href={shop.website} target="_blank">
+              <Link href={shop.website} target="_blank" className="overflow-hidden text-ellipsis whitespace-nowrap">
                 {shop.website}
               </Link>
             )}

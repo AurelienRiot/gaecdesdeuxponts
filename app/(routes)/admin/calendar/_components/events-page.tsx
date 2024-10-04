@@ -1,24 +1,24 @@
 "use client";
 import { extractProductQuantities } from "@/components/google-events/get-orders-for-events";
 import { getUnitLabel } from "@/components/product/product-function";
-import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
 import { debounce } from "@/lib/debounce";
+import { formatFrenchPhoneNumber } from "@/lib/utils";
+import { addDays } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { getGroupedAMAPOrders } from "../_functions/get-amap-orders";
 import type { CalendarOrdersType } from "../_functions/get-orders";
+import TodayFocus from "./date-focus";
 import DisplayAmap from "./display-amap";
 import DisplayOrder from "./display-order";
 import SummarizeProducts from "./summarize-products";
-import { formatFrenchPhoneNumber } from "@/lib/utils";
-import { addDays } from "date-fns";
-import TodayFocus from "./date-focus";
 import UpdatePage from "./update-page";
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 
 type EventsPageProps = {
   orders: CalendarOrdersType[];
@@ -292,7 +292,7 @@ const UserInfo = ({ user }: { user: CalendarOrdersType["user"] }) => (
         <div className="mb-4">
           <h3 className="text-sm font-medium text-gray-500">Adresse</h3>
           <Button asChild variant={"link"} className="mt-1 text-sm p-0 text-blue-700">
-            <Link href={`https://www.google.com/maps/search/?api=1&query=${user.address}`} target="_blank">
+            <Link href={`https://maps.google.com/?q=${user.address} ${user.company} `} target="_blank">
               {user.address}
             </Link>
           </Button>
@@ -302,7 +302,7 @@ const UserInfo = ({ user }: { user: CalendarOrdersType["user"] }) => (
         <div className="mb-4">
           <h3 className="text-sm font-medium text-gray-500">Notes</h3>
 
-          <AutosizeTextarea className="border-0 focus-visible:ring-0" readOnly value={user.notes} />
+          <AutosizeTextarea className="border-0 focus-visible:ring-0 select-text" readOnly value={user.notes} />
         </div>
       ) : null}
     </div>

@@ -13,12 +13,15 @@ function SummarizeProducts({
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <Card className={cn("w-full max-w-sm ", className)}>
+    <Card className={cn("w-full max-w-sm rounded-t-md", className)}>
       <CardHeader
-        className="flex bg-green-200 dark:bg-green-800 items-center justify-between p-2 py-0 cursor-pointer flex-row"
+        data-state={isExpanded}
+        className={
+          "flex     data-[state=true]:rounded-b-none  rounded-md  bg-green-200 dark:bg-green-800 items-center justify-between p-2 py-0 cursor-pointer flex-row transition-all delay-300 data-[state=true]:delay-0"
+        }
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <h2 className=" font-bold  p-2 rounded-md">Résumé des produits</h2>
+        <h2 className=" font-bold  p-2 ">Résumé des produits</h2>
         <ChevronDown
           data-state={isExpanded}
           className="h-4 w-4 data-[state=true]:rotate-180 transition-transform duration-500"

@@ -14,26 +14,20 @@ const NameInput = ({ setSortedShops, shops, ...props }: NameInputProps) => {
   const onChange = (value: ChangeEvent<HTMLInputElement>) => {
     setSearch(value.target.value);
     const sortedShops = [...shops].sort((a, b) => {
-      const searchLower = search.toLowerCase();
-      const indexA = a.name.toLowerCase().indexOf(searchLower);
-      const indexB = b.name.toLowerCase().indexOf(searchLower);
+      const normalizedSearchTerm = search.toLowerCase();
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+
+      const matchA = nameA.includes(normalizedSearchTerm) ? 1 : 0;
+      const matchB = nameB.includes(normalizedSearchTerm) ? 1 : 0;
 
       // If one name contains the search term and the other does not, the one with the search term goes first
-      if (indexA !== -1 && indexB === -1) {
-        return -1; // A has the search term and B does not, A goes first
-      }
-      if (indexB !== -1 && indexA === -1) {
-        return 1; // B has the search term and A does not, B goes first
+      if (matchA !== matchB) {
+        return matchB - matchA;
       }
 
-      // If both names contain the search term, the one with the term appearing earlier goes first
-      // If neither name contains the search term, or the search term appears at the same position, sort alphabetically
-      if (indexA !== indexB) {
-        return indexA - indexB;
-      }
-
-      // Secondary sorting condition: alphabetically
-      return a.name.localeCompare(b.name);
+      // If both contain the search term or neither does, sort alphabetically
+      return nameA.localeCompare(nameB);
     });
 
     setSortedShops(sortedShops);
