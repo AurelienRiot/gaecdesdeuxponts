@@ -6,7 +6,7 @@ import useServerAction from "@/hooks/use-server-action";
 import { cn } from "@/lib/utils";
 import { Clipboard, ClipboardCheck, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
 import changeEmail from "../_actions/change-email";
@@ -23,9 +23,15 @@ function MailForm({ email, id }: { email: string | null; id: string }) {
       navigator.clipboard.writeText(email);
       toast.success("Email copié", { position: "top-center" });
       setCopied(true);
-      setTimeout(() => setCopied(false), 1000 * 60);
     }
   };
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    if (copied) {
+      timeoutId = setTimeout(() => setCopied(false), 1000 * 60);
+    }
+    return () => clearTimeout(timeoutId); // Cleanup function
+  }, [copied]);
 
   return (
     <div className="py-4 space-y-4">

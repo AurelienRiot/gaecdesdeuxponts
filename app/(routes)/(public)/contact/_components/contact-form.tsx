@@ -64,10 +64,11 @@ export const ContactForm = (): React.ReactNode => {
 
   useEffect(() => {
     if (session.status === "authenticated") {
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         form.setValue("name", session.data.user?.name || "");
         form.setValue("email", session.data.user?.email || "");
       }, 0);
+      return () => clearTimeout(timeoutId);
     }
   }, [session, form]);
   return (

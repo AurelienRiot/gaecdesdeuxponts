@@ -45,11 +45,13 @@ function SelectSheetWithTabs<V extends { key: string }, T extends string>({
   );
 
   React.useEffect(() => {
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       if (contentRef.current && currentTab) {
         setContentHeight(`${contentRef.current.scrollHeight + 49}px`);
       }
     }, 0);
+
+    return () => clearTimeout(timeoutId);
   }, [currentTab]);
 
   return (

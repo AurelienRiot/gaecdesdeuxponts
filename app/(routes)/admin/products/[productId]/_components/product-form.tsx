@@ -83,7 +83,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
   });
 
   useEffect(() => {
-    setTimeout(() => form.setFocus("name"), 0);
+    const timeoutId = setTimeout(() => form.setFocus("name"), 0);
+    return () => clearTimeout(timeoutId);
   }, [form]);
 
   const onSubmit = async (data: ProductFormValues) => {
