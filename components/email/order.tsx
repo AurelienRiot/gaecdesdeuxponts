@@ -1,9 +1,9 @@
 import { Section, Text } from "@react-email/components";
 import MainBody, { ButtonRedirect } from "./common";
 
-const OrderEmail = ({ date, baseUrl, price, id }: OrderEmailProps) => (
+const OrderEmail = ({ date, baseUrl, price, id, email }: OrderEmailProps) => (
   <MainBody baseUrl={baseUrl} previewText={`Votre commande d'un montant de ${price}`}>
-    <OrderBody price={price} baseUrl={baseUrl} date={date} id={id} />
+    <OrderBody price={price} baseUrl={baseUrl} date={date} id={id} email={email} />
   </MainBody>
 );
 
@@ -16,13 +16,14 @@ OrderEmail.PreviewProps = {
 } as OrderEmailProps;
 
 interface OrderEmailProps {
+  email: string;
   baseUrl: string;
   date: string;
   price: string;
   id: string;
 }
 
-const OrderBody = ({ date, price, baseUrl, id }: OrderEmailProps) => (
+const OrderBody = ({ date, price, baseUrl, id, email }: OrderEmailProps) => (
   <>
     <Text className="text-left text-base">Bonjour,</Text>
 
@@ -39,7 +40,10 @@ const OrderBody = ({ date, price, baseUrl, id }: OrderEmailProps) => (
         Retrouver les informations de votre commande dans votre espace client
       </Text>
 
-      <ButtonRedirect href={`${baseUrl}/profile/commandes`} text="Voir ma commande" />
+      <ButtonRedirect
+        href={`${baseUrl}/profile/commandes?emaillogin=${encodeURIComponent(email)}`}
+        text="Voir ma commande"
+      />
     </Section>
 
     <Text className="text-center text-base">Merci pour votre confiance.</Text>

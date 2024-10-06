@@ -32,7 +32,7 @@ async function createBugReport(data: BugReportValues) {
             html: await render(
               ContactSend({
                 baseUrl,
-                url: `${baseUrl}/admin/contacts`,
+                url: `${baseUrl}/admin/contacts?emaillogin=${encodeURIComponent("laiteriedupontrobert@gmail.com")}`,
                 name: contact.name,
                 message: contact.message,
               }),

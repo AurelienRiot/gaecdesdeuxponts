@@ -73,6 +73,7 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
             text: await render(
               OrderEmail({
                 date: dateFormatter(order.createdAt),
+                email: user.email || "",
                 baseUrl,
                 id: order.id,
                 price: currencyFormatter.format(order.totalPrice),
@@ -82,6 +83,7 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
             html: await render(
               OrderEmail({
                 date: dateFormatter(order.createdAt),
+                email: user.email || "",
                 baseUrl,
                 id: order.id,
                 price: currencyFormatter.format(order.totalPrice),

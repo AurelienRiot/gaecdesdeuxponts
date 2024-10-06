@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const LoginPage = async (context: {
-  searchParams: { callbackUrl: string | undefined; error: string | undefined };
+  searchParams: { callbackUrl: string | undefined; error: string | undefined; emaillogin: string | undefined };
 }) => {
   const callbackUrl = decodeURI(context.searchParams.callbackUrl ?? `${baseUrl}/profile`);
   const user = await getSessionUser();
@@ -47,7 +47,7 @@ const LoginPage = async (context: {
         >
           ou
         </div>
-        <EmailButton callbackUrl={callbackUrl} />
+        <EmailButton callbackUrl={callbackUrl} emaillogin={context.searchParams.emaillogin} />
       </div>
     </div>
   );

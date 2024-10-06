@@ -1,4 +1,3 @@
-import type { Role } from "@prisma/client";
 import { getToken, type JWT } from "next-auth/jwt";
 import { cookies } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
@@ -72,5 +71,12 @@ export const config = {
   matcher: ["/admin/:path*", "/profile/:path*"],
 };
 
-const redirectToLogin = (req: NextRequest) =>
-  NextResponse.redirect(new URL(`/login?callbackUrl=${encodeURIComponent(req.url)}`, req.url));
+const redirectToLogin = (req: NextRequest) => {
+  const emaillogin = req.nextUrl.searchParams.get("emaillogin");
+  return NextResponse.redirect(
+    new URL(
+      `/login?callbackUrl=${encodeURIComponent(req.url)}${emaillogin ? `&emaillogin=${emaillogin}` : ""}`,
+      req.url,
+    ),
+  );
+};

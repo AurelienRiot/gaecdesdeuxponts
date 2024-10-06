@@ -28,7 +28,10 @@ const OrderSendBody = ({ date, price, baseUrl, id, name }: OrderEmailProps) => (
     <Text className="text-left text-base">{`Commande numéro ${id} pour le ${date} d'un montant de ${price} par ${name}.
 `}</Text>
 
-    <ButtonRedirect href={`${baseUrl}/admin/orders/${id}`} text="Voir la commande" />
+    <ButtonRedirect
+      href={`${baseUrl}/admin/orders/${id}?emaillogin=${encodeURIComponent("laiteriedupontrobert@gmail.com")}`}
+      text="Voir la commande"
+    />
   </Section>
 );
 

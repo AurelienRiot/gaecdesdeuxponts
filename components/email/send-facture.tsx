@@ -41,7 +41,10 @@ const SendFactureBody = ({ date, price, baseUrl, id, email }: FactureEmailProps)
         email : {email}
       </Text>
 
-      <ButtonRedirect href={`${baseUrl}/profile/factures`} text="Voir ma commande" />
+      <ButtonRedirect
+        href={`${baseUrl}/profile/factures?emaillogin=${encodeURIComponent(email)}`}
+        text="Voir ma commande"
+      />
     </Section>
 
     <Text className="text-center text-base">Merci pour votre confiance.</Text>

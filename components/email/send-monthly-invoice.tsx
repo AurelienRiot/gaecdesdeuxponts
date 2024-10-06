@@ -37,7 +37,10 @@ const SendMonthlyInvoiceBody = ({ date, baseUrl, email }: MonthlyInvoiceProps) =
         : {email}
       </Text>
 
-      <ButtonRedirect href={`${baseUrl}/profile/factures`} text="Voir ma commande" />
+      <ButtonRedirect
+        href={`${baseUrl}/profile/factures?emaillogin=${encodeURIComponent(email)}`}
+        text="Voir ma commande"
+      />
     </Section>
 
     <Text className="text-center text-base">Merci pour votre confiance.</Text>

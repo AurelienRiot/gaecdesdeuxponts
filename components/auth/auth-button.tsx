@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { LogIn, LogOut } from "lucide-react";
 import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -86,34 +86,44 @@ const formSchema = z.object({
 
 type EmailFormValues = z.infer<typeof formSchema>;
 
-export const EmailButton = ({ callbackUrl }: { callbackUrl: string }) => {
+export const EmailButton = ({ callbackUrl, emaillogin }: { callbackUrl: string; emaillogin?: string }) => {
   const [success, setSuccess] = useState(false);
   const form = useForm<EmailFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
+      email: emaillogin,
     },
   });
 
-  const onSubmit = async (data: EmailFormValues) => {
-    await signIn("email", {
-      email: data.email.trim().toLowerCase(),
-      redirect: false,
-      callbackUrl,
-    })
-      .then((res) => {
-        if (res?.error) {
-          toast.error("Erreur veuillez réessayer", { position: "top-center" });
-        } else {
-          toast.success("Vérifiez votre boite mail", { position: "top-center" });
-          setSuccess(true);
-        }
+  const onSubmit = useCallback(
+    async (data: EmailFormValues) => {
+      await signIn("email", {
+        email: data.email.trim().toLowerCase(),
+        redirect: false,
+        callbackUrl,
       })
-      .catch(() => {
-        toast.error("Erreur veuillez réessayer", { position: "top-center" });
-      });
-  };
+        .then((res) => {
+          if (res?.error) {
+            toast.error("Erreur veuillez réessayer", { position: "top-center" });
+          } else {
+            toast.success("Vérifiez votre boite mail", { position: "top-center" });
+            setSuccess(true);
+          }
+        })
+        .catch(() => {
+          toast.error("Erreur veuillez réessayer", { position: "top-center" });
+        });
+    },
+    [callbackUrl],
+  );
   const email = form.watch("email");
+
+  // useEffect(() => {
+  //   if (emaillogin) {
+  //     form.handleSubmit(onSubmit)();
+  //   }
+  // }, []);
+
   return (
     <>
       {!success && (

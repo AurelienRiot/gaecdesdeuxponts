@@ -4,13 +4,14 @@ import { dateFormatter, dateMonthYear } from "@/lib/date-utils";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import type { ReturnTypeServerAction } from "@/lib/server-action";
-import { addDelay, addressFormatter, formatFrenchPhoneNumber } from "@/lib/utils";
+import { addDelay, addressFormatter, currencyFormatter, formatFrenchPhoneNumber } from "@/lib/utils";
 import { render } from "@react-email/render";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { revalidateTag } from "next/cache";
 import MonthlyInvoice from "../create-monthly-invoice";
 import { createInvoicePDFData, createMonthlyInvoicePDFData } from "../pdf-data";
 import Invoice from "../create-invoice";
+import SendFactureEmail from "@/components/email/send-facture";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 export async function sendInvoice(invoiceId: string) {
@@ -63,6 +64,46 @@ export async function sendInvoice(invoiceId: string) {
           : await renderToBuffer(
               <Invoice dataInvoice={createInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
             );
+      const text =
+        type === "monthly"
+          ? await render(
+              SendMonthlyInvoiceEmail({
+                date,
+                baseUrl,
+                email: fullInvoice.customer.email,
+              }),
+              { plainText: true },
+            )
+          : await render(
+              SendFactureEmail({
+                date: dateFormatter(fullInvoice.dateOfEdition),
+                baseUrl,
+                id: fullInvoice.id,
+                price: currencyFormatter.format(fullInvoice.totalPrice),
+                email: fullInvoice.customer.email,
+              }),
+              { plainText: true },
+            );
+
+      const html =
+        type === "monthly"
+          ? await render(
+              SendMonthlyInvoiceEmail({
+                date,
+                baseUrl,
+                email: fullInvoice.customer.email,
+              }),
+            )
+          : await render(
+              SendFactureEmail({
+                date: dateFormatter(fullInvoice.dateOfEdition),
+                baseUrl,
+                id: fullInvoice.id,
+                price: currencyFormatter.format(fullInvoice.totalPrice),
+                email: fullInvoice.customer.email,
+              }),
+            );
+
       await transporter.sendMail({
         from: "laiteriedupontrobert@gmail.com",
         to: fullInvoice.customer.email,
@@ -72,21 +113,8 @@ export async function sendInvoice(invoiceId: string) {
           type === "monthly"
             ? `Facture Mensuelle ${date}  - Laiterie du Pont Robert`
             : `Facture du ${dateFormatter(fullInvoice.dateOfEdition)} - Laiterie du Pont Robert`,
-        text: await render(
-          SendMonthlyInvoiceEmail({
-            date,
-            baseUrl,
-            email: fullInvoice.customer.email,
-          }),
-          { plainText: true },
-        ),
-        html: await render(
-          SendMonthlyInvoiceEmail({
-            date,
-            baseUrl,
-            email: fullInvoice.customer.email,
-          }),
-        ),
+        text,
+        html,
         attachments: [
           {
             filename: type === "monthly" ? `Facture mensuelle ${date}.pdf` : `Facture ${fullInvoice.id}`,

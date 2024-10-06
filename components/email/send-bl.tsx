@@ -39,7 +39,10 @@ const SendBLBody = ({ date, baseUrl, id, email }: BLEmailProps) => (
         email : {email}
       </Text>
 
-      <ButtonRedirect href={`${baseUrl}/profile/commandes`} text="Voir ma commande" />
+      <ButtonRedirect
+        href={`${baseUrl}/profile/commandes?emaillogin=${encodeURIComponent(email)}`}
+        text="Voir ma commande"
+      />
     </Section>
 
     <Text className="text-center text-base">Merci pour votre confiance.</Text>
