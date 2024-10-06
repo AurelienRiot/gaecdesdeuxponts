@@ -1,16 +1,17 @@
 "use client";
 import useServerAction from "@/hooks/use-server-action";
 import { addDelay, checkIfUrlAccessible } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, Reorder } from "framer-motion";
 import { Loader2, Plus, UploadCloud, X } from "lucide-react";
 import Image from "next/image";
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef, useState } from "react";
 import { toast } from "sonner";
 import { AnimateHeight } from "../animations/animate-size";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
-import { deleteObject, getSignature, listFiles, type Ressources } from "./server";
+import { deleteObject, getSignature, listFiles } from "./server";
 
 export const getFileKey = (url: string): string => {
   const parts = url.split("/");
@@ -30,24 +31,35 @@ type UploadImageProps = {
   multipleImages?: boolean;
 };
 
+async function fetchAllFiles() {
+  await addDelay(2000);
+  return await listFiles().then((res) => {
+    if (res.success && res.data) {
+      return res.data.map((item) => makeURL(item.public_id));
+    }
+    throw new Error(res.message || "Impossible de charger les fichiers");
+  });
+}
+
 const UploadImage = forwardRef<HTMLDivElement, UploadImageProps>(
   ({ selectedFiles, setSelectedFiles, multipleImages = false }, ref) => {
-    const [allFiles, setAllFiles] = useState<string[]>([]);
+    // const [allFiles, setAllFiles] = useState<string[]>([]);
+    const { data: allFiles, isLoading } = useQuery({ queryFn: () => fetchAllFiles(), queryKey: ["listUploadedFiles"] });
     const { serverAction: listFilesAction } = useServerAction(listFiles);
 
-    useEffect(() => {
-      const fetchFiles = async () => {
-        function onSuccess(data?: Ressources[]) {
-          if (!data) {
-            toast.error("Impossible de charger le fichier. Veuillez reessayer plus tard.");
-            return;
-          }
-          setAllFiles(data.map((item) => makeURL(item.public_id)));
-        }
-        await listFilesAction({ data: {}, onSuccess });
-      };
-      fetchFiles();
-    }, [listFilesAction]);
+    // useEffect(() => {
+    //   const fetchFiles = async () => {
+    //     function onSuccess(data?: Ressources[]) {
+    //       if (!data) {
+    //         toast.error("Impossible de charger le fichier. Veuillez reessayer plus tard.");
+    //         return;
+    //       }
+    //       // setAllFiles(data.map((item) => makeURL(item.public_id)));
+    //     }
+    //     await listFilesAction({ data: {}, onSuccess });
+    //   };
+    //   fetchFiles();
+    // }, [listFilesAction]);
 
     return (
       <div ref={ref} className="justify-left flex flex-col gap-4 p-4">
@@ -55,7 +67,7 @@ const UploadImage = forwardRef<HTMLDivElement, UploadImageProps>(
           selectedFiles={selectedFiles}
           setSelectedFiles={setSelectedFiles}
           multipleImages={multipleImages}
-          setAllFiles={setAllFiles}
+          // setAllFiles={setAllFiles}
         />
         <DisplaySelectedImages
           selectedFiles={selectedFiles}
@@ -65,7 +77,7 @@ const UploadImage = forwardRef<HTMLDivElement, UploadImageProps>(
 
         <DisplayImages
           allFiles={allFiles}
-          setFiles={setAllFiles}
+          // setFiles={setAllFiles}
           selectedFiles={selectedFiles}
           setSelectedFiles={setSelectedFiles}
           multipleImages={multipleImages}
@@ -83,10 +95,10 @@ type InputImageProps = {
   selectedFiles: string[];
   setSelectedFiles: (files: string[]) => void;
   multipleImages: boolean;
-  setAllFiles: React.Dispatch<React.SetStateAction<string[]>>;
+  // setAllFiles: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
-function InputImage({ selectedFiles, setSelectedFiles, multipleImages, setAllFiles }: InputImageProps) {
+function InputImage({ selectedFiles, setSelectedFiles, multipleImages }: InputImageProps) {
   const { serverAction: getSignatureAction } = useServerAction(getSignature);
   const { serverAction: listFilesAction } = useServerAction(listFiles);
   const [loading, setLoading] = useState(false);
@@ -137,7 +149,7 @@ function InputImage({ selectedFiles, setSelectedFiles, multipleImages, setAllFil
       setLoading(false);
       return;
     }
-    setAllFiles(allFiles.map((item) => makeURL(item.public_id)));
+    // setAllFiles(allFiles.map((item) => makeURL(item.public_id)));
     if (multipleImages) {
       setSelectedFiles([...selectedFiles, ...validUrls.map((item) => makeURL(item.publicId))]);
     } else {
@@ -303,14 +315,14 @@ const DisplaySelectedImages = ({ selectedFiles, setSelectedFiles, multipleImages
 };
 
 type DisplayImagesProps = {
-  allFiles: string[];
-  setFiles: React.Dispatch<React.SetStateAction<string[]>>;
+  allFiles: string[] | undefined;
+  // setFiles: React.Dispatch<React.SetStateAction<string[]>>;
   selectedFiles: string[];
   setSelectedFiles: (files: string[]) => void;
   multipleImages: boolean;
 };
 
-const DisplayImages = ({ allFiles, setFiles, selectedFiles, setSelectedFiles, multipleImages }: DisplayImagesProps) => {
+const DisplayImages = ({ allFiles, selectedFiles, setSelectedFiles, multipleImages }: DisplayImagesProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const imagesPerPage = 10;
   const [displayFiles, setDisplayFiles] = useState(false);
@@ -322,7 +334,10 @@ const DisplayImages = ({ allFiles, setFiles, selectedFiles, setSelectedFiles, mu
       return;
     }
     function onSuccess() {
-      setFiles(allFiles.filter((fileUrl) => fileUrl !== url));
+      if (!allFiles) {
+        return;
+      }
+      // setFiles(allFiles.filter((fileUrl) => fileUrl !== url));
     }
     await serverAction({
       data: { publicID: getFileKey(url) },
@@ -341,7 +356,7 @@ const DisplayImages = ({ allFiles, setFiles, selectedFiles, setSelectedFiles, mu
       />
       <AnimateHeight display={displayFiles} className="space-y-4 p-1">
         <div className="flex max-w-[1000px] flex-row flex-wrap gap-4 whitespace-nowrap p-2">
-          {allFiles.length > 0 ? (
+          {!!allFiles && allFiles.length > 0 ? (
             allFiles
               .filter((fileUrl) => !selectedFiles.includes(fileUrl))
               .slice((currentPage - 1) * imagesPerPage, currentPage * imagesPerPage)
@@ -394,30 +409,32 @@ const DisplayImages = ({ allFiles, setFiles, selectedFiles, setSelectedFiles, mu
             <Loader2 className="m-4 h-8 w-8 animate-spin" />
           )}
         </div>
-        <div className="flex items-center justify-start space-x-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={(e) => {
-              setCurrentPage((prev) => prev - 1);
-            }}
-            disabled={currentPage === 1}
-          >
-            Précedent
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={(e) => {
-              setCurrentPage((prev) => prev + 1);
-            }}
-            disabled={currentPage * imagesPerPage >= allFiles.length - selectedFiles.length}
-          >
-            Suivant
-          </Button>
-        </div>
+        {!!allFiles && (
+          <div className="flex items-center justify-start space-x-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={(e) => {
+                setCurrentPage((prev) => prev - 1);
+              }}
+              disabled={currentPage === 1}
+            >
+              Précedent
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={(e) => {
+                setCurrentPage((prev) => prev + 1);
+              }}
+              disabled={currentPage * imagesPerPage >= allFiles.length - selectedFiles.length}
+            >
+              Suivant
+            </Button>
+          </div>
+        )}
       </AnimateHeight>
     </div>
   );

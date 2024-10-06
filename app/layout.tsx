@@ -13,6 +13,7 @@ import {
   EB_Garamond as FontSerif,
 } from "next/font/google";
 import "./globals.css";
+import ReactQueryProvider from "@/providers/react-query-provider";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.laiteriedupontrobert.fr"),
@@ -78,15 +79,17 @@ export default function RootLayout({
       >
         <AuthProviders>
           <CSPostHogProvider>
-            <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-              <TooltipProvider delayDuration={100} skipDelayDuration={0}>
-                <ConfirmDialogProvider>
-                  <Toaster />
-                  <DebugScreens />
-                  {children}
-                </ConfirmDialogProvider>
-              </TooltipProvider>
-            </ThemeProvider>
+            <ReactQueryProvider>
+              <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+                <TooltipProvider delayDuration={100} skipDelayDuration={0}>
+                  <ConfirmDialogProvider>
+                    <Toaster />
+                    <DebugScreens />
+                    {children}
+                  </ConfirmDialogProvider>
+                </TooltipProvider>
+              </ThemeProvider>
+            </ReactQueryProvider>
           </CSPostHogProvider>
         </AuthProviders>
       </body>

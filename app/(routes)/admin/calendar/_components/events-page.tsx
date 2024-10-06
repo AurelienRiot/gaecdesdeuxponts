@@ -43,24 +43,28 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
 
   // Handle Initial Scroll to Center the Focus Date
   useLayoutEffect(() => {
-    if (containerRef.current && currentDateRef.current && !initialScrollRef.current) {
-      const container = containerRef.current;
-      const currentDateElement = currentDateRef.current;
+    function scrollToCurrentDate() {
+      if (containerRef.current && currentDateRef.current && !initialScrollRef.current) {
+        const container = containerRef.current;
+        const currentDateElement = currentDateRef.current;
 
-      const containerWidth = container.clientWidth;
-      const elementOffsetLeft = currentDateElement.offsetLeft;
-      const elementWidth = currentDateElement.clientWidth;
+        const containerWidth = container.clientWidth;
+        const elementOffsetLeft = currentDateElement.offsetLeft;
+        const elementWidth = currentDateElement.clientWidth;
 
-      // Calculate the position to scroll so that the current date is centered
-      const scrollPosition = elementOffsetLeft - containerWidth / 2 + elementWidth / 2;
+        // Calculate the position to scroll so that the current date is centered
+        const scrollPosition = elementOffsetLeft - containerWidth / 2 + elementWidth / 2;
 
-      container.scrollTo({
-        left: scrollPosition,
-        behavior: "smooth", // Optional: adds smooth scrolling
-      });
+        container.scrollTo({
+          left: scrollPosition,
+          behavior: "smooth", // Optional: adds smooth scrolling
+        });
 
-      initialScrollRef.current = true; // Mark that initial scroll has been performed
+        initialScrollRef.current = true; // Mark that initial scroll has been performed
+      }
     }
+
+    scrollToCurrentDate();
   }, []); // Empty dependency array ensures this runs only once on mount
 
   // Scroll Event Handler to Update 'day' Search Parameter
@@ -111,25 +115,29 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
 
   // Adjust scroll when the searchParam "day" changes
   useEffect(() => {
-    if (dateIndex && containerRef.current && refresh) {
-      const container = containerRef.current;
-      if (dateIndex !== -1) {
-        const currentDateElement = container.children[dateIndex] as HTMLElement;
-        if (currentDateElement) {
-          const containerWidth = container.clientWidth;
-          const elementOffsetLeft = currentDateElement.offsetLeft;
-          const elementWidth = currentDateElement.clientWidth;
+    function scrollToCurrentDate() {
+      if (dateIndex && containerRef.current && refresh) {
+        const container = containerRef.current;
+        if (dateIndex !== -1) {
+          const currentDateElement = container.children[dateIndex] as HTMLElement;
+          if (currentDateElement) {
+            const containerWidth = container.clientWidth;
+            const elementOffsetLeft = currentDateElement.offsetLeft;
+            const elementWidth = currentDateElement.clientWidth;
 
-          // Calculate the position to scroll so that the current date is centered
-          const scrollPosition = elementOffsetLeft - containerWidth / 2 + elementWidth / 2;
+            // Calculate the position to scroll so that the current date is centered
+            const scrollPosition = elementOffsetLeft - containerWidth / 2 + elementWidth / 2;
 
-          container.scrollTo({
-            left: scrollPosition,
-            behavior: "smooth", // Optional: adds smooth scrolling
-          });
+            container.scrollTo({
+              left: scrollPosition,
+              behavior: "smooth", // Optional: adds smooth scrolling
+            });
+          }
         }
       }
     }
+
+    scrollToCurrentDate();
   }, [dateIndex, refresh]);
 
   return (

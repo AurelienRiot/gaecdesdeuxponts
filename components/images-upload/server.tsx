@@ -60,36 +60,37 @@ async function getSignature(): Promise<ReturnTypeServerAction<SignatureType, und
 }
 
 async function listFiles(): Promise<ReturnTypeServerAction<Ressources[], undefined>> {
-  const isAuth = await checkReadOnlyAdmin();
-  if (!isAuth) {
-    return {
-      success: false,
-      message: "Vous devez être authentifier",
-    };
-  }
-  try {
-    const files = await cloudinary.v2.api.resources({
-      resource_type: "image",
-      type: "upload",
-      prefix: "farm",
-      max_results: 100, // Adjust based on how many results you'd like to fetch (max is 500)
-    });
+  return await safeServerAction({
+    schema: z.void(),
+    data: undefined,
+    roles: ["admin", "readOnlyAdmin"],
+    serverAction: async () => {
+      try {
+        const files = await cloudinary.v2.api.resources({
+          resource_type: "image",
+          type: "upload",
+          prefix: "farm",
+          max_results: 100, // Adjust based on how many results you'd like to fetch (max is 500)
+        });
 
-    const images = files.resources?.sort(
-      (a: Ressources, b: Ressources) => new Date(b.created_at ?? 0).getTime() - new Date(a.created_at ?? 0).getTime(),
-    ) as Ressources[];
-    return {
-      success: true,
-      message: "",
-      data: images,
-    };
-  } catch (error) {
-    console.error(`An error occurred: ${error}`);
-    return {
-      success: false,
-      message: "Erreur dans le chargement des fichiers, veuillez rafraichir la page",
-    };
-  }
+        const images = files.resources?.sort(
+          (a: Ressources, b: Ressources) =>
+            new Date(b.created_at ?? 0).getTime() - new Date(a.created_at ?? 0).getTime(),
+        ) as Ressources[];
+        return {
+          success: true,
+          message: "",
+          data: images,
+        };
+      } catch (error) {
+        console.error(`An error occurred: ${error}`);
+        return {
+          success: false,
+          message: "Erreur dans le chargement des fichiers, veuillez rafraichir la page",
+        };
+      }
+    },
+  });
 }
 
 const deleteObjectSchema = z.object({
