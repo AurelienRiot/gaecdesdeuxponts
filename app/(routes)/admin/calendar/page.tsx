@@ -7,8 +7,8 @@ import EventPage from "./_components/events-page";
 import { getGroupedAMAPOrders } from "./_functions/get-amap-orders";
 import { nanoid } from "nanoid";
 
-export const revalidate = 86400;
-// export const dynamic = "force-static";
+// export const revalidate = 86400;
+export const dynamic = "force-static";
 
 async function CalendarPage() {
   // const [orders, amapOrders] = await Promise.all([getOrdersByDate({ from, to }), getGroupedAMAPOrders()]);
