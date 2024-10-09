@@ -2,7 +2,7 @@
 import createOrdersEvent from "@/components/google-events/create-orders-event";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const deleteSchema = z.object({
@@ -35,6 +35,7 @@ async function deleteAMAP(data: z.infer<typeof deleteSchema>) {
         }
       }
       revalidateTag("amap-orders");
+      revalidatePath("/admin/calendar");
 
       return {
         success: true,

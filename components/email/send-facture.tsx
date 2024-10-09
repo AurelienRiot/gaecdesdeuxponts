@@ -27,7 +27,7 @@ const SendFactureBody = ({ date, price, baseUrl, id, email }: FactureEmailProps)
   <>
     <Text className="text-left text-base">Bonjour,</Text>
 
-    <Text className="text-left text-base">{`Nous vous remercions d'avoir passé commande chez nous. Veuillez trouver ci-joint la facture de votre commande numéro ${id} du ${date} pour un montant de ${price}.
+    <Text className="text-left text-base">{`Nous vous remercions d'avoir passé commande chez nous. Veuillez trouver ci-joint la facture de votre commande du ${date} pour un montant de ${price}.
 `}</Text>
 
     <Text className="text-left text-base">

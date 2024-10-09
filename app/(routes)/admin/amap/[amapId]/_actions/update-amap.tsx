@@ -3,7 +3,7 @@
 import createOrdersEvent from "@/components/google-events/create-orders-event";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { schema, type AMAPFormValues } from "../_components/amap-schema";
 
 async function updateAMAP(data: AMAPFormValues) {
@@ -74,6 +74,7 @@ async function updateAMAP(data: AMAPFormValues) {
         }
       }
       revalidateTag("amap-orders");
+      revalidatePath("/admin/calendar");
       return {
         success: true,
         message: "Commande AMAP mise à jour",

@@ -1,12 +1,7 @@
 "use client";
 
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
-import { AlertModal } from "@/components/ui/alert-modal-form";
-import useServerAction from "@/hooks/use-server-action";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import deleteInvoice from "../_actions/delete-invoice";
-import type { InvoiceColumn } from "./columns";
+import { sendInvoiceAction } from "@/components/pdf/server-actions/create-send-invoice-action";
+import { Button } from "@/components/ui/button";
 import { useConfirm } from "@/components/ui/confirm-dialog";
 import {
   DropdownMenu,
@@ -15,18 +10,19 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Copy, Edit, MoreHorizontal, Send, Trash } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { useToastPromise } from "@/components/ui/sonner";
-import { sendInvoiceAction } from "@/components/pdf/server-actions/create-send-invoice-action";
-import validateInvoice from "../_actions/validate-invoice";
+import useServerAction from "@/hooks/use-server-action";
+import { Copy, MoreHorizontal, Send, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { MdPaid } from "react-icons/md";
+import { toast } from "sonner";
+import deleteInvoice from "../_actions/delete-invoice";
+import validateInvoice from "../_actions/validate-invoice";
+import type { InvoiceColumn } from "./columns";
 
 interface CellActionProps {
   data: InvoiceColumn;
 }
-
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
   const { serverAction, loading } = useServerAction(deleteInvoice);

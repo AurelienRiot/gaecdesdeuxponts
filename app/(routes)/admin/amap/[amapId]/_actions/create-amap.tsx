@@ -4,7 +4,7 @@ import { checkAdmin } from "@/components/auth/checkAuth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { schema, type AMAPFormValues } from "../_components/amap-schema";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import createOrdersEvent from "@/components/google-events/create-orders-event";
 
 async function createAMAP(data: AMAPFormValues) {
@@ -57,6 +57,7 @@ async function createAMAP(data: AMAPFormValues) {
         console.log(event.message);
       }
       revalidateTag("amap-orders");
+      revalidatePath("/admin/calendar");
       return {
         success: true,
         message: "Commande AMAP crée",

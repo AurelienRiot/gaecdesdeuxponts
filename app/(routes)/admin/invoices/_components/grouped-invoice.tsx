@@ -78,7 +78,7 @@ function GroupedInvoicePage({ proUserWithOrders }: { proUserWithOrders: UserWith
       const chunkRes = await Promise.all(
         chunk.map((invoiceId) => {
           return ky
-            .post("/api/grouped-invoice", { json: { invoiceId }, timeout: 15000 })
+            .post("/api/send-invoice", { json: { invoiceId }, timeout: 15000 })
             .then(async (responce) => {
               const res = await responce.text();
               // toast.success(res);

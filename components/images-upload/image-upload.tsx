@@ -1,9 +1,9 @@
 "use client";
 import useServerAction from "@/hooks/use-server-action";
 import { addDelay, checkIfUrlAccessible } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, Reorder } from "framer-motion";
-import { Loader2, Plus, UploadCloud, X } from "lucide-react";
+import { Loader2, Plus, Trash, UploadCloud, X } from "lucide-react";
 import Image from "next/image";
 import { forwardRef, useState } from "react";
 import { toast } from "sonner";
@@ -32,7 +32,6 @@ type UploadImageProps = {
 };
 
 async function fetchAllFiles() {
-  await addDelay(2000);
   return await listFiles().then((res) => {
     if (res.success && res.data) {
       return res.data.map((item) => makeURL(item.public_id));
@@ -43,32 +42,11 @@ async function fetchAllFiles() {
 
 const UploadImage = forwardRef<HTMLDivElement, UploadImageProps>(
   ({ selectedFiles, setSelectedFiles, multipleImages = false }, ref) => {
-    // const [allFiles, setAllFiles] = useState<string[]>([]);
-    const { data: allFiles, isLoading } = useQuery({ queryFn: () => fetchAllFiles(), queryKey: ["listUploadedFiles"] });
-    const { serverAction: listFilesAction } = useServerAction(listFiles);
-
-    // useEffect(() => {
-    //   const fetchFiles = async () => {
-    //     function onSuccess(data?: Ressources[]) {
-    //       if (!data) {
-    //         toast.error("Impossible de charger le fichier. Veuillez reessayer plus tard.");
-    //         return;
-    //       }
-    //       // setAllFiles(data.map((item) => makeURL(item.public_id)));
-    //     }
-    //     await listFilesAction({ data: {}, onSuccess });
-    //   };
-    //   fetchFiles();
-    // }, [listFilesAction]);
+    const { data: allFiles, isLoading } = useQuery({ queryFn: fetchAllFiles, queryKey: ["listUploadedFiles"] });
 
     return (
       <div ref={ref} className="justify-left flex flex-col gap-4 p-4">
-        <InputImage
-          selectedFiles={selectedFiles}
-          setSelectedFiles={setSelectedFiles}
-          multipleImages={multipleImages}
-          // setAllFiles={setAllFiles}
-        />
+        <InputImage selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} multipleImages={multipleImages} />
         <DisplaySelectedImages
           selectedFiles={selectedFiles}
           setSelectedFiles={setSelectedFiles}
@@ -77,7 +55,6 @@ const UploadImage = forwardRef<HTMLDivElement, UploadImageProps>(
 
         <DisplayImages
           allFiles={allFiles}
-          // setFiles={setAllFiles}
           selectedFiles={selectedFiles}
           setSelectedFiles={setSelectedFiles}
           multipleImages={multipleImages}
@@ -95,12 +72,12 @@ type InputImageProps = {
   selectedFiles: string[];
   setSelectedFiles: (files: string[]) => void;
   multipleImages: boolean;
-  // setAllFiles: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 function InputImage({ selectedFiles, setSelectedFiles, multipleImages }: InputImageProps) {
   const { serverAction: getSignatureAction } = useServerAction(getSignature);
-  const { serverAction: listFilesAction } = useServerAction(listFiles);
+  const queryClient = useQueryClient();
+
   const [loading, setLoading] = useState(false);
 
   const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
@@ -144,12 +121,7 @@ function InputImage({ selectedFiles, setSelectedFiles, multipleImages }: InputIm
 
     await checkUrls(validUrls);
 
-    const allFiles = await listFilesAction({ data: {} });
-    if (!allFiles) {
-      setLoading(false);
-      return;
-    }
-    // setAllFiles(allFiles.map((item) => makeURL(item.public_id)));
+    queryClient.invalidateQueries({ queryKey: ["listUploadedFiles"] });
     if (multipleImages) {
       setSelectedFiles([...selectedFiles, ...validUrls.map((item) => makeURL(item.publicId))]);
     } else {
@@ -316,7 +288,6 @@ const DisplaySelectedImages = ({ selectedFiles, setSelectedFiles, multipleImages
 
 type DisplayImagesProps = {
   allFiles: string[] | undefined;
-  // setFiles: React.Dispatch<React.SetStateAction<string[]>>;
   selectedFiles: string[];
   setSelectedFiles: (files: string[]) => void;
   multipleImages: boolean;
@@ -327,6 +298,7 @@ const DisplayImages = ({ allFiles, selectedFiles, setSelectedFiles, multipleImag
   const imagesPerPage = 10;
   const [displayFiles, setDisplayFiles] = useState(false);
   const { serverAction } = useServerAction(deleteObject);
+  const queryClient = useQueryClient();
 
   const onDelete = async (url: string | undefined) => {
     if (!url) {
@@ -337,7 +309,11 @@ const DisplayImages = ({ allFiles, selectedFiles, setSelectedFiles, multipleImag
       if (!allFiles) {
         return;
       }
-      // setFiles(allFiles.filter((fileUrl) => fileUrl !== url));
+      queryClient.setQueryData(["listUploadedFiles"], (old: string[] | undefined) => {
+        if (old) {
+          return old.filter((fileUrl) => fileUrl !== url);
+        }
+      });
     }
     await serverAction({
       data: { publicID: getFileKey(url) },
@@ -381,7 +357,7 @@ const DisplayImages = ({ allFiles, selectedFiles, setSelectedFiles, multipleImag
                       </div>
                     </div>
                   </div>
-                  {/* <button
+                  <button
                     type="button"
                     onClick={async (e) => {
                       await onDelete(fileUrl);
@@ -389,7 +365,7 @@ const DisplayImages = ({ allFiles, selectedFiles, setSelectedFiles, multipleImag
                     className="absolute right-0 hidden items-center justify-center rounded-tr-md bg-destructive px-2 py-1 text-destructive-foreground transition-all hover:bg-destructive/90 group-hover:flex"
                   >
                     <Trash size={15} />
-                  </button> */}
+                  </button>
                   <button
                     type="button"
                     onClick={(e) => {

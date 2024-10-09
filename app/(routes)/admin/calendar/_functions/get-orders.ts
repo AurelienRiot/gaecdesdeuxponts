@@ -1,3 +1,4 @@
+"server only";
 import type { ProductQuantities } from "@/components/google-events/get-orders-for-events";
 import { getUnitLabel } from "@/components/product/product-function";
 import { getUserName } from "@/components/table-custom-fuction";
@@ -29,6 +30,7 @@ export const getOrdersByDate = async ({ from, to }: { from: Date; to: Date }) =>
     .map((order) => ({
       id: order.id,
       name: getUserName(order.user),
+      index: order.index,
       user: {
         name: order.user.name,
         email: order.user.email,
@@ -53,12 +55,13 @@ export const getOrdersByDate = async ({ from, to }: { from: Date; to: Date }) =>
       shopId: order.shop?.id || "",
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
-  return formattedOrders;
+  return { success: true, data: formattedOrders, message: "Commandes trouvées" };
 };
 
 export type CalendarOrdersType = {
   id: string;
   name: string;
+  index: number | null;
   user: {
     id: string;
     name?: string | null;

@@ -1,5 +1,6 @@
 model Order {
   id         String @unique @id @default(cuid())
+  index      Int?
   orderItems OrderItem[]
   totalPrice Float 
   dateOfShipping      DateTime?

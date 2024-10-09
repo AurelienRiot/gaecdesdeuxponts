@@ -3,14 +3,14 @@ import { extractProductQuantities } from "@/components/google-events/get-orders-
 import { getUnitLabel } from "@/components/product/product-function";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
-import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
+import { dateFormatter, getLocalIsoString, ONE_DAY } from "@/lib/date-utils";
 import { debounce } from "@/lib/debounce";
 import { formatFrenchPhoneNumber } from "@/lib/utils";
-import { addDays } from "date-fns";
+import { addDays, addHours } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { type Dispatch, type SetStateAction, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { getGroupedAMAPOrders } from "../_functions/get-amap-orders";
 import type { CalendarOrdersType } from "../_functions/get-orders";
 import TodayFocus from "./date-focus";
@@ -19,22 +19,34 @@ import DisplayOrder from "./display-order";
 import SummarizeProducts from "./summarize-products";
 import UpdatePage from "./update-page";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
+import { useQuery } from "@tanstack/react-query";
+import type getDailyOrders from "../_actions/get-daily-orders";
+import ky from "ky";
 
 type EventsPageProps = {
-  orders: CalendarOrdersType[];
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
-  dateArray: string[];
 };
 
-export default function EventPage({ amapOrders, dateArray, orders }: EventsPageProps) {
+function makeDateArray(date: string | null) {
+  const currentDate = date ? new Date(date) : new Date();
+  const from = addDays(currentDate, -3);
+  const to = addDays(currentDate, 8);
+  const arrayLength = Math.round((to.getTime() - from.getTime()) / ONE_DAY);
+  return new Array(arrayLength).fill(0).map((_, index) => {
+    return new Date(from.getTime() + index * ONE_DAY).toISOString().split("T")[0];
+  });
+}
+
+export default function EventPage({ amapOrders }: EventsPageProps) {
   const searchParams = useSearchParams();
+  const dayParam = searchParams.get("day");
+  const [dateArray, setDateArray] = useState<string[]>(makeDateArray(dayParam));
   const router = useRouter();
   const initialScrollRef = useRef<boolean>(false); // Tracks if initial scroll has been done
   const containerRef = useRef<HTMLDivElement>(null);
   const currentDateRef = useRef<HTMLDivElement>(null);
   const [user, setUser] = useState<CalendarOrdersType["user"]>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const dayParam = searchParams.get("day");
   const dateIndex = dayParam ? dateArray.indexOf(dayParam) : null;
   const refresh = searchParams.get("refresh");
 
@@ -146,40 +158,6 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
         {dateArray.map((date) => {
           const isFocused = date === initialFocusDate.current;
 
-          const amapData = amapOrders.map((order) => ({
-            shopName: order.shopName,
-            shopImageUrl: order.shopImageUrl,
-            order: order.shippingDays.find((shippingDay) => getLocalIsoString(new Date(shippingDay.date)) === date),
-          }));
-          const orderData = orders
-            .filter((order) => getLocalIsoString(order.shippingDate) === date)
-            .sort((a, b) => {
-              if (a.status === "Commande livrée") return 1;
-              return -1;
-            });
-
-          const productQuantities = extractProductQuantities(
-            orderData
-              .flatMap((order) =>
-                order.productsList.map((item) => ({
-                  itemId: item.name,
-                  name: item.name,
-                  quantity: Number(item.quantity || 1),
-                  unit: getUnitLabel(item.unit).quantity,
-                })),
-              )
-              .concat(
-                amapData.flatMap(
-                  (shop) =>
-                    shop.order?.items.map((item) => ({
-                      itemId: item.itemId,
-                      name: item.name,
-                      quantity: item.quantity,
-                      unit: item.unit,
-                    })) || [],
-                ),
-              ),
-          );
           return (
             <div
               ref={isFocused ? currentDateRef : null}
@@ -189,35 +167,8 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
               <h2 className="text-xl font-semibold capitalize text-center">
                 {dateFormatter(new Date(date), { days: true })}
               </h2>
-              <ul className="space-y-4 overflow-y-auto h-full" style={{ height: `calc(100% - 36px)` }}>
-                {productQuantities.aggregateProducts.length > 0 && (
-                  <SummarizeProducts productQuantities={productQuantities} />
-                )}
-                <DisplayAmap amapOrders={amapData} />
-                {orderData.length === 0 ? (
-                  <p className="text-center">Aucune commande</p>
-                ) : (
-                  orderData.map((order, index) => {
-                    const newOrder = orders.some((nextOrder) => {
-                      return (
-                        nextOrder.user.id === order.user.id &&
-                        addDays(new Date(date), 1).getTime() < nextOrder.shippingDate.getTime()
-                      );
-                    });
-                    return (
-                      <DisplayOrder
-                        key={order.id}
-                        order={order}
-                        newOrder={newOrder}
-                        onOpenModal={() => {
-                          setUser(order.user);
-                          setIsModalOpen(true);
-                        }}
-                      />
-                    );
-                  })
-                )}
-              </ul>
+
+              <DatePage date={date} amapOrders={amapOrders} setUser={setUser} setIsModalOpen={setIsModalOpen} />
             </div>
           );
         })}
@@ -227,6 +178,125 @@ export default function EventPage({ amapOrders, dateArray, orders }: EventsPageP
         <TodayFocus />
       </div>
       <UserModal open={isModalOpen} onClose={() => setIsModalOpen(false)} user={user} />
+    </>
+  );
+}
+
+async function fetchDailyOrders(date: string) {
+  const from = new Date(date);
+  const to = addHours(from, 24);
+  const responce = (await ky.post("/api/get-day-orders", { json: { from, to } }).json()) as Awaited<
+    ReturnType<typeof getDailyOrders>
+  >;
+  // const responce = await getDailyOrders({ from, to });
+  if (!responce.success) {
+    throw new Error(responce.message);
+  }
+  if (!responce.data) {
+    throw new Error("Impossible de charger les commandes");
+  }
+  for (const order of responce.data) {
+    order.createdAt = new Date(order.createdAt);
+    order.shippingDate = new Date(order.shippingDate);
+  }
+  return responce.data;
+}
+
+function DatePage({
+  date,
+  amapOrders,
+  setUser,
+  setIsModalOpen,
+}: {
+  date: string;
+  amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
+  setUser: Dispatch<SetStateAction<CalendarOrdersType["user"] | undefined>>;
+  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+}) {
+  const {
+    data: dailyOrders,
+    isLoading,
+    error,
+  } = useQuery({
+    queryFn: async () => await fetchDailyOrders(date),
+    queryKey: ["fetchDailyOrders", { date }],
+    staleTime: 10 * 60,
+  });
+  if (error) {
+    return <div>{error.stack}</div>;
+  }
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!dailyOrders) {
+    return <div>No data</div>;
+  }
+
+  const amapData = amapOrders.map((order) => ({
+    shopName: order.shopName,
+    shopImageUrl: order.shopImageUrl,
+    order: order.shippingDays.find((shippingDay) => getLocalIsoString(new Date(shippingDay.date)) === date),
+  }));
+  const orderData = dailyOrders
+    .filter((order) => getLocalIsoString(order.shippingDate) === date)
+    .sort((a, b) => {
+      if (a.status === "Commande livrée") return 1;
+      return -1;
+    });
+
+  const productQuantities = extractProductQuantities(
+    orderData
+      .flatMap((order) =>
+        order.productsList.map((item) => ({
+          itemId: item.name,
+          name: item.name,
+          quantity: Number(item.quantity || 1),
+          unit: getUnitLabel(item.unit).quantity,
+        })),
+      )
+      .concat(
+        amapData.flatMap(
+          (shop) =>
+            shop.order?.items.map((item) => ({
+              itemId: item.itemId,
+              name: item.name,
+              quantity: item.quantity,
+              unit: item.unit,
+            })) || [],
+        ),
+      ),
+  );
+
+  return (
+    <>
+      <ul className="space-y-4 overflow-y-auto h-full" style={{ height: `calc(100% - 36px)` }}>
+        {productQuantities.aggregateProducts.length > 0 && <SummarizeProducts productQuantities={productQuantities} />}
+        <DisplayAmap amapOrders={amapData} />
+        {orderData.length === 0 ? (
+          <p className="text-center">Aucune commande</p>
+        ) : (
+          orderData.map((order, index) => {
+            const newOrder = dailyOrders.some((nextOrder) => {
+              return (
+                nextOrder.user.id === order.user.id &&
+                addDays(new Date(date), 1).getTime() < nextOrder.shippingDate.getTime()
+              );
+            });
+            return (
+              <DisplayOrder
+                key={order.id}
+                order={order}
+                newOrder={newOrder}
+                onOpenModal={() => {
+                  setUser(order.user);
+                  setIsModalOpen(true);
+                }}
+              />
+            );
+          })
+        )}
+      </ul>
     </>
   );
 }
