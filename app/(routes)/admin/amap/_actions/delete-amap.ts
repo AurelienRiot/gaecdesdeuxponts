@@ -35,7 +35,6 @@ async function deleteAMAP(data: z.infer<typeof deleteSchema>) {
         }
       }
       revalidateTag("amap-orders");
-      revalidatePath("/admin/calendar");
 
       return {
         success: true,

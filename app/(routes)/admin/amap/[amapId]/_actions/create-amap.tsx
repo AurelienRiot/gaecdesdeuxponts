@@ -57,7 +57,6 @@ async function createAMAP(data: AMAPFormValues) {
         console.log(event.message);
       }
       revalidateTag("amap-orders");
-      revalidatePath("/admin/calendar");
       return {
         success: true,
         message: "Commande AMAP crée",

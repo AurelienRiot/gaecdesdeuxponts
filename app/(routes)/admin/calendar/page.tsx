@@ -5,10 +5,8 @@ import Link from "next/link";
 import { Suspense } from "react";
 import EventPage from "./_components/events-page";
 import { getGroupedAMAPOrders } from "./_functions/get-amap-orders";
-import { nanoid } from "nanoid";
 
-// export const revalidate = 86400;
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 async function CalendarPage() {
   // const [orders, amapOrders] = await Promise.all([getOrdersByDate({ from, to }), getGroupedAMAPOrders()]);
@@ -22,7 +20,7 @@ async function CalendarPage() {
           <User className="size-4 text-green-100 stroke-[3]" />
         </Link>
         <Heading
-          title={`Calendrier des commandes ${nanoid(5)}`}
+          title={`Calendrier des commandes`}
           description=""
           className=" w-fit  text-center mx-auto"
           titleClassName=" text-lg sm:text-2xl md:text-3xl"

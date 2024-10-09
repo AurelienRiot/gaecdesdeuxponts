@@ -74,7 +74,6 @@ async function updateAMAP(data: AMAPFormValues) {
         }
       }
       revalidateTag("amap-orders");
-      revalidatePath("/admin/calendar");
       return {
         success: true,
         message: "Commande AMAP mise à jour",

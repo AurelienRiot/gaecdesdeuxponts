@@ -56,8 +56,7 @@ export const getAMAPOrders = unstable_cache(
   { revalidate: 60 * 60 * 24, tags: ["amap-orders"] },
 );
 
-export const getGroupedAMAPOrders =
-  // unstable_cache(
+export const getGroupedAMAPOrders = unstable_cache(
   async () => {
     const amapOrders = await prismadb.aMAPOrder.findMany({
       where: {
@@ -135,7 +134,7 @@ export const getGroupedAMAPOrders =
     });
 
     return result;
-  };
-//   ["getGroupedAMAPOrders"],
-//   { revalidate: 60 * 60 * 24 * 15, tags: ["amap-orders"] },
-// );
+  },
+  ["getGroupedAMAPOrders"],
+  { revalidate: 60 * 60 * 24 * 15, tags: ["amap-orders"] },
+);
