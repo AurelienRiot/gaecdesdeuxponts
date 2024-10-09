@@ -54,7 +54,7 @@ const DatePicker = ({ usersAndShops }: { usersAndShops: UserAndShop[] }) => {
       );
       form.setValue("waypoints", addresses);
     }
-    serverAction({ data: { date }, onError: () => setOpen(true), onSuccess });
+    // serverAction({ data: { date }, onError: () => setOpen(true), onSuccess });
   }
 
   return (
