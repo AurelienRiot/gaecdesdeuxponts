@@ -17,7 +17,7 @@ async function DirectionPage() {
         {
           label: getUserName(user),
           image: user.image,
-          address: addressFormatter(user.address, true),
+          address: addressFormatter(user.address, false),
         },
       ]),
     );

@@ -2,6 +2,7 @@
 
 import DateModal from "@/components/date-modal";
 import { ONE_DAY, getLocalIsoString } from "@/lib/date-utils";
+import { cn } from "@/lib/utils";
 import { addDays } from "date-fns";
 import { useRouter } from "next/navigation";
 
@@ -17,7 +18,7 @@ function TodayFocus({ className }: { className?: string }) {
   return (
     <DateModal
       trigger={"Date"}
-      triggerClassName="text-primary border-dashed w-fit"
+      triggerClassName={cn("text-primary border-dashed w-fit", className)}
       onValueChange={(date) => {
         if (!date) return;
         router.replace(`?day=${getLocalIsoString(date)}&refresh=true`);

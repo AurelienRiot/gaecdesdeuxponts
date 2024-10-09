@@ -4,43 +4,34 @@ import { IconButton } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import useServerAction from "@/hooks/use-server-action";
-import { addressFormatter } from "@/lib/utils";
-import type { Address } from "@prisma/client";
+import { addHours } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import getDailyOrders from "../../calendar/_actions/get-daily-orders";
+import getUsersForDate from "../_functions/get-users-for-date";
 import type { UserAndShop } from "./direction-form";
 import type { DirectionFormValues, Point } from "./direction-schema";
 
 const DatePicker = ({ usersAndShops }: { usersAndShops: UserAndShop[] }) => {
   const [open, setOpen] = useState(false);
-  const { loading, serverAction } = useServerAction(getDailyOrders);
+  const { loading, serverAction } = useServerAction(getUsersForDate);
   const form = useFormContext<DirectionFormValues>();
 
   async function onDaySelected(date: Date) {
     setOpen(false);
-    async function onSuccess(
-      result?: {
-        user: { address: Address | null };
-      }[],
-    ) {
+    async function onSuccess(result?: Point[]) {
       if (!result) return;
       const addresses: Point[] = await Promise.all(
         result.map(async (order) => {
-          const address = addressFormatter(order.user.address);
-          if (!address) {
+          if (!order.label) {
             return { label: "" };
           }
 
-          const user = usersAndShops.find(
-            (user) => user.address && (address.includes(user.address) || user.address.includes(address)),
-          );
-          console.log(user?.label);
-          let latitude = user?.latitude || order.user.address?.latitude;
-          let longitude = user?.longitude || order.user.address?.longitude;
+          const user = usersAndShops.find((user) => user.address && order.label === user.address);
+          let latitude = user?.latitude || order.latitude;
+          let longitude = user?.longitude || order.longitude;
           if (!latitude || !longitude) {
-            const suggestions = await AddressAutocomplete(address);
+            const suggestions = await AddressAutocomplete(order.label);
             if (suggestions.length > 0) {
               latitude = suggestions[0].latitude;
               longitude = suggestions[0].longitude;
@@ -49,12 +40,17 @@ const DatePicker = ({ usersAndShops }: { usersAndShops: UserAndShop[] }) => {
           if (user) {
             return { label: user.address, latitude, longitude };
           }
-          return { label: address, latitude, longitude };
+          return { label: order.label, latitude, longitude };
         }),
       );
-      form.setValue("waypoints", addresses);
+      form.setValue(
+        "waypoints",
+        addresses.filter((address) => address.label),
+      );
     }
-    // serverAction({ data: { date }, onError: () => setOpen(true), onSuccess });
+    const from = date;
+    const to = addHours(date, 24);
+    serverAction({ data: { from, to }, onError: () => setOpen(true), onSuccess });
   }
 
   return (

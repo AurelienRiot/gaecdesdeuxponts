@@ -37,7 +37,7 @@ export const getOrdersByDate = async ({ from, to }: { from: Date; to: Date }) =>
         company: order.user.company,
         image: order.user.image,
         phone: order.user.phone,
-        address: addressFormatter(order.user.address),
+        address: addressFormatter(order.user.address, false),
         notes: order.user.notes,
         id: order.user.id,
       },

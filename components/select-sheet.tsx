@@ -29,7 +29,6 @@ function SelectSheet<T extends { key: string }>({
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
-    // <SelectSheetContext.Provider value={{ isOpen, setIsOpen }}>
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         {typeof trigger === "string" ? (
@@ -55,7 +54,6 @@ function SelectSheet<T extends { key: string }>({
         </div>
       </SheetContent>
     </Sheet>
-    // </SelectSheetContext.Provider>
   );
 }
 
@@ -89,8 +87,7 @@ function SelectSheetContent<T extends { key: string }>({
   return (
     <div className="relative">
       <ScrollArea ref={scrollRef} className="max-h-[50dvh] overflow-y-auto relative py-8">
-        {" "}
-        <div className=" flex flex-col gap-2 ">
+        <div className=" flex flex-col gap-2 items-center justify-center">
           {values.map((value, index) => (
             <Button
               style={{ touchAction: "pan-y" }}
@@ -98,6 +95,7 @@ function SelectSheetContent<T extends { key: string }>({
                 itemRefs.current[index] = el;
               }}
               variant={value.value.key === selectedValue ? "green" : value.highlight ? "secondary" : "outline"}
+              className="w-full"
               key={value.value.key}
               onClick={() => {
                 setIsOpen(false);
