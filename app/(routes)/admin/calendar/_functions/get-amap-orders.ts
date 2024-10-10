@@ -136,5 +136,5 @@ export const getGroupedAMAPOrders = unstable_cache(
     return result;
   },
   ["getGroupedAMAPOrders"],
-  { revalidate: 60 * 60 * 24 * 15, tags: ["amap-orders"] },
+  { revalidate: 60 * 60 * 24, tags: ["amap-orders"] },
 );

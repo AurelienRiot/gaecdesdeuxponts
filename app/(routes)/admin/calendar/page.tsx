@@ -5,12 +5,26 @@ import Link from "next/link";
 import { Suspense } from "react";
 import EventPage from "./_components/events-page";
 import { getGroupedAMAPOrders } from "./_functions/get-amap-orders";
+import { addDays } from "date-fns";
+import { ONE_DAY } from "@/lib/date-utils";
+import { getOrdersByDate } from "./_functions/get-orders";
 
 export const dynamic = "force-dynamic";
 
+function makeDateArray({ from, to }: { from: Date; to: Date }) {
+  const arrayLength = Math.round((to.getTime() - from.getTime()) / ONE_DAY);
+  return new Array(arrayLength).fill(0).map((_, index) => {
+    return new Date(from.getTime() + index * ONE_DAY).toISOString().split("T")[0];
+  });
+}
+
 async function CalendarPage() {
-  // const [orders, amapOrders] = await Promise.all([getOrdersByDate({ from, to }), getGroupedAMAPOrders()]);
-  const amapOrders = await getGroupedAMAPOrders();
+  const from = addDays(new Date(), -14);
+  const to = addDays(new Date(), 30);
+  const dateArray = makeDateArray({ from, to });
+  const [orders, amapOrders] = await Promise.all([getOrdersByDate({ from, to }), getGroupedAMAPOrders()]);
+  // const amapOrders = await getGroupedAMAPOrders();
+  console.log("refresh");
 
   return (
     <div className=" flex flex-col gap-2 relative" style={{ height: `calc(100dvh - 80px)` }}>
@@ -38,9 +52,7 @@ async function CalendarPage() {
         <Separator />
       </div>
 
-      <Suspense fallback={<div>Loading...</div>}>
-        <EventPage amapOrders={amapOrders} />
-      </Suspense>
+      <EventPage initialOrders={orders.data} dateArray={dateArray} amapOrders={amapOrders} />
     </div>
   );
 }

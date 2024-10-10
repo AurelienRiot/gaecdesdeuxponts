@@ -3,8 +3,8 @@ import DateModal from "@/components/date-modal";
 import DeleteButton from "@/components/delete-button";
 import { DisplayCreateInvoice } from "@/components/pdf/button/display-create-invoice";
 import { DisplayInvoice } from "@/components/pdf/button/display-invoice";
-import { DisplayShippingOrder, ModalDescription } from "@/components/pdf/button/display-shipping-order";
-import { Button, LoadingButton } from "@/components/ui/button";
+import { DisplayShippingOrder } from "@/components/pdf/button/display-shipping-order";
+import { Button } from "@/components/ui/button";
 import { Form, FormButton, FormField } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Label } from "@/components/ui/label";
@@ -18,6 +18,7 @@ import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import validateInvoice from "../../../invoices/_actions/validate-invoice";
 import { deleteOrder } from "../../_actions/delete-orders";
 import confirmOrder from "../_actions/confirm-order";
 import createOrder from "../_actions/create-order";
@@ -29,10 +30,6 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
-import validateInvoice from "../../../invoices/_actions/validate-invoice";
-import { createInvoiceAction } from "@/components/pdf/server-actions/create-send-invoice-action";
-import getOrderForConfirmation from "@/components/pdf/server-actions/get-order-for-confirmation";
-import { useConfirm } from "@/components/ui/confirm-dialog";
 
 export type OrderFormProps = {
   initialData:
@@ -113,6 +110,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
   });
 
   const userId = form.watch("userId");
+  const shippingDate = form.watch("dateOfShipping");
 
   const user = userId ? users.find((user) => user.id === userId) : null;
 
@@ -124,6 +122,9 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
 
     function onSuccess() {
       router.replace(`/admin/orders/${initialData?.id}?referer=${encodeURIComponent(referer)}#button-container`);
+      // shippingDate && queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(shippingDate) }] });
+      // prevDateOfShipping &&
+      //   queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(prevDateOfShipping) }] });
     }
 
     await confirmOrderAction({
@@ -144,7 +145,12 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
     }
     validateInvoiceAction({
       data: { id: initialData?.invoiceId, isPaid: !initialData.dateOfPayment },
-      onSuccess: () => router.refresh(),
+      onSuccess: () => {
+        // shippingDate && queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(shippingDate) }] });
+        // prevDateOfShipping &&
+        //   queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(prevDateOfShipping) }] });
+        router.refresh();
+      },
     });
   }
 
@@ -179,7 +185,12 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
           toastOptions: { position: "top-center" },
         })
       : await createOrderAction({ data, toastOptions: { position: "top-center" } });
-
+    // shippingDate &&
+    //   queryClient.invalidateQueries({ queryKey: ["fetchDailyOrders", { date: getLocalIsoString(shippingDate) }] });
+    // prevDateOfShipping &&
+    //   queryClient.invalidateQueries({
+    //     queryKey: ["fetchDailyOrders", { date: getLocalIsoString(prevDateOfShipping) }],
+    //   });
     router.replace(`/admin/orders/${data.id}?referer=${encodeURIComponent(referer)}#button-container`);
   };
 

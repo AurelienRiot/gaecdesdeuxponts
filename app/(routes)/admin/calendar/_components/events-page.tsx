@@ -1,16 +1,18 @@
 "use client";
 import { extractProductQuantities } from "@/components/google-events/get-orders-for-events";
 import { getUnitLabel } from "@/components/product/product-function";
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
-import { dateFormatter, getLocalIsoString, ONE_DAY } from "@/lib/date-utils";
-import { debounce } from "@/lib/debounce";
+import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
 import { formatFrenchPhoneNumber } from "@/lib/utils";
 import { addDays, addHours } from "date-fns";
+import ky from "ky";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { type Dispatch, type SetStateAction, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { type Dispatch, type SetStateAction, useLayoutEffect, useRef, useState } from "react";
+import type getDailyOrders from "../_actions/get-daily-orders";
 import type { getGroupedAMAPOrders } from "../_functions/get-amap-orders";
 import type { CalendarOrdersType } from "../_functions/get-orders";
 import TodayFocus from "./date-focus";
@@ -18,45 +20,26 @@ import DisplayAmap from "./display-amap";
 import DisplayOrder from "./display-order";
 import SummarizeProducts from "./summarize-products";
 import UpdatePage from "./update-page";
-import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
-import { useQuery } from "@tanstack/react-query";
-import type getDailyOrders from "../_actions/get-daily-orders";
-import ky from "ky";
 
 type EventsPageProps = {
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
+  initialOrders: CalendarOrdersType[];
+  dateArray: string[];
 };
 
-function makeDateArray(date: string | null) {
-  const currentDate = date ? new Date(date) : new Date();
-  const from = addDays(currentDate, -3);
-  const to = addDays(currentDate, 8);
-  const arrayLength = Math.round((to.getTime() - from.getTime()) / ONE_DAY);
-  return new Array(arrayLength).fill(0).map((_, index) => {
-    return new Date(from.getTime() + index * ONE_DAY).toISOString().split("T")[0];
-  });
-}
-
-export default function EventPage({ amapOrders }: EventsPageProps) {
-  const searchParams = useSearchParams();
-  const dayParam = searchParams.get("day");
-  const [dateArray, setDateArray] = useState<string[]>(makeDateArray(dayParam));
-  const router = useRouter();
-  const initialScrollRef = useRef<boolean>(false); // Tracks if initial scroll has been done
+export default function EventPage({ amapOrders, initialOrders, dateArray }: EventsPageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const currentDateRef = useRef<HTMLDivElement>(null);
   const [user, setUser] = useState<CalendarOrdersType["user"]>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const dateIndex = dayParam ? dateArray.indexOf(dayParam) : null;
-  const refresh = searchParams.get("refresh");
+  const [focusDate, setFocusDate] = useState(getLocalIsoString(new Date()));
 
   // Extract the initial focus date from search parameters or default to today
-  const initialFocusDate = useRef<string>(dayParam || getLocalIsoString(new Date()));
 
   // Handle Initial Scroll to Center the Focus Date
   useLayoutEffect(() => {
     function scrollToCurrentDate() {
-      if (containerRef.current && currentDateRef.current && !initialScrollRef.current) {
+      if (containerRef.current && currentDateRef.current && focusDate) {
         const container = containerRef.current;
         const currentDateElement = currentDateRef.current;
 
@@ -71,111 +54,46 @@ export default function EventPage({ amapOrders }: EventsPageProps) {
           left: scrollPosition,
           behavior: "smooth", // Optional: adds smooth scrolling
         });
-
-        initialScrollRef.current = true; // Mark that initial scroll has been performed
       }
     }
 
     scrollToCurrentDate();
-  }, []); // Empty dependency array ensures this runs only once on mount
-
-  // Scroll Event Handler to Update 'day' Search Parameter
-  const handleScroll = useCallback(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const containerRect = container.getBoundingClientRect();
-    const containerCenter = containerRect.left + containerRect.width / 2;
-
-    let closestDate: string | null = null;
-    let minDistance = Number.POSITIVE_INFINITY;
-
-    dateArray.forEach((date, index) => {
-      const child = container.children[index] as HTMLElement;
-      if (child) {
-        const childRect = child.getBoundingClientRect();
-        const childCenter = childRect.left + childRect.width / 2;
-        const distance = Math.abs(containerCenter - childCenter);
-
-        if (distance < minDistance) {
-          minDistance = distance;
-          closestDate = date;
-        }
-      }
-    });
-
-    if (closestDate) {
-      router.replace(`?day=${closestDate}`);
-    }
-  }, [dateArray, router]);
-
-  // Debounced Scroll Handler to Optimize Performance
-  const debouncedHandleScroll = useCallback(debounce(handleScroll, 300), []);
-
-  // Attach Scroll Event Listener
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    container.addEventListener("scroll", debouncedHandleScroll);
-
-    return () => {
-      container.removeEventListener("scroll", debouncedHandleScroll);
-      debouncedHandleScroll.cancel(); // Cancel any pending debounced calls on unmount
-    };
-  }, [debouncedHandleScroll]);
-
-  // Adjust scroll when the searchParam "day" changes
-  useEffect(() => {
-    function scrollToCurrentDate() {
-      if (dateIndex && containerRef.current && refresh) {
-        const container = containerRef.current;
-        if (dateIndex !== -1) {
-          const currentDateElement = container.children[dateIndex] as HTMLElement;
-          if (currentDateElement) {
-            const containerWidth = container.clientWidth;
-            const elementOffsetLeft = currentDateElement.offsetLeft;
-            const elementWidth = currentDateElement.clientWidth;
-
-            // Calculate the position to scroll so that the current date is centered
-            const scrollPosition = elementOffsetLeft - containerWidth / 2 + elementWidth / 2;
-
-            container.scrollTo({
-              left: scrollPosition,
-              behavior: "smooth", // Optional: adds smooth scrolling
-            });
-          }
-        }
-      }
-    }
-
-    scrollToCurrentDate();
-  }, [dateIndex, refresh]);
+  }, [focusDate]); // Empty dependency array ensures this runs only once on mount
 
   return (
     <>
       <div ref={containerRef} className="flex flex-row gap-4 w-full overflow-x-scroll mx-auto flex-auto">
         {dateArray.map((date) => {
-          const isFocused = date === initialFocusDate.current;
-
+          const isFocused = date === focusDate;
+          const initialData = initialOrders.filter((order) => getLocalIsoString(order.shippingDate) === date);
           return (
             <div
               ref={isFocused ? currentDateRef : null}
               key={date}
-              className="flex-shrink-0  w-full max-w-xs h-full space-y-2"
+              className="flex-shrink-0  w-full max-w-xs h-full space-y-2 relative"
             >
               <h2 className="text-xl font-semibold capitalize text-center">
                 {dateFormatter(new Date(date), { days: true })}
               </h2>
 
-              <DatePage date={date} amapOrders={amapOrders} setUser={setUser} setIsModalOpen={setIsModalOpen} />
+              <DatePage
+                date={date}
+                initialData={initialData}
+                amapOrders={amapOrders}
+                setUser={setUser}
+                setIsModalOpen={setIsModalOpen}
+              />
             </div>
           );
         })}
       </div>{" "}
       <div className="flex justify-between p-4 ">
         <UpdatePage />
-        <TodayFocus />
+        <TodayFocus
+          startMonth={new Date(dateArray[0])}
+          endMonth={new Date(dateArray[dateArray.length - 1])}
+          setFocusDate={setFocusDate}
+        />
       </div>
       <UserModal open={isModalOpen} onClose={() => setIsModalOpen(false)} user={user} />
     </>
@@ -185,6 +103,7 @@ export default function EventPage({ amapOrders }: EventsPageProps) {
 async function fetchDailyOrders(date: string) {
   const from = new Date(date);
   const to = addHours(from, 24);
+  console.log({ from, to });
   const responce = (await ky.post("/api/get-day-orders", { json: { from, to } }).json()) as Awaited<
     ReturnType<typeof getDailyOrders>
   >;
@@ -205,33 +124,33 @@ async function fetchDailyOrders(date: string) {
 function DatePage({
   date,
   amapOrders,
+  initialData: dailyOrders,
   setUser,
   setIsModalOpen,
 }: {
   date: string;
+  initialData: CalendarOrdersType[];
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
   setUser: Dispatch<SetStateAction<CalendarOrdersType["user"] | undefined>>;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 }) {
-  const {
-    data: dailyOrders,
-    isLoading,
-    error,
-  } = useQuery({
-    queryFn: async () => await fetchDailyOrders(date),
-    queryKey: ["fetchDailyOrders", { date }],
-    staleTime: 10 * 60,
-  });
-  if (error) {
-    return <div>{error.stack}</div>;
-  }
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  // const {
+  //   data: dailyOrders,
+  //   isLoading,
+  //   error,
+  // } = useQuery({
+  //   queryFn: async () => await fetchDailyOrders(date),
+  //   queryKey: ["fetchDailyOrders", { date }],
+  //   staleTime: 10 * 60,
+  //   initialData,
+  // });
+  // if (error) {
+  //   return <div>{error.message}</div>;
+  // }
 
-  if (!dailyOrders) {
-    return <div>No data</div>;
-  }
+  // if (!dailyOrders) {
+  //   return <div>No data</div>;
+  // }
 
   const amapData = amapOrders.map((order) => ({
     shopName: order.shopName,
@@ -270,7 +189,8 @@ function DatePage({
 
   return (
     <>
-      <ul className="space-y-4 overflow-y-auto h-full" style={{ height: `calc(100% - 36px)` }}>
+      {/* {isLoading && <Spinner size={20} className="absolute -top-0 right-0" />} */}
+      <ul className="space-y-4 overflow-y-auto h-full relative" style={{ height: `calc(100% - 36px)` }}>
         {productQuantities.aggregateProducts.length > 0 && <SummarizeProducts productQuantities={productQuantities} />}
         <DisplayAmap amapOrders={amapData} />
         {orderData.length === 0 ? (
