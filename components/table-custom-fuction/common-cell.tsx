@@ -59,7 +59,7 @@ function NameCell({ image, name, url, displayImage = true, imageSize = 32, compl
   );
 }
 
-const NameWithImage = ({ name, image, imageSize = 16, displayImage = true, completed }: NameCellProps) => (
+const NameWithImage = ({ name, image, imageSize = 16, displayImage = true, completed = true }: NameCellProps) => (
   <div className="flex items-center justify-start gap-2 w-full">
     {displayImage ? (
       image ? (
