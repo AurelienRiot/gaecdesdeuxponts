@@ -46,7 +46,7 @@ function NameCell({ image, name, url, displayImage = true, imageSize = 32 }: Nam
 }
 
 const NameWithImage = ({ name, image, imageSize = 16, displayImage = true }: NameCellProps) => (
-  <div className="flex items-center justify-start gap-4 w-full">
+  <div className="flex items-center justify-start gap-2 w-full">
     {displayImage ? (
       image ? (
         <Image
@@ -54,18 +54,25 @@ const NameWithImage = ({ name, image, imageSize = 16, displayImage = true }: Nam
           alt="user"
           width={imageSize * 2}
           height={imageSize}
-          className="mr-2 object-contain rounded-sm bg-white"
+          className="object-contain rounded-sm bg-white"
         />
       ) : (
+        // <div
+        //   style={{ width: imageSize * 2, height: imageSize * 2 }}
+        //   className=" rounded-full bg-gray-200 flex items-center justify-center shrink-0 "
+        // >
+        //   <span className="text-gray-600 font-semibold text-xs no-underline">{name.charAt(0)}</span>
+        // </div>
         <div
           style={{ width: imageSize * 2, height: imageSize * 2 }}
-          className=" rounded-full bg-gray-200 flex items-center justify-center shrink-0 "
+          className=" rounded-full bg-gray-200 flex items-center justify-center shrink-0"
         >
           <span className="text-gray-600 font-semibold text-xs no-underline">{name.charAt(0)}</span>
         </div>
       )
     ) : null}
-    {name}
+    {/* {name} */}
+    <span className="font-medium text-xs truncate">{name}</span>
   </div>
 );
 

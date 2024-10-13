@@ -1,12 +1,11 @@
 "use client";
 import { AnimateHeight } from "@/components/animations/animate-size";
 import { StatusCell } from "@/components/table-custom-fuction/cell-orders";
+import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Button, IconButton } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { getRelativeDate } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
 import { Check, ChevronDown } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import type { CalendarOrdersType } from "../_functions/get-orders";
@@ -21,7 +20,6 @@ interface DisplayOrderProps {
 
 const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, onOpenModal, newOrder }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const relativeDate = getRelativeDate(order.shippingDate);
 
   return (
     <>
@@ -38,22 +36,9 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, onOpenMod
                 e.stopPropagation();
                 onOpenModal();
               }}
-              className="flex col-span-5 items-center gap-2 "
+              className="col-span-5  "
             >
-              {order.user.image ? (
-                <Image
-                  src={order.user.image}
-                  alt={order.name}
-                  width={24}
-                  height={24}
-                  className="rounded-sm object-contain"
-                />
-              ) : (
-                <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
-                  <span className="text-gray-600 font-semibold text-xs">{order.name.charAt(0)}</span>
-                </div>
-              )}
-              <span className="font-medium text-xs truncate">{order.name}</span>
+              <NameWithImage name={order.name} image={order.user.image} imageSize={12} />
             </button>
 
             <StatusCell status={order.status} className="col-span-5 justify-center" />

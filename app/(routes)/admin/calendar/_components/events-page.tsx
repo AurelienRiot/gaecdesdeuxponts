@@ -2,7 +2,7 @@
 import { extractProductQuantities } from "@/components/google-events/get-orders-for-events";
 import { getUnitLabel } from "@/components/product/product-function";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
-import { Button } from "@/components/ui/button";
+import { Button, IconButton } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
 import { formatFrenchPhoneNumber } from "@/lib/utils";
@@ -11,7 +11,7 @@ import ky from "ky";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { type Dispatch, type SetStateAction, useLayoutEffect, useRef, useState } from "react";
+import { type Dispatch, type SetStateAction, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type getDailyOrders from "../_actions/get-daily-orders";
 import type { getGroupedAMAPOrders } from "../_functions/get-amap-orders";
 import type { CalendarOrdersType } from "../_functions/get-orders";
@@ -20,6 +20,8 @@ import DisplayAmap from "./display-amap";
 import DisplayOrder from "./display-order";
 import SummarizeProducts from "./summarize-products";
 import UpdatePage from "./update-page";
+import { ListOrdered } from "lucide-react";
+import OrdersModal from "./orders-modal";
 
 type EventsPageProps = {
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
@@ -31,7 +33,9 @@ export default function EventPage({ amapOrders, initialOrders, dateArray }: Even
   const containerRef = useRef<HTMLDivElement>(null);
   const currentDateRef = useRef<HTMLDivElement>(null);
   const [user, setUser] = useState<CalendarOrdersType["user"]>();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [odrerIds, setOrderIds] = useState<string[]>();
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+  const [isOrdersModalOpen, setIsOrdersModalOpen] = useState(false);
   const [focusDate, setFocusDate] = useState(getLocalIsoString(new Date()));
 
   // Extract the initial focus date from search parameters or default to today
@@ -65,23 +69,41 @@ export default function EventPage({ amapOrders, initialOrders, dateArray }: Even
       <div ref={containerRef} className="flex flex-row gap-4 w-full overflow-x-scroll mx-auto flex-auto">
         {dateArray.map((date) => {
           const isFocused = date === focusDate;
-          const initialData = initialOrders.filter((order) => getLocalIsoString(order.shippingDate) === date);
+          const initialData = initialOrders
+            .filter((order) => getLocalIsoString(order.shippingDate) === date)
+            .sort((a, b) => {
+              if (a.index === null) return -1;
+              if (b.index === null) return 1;
+              return (a.index ?? 0) - (b.index ?? 0);
+            });
           return (
             <div
               ref={isFocused ? currentDateRef : null}
               key={date}
               className="flex-shrink-0  w-full max-w-xs h-full space-y-2 relative"
             >
-              <h2 className="text-xl font-semibold capitalize text-center">
-                {dateFormatter(new Date(date), { days: true })}
+              <h2 className="text-xl font-semibold capitalize text-center flex justify-between items-center px-2">
+                <span>{dateFormatter(new Date(date), { days: true })}</span>
+                {initialData.length > 0 && (
+                  <IconButton
+                    Icon={ListOrdered}
+                    iconClassName="size-3"
+                    onClick={() => {
+                      setOrderIds(initialData.map((order) => order.id));
+                      setIsOrdersModalOpen(true);
+                    }}
+                    className=""
+                  />
+                )}
               </h2>
 
               <DatePage
                 date={date}
-                initialData={initialData}
+                dailyOrders={initialData}
+                allOrders={initialOrders}
                 amapOrders={amapOrders}
                 setUser={setUser}
-                setIsModalOpen={setIsModalOpen}
+                setIsModalOpen={setIsUserModalOpen}
               />
             </div>
           );
@@ -95,7 +117,16 @@ export default function EventPage({ amapOrders, initialOrders, dateArray }: Even
           setFocusDate={setFocusDate}
         />
       </div>
-      <UserModal open={isModalOpen} onClose={() => setIsModalOpen(false)} user={user} />
+      <UserModal open={isUserModalOpen} onClose={() => setIsUserModalOpen(false)} user={user} />
+      <OrdersModal
+        open={isOrdersModalOpen}
+        onClose={() => {
+          setIsOrdersModalOpen(false);
+          // router.refresh();
+        }}
+        orderIds={odrerIds}
+        allOrders={initialOrders}
+      />
     </>
   );
 }
@@ -124,12 +155,14 @@ async function fetchDailyOrders(date: string) {
 function DatePage({
   date,
   amapOrders,
-  initialData: dailyOrders,
+  dailyOrders,
+  allOrders,
   setUser,
   setIsModalOpen,
 }: {
   date: string;
-  initialData: CalendarOrdersType[];
+  dailyOrders: CalendarOrdersType[];
+  allOrders: CalendarOrdersType[];
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
   setUser: Dispatch<SetStateAction<CalendarOrdersType["user"] | undefined>>;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -157,15 +190,14 @@ function DatePage({
     shopImageUrl: order.shopImageUrl,
     order: order.shippingDays.find((shippingDay) => getLocalIsoString(new Date(shippingDay.date)) === date),
   }));
-  const orderData = dailyOrders
-    .filter((order) => getLocalIsoString(order.shippingDate) === date)
-    .sort((a, b) => {
-      if (a.status === "Commande livrée") return 1;
-      return -1;
-    });
+  // const orderData = dailyOrders
+  //   .sort((a, b) => {
+  //     if (a.status === "Commande livrée") return 1;
+  //     return -1;
+  //   });
 
   const productQuantities = extractProductQuantities(
-    orderData
+    dailyOrders
       .flatMap((order) =>
         order.productsList.map((item) => ({
           itemId: item.name,
@@ -193,11 +225,11 @@ function DatePage({
       <ul className="space-y-4 overflow-y-auto h-full relative" style={{ height: `calc(100% - 36px)` }}>
         {productQuantities.aggregateProducts.length > 0 && <SummarizeProducts productQuantities={productQuantities} />}
         <DisplayAmap amapOrders={amapData} />
-        {orderData.length === 0 ? (
+        {dailyOrders.length === 0 ? (
           <p className="text-center">Aucune commande</p>
         ) : (
-          orderData.map((order, index) => {
-            const newOrder = dailyOrders.some((nextOrder) => {
+          dailyOrders.map((order, index) => {
+            const newOrder = allOrders.some((nextOrder) => {
               return (
                 nextOrder.user.id === order.user.id &&
                 addDays(new Date(date), 1).getTime() < nextOrder.shippingDate.getTime()

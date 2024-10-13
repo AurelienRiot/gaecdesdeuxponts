@@ -18,6 +18,7 @@ export const getAllOrders = async ({ startDate, endDate }: { startDate: Date; en
       },
       select: {
         id: true,
+        index: true,
         shippingEmail: true,
         shop: { select: { address: true } },
         orderItems: { select: { itemId: true, name: true, quantity: true, unit: true } },
@@ -78,21 +79,28 @@ export const getAllOrders = async ({ startDate, endDate }: { startDate: Date; en
     {} as Record<string, (typeof amapOrders)[0]>,
   );
 
-  const formattedOrders = orders.map((order) => ({
-    id: order.id,
-    userId: order.user.id,
-    shippingAddress: order.shop?.address || addressFormatter(order.user?.address),
-    shippingEmail: order.shippingEmail,
-    name: order.user?.name,
-    company: order.user?.company,
-    image: order.user?.image,
-    orderItems: order.orderItems.map((item) => ({
-      itemId: item.itemId,
-      name: item.name,
-      quantity: item.quantity,
-      unit: getUnitLabel(item.unit).quantity,
-    })),
-  }));
+  const formattedOrders = orders
+    .map((order) => ({
+      id: order.id,
+      userId: order.user.id,
+      shippingAddress: order.shop?.address || addressFormatter(order.user?.address),
+      shippingEmail: order.shippingEmail,
+      name: order.user?.name,
+      index: order.index,
+      company: order.user?.company,
+      image: order.user?.image,
+      orderItems: order.orderItems.map((item) => ({
+        itemId: item.itemId,
+        name: item.name,
+        quantity: item.quantity,
+        unit: getUnitLabel(item.unit).quantity,
+      })),
+    }))
+    .sort((a, b) => {
+      if (a.index === null) return -1;
+      if (b.index === null) return 1;
+      return (a.index ?? 0) - (b.index ?? 0);
+    });
 
   // if (formattedOrders.length > 1) {
   //   const waypoints = formattedOrders.map((order) => order.shippingAddress || "");

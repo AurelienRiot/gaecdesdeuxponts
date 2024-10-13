@@ -6,16 +6,17 @@ import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
 import { orderSchema, type OrderFormValues } from "../_components/order-schema";
 import { createCustomer } from "@/components/pdf/pdf-data";
+import { createId } from "@/lib/id";
 
 async function createOrder(data: OrderFormValues) {
   return await safeServerAction({
     schema: orderSchema,
     data,
     roles: ["admin"],
-    serverAction: async ({ datePickUp, id, orderItems, totalPrice, userId, dateOfEdition, dateOfShipping, shopId }) => {
+    serverAction: async ({ datePickUp, orderItems, totalPrice, userId, dateOfEdition, dateOfShipping, shopId }) => {
       const order = await prismadb.order.create({
         data: {
-          id,
+          id: createId("order", dateOfShipping),
           totalPrice,
           userId,
           dateOfShipping,
@@ -56,7 +57,7 @@ async function createOrder(data: OrderFormValues) {
         success: true,
         message: "Commande crée",
         data: {
-          id,
+          id: order.id,
         },
       };
     },

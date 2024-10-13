@@ -24,7 +24,6 @@ async function CalendarPage() {
   const dateArray = makeDateArray({ from, to });
   const [orders, amapOrders] = await Promise.all([getOrdersByDate({ from, to }), getGroupedAMAPOrders()]);
   // const amapOrders = await getGroupedAMAPOrders();
-  console.log("refresh");
 
   return (
     <div className=" flex flex-col gap-2 relative" style={{ height: `calc(100dvh - 80px)` }}>

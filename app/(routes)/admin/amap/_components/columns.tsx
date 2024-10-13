@@ -61,7 +61,9 @@ export const columns: ColumnDef<AMAPColumn>[] = [
   {
     accessorKey: "name",
     header: "Client",
-    cell: ({ row }) => <NameCell name={row.original.name} url={`/admin/users/${row.original.userId}`} />,
+    cell: ({ row }) => (
+      <NameCell name={row.original.name} url={`/admin/users/${row.original.userId}`} displayImage={false} />
+    ),
     filterFn: FilterOneInclude,
   },
   {

@@ -12,7 +12,7 @@ function MobileNav() {
   const pathname = usePathname();
   const mainRoutes = MainAdminRoutes(pathname);
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-neutral-950 text-neutral-200 sm:px-2 flex justify-around items-center h-20 pb-4 lg:hidden z-[1100]">
+    <nav className="fixed bottom-0 left-0 right-0 bg-primary text-neutral-200 sm:px-2 flex justify-around items-center h-20 pb-4 lg:hidden z-[1100]">
       <div className="grid grid-cols-5 w-full items-center justify-between  sm:px-4">
         {mainRoutes.map((route) => (
           <Link
@@ -43,7 +43,7 @@ function AutresButton() {
         <AutoCloseSheet setIsOpen={setOpen} />{" "}
       </Suspense>
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger className=" group relative transition-colors duration-300    data-[state=open]:text-destructive text-sm">
+        <PopoverTrigger className=" group relative transition-colors duration-300   data-[state=open]:text-destructive text-sm">
           <div className="size-6 relative -translate-y-2  -translate-x-2 mx-auto">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -91,7 +91,7 @@ function AutresButton() {
         <PopoverContent
           side="top"
           align="end"
-          className="w-fit  pt-2 px-2 bg-neutral-950 text-neutral-200 border-0 shadow-lg"
+          className="w-fit  pt-2 px-2 bg-green-950  text-neutral-200 border-0 shadow-lg"
         >
           {secondaryRoutes.map((route) => (
             <Link

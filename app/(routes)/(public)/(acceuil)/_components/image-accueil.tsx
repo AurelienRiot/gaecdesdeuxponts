@@ -22,7 +22,7 @@ const ImageAccueil = () => {
       p-2 md:grid-cols-[4fr_5fr]  lg:grid-cols-[5fr_4fr]"
     >
       <div className=" flex flex-col items-center justify-center p-6 text-center @container">
-        <h1 className="group mb-4 text-3xl font-bold @sm:text-4xl @md:text-5xl @lg:text-6xl">
+        <h1 className="group mb-4 text-3xl font-bold @sm:text-4xl @md:text-5xl @lg:text-6xl text-primary">
           {/* Lait
           <span className="relative ml-1 inline-block @sm:ml-2 @lg:ml-3">
             {placeholders.map((placeholder, i) => (
