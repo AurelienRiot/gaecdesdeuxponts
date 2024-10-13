@@ -68,7 +68,7 @@ export default function EventPage({ amapOrders, initialOrders, dateArray }: Even
     <>
       <div
         ref={containerRef}
-        className="flex flex-row gap-4 w-full overflow-x-scroll overflow-y-hidden mx-auto flex-auto"
+        className="flex flex-row gap-4 w-full overflow-x-scroll overflow-y-hidden mx-auto flex-auto pb-4"
       >
         {dateArray.map((date) => {
           const isFocused = date === focusDate;
