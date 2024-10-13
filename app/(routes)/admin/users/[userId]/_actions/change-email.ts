@@ -75,7 +75,7 @@ async function changeEmail(data: z.infer<typeof schema>) {
 
       return {
         success: true,
-        message: "Email mise à jour",
+        message: "Email mis à jour",
       };
     },
   });

@@ -19,5 +19,7 @@ export const billingAddressSchema = z
     state: z.string().min(1, {
       message: "Veuillez entrer la région",
     }),
+    latitude: z.number().optional(),
+    longitude: z.number().optional(),
   })
   .optional();

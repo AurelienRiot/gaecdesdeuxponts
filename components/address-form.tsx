@@ -31,6 +31,8 @@ export const AddressForm = ({ className }: AdressFormProps) => {
       line2: address.line2,
       postalCode: suggestion.postal_code,
       state: suggestion.state,
+      longitude: suggestion.longitude,
+      latitude: suggestion.latitude,
     });
   }
 

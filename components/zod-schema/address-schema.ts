@@ -8,6 +8,8 @@ export type FullAdress = {
   line2: string;
   postalCode: string;
   state: string;
+  latitude?: number;
+  longitude?: number;
 };
 
 export const defaultAddress: FullAdress = {
@@ -28,4 +30,6 @@ export const addressSchema = z.object({
   line2: z.string().optional(),
   postalCode: z.string().optional(),
   state: z.string().optional(),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
 });

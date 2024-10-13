@@ -66,7 +66,7 @@ export default async function createOrdersEvent(data: { date: Date }) {
       },
     })
     .then((event) => {
-      return { success: true, message: "Agenda mise à jour" };
+      return { success: true, message: "Agenda mis à jour" };
     })
     .catch((error) => {
       console.log(error);

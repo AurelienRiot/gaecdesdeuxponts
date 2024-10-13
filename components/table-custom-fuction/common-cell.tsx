@@ -12,6 +12,7 @@ import { AutosizeTextarea } from "../ui/autosize-textarea";
 import { Button } from "../ui/button";
 import { Checkbox, type CheckedState } from "../ui/checkbox";
 import Currency from "../ui/currency";
+import { cn } from "@/lib/utils";
 
 type DateCellProps = {
   date: Date;
@@ -29,23 +30,36 @@ type NameCellProps = {
   url?: string;
   imageSize?: number;
   displayImage?: boolean;
+  completed?: boolean;
 };
 
-function NameCell({ image, name, url, displayImage = true, imageSize = 32 }: NameCellProps) {
+function NameCell({ image, name, url, displayImage = true, imageSize = 32, completed = true }: NameCellProps) {
   return (
     <Button asChild variant={url ? "link" : "ghost"} className="px-0">
       {url ? (
         <Link href={url}>
-          <NameWithImage name={name} image={image} imageSize={imageSize} displayImage={displayImage} />
+          <NameWithImage
+            name={name}
+            image={image}
+            imageSize={imageSize}
+            displayImage={displayImage}
+            completed={completed}
+          />
         </Link>
       ) : (
-        <span>{name}</span>
+        <NameWithImage
+          name={name}
+          image={image}
+          imageSize={imageSize}
+          displayImage={displayImage}
+          completed={completed}
+        />
       )}
     </Button>
   );
 }
 
-const NameWithImage = ({ name, image, imageSize = 16, displayImage = true }: NameCellProps) => (
+const NameWithImage = ({ name, image, imageSize = 16, displayImage = true, completed }: NameCellProps) => (
   <div className="flex items-center justify-start gap-2 w-full">
     {displayImage ? (
       image ? (
@@ -72,7 +86,7 @@ const NameWithImage = ({ name, image, imageSize = 16, displayImage = true }: Nam
       )
     ) : null}
     {/* {name} */}
-    <span className="font-medium text-xs truncate">{name}</span>
+    <span className={cn("font-medium text-xs truncate", !completed ? "text-destructive" : "")}>{name}</span>
   </div>
 );
 

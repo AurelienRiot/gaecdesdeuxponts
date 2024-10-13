@@ -38,7 +38,12 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, onOpenMod
               }}
               className="col-span-5  "
             >
-              <NameWithImage name={order.name} image={order.user.image} imageSize={12} />
+              <NameWithImage
+                name={order.name}
+                image={order.user.image}
+                imageSize={12}
+                completed={order.user.completed}
+              />
             </button>
 
             <StatusCell status={order.status} className="col-span-5 justify-center" />

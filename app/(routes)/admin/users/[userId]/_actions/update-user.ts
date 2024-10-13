@@ -65,7 +65,7 @@ async function updateUser(data: UserFormValues) {
 
       return {
         success: true,
-        message: "Utilisateur mise à jour",
+        message: "Utilisateur mis à jour",
       };
     },
   });

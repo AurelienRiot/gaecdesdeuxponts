@@ -36,7 +36,7 @@ async function updateProStatus(data: z.infer<typeof schema>) {
 
       return {
         success: true,
-        message: "Utilisateur mise à jour",
+        message: "Utilisateur mis à jour",
       };
     },
   });

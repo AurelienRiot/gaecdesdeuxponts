@@ -92,7 +92,7 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
 
       return {
         success: true,
-        message: "Commande mise à jour",
+        message: "Commande mis à jour",
       };
     },
   });

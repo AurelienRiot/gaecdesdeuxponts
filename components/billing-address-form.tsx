@@ -35,6 +35,8 @@ export const BillingAddressForm = ({ className }: AdressFormProps) => {
       line2: billingAddress?.line2,
       postalCode: suggestion.postal_code,
       state: suggestion.state,
+      longitude: suggestion.longitude,
+      latitude: suggestion.latitude,
     });
     form.clearErrors("billingAddress");
   }

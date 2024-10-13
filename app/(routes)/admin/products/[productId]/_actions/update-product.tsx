@@ -76,7 +76,7 @@ export async function updateProduct(data: ProductFormValues) {
 
       return {
         success: true,
-        message: "Produit mise à jour",
+        message: "Produit mis à jour",
       };
     },
   });

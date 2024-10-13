@@ -76,7 +76,7 @@ async function updateAMAP(data: AMAPFormValues) {
       revalidateTag("amap-orders");
       return {
         success: true,
-        message: "Commande AMAP mise à jour",
+        message: "Commande AMAP mis à jour",
       };
     },
   });

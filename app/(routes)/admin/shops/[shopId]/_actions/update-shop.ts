@@ -21,7 +21,7 @@ async function updateShop(data: ShopFormValues) {
       revalidateTag("shops");
       return {
         success: true,
-        message: "Magasin mise à jour",
+        message: "Magasin mis à jour",
       };
     },
   });
