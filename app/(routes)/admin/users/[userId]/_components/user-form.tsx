@@ -147,25 +147,48 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="company"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className={field.value?.includes("acompleter") ? "font-bold text-destructive" : ""}>
-                        Entreprise
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          disabled={form.formState.isSubmitting || role !== "pro"}
-                          placeholder="entreprise"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {role === "pro" && (
+                  <>
+                    <FormField
+                      control={form.control}
+                      name="company"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel
+                            className={field.value?.includes("acompleter") ? "font-bold text-destructive" : ""}
+                          >
+                            Entreprise
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled={form.formState.isSubmitting || role !== "pro"}
+                              placeholder="Entreprise"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="raisonSocial"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Raison sociale</FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled={form.formState.isSubmitting || role !== "pro"}
+                              placeholder="Raison sociale"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </>
+                )}
                 <FormField
                   control={form.control}
                   name="phone"
