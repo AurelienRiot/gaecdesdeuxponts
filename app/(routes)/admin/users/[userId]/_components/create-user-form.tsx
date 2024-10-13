@@ -36,6 +36,7 @@ export const CreateUserForm = () => {
       name: "",
       email: "",
       company: "",
+      raisonSocial: "",
       completed: true,
       phone: "",
       role: "pro",
@@ -121,23 +122,44 @@ export const CreateUserForm = () => {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="company"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Entreprise</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={form.formState.isSubmitting || role !== "pro"}
-                        placeholder="entreprise"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {role === "pro" && (
+                <>
+                  <FormField
+                    control={form.control}
+                    name="company"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Entreprise</FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={form.formState.isSubmitting || role !== "pro"}
+                            placeholder="Entreprise"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="raisonSocial"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Raison sociale</FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={form.formState.isSubmitting || role !== "pro"}
+                            placeholder="Raison sociale"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </>
+              )}
               <FormField
                 control={form.control}
                 name="phone"

@@ -24,7 +24,7 @@ export const createCustomer = (user: UserWithAddress): CustomerForPDF => {
   return {
     name: user.name || "",
     userId: user.id,
-    company: user.company,
+    company: user.raisonSocial || user.company,
     email: user.email || "",
     phone: formatFrenchPhoneNumber(user.phone),
     shippingAddress,

@@ -21,6 +21,7 @@ const PageSettings = () => {
     phone: user.phone || "",
     email: user.email || "",
     company: user.company || "",
+    raisonSocial: user.raisonSocial || "",
     address: {
       label: user.address?.label || "",
       city: user.address?.city || "",
@@ -61,13 +62,7 @@ const LoadingUserForm = () => (
           {" "}
           <Skeleton className="h-4 w-32" />{" "}
         </h2>
-        <TrashButton
-          disabled={true}
-          variant="destructive"
-          size="sm"
-          className="ml-3"
-          iconClassName="ml-2 size-6"
-        >
+        <TrashButton disabled={true} variant="destructive" size="sm" className="ml-3" iconClassName="ml-2 size-6">
           Supprimer le compte
         </TrashButton>
       </div>

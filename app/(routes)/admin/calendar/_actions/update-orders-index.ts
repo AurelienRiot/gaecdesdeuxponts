@@ -26,7 +26,7 @@ async function updateOrdersIndex(data: z.infer<typeof schema>) {
       }
       return {
         success: true,
-        message: "Commandes mises à jour",
+        message: "",
       };
     },
   });

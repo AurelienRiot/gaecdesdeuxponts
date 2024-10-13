@@ -25,6 +25,7 @@ interface UserFormProps {
     name: string;
     role: string;
     company: string;
+    raisonSocial: string;
     email: string;
     phone: string;
     address: FullAdress;
@@ -42,6 +43,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }: UserFormProps
     defaultValues: {
       name: initialData.name,
       company: initialData.company,
+      raisonSocial: initialData.raisonSocial,
       phone: initialData.phone,
       address: initialData.address ?? defaultAddress,
       billingAddress: initialData.billingAddress,
@@ -62,6 +64,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }: UserFormProps
               name: data.name,
               phone: data.phone,
               company: data.company || null,
+              raisonSocial: data.raisonSocial || null,
               address: (data.address as Address) ?? null,
               billingAddress: (data.billingAddress as BillingAddress) ?? null,
             }
@@ -108,19 +111,34 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }: UserFormProps
               )}
             />
             {initialData.role === "pro" && (
-              <FormField
-                control={form.control}
-                name="company"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Entreprise</FormLabel>
-                    <FormControl>
-                      <Input disabled={form.formState.isSubmitting} placeholder="entreprise" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <>
+                <FormField
+                  control={form.control}
+                  name="company"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Entreprise</FormLabel>
+                      <FormControl>
+                        <Input disabled={form.formState.isSubmitting} placeholder="Entreprise" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="raisonSocial"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Raison sociale</FormLabel>
+                      <FormControl>
+                        <Input disabled={form.formState.isSubmitting} placeholder="Raison sociale" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
             )}
 
             <FormField

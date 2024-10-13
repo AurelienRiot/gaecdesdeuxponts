@@ -49,6 +49,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
       name: initialData.name || "",
       image: initialData.image || "",
       company: initialData.company || "",
+      raisonSocial: initialData.raisonSocial || "",
       phone: initialData.phone || "",
       ccInvoice: initialData.ccInvoice,
       role: ["user", "pro", "trackOnlyUser"].includes(initialData.role) ? (initialData.role as "user") : "user",

@@ -34,6 +34,7 @@ model User {
   id               String    @unique @id @default(cuid())
   name             String?
   company          String?
+  raisonSocial     String?
   email            String?   @unique
   emailVerified    DateTime?
   phone            String? 

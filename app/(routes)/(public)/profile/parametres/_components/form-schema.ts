@@ -8,6 +8,7 @@ export const formSchema = z.object({
     message: "Veuillez entrer votre nom",
   }),
   company: z.string().optional(),
+  raisonSocial: z.string().optional(),
   phone: z.string().refine(
     (value) => {
       return value === "" || isValidPhoneNumber(value);

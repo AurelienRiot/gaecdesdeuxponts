@@ -14,6 +14,7 @@ async function updateUser(data: UserFormValues) {
       id,
       name,
       company,
+      raisonSocial,
       phone,
       role,
       address,
@@ -35,6 +36,7 @@ async function updateUser(data: UserFormValues) {
         data: {
           name: name.trim(),
           company: role === "pro" ? company?.trim() : undefined,
+          raisonSocial: role === "pro" ? raisonSocial?.trim() : undefined,
           phone,
           image,
           completed,
