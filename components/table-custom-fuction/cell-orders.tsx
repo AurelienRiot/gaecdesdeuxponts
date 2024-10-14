@@ -81,10 +81,11 @@ function OrderIdCell({ id, shippingEmail, invoiceEmail, datePickUp, status }: Or
 type AdminShopNameCellProps = {
   shopName: string;
   shopId: string;
+  shopImage?: string | null;
 };
-function AdminShopNameCell({ shopName, shopId }: AdminShopNameCellProps) {
+function AdminShopNameCell({ shopName, shopId, shopImage }: AdminShopNameCellProps) {
   return shopName !== "Livraison à domicile" ? (
-    <NameCell name={shopName} url={`/admin/shops/${shopId}`} />
+    <NameCell name={shopName} url={`/admin/shops/${shopId}`} image={shopImage} imageSize={14} />
   ) : (
     <Button variant={"ghost"} className="cursor-default px-0">
       {shopName}

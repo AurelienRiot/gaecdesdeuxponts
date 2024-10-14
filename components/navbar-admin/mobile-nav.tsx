@@ -18,6 +18,7 @@ function MobileNav() {
           <Link
             key={route.href}
             href={route.href}
+            onClick={(e) => e.stopPropagation()}
             className={cn("flex flex-col items-center px-2 py-1 rounded-md", route.active && "bg-green-600 font-bold")}
           >
             <route.Icone className="w-6 h-6" />
@@ -43,7 +44,10 @@ function AutresButton() {
         <AutoCloseSheet setIsOpen={setOpen} />{" "}
       </Suspense>
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger className=" group relative transition-colors duration-300   data-[state=open]:text-destructive text-sm">
+        <PopoverTrigger
+          onClick={(e) => e.stopPropagation()}
+          className=" group relative transition-colors duration-300   data-[state=open]:text-destructive text-sm"
+        >
           <div className="size-6 relative -translate-y-2  -translate-x-2 mx-auto">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -97,6 +101,7 @@ function AutresButton() {
             <Link
               key={route.href}
               href={route.href}
+              onClick={(e) => e.stopPropagation()}
               className={cn(
                 "flex flex-row items-center gap-4 px-4 py-2 rounded-md",
                 route.active && "bg-green-600 font-bold",

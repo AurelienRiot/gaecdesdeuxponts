@@ -28,6 +28,7 @@ export type OrderColumn = {
   shippingEmail: Date | null;
   invoiceEmail: Date | null;
   shopId: string;
+  shopImage?: string | null;
 };
 export const columns: ColumnDef<OrderColumn>[] = [
   {
@@ -70,7 +71,13 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "shopName",
     header: ShopNameHeader,
-    cell: ({ row }) => <AdminShopNameCell shopName={row.original.shopName} shopId={row.original.shopId} />,
+    cell: ({ row }) => (
+      <AdminShopNameCell
+        shopImage={row.original.shopImage}
+        shopName={row.original.shopName}
+        shopId={row.original.shopId}
+      />
+    ),
     filterFn: FilterOneInclude,
   },
 

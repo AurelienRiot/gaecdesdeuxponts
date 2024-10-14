@@ -47,7 +47,7 @@ export const DisplayCreateInvoice = ({ orderIds, disabled }: { orderIds: string[
         return;
       }
     }
-    serverAction({ data: { orderIds, sendEmail } });
+    serverAction({ data: { orderIds, sendEmail }, onSuccess: () => router.refresh() });
   };
 
   return (

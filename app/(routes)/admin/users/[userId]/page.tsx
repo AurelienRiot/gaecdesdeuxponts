@@ -63,6 +63,7 @@ const getUserPageData = unstable_cache(
       createdAt: order.createdAt,
       shopName: order.shop?.name || "Livraison à domicile",
       shopId: order.shop?.id || "",
+      shopImage: order.shop?.imageUrl,
     }));
     return { formatedUser, formattedOrders };
   },

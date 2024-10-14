@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 import getOrdersIndex from "../_actions/get-orders-index";
 import { addDays } from "date-fns";
 import Spinner from "@/components/animations/spinner";
+import Loading from "../@modal/_loading";
+import NoResults from "@/components/ui/no-results";
 
 function OrdersModal({
   open,
@@ -24,47 +26,10 @@ function OrdersModal({
   orderIds?: string[];
   allOrders: CalendarOrdersType[];
 }) {
-  const [orders, setOrders] = useState<CalendarOrdersType[]>();
   const { serverAction } = useServerAction(updateOrdersIndex);
+  const [orders, setOrders] = useState<CalendarOrdersType[]>();
   const { serverAction: getOrdersIndexAction, loading } = useServerAction(getOrdersIndex);
   const router = useRouter();
-  // const listRef = useRef<HTMLUListElement>(null);
-  // const pointerY = useRef<number | undefined>(undefined);
-  // const [isDragging, setIsDragging] = useState(false);
-
-  // useEffect(() => {
-  //   const handlePointerMove = (e: PointerEvent) => {
-  //     pointerY.current = e.clientY;
-  //   };
-
-  //   window.addEventListener("pointermove", handlePointerMove);
-
-  //   return () => window.removeEventListener("pointermove", handlePointerMove);
-  // }, []);
-
-  // Auto-scroll logic
-  // useEffect(() => {
-  //   if (!isDragging || !listRef.current) return;
-
-  //   const container = listRef.current;
-  //   const buffer = 50; // Distance in px from the edge to start scrolling
-  //   const scrollSpeed = 20; // Pixels to scroll per interval
-  //   const intervalTime = 50; // Interval time in ms
-
-  //   const scrollInterval = setInterval(() => {
-  //     if (!pointerY.current) return;
-
-  //     const rect = container.getBoundingClientRect();
-
-  //     if (pointerY.current < rect.top + buffer) {
-  //       container.scrollBy({ top: -scrollSpeed, behavior: "smooth" });
-  //     } else if (pointerY.current > rect.bottom - buffer) {
-  //       container.scrollBy({ top: scrollSpeed, behavior: "smooth" });
-  //     }
-  //   }, intervalTime);
-
-  //   return () => clearInterval(scrollInterval);
-  // }, [isDragging]);
 
   function closeModal() {
     onClose();
@@ -83,7 +48,6 @@ function OrdersModal({
       const userIds = [...new Set(newOrders.map((order) => order.user.id))];
       const beginDay = addDays(newOrders[0].shippingDate.setHours(0, 0, 0, 0), -7);
       const endDay = addDays(beginDay, 1);
-      console.log({ beginDay, endDay });
 
       if (newOrders.some((order) => !order.index)) {
         const responce = await getOrdersIndexAction({ data: { userIds, beginDay, endDay } });
@@ -105,30 +69,42 @@ function OrdersModal({
     }
     sedData();
   }, [orderIds, allOrders, getOrdersIndexAction]);
-  if (!orders) return null;
+
   return (
     <Modal title="Ordonner les commandes" isOpen={open} onClose={closeModal}>
-      {loading && <Spinner className="absolute right-4 top-4" />}
-      <ScrollArea className=" max-h-[70dvh] overflow-auto ">
-        <Reorder.Group
-          as="ul"
-          values={orders}
-          onReorder={setOrders}
-          className="flex flex-col gap-2  p-2  relative"
-          axis="y"
-          layoutScroll
-          // ref={listRef}
-        >
-          {orders.map((order, index) => (
-            <OrderItem key={order.id} order={order} index={index} />
-          ))}
-        </Reorder.Group>
-      </ScrollArea>
+      <ReorderItem loading={loading} orders={orders} setOrders={setOrders} />
     </Modal>
   );
 }
 
 export default OrdersModal;
+
+function ReorderItem({
+  loading,
+  orders,
+  setOrders,
+}: { loading: boolean; orders: CalendarOrdersType[] | undefined; setOrders: (orders: CalendarOrdersType[]) => void }) {
+  if (loading) return <Loading />;
+
+  if (!orders) return <NoResults />;
+  return (
+    <ScrollArea className=" max-h-[70dvh] overflow-auto ">
+      <Reorder.Group
+        as="ul"
+        values={orders}
+        onReorder={setOrders}
+        className="flex flex-col gap-2  p-2  relative"
+        axis="y"
+        layoutScroll
+        // ref={listRef}
+      >
+        {orders.map((order, index) => (
+          <OrderItem key={order.id} order={order} index={index} />
+        ))}
+      </Reorder.Group>
+    </ScrollArea>
+  );
+}
 
 function OrderItem({
   order,

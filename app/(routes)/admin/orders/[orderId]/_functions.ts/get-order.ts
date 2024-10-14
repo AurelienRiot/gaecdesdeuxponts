@@ -56,7 +56,7 @@ const getShippingOrder = unstable_cache(
     return initialData;
   },
   ["getShippingOrder"],
-  { revalidate: 60 * 60 * 24, tags: ["orders"] },
+  { revalidate: 60 * 60 * 24, tags: ["orders", "invoices"] },
 );
 
 export default getShippingOrder;
