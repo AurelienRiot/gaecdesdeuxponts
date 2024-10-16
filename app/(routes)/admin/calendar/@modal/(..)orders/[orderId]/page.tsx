@@ -1,8 +1,8 @@
 import { OrderForm } from "@/app/(routes)/admin/orders/[orderId]/_components/order-form";
-import getShippingOrder from "@/app/(routes)/admin/orders/[orderId]/_functions.ts/get-order";
-import getProductsForOrders from "@/app/(routes)/admin/orders/[orderId]/_functions.ts/get-products-for-orders";
-import getShopsForOrders from "@/app/(routes)/admin/orders/[orderId]/_functions.ts/get-shops-for-orders";
-import getUsersForOrders from "@/app/(routes)/admin/orders/[orderId]/_functions.ts/get-users-for-orders";
+import getShippingOrder from "@/app/(routes)/admin/orders/[orderId]/_functions/get-order";
+import getProductsForOrders from "@/app/(routes)/admin/orders/[orderId]/_functions/get-products-for-orders";
+import getShopsForOrders from "@/app/(routes)/admin/orders/[orderId]/_functions/get-shops-for-orders";
+import getUsersForOrders from "@/app/(routes)/admin/orders/[orderId]/_functions/get-users-for-orders";
 import { headers } from "next/headers";
 import { Suspense } from "react";
 import Loading from "../../_loading";

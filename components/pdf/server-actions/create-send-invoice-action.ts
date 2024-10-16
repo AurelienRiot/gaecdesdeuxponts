@@ -18,7 +18,6 @@ export async function createInvoiceAction(data: z.infer<typeof createInvoiceSche
       // await addDelay(2000);
       const previousInvoice = await prismadb.invoice.findFirst({
         orderBy: { createdAt: "desc" },
-        where: { deletedAt: null },
         select: { id: true },
       });
       const invoice = await createInvoice(orderIds, previousInvoice?.id || null);

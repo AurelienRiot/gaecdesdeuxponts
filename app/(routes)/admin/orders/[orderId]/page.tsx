@@ -1,10 +1,10 @@
 import ButtonBackward from "@/components/ui/button-backward";
 import { headers } from "next/headers";
 import { OrderForm } from "./_components/order-form";
-import getShippingOrder from "./_functions.ts/get-order";
-import getProductsForOrders from "./_functions.ts/get-products-for-orders";
-import getShopsForOrders from "./_functions.ts/get-shops-for-orders";
-import getUsersForOrders from "./_functions.ts/get-users-for-orders";
+import getShippingOrder from "./_functions/get-order";
+import getProductsForOrders from "./_functions/get-products-for-orders";
+import getShopsForOrders from "./_functions/get-shops-for-orders";
+import getUsersForOrders from "./_functions/get-users-for-orders";
 
 export const dynamic = "force-dynamic";
 const OrderFormPage = async ({

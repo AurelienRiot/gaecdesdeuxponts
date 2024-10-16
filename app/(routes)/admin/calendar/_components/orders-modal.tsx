@@ -1,34 +1,27 @@
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Modal } from "@/components/ui/modal";
+import NoResults from "@/components/ui/no-results";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import useServerAction from "@/hooks/use-server-action";
 import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import { Grip } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import updateOrdersIndex from "../_actions/update-orders-index";
 import type { CalendarOrdersType } from "../_functions/get-orders";
 import { useRaisedShadow } from "./use-raised-shadow";
-import updateOrdersIndex from "../_actions/update-orders-index";
-import useServerAction from "@/hooks/use-server-action";
-import { useRouter } from "next/navigation";
-import getOrdersIndex from "../_actions/get-orders-index";
-import { addDays } from "date-fns";
-import Spinner from "@/components/animations/spinner";
-import Loading from "../@modal/_loading";
-import NoResults from "@/components/ui/no-results";
 
 function OrdersModal({
   open,
   onClose,
-  orderIds,
-  allOrders,
+  initialOrders,
 }: {
   open: boolean;
   onClose: () => void;
-  orderIds?: string[];
-  allOrders: CalendarOrdersType[];
+  initialOrders: CalendarOrdersType[];
 }) {
   const { serverAction } = useServerAction(updateOrdersIndex);
   const [orders, setOrders] = useState<CalendarOrdersType[]>();
-  const { serverAction: getOrdersIndexAction, loading } = useServerAction(getOrdersIndex);
   const router = useRouter();
 
   function closeModal() {
@@ -42,37 +35,43 @@ function OrdersModal({
   }
 
   useEffect(() => {
-    async function sedData() {
-      if (!orderIds) return;
-      const newOrders = allOrders.filter((order) => orderIds?.includes(order.id));
-      const userIds = [...new Set(newOrders.map((order) => order.user.id))];
-      const beginDay = addDays(newOrders[0].shippingDate.setHours(0, 0, 0, 0), -7);
-      const endDay = addDays(beginDay, 1);
+    setOrders(initialOrders);
+  }, [initialOrders]);
 
-      if (newOrders.some((order) => !order.index)) {
-        const responce = await getOrdersIndexAction({ data: { userIds, beginDay, endDay } });
-        if (responce) {
-          for (const order of newOrders) {
-            if (!order.index) {
-              order.index = responce.find((o) => o.userId === order.user.id)?.index || null;
-            }
-          }
-        }
-      }
-      setOrders(
-        newOrders.sort((a, b) => {
-          if (a.index === null) return -1;
-          if (b.index === null) return 1;
-          return (a.index ?? 0) - (b.index ?? 0);
-        }),
-      );
-    }
-    sedData();
-  }, [orderIds, allOrders, getOrdersIndexAction]);
+  // useEffect(() => {
+  //   async function sedData() {
+  //     if (!orderIds) return;
+  //     const newOrders = allOrders.filter((order) => orderIds?.includes(order.id));
+
+  //     if (!newOrders.length) return;
+  //     const userIds = [...new Set(newOrders.map((order) => order.user.id))];
+  //     const beginDay = addDays(newOrders[0].shippingDate.setHours(0, 0, 0, 0), -7);
+  //     const endDay = addDays(beginDay, 1);
+
+  //     if (newOrders.some((order) => !order.index)) {
+  //       const responce = await getOrdersIndexAction({ data: { userIds, beginDay, endDay } });
+  //       if (responce) {
+  //         for (const order of newOrders) {
+  //           if (!order.index) {
+  //             order.index = responce.find((o) => o.userId === order.user.id)?.index || null;
+  //           }
+  //         }
+  //       }
+  //     }
+  //     setOrders(
+  //       newOrders.sort((a, b) => {
+  //         if (a.index === null) return -1;
+  //         if (b.index === null) return 1;
+  //         return (a.index ?? 0) - (b.index ?? 0);
+  //       }),
+  //     );
+  //   }
+  //   sedData();
+  // }, [orderIds, allOrders, getOrdersIndexAction]);
 
   return (
     <Modal title="Ordonner les commandes" isOpen={open} onClose={closeModal}>
-      <ReorderItem loading={loading} orders={orders} setOrders={setOrders} />
+      <ReorderItem orders={orders} setOrders={setOrders} />
     </Modal>
   );
 }
@@ -80,12 +79,9 @@ function OrdersModal({
 export default OrdersModal;
 
 function ReorderItem({
-  loading,
   orders,
   setOrders,
-}: { loading: boolean; orders: CalendarOrdersType[] | undefined; setOrders: (orders: CalendarOrdersType[]) => void }) {
-  if (loading) return <Loading />;
-
+}: { orders: CalendarOrdersType[] | undefined; setOrders: (orders: CalendarOrdersType[]) => void }) {
   if (!orders) return <NoResults />;
   return (
     <ScrollArea className=" max-h-[70dvh] overflow-auto ">

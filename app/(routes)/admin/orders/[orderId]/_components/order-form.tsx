@@ -30,8 +30,6 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
-import { QueryClient, useQueryClient } from "@tanstack/react-query";
-import { getLocalIsoString } from "@/lib/date-utils";
 
 export type OrderFormProps = {
   initialData:
@@ -52,7 +50,7 @@ export type OrderFormProps = {
 
 export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, users, shops, referer, className }) => {
   const router = useRouter();
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   const prevDateOfShipping = initialData?.dateOfShipping ? new Date(initialData.dateOfShipping) : undefined;
   const { serverAction: createOrderAction } = useServerAction(createOrder);
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
@@ -149,9 +147,9 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
     validateInvoiceAction({
       data: { id: initialData?.invoiceId, isPaid: !initialData.dateOfPayment },
       onSuccess: () => {
-        shippingDate && queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(shippingDate) }] });
-        prevDateOfShipping &&
-          queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(prevDateOfShipping) }] });
+        // shippingDate && queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(shippingDate) }] });
+        // prevDateOfShipping &&
+        //   queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(prevDateOfShipping) }] });
         router.refresh();
       },
     });
@@ -190,12 +188,12 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
           toastOptions: { position: "top-center" },
         })
       : await createOrderAction({ data, toastOptions: { position: "top-center" }, onSuccess: () => router.back() });
-    shippingDate &&
-      queryClient.invalidateQueries({ queryKey: ["fetchDailyOrders", { date: getLocalIsoString(shippingDate) }] });
-    prevDateOfShipping &&
-      queryClient.invalidateQueries({
-        queryKey: ["fetchDailyOrders", { date: getLocalIsoString(prevDateOfShipping) }],
-      });
+    // shippingDate &&
+    //   queryClient.invalidateQueries({ queryKey: ["fetchDailyOrders", { date: getLocalIsoString(shippingDate) }] });
+    // prevDateOfShipping &&
+    //   queryClient.invalidateQueries({
+    //     queryKey: ["fetchDailyOrders", { date: getLocalIsoString(prevDateOfShipping) }],
+    //   });
   };
 
   function onNewOrder(date?: Date) {
@@ -289,7 +287,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
       </Form>
       {!!initialData?.id && !!initialData.dateOfEdition && (
         <div id="button-container" className="space-y-4">
-          {user?.role === "pro" ? (
+          {user?.role === "pro" && (
             <div className="space-y-2">
               <Label>Bon de livraison</Label>
               <DisplayShippingOrder
@@ -298,50 +296,49 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
                 isSend={!!initialData.shippingEmail}
               />
             </div>
-          ) : (
-            <div className="space-y-4">
-              {(user?.role === "trackOnlyUser" || !initialData.shippingEmail) && (
-                <Button
-                  onClick={onConfirm}
-                  disabled={form.formState.isSubmitting || loading || validateLoading}
-                  variant={initialData.shippingEmail ? "destructive" : "default"}
-                  className="w-fit block"
-                >
-                  {initialData.shippingEmail ? "Annuler la livraison" : "Confirmer la livraison"}
-                </Button>
-              )}
-              {user?.role === "user" && initialData.shippingEmail && (
-                <>
-                  <Label>Facture</Label>
-
-                  {initialData.invoiceId ? (
-                    <>
-                      <DisplayInvoice
-                        disabled={form.formState.isSubmitting || loading || validateLoading}
-                        onSendClassName="inline-flex"
-                        onViewClassName="hidden"
-                        invoiceId={initialData.invoiceId}
-                        isSend={!!initialData.invoiceEmail}
-                      />
-                      <Button
-                        onClick={onPaid}
-                        disabled={form.formState.isSubmitting || loading || validateLoading}
-                        variant={initialData.dateOfPayment ? "destructive" : "default"}
-                        className="w-fit"
-                      >
-                        {initialData.dateOfPayment ? "Annuler le paiement" : "Valider le paiement"}
-                      </Button>
-                    </>
-                  ) : (
-                    <DisplayCreateInvoice
-                      disabled={form.formState.isSubmitting || loading || validateLoading}
-                      orderIds={[initialData.id]}
-                    />
-                  )}
-                </>
-              )}
-            </div>
           )}
+          <div className="space-y-4">
+            {(user?.role === "trackOnlyUser" || !initialData.shippingEmail) && (
+              <Button
+                onClick={onConfirm}
+                disabled={form.formState.isSubmitting || loading || validateLoading}
+                variant={initialData.shippingEmail ? "destructive" : "default"}
+                className="w-fit block"
+              >
+                {initialData.shippingEmail ? "Annuler la livraison" : "Confirmer la livraison"}
+              </Button>
+            )}
+            {user?.role === "user" && initialData.shippingEmail && (
+              <>
+                <Label>Facture</Label>
+
+                {initialData.invoiceId ? (
+                  <>
+                    <DisplayInvoice
+                      disabled={form.formState.isSubmitting || loading || validateLoading}
+                      onSendClassName="inline-flex"
+                      onViewClassName="hidden"
+                      invoiceId={initialData.invoiceId}
+                      isSend={!!initialData.invoiceEmail}
+                    />
+                    <Button
+                      onClick={onPaid}
+                      disabled={form.formState.isSubmitting || loading || validateLoading}
+                      variant={initialData.dateOfPayment ? "destructive" : "default"}
+                      className="w-fit"
+                    >
+                      {initialData.dateOfPayment ? "Annuler le paiement" : "Valider le paiement"}
+                    </Button>
+                  </>
+                ) : (
+                  <DisplayCreateInvoice
+                    disabled={form.formState.isSubmitting || loading || validateLoading}
+                    orderIds={[initialData.id]}
+                  />
+                )}
+              </>
+            )}
+          </div>
         </div>
       )}
 

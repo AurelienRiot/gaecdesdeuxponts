@@ -18,8 +18,8 @@ function makeDateArray({ from, to }: { from: Date; to: Date }) {
 }
 
 async function CalendarPage() {
-  const from = addDays(new Date(), -3);
-  const to = addDays(new Date(), 8);
+  const from = addDays(new Date(), -14);
+  const to = addDays(new Date(), 30);
   const dateArray = makeDateArray({ from, to });
   const [orders, amapOrders] = await Promise.all([getOrdersByDate({ from, to }), getGroupedAMAPOrders()]);
   // const amapOrders = await getGroupedAMAPOrders();

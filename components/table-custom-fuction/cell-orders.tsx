@@ -153,7 +153,7 @@ function createProduct(items: OrderItem[] | AMAPItem[]) {
 }
 
 const status = [
-  "En cours de validation",
+  "En attente de confirmation",
   "Commande validée",
   "Commande livrée",
   "En attente de paiement",
@@ -173,7 +173,7 @@ function createStatus({ dateOfEdition, invoiceOrder, shippingEmail }: OrderForSt
   if (invoiceOrder[0]?.invoice.id) return "En attente de paiement";
   if (shippingEmail) return "Commande livrée";
   if (dateOfEdition) return "Commande validée";
-  return "En cours de validation";
+  return "En attente de confirmation";
 }
 
 const createStatusArray = (statuses: Status[]): { label: string; value: Status }[] => {
@@ -193,47 +193,47 @@ type StatusCellProps = {
 const statusConfig: Record<
   Status,
   {
-    icon: JSX.Element;
+    Icon: React.ElementType;
     color: string;
     hoverColor: string;
   }
 > = {
-  ["En cours de validation"]: {
-    icon: <Package className="h-3 w-3" />,
+  ["En attente de confirmation"]: {
+    Icon: Package,
     color: "bg-yellow-500",
     hoverColor: "hover:bg-yellow-500/90",
   },
   ["Commande validée"]: {
-    icon: <CheckCircle className="h-3 w-3" />,
+    Icon: CheckCircle,
     color: "bg-teal-500",
     hoverColor: "hover:bg-teal-500/90",
   },
   ["Commande livrée"]: {
-    icon: <Truck className="h-3 w-3" />,
+    Icon: Truck,
     color: "bg-blue-500",
     hoverColor: "hover:bg-blue-500/90",
   },
   ["En attente de paiement"]: {
-    icon: <CreditCard className="h-3 w-3" />,
+    Icon: CreditCard,
     color: "bg-orange-500",
     hoverColor: "hover:bg-orange-500/90",
   },
   ["Payé"]: {
-    icon: <FaFileInvoiceDollar className="h-3 w-3" />,
+    Icon: FaFileInvoiceDollar,
     color: "bg-green-500",
     hoverColor: "hover:bg-green-500/90",
   },
 };
 
 function StatusCell({ status, className }: StatusCellProps) {
-  const { icon, color, hoverColor } = statusConfig[status];
+  const { Icon, color, hoverColor } = statusConfig[status];
   return (
     <div className={cn("flex gap-2 sm:gap-4", className)}>
       <Badge
         variant="secondary"
         className={cn(color, hoverColor, "text-white text-xs px-2 py-0.5 flex items-center space-x-1")}
       >
-        {icon}
+        <Icon className="size-3" />
         <span className="text-[10px]">{status}</span>
       </Badge>
     </div>

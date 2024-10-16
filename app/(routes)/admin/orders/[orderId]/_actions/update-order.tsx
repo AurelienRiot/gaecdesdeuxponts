@@ -7,6 +7,7 @@ import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { orderSchema, type OrderFormValues } from "../_components/order-schema";
 import { createCustomer } from "@/components/pdf/pdf-data";
+import getOrdersIndex from "../_functions/get-orders-index";
 
 async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date | null }) {
   return await safeServerAction({
@@ -61,12 +62,18 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
         include: { user: { include: { address: true, billingAddress: true } } },
       });
 
+      const index =
+        dateOfShipping && prevDateOfShipping && dateOfShipping.getTime() !== prevDateOfShipping.getTime()
+          ? await getOrdersIndex(userId, dateOfShipping)
+          : order.index;
+
       const customer = createCustomer(order.user);
       await prismadb.order.update({
         where: {
           id: id,
         },
         data: {
+          index,
           customer: {
             upsert: {
               create: customer,

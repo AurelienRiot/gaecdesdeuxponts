@@ -1,23 +1,13 @@
 "use client";
 import { extractProductQuantities } from "@/components/google-events/get-orders-for-events";
 import { getUnitLabel } from "@/components/product/product-function";
-import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
-import { Button, IconButton } from "@/components/ui/button";
-import { Modal } from "@/components/ui/modal";
+import { IconButton } from "@/components/ui/button";
 import NoResults from "@/components/ui/no-results";
-import useIsComponentMounted from "@/hooks/use-mounted";
-import { dateFormatter, getLocalIsoString, ONE_DAY } from "@/lib/date-utils";
-import throttle from "@/lib/throttle";
-import { formatFrenchPhoneNumber } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
-import { addDays, addHours, subDays } from "date-fns";
-import { motion } from "framer-motion";
+import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
+import { addDays, addHours } from "date-fns";
 import ky from "ky";
 import { ListOrdered } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { type Dispatch, type SetStateAction, useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import type getDailyOrders from "../_actions/get-daily-orders";
 import type { getGroupedAMAPOrders } from "../_functions/get-amap-orders";
 import type { CalendarOrdersType } from "../_functions/get-orders";
@@ -34,107 +24,72 @@ type EventsPageProps = {
   initialDateArray: string[];
 };
 
-export default function EventPage({ amapOrders, initialOrders, initialDateArray }: EventsPageProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const currentDateRef = useRef<HTMLDivElement>(null);
-  const isComponentMounted = useIsComponentMounted();
-  const [user, setUser] = useState<CalendarOrdersType["user"]>();
+function scrollToElement(id: string, behavior: "smooth" | "instant" = "smooth") {
+  const element = document.getElementById(id);
+  if (element) {
+    element.scrollIntoView({
+      behavior, // or 'auto'
+      block: "nearest", // 'start', 'center', 'end', or 'nearest'
+      inline: "center", // 'start', 'center', 'end', or 'nearest'
+    });
+  } else {
+    console.warn(`Element with id '${id}' not found inside the container.`);
+  }
+}
+
+export default function EventPage({ amapOrders, initialOrders, initialDateArray: dateArray }: EventsPageProps) {
   const [odrerIds, setOrderIds] = useState<string[]>();
-  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
-  const [isOrdersModalOpen, setIsOrdersModalOpen] = useState(false);
-  const [focusDate, setFocusDate] = useState(getLocalIsoString(new Date()));
-  const [dateArray, setDateArray] = useState<string[]>(initialDateArray);
-  const actionRef = useRef<null | "prepend" | "append">(null);
-  const [scrollAdjustment, setScrollAdjustment] = useState(0);
 
   // Handle Initial Scroll to Center the Focus Date
   useLayoutEffect(() => {
-    function scrollToCurrentDate() {
-      if (containerRef.current && currentDateRef.current && focusDate) {
-        const container = containerRef.current;
-        const currentDateElement = currentDateRef.current;
+    scrollToElement(getLocalIsoString(new Date()), "instant");
+  }, []);
 
-        const containerWidth = container.clientWidth;
-        const elementOffsetLeft = currentDateElement.offsetLeft;
-        const elementWidth = currentDateElement.clientWidth;
+  // const onEnterViewport = useCallback((index: number) => {
+  //   const numberDates = 1;
+  //   const dateWidth = numberDates * (320 + 16);
+  //   const container = containerRef.current;
+  //   if (!container) return;
+  //   if (index === 0) {
+  //     console.log("onEnterViewport first");
 
-        // Calculate the position to scroll so that the current date is centered
-        const scrollPosition = elementOffsetLeft - containerWidth / 2 + elementWidth / 2;
-
-        container.scrollTo({
-          left: scrollPosition,
-          behavior: isComponentMounted ? "smooth" : "instant", // Optional: adds smooth scrolling
-        });
-      }
-    }
-
-    scrollToCurrentDate();
-  }, [focusDate, isComponentMounted]);
-
-  const onEnterViewport = throttle(
-    useCallback((index: number) => {
-      const numberDates = 1;
-      const dateWidth = numberDates * (320 + 16);
-      const container = containerRef.current;
-      if (!container) return;
-      if (index === 0) {
-        console.log("onEnterViewport first");
-
-        setDateArray((prevDateArray) => {
-          const newDates = Array.from(
-            { length: numberDates },
-            (_, i) =>
-              subDays(new Date(prevDateArray[0]), i + 1)
-                .toISOString()
-                .split("T")[0],
-          ).reverse();
-          return [...newDates, ...prevDateArray.slice(0, -numberDates)]; // Keep the last dates
-        });
-        // container.scrollLeft += dateWidth;
-        // setTimeout(() => {
-        // container.scrollLeft += dateWidth;
-        // }, 0);
-        setScrollAdjustment((prev) => prev + dateWidth);
-      }
-      if (index === 9) {
-        console.log("onEnterViewport last");
-        setDateArray((prevDateArray) => {
-          const newLastDates = Array.from(
-            { length: numberDates },
-            (_, i) =>
-              addDays(new Date(prevDateArray[prevDateArray.length - 1]), i + 1)
-                .toISOString()
-                .split("T")[0],
-          );
-          return [...prevDateArray.slice(numberDates), ...newLastDates]; // Remove the first four elements and add new last dates
-        });
-        // setTimeout(() => {
-        // container.scrollLeft -= dateWidth;
-        // }, 0);
-        setScrollAdjustment((prev) => prev - dateWidth);
-      }
-    }, []),
-    200,
-  );
-
-  useLayoutEffect(() => {
-    const container = containerRef.current;
-
-    if (!container || !scrollAdjustment) return;
-
-    container.scrollLeft += scrollAdjustment;
-    setScrollAdjustment(0);
-  }, [scrollAdjustment]);
+  //     setDateArray((prevDateArray) => {
+  //       const newDates = Array.from(
+  //         { length: numberDates },
+  //         (_, i) =>
+  //           subDays(new Date(prevDateArray[0]), i + 1)
+  //             .toISOString()
+  //             .split("T")[0],
+  //       ).reverse();
+  //       return [...newDates, ...prevDateArray.slice(0, -numberDates)]; // Keep the last dates
+  //     });
+  //     requestAnimationFrame(() => {
+  //       container.scrollLeft *= dateWidth;
+  //     });
+  //   }
+  //   if (index === 9) {
+  //     console.log("onEnterViewport last");
+  //     setDateArray((prevDateArray) => {
+  //       const newLastDates = Array.from(
+  //         { length: numberDates },
+  //         (_, i) =>
+  //           addDays(new Date(prevDateArray[prevDateArray.length - 1]), i + 1)
+  //             .toISOString()
+  //             .split("T")[0],
+  //       );
+  //       return [...prevDateArray.slice(numberDates), ...newLastDates]; // Remove the first four elements and add new last dates
+  //     });
+  //     requestAnimationFrame(() => {
+  //       container.scrollLeft -= dateWidth;
+  //     });
+  //   }
+  // }, []);
 
   return (
     <>
-      <div
-        ref={containerRef}
-        className="flex flex-row gap-4 w-full overflow-x-scroll overflow-y-hidden mx-auto flex-auto pb-4 "
-      >
+      <div className="flex flex-row gap-4 w-full overflow-x-scroll overflow-y-hidden mx-auto flex-auto pb-4 ">
         {dateArray.map((date, index) => {
-          const isFocused = date === focusDate;
-          const initialData = initialOrders
+          const dailyOrders = initialOrders
             .filter((order) => getLocalIsoString(order.shippingDate) === date)
             .sort((a, b) => {
               if (a.index === null) return -1;
@@ -142,62 +97,67 @@ export default function EventPage({ amapOrders, initialOrders, initialDateArray 
               return (a.index ?? 0) - (b.index ?? 0);
             });
           return (
-            <motion.div
-              ref={isFocused ? currentDateRef : null}
+            <RenderEvent
+              date={date}
+              initialOrders={initialOrders}
+              amapOrders={amapOrders}
+              dailyOrders={dailyOrders}
               key={date}
-              data-date={date}
-              onViewportEnter={(e) => {
-                onEnterViewport(index);
-              }}
-              viewport={{ once: true }}
-              className="flex-shrink-0  w-[320px] h-full space-y-2 relative"
-            >
-              <h2 className="text-xl font-semibold capitalize text-center flex justify-between items-center px-2">
-                <span>{dateFormatter(new Date(date), { days: true })}</span>
-                {initialData.length > 0 && (
-                  <IconButton
-                    Icon={ListOrdered}
-                    iconClassName="size-3"
-                    onClick={() => {
-                      setOrderIds(initialData.map((order) => order.id));
-                      setIsOrdersModalOpen(true);
-                    }}
-                    className=""
-                  />
-                )}
-              </h2>
-
-              <DatePage
-                date={date}
-                dailyOrders={initialData}
-                allOrders={initialOrders}
-                amapOrders={amapOrders}
-                setUser={setUser}
-                setIsModalOpen={setIsUserModalOpen}
-              />
-            </motion.div>
+            />
           );
         })}
-      </div>{" "}
+      </div>
       <div className="flex justify-between p-4 ">
         <UpdatePage />
         <TodayFocus
           startMonth={new Date(dateArray[0])}
           endMonth={new Date(dateArray[dateArray.length - 1])}
-          setFocusDate={setFocusDate}
+          onDayClick={scrollToElement}
         />
       </div>
-      <UserModal open={isUserModalOpen} onClose={() => setIsUserModalOpen(false)} user={user} />
-      <OrdersModal
-        open={isOrdersModalOpen}
-        onClose={() => {
-          setIsOrdersModalOpen(false);
-          // router.refresh();
-        }}
-        orderIds={odrerIds}
-        allOrders={initialOrders}
-      />
     </>
+  );
+}
+
+function RenderEvent({
+  dailyOrders,
+  date,
+  initialOrders,
+  amapOrders,
+}: {
+  dailyOrders: CalendarOrdersType[];
+  initialOrders: CalendarOrdersType[];
+  date: string;
+  amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
+}) {
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  return (
+    <div key={date} id={date} className="flex-shrink-0  w-[320px] h-full space-y-2 relative">
+      <h2 className="text-xl font-semibold capitalize text-center flex justify-between items-center px-2">
+        <span>{dateFormatter(new Date(date), { days: true })}</span>
+        {dailyOrders.length > 0 && (
+          <>
+            <OrdersModal
+              open={isOrderModalOpen}
+              onClose={() => {
+                setIsOrderModalOpen(false);
+              }}
+              initialOrders={dailyOrders}
+            />
+            <IconButton
+              Icon={ListOrdered}
+              iconClassName="size-3"
+              onClick={() => {
+                setIsOrderModalOpen(true);
+              }}
+              className=""
+            />
+          </>
+        )}
+      </h2>
+
+      <DatePage date={date} dailyOrders={dailyOrders} allOrders={initialOrders} amapOrders={amapOrders} />
+    </div>
   );
 }
 
@@ -224,31 +184,27 @@ async function fetchDailyOrders(date: string) {
 function DatePage({
   date,
   amapOrders,
-  // dailyOrders,
+  dailyOrders,
   allOrders,
-  setUser,
-  setIsModalOpen,
 }: {
   date: string;
   dailyOrders: CalendarOrdersType[];
   allOrders: CalendarOrdersType[];
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
-  setUser: Dispatch<SetStateAction<CalendarOrdersType["user"] | undefined>>;
-  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 }) {
-  const {
-    data: dailyOrders,
-    isLoading,
-    error,
-  } = useQuery({
-    queryFn: async () => await fetchDailyOrders(date),
-    queryKey: ["fetchDailyOrders", { date }],
-    staleTime: 10 * 60,
-    // initialData,
-  });
-  if (error) {
-    return <div>{error.message}</div>;
-  }
+  // const {
+  //   data: dailyOrders,
+  //   isLoading,
+  //   error,
+  // } = useQuery({
+  //   queryFn: async () => await fetchDailyOrders(date),
+  //   queryKey: ["fetchDailyOrders", { date }],
+  //   staleTime: 10 * 60,
+  //   // initialData,
+  // });
+  // if (error) {
+  //   return <div>{error.message}</div>;
+  // }
   // console.log(isLoading);
   // if (isLoading) {
   //   <Spinner className="size-6" />;
@@ -308,106 +264,10 @@ function DatePage({
                 addDays(new Date(date), 1).getTime() < nextOrder.shippingDate.getTime()
               );
             });
-            return (
-              <DisplayOrder
-                key={order.id}
-                order={order}
-                newOrder={newOrder}
-                onOpenModal={() => {
-                  setUser(order.user);
-                  setIsModalOpen(true);
-                }}
-              />
-            );
+            return <DisplayOrder key={order.id} order={order} newOrder={newOrder} />;
           })
         )}
       </ul>
     </>
   );
 }
-
-function UserModal({ open, onClose, user }: { open: boolean; onClose: () => void; user?: CalendarOrdersType["user"] }) {
-  const router = useRouter();
-  return (
-    <Modal title="Information du client" isOpen={open} onClose={onClose}>
-      {user ? (
-        <>
-          <UserInfo user={user} />
-          <div className="flex justify-between gap-4">
-            <Button variant={"outline"} className="w-full" onClick={onClose}>
-              Fermer
-            </Button>
-            <Button
-              variant={"green"}
-              className="w-full"
-              onClick={() => {
-                onClose();
-                router.push(`/admin/users/${user.id}`);
-              }}
-            >
-              Consulter
-            </Button>
-          </div>
-        </>
-      ) : (
-        <>
-          <p>Aucun client sélectionné</p>
-          <Button variant={"outline"} className="w-full" onClick={onClose}>
-            Fermer
-          </Button>
-        </>
-      )}
-    </Modal>
-  );
-}
-
-const UserInfo = ({ user }: { user: CalendarOrdersType["user"] }) => (
-  <div className="px-4 py-5 ">
-    <div className="flex items-center mb-4 gap-4">
-      {user.image ? (
-        <Image
-          src={user.image}
-          alt={user.name || "Unknown User"}
-          width={48}
-          height={48}
-          className="rounded-sm object-contain"
-        />
-      ) : (
-        <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
-          <span className="text-gray-600 font-semibold text-xs">{user.name?.charAt(0)}</span>
-        </div>
-      )}
-      <div>
-        <h2 className="text-lg font-semibold">{user.company || user.name || "Unknown User"}</h2>
-        <p className="text-sm text-gray-500">{user.email}</p>
-        {!!user.phone && <p>{formatFrenchPhoneNumber(user.phone)}</p>}
-      </div>
-    </div>
-    <div className="max-h-[40dvh] overflow-y-auto px-4">
-      {user.company ? (
-        <div className="mb-4">
-          <h3 className="text-sm font-medium text-gray-500">Nom</h3>
-
-          <p className="mt-1 text-sm text-gray-900">{user.name}</p>
-        </div>
-      ) : null}
-      {user.address ? (
-        <div className="mb-4">
-          <h3 className="text-sm font-medium text-gray-500">Adresse</h3>
-          <Button asChild variant={"link"} className="mt-1 text-sm p-0 text-blue-700">
-            <Link href={`https://maps.google.com/?q=${user.address} ${user.company} `} target="_blank">
-              {user.address}
-            </Link>
-          </Button>
-        </div>
-      ) : null}
-      {user.notes ? (
-        <div className="mb-4">
-          <h3 className="text-sm font-medium text-gray-500">Notes</h3>
-
-          <AutosizeTextarea className="border-0 focus-visible:ring-0 select-text" readOnly value={user.notes} />
-        </div>
-      ) : null}
-    </div>
-  </div>
-);

@@ -16,15 +16,15 @@ function TodayFocus({
   className,
   startMonth,
   endMonth,
-  setFocusDate,
-}: { className?: string; startMonth: Date; endMonth: Date; setFocusDate: (date: string) => void }) {
+  onDayClick,
+}: { className?: string; startMonth: Date; endMonth: Date; onDayClick: (id: string) => void }) {
   return (
     <DateModal
       trigger={"Date"}
       triggerClassName={cn("text-primary border-dashed w-fit", className)}
       onValueChange={(date) => {
         if (!date) return;
-        setFocusDate(getLocalIsoString(date));
+        onDayClick(getLocalIsoString(date));
       }}
       modifiers={{
         disabled: (date) => isDateDisabled(date),
