@@ -2,7 +2,7 @@ import { getRelativeDate } from "@/lib/date-utils";
 import type { OrderWithItemsAndShop } from "@/types";
 import type { AMAPItem, OrderItem, Shop } from "@prisma/client";
 import type { Row } from "@tanstack/react-table";
-import { CheckCircle, CreditCard, Package, Search, Truck } from "lucide-react";
+import { CheckCircle, CreditCard, Hourglass, Package, Search, Truck } from "lucide-react";
 import Link from "next/link";
 import { FaFileInvoiceDollar } from "react-icons/fa";
 import { ShopCard } from "../display-shops/shop-card";
@@ -199,9 +199,9 @@ const statusConfig: Record<
   }
 > = {
   ["En attente de confirmation"]: {
-    Icon: Package,
-    color: "bg-yellow-500",
-    hoverColor: "hover:bg-yellow-500/90",
+    Icon: Hourglass,
+    color: "bg-orange-500",
+    hoverColor: "hover:bg-orange-500/90",
   },
   ["Commande validée"]: {
     Icon: CheckCircle,
@@ -215,8 +215,8 @@ const statusConfig: Record<
   },
   ["En attente de paiement"]: {
     Icon: CreditCard,
-    color: "bg-orange-500",
-    hoverColor: "hover:bg-orange-500/90",
+    color: "bg-yellow-500",
+    hoverColor: "hover:bg-yellow-500/90",
   },
   ["Payé"]: {
     Icon: FaFileInvoiceDollar,

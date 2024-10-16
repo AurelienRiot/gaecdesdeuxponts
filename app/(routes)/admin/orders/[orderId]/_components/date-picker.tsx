@@ -1,17 +1,20 @@
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Calendar, type CalendarProps } from "@/components/ui/calendar";
+import { Checkbox, type CheckedState } from "@/components/ui/checkbox";
 import { FormItem, FormLabel } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { dateFormatter } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
 import { fr } from "date-fns/locale";
 import { forwardRef, useState } from "react";
+import type { OrderFormValues } from "./order-schema";
+import { useFormContext } from "react-hook-form";
 
 type FormDatePickerProps = Omit<CalendarProps, "disabled"> & {
   title: string;
   className?: string;
-  button?: "reset" | "uptade" | "none";
+  button?: "reset" | "uptade" | "none" | "confirm";
   date: Date | undefined | null;
   disabled?: boolean;
   onSelectDate: (date: Date | undefined | null) => void;
@@ -19,12 +22,26 @@ type FormDatePickerProps = Omit<CalendarProps, "disabled"> & {
 
 const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
   ({ title, className, date, button = "reset", disabled, onSelectDate, ...props }: FormDatePickerProps, ref) => {
+    const form = useFormContext<OrderFormValues>();
     const [open, setOpen] = useState(false);
+    const dateOfEdition = form.watch("dateOfEdition");
 
     return (
       <FormItem className={cn("w-64", className)}>
         <FormLabel className="flex items-center justify-between gap-2">
           <span>{title}</span>
+          {button === "confirm" && (
+            <Checkbox
+              checked={!!dateOfEdition}
+              onCheckedChange={(check) => {
+                if (check) {
+                  form.setValue("dateOfEdition", new Date());
+                } else {
+                  form.setValue("dateOfEdition", null);
+                }
+              }}
+            />
+          )}
           {button === "reset" && (
             <Button
               variant={"outline"}

@@ -156,6 +156,7 @@ async function createOrder({ totalPrice, productsWithQuantity, shopId, user, dat
       userId: user.id,
       shopId: shopId === "domicile" ? null : shopId,
       datePickUp,
+      dateOfShipping: datePickUp,
     },
     // include: {
     //   shop: true,

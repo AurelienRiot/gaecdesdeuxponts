@@ -83,7 +83,9 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
       shopId: initialData?.shopId || "",
       datePickUp: initialData?.datePickUp
         ? new Date(initialData.datePickUp)
-        : new Date(new Date().setHours(10, 0, 0, 0)),
+        : initialData?.dateOfShipping
+          ? new Date(initialData.dateOfShipping)
+          : new Date(new Date().setHours(10, 0, 0, 0)),
       orderItems: initialData?.orderItems.map((product) => ({
         id: product.id,
         itemId: product.itemId,
@@ -111,7 +113,6 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
   });
 
   const userId = form.watch("userId");
-  const shippingDate = form.watch("dateOfShipping");
 
   const user = userId ? users.find((user) => user.id === userId) : null;
 
@@ -256,11 +257,18 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
                 )}
               />
             )}
+
             <FormField
               control={form.control}
               name="dateOfShipping"
               render={({ field }) => (
-                <FormDatePicker {...field} date={field.value} onSelectDate={field.onChange} title="Date de livraison" />
+                <FormDatePicker
+                  {...field}
+                  date={field.value}
+                  onSelectDate={field.onChange}
+                  button="confirm"
+                  title="Date de livraison"
+                />
               )}
             />
 

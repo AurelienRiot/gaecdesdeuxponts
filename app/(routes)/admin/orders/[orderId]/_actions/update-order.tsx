@@ -38,12 +38,12 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
           id: id,
         },
         data: {
-          userId: userId,
-          totalPrice: totalPrice,
-          dateOfShipping: dateOfShipping,
-          dateOfEdition: dateOfEdition || new Date(),
-          datePickUp: datePickUp,
-          shopId: shopId,
+          userId,
+          totalPrice,
+          dateOfShipping,
+          dateOfEdition,
+          datePickUp,
+          shopId,
           orderItems: {
             create: orderItems.map(({ categoryName, description, itemId, name, price, quantity, unit, tax }) => {
               return {
