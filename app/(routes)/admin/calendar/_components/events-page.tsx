@@ -4,41 +4,48 @@ import { getUnitLabel } from "@/components/product/product-function";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button, IconButton } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
-import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
+import NoResults from "@/components/ui/no-results";
+import useIsComponentMounted from "@/hooks/use-mounted";
+import { dateFormatter, getLocalIsoString, ONE_DAY } from "@/lib/date-utils";
+import throttle from "@/lib/throttle";
 import { formatFrenchPhoneNumber } from "@/lib/utils";
-import { addDays, addHours } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
+import { addDays, addHours, subDays } from "date-fns";
+import { motion } from "framer-motion";
 import ky from "ky";
+import { ListOrdered } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { type Dispatch, type SetStateAction, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { type Dispatch, type SetStateAction, useCallback, useLayoutEffect, useRef, useState } from "react";
 import type getDailyOrders from "../_actions/get-daily-orders";
 import type { getGroupedAMAPOrders } from "../_functions/get-amap-orders";
 import type { CalendarOrdersType } from "../_functions/get-orders";
 import TodayFocus from "./date-focus";
 import DisplayAmap from "./display-amap";
 import DisplayOrder from "./display-order";
+import OrdersModal from "./orders-modal";
 import SummarizeProducts from "./summarize-products";
 import UpdatePage from "./update-page";
-import { ListOrdered } from "lucide-react";
-import OrdersModal from "./orders-modal";
 
 type EventsPageProps = {
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
   initialOrders: CalendarOrdersType[];
-  dateArray: string[];
+  initialDateArray: string[];
 };
 
-export default function EventPage({ amapOrders, initialOrders, dateArray }: EventsPageProps) {
+export default function EventPage({ amapOrders, initialOrders, initialDateArray }: EventsPageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const currentDateRef = useRef<HTMLDivElement>(null);
+  const isComponentMounted = useIsComponentMounted();
   const [user, setUser] = useState<CalendarOrdersType["user"]>();
   const [odrerIds, setOrderIds] = useState<string[]>();
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [isOrdersModalOpen, setIsOrdersModalOpen] = useState(false);
   const [focusDate, setFocusDate] = useState(getLocalIsoString(new Date()));
-
-  // Extract the initial focus date from search parameters or default to today
+  const [dateArray, setDateArray] = useState<string[]>(initialDateArray);
+  const actionRef = useRef<null | "prepend" | "append">(null);
+  const [scrollAdjustment, setScrollAdjustment] = useState(0);
 
   // Handle Initial Scroll to Center the Focus Date
   useLayoutEffect(() => {
@@ -56,21 +63,76 @@ export default function EventPage({ amapOrders, initialOrders, dateArray }: Even
 
         container.scrollTo({
           left: scrollPosition,
-          behavior: "smooth", // Optional: adds smooth scrolling
+          behavior: isComponentMounted ? "smooth" : "instant", // Optional: adds smooth scrolling
         });
       }
     }
 
     scrollToCurrentDate();
-  }, [focusDate]); // Empty dependency array ensures this runs only once on mount
+  }, [focusDate, isComponentMounted]);
+
+  const onEnterViewport = throttle(
+    useCallback((index: number) => {
+      const numberDates = 1;
+      const dateWidth = numberDates * (320 + 16);
+      const container = containerRef.current;
+      if (!container) return;
+      if (index === 0) {
+        console.log("onEnterViewport first");
+
+        setDateArray((prevDateArray) => {
+          const newDates = Array.from(
+            { length: numberDates },
+            (_, i) =>
+              subDays(new Date(prevDateArray[0]), i + 1)
+                .toISOString()
+                .split("T")[0],
+          ).reverse();
+          return [...newDates, ...prevDateArray.slice(0, -numberDates)]; // Keep the last dates
+        });
+        // container.scrollLeft += dateWidth;
+        // setTimeout(() => {
+        // container.scrollLeft += dateWidth;
+        // }, 0);
+        setScrollAdjustment((prev) => prev + dateWidth);
+      }
+      if (index === 9) {
+        console.log("onEnterViewport last");
+        setDateArray((prevDateArray) => {
+          const newLastDates = Array.from(
+            { length: numberDates },
+            (_, i) =>
+              addDays(new Date(prevDateArray[prevDateArray.length - 1]), i + 1)
+                .toISOString()
+                .split("T")[0],
+          );
+          return [...prevDateArray.slice(numberDates), ...newLastDates]; // Remove the first four elements and add new last dates
+        });
+        // setTimeout(() => {
+        // container.scrollLeft -= dateWidth;
+        // }, 0);
+        setScrollAdjustment((prev) => prev - dateWidth);
+      }
+    }, []),
+    200,
+  );
+
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+
+    if (!container || !scrollAdjustment) return;
+
+    container.scrollLeft += scrollAdjustment;
+    setScrollAdjustment(0);
+  }, [scrollAdjustment]);
 
   return (
     <>
       <div
         ref={containerRef}
-        className="flex flex-row gap-4 w-full overflow-x-scroll overflow-y-hidden mx-auto flex-auto pb-4"
+        className="flex flex-row gap-4 w-full overflow-x-scroll overflow-y-hidden mx-auto flex-auto pb-4 "
       >
-        {dateArray.map((date) => {
+        {dateArray.map((date, index) => {
           const isFocused = date === focusDate;
           const initialData = initialOrders
             .filter((order) => getLocalIsoString(order.shippingDate) === date)
@@ -80,10 +142,15 @@ export default function EventPage({ amapOrders, initialOrders, dateArray }: Even
               return (a.index ?? 0) - (b.index ?? 0);
             });
           return (
-            <div
+            <motion.div
               ref={isFocused ? currentDateRef : null}
               key={date}
-              className="flex-shrink-0  w-full max-w-xs h-full space-y-2 relative"
+              data-date={date}
+              onViewportEnter={(e) => {
+                onEnterViewport(index);
+              }}
+              viewport={{ once: true }}
+              className="flex-shrink-0  w-[320px] h-full space-y-2 relative"
             >
               <h2 className="text-xl font-semibold capitalize text-center flex justify-between items-center px-2">
                 <span>{dateFormatter(new Date(date), { days: true })}</span>
@@ -108,7 +175,7 @@ export default function EventPage({ amapOrders, initialOrders, dateArray }: Even
                 setUser={setUser}
                 setIsModalOpen={setIsUserModalOpen}
               />
-            </div>
+            </motion.div>
           );
         })}
       </div>{" "}
@@ -137,7 +204,6 @@ export default function EventPage({ amapOrders, initialOrders, dateArray }: Even
 async function fetchDailyOrders(date: string) {
   const from = new Date(date);
   const to = addHours(from, 24);
-  console.log({ from, to });
   const responce = (await ky.post("/api/get-day-orders", { json: { from, to } }).json()) as Awaited<
     ReturnType<typeof getDailyOrders>
   >;
@@ -158,7 +224,7 @@ async function fetchDailyOrders(date: string) {
 function DatePage({
   date,
   amapOrders,
-  dailyOrders,
+  // dailyOrders,
   allOrders,
   setUser,
   setIsModalOpen,
@@ -170,23 +236,27 @@ function DatePage({
   setUser: Dispatch<SetStateAction<CalendarOrdersType["user"] | undefined>>;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 }) {
-  // const {
-  //   data: dailyOrders,
-  //   isLoading,
-  //   error,
-  // } = useQuery({
-  //   queryFn: async () => await fetchDailyOrders(date),
-  //   queryKey: ["fetchDailyOrders", { date }],
-  //   staleTime: 10 * 60,
-  //   initialData,
-  // });
-  // if (error) {
-  //   return <div>{error.message}</div>;
+  const {
+    data: dailyOrders,
+    isLoading,
+    error,
+  } = useQuery({
+    queryFn: async () => await fetchDailyOrders(date),
+    queryKey: ["fetchDailyOrders", { date }],
+    staleTime: 10 * 60,
+    // initialData,
+  });
+  if (error) {
+    return <div>{error.message}</div>;
+  }
+  // console.log(isLoading);
+  // if (isLoading) {
+  //   <Spinner className="size-6" />;
   // }
 
-  // if (!dailyOrders) {
-  //   return <div>No data</div>;
-  // }
+  if (!dailyOrders) {
+    return <NoResults />;
+  }
 
   const amapData = amapOrders.map((order) => ({
     shopName: order.shopName,

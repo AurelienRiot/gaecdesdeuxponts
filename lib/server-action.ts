@@ -52,47 +52,55 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E>({
 }: SafeServerActionType<D, R, E>): Promise<ReturnTypeServerAction<R, E>> {
   const timerLabel = `Total Execution Time - ${nanoid(5)}`;
   console.time(timerLabel);
+  try {
+    const user = await checkUser();
 
-  const user = await checkUser();
+    if (rateLimited) {
+      const isRateLimited = await rateLimit(user?.role);
+      if (isRateLimited) {
+        console.timeEnd(timerLabel);
 
-  if (rateLimited) {
-    const isRateLimited = await rateLimit(user?.role);
-    if (isRateLimited) {
+        return {
+          success: false,
+          message: "Trop de requêtes. Veuillez reessayer plus tard",
+        };
+      }
+    }
+
+    const validatedData = schema.safeParse(data);
+    if (!validatedData.success) {
       console.timeEnd(timerLabel);
-
       return {
         success: false,
-        message: "Trop de requêtes. Veuillez reessayer plus tard",
+        message: validatedData.error.issues[0].message,
+        zodError: validatedData.error.flatten().fieldErrors,
       };
     }
-  }
+    if (ignoreCheckUser) {
+      const result = await serverAction(validatedData.data, user);
+      console.timeEnd(timerLabel);
+      return result;
+    }
 
-  const validatedData = schema.safeParse(data);
-  if (!validatedData.success) {
-    console.timeEnd(timerLabel);
-    return {
-      success: false,
-      message: validatedData.error.issues[0].message,
-      zodError: validatedData.error.flatten().fieldErrors,
-    };
-  }
-  if (ignoreCheckUser) {
+    if (!user || !roles.includes(user.role)) {
+      console.timeEnd(timerLabel);
+      return {
+        success: false,
+        message: "Vous devez être authentifier pour continuer",
+      };
+    }
+
     const result = await serverAction(validatedData.data, user);
     console.timeEnd(timerLabel);
     return result;
-  }
-
-  if (!user || !roles.includes(user.role)) {
+  } catch (error) {
     console.timeEnd(timerLabel);
+    console.log(error);
     return {
       success: false,
-      message: "Vous devez être authentifier pour continuer",
+      message: "Une erreur est survenue",
     };
   }
-
-  const result = await serverAction(validatedData.data, user);
-  console.timeEnd(timerLabel);
-  return result;
 }
 
 type BaseRouteAPIType<D extends z.ZodTypeAny> = {

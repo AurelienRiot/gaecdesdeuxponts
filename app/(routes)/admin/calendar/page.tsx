@@ -1,12 +1,11 @@
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
+import { ONE_DAY } from "@/lib/date-utils";
+import { addDays } from "date-fns";
 import { Package, Plus, User } from "lucide-react";
 import Link from "next/link";
-import { Suspense } from "react";
 import EventPage from "./_components/events-page";
 import { getGroupedAMAPOrders } from "./_functions/get-amap-orders";
-import { addDays } from "date-fns";
-import { ONE_DAY } from "@/lib/date-utils";
 import { getOrdersByDate } from "./_functions/get-orders";
 
 export const dynamic = "force-dynamic";
@@ -19,8 +18,8 @@ function makeDateArray({ from, to }: { from: Date; to: Date }) {
 }
 
 async function CalendarPage() {
-  const from = addDays(new Date(), -14);
-  const to = addDays(new Date(), 30);
+  const from = addDays(new Date(), -3);
+  const to = addDays(new Date(), 8);
   const dateArray = makeDateArray({ from, to });
   const [orders, amapOrders] = await Promise.all([getOrdersByDate({ from, to }), getGroupedAMAPOrders()]);
   // const amapOrders = await getGroupedAMAPOrders();
@@ -51,7 +50,7 @@ async function CalendarPage() {
         <Separator />
       </div>
 
-      <EventPage initialOrders={orders.data} dateArray={dateArray} amapOrders={amapOrders} />
+      <EventPage initialOrders={orders.data} amapOrders={amapOrders} initialDateArray={dateArray} />
     </div>
   );
 }
