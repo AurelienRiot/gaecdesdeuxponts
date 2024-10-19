@@ -14,20 +14,21 @@ import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
 import useServerAction from "@/hooks/use-server-action";
-import type { UserWithOrdersAndAdress } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import deleteUser from "../../_actions/delete-user";
 import updateUser from "../_actions/update-user";
+import type { GetUserPageDataProps } from "../_functions/get-user-page-data";
+import CcInvoiceForm from "./cc-invoice-form";
 import MailForm from "./mail-form";
 import SelectRole from "./select-role";
 import { schema, type UserFormValues } from "./user-schema";
-import CcInvoiceForm from "./cc-invoice-form";
+import UserLinks from "./user-links";
 
 interface UserFormProps {
-  initialData: UserWithOrdersAndAdress;
+  initialData: GetUserPageDataProps["formatedUser"];
   incomplete?: boolean;
 }
 
@@ -54,6 +55,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
       ccInvoice: initialData.ccInvoice,
       role: ["user", "pro", "trackOnlyUser"].includes(initialData.role) ? (initialData.role as "user") : "user",
       notes: initialData.notes || "",
+      links: initialData.links || [],
       address: {
         label: initialData.address?.label || "",
         city: initialData.address?.city || "",
@@ -130,6 +132,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
                   </FormItem>
                 )}
               />
+              <SelectRole display={open} />
               <div className="flex flex-wrap gap-8 ">
                 <FormField
                   control={form.control}
@@ -225,8 +228,9 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
                     </FormItem>
                   )}
                 />
-                <SelectRole display={open} />
-                <CcInvoiceForm />
+                <UserLinks />
+
+                {role === "pro" && <CcInvoiceForm />}
                 <FormField
                   control={form.control}
                   name="completed"

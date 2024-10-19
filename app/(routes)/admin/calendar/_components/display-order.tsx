@@ -14,6 +14,7 @@ import Image from "next/image";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Modal } from "@/components/ui/modal";
 import { useRouter } from "next/navigation";
+import { getMapLinks } from "@/components/google-events";
 
 interface DisplayOrderProps {
   order: CalendarOrdersType;
@@ -161,12 +162,13 @@ const UserInfo = ({ user }: { user: CalendarOrdersType["user"] }) => (
         <div className="mb-4">
           <h3 className="text-sm font-medium text-gray-500">Adresse</h3>
           <Button asChild variant={"link"} className="mt-1 text-sm p-0 text-blue-700">
-            <Link href={`https://maps.google.com/?q=${user.address} ${user.company} `} target="_blank">
+            <Link href={getMapLinks({ address: user.address, name: user.company })} target="_blank">
               {user.address}
             </Link>
           </Button>
         </div>
       ) : null}
+
       {user.notes ? (
         <div className="mb-4">
           <h3 className="text-sm font-medium text-gray-500">Notes</h3>
@@ -174,6 +176,19 @@ const UserInfo = ({ user }: { user: CalendarOrdersType["user"] }) => (
           <AutosizeTextarea className="border-0 focus-visible:ring-0 select-text" readOnly value={user.notes} />
         </div>
       ) : null}
+      {user.links.length > 0 && (
+        <div className="mb-4">
+          <h3 className="text-sm font-medium text-gray-500">Liens</h3>
+
+          {user.links.map(({ value, label }) => (
+            <Button key={value} asChild variant={"link"}>
+              <Link href={value} target="_blank">
+                {label}
+              </Link>
+            </Button>
+          ))}
+        </div>
+      )}
     </div>
   </div>
 );

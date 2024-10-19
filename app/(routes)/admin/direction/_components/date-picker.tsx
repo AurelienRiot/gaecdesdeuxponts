@@ -8,7 +8,7 @@ import { addHours } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import getUsersForDate from "../_functions/get-users-for-date";
+import getUsersForDate from "../_actions/get-users-for-date";
 import type { UserAndShop } from "./direction-form";
 import type { DirectionFormValues, Point } from "./direction-schema";
 

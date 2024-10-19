@@ -1,0 +1,33 @@
+model Stock {
+  id            Int @unique @default(autoincrement())
+  name          String
+  totalQuantity Float
+  index         Int @default(0)
+  userStocks    UserStock[]
+  products      ProductStock[]
+  date          DateTime
+}
+
+model UserStock{
+  id       Int @unique @default(autoincrement())
+  quantity Float
+  stockId  Int
+  stock    Stock       @relation(fields: [stockId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+
+  @@index([userId])
+  @@index([stockId])
+}
+
+model ProductStock {
+  id        Int @unique @default(autoincrement())
+  productId String
+  stockId   Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  stock     Stock   @relation(fields: [stockId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([stockId])
+}

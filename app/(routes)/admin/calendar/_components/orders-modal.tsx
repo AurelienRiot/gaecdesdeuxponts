@@ -10,6 +10,9 @@ import { useEffect, useState } from "react";
 import updateOrdersIndex from "../_actions/update-orders-index";
 import type { CalendarOrdersType } from "../_functions/get-orders";
 import { useRaisedShadow } from "./use-raised-shadow";
+import Link from "next/link";
+import { FaMapLocationDot } from "react-icons/fa6";
+import { createDirectionUrl } from "@/components/google-events";
 
 function OrdersModal({
   open,
@@ -83,13 +86,24 @@ function ReorderItem({
   setOrders,
 }: { orders: CalendarOrdersType[] | undefined; setOrders: (orders: CalendarOrdersType[]) => void }) {
   if (!orders) return <NoResults />;
+  const directionString = createDirectionUrl({
+    addresses: orders.map((order) => order.address.label),
+  });
   return (
-    <ScrollArea className=" max-h-[70dvh] overflow-auto ">
+    <ScrollArea className=" max-h-[70dvh] overflow-auto p-2">
+      <Link
+        href={directionString}
+        target="_blank"
+        className="flex items-center justify-center bg-blue-500 text-white font-bold py-2 px-4 rounded-md shadow-md hover:bg-blue-600 transition-colors duration-200 mb-2"
+      >
+        <FaMapLocationDot className="h-5 w-5 mr-3" />
+        Accéder au trajet
+      </Link>
       <Reorder.Group
         as="ul"
         values={orders}
         onReorder={setOrders}
-        className="flex flex-col gap-2  p-2  relative"
+        className="flex flex-col gap-2   relative"
         axis="y"
         layoutScroll
         // ref={listRef}

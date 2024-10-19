@@ -152,13 +152,7 @@ function createProduct(items: OrderItem[] | AMAPItem[]) {
     .join(", ");
 }
 
-const status = [
-  "En attente de confirmation",
-  "Commande validée",
-  "Commande livrée",
-  "En attente de paiement",
-  "Payé",
-] as const;
+const status = ["À confirmer", "Commande validée", "Commande livrée", "En attente de paiement", "Payé"] as const;
 
 type Status = (typeof status)[number];
 
@@ -173,7 +167,7 @@ function createStatus({ dateOfEdition, invoiceOrder, shippingEmail }: OrderForSt
   if (invoiceOrder[0]?.invoice.id) return "En attente de paiement";
   if (shippingEmail) return "Commande livrée";
   if (dateOfEdition) return "Commande validée";
-  return "En attente de confirmation";
+  return "À confirmer";
 }
 
 const createStatusArray = (statuses: Status[]): { label: string; value: Status }[] => {
@@ -198,7 +192,7 @@ const statusConfig: Record<
     hoverColor: string;
   }
 > = {
-  ["En attente de confirmation"]: {
+  ["À confirmer"]: {
     Icon: Hourglass,
     color: "bg-orange-500",
     hoverColor: "hover:bg-orange-500/90",

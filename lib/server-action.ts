@@ -69,6 +69,7 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E>({
 
     const validatedData = schema.safeParse(data);
     if (!validatedData.success) {
+      console.log(validatedData.error.issues[0].message);
       console.timeEnd(timerLabel);
       return {
         success: false,

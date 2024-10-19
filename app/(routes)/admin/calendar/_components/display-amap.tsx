@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useState } from "react";
 import DisplayItem from "./display-item";
 import { nanoid } from "@/lib/id";
+import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 
 interface DisplayAmapProps {
   amapOrders: {
@@ -31,24 +32,11 @@ const DisplayAmap: React.FC<DisplayAmapProps> = ({ amapOrders, className }) => {
     return (
       <Card key={order.shopName} className={cn("w-full max-w-sm ", className)}>
         <CardHeader
-          className="grid grid-cols-8   items-center  py-2 px-4 cursor-pointer"
+          className="grid grid-cols-8   items-center  py-2 px-4 cursor-pointer "
           onClick={() => setIsExpanded(!isExpanded)}
         >
           <div className="flex items-center gap-2 col-span-7">
-            {order.shopImageUrl ? (
-              <Image
-                src={order.shopImageUrl}
-                alt={order.shopName}
-                width={24}
-                height={24}
-                className="rounded-sm object-contain"
-              />
-            ) : (
-              <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-600 font-semibold text-xs">{order.shopName.charAt(0)}</span>
-              </div>
-            )}
-            <span className="font-medium text-xs truncate">{order.shopName}</span>
+            <NameWithImage name={order.shopName} image={order.shopImageUrl} imageSize={12} />
           </div>
 
           {/* <Link

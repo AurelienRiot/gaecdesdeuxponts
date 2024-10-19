@@ -1,15 +1,12 @@
-import { destination, origin } from "@/app/(routes)/admin/direction/_components/direction-schema";
 import { calendarAPI } from "@/lib/api-google";
 import { dateFormatter, getLocalIsoString, timeZone } from "@/lib/date-utils";
 import { createId } from "@/lib/id";
+import { numberFormat2Decimals } from "@/lib/utils";
 import { addHours } from "date-fns";
 import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 import deleteEvent from "./delete-events";
 import getEventsList from "./get-events-list";
 import getAllOrders from "./get-orders-for-events";
-import { devOnly, numberFormat2Decimals } from "@/lib/utils";
-
-const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 
 export default async function createOrdersEvent(data: { date: Date }) {
   const start = formatInTimeZone(data.date, timeZone, "yyyy-MM-dd");
@@ -122,11 +119,12 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
           )
           .join("<br />");
 
-  const uniqueShippingAddresses = [...new Set(formattedOrders.map((order) => `${order.shippingAddress}`))];
-  const directionString =
-    formattedOrders.length === 0
-      ? ""
-      : `<strong><a  href="${googleDirectioUrl}/${origin.label}/${uniqueShippingAddresses.join("/")}/${destination.label}">Voir le parcours</a></strong> <br /><br />`;
+  // const uniqueShippingAddresses = [...new Set(formattedOrders.map((order) => `${order.shippingAddress}`))];
+  // const googleDirectionUrl=createDirectionUrl({addresses:uniqueShippingAddresses})
+  // const directionString =
+  // formattedOrders.length === 0
+  //   ? ""
+  //   : `<strong><a  href="${googleDirectionUrl}">Voir le parcours</a></strong> <br /><br />`;
 
   return header + totaleQuantity + "<br />" + productDescriptions + amapOrdersDescription + orderDescriptions;
 }

@@ -4,6 +4,7 @@ import { LocationMarker } from "@/app/(routes)/(public)/ou-nous-trouver/_compone
 import { Button, IconButton, LoadingButton, buttonVariants } from "@/components/ui/button";
 
 import AddressAutocomplete from "@/actions/adress-autocompleteFR";
+import { createDirectionUrl } from "@/components/google-events";
 import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Modal } from "@/components/ui/modal";
 import useScrollToHashOnMount from "@/hooks/use-scroll-to-hash";
@@ -27,8 +28,6 @@ import getTodaysOrders from "../_actions/get-todays-orders";
 import AddressModal from "./address-modal";
 import DatePicker from "./date-picker";
 import { destination, directionSchema, origin, type DirectionFormValues, type Point } from "./direction-schema";
-
-const googleDirectioUrl = process.env.NEXT_PUBLIC_GOOGLE_DIR_URL;
 
 export type UserAndShop = {
   label: string;
@@ -188,10 +187,14 @@ function SuccessModal({
   usersAndShops,
 }: { isOpen: boolean; onClose: () => void; reorderedWaypoints: Point[]; usersAndShops: UserAndShop[] }) {
   const form = useFormContext<DirectionFormValues>();
-  const ori = form.watch("origin");
-  const dest = form.watch("destination");
+  const origin = form.watch("origin");
+  const destination = form.watch("destination");
 
-  const directionString = `${googleDirectioUrl}/${ori.label}/${reorderedWaypoints.map(({ label }) => label).join("/")}/${dest.label}`;
+  const directionString = createDirectionUrl({
+    origin: origin.label,
+    destination: destination.label,
+    addresses: reorderedWaypoints.map(({ label }) => label),
+  });
 
   return (
     <Modal

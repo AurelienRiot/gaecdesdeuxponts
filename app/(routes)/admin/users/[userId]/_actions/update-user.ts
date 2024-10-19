@@ -22,11 +22,24 @@ async function updateUser(data: UserFormValues) {
       image,
       completed,
       notes,
+      links,
       ccInvoice,
     }) => {
       const user = await prismadb.user.findUnique({
         where: { id },
         select: { billingAddress: true },
+      });
+
+      if (!user) {
+        return {
+          success: false,
+          message: "Utilisateur introuvable",
+        };
+      }
+      await prismadb.link.deleteMany({
+        where: {
+          userId: id,
+        },
       });
 
       await prismadb.user.update({
@@ -41,8 +54,14 @@ async function updateUser(data: UserFormValues) {
           image,
           completed,
           role,
-          ccInvoice,
+          ccInvoice: role === "pro" ? ccInvoice : [],
           notes,
+          links: {
+            create: links.map(({ label, value }) => ({
+              label,
+              value,
+            })),
+          },
           address: {
             upsert: {
               create: address ?? defaultAddress,

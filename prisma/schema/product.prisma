@@ -30,6 +30,7 @@ model Product {
   imagesUrl    String[]
   options      Option[] @relation("ProductToOption")
   unit         Unit? 
+  stocks       ProductStock[]
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

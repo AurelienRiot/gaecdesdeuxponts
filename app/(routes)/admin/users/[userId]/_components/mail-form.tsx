@@ -67,18 +67,17 @@ function EmailModal({ id, onClose, openModal }: { id: string; onClose: () => voi
       },
     });
   }
+
   return (
     <Modal
       title="Changer l'email"
-      description="Entrez le nouvel email ci-dessous. Cliquez sur sauvegarder une fois terminé."
+      description="Entrez le nouvel email ci-dessous"
+      className="top-[30%]"
       isOpen={openModal}
       onClose={onClose}
     >
       <form action={onSumbit} className="space-y-4">
         <div className="space-y-4">
-          <Label htmlFor="email" className="text-right">
-            Email
-          </Label>
           <Input name="email" id="email" placeholder="exemple@email.fr" className="col-span-3" />
         </div>
         <DialogFooter>

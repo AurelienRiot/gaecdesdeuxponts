@@ -4,6 +4,7 @@ import { fr } from "date-fns/locale";
 
 export const timeZone = "Europe/Paris";
 export const ONE_DAY = 24 * 60 * 60 * 1000;
+export const MIN_DAYS_FOR_PICK_UP = 3;
 
 export const dateFormatter = (date: Date, options?: { hours?: boolean; days?: boolean; customFormat?: string }) => {
   if (options?.customFormat) return formatInTimeZone(date, timeZone, options.customFormat, { locale: fr });
@@ -14,8 +15,6 @@ export const dateFormatter = (date: Date, options?: { hours?: boolean; days?: bo
 
   return formatInTimeZone(date, timeZone, "d MMMM yyyy", { locale: fr });
 };
-
-export const MIN_DAYS_FOR_PICK_UP = 3;
 
 export const isDateDisabled = (date: Date) => {
   return date.getDay() === 0 || date < addDays(new Date(), MIN_DAYS_FOR_PICK_UP);

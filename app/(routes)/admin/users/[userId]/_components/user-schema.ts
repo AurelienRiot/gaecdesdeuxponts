@@ -21,6 +21,16 @@ export const schema = z.object({
       message: "Le numéro de téléphone n'est pas valide",
     },
   ),
+  links: z.array(
+    z.object({
+      label: z.string().trim().min(1, {
+        message: "Le nom est obligatoire",
+      }),
+      value: z.string().trim().min(1, {
+        message: "Le lien est obligatoire",
+      }),
+    }),
+  ),
   notes: z.string().optional(),
   image: z.string().optional().nullable(),
   role: z.enum(["user", "pro", "trackOnlyUser"]),

@@ -17,6 +17,7 @@ import DisplayOrder from "./display-order";
 import OrdersModal from "./orders-modal";
 import SummarizeProducts from "./summarize-products";
 import UpdatePage from "./update-page";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type EventsPageProps = {
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
@@ -38,56 +39,14 @@ function scrollToElement(id: string, behavior: "smooth" | "instant" = "smooth") 
 }
 
 export default function EventPage({ amapOrders, initialOrders, initialDateArray: dateArray }: EventsPageProps) {
-  const [odrerIds, setOrderIds] = useState<string[]>();
-
   // Handle Initial Scroll to Center the Focus Date
   useLayoutEffect(() => {
     scrollToElement(getLocalIsoString(new Date()), "instant");
   }, []);
 
-  // const onEnterViewport = useCallback((index: number) => {
-  //   const numberDates = 1;
-  //   const dateWidth = numberDates * (320 + 16);
-  //   const container = containerRef.current;
-  //   if (!container) return;
-  //   if (index === 0) {
-  //     console.log("onEnterViewport first");
-
-  //     setDateArray((prevDateArray) => {
-  //       const newDates = Array.from(
-  //         { length: numberDates },
-  //         (_, i) =>
-  //           subDays(new Date(prevDateArray[0]), i + 1)
-  //             .toISOString()
-  //             .split("T")[0],
-  //       ).reverse();
-  //       return [...newDates, ...prevDateArray.slice(0, -numberDates)]; // Keep the last dates
-  //     });
-  //     requestAnimationFrame(() => {
-  //       container.scrollLeft *= dateWidth;
-  //     });
-  //   }
-  //   if (index === 9) {
-  //     console.log("onEnterViewport last");
-  //     setDateArray((prevDateArray) => {
-  //       const newLastDates = Array.from(
-  //         { length: numberDates },
-  //         (_, i) =>
-  //           addDays(new Date(prevDateArray[prevDateArray.length - 1]), i + 1)
-  //             .toISOString()
-  //             .split("T")[0],
-  //       );
-  //       return [...prevDateArray.slice(numberDates), ...newLastDates]; // Remove the first four elements and add new last dates
-  //     });
-  //     requestAnimationFrame(() => {
-  //       container.scrollLeft -= dateWidth;
-  //     });
-  //   }
-  // }, []);
-
   return (
     <>
-      <div className="flex flex-row gap-4 w-full overflow-x-scroll overflow-y-hidden mx-auto flex-auto pb-4 ">
+      <div className="flex flex-row gap-4  pb-4 overflow-y-hidden mx-auto flex-auto w-full overflow-x-scroll">
         {dateArray.map((date, index) => {
           const dailyOrders = initialOrders
             .filter((order) => getLocalIsoString(order.shippingDate) === date)

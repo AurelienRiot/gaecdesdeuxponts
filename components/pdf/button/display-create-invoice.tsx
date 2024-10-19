@@ -25,7 +25,7 @@ export const DisplayCreateInvoice = ({ orderIds, disabled }: { orderIds: string[
         return;
       }
 
-      if (!order.user.completed) {
+      if (!order.user.completed && sendEmail) {
         router.push(`/admin/users/${order.user.id}?incomplete=true`);
         toast.error("Utilisateur incomplet", { position: "top-center" });
         return;

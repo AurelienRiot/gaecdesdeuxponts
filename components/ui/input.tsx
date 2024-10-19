@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 
 import useIsComponentMounted from "@/hooks/use-mounted";
