@@ -99,7 +99,7 @@ function ValueInput({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-[200px] p-0 z-[1200]">
         <Command>
           <CommandInput value={search} onValueChange={setSearch} placeholder="Nom de la valeur" />
           <CommandList>

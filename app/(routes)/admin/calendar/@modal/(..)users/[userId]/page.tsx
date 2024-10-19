@@ -35,6 +35,7 @@ async function DisplayUserForm({ userId }: { userId: string | "new" | undefined 
     include: {
       address: true,
       billingAddress: true,
+      links: true,
     },
   });
 
@@ -46,5 +47,5 @@ async function DisplayUserForm({ userId }: { userId: string | "new" | undefined 
     );
   }
 
-  return <UserForm initialData={{ ...user, orders: [] }} incomplete={true} />;
+  return <UserForm initialData={user} incomplete={true} />;
 }
