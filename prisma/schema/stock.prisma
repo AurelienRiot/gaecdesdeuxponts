@@ -3,23 +3,9 @@ model Stock {
   name          String
   totalQuantity Float
   index         Int @default(0)
-  userStocks    UserStock[]
   products      ProductStock[]
-   createdAt  DateTime @default(now()) 
+  createdAt  DateTime @default(now()) 
   updatedAt  DateTime @updatedAt 
-}
-
-model UserStock{
-  id       Int @unique @default(autoincrement())
-  quantity Float
-  stockId  String
-  stock    Stock       @relation(fields: [stockId], references: [id], onDelete: Cascade)
-  userId   String
-  user     User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-
-  @@index([userId])
-  @@index([stockId])
 }
 
 model ProductStock {

@@ -68,7 +68,7 @@ export async function createProduct(data: ProductFormValues) {
 
       revalidateTag("categories");
       revalidateTag("products");
-      revalidateTag("productfetch");
+      revalidateTag("products");
       return {
         success: true,
         message: "Produit creé",

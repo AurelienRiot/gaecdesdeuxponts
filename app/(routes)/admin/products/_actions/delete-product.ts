@@ -26,7 +26,7 @@ async function deleteProduct(data: z.infer<typeof schema>) {
           message: "Une erreur est survenue",
         };
       }
-      revalidateTag("productfetch");
+      revalidateTag("products");
       revalidateTag("categories");
       return {
         success: true,

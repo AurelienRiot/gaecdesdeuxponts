@@ -44,7 +44,6 @@ model User {
   role             Role @default(user)
   links            Link[]
   orders           Order[]
-  stocks           UserStock[]
   amapOrders       AMAPOrder[]
   invoices         Invoice[]
   accounts         Account[]

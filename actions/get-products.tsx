@@ -37,7 +37,7 @@ export const getProductsByCategoryName = unstable_cache(
     return products;
   },
   ["getProductsByCategoryName"],
-  { revalidate: 60 * 60 * 24, tags: ["productfetch"] },
+  { revalidate: 60 * 60 * 24, tags: ["products", "categories"] },
 );
 
 export const getProProductsByCategoryName = unstable_cache(
@@ -59,7 +59,7 @@ export const getProProductsByCategoryName = unstable_cache(
     return products;
   },
   ["getProProductsByCategoryName"],
-  { revalidate: 60 * 60 * 24, tags: ["productfetch"] },
+  { revalidate: 60 * 60 * 24, tags: ["products", "categories"] },
 );
 
 export const getMainProductsByCategoryName = unstable_cache(
@@ -74,7 +74,7 @@ export const getMainProductsByCategoryName = unstable_cache(
     return products;
   },
   ["getMainProductsByCategoryName"],
-  { revalidate: 60 * 60, tags: ["productfetch"] },
+  { revalidate: 60 * 60, tags: ["products", "categories"] },
 );
 
 export const getProMainProductsByCategoryName = unstable_cache(
@@ -89,7 +89,7 @@ export const getProMainProductsByCategoryName = unstable_cache(
     return products;
   },
   ["getProMainProductsByCategoryName"],
-  { revalidate: 60 * 60, tags: ["productfetch"] },
+  { revalidate: 60 * 60, tags: ["products", "categories"] },
 );
 
 export const getUniqueProductsByCategory = async (categoryName: string) => {
@@ -120,5 +120,5 @@ export const getFeaturedProducts = unstable_cache(
     return products;
   },
   ["getFeaturedProducts"],
-  { revalidate: 60 * 60, tags: ["productfetch"] },
+  { revalidate: 60 * 60, tags: ["products"] },
 );

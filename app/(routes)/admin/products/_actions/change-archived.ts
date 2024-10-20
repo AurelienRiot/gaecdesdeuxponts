@@ -31,7 +31,7 @@ const changeArchived = async (data: z.infer<typeof schema>) => {
           isArchived: checkState,
         },
       });
-      revalidateTag("productfetch");
+      revalidateTag("products");
       revalidateTag("categories");
 
       return {

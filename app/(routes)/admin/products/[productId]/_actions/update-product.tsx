@@ -79,7 +79,7 @@ export async function updateProduct(data: ProductFormValues) {
         },
       });
       revalidateTag("products");
-      revalidateTag("productfetch");
+      revalidateTag("products");
       revalidateTag("categories");
 
       return {

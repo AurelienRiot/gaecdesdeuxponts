@@ -31,7 +31,7 @@ const changePro = async (data: z.infer<typeof schema>) => {
         },
       });
       revalidateTag("categories");
-      revalidateTag("productfetch");
+      revalidateTag("products");
 
       return {
         success: true,

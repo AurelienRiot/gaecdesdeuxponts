@@ -107,5 +107,5 @@ const getProduct = unstable_cache(
     return { products, optionsArray, uniqueProducts };
   },
   ["getProduct"],
-  { revalidate: 60 * 60 * 24, tags: ["productfetch"] },
+  { revalidate: 60 * 60 * 24, tags: ["products", "categories"] },
 );

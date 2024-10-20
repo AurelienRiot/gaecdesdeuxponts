@@ -18,7 +18,7 @@ export const getCategoryByName = unstable_cache(
     return category;
   },
   ["getCategoryByName"],
-  { revalidate: 60 * 60 * 10, tags: ["categories"] },
+  { revalidate: 60 * 60 * 10, tags: ["categories", "products"] },
 );
 
 export const getProCategories = unstable_cache(
@@ -37,7 +37,7 @@ export const getProCategories = unstable_cache(
     return category;
   },
   ["getProCategories"],
-  { revalidate: 60 * 60 * 10, tags: ["categories"] },
+  { revalidate: 60 * 60 * 10, tags: ["categories", "products"] },
 );
 
 export const getProCategoryByName = async (categoryName: string) => {
@@ -74,5 +74,5 @@ export const getCategories = unstable_cache(
     return category;
   },
   ["getCategories"],
-  { revalidate: 60 * 60 * 10, tags: ["categories"] },
+  { revalidate: 60 * 60 * 10, tags: ["categories", "products"] },
 );
