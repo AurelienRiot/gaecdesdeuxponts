@@ -6,6 +6,12 @@ import type { Role } from "@prisma/client";
 import { type NextRequest, NextResponse } from "next/server";
 import { nanoid } from "./id";
 
+export type ZodError = {
+  [x: string]: string[] | undefined;
+  [x: number]: string[] | undefined;
+  [x: symbol]: string[] | undefined;
+};
+
 export type ReturnTypeServerAction<R = undefined, E = undefined> =
   | {
       success: true;
@@ -16,11 +22,7 @@ export type ReturnTypeServerAction<R = undefined, E = undefined> =
       success: false;
       message: string;
       errorData?: E;
-      zodError?: {
-        [x: string]: string[] | undefined;
-        [x: number]: string[] | undefined;
-        [x: symbol]: string[] | undefined;
-      };
+      zodError?: ZodError;
     };
 
 type BaseServerActionType<D extends z.ZodTypeAny> = {

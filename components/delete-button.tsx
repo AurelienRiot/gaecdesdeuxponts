@@ -4,6 +4,7 @@ import { TrashButton } from "./animations/lottie-animation/trash-button";
 import { AlertModal } from "./ui/alert-modal-form";
 import { useState } from "react";
 import type { ReturnTypeServerAction } from "@/lib/server-action";
+import { cn } from "@/lib/utils";
 
 type DeleteButtonProps<D, R, E = undefined> = {
   data: D;
@@ -11,6 +12,10 @@ type DeleteButtonProps<D, R, E = undefined> = {
   isSubmitting?: boolean;
   onSuccess?: () => void;
   children?: React.ReactNode;
+  className?: string;
+  iconClassName?: string;
+  title?: string;
+  description?: string;
 };
 
 function DeleteButton<D, R, E = undefined>({
@@ -19,6 +24,10 @@ function DeleteButton<D, R, E = undefined>({
   action,
   onSuccess,
   children,
+  className,
+  iconClassName,
+  title,
+  description,
 }: DeleteButtonProps<D, R, E>) {
   const [open, setOpen] = useState(false);
   const { serverAction, loading } = useServerAction(action);
@@ -28,14 +37,21 @@ function DeleteButton<D, R, E = undefined>({
   };
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
+      <AlertModal
+        title={title}
+        description={description}
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onConfirm={onDelete}
+      />
 
       <TrashButton
         disabled={isSubmitting || loading}
         variant="destructive"
         size="sm"
         onClick={() => setOpen(true)}
-        iconClassName="size-6"
+        iconClassName={cn("size-6", iconClassName)}
+        className={className}
       >
         {children}
       </TrashButton>

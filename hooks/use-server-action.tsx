@@ -1,10 +1,11 @@
 "use client";
-import type { ReturnTypeServerAction } from "@/lib/server-action";
+import type { ReturnTypeServerAction, ZodError } from "@/lib/server-action";
 import { useCallback, useState } from "react";
 import { toast, type ExternalToast } from "sonner";
 
 function useServerAction<D, R, E = undefined>(action: (data: D) => Promise<ReturnTypeServerAction<R, E>>) {
   const [loading, setLoading] = useState(false);
+  const [zodErrors, setZodErrors] = useState<ZodError>();
   const serverAction = useCallback(
     async ({
       data,
@@ -15,14 +16,7 @@ function useServerAction<D, R, E = undefined>(action: (data: D) => Promise<Retur
     }: {
       data: D;
       onFinally?: () => void;
-      onError?: (
-        errorData?: E,
-        zodError?: {
-          [x: string]: string[] | undefined;
-          [x: number]: string[] | undefined;
-          [x: symbol]: string[] | undefined;
-        },
-      ) => void;
+      onError?: (errorData?: E) => void;
       onSuccess?: (result?: R) => void;
       toastOptions?: ExternalToast;
     }) => {
@@ -31,7 +25,8 @@ function useServerAction<D, R, E = undefined>(action: (data: D) => Promise<Retur
       return await action(data)
         .then(async (result) => {
           if (!result.success) {
-            await onError?.(result.errorData, result.zodError);
+            setZodErrors(result.zodError);
+            await onError?.(result.errorData);
             result.message ? toast.error(result.message, toastOptions) : null;
             return;
           }
@@ -51,7 +46,7 @@ function useServerAction<D, R, E = undefined>(action: (data: D) => Promise<Retur
     [action],
   );
 
-  return { serverAction, loading, setLoading };
+  return { serverAction, loading, zodErrors };
 }
 
 export default useServerAction;

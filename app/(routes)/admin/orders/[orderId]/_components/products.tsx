@@ -14,6 +14,8 @@ import { toast } from "sonner";
 import type { OrderFormValues } from "./order-schema";
 import { LuPackageMinus } from "react-icons/lu";
 import { createId } from "@/lib/id";
+import type { ProductStock } from "@prisma/client";
+import { ca } from "date-fns/locale";
 
 const negativeQuantityStyle =
   "bg-destructive hover:bg-destructive/90 hover:text-destructive-foreground text-destructive-foreground";
@@ -22,7 +24,7 @@ export const ShippingProducts = ({
   products,
   user,
 }: {
-  products: ProductWithMain[];
+  products: (ProductWithMain & { stocks: ProductStock[] })[];
   user?: UserWithAddress | null;
 }) => {
   const form = useFormContext<OrderFormValues>();
@@ -35,6 +37,7 @@ export const ShippingProducts = ({
         id: createId("orderItem"),
         unit: "",
         price: 0,
+        stocks: [],
         quantity: 1,
         tax: 1.055,
         name: "",
@@ -87,7 +90,7 @@ function ProductName({
 }: {
   user?: UserWithAddress | null;
   productIndex: number;
-  products: ProductWithMain[];
+  products: (ProductWithMain & { stocks: ProductStock[] })[];
 }) {
   const form = useFormContext<OrderFormValues>();
   const items = form.watch("orderItems");
@@ -218,7 +221,7 @@ const SelectProductName = ({
   user?: UserWithAddress | null;
   productIndex: number;
   quantity: number;
-  products: ProductWithMain[];
+  products: (ProductWithMain & { stocks: ProductStock[] })[];
   selectedProduct?: ProductWithMain;
 }) => {
   const form = useFormContext<OrderFormValues>();
@@ -229,7 +232,6 @@ const SelectProductName = ({
       toast.error("Produit introuvable");
       return;
     }
-
     form.setValue(`orderItems.${productIndex}.name`, product.name);
     form.setValue(`orderItems.${productIndex}.categoryName`, product.product.categoryName);
     form.setValue(`orderItems.${productIndex}.itemId`, product.id);
@@ -237,6 +239,10 @@ const SelectProductName = ({
     form.setValue(`orderItems.${productIndex}.tax`, product.tax);
     form.setValue(`orderItems.${productIndex}.description`, product.description);
     form.setValue(`orderItems.${productIndex}.price`, product.price);
+    form.setValue(
+      `orderItems.${productIndex}.stocks`,
+      product.stocks.map((stock) => stock.stockId),
+    );
   }
   const groupedProducts = sortProductByTabType(
     products.filter(

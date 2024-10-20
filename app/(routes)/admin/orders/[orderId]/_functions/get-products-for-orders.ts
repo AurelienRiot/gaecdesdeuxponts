@@ -14,6 +14,7 @@ const getProductsForOrders = unstable_cache(
       },
       include: {
         product: true,
+        stocks: true,
       },
     });
 

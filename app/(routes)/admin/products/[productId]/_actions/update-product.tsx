@@ -57,6 +57,13 @@ export async function updateProduct(data: ProductFormValues) {
                 isFeatured: product.isFeatured,
                 isArchived: product.isArchived,
                 imagesUrl: product.imagesUrl,
+                stocks: {
+                  create: product.stocks.map((stockId) => {
+                    return {
+                      stockId,
+                    };
+                  }),
+                },
                 options: {
                   create: product.options.map((option) => {
                     return {
@@ -71,6 +78,7 @@ export async function updateProduct(data: ProductFormValues) {
           },
         },
       });
+      revalidateTag("products");
       revalidateTag("productfetch");
       revalidateTag("categories");
 

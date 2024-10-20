@@ -11,6 +11,7 @@ import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import ShippingOrder from "../create-shipping";
 import { createPDFData } from "../pdf-data";
+import { updateStocks } from "@/actions/update-stocks";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
@@ -96,6 +97,7 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
           });
         }
       }
+      !order.shippingEmail && (await updateStocks(order.orderItems));
 
       await prismadb.order.update({
         where: {
@@ -105,6 +107,7 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
           shippingEmail: new Date(),
         },
       });
+
       createOrdersEvent({ date: order.dateOfShipping });
       revalidateTag("orders");
 

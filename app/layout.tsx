@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     "Du lait au beurre, le goût du meilleur !",
   ],
   title: {
-    default: "Laiterie du Pont Robert",
+    default: "Laiterie du Pont Robert, lait cru bio",
     template: `%s | Laiterie du Pont Robert`,
   },
   description:

@@ -13,6 +13,7 @@ import changeEmail from "../_actions/change-email";
 import { Modal } from "@/components/ui/modal";
 import { Label } from "@/components/ui/label";
 import { DialogFooter } from "@/components/ui/dialog";
+import FormLoadingButton from "@/components/form-loading-button";
 
 function MailForm({ email, id }: { email: string | null; id: string }) {
   const [display, setDisplay] = useState(false);
@@ -81,28 +82,9 @@ function EmailModal({ id, onClose, openModal }: { id: string; onClose: () => voi
           <Input name="email" id="email" placeholder="exemple@email.fr" className="col-span-3" />
         </div>
         <DialogFooter>
-          <LoadingButton type="submit">Mettre à jour l'email</LoadingButton>
+          <FormLoadingButton>Mettre à jour l'email</FormLoadingButton>
         </DialogFooter>
       </form>
     </Modal>
   );
 }
-
-const LoadingButton = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, disabled, children, ...props }, ref) => {
-    const { pending } = useFormStatus();
-    return (
-      <button
-        className={cn(buttonVariants({ variant, size, className }))}
-        disabled={disabled || pending}
-        ref={ref}
-        {...props}
-      >
-        <>
-          {pending && <Loader2 className={cn("h-4 w-4 animate-spin", children ? "mr-2" : "")} />}
-          {children}
-        </>
-      </button>
-    );
-  },
-);

@@ -7,7 +7,7 @@ const baseUrl = process.env.NEXT_PUBLIC_URL;
 
 export async function middleware(req: NextRequest) {
   try {
-    const token = (await getToken({ req, secret })) as (JWT & { exp: number }) | null;
+    const token = await getToken({ req, secret });
     const today = new Date().getTime();
     const path = req.nextUrl.pathname;
 

@@ -13,7 +13,7 @@ import useServerAction from "@/hooks/use-server-action";
 import { createId } from "@/lib/id";
 import type { ProductWithMain, UserWithAddress } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { Shop } from "@prisma/client";
+import type { ProductStock, Shop } from "@prisma/client";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -41,7 +41,7 @@ export type OrderFormProps = {
         dateOfPayment?: Date | null;
       })
     | null;
-  products: ProductWithMain[];
+  products: (ProductWithMain & { stocks: ProductStock[] })[];
   shops: Shop[];
   users: UserWithAddress[];
   referer: string;
@@ -90,6 +90,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
         id: product.id,
         itemId: product.itemId,
         unit: product.unit,
+        stocks: product.stocks,
         price: product.price,
         tax: product.tax,
         quantity: product.quantity,

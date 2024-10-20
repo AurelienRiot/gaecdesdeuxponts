@@ -7,6 +7,7 @@ const orderItemSchema = z.object({
   price: z.coerce.number(),
   quantity: z.coerce.number(),
   tax: z.coerce.number(),
+  stocks: z.array(z.string()),
   name: z.string().min(1, { message: "Le nom est requis" }),
   categoryName: z.string().min(0, { message: "La catégorie est requise" }),
   description: z.string().min(0, { message: "La description est requise" }),

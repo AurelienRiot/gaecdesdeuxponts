@@ -18,6 +18,7 @@ const getShippingOrder = unstable_cache(
         orderItems: {
           select: {
             id: true,
+            stocks: true,
             name: true,
             itemId: true,
             unit: true,

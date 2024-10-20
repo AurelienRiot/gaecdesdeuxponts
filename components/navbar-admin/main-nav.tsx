@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import {
+  Box,
   Calendar,
   LayoutDashboardIcon,
   ListOrderedIcon,
@@ -116,6 +117,12 @@ export const SecondaryAdminRoutes = (pathname: string) => [
     label: "Commandes",
     active: pathname.startsWith(`/admin/orders`),
     Icone: ListOrderedIcon,
+  },
+  {
+    href: `/admin/stocks`,
+    label: "Stocks",
+    active: pathname.startsWith(`/admin/stocks`),
+    Icone: Box,
   },
   {
     href: `/admin/direction`,

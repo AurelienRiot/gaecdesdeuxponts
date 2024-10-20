@@ -1,21 +1,27 @@
 import { Heading } from "@/components/ui/heading";
-import StockCard from "./_components/stock-card";
-import { Suspense } from "react";
-import { addDelay } from "@/lib/utils";
-import updateBidon5L from "./_actions/update-bidon5L";
 import { Separator } from "@/components/ui/separator";
+import type { SearchParams } from "@/types";
+import { Suspense } from "react";
+import NewStockModal from "./_components/new-stock-modal";
+import StockCard from "./_components/stock-card";
+import { getStocks } from "./_functions/get-stocks";
 
-export const revalidate = 86400;
+export const dynamic = "force-dynamic";
 
-function StocksPage() {
+interface StockSearchParams extends SearchParams {
+  modal?: string;
+}
+
+function StocksPage({ searchParams }: { searchParams: StockSearchParams }) {
   return (
     <div className="m-4 space-y-4">
       <div className="flex flex-col items-center justify-between sm:flex-row gap-y-2">
         <Heading title={`Stocks`} description="Stocks des différents produits" />
+        <NewStockModal />
       </div>
       <Separator />
       <Suspense fallback={<StockCard />}>
-        <Bidon5LStock />
+        <DisplayStock />
       </Suspense>
     </div>
   );
@@ -23,7 +29,13 @@ function StocksPage() {
 
 export default StocksPage;
 
-async function Bidon5LStock() {
-  await addDelay(2000);
-  return <StockCard title="Bidon de 5 Litres" id="bidon5eL" stock={10} action={updateBidon5L} />;
+async function DisplayStock() {
+  const stocks = await getStocks();
+  return (
+    <div className="flex flex-wrap gap-4 justify-center">
+      {stocks.map((stock) => (
+        <StockCard key={stock.id} id={stock.id} title={stock.name} name={stock.name} stock={stock.totalQuantity} />
+      ))}
+    </div>
+  );
 }

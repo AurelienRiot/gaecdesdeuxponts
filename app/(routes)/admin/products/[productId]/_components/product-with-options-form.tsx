@@ -12,7 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { createId } from "@/lib/id";
 import { cn, getPercentage } from "@/lib/utils";
-import { Unit } from "@prisma/client";
+import { type Stock, Unit } from "@prisma/client";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { Check, ChevronLeft, ChevronRight, ChevronsDown, ChevronsUp, ChevronsUpDown, X } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -20,11 +20,14 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import OptionValueForm from "./options-values-form";
 import type { ProductFormValues } from "./product-schema";
+import MultipleSelector, { type Option } from "@/components/ui/multiple-selector";
 
 export const ProductWithOptions = ({
   optionsArray,
+  stocks,
 }: {
   optionsArray: OptionsArray;
+  stocks: Stock[];
 }) => {
   const [listChanges, setListChanges] = useState(0);
   const router = useRouter();
@@ -43,6 +46,7 @@ export const ProductWithOptions = ({
       isFeatured: false,
       imagesUrl: [],
       tax: 1.055,
+      stocks: [],
       options: products[0].options.map((option) => ({
         index: option.index,
         name: option.name,
@@ -109,6 +113,7 @@ export const ProductWithOptions = ({
                     productIndex={productIndex}
                     options={options}
                     optionsArray={optionsArray}
+                    stocks={stocks}
                   />
                 </div>
               ))}
@@ -131,11 +136,13 @@ function ProductName({
   optionsArray,
   products,
   setListChanges,
+  stocks,
 }: {
   productIndex: number;
   options: { name: string; value: string }[];
   optionsArray: OptionsArray;
   products: ProductFormValues["products"];
+  stocks: Stock[];
   setListChanges: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const form = useFormContext<ProductFormValues>();
@@ -262,6 +269,24 @@ function ProductName({
                   disabled={form.formState.isSubmitting}
                   placeholder="Description du produit"
                   {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name={`products.${productIndex}.stocks`}
+          render={({ field }) => (
+            <FormItem className="w-[300px]">
+              <FormLabel>Stocks</FormLabel>
+              <FormControl>
+                <StockMultipleSelector
+                  stocks={stocks.map((stock) => ({ value: stock.id, label: stock.name }))}
+                  selectedStocks={field.value}
+                  setSelectedStocks={field.onChange}
+                  disabled={form.formState.isSubmitting}
                 />
               </FormControl>
               <FormMessage />
@@ -531,5 +556,36 @@ const OptionsName = ({
         </FormItem>
       )}
     />
+  );
+};
+
+type StockMultipleSelectorProps = {
+  selectedStocks: string[];
+  setSelectedStocks: (tags: string[]) => void;
+  disabled?: boolean;
+  stocks: Option[];
+};
+const StockMultipleSelector = ({ selectedStocks, setSelectedStocks, disabled, stocks }: StockMultipleSelectorProps) => {
+  const selectedStockOptions = selectedStocks
+    .map((id) => stocks.find((stock) => stock.value === id))
+    .filter((option) => option !== undefined) as Option[];
+
+  console.log(selectedStocks);
+  function setSelectedStockOptions(select: Option[]) {
+    setSelectedStocks(select.map((option) => option.value));
+  }
+  return (
+    <div className="w-full">
+      <MultipleSelector
+        disabled={disabled}
+        value={selectedStockOptions}
+        onChange={setSelectedStockOptions}
+        options={stocks}
+        className="bg-background"
+        emptyIndicator={
+          <p className="text-center text-sm leading-10 text-gray-600 dark:text-gray-400">Aucun résultat</p>
+        }
+      />
+    </div>
   );
 };

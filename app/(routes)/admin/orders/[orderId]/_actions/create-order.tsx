@@ -28,18 +28,21 @@ async function createOrder(data: OrderFormValues) {
           shopId,
           index,
           orderItems: {
-            create: orderItems.map(({ categoryName, description, itemId, name, price, quantity, unit, tax }) => {
-              return {
-                itemId,
-                price,
-                quantity,
-                unit,
-                name,
-                tax,
-                categoryName,
-                description,
-              };
-            }),
+            create: orderItems.map(
+              ({ categoryName, description, itemId, name, price, quantity, unit, tax, stocks }) => {
+                return {
+                  itemId,
+                  price,
+                  stocks,
+                  quantity,
+                  unit,
+                  name,
+                  tax,
+                  categoryName,
+                  description,
+                };
+              },
+            ),
           },
         },
         include: { user: { include: { address: true, billingAddress: true } } },

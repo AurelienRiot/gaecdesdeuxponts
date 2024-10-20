@@ -28,7 +28,7 @@ async function DisplayUserForm({ userId }: { userId: string | "new" | undefined 
     return <CreateUserForm />;
   }
 
-  const user = await await prismadb.user.findUnique({
+  const user = await prismadb.user.findUnique({
     where: {
       id: userId,
     },

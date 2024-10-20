@@ -36,6 +36,7 @@ model OrderItem {
   name         String
   categoryName String
   description  String @db.VarChar(1000)
+  stocks       String[]
   orderId      String
   order        Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 

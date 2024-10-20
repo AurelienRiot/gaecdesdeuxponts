@@ -11,26 +11,27 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import useServerAction from "@/hooks/use-server-action";
 import { createId } from "@/lib/id";
-import type { MainProductWithProducts } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { Category } from "@prisma/client";
+import type { Category, Stock } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import deleteProduct from "../../_actions/delete-product";
 import { createProduct } from "../_actions/create-product";
 import { updateProduct } from "../_actions/update-product";
+import type { GetMainProductType } from "../_functions/get-main-product";
 import { mainProductSchema, type ProductFormValues } from "./product-schema";
 import ProductSpecs from "./product-specs";
 import { ProductWithOptions } from "./product-with-options-form";
 
 type ProductFormProps = {
-  initialData: MainProductWithProducts | null;
+  initialData: GetMainProductType | null;
   categories: Category[];
   optionsArray: OptionsArray;
+  stocks: Stock[];
 };
 
-export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categories, optionsArray }) => {
+export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categories, optionsArray, stocks }) => {
   const router = useRouter();
   const { serverAction: createProductAction } = useServerAction(createProduct);
   const { serverAction: updateProductAction } = useServerAction(updateProduct);
@@ -57,6 +58,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
         price: product.price,
         tax: product.tax,
         unit: product.unit || undefined,
+        stocks: product.stocks.map((stock) => stock.stockId) || [],
         isFeatured: product.isFeatured,
         isArchived: product.isArchived,
         imagesUrl: product.imagesUrl,
@@ -75,6 +77,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
           price: undefined,
           isFeatured: false,
           isArchived: false,
+          stocks: [],
           imagesUrl: [],
           options: [],
         },
@@ -208,7 +211,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
               )}
             />
           </div>
-          <ProductWithOptions optionsArray={optionsArray} />
+          <ProductWithOptions stocks={stocks} optionsArray={optionsArray} />
           <ProductSpecs />
 
           <FormButton className="ml-auto">{action}</FormButton>

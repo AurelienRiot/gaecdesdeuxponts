@@ -22,6 +22,7 @@ declare module "next-auth/jwt" {
     id: string;
     role: Role;
     tokenExpires: Date;
+    exp: number;
   }
 }
 
