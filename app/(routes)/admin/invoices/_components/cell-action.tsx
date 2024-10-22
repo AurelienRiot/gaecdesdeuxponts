@@ -29,7 +29,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const { serverAction: validateInvoiceAction, loading: validateLoading } = useServerAction(validateInvoice);
   const { toastServerAction, loading: toastLoading } = useToastPromise({
     serverAction: sendInvoiceAction,
-    message: "Facture envoyée",
+    message: "Envoie de la facture",
     errorMessage: "Erreur lors de l'envoi de la facture",
   });
   const confirm = useConfirm();

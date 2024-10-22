@@ -20,6 +20,7 @@ import createUser from "../_actions/create-user";
 import SelectRole from "./select-role";
 import { schema, type UserFormValues } from "./user-schema";
 import CcInvoiceForm from "./cc-invoice-form";
+import UserLinks from "./user-links";
 
 export const CreateUserForm = () => {
   const { serverAction } = useServerAction(createUser);
@@ -41,6 +42,7 @@ export const CreateUserForm = () => {
       phone: "",
       role: "pro",
       ccInvoice: [],
+      links: [],
       address: {
         label: "",
         city: "",
@@ -58,14 +60,13 @@ export const CreateUserForm = () => {
 
   const onSubmit = async (data: UserFormValues) => {
     data.name = data.name.trim();
-    // console.log(data);
+    console.log(data);
     function onSuccess() {
       router.back();
       router.refresh();
     }
     await serverAction({ data, onSuccess });
   };
-
   return (
     <div className="space-y-6 p-8 pt-6">
       <div className="mb-8 flex-1 space-y-4">
@@ -75,7 +76,7 @@ export const CreateUserForm = () => {
         <Separator />
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit, (e) => console.log(e))} className="w-full space-y-8">
             <FormField
               control={form.control}
               name="image"
@@ -94,6 +95,7 @@ export const CreateUserForm = () => {
                 </FormItem>
               )}
             />
+            <SelectRole display />
             <div className="flex flex-wrap gap-8 ">
               <FormField
                 control={form.control}
@@ -179,7 +181,7 @@ export const CreateUserForm = () => {
                   </FormItem>
                 )}
               />
-              <SelectRole display />
+
               <FormField
                 control={form.control}
                 name="completed"
@@ -211,6 +213,7 @@ export const CreateUserForm = () => {
                   </FormItem>
                 )}
               />
+              <UserLinks />
               <CcInvoiceForm />
               <AddressForm />
               <BillingAddressForm />

@@ -88,21 +88,20 @@ const useToastPromise = <D, R, E = undefined>({
       toast.promise(promise, {
         position: "top-center",
         loading: (
-          <div className="flex w-full items-center justify-between">
+          <div className="flex w-full items-center justify-between ">
             <span className="align-middle">
               <Loader2 className="my-auto mr-2 inline size-4 animate-spin" /> {message}{" "}
             </span>
-            {delay && (
-              <Button
-                size={"xs"}
-                className="animate-[hide-element_2s_forwards] text-xs"
-                onClick={() => {
-                  abortController.abort();
-                }}
-              >
-                Annuler
-              </Button>
-            )}
+            <Button
+              size={"xs"}
+              disabled={!delay}
+              className="animate-[hide-element_2s_forwards] text-xs h-auto"
+              onClick={() => {
+                abortController.abort();
+              }}
+            >
+              Annuler
+            </Button>
           </div>
         ),
         success: async (result) => {

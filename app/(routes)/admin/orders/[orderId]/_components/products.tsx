@@ -94,8 +94,8 @@ function ProductName({
 }) {
   const form = useFormContext<OrderFormValues>();
   const items = form.watch("orderItems");
-  const quantity = items[productIndex].quantity;
-  const selectedProduct = products.find((product) => product.id === items[productIndex].itemId);
+  const selectedProduct = items[productIndex];
+  const quantity = selectedProduct.quantity;
 
   const deleteProduct = () => {
     const newItems = items.filter((_, index) => index !== productIndex);
@@ -222,7 +222,7 @@ const SelectProductName = ({
   productIndex: number;
   quantity: number;
   products: (ProductWithMain & { stocks: ProductStock[] })[];
-  selectedProduct?: ProductWithMain;
+  selectedProduct?: OrderFormValues["orderItems"][number];
 }) => {
   const form = useFormContext<OrderFormValues>();
 
@@ -276,7 +276,7 @@ const SelectProductName = ({
                       quantity < 0 ? negativeQuantityStyle : "",
                     )}
                   >
-                    {selectedProduct?.product.isPro && (
+                    {products.find((product) => product.id === field.value)?.product.isPro && (
                       <Badge variant="orange" className="mr-2">
                         Pro
                       </Badge>

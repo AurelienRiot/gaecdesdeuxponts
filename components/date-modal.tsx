@@ -1,7 +1,6 @@
 "use client";
 import { dateFormatter } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
-import { addDays } from "date-fns";
 import { fr } from "date-fns/locale";
 import * as React from "react";
 import { Icons } from "./icons";
@@ -11,7 +10,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui
 
 type DateModalProps = Omit<CalendarProps, "mode"> & {
   value?: Date;
-  onValueChange?: (value?: Date) => void;
+  onValueChange: (value?: Date) => void;
   triggerClassName?: string;
   trigger?: React.ReactNode;
 };
@@ -44,7 +43,7 @@ const DateModal = React.forwardRef<HTMLButtonElement, DateModalProps>(
         </SheetTrigger>
         <SheetContent
           side={"bottom"}
-          className={cn("pb-16 max-h-[90dvh] gap-14 flex flex-col justify-between ", className)}
+          className={cn("pb-8 max-h-[90dvh] gap-14 flex flex-col justify-between ", className)}
         >
           <SheetHeader className="mx-auto w-full max-w-sm ">
             <SheetTitle className="text-center">{"Selectionner une date"}</SheetTitle>
@@ -81,51 +80,58 @@ export default DateModal;
 function QuickButtons({
   onValueChange,
   setOpen,
-}: { onValueChange?: (value?: Date) => void; setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
+}: { onValueChange: (value?: Date) => void; setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
+  const nextMonday = new Date();
+  nextMonday.setDate(nextMonday.getDate() + ((1 - nextMonday.getDay() + 7) % 7 || 7));
+  const nextTuesday = new Date();
+  nextTuesday.setDate(nextTuesday.getDate() + ((2 - nextTuesday.getDay() + 7) % 7 || 7));
   const nextThursday = new Date();
-  nextThursday.setDate(nextThursday.getDate() + ((2 - nextThursday.getDay() + 7) % 7 || 7));
+  nextThursday.setDate(nextThursday.getDate() + ((4 - nextThursday.getDay() + 7) % 7 || 7));
   const nextFriday = new Date();
   nextFriday.setDate(nextFriday.getDate() + ((5 - nextFriday.getDay() + 7) % 7 || 7));
-  // const reverse = nextThursday.getTime() > nextFriday.getTime();
+
   return (
     <div className="flex justify-center gap-4 items-center">
       <Button
         variant="secondary"
         className="text-xs sm:text-sm"
         onClick={() => {
-          onValueChange?.(addDays(new Date(), 1));
+          onValueChange?.(nextMonday);
           setOpen(false);
-        }} // Tomorrow
+        }}
       >
-        Demain
+        Lundi
       </Button>
-      <div
-        className={cn(
-          "flex gap-4 items-center justify-center",
-          // reverse ? "flex-row-reverse" : "flex-row"
-        )}
+      <Button
+        variant="secondary"
+        className="text-xs sm:text-sm"
+        onClick={() => {
+          onValueChange?.(nextTuesday);
+          setOpen(false);
+        }}
       >
-        <Button
-          variant="secondary"
-          className="text-xs sm:text-sm"
-          onClick={() => {
-            onValueChange?.(nextThursday);
-            setOpen(false);
-          }}
-        >
-          Mardi prochain
-        </Button>
-        <Button
-          variant="secondary"
-          className="text-xs sm:text-sm"
-          onClick={() => {
-            onValueChange?.(nextFriday);
-            setOpen(false);
-          }}
-        >
-          Vendredi prochain
-        </Button>
-      </div>
+        Mardi
+      </Button>
+      <Button
+        variant="secondary"
+        className="text-xs sm:text-sm"
+        onClick={() => {
+          onValueChange?.(nextThursday);
+          setOpen(false);
+        }}
+      >
+        Jeudi
+      </Button>
+      <Button
+        variant="secondary"
+        className="text-xs sm:text-sm"
+        onClick={() => {
+          onValueChange?.(nextFriday);
+          setOpen(false);
+        }}
+      >
+        Vendredi
+      </Button>
     </div>
   );
 }

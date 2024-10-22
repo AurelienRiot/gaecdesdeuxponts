@@ -8,6 +8,7 @@ import EventPage from "./_components/events-page";
 import { getGroupedAMAPOrders } from "./_functions/get-amap-orders";
 import { getOrdersByDate } from "./_functions/get-orders";
 import { addDelay } from "@/lib/utils";
+import { getStocks } from "../stocks/_functions/get-stocks";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +24,10 @@ async function CalendarPage() {
   const to = addDays(new Date(), 30);
   const dateArray = makeDateArray({ from, to });
   const [orders, amapOrders] = await Promise.all([getOrdersByDate({ from, to }), getGroupedAMAPOrders()]);
+  // const stocks = await getStocks();
+  // for (const stock of stocks) {
+  //   console.log(stock.name, " : ", stock.totalQuantity);
+  // }
   // const amapOrders = await getGroupedAMAPOrders();
 
   return (

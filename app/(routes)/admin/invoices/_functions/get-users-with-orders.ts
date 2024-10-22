@@ -9,6 +9,7 @@ export async function getUsersWithOrders() {
       orders: {
         some: {
           deletedAt: null,
+          shippingEmail: { not: null },
           dateOfShipping: { not: null },
           orderItems: { some: { price: { not: 0 } } },
           OR: [
@@ -36,6 +37,7 @@ export async function getUsersWithOrders() {
         where: {
           deletedAt: null,
           dateOfShipping: { not: null },
+          shippingEmail: { not: null },
           orderItems: { some: { price: { not: 0 } } },
           OR: [
             { invoiceOrder: { none: {} } },

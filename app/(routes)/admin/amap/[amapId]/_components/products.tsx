@@ -88,8 +88,9 @@ function ProductName({
 }) {
   const form = useFormContext<AMAPFormValues>();
   const items = form.watch("amapItems");
-  const quantity = items[productIndex].quantity;
-  const selectedProduct = products.find((product) => product.id === items[productIndex].itemId);
+  const selectedProduct = items[productIndex];
+  const quantity = selectedProduct.quantity;
+  // const selectedProduct = products.find((product) => product.id === items[productIndex].itemId);
 
   const deleteProduct = () => {
     const newItems = items.filter((_, index) => index !== productIndex);
@@ -188,7 +189,7 @@ const SelectProductName = ({
   productIndex: number;
   quantity: number;
   products: Product[];
-  selectedProduct?: Product;
+  selectedProduct?: AMAPFormValues["amapItems"][number];
 }) => {
   const form = useFormContext<AMAPFormValues>();
 
@@ -206,7 +207,6 @@ const SelectProductName = ({
     form.setValue(`amapItems.${productIndex}.price`, product.price);
     form.setValue(`amapItems.${productIndex}.quantity`, 1);
   }
-
   return (
     <FormField
       control={form.control}
@@ -233,7 +233,7 @@ const SelectProductName = ({
                   {selectedProduct ? selectedProduct.name : "Nom du produit"}
                 </Button>
               }
-              selectedValue={selectedProduct?.id}
+              selectedValue={selectedProduct?.itemId}
               values={products.map((product) => ({
                 label: product.name,
                 value: { key: product.id },
