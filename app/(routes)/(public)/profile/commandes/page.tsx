@@ -12,7 +12,6 @@ import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { useUserContext } from "@/context/user-context";
 import useServerAction from "@/hooks/use-server-action";
 import { getMonthNumber } from "@/lib/date-utils";
 import { currencyFormatter } from "@/lib/utils";
@@ -20,13 +19,24 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import sendCheckoutEmail from "./_actions/send-chekout-email";
 import { OrdersColumn, type OrderColumnType } from "./_components/order-column";
+import { useUserQuery } from "../_components/user-query";
 
 const PageOrderTable = () => {
-  const { user } = useUserContext();
+  const { data: user } = useUserQuery();
   const { serverAction } = useServerAction(sendCheckoutEmail);
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
   const order = user?.orders.find((order) => order.id === orderId);
+
+  useEffect(() => {
+    const sendCheckoutEmail = async () => {
+      if (orderId && order && !order.orderEmail) {
+        await serverAction({ data: { orderId } });
+      }
+    };
+
+    sendCheckoutEmail();
+  }, [orderId, order, serverAction]);
 
   if (!user) {
     return (
@@ -50,18 +60,6 @@ const PageOrderTable = () => {
     delivered: !!order.invoiceOrder?.[0]?.invoice?.id || !!order.shippingEmail,
     createdAt: order.createdAt,
   }));
-
-  useEffect(() => {
-    async function sendCheckoutEmail() {
-      if (orderId) {
-        if (order && !order?.orderEmail) {
-          await serverAction({ data: { orderId } });
-        }
-      }
-    }
-
-    sendCheckoutEmail();
-  }, [orderId, order, serverAction]);
 
   const yearSet = new Set(formattedOrders.map((order) => new Date(order.createdAt).getFullYear()));
   const yearArray = Array.from(yearSet);

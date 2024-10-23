@@ -58,12 +58,10 @@ async function CalendarPage() {
               <Package className="size-4 text-green-100 stroke-[3]" />
             </Link>
           </div>
-          <div className=" space-y-4 p-8  py-2   w-full">
-            <Separator />
-          </div>
+          <Separator />
 
           <EventPage amapOrders={amapOrders} initialDateArray={dateArray} />
-          <div className="flex justify-between p-4 ">
+          <div className="flex justify-between p-4 max-w-[500px] mx-auto w-full">
             <UpdatePage />
             <TodayFocus startMonth={new Date(dateArray[0])} endMonth={new Date(dateArray[dateArray.length - 1])} />
           </div>

@@ -1,17 +1,17 @@
 "use client";
 import { TbFileInvoice } from "@/components/react-icons";
 import { IconButton } from "@/components/ui/button";
-import { useUserContext } from "@/context/user-context";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ChevronLeft, CircleUserRound, Package, Settings, Store, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
+import { useUserQuery } from "./_components/user-query";
 
 const ProfilNavBar = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const { user } = useUserContext();
+  const { data: user } = useUserQuery();
   const userName = user ? user.name : undefined;
   const router = useRouter();
   const [visible, setVisible] = useState(false);

@@ -20,6 +20,7 @@ import DatePicker from "./date-picker";
 import LoginCard from "./login-card";
 import TimePicker from "./time-picker";
 import { addDelay } from "@/lib/utils";
+import { useUserQueryClient } from "../../profile/_components/user-query";
 
 const getDateFromSearchParam = (param: string | null): Date | undefined => {
   if (param === null) return undefined;
@@ -33,6 +34,8 @@ interface SummaryProps {
 
 const Summary: React.FC<SummaryProps> = ({ shops }) => {
   const { serverAction, loading } = useServerAction(createCheckOut);
+  const { refectUser } = useUserQueryClient();
+
   const session = useSession();
   const role = session.data?.user?.role;
   const cart = useCart();
@@ -99,6 +102,7 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
         toast.error("Erreur");
         return;
       }
+      refectUser();
       router.push(`/profile/commandes?orderId=${result.orderId}`);
       await addDelay(500);
       cart.removeAll();

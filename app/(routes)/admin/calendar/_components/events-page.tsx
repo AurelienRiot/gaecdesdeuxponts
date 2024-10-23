@@ -20,7 +20,6 @@ import { addDelay } from "@/lib/utils";
 
 type EventsPageProps = {
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
-  // initialOrders: CalendarOrdersType[];
   initialDateArray: string[];
 };
 
@@ -66,13 +65,11 @@ export default function EventPage({ amapOrders, initialDateArray: dateArray }: E
     queryFn: async () => await fetchOrders(dateArray),
     queryKey: ["fetchOrders"],
     staleTime: 60 * 60 * 1000,
-    // initialData,
   });
 
   useLayoutEffect(() => {
     scrollToElement(getLocalIsoString(new Date()), "instant");
   }, []);
-  console.log(error);
   return (
     <>
       <div className="flex flex-row gap-4  pb-4 overflow-y-hidden mx-auto flex-auto w-full overflow-x-scroll">
@@ -113,8 +110,8 @@ function RenderEvent({
 }) {
   const { setOrders, setIsOrderModalOpen } = useOrdersModal();
   return (
-    <div key={date} id={date} className="flex-shrink-0  w-[320px] h-full space-y-2 relative">
-      <h2 className="text-xl font-semibold capitalize text-center flex justify-between items-center px-2">
+    <div key={date} id={date} className="flex-shrink-0  w-[320px] h-full space-y-2 relative ">
+      <h2 className="text-xl font-semibold capitalize text-center flex justify-between items-center p-2 z-50">
         <span>{dateFormatter(new Date(date), { days: true })}</span>
         {dailyOrders && dailyOrders.length > 0 && (
           <>
@@ -151,24 +148,6 @@ function DatePage({
   allOrders: CalendarOrdersType[];
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
 }) {
-  // const {
-  //   data: dailyOrders,
-  //   isLoading,
-  //   error,
-  // } = useQuery({
-  //   queryFn: async () => await fetchDailyOrders(date),
-  //   queryKey: ["fetchDailyOrders", { date }],
-  //   staleTime: 10 * 60,
-  //   // initialData,
-  // });
-  // if (error) {
-  //   return <div>{error.message}</div>;
-  // }
-  // console.log(isLoading);
-  // if (isLoading) {
-  //   <Spinner className="size-6" />;
-  // }
-
   if (!dailyOrders) {
     return <NoResults />;
   }
@@ -178,11 +157,6 @@ function DatePage({
     shopImageUrl: order.shopImageUrl,
     order: order.shippingDays.find((shippingDay) => getLocalIsoString(new Date(shippingDay.date)) === date),
   }));
-  // const orderData = dailyOrders
-  //   .sort((a, b) => {
-  //     if (a.status === "Commande livrée") return 1;
-  //     return -1;
-  //   });
 
   return (
     <>

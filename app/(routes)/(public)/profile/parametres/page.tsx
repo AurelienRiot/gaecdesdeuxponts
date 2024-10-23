@@ -5,11 +5,11 @@ import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { useUserContext } from "@/context/user-context";
 import { UserForm } from "./_components/user-form";
+import { useUserQuery } from "../_components/user-query";
 
 const PageSettings = () => {
-  const { user } = useUserContext();
+  const { data: user } = useUserQuery();
 
   if (!user) {
     return <LoadingUserForm />;

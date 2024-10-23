@@ -1,12 +1,12 @@
 "use client";
 
-import { LoadingButton } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 
 function UpdatePage({ className }: { className?: string }) {
   const queryClient = useQueryClient();
   return (
-    <LoadingButton
+    <Button
       variant="default"
       className={className}
       onClick={() => {
@@ -15,7 +15,7 @@ function UpdatePage({ className }: { className?: string }) {
       }}
     >
       Actualiser
-    </LoadingButton>
+    </Button>
   );
 }
 

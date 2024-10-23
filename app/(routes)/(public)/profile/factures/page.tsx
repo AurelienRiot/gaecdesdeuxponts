@@ -2,13 +2,13 @@
 
 import { DataTableSkeleton } from "@/components/skeleton-ui/data-table-skeleton";
 import { DataTable } from "@/components/ui/data-table/data-table";
-import { useUserContext } from "@/context/user-context";
+import { dateFormatter, dateMonthYear } from "@/lib/date-utils";
 import { currencyFormatter } from "@/lib/utils";
 import { InvoiceColumn, type InvoiceColumnType } from "./_components/invoice-column";
-import { dateFormatter, dateMonthYear } from "@/lib/date-utils";
+import { useUserQuery } from "../_components/user-query";
 
 const PageOrderTable = () => {
-  const { user } = useUserContext();
+  const { data: user } = useUserQuery();
 
   if (!user) {
     return <DataTableSkeleton columnCount={5} />;

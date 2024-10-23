@@ -1,13 +1,13 @@
 "use client";
 import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { useUserContext } from "@/context/user-context";
 import { addressFormatter } from "@/lib/utils";
 import Link from "next/link";
 import { formatPhoneNumber } from "react-phone-number-input";
+import { useUserQuery } from "../../_components/user-query";
 
 export const UserName = () => {
-  const { user } = useUserContext();
+  const { data: user } = useUserQuery();
 
   return !user ? (
     <Skeleton className="h-6 w-40" />
@@ -20,19 +20,19 @@ export const UserName = () => {
 };
 
 export const UserEmail = () => {
-  const { user } = useUserContext();
+  const { data: user } = useUserQuery();
 
   return !user ? <Skeleton className="h-6 w-40" /> : user.email;
 };
 
 export const UserPhone = () => {
-  const { user } = useUserContext();
+  const { data: user } = useUserQuery();
 
   return !user ? <Skeleton className="h-6 w-40" /> : user.phone ? formatPhoneNumber(user.phone) : "Non renseigné";
 };
 
 export const UserAddress = () => {
-  const { user } = useUserContext();
+  const { data: user } = useUserQuery();
 
   const address = user?.address ? addressFormatter(user.address, false) : null;
 
@@ -40,7 +40,7 @@ export const UserAddress = () => {
 };
 
 export const ProButton = () => {
-  const { user } = useUserContext();
+  const { data: user } = useUserQuery();
 
   return (
     user?.role === "pro" && (

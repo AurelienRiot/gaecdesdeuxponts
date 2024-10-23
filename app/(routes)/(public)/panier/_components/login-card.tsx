@@ -28,15 +28,8 @@ const LoginCard = ({
   }
 
   return (
-    <Card
-      className={cn(
-        "mt-6 flex h-[450px] max-w-[500px] flex-col justify-between",
-        className,
-      )}
-    >
-      <CardHeader className="text-center text-2xl font-semibold ">
-        Connecté vous pour valider votre commande
-      </CardHeader>
+    <Card className={cn("mt-6 flex h-[450px] max-w-[500px] flex-col justify-between", className)}>
+      <CardHeader className="text-center text-2xl font-semibold ">Connecté vous pour valider votre commande</CardHeader>
       <CardContent className="flex  flex-col items-center justify-center">
         <GoogleButton callbackUrl={callbackUrl} />
       </CardContent>

@@ -128,8 +128,8 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
           noStyle
             ? ""
             : "flex items-center justify-center rounded-full border bg-background p-2 shadow-md transition-all hover:scale-110 active:scale-95",
-          className,
           props.disabled ? "cursor-not-allowed opacity-50 hover:scale-100 active:scale-100" : "",
+          className,
         )}
         {...props}
       >

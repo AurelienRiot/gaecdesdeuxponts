@@ -8,14 +8,13 @@ import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
 import { defaultAddress, type FullAdress } from "@/components/zod-schema/address-schema";
-import { useUserContext } from "@/context/user-context";
 import useServerAction from "@/hooks/use-server-action";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { Address, BillingAddress } from "@prisma/client";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useUserQueryClient } from "../../_components/user-query";
 import deleteUser from "../_actions/delete-user";
 import updateUser from "../_actions/update-user";
 import { formSchema, type UserFormValues } from "./form-schema";
@@ -35,6 +34,7 @@ interface UserFormProps {
 
 export const UserForm: React.FC<UserFormProps> = ({ initialData }: UserFormProps) => {
   const { serverAction } = useServerAction(updateUser);
+  const { refectUser } = useUserQueryClient();
   const title = initialData.name ? "Modifier votre profile" : "Completer votre  profile";
   const action = "Enregistrer les modifications";
 
@@ -51,25 +51,12 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }: UserFormProps
   });
 
   const router = useRouter();
-  const { setUser } = useUserContext();
 
   const onSubmit = async (data: UserFormValues) => {
     data.name = data.name.trim();
     data.company = data.company?.trim();
     function onSuccess() {
-      setUser((prev) =>
-        prev
-          ? {
-              ...prev,
-              name: data.name,
-              phone: data.phone,
-              company: data.company || null,
-              raisonSocial: data.raisonSocial || null,
-              address: (data.address as Address) ?? null,
-              billingAddress: (data.billingAddress as BillingAddress) ?? null,
-            }
-          : null,
-      );
+      refectUser();
       router.push("/profile");
     }
     await serverAction({ data, onSuccess });

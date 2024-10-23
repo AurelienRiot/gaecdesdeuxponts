@@ -2,14 +2,14 @@
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { useUserContext } from "@/context/user-context";
 import useServerAction from "@/hooks/use-server-action";
+import { useUserQuery, useUserQueryClient } from "../../_components/user-query";
 import changeInvoice from "../_actions/change-invoice";
 import changeShipping from "../_actions/change-shipping";
 
 function NotificationsCheckbox() {
-  const { user, setUser } = useUserContext();
-
+  const { data: user } = useUserQuery();
+  const { mutateUser } = useUserQueryClient();
   const { serverAction: changeInvoiceAction, loading: invoiceLoading } = useServerAction(changeInvoice);
   const { serverAction: changeShippingAction, loading: shippingLoading } = useServerAction(changeShipping);
 
@@ -17,7 +17,7 @@ function NotificationsCheckbox() {
     if (!user) {
       return;
     }
-    setUser((prev) => {
+    mutateUser((prev) => {
       if (prev) {
         return {
           ...prev,
@@ -30,7 +30,7 @@ function NotificationsCheckbox() {
       return prev;
     });
     function onError() {
-      setUser((prev) => {
+      mutateUser((prev) => {
         if (prev) {
           return {
             ...prev,
@@ -54,7 +54,7 @@ function NotificationsCheckbox() {
     if (!user) {
       return;
     }
-    setUser((prev) => {
+    mutateUser((prev) => {
       if (prev) {
         return {
           ...prev,
@@ -67,7 +67,7 @@ function NotificationsCheckbox() {
       return prev;
     });
     function onError() {
-      setUser((prev) => {
+      mutateUser((prev) => {
         if (prev) {
           return {
             ...prev,
