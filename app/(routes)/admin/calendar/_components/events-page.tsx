@@ -184,34 +184,11 @@ function DatePage({
   //     return -1;
   //   });
 
-  const productQuantities = extractProductQuantities(
-    dailyOrders
-      .flatMap((order) =>
-        order.productsList.map((item) => ({
-          itemId: item.name,
-          name: item.name,
-          quantity: Number(item.quantity || 1),
-          unit: getUnitLabel(item.unit).quantity,
-        })),
-      )
-      .concat(
-        amapData.flatMap(
-          (shop) =>
-            shop.order?.items.map((item) => ({
-              itemId: item.itemId,
-              name: item.name,
-              quantity: item.quantity,
-              unit: item.unit,
-            })) || [],
-        ),
-      ),
-  );
-
   return (
     <>
       {/* {isLoading && <Spinner size={20} className="absolute -top-0 right-0" />} */}
       <ul className="space-y-4 overflow-y-auto h-full relative" style={{ height: `calc(100% - 36px)` }}>
-        {productQuantities.aggregateProducts.length > 0 && <SummarizeProducts productQuantities={productQuantities} />}
+        <SummarizeProducts dailyOrders={dailyOrders} amapOrders={amapData} />
         <DisplayAmap amapOrders={amapData} />
         {dailyOrders.length === 0 ? (
           <p className="text-center">Aucune commande</p>

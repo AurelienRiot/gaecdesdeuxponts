@@ -48,6 +48,7 @@ export const getOrdersByDate = async ({ from, to }: { from: Date; to: Date }) =>
       productsList: order.orderItems.map((item) => ({
         itemId: item.itemId,
         name: item.name,
+        price: item.price,
         quantity: item.quantity,
         unit: getUnitLabel(item.unit).quantity,
       })),

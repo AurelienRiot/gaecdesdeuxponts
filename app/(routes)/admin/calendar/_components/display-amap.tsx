@@ -1,15 +1,14 @@
 import { AnimateHeight } from "@/components/animations/animate-size";
 import type { ProductQuantities } from "@/components/google-events/get-orders-for-events";
+import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { nanoid } from "@/lib/id";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
 import DisplayItem from "./display-item";
-import { nanoid } from "@/lib/id";
-import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 
-interface DisplayAmapProps {
+export interface DisplayAmapProps {
   amapOrders: {
     shopName: string;
     shopImageUrl: string | null;

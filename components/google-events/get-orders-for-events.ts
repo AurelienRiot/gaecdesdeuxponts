@@ -21,7 +21,7 @@ export const getAllOrders = async ({ startDate, endDate }: { startDate: Date; en
         index: true,
         shippingEmail: true,
         shop: { select: { address: true } },
-        orderItems: { select: { itemId: true, name: true, quantity: true, unit: true } },
+        orderItems: { select: { itemId: true, name: true, quantity: true, unit: true, price: true } },
         user: { select: { company: true, email: true, image: true, name: true, id: true, address: true } },
       },
     }),
@@ -36,7 +36,7 @@ export const getAllOrders = async ({ startDate, endDate }: { startDate: Date; en
         select: {
           shippingDays: true,
           user: { select: { name: true, email: true, id: true } },
-          amapItems: { select: { itemId: true, name: true, quantity: true, unit: true } },
+          amapItems: { select: { itemId: true, name: true, quantity: true, unit: true, price: true } },
           shop: { select: { name: true, address: true, id: true, imageUrl: true } },
         },
       })
@@ -50,6 +50,7 @@ export const getAllOrders = async ({ startDate, endDate }: { startDate: Date; en
           orderItems: order.amapItems.map((item) => ({
             itemId: item.itemId,
             name: item.name,
+            price: item.price,
             quantity: item.quantity,
             unit: getUnitLabel(item.unit).quantity,
           })),
@@ -92,6 +93,7 @@ export const getAllOrders = async ({ startDate, endDate }: { startDate: Date; en
       orderItems: order.orderItems.map((item) => ({
         itemId: item.itemId,
         name: item.name,
+        price: item.price,
         quantity: item.quantity,
         unit: getUnitLabel(item.unit).quantity,
       })),
@@ -117,6 +119,7 @@ export const getAllOrders = async ({ startDate, endDate }: { startDate: Date; en
         order.orderItems.map((item) => ({
           itemId: item.itemId,
           name: item.name,
+          price: item.price,
           unit: getUnitLabel(item.unit).quantity,
           quantity: item.quantity,
         })),
@@ -132,6 +135,7 @@ export default getAllOrders;
 export type ProductQuantities = {
   itemId: string;
   name: string;
+  price: number;
   unit: string;
   quantity: number;
 };
@@ -150,10 +154,10 @@ const aggregationRules: { match: RegExp; aggregateTo: string }[] = [
 ];
 
 function getAggregateProducts(products: ProductQuantities[]): ProductQuantities[] {
-  const aggregatedMap: Map<string, { quantity: number; itemId: string; unit: string }> = new Map();
+  const aggregatedMap: Map<string, { quantity: number; itemId: string; unit: string; price: number }> = new Map();
 
   for (const product of products) {
-    const { name, quantity, itemId, unit } = product;
+    const { name, quantity, itemId, unit, price } = product;
 
     // Skip excluded product names
     if (excludedNames.has(name) || quantity <= 0) {
@@ -175,7 +179,7 @@ function getAggregateProducts(products: ProductQuantities[]): ProductQuantities[
       if (existing) {
         existing.quantity += quantity;
       } else {
-        aggregatedMap.set(aggregatedName, { quantity, itemId, unit });
+        aggregatedMap.set(aggregatedName, { quantity, itemId, unit, price });
       }
     } else {
       // Otherwise, aggregate by the original product name
@@ -184,7 +188,7 @@ function getAggregateProducts(products: ProductQuantities[]): ProductQuantities[
       if (existing) {
         existing.quantity += quantity;
       } else {
-        aggregatedMap.set(key, { quantity, itemId, unit });
+        aggregatedMap.set(key, { quantity, itemId, unit, price });
       }
     }
   }
@@ -192,10 +196,11 @@ function getAggregateProducts(products: ProductQuantities[]): ProductQuantities[
   // Convert the aggregated map to an array of ProductQuantities
   const aggregatedProducts: ProductQuantities[] = [];
 
-  for (const [name, { quantity, itemId, unit }] of aggregatedMap.entries()) {
+  for (const [name, { quantity, itemId, unit, price }] of aggregatedMap.entries()) {
     aggregatedProducts.push({
       name,
       itemId,
+      price,
       unit,
       quantity: name.includes("Casier") ? quantity / 12 : quantity,
     });
