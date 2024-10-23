@@ -9,11 +9,11 @@ import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import { Grip } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { createContext, memo, useContext, useEffect, useState } from "react";
-import { FaMapLocationDot } from "react-icons/fa6";
+import { createContext, memo, useContext, useState } from "react";
 import updateOrdersIndex from "../_actions/update-orders-index";
 import type { CalendarOrdersType } from "../_functions/get-orders";
 import { useRaisedShadow } from "./use-raised-shadow";
+import { FaMapLocationDot } from "@/components/react-icons";
 
 type OrdersModalContextType = {
   orders: CalendarOrdersType[] | null;

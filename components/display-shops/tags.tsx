@@ -1,10 +1,15 @@
 import MultipleSelector, { type Option } from "@/components/ui/multiple-selector";
-import { MdLocalBar, MdOutlineStorefront } from "react-icons/md";
-import { PiBasket, PiFarm } from "react-icons/pi";
-import { LuCigarette, LuCoffee } from "react-icons/lu";
-import { GiBread } from "react-icons/gi";
-import { IoRestaurantSharp } from "react-icons/io5";
-import { FaConciergeBell } from "react-icons/fa";
+import {
+  PiBasket,
+  FaConciergeBell,
+  PiFarm,
+  MdLocalBar,
+  MdOutlineStorefront,
+  LuCigarette,
+  LuCoffee,
+  GiBread,
+  IoRestaurantSharp,
+} from "../react-icons";
 
 const tagOptions: Option[] = [
   { label: "Bar", value: "bar", Icon: MdLocalBar },

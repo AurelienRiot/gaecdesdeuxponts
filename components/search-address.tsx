@@ -3,9 +3,9 @@ import AddressAutocomplete, { type Suggestion } from "@/actions/adress-autocompl
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 import * as React from "react";
-import { LuMapPin } from "react-icons/lu";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
+import { LuMapPin } from "./react-icons";
 
 type SearchAddressProps = {
   className?: string;

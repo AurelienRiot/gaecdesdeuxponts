@@ -14,6 +14,7 @@ import { createId } from "@/lib/id";
 import type { ProductWithMain, UserWithAddress } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ProductStock, Shop } from "@prisma/client";
+import { useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -50,7 +51,7 @@ export type OrderFormProps = {
 
 export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, users, shops, referer, className }) => {
   const router = useRouter();
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
   const prevDateOfShipping = initialData?.dateOfShipping ? new Date(initialData.dateOfShipping) : undefined;
   const { serverAction: createOrderAction } = useServerAction(createOrder);
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
@@ -125,6 +126,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
 
     function onSuccess() {
       router.replace(`/admin/orders/${initialData?.id}?referer=${encodeURIComponent(referer)}#button-container`);
+      queryClient.invalidateQueries({ queryKey: ["fetchOrders"] });
       // shippingDate && queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(shippingDate) }] });
       // prevDateOfShipping &&
       //   queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(prevDateOfShipping) }] });
@@ -149,6 +151,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
     validateInvoiceAction({
       data: { id: initialData?.invoiceId, isPaid: !initialData.dateOfPayment },
       onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["fetchOrders"] });
         // shippingDate && queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(shippingDate) }] });
         // prevDateOfShipping &&
         //   queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(prevDateOfShipping) }] });
@@ -190,8 +193,8 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
           toastOptions: { position: "top-center" },
         })
       : await createOrderAction({ data, toastOptions: { position: "top-center" }, onSuccess: () => router.back() });
-    // shippingDate &&
-    //   queryClient.invalidateQueries({ queryKey: ["fetchDailyOrders", { date: getLocalIsoString(shippingDate) }] });
+
+    queryClient.invalidateQueries({ queryKey: ["fetchOrders"] });
     // prevDateOfShipping &&
     //   queryClient.invalidateQueries({
     //     queryKey: ["fetchDailyOrders", { date: getLocalIsoString(prevDateOfShipping) }],

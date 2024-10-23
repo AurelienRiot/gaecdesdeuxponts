@@ -1,19 +1,17 @@
 "use client";
 
-import { Button, buttonVariants, type ButtonProps } from "@/components/ui/button";
+import FormLoadingButton from "@/components/form-loading-button";
+import { Button } from "@/components/ui/button";
+import { DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Modal } from "@/components/ui/modal";
 import useServerAction from "@/hooks/use-server-action";
-import { cn } from "@/lib/utils";
-import { Clipboard, ClipboardCheck, Loader2 } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Clipboard, ClipboardCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { forwardRef, useEffect, useState } from "react";
-import { useFormStatus } from "react-dom";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import changeEmail from "../_actions/change-email";
-import { Modal } from "@/components/ui/modal";
-import { Label } from "@/components/ui/label";
-import { DialogFooter } from "@/components/ui/dialog";
-import FormLoadingButton from "@/components/form-loading-button";
 
 function MailForm({ email, id }: { email: string | null; id: string }) {
   const [display, setDisplay] = useState(false);
@@ -55,6 +53,7 @@ export default MailForm;
 
 function EmailModal({ id, onClose, openModal }: { id: string; onClose: () => void; openModal: boolean }) {
   const { serverAction } = useServerAction(changeEmail);
+  const queryClient = useQueryClient();
   const router = useRouter();
 
   async function onSumbit(formData: FormData) {
@@ -64,6 +63,7 @@ function EmailModal({ id, onClose, openModal }: { id: string; onClose: () => voi
       data: { email, id },
       onSuccess: () => {
         router.refresh();
+        queryClient.invalidateQueries({ queryKey: ["fetchOrders"] });
         onClose();
       },
     });

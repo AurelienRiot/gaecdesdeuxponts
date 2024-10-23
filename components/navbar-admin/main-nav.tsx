@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PiInvoice } from "react-icons/pi";
+import { PiInvoice } from "../react-icons";
 
 export function MainNav({ className }: React.HTMLAttributes<HTMLElement>) {
   const pathname = usePathname();

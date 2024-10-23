@@ -1,33 +1,21 @@
 "use client";
 
 import DateModal from "@/components/date-modal";
-import { ONE_DAY, getLocalIsoString } from "@/lib/date-utils";
+import { getLocalIsoString } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
-import { addDays } from "date-fns";
+import { scrollToElement } from "./events-page";
 
-const from = new Date(new Date().getTime() - 10 * ONE_DAY);
-const to = addDays(new Date(), 30);
-
-const isDateDisabled = (date: Date) => {
-  return date < from || date > to;
-};
-
-function TodayFocus({
-  className,
-  startMonth,
-  endMonth,
-  onDayClick,
-}: { className?: string; startMonth: Date; endMonth: Date; onDayClick: (id: string) => void }) {
+function TodayFocus({ className, startMonth, endMonth }: { className?: string; startMonth: Date; endMonth: Date }) {
   return (
     <DateModal
       trigger={"Date"}
       triggerClassName={cn("text-primary border-dashed w-fit", className)}
       onValueChange={(date) => {
         if (!date) return;
-        onDayClick(getLocalIsoString(date));
+        scrollToElement(getLocalIsoString(date));
       }}
       modifiers={{
-        disabled: (date) => isDateDisabled(date),
+        disabled: (date) => date < startMonth || date > endMonth,
       }}
       startMonth={startMonth}
       endMonth={endMonth}

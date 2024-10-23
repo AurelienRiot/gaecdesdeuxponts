@@ -12,6 +12,7 @@ import { createContext, useContext, useState } from "react";
 import type { CalendarOrdersType } from "../_functions/get-orders";
 import DisplayItem from "./display-item";
 import { dateFormatter } from "@/lib/date-utils";
+import { formatPhoneNumber } from "react-phone-number-input";
 
 type UserModalProps = CalendarOrdersType["user"] & { orders: CalendarOrdersType[] };
 
@@ -106,7 +107,12 @@ const UserInfo = () => {
         <div>
           <h2 className="text-lg font-semibold">{user.company || user.name || "Unknown User"}</h2>
           <p className="text-sm text-gray-500">{user.email}</p>
-          {!!user.phone && <p>{formatFrenchPhoneNumber(user.phone)}</p>}
+
+          {!!user.phone && (
+            <Link href={`tel:${user.phone}`} target="_blank">
+              {formatFrenchPhoneNumber(user.phone)}
+            </Link>
+          )}
         </div>
       </div>
       <div className="max-h-[40dvh] overflow-y-auto px-4">

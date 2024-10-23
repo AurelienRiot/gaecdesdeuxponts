@@ -1,30 +1,50 @@
 "use client";
+import Spinner from "@/components/animations/spinner";
 import { extractProductQuantities } from "@/components/google-events/get-orders-for-events";
 import { getUnitLabel } from "@/components/product/product-function";
 import { IconButton } from "@/components/ui/button";
 import NoResults from "@/components/ui/no-results";
 import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
-import { addDays, addHours } from "date-fns";
-import ky from "ky";
+import { useQuery } from "@tanstack/react-query";
+import { addDays } from "date-fns";
 import { ListOrdered } from "lucide-react";
 import { useLayoutEffect } from "react";
-import type getDailyOrders from "../_actions/get-daily-orders";
+import getDailyOrders from "../_actions/get-daily-orders";
 import type { getGroupedAMAPOrders } from "../_functions/get-amap-orders";
 import type { CalendarOrdersType } from "../_functions/get-orders";
-import TodayFocus from "./date-focus";
 import DisplayAmap from "./display-amap";
 import DisplayOrder from "./display-order";
 import { useOrdersModal } from "./orders-modal";
 import SummarizeProducts from "./summarize-products";
-import UpdatePage from "./update-page";
+import { addDelay } from "@/lib/utils";
 
 type EventsPageProps = {
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
-  initialOrders: CalendarOrdersType[];
+  // initialOrders: CalendarOrdersType[];
   initialDateArray: string[];
 };
 
-function scrollToElement(id: string, behavior: "smooth" | "instant" = "smooth") {
+async function fetchOrders(dateArray: string[]) {
+  const from = new Date(dateArray[0]);
+  const to = new Date(dateArray[dateArray.length - 1]);
+  const responce = await getDailyOrders({ from, to });
+  // const responce = (await ky.post("/api/get-day-orders", { json: { from, to } }).json()) as Awaited<
+  //   ReturnType<typeof getDailyOrders>
+  // >;
+  if (!responce.success) {
+    throw new Error(responce.message);
+  }
+  if (!responce.data) {
+    throw new Error("Impossible de charger les commandes");
+  }
+  for (const order of responce.data) {
+    order.createdAt = new Date(order.createdAt);
+    order.shippingDate = new Date(order.shippingDate);
+  }
+  return responce.data;
+}
+
+export function scrollToElement(id: string, behavior: "smooth" | "instant" = "smooth") {
   const element = document.getElementById(id);
   if (element) {
     element.scrollIntoView({
@@ -37,18 +57,29 @@ function scrollToElement(id: string, behavior: "smooth" | "instant" = "smooth") 
   }
 }
 
-export default function EventPage({ amapOrders, initialOrders, initialDateArray: dateArray }: EventsPageProps) {
-  // Handle Initial Scroll to Center the Focus Date
+export default function EventPage({ amapOrders, initialDateArray: dateArray }: EventsPageProps) {
+  const {
+    data: allOrders,
+    isFetching,
+    error,
+  } = useQuery({
+    queryFn: async () => await fetchOrders(dateArray),
+    queryKey: ["fetchOrders"],
+    staleTime: 60 * 60 * 1000,
+    // initialData,
+  });
+
   useLayoutEffect(() => {
     scrollToElement(getLocalIsoString(new Date()), "instant");
   }, []);
-
+  console.log(error);
   return (
     <>
       <div className="flex flex-row gap-4  pb-4 overflow-y-hidden mx-auto flex-auto w-full overflow-x-scroll">
+        {isFetching && <Spinner className="absolute top-1/2 left-1/2 text-primary/50" />}
         {dateArray.map((date, index) => {
-          const dailyOrders = initialOrders
-            .filter((order) => getLocalIsoString(order.shippingDate) === date)
+          const dailyOrders = allOrders
+            ?.filter((order) => getLocalIsoString(order.shippingDate) === date)
             .sort((a, b) => {
               if (a.index === null) return -1;
               if (b.index === null) return 1;
@@ -57,21 +88,13 @@ export default function EventPage({ amapOrders, initialOrders, initialDateArray:
           return (
             <RenderEvent
               date={date}
-              initialOrders={initialOrders}
+              allOrders={allOrders}
               amapOrders={amapOrders}
               dailyOrders={dailyOrders}
               key={date}
             />
           );
         })}
-      </div>
-      <div className="flex justify-between p-4 ">
-        <UpdatePage />
-        <TodayFocus
-          startMonth={new Date(dateArray[0])}
-          endMonth={new Date(dateArray[dateArray.length - 1])}
-          onDayClick={scrollToElement}
-        />
       </div>
     </>
   );
@@ -80,11 +103,11 @@ export default function EventPage({ amapOrders, initialOrders, initialDateArray:
 function RenderEvent({
   dailyOrders,
   date,
-  initialOrders,
+  allOrders,
   amapOrders,
 }: {
-  dailyOrders: CalendarOrdersType[];
-  initialOrders: CalendarOrdersType[];
+  dailyOrders?: CalendarOrdersType[];
+  allOrders?: CalendarOrdersType[];
   date: string;
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
 }) {
@@ -93,7 +116,7 @@ function RenderEvent({
     <div key={date} id={date} className="flex-shrink-0  w-[320px] h-full space-y-2 relative">
       <h2 className="text-xl font-semibold capitalize text-center flex justify-between items-center px-2">
         <span>{dateFormatter(new Date(date), { days: true })}</span>
-        {dailyOrders.length > 0 && (
+        {dailyOrders && dailyOrders.length > 0 && (
           <>
             <IconButton
               Icon={ListOrdered}
@@ -108,29 +131,13 @@ function RenderEvent({
         )}
       </h2>
 
-      <DatePage date={date} dailyOrders={dailyOrders} allOrders={initialOrders} amapOrders={amapOrders} />
+      {dailyOrders && allOrders ? (
+        <DatePage date={date} dailyOrders={dailyOrders} allOrders={allOrders} amapOrders={amapOrders} />
+      ) : (
+        <Spinner className="size-6" />
+      )}
     </div>
   );
-}
-
-async function fetchDailyOrders(date: string) {
-  const from = new Date(date);
-  const to = addHours(from, 24);
-  const responce = (await ky.post("/api/get-day-orders", { json: { from, to } }).json()) as Awaited<
-    ReturnType<typeof getDailyOrders>
-  >;
-  // const responce = await getDailyOrders({ from, to });
-  if (!responce.success) {
-    throw new Error(responce.message);
-  }
-  if (!responce.data) {
-    throw new Error("Impossible de charger les commandes");
-  }
-  for (const order of responce.data) {
-    order.createdAt = new Date(order.createdAt);
-    order.shippingDate = new Date(order.shippingDate);
-  }
-  return responce.data;
 }
 
 function DatePage({

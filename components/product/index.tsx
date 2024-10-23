@@ -1,8 +1,5 @@
-import { BsBasketFill } from "react-icons/bs";
-import { LuMilk } from "react-icons/lu";
-import { PiPackageDuotone } from "react-icons/pi";
-import { TbMilk } from "react-icons/tb";
 import { Icons } from "../icons";
+import { TbMilk, BsBasketFill, PiPackageDuotone, LuMilk } from "../react-icons";
 
 export const priorityMap: { [key: string]: number } = {
   "Lait cru bouteille verre 1L consignée": 1,

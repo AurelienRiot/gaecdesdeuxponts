@@ -1,17 +1,16 @@
 import { getRelativeDate } from "@/lib/date-utils";
-import type { OrderWithItemsAndShop } from "@/types";
+import { cn } from "@/lib/utils";
 import type { AMAPItem, OrderItem, Shop } from "@prisma/client";
 import type { Row } from "@tanstack/react-table";
-import { CheckCircle, CreditCard, Hourglass, Package, Search, Truck } from "lucide-react";
+import { CheckCircle, CreditCard, Hourglass, Search, Truck } from "lucide-react";
 import Link from "next/link";
-import { FaFileInvoiceDollar } from "react-icons/fa";
 import { ShopCard } from "../display-shops/shop-card";
 import { getUnitLabel } from "../product/product-function";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { NameCell } from "./common-cell";
-import { cn } from "@/lib/utils";
+import { FaFileInvoiceDollar } from "../react-icons";
 
 type ProductCellProps = {
   products: string;
@@ -239,14 +238,14 @@ function createDatePickUp({ dateOfShipping, datePickUp }: { datePickUp: Date; da
 }
 export {
   AdminShopNameCell,
-  OrderIdCell,
-  ProductCell,
-  ShopNameCell,
-  StatusCell,
   createDatePickUp,
   createProduct,
   createProductList,
   createStatus,
+  OrderIdCell,
+  ProductCell,
+  ShopNameCell,
   statusArray,
+  StatusCell,
   type Status,
 };

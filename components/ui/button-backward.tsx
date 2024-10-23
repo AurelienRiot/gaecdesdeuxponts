@@ -1,11 +1,10 @@
 "use client";
 import { cn } from "@/lib/utils";
+import { MoveLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { forwardRef } from "react";
-import { HiArrowNarrowLeft } from "react-icons/hi";
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   url?: string;
 }
 
@@ -30,7 +29,7 @@ const ButtonBackward = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        <HiArrowNarrowLeft className="h-6 w-6" />
+        <MoveLeft className="h-6 w-6" />
       </button>
     );
   },

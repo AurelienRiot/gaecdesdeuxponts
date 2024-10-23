@@ -1,21 +1,19 @@
 "use client";
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import { GrPowerReset, LuPackageMinus } from "@/components/react-icons";
 import SelectSheetWithTabs, { sortProductByTabType } from "@/components/select-sheet-with-tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button, IconButton } from "@/components/ui/button";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { NumberInput } from "@/components/ui/input";
+import { createId } from "@/lib/id";
 import { cn } from "@/lib/utils";
 import type { ProductWithMain, UserWithAddress } from "@/types";
+import type { ProductStock } from "@prisma/client";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { useFormContext } from "react-hook-form";
-import { GrPowerReset } from "react-icons/gr";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-schema";
-import { LuPackageMinus } from "react-icons/lu";
-import { createId } from "@/lib/id";
-import type { ProductStock } from "@prisma/client";
-import { ca } from "date-fns/locale";
 
 const negativeQuantityStyle =
   "bg-destructive hover:bg-destructive/90 hover:text-destructive-foreground text-destructive-foreground";

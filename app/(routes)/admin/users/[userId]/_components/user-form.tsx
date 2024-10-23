@@ -15,6 +15,7 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
 import useServerAction from "@/hooks/use-server-action";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -24,8 +25,8 @@ import type { GetUserPageDataProps } from "../_functions/get-user-page-data";
 import CcInvoiceForm from "./cc-invoice-form";
 import MailForm from "./mail-form";
 import SelectRole from "./select-role";
-import { schema, type UserFormValues } from "./user-schema";
 import UserLinks from "./user-links";
+import { schema, type UserFormValues } from "./user-schema";
 
 interface UserFormProps {
   initialData: GetUserPageDataProps["formatedUser"];
@@ -34,6 +35,7 @@ interface UserFormProps {
 
 export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { serverAction } = useServerAction(updateUser);
   const [open, setOpen] = useState(incomplete);
 
@@ -84,6 +86,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
     function onSuccess() {
       router.back();
       router.refresh();
+      queryClient.invalidateQueries({ queryKey: ["fetchOrders"] });
     }
     await serverAction({ data, onSuccess });
   };
@@ -101,6 +104,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
           onSuccess={() => {
             router.push(`/admin/users`);
             router.refresh();
+            queryClient.invalidateQueries({ queryKey: ["fetchOrders"] });
           }}
         />
       </div>

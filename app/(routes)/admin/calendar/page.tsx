@@ -4,13 +4,14 @@ import { ONE_DAY } from "@/lib/date-utils";
 import { addDays } from "date-fns";
 import { Package, Plus, User } from "lucide-react";
 import Link from "next/link";
+import TodayFocus from "./_components/date-focus";
 import EventPage from "./_components/events-page";
 import { OrdersModalProvider } from "./_components/orders-modal";
-import { getGroupedAMAPOrders } from "./_functions/get-amap-orders";
-import { getOrdersByDate } from "./_functions/get-orders";
+import UpdatePage from "./_components/update-page";
 import { UserModalProvider } from "./_components/user-modal";
+import { getGroupedAMAPOrders } from "./_functions/get-amap-orders";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400;
 
 function makeDateArray({ from, to }: { from: Date; to: Date }) {
   const arrayLength = Math.round((to.getTime() - from.getTime()) / ONE_DAY);
@@ -23,12 +24,12 @@ async function CalendarPage() {
   const from = addDays(new Date(), -14);
   const to = addDays(new Date(), 30);
   const dateArray = makeDateArray({ from, to });
-  const [orders, amapOrders] = await Promise.all([getOrdersByDate({ from, to }), getGroupedAMAPOrders()]);
+  // const [orders, amapOrders] = await Promise.all([getOrdersByDate({ from, to }), getGroupedAMAPOrders()]);
   // const stocks = await getStocks();
   // for (const stock of stocks) {
   //   console.log(stock.name, " : ", stock.totalQuantity);
   // }
-  // const amapOrders = await getGroupedAMAPOrders();
+  const amapOrders = await getGroupedAMAPOrders();
 
   return (
     <OrdersModalProvider>
@@ -61,7 +62,11 @@ async function CalendarPage() {
             <Separator />
           </div>
 
-          <EventPage initialOrders={orders.data} amapOrders={amapOrders} initialDateArray={dateArray} />
+          <EventPage amapOrders={amapOrders} initialDateArray={dateArray} />
+          <div className="flex justify-between p-4 ">
+            <UpdatePage />
+            <TodayFocus startMonth={new Date(dateArray[0])} endMonth={new Date(dateArray[dateArray.length - 1])} />
+          </div>
         </div>
       </UserModalProvider>
     </OrdersModalProvider>

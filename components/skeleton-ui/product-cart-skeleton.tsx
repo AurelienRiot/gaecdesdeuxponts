@@ -1,8 +1,7 @@
-import { ShoppingCart } from "lucide-react";
 import { FaInfo } from "react-icons/fa";
-import { Skeleton } from "./skeleton";
-import Currency from "../ui/currency";
 import { IconButton } from "../ui/button";
+import Currency from "../ui/currency";
+import { Skeleton } from "./skeleton";
 
 export const ProductCart = () => {
   return (
