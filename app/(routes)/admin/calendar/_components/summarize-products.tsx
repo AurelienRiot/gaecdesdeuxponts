@@ -100,7 +100,7 @@ function groupOrdersByProduct(orders: CalendarOrdersType[]): ProductOrders[] {
       const { itemId, name, unit, quantity, price } = product;
 
       // **Exclude products with negative quantity**
-      if (quantity <= 0 || price <= 0) {
+      if (quantity <= 0 || price <= 0 || name === "Bouteille verre 1L") {
         break; // Skip this product
       }
 

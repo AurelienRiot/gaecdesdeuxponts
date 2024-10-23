@@ -66,7 +66,7 @@ export const getGroupedAMAPOrders = unstable_cache(
       },
       select: {
         shippingDays: true,
-        amapItems: { select: { itemId: true, name: true, quantity: true, unit: true } },
+        amapItems: { select: { itemId: true, name: true, quantity: true, unit: true, price: true } },
         shop: { select: { name: true, address: true, id: true, imageUrl: true } },
       },
     });
@@ -100,12 +100,13 @@ export const getGroupedAMAPOrders = unstable_cache(
         }
 
         for (const item of order.amapItems) {
-          const { itemId, name, quantity, unit } = item;
+          const { itemId, name, quantity, unit, price } = item;
 
           if (!groupedData[shopName].shippingDays[dateStr][itemId]) {
             groupedData[shopName].shippingDays[dateStr][itemId] = {
               itemId,
               name,
+              price,
               unit: getUnitLabel(unit).quantity,
               quantity: 0,
             };
