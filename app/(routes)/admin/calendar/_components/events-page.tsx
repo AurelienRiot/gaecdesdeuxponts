@@ -7,17 +7,16 @@ import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
 import { addDays, addHours } from "date-fns";
 import ky from "ky";
 import { ListOrdered } from "lucide-react";
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect } from "react";
 import type getDailyOrders from "../_actions/get-daily-orders";
 import type { getGroupedAMAPOrders } from "../_functions/get-amap-orders";
 import type { CalendarOrdersType } from "../_functions/get-orders";
 import TodayFocus from "./date-focus";
 import DisplayAmap from "./display-amap";
 import DisplayOrder from "./display-order";
-import OrdersModal from "./orders-modal";
+import { useOrdersModal } from "./orders-modal";
 import SummarizeProducts from "./summarize-products";
 import UpdatePage from "./update-page";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 type EventsPageProps = {
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
@@ -89,24 +88,18 @@ function RenderEvent({
   date: string;
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
 }) {
-  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  const { setOrders, setIsOrderModalOpen } = useOrdersModal();
   return (
     <div key={date} id={date} className="flex-shrink-0  w-[320px] h-full space-y-2 relative">
       <h2 className="text-xl font-semibold capitalize text-center flex justify-between items-center px-2">
         <span>{dateFormatter(new Date(date), { days: true })}</span>
         {dailyOrders.length > 0 && (
           <>
-            <OrdersModal
-              open={isOrderModalOpen}
-              onClose={() => {
-                setIsOrderModalOpen(false);
-              }}
-              initialOrders={dailyOrders}
-            />
             <IconButton
               Icon={ListOrdered}
               iconClassName="size-3"
               onClick={() => {
+                setOrders(dailyOrders);
                 setIsOrderModalOpen(true);
               }}
               className=""
@@ -223,7 +216,12 @@ function DatePage({
                 addDays(new Date(date), 1).getTime() < nextOrder.shippingDate.getTime()
               );
             });
-            return <DisplayOrder key={order.id} order={order} newOrder={newOrder} />;
+            const otherOrders = allOrders.filter((otherOrder) => {
+              return (
+                otherOrder.user.id === order.user.id && otherOrder.shippingDate.getTime() <= new Date(date).getTime()
+              );
+            });
+            return <DisplayOrder key={order.id} order={order} newOrder={newOrder} otherOrders={otherOrders} />;
           })
         )}
       </ul>

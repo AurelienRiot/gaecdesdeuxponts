@@ -8,7 +8,7 @@ export function useRaisedShadow(value: MotionValue<number>) {
 
   useEffect(() => {
     let isActive = false;
-    value.onChange((latest) => {
+    function onChange(latest: number) {
       const wasActive = isActive;
       if (latest !== 0) {
         isActive = true;
@@ -21,7 +21,8 @@ export function useRaisedShadow(value: MotionValue<number>) {
           animate(boxShadow, inactiveShadow);
         }
       }
-    });
+    }
+    value.on("change", onChange);
   }, [value, boxShadow]);
 
   return boxShadow;

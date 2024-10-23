@@ -31,11 +31,20 @@ type NameCellProps = {
   imageSize?: number;
   displayImage?: boolean;
   completed?: boolean;
+  className?: string;
 };
 
-function NameCell({ image, name, url, displayImage = true, imageSize = 32, completed = true }: NameCellProps) {
+function NameCell({
+  image,
+  name,
+  url,
+  displayImage = true,
+  imageSize = 32,
+  completed = true,
+  className,
+}: NameCellProps) {
   return (
-    <Button asChild variant={url ? "link" : "ghost"} className="px-0">
+    <Button asChild variant={url ? "link" : "ghost"}>
       {url ? (
         <Link href={url}>
           <NameWithImage
@@ -44,6 +53,7 @@ function NameCell({ image, name, url, displayImage = true, imageSize = 32, compl
             imageSize={imageSize}
             displayImage={displayImage}
             completed={completed}
+            className={cn("px-0", className)}
           />
         </Link>
       ) : (
@@ -53,14 +63,22 @@ function NameCell({ image, name, url, displayImage = true, imageSize = 32, compl
           imageSize={imageSize}
           displayImage={displayImage}
           completed={completed}
+          className={cn("px-0", className)}
         />
       )}
     </Button>
   );
 }
 
-const NameWithImage = ({ name, image, imageSize = 16, displayImage = true, completed = true }: NameCellProps) => (
-  <div className="flex items-center justify-start gap-2 w-full">
+const NameWithImage = ({
+  name,
+  image,
+  imageSize = 16,
+  displayImage = true,
+  completed = true,
+  className,
+}: NameCellProps) => (
+  <div className={cn("flex items-center justify-start gap-2 w-full", className)}>
     {displayImage ? (
       image ? (
         <Image

@@ -1,4 +1,4 @@
-import { getToken, type JWT } from "next-auth/jwt";
+import { getToken } from "next-auth/jwt";
 import { cookies } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
 
