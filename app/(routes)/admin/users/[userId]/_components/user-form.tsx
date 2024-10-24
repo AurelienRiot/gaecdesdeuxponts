@@ -27,6 +27,7 @@ import MailForm from "./mail-form";
 import SelectRole from "./select-role";
 import UserLinks from "./user-links";
 import { schema, type UserFormValues } from "./user-schema";
+import { useOrdersQueryClient } from "../../../calendar/_components/orders-query";
 
 interface UserFormProps {
   initialData: GetUserPageDataProps["formatedUser"];
@@ -35,7 +36,7 @@ interface UserFormProps {
 
 export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) => {
   const router = useRouter();
-  const queryClient = useQueryClient();
+  const { refectOrders } = useOrdersQueryClient();
   const { serverAction } = useServerAction(updateUser);
   const [open, setOpen] = useState(incomplete);
 
@@ -86,7 +87,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
     function onSuccess() {
       router.back();
       router.refresh();
-      queryClient.invalidateQueries({ queryKey: ["fetchOrders"] });
+      refectOrders();
     }
     await serverAction({ data, onSuccess });
   };
@@ -102,9 +103,9 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
           data={{ email: initialData.email }}
           isSubmitting={form.formState.isSubmitting}
           onSuccess={() => {
-            router.push(`/admin/users`);
+            refectOrders();
+            router.back();
             router.refresh();
-            queryClient.invalidateQueries({ queryKey: ["fetchOrders"] });
           }}
         />
       </div>

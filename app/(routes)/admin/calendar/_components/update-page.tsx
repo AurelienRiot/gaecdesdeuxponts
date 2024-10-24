@@ -1,16 +1,16 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useQueryClient } from "@tanstack/react-query";
+import { useOrdersQueryClient } from "./orders-query";
 
 function UpdatePage({ className }: { className?: string }) {
-  const queryClient = useQueryClient();
+  const { refectOrders } = useOrdersQueryClient();
   return (
     <Button
       variant="default"
       className={className}
       onClick={() => {
-        queryClient.invalidateQueries({ queryKey: ["fetchOrders"] });
+        refectOrders();
         // router.push(`?refresh=${nanoid(5)}`);
       }}
     >

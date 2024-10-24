@@ -31,6 +31,7 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
+import { useOrdersQueryClient } from "../../../calendar/_components/orders-query";
 
 export type OrderFormProps = {
   initialData:
@@ -51,7 +52,7 @@ export type OrderFormProps = {
 
 export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, users, shops, referer, className }) => {
   const router = useRouter();
-  const queryClient = useQueryClient();
+  const { refectOrders } = useOrdersQueryClient();
   const prevDateOfShipping = initialData?.dateOfShipping ? new Date(initialData.dateOfShipping) : undefined;
   const { serverAction: createOrderAction } = useServerAction(createOrder);
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
@@ -126,7 +127,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
 
     function onSuccess() {
       router.replace(`/admin/orders/${initialData?.id}?referer=${encodeURIComponent(referer)}#button-container`);
-      queryClient.invalidateQueries({ queryKey: ["fetchOrders"] });
+      refectOrders();
       // shippingDate && queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(shippingDate) }] });
       // prevDateOfShipping &&
       //   queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(prevDateOfShipping) }] });
@@ -151,7 +152,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
     validateInvoiceAction({
       data: { id: initialData?.invoiceId, isPaid: !initialData.dateOfPayment },
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["fetchOrders"] });
+        refectOrders();
         // shippingDate && queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(shippingDate) }] });
         // prevDateOfShipping &&
         //   queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(prevDateOfShipping) }] });
@@ -194,7 +195,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
         })
       : await createOrderAction({ data, toastOptions: { position: "top-center" }, onSuccess: () => router.back() });
 
-    queryClient.invalidateQueries({ queryKey: ["fetchOrders"] });
+    refectOrders();
     // prevDateOfShipping &&
     //   queryClient.invalidateQueries({
     //     queryKey: ["fetchDailyOrders", { date: getLocalIsoString(prevDateOfShipping) }],
@@ -232,6 +233,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
             }}
             isSubmitting={form.formState.isSubmitting}
             onSuccess={() => {
+              refectOrders();
               router.back();
               router.refresh();
             }}

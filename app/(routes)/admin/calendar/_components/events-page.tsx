@@ -3,42 +3,21 @@ import Spinner from "@/components/animations/spinner";
 import { IconButton } from "@/components/ui/button";
 import NoResults from "@/components/ui/no-results";
 import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
-import { useQuery } from "@tanstack/react-query";
 import { addDays } from "date-fns";
 import { ListOrdered } from "lucide-react";
 import { useLayoutEffect } from "react";
-import getDailyOrders from "../_actions/get-daily-orders";
 import type { getGroupedAMAPOrders } from "../_functions/get-amap-orders";
 import type { CalendarOrdersType } from "../_functions/get-orders";
 import DisplayAmap from "./display-amap";
 import DisplayOrder from "./display-order";
 import { useOrdersModal } from "./orders-modal";
+import { useOrdersQuery } from "./orders-query";
 import SummarizeProducts from "./summarize-products";
 
 type EventsPageProps = {
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
   initialDateArray: string[];
 };
-
-async function fetchOrders(dateArray: string[]) {
-  const from = new Date(dateArray[0]);
-  const to = new Date(dateArray[dateArray.length - 1]);
-  const responce = await getDailyOrders({ from, to });
-  // const responce = (await ky.post("/api/get-day-orders", { json: { from, to } }).json()) as Awaited<
-  //   ReturnType<typeof getDailyOrders>
-  // >;
-  if (!responce.success) {
-    throw new Error(responce.message);
-  }
-  if (!responce.data) {
-    throw new Error("Impossible de charger les commandes");
-  }
-  for (const order of responce.data) {
-    order.createdAt = new Date(order.createdAt);
-    order.shippingDate = new Date(order.shippingDate);
-  }
-  return responce.data;
-}
 
 export function scrollToElement(id: string, behavior: "smooth" | "instant" = "smooth") {
   const element = document.getElementById(id);
@@ -54,15 +33,7 @@ export function scrollToElement(id: string, behavior: "smooth" | "instant" = "sm
 }
 
 export default function EventPage({ amapOrders, initialDateArray: dateArray }: EventsPageProps) {
-  const {
-    data: allOrders,
-    isFetching,
-    error,
-  } = useQuery({
-    queryFn: async () => await fetchOrders(dateArray),
-    queryKey: ["fetchOrders"],
-    staleTime: 60 * 60 * 1000,
-  });
+  const { data: allOrders, isFetching, error } = useOrdersQuery(dateArray);
 
   useLayoutEffect(() => {
     scrollToElement(getLocalIsoString(new Date()), "instant");

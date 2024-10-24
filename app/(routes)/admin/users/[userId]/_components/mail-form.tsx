@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import changeEmail from "../_actions/change-email";
+import { useOrdersQueryClient } from "../../../calendar/_components/orders-query";
 
 function MailForm({ email, id }: { email: string | null; id: string }) {
   const [display, setDisplay] = useState(false);
@@ -53,7 +54,7 @@ export default MailForm;
 
 function EmailModal({ id, onClose, openModal }: { id: string; onClose: () => void; openModal: boolean }) {
   const { serverAction } = useServerAction(changeEmail);
-  const queryClient = useQueryClient();
+  const { refectOrders } = useOrdersQueryClient();
   const router = useRouter();
 
   async function onSumbit(formData: FormData) {
@@ -62,8 +63,8 @@ function EmailModal({ id, onClose, openModal }: { id: string; onClose: () => voi
     serverAction({
       data: { email, id },
       onSuccess: () => {
+        refectOrders();
         router.refresh();
-        queryClient.invalidateQueries({ queryKey: ["fetchOrders"] });
         onClose();
       },
     });
