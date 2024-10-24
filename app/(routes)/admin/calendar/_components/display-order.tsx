@@ -21,17 +21,6 @@ interface DisplayOrderProps {
 
 const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, newOrder, otherOrders }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const { setUser, setIsUserModalOpen } = useUserModal();
-
-  function setUserForModal(e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) {
-    e.stopPropagation();
-    setUser({
-      ...order.user,
-      orders: otherOrders.sort((a, b) => b.shippingDate.getTime() - a.shippingDate.getTime()),
-      date: order.shippingDate,
-    });
-    setIsUserModalOpen(true);
-  }
 
   return (
     <>
@@ -42,14 +31,7 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, newOrder,
         >
           {newOrder && <IconButton className="size-4 p-0.5 text-green-500 absolute top-0.5 left-0.5 " Icon={Check} />}
           <div className="grid grid-cols-11  items-center w-full">
-            <button type="button" onClick={setUserForModal} className="col-span-5  ">
-              <NameWithImage
-                name={order.name}
-                image={order.user.image}
-                imageSize={12}
-                completed={order.user.completed}
-              />
-            </button>
+            <SetUserModal order={order} otherOrders={otherOrders} />
 
             <StatusCell status={order.status} className="col-span-5 justify-center" />
             <div className="flex justify-end">
@@ -89,5 +71,24 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, newOrder,
     </>
   );
 };
+
+function SetUserModal({ order, otherOrders }: { order: CalendarOrdersType; otherOrders: CalendarOrdersType[] }) {
+  const { setUser, setIsUserModalOpen } = useUserModal();
+
+  function setUserForModal(e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) {
+    e.stopPropagation();
+    setUser({
+      ...order.user,
+      orders: otherOrders.sort((a, b) => b.shippingDate.getTime() - a.shippingDate.getTime()),
+      date: order.shippingDate,
+    });
+    setIsUserModalOpen(true);
+  }
+  return (
+    <button type="button" onClick={setUserForModal} className="col-span-5  ">
+      <NameWithImage name={order.name} image={order.user.image} imageSize={12} completed={order.user.completed} />
+    </button>
+  );
+}
 
 export default DisplayOrder;

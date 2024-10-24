@@ -76,24 +76,11 @@ function RenderEvent({
   date: string;
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
 }) {
-  const { setOrders, setIsOrderModalOpen } = useOrdersModal();
   return (
     <div key={date} id={date} className="flex-shrink-0  w-[320px] h-full space-y-2 relative ">
       <h2 className="text-xl font-semibold capitalize text-center flex justify-between items-center p-2 z-50">
         <span>{dateFormatter(new Date(date), { days: true })}</span>
-        {dailyOrders && dailyOrders.length > 0 && (
-          <>
-            <IconButton
-              Icon={ListOrdered}
-              iconClassName="size-3"
-              onClick={() => {
-                setOrders(dailyOrders);
-                setIsOrderModalOpen(true);
-              }}
-              className=""
-            />
-          </>
-        )}
+        {dailyOrders && dailyOrders.length > 0 && <IconReorder dailyOrders={dailyOrders} />}
       </h2>
 
       {dailyOrders && allOrders ? (
@@ -102,6 +89,22 @@ function RenderEvent({
         <Spinner className="size-6" />
       )}
     </div>
+  );
+}
+
+function IconReorder({ dailyOrders }: { dailyOrders: CalendarOrdersType[] }) {
+  const { setOrders, setIsOrderModalOpen } = useOrdersModal();
+
+  return (
+    <IconButton
+      Icon={ListOrdered}
+      iconClassName="size-3"
+      onClick={() => {
+        setOrders(dailyOrders);
+        setIsOrderModalOpen(true);
+      }}
+      className=""
+    />
   );
 }
 
