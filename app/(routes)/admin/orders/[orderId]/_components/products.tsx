@@ -274,7 +274,7 @@ const SelectProductName = ({
                       quantity < 0 ? negativeQuantityStyle : "",
                     )}
                   >
-                    {products.find((product) => product.id === field.value)?.product.isPro && (
+                    {products.find((product) => product.id === selectedProduct.itemId)?.product.isPro && (
                       <Badge variant="orange" className="mr-2">
                         Pro
                       </Badge>

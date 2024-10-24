@@ -41,7 +41,15 @@ export default function EventPage({ amapOrders, initialDateArray: dateArray }: E
   return (
     <>
       <div className="flex flex-row gap-4  pb-6 overflow-y-hidden mx-auto flex-auto w-full overflow-x-scroll">
-        {isFetching && <Spinner className="absolute left-1/2 text-primary/50 bottom-3" />}
+        {isFetching && (
+          <div className="absolute left-1/2 translate-x-[-40%]    bottom-7 h-2 max-w-[200px]  w-[40%] overflow-hidden rounded border-2 bg-primary-foreground">
+            <div className="absolute h-full animate-load-bar rounded bg-primary"></div>
+            <div
+              style={{ animationDelay: `500ms` }}
+              className="absolute h-full animate-load-bar rounded bg-primary"
+            ></div>
+          </div>
+        )}
         {dateArray.map((date, index) => {
           const dailyOrders = allOrders
             ?.filter((order) => getLocalIsoString(order.shippingDate) === date)
