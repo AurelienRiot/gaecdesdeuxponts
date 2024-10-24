@@ -1,5 +1,6 @@
 "use client";
 import { createDirectionUrl } from "@/components/google-events";
+import { FaMapLocationDot } from "@/components/react-icons";
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Modal } from "@/components/ui/modal";
 import NoResults from "@/components/ui/no-results";
@@ -8,12 +9,10 @@ import useServerAction from "@/hooks/use-server-action";
 import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import { Grip } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { createContext, memo, useContext, useState } from "react";
+import { createContext, memo, useContext, useEffect, useState } from "react";
 import updateOrdersIndex from "../_actions/update-orders-index";
 import type { CalendarOrdersType } from "../_functions/get-orders";
-import { useRaisedShadow } from "./use-raised-shadow";
-import { FaMapLocationDot } from "@/components/react-icons";
+import { useOrdersQueryClient } from "./orders-query";
 
 type OrdersModalContextType = {
   orders: CalendarOrdersType[] | null;
@@ -51,29 +50,39 @@ export function useOrdersModal() {
 function OrdersModal() {
   const { serverAction } = useServerAction(updateOrdersIndex);
   const { orders, isOrderModalOpen, setIsOrderModalOpen } = useOrdersModal();
-  const router = useRouter();
+  const { refectOrders } = useOrdersQueryClient();
+  const [localOrders, setLocalOrders] = useState(orders);
+
+  useEffect(() => {
+    setLocalOrders(orders);
+  }, [orders]);
 
   function closeModal() {
     setIsOrderModalOpen(false);
-    if (!orders) return;
+    if (!localOrders) return;
     function onSuccess() {
-      router.refresh();
+      refectOrders();
     }
-    const newOrders = orders.map((order, index) => ({ orderId: order.id, index: index + 1 }));
+    const newOrders = localOrders.map((order, index) => ({ orderId: order.id, index: index + 1 }));
     serverAction({ data: newOrders, onSuccess });
   }
 
   return (
     <Modal title="Ordonner les commandes" isOpen={isOrderModalOpen} onClose={closeModal}>
-      <ReorderItem />
+      <ReorderItem orders={localOrders} setOrders={setLocalOrders} />
     </Modal>
   );
 }
 
 export default OrdersModal;
 
-function ReorderItem() {
-  const { orders, setOrders } = useOrdersModal();
+function ReorderItem({
+  orders,
+  setOrders,
+}: {
+  orders: CalendarOrdersType[] | null;
+  setOrders: React.Dispatch<React.SetStateAction<CalendarOrdersType[] | null>>;
+}) {
   if (!orders) return <NoResults />;
   const directionString = createDirectionUrl({
     addresses: orders.map((order) => order.address.label),
@@ -96,7 +105,6 @@ function ReorderItem() {
         className="flex flex-col gap-2   relative"
         axis="y"
         layoutScroll
-        // ref={listRef}
       >
         {orders.map((order, index) => (
           <MemoizedOrderItem key={order.id} order={order} />
@@ -109,30 +117,41 @@ function ReorderItem() {
 const MemoizedOrderItem = memo(OrderItem);
 
 function OrderItem({ order }: { order: CalendarOrdersType }) {
-  const y = useMotionValue(0);
-  const boxShadow = useRaisedShadow(y);
+  // const y = useMotionValue(0);
+  // const boxShadow = useRaisedShadow(y);
   const controls = useDragControls();
+  const backgroundColor = useMotionValue("var(--background)");
 
   const handlePointerDown = (e: React.PointerEvent) => {
     e.preventDefault();
     e.stopPropagation();
     controls.start(e);
+    backgroundColor.set("var(--blue-300)");
   };
 
   return (
     <Reorder.Item
-      style={{ boxShadow, y }}
+      // style={{ boxShadow, y }}
       value={order}
       id={order.id}
       dragListener={false}
       dragControls={controls}
+      onDragEnd={() => {
+        backgroundColor.set("var(--background)");
+      }}
       as="li"
-      className="p-2  border rounded-md  flex gap-2 bg-background hover:bg-background/50"
+      style={{ backgroundColor }}
+      className={`p-2 border rounded-md flex gap-2 transition-colors`}
     >
       <div onPointerDown={handlePointerDown} className="flex gap-2 items-center justify-center p-2 cursor-pointer">
         <Grip className="size-4" />
       </div>
-      <NameWithImage name={order.name} image={order.user.image} imageSize={12} className="p-2" />
+      <NameWithImage
+        name={order.name}
+        image={order.user.image}
+        imageSize={12}
+        className="p-2 select-none pointer-events-none"
+      />
     </Reorder.Item>
   );
 }

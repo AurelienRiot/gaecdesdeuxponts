@@ -25,7 +25,11 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, newOrder,
 
   function setUserForModal(e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) {
     e.stopPropagation();
-    setUser({ ...order.user, orders: otherOrders.sort((a, b) => b.shippingDate.getTime() - a.shippingDate.getTime()) });
+    setUser({
+      ...order.user,
+      orders: otherOrders.sort((a, b) => b.shippingDate.getTime() - a.shippingDate.getTime()),
+      date: order.shippingDate,
+    });
     setIsUserModalOpen(true);
   }
 

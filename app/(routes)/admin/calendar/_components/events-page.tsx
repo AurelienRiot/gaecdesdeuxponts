@@ -144,7 +144,8 @@ function DatePage({
             });
             const otherOrders = allOrders.filter((otherOrder) => {
               return (
-                otherOrder.user.id === order.user.id && otherOrder.shippingDate.getTime() <= new Date(date).getTime()
+                otherOrder.user.id === order.user.id
+                //  && otherOrder.shippingDate.getTime() <= addDays(new Date(date), 1).getTime()
               );
             });
             return <DisplayOrder key={order.id} order={order} newOrder={newOrder} otherOrders={otherOrders} />;

@@ -4,6 +4,7 @@ import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import NoResults from "@/components/ui/no-results";
+import { dateFormatter } from "@/lib/date-utils";
 import { formatFrenchPhoneNumber } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,10 +12,10 @@ import { useRouter } from "next/navigation";
 import { createContext, useContext, useState } from "react";
 import type { CalendarOrdersType } from "../_functions/get-orders";
 import DisplayItem from "./display-item";
-import { dateFormatter } from "@/lib/date-utils";
-import { formatPhoneNumber } from "react-phone-number-input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { StatusCell } from "@/components/table-custom-fuction/cell-orders";
 
-type UserModalProps = CalendarOrdersType["user"] & { orders: CalendarOrdersType[] };
+type UserModalProps = CalendarOrdersType["user"] & { orders: CalendarOrdersType[]; date: Date };
 
 type UserModalContextType = {
   user: UserModalProps | null;
@@ -53,7 +54,12 @@ function UserModal() {
   const router = useRouter();
   const { user, isUserModalOpen, setIsUserModalOpen } = useUserModal();
   return (
-    <Modal title="Information du client" isOpen={isUserModalOpen} onClose={() => setIsUserModalOpen(false)}>
+    <Modal
+      title="Information du client"
+      className="p-4"
+      isOpen={isUserModalOpen}
+      onClose={() => setIsUserModalOpen(false)}
+    >
       {user ? (
         <>
           <UserInfo />
@@ -89,7 +95,7 @@ const UserInfo = () => {
   const { user } = useUserModal();
   if (!user) return <NoResults />;
   return (
-    <div className="px-4 py-5 ">
+    <div className="px-2 py-3 ">
       <div className="flex items-center mb-4 gap-4">
         {user.image ? (
           <Image
@@ -106,7 +112,14 @@ const UserInfo = () => {
         )}
         <div>
           <h2 className="text-lg font-semibold">{user.company || user.name || "Unknown User"}</h2>
-          <p className="text-sm text-gray-500">{user.email}</p>
+          <Link
+            href={`mailto:${user.email}`}
+            target="_blank"
+            className="text-sm text-gray-500
+          block"
+          >
+            {user.email}
+          </Link>
 
           {!!user.phone && (
             <Link href={`tel:${user.phone}`} target="_blank">
@@ -115,7 +128,9 @@ const UserInfo = () => {
           )}
         </div>
       </div>
-      <div className="max-h-[40dvh] overflow-y-auto px-4">
+      <ScrollArea className="max-h-[50dvh] overflow-y-auto pb-2">
+        <DisplayUserOrders />
+
         {user.company ? (
           <div className="mb-4">
             <h3 className="text-sm font-medium text-gray-500">Nom</h3>
@@ -154,8 +169,7 @@ const UserInfo = () => {
             ))}
           </div>
         )}
-        <DisplayUserOrders />
-      </div>
+      </ScrollArea>
     </div>
   );
 };
@@ -171,19 +185,20 @@ function DisplayUserOrders() {
       </h3>
 
       {user.orders.map((order) => (
-        <div key={order.id} className="space-y-2 px-2">
+        <div key={order.id} className="space-y-2 p-3 rounded-md bg-secondary">
           <h4 className="text-xs font-semibold capitalize text-center flex justify-between items-center text-primary">
-            <span>{dateFormatter(new Date(order.shippingDate), { days: true })}</span>
+            <span>
+              {new Date(order.shippingDate).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)
+                ? "Aujourd'hui"
+                : dateFormatter(new Date(order.shippingDate), { days: true })}
+            </span>
           </h4>
           <div>
             <h4 className="text-xs font-semibold">Produits :</h4>
             <DisplayItem items={order.productsList} />
           </div>
           <div className="flex justify-between items-center">
-            <div>
-              <p className="text-xs font-semibold">Total : {order.totalPrice}</p>
-              {/* <p className="text-[10px] text-gray-500">Livraison {relativeDate}</p> */}
-            </div>
+            <StatusCell status={order.status} />
             <Button asChild variant="secondary" className="text-sm border-dashed border">
               <Link href={`/admin/orders/${order.id}`}>Éditer</Link>
             </Button>
