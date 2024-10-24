@@ -4,10 +4,10 @@ const TbMilk = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="none"
-    stroke-width="2"
+    strokeWidth="2"
     viewBox="0 0 24 24"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     height="1em"
     width="1em"
     xmlns="http://www.w3.org/2000/svg"
@@ -23,7 +23,7 @@ const BsBasketFill = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="currentColor"
-    stroke-width="0"
+    strokeWidth="0"
     viewBox="0 0 16 16"
     height="1em"
     width="1em"
@@ -37,10 +37,10 @@ const LuMilk = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="none"
-    stroke-width="2"
+    strokeWidth="2"
     viewBox="0 0 24 24"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     height="1em"
     width="1em"
     xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +55,7 @@ const PiPackageDuotone = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="currentColor"
-    stroke-width="0"
+    strokeWidth="0"
     viewBox="0 0 256 256"
     height="1em"
     width="1em"
@@ -70,7 +70,7 @@ const PiFarm = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="currentColor"
-    stroke-width="0"
+    strokeWidth="0"
     viewBox="0 0 256 256"
     height="1em"
     width="1em"
@@ -84,7 +84,7 @@ const PiBasket = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="currentColor"
-    stroke-width="0"
+    strokeWidth="0"
     viewBox="0 0 256 256"
     height="1em"
     width="1em"
@@ -98,7 +98,7 @@ const MdLocalBar = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="currentColor"
-    stroke-width="0"
+    strokeWidth="0"
     viewBox="0 0 24 24"
     height="1em"
     width="1em"
@@ -114,7 +114,7 @@ const MdOutlineStorefront = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="currentColor"
-    stroke-width="0"
+    strokeWidth="0"
     viewBox="0 0 24 24"
     height="1em"
     width="1em"
@@ -130,10 +130,10 @@ const LuCigarette = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="none"
-    stroke-width="2"
+    strokeWidth="2"
     viewBox="0 0 24 24"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     height="1em"
     width="1em"
     xmlns="http://www.w3.org/2000/svg"
@@ -151,10 +151,10 @@ const LuCoffee = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="none"
-    stroke-width="2"
+    strokeWidth="2"
     viewBox="0 0 24 24"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     height="1em"
     width="1em"
     xmlns="http://www.w3.org/2000/svg"
@@ -171,7 +171,7 @@ const GiBread = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="currentColor"
-    stroke-width="0"
+    strokeWidth="0"
     viewBox="0 0 512 512"
     height="1em"
     width="1em"
@@ -186,7 +186,7 @@ const IoRestaurantSharp = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="currentColor"
-    stroke-width="0"
+    strokeWidth="0"
     viewBox="0 0 512 512"
     height="1em"
     width="1em"
@@ -202,7 +202,7 @@ const FaConciergeBell = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="currentColor"
-    stroke-width="0"
+    strokeWidth="0"
     viewBox="0 0 512 512"
     height="1em"
     width="1em"
@@ -217,7 +217,7 @@ const PiInvoice = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="currentColor"
-    stroke-width="0"
+    strokeWidth="0"
     viewBox="0 0 256 256"
     height="1em"
     width="1em"
@@ -233,10 +233,10 @@ const TbFileInvoice = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="none"
-    stroke-width="2"
+    strokeWidth="2"
     viewBox="0 0 24 24"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     height="1em"
     width="1em"
     xmlns="http://www.w3.org/2000/svg"
@@ -254,7 +254,7 @@ const FaMapLocationDot = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="currentColor"
-    stroke-width="0"
+    strokeWidth="0"
     viewBox="0 0 576 512"
     height="1em"
     width="1em"
@@ -269,10 +269,10 @@ const LuPackageMinus = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="none"
-    stroke-width="2"
+    strokeWidth="2"
     viewBox="0 0 24 24"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     height="1em"
     width="1em"
     xmlns="http://www.w3.org/2000/svg"
@@ -290,7 +290,7 @@ const GrPowerReset = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="currentColor"
-    stroke-width="0"
+    strokeWidth="0"
     viewBox="0 0 24 24"
     height="1em"
     width="1em"
@@ -299,7 +299,7 @@ const GrPowerReset = (props: LucideProps) => (
   >
     <path
       fill="none"
-      stroke-width="2"
+      strokeWidth="2"
       d="M20,8 C18.5974037,5.04031171 15.536972,3 12,3 C7.02943725,3 3,7.02943725 3,12 C3,16.9705627 7.02943725,21 12,21 L12,21 C16.9705627,21 21,16.9705627 21,12 M21,3 L21,9 L15,9"
     ></path>
   </svg>
@@ -309,10 +309,10 @@ const LuMapPin = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="none"
-    stroke-width="2"
+    strokeWidth="2"
     viewBox="0 0 24 24"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     height="1em"
     width="1em"
     xmlns="http://www.w3.org/2000/svg"
@@ -327,7 +327,7 @@ const FaFileInvoiceDollar = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="currentColor"
-    stroke-width="0"
+    strokeWidth="0"
     viewBox="0 0 384 512"
     height="1em"
     width="1em"

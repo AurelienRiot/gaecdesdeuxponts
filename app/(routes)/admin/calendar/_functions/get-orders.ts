@@ -61,7 +61,7 @@ export const getOrdersByDate = async ({ from, to }: { from: Date; to: Date }) =>
       totalPrice: currencyFormatter.format(order.totalPrice),
       createdAt: order.createdAt,
       shopName: order.shop?.name || "Livraison à domicile",
-      shopId: order.shop?.id || "",
+      shopId: order.shop?.id,
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
   return { success: true, data: formattedOrders, message: "Commandes trouvées" };
@@ -89,6 +89,6 @@ export type CalendarOrdersType = {
   productsList: ProductQuantities[];
   shopName: string;
   address: Point;
-  shopId: string;
+  shopId?: string;
   createdAt: Date;
 };

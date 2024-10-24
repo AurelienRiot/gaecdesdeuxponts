@@ -1,7 +1,5 @@
 "use client";
 import Spinner from "@/components/animations/spinner";
-import { extractProductQuantities } from "@/components/google-events/get-orders-for-events";
-import { getUnitLabel } from "@/components/product/product-function";
 import { IconButton } from "@/components/ui/button";
 import NoResults from "@/components/ui/no-results";
 import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
@@ -16,7 +14,6 @@ import DisplayAmap from "./display-amap";
 import DisplayOrder from "./display-order";
 import { useOrdersModal } from "./orders-modal";
 import SummarizeProducts from "./summarize-products";
-import { addDelay } from "@/lib/utils";
 
 type EventsPageProps = {
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
@@ -72,8 +69,8 @@ export default function EventPage({ amapOrders, initialDateArray: dateArray }: E
   }, []);
   return (
     <>
-      <div className="flex flex-row gap-4  pb-4 overflow-y-hidden mx-auto flex-auto w-full overflow-x-scroll">
-        {isFetching && <Spinner className="absolute top-1/2 left-1/2 text-primary/50" />}
+      <div className="flex flex-row gap-4  pb-6 overflow-y-hidden mx-auto flex-auto w-full overflow-x-scroll">
+        {isFetching && <Spinner className="absolute left-1/2 text-primary/50 bottom-3" />}
         {dateArray.map((date, index) => {
           const dailyOrders = allOrders
             ?.filter((order) => getLocalIsoString(order.shippingDate) === date)
