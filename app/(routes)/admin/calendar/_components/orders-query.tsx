@@ -2,6 +2,7 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import getDailyOrders from "../_actions/get-daily-orders";
+import type { CalendarOrdersType } from "../_functions/get-orders";
 
 async function fetchOrders(dateArray: string[]) {
   const from = new Date(dateArray[0]);
@@ -34,12 +35,16 @@ export function useOrdersQuery(dateArray: string[]) {
 export function useOrdersQueryClient() {
   const queryClient = useQueryClient();
 
-  // const mutateUser = (fn: (user?: GetUserReturnType | null) => GetUserReturnType | null | undefined) => {
-  //   queryClient.setQueryData(["userProfile"], fn);
-  // };
+  const mutateOrders = (fn: (orders: CalendarOrdersType[]) => CalendarOrdersType[]) => {
+    setTimeout(() => {
+      queryClient.setQueryData(["fetchOrders"], (orders?: CalendarOrdersType[] | null) => {
+        if (orders) return fn(orders);
+      });
+    }, 0);
+  };
 
   const refectOrders = () => {
     setTimeout(() => queryClient.invalidateQueries({ queryKey: ["fetchOrders"] }), 0);
   };
-  return { refectOrders };
+  return { refectOrders, mutateUser: mutateOrders };
 }

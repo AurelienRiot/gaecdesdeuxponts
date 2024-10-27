@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { ChevronLeft, CircleUserRound, Package, Settings, Store, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
-import { useUserQuery } from "./_components/user-query";
+import { useUserQuery } from "./_functions/user-query";
 
 const ProfilNavBar = () => {
   const [open, setOpen] = useState(false);

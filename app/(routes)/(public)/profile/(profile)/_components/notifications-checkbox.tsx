@@ -3,7 +3,7 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import useServerAction from "@/hooks/use-server-action";
-import { useUserQuery, useUserQueryClient } from "../../_components/user-query";
+import { useUserQuery, useUserQueryClient } from "../../_functions/user-query";
 import changeInvoice from "../_actions/change-invoice";
 import changeShipping from "../_actions/change-shipping";
 

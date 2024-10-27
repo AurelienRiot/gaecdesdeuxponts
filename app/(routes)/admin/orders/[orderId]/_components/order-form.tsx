@@ -51,7 +51,7 @@ export type OrderFormProps = {
 
 export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, users, shops, referer, className }) => {
   const router = useRouter();
-  const { refectOrders } = useOrdersQueryClient();
+  const { refectOrders, mutateUser } = useOrdersQueryClient();
   const prevDateOfShipping = initialData?.dateOfShipping ? new Date(initialData.dateOfShipping) : undefined;
   const { serverAction: createOrderAction } = useServerAction(createOrder);
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
@@ -126,7 +126,13 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
 
     function onSuccess() {
       router.replace(`/admin/orders/${initialData?.id}?referer=${encodeURIComponent(referer)}#button-container`);
-      refectOrders();
+      mutateUser((prev) =>
+        prev.map((order) =>
+          order.id === initialData?.id
+            ? { ...order, status: !initialData.shippingEmail ? "Commande livrée" : "Commande validée" }
+            : order,
+        ),
+      );
     }
 
     await confirmOrderAction({
@@ -134,10 +140,6 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
       onSuccess,
       toastOptions: { position: "top-center" },
     });
-    if (!initialData?.id) {
-      toast.error("Une erreur est survenue");
-      return;
-    }
   };
 
   function onPaid() {
@@ -182,17 +184,31 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
     initialData?.id
       ? await updateOrderAction({
           data: { ...data, prevDateOfShipping },
-          onSuccess: () => {
-            refectOrders();
-            router.replace(`/admin/orders/${data.id}?referer=${encodeURIComponent(referer)}#button-container`);
+          onSuccess: (result) => {
+            if (!result) {
+              toast.error("Une erreur est survenue");
+              return;
+            }
+            result.shippingDate = new Date(result.shippingDate);
+            result.createdAt = new Date(result.createdAt);
+            mutateUser((prev) => prev.filter((order) => order.id !== result.id).concat(result));
+            // refectOrders();
+            router.replace(`/admin/orders/${result.id}?referer=${encodeURIComponent(referer)}#button-container`);
           },
           toastOptions: { position: "top-center" },
         })
       : await createOrderAction({
           data,
           toastOptions: { position: "top-center" },
-          onSuccess: () => {
-            refectOrders();
+          onSuccess: (result) => {
+            if (!result) {
+              toast.error("Une erreur est survenue");
+              return;
+            }
+            result.shippingDate = new Date(result.shippingDate);
+            result.createdAt = new Date(result.createdAt);
+            mutateUser((prev) => prev.filter((order) => order.id !== result.id).concat(result));
+            // refectOrders();
             router.back();
           },
         });
@@ -372,4 +388,43 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
       )}
     </>
   );
+};
+
+const newOrder = {
+  id: "CM_28-10-24_OX9TN",
+  name: "L'Eolienne",
+  index: 6,
+  user: {
+    name: "L'Eolienne",
+    email: "union-jadis-0f@icloud.com",
+    company: "L'Eolienne",
+    completed: false,
+    image: "https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/farm/lylttbk2fpktpn0etsuv",
+    phone: "",
+    address: "Rue du Lotier des Marais, 35600, Sainte-Marie",
+    notes:
+      "Lundi 08:00 - 14:00\nMardi 08:00 - 14:00\nMercredi 08:00 - 14:00\nJeudi 08:00 - 14:00\nVendredi 08:00 - 14:00\nSamedi Fermé\nDimanche Fermé",
+    links: [],
+    id: "CS_6CGWVR8",
+  },
+  shippingDate: new Date("2024-10-28T09:00:00.000Z"),
+  productsList: [
+    {
+      itemId: "PR_JYRIWOS",
+      name: "Lait cru bouteille verre 1L",
+      price: 1,
+      quantity: 15,
+      unit: "",
+    },
+  ],
+  address: {
+    label: "5 Rue du Lotier des Marais 35600 Sainte-Marie",
+    longitude: -2.053687,
+    latitude: 47.684641,
+  },
+  status: "Commande validée",
+  totalPrice: "10€",
+  createdAt: new Date("2024-10-21T08:30:47.438Z"),
+  shopName: "L’éolienne",
+  shopId: "SH_OAHK2LM",
 };

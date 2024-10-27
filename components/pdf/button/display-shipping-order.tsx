@@ -31,7 +31,7 @@ export function DisplayShippingOrder({
   const { serverAction, loading } = useServerAction(createShippingPDF64StringAction);
   const { serverAction: orderAction, loading: loading2 } = useServerAction(getOrderForConfirmation);
   const router = useRouter();
-  const { refectOrders } = useOrdersQueryClient();
+  const { mutateUser } = useOrdersQueryClient();
   const confirm = useConfirm();
 
   const onViewFile = async () => {
@@ -93,7 +93,10 @@ export function DisplayShippingOrder({
       data: { orderId },
       onSuccess: () => {
         setSend(true);
-        refectOrders();
+        mutateUser((prev) =>
+          prev.map((order) => (order.id === orderId ? { ...order, status: "Commande livrée" } : order)),
+        );
+        // refectOrders();
       },
     });
   };

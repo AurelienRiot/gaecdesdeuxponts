@@ -1,14 +1,15 @@
 "use server";
 
+import { ADMIN } from "@/components/auth";
 import createOrdersEvent from "@/components/google-events/create-orders-event";
+import { createCustomer } from "@/components/pdf/pdf-data";
+import { createId } from "@/lib/id";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
+import { formatOrders } from "../../../calendar/_functions/get-orders";
 import { orderSchema, type OrderFormValues } from "../_components/order-schema";
-import { createCustomer } from "@/components/pdf/pdf-data";
-import { createId } from "@/lib/id";
 import getOrdersIndex from "../_functions/get-orders-index";
-import { ADMIN } from "@/components/auth";
 
 async function createOrder(data: OrderFormValues) {
   return await safeServerAction({
@@ -46,7 +47,16 @@ async function createOrder(data: OrderFormValues) {
             ),
           },
         },
-        include: { user: { include: { address: true, billingAddress: true } } },
+        include: {
+          orderItems: true,
+          shop: true,
+          user: { include: { address: true, billingAddress: true, links: true } },
+          invoiceOrder: {
+            select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
+            orderBy: { createdAt: "desc" },
+            where: { invoice: { deletedAt: null } },
+          },
+        },
       });
 
       const customer = createCustomer(order.user);
@@ -64,9 +74,7 @@ async function createOrder(data: OrderFormValues) {
       return {
         success: true,
         message: "Commande crée",
-        data: {
-          id: order.id,
-        },
+        data: formatOrders(order),
       };
     },
   });

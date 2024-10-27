@@ -5,7 +5,7 @@ import { DataTable } from "@/components/ui/data-table/data-table";
 import { dateFormatter, dateMonthYear } from "@/lib/date-utils";
 import { currencyFormatter } from "@/lib/utils";
 import { InvoiceColumn, type InvoiceColumnType } from "./_components/invoice-column";
-import { useUserQuery } from "../_components/user-query";
+import { useUserQuery } from "../_functions/user-query";
 
 const PageOrderTable = () => {
   const { data: user } = useUserQuery();

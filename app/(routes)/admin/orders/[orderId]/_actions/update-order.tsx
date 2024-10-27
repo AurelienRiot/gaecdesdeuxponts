@@ -9,6 +9,7 @@ import { orderSchema, type OrderFormValues } from "../_components/order-schema";
 import { createCustomer } from "@/components/pdf/pdf-data";
 import getOrdersIndex from "../_functions/get-orders-index";
 import { ADMIN } from "@/components/auth";
+import { formatOrders } from "../../../calendar/_functions/get-orders";
 
 async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date | null }) {
   return await safeServerAction({
@@ -72,7 +73,7 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
           : order.index;
 
       const customer = createCustomer(order.user);
-      await prismadb.order.update({
+      const updadedOrders = await prismadb.order.update({
         where: {
           id: id,
         },
@@ -83,6 +84,16 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
               create: customer,
               update: customer,
             },
+          },
+        },
+        include: {
+          orderItems: true,
+          shop: true,
+          user: { include: { address: true, billingAddress: true, links: true } },
+          invoiceOrder: {
+            select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
+            orderBy: { createdAt: "desc" },
+            where: { invoice: { deletedAt: null } },
           },
         },
       });
@@ -104,6 +115,7 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
       return {
         success: true,
         message: "Commande mis à jour",
+        data: formatOrders(updadedOrders),
       };
     },
   });

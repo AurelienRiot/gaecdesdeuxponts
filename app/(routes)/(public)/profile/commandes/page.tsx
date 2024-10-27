@@ -19,7 +19,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import sendCheckoutEmail from "./_actions/send-chekout-email";
 import { OrdersColumn, type OrderColumnType } from "./_components/order-column";
-import { useUserQuery } from "../_components/user-query";
+import { useUserQuery } from "../_functions/user-query";
 
 const PageOrderTable = () => {
   const { data: user } = useUserQuery();
