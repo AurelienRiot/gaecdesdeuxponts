@@ -1,4 +1,6 @@
+import AdminSidebar from "@/components/navbar-admin/admin-sidebar";
 import Navbar from "@/components/navbar-admin/navbar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import type React from "react";
 
 export default async function AdminLayout({
@@ -7,10 +9,14 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative h-full pb-20 md:pb-0 ">
-      {/* <AdminColorSchema /> */}
-      <Navbar />
-      {children}
-    </div>
+    <SidebarProvider>
+      <AdminSidebar />
+      <div className="relative h-full pb-20 md:pb-0 w-full">
+        {/* <AdminColorSchema /> */}
+        <Navbar />
+
+        {children}
+      </div>
+    </SidebarProvider>
   );
 }

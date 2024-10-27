@@ -128,9 +128,6 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
     function onSuccess() {
       router.replace(`/admin/orders/${initialData?.id}?referer=${encodeURIComponent(referer)}#button-container`);
       refectOrders();
-      // shippingDate && queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(shippingDate) }] });
-      // prevDateOfShipping &&
-      //   queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(prevDateOfShipping) }] });
     }
 
     await confirmOrderAction({
@@ -153,9 +150,6 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
       data: { id: initialData?.invoiceId, isPaid: !initialData.dateOfPayment },
       onSuccess: () => {
         refectOrders();
-        // shippingDate && queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(shippingDate) }] });
-        // prevDateOfShipping &&
-        //   queryClient.invalidateQueries({ queryKey: [{ date: getLocalIsoString(prevDateOfShipping) }] });
         router.refresh();
       },
     });
@@ -189,13 +183,21 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
     initialData?.id
       ? await updateOrderAction({
           data: { ...data, prevDateOfShipping },
-          onSuccess: () =>
-            router.replace(`/admin/orders/${data.id}?referer=${encodeURIComponent(referer)}#button-container`),
+          onSuccess: () => {
+            refectOrders();
+            router.replace(`/admin/orders/${data.id}?referer=${encodeURIComponent(referer)}#button-container`);
+          },
           toastOptions: { position: "top-center" },
         })
-      : await createOrderAction({ data, toastOptions: { position: "top-center" }, onSuccess: () => router.back() });
+      : await createOrderAction({
+          data,
+          toastOptions: { position: "top-center" },
+          onSuccess: () => {
+            refectOrders();
+            router.back();
+          },
+        });
 
-    refectOrders();
     // prevDateOfShipping &&
     //   queryClient.invalidateQueries({
     //     queryKey: ["fetchDailyOrders", { date: getLocalIsoString(prevDateOfShipping) }],

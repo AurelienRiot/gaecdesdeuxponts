@@ -1,17 +1,15 @@
 import { AnimateHeight } from "@/components/animations/animate-size";
-import { extractProductQuantities } from "@/components/google-events/get-orders-for-events";
-import { getUnitLabel } from "@/components/product/product-function";
+import { extractProductQuantities, type GroupUsersByProduct } from "@/components/google-events";
+import { DisplayProductIcon } from "@/components/product";
+import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { nanoid } from "@/lib/id";
 import { cn, numberFormat2Decimals } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import type { CalendarOrdersType } from "../_functions/get-orders";
 import type { DisplayAmapProps } from "./display-amap";
 import DisplayItem from "./display-item";
-import { getUserName } from "@/components/table-custom-fuction";
-import { DisplayProductIcon } from "@/components/product";
-import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
-import { nanoid } from "@/lib/id";
 
 function SummarizeProducts({
   dailyOrders,
@@ -20,30 +18,7 @@ function SummarizeProducts({
 }: DisplayAmapProps & { dailyOrders: CalendarOrdersType[]; className?: string }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const productQuantities = extractProductQuantities(
-    dailyOrders
-      .flatMap((order) =>
-        order.productsList.map((item) => ({
-          itemId: item.name,
-          name: item.name,
-          price: item.price,
-          quantity: Number(item.quantity || 1),
-          unit: getUnitLabel(item.unit).quantity,
-        })),
-      )
-      .concat(
-        amapOrders.flatMap(
-          (shop) =>
-            shop.order?.items.map((item) => ({
-              itemId: item.itemId,
-              name: item.name,
-              price: item.price,
-              quantity: item.quantity,
-              unit: item.unit,
-            })) || [],
-        ),
-      ),
-  );
+  const productQuantities = extractProductQuantities(dailyOrders, amapOrders);
   if (productQuantities.aggregateProducts.length === 0) return null;
 
   return (
@@ -69,122 +44,25 @@ function SummarizeProducts({
               {item.unit}
             </p>
           ))}
-          <DisplayItem items={productQuantities.aggregateProducts} />
-          <SummarizeUserProducts dailyOrders={dailyOrders} amapOrders={amapOrders} />
+          <DisplayItem
+            items={productQuantities.aggregateProducts.map((item) => ({
+              name: item.productName,
+              quantity: item.totalQuantity,
+              unit: item.unit,
+            }))}
+          />
+          <SummarizeUserProducts aggregateProducts={productQuantities.aggregateProducts} />
         </CardContent>
       </AnimateHeight>
     </Card>
   );
 }
 
-type ProductOrders = {
-  productId: string;
-  productName: string;
-  unit?: string;
-  totalQuantity: number; // Added totalQuantity property
-  users: {
-    userId: string;
-    image?: string | null;
-    userName: string;
-    quantity: number;
-  }[];
-};
-
-function groupOrdersByProduct(
-  orders: CalendarOrdersType[],
-  amapOrders: DisplayAmapProps["amapOrders"],
-): ProductOrders[] {
-  const productMap = new Map<string, ProductOrders>();
-
-  for (const order of orders) {
-    const userName = getUserName(order.user);
-    const userId = order.user.id;
-    const image = order.user.image;
-
-    for (const product of order.productsList) {
-      const { itemId, name, unit, quantity, price } = product;
-
-      // **Exclude products with negative quantity**
-      if (quantity <= 0 || price <= 0 || name === "Bouteille verre 1L") {
-        break; // Skip this product
-      }
-
-      const effectiveName = name === "Lait cru bio 1L" ? "Lait cru bouteille verre 1L consignée" : name;
-
-      if (!productMap.has(effectiveName)) {
-        productMap.set(effectiveName, {
-          productId: itemId,
-          productName: effectiveName,
-          unit,
-          totalQuantity: quantity, // Initialize totalQuantity
-          users: [],
-        });
-      } else {
-        // If the product already exists, add to the total quantity
-        const productOrder = productMap.get(effectiveName);
-        if (productOrder) {
-          productOrder.totalQuantity += quantity; // Update totalQuantity
-        }
-      }
-
-      const productOrder = productMap.get(effectiveName);
-      if (productOrder) {
-        productOrder.users.push({
-          image,
-          userId,
-          userName,
-          quantity,
-        });
-      }
-    }
-  }
-
-  for (const order of amapOrders) {
-    const userName = order.shopName;
-    const userId = nanoid(5);
-    const image = order.shopImageUrl;
-
-    for (const product of order.order?.items || []) {
-      const { itemId, name, unit, quantity } = product;
-      if (!productMap.has(name)) {
-        productMap.set(name, {
-          productId: itemId,
-          productName: name,
-          unit,
-          totalQuantity: quantity, // Initialize totalQuantity
-          users: [],
-        });
-      } else {
-        // If the product already exists, add to the total quantity
-        const productOrder = productMap.get(name);
-        if (productOrder) {
-          productOrder.totalQuantity += quantity; // Update totalQuantity
-        }
-      }
-      const productOrder = productMap.get(name);
-      if (productOrder) {
-        productOrder.users.push({
-          image,
-          userId,
-          userName,
-          quantity,
-        });
-      }
-    }
-  }
-
-  return Array.from(productMap.values());
-}
-
-function SummarizeUserProducts({
-  dailyOrders,
-  amapOrders,
-}: { dailyOrders: CalendarOrdersType[]; amapOrders: DisplayAmapProps["amapOrders"] }) {
-  const productOrders = groupOrdersByProduct(dailyOrders, amapOrders);
+function SummarizeUserProducts({ aggregateProducts }: { aggregateProducts: GroupUsersByProduct[] }) {
   return (
     <div className="space-y-6">
       <h2 className="text-base">Clients par produits</h2>
-      {productOrders.map((product) => (
+      {aggregateProducts.map((product) => (
         <div key={nanoid(5)} className="space-y-2">
           <h3 className="flex items-center gap-2">
             <DisplayProductIcon name={product.productName} />

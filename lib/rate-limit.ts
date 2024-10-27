@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 const idToRequestCount = new Map<string, number>(); // keeps track of individual users
 const rateLimiter = {
   windowStart: Date.now(),
-  windowSize: 2 * 60 * 1000, // Milliseconds (2 minute)
+  windowSize: 2 * 60 * 1000, // Milliseconds (2 minutes)
   maxRequests: 10,
 };
 

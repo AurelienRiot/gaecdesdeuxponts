@@ -11,42 +11,29 @@ import { HiOutlineExternalLink } from "react-icons/hi";
 import AutoCloseSheet from "../auto-close-sheet";
 import CartItem from "../cart-item";
 import { Button } from "../ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "../ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
 
-const CartIcon = forwardRef<HTMLButtonElement, { qty: number }>(
-  ({ qty, ...props }, ref) => {
-    return (
-      <Button
-        variant={"outline"}
-        className="group relative border-0 px-3 hover:bg-background hover:text-foreground/80"
-        ref={ref}
-        {...props}
+const CartIcon = forwardRef<HTMLButtonElement, { qty: number }>(({ qty, ...props }, ref) => {
+  return (
+    <Button
+      variant={"outline"}
+      className="group relative border-0 px-3 hover:bg-background hover:text-foreground/80"
+      ref={ref}
+      {...props}
+    >
+      <ShoppingCart size={20} className="group-hover:text-foreground/80" />
+      <span className="sr-only">Ouvrir le panier</span>
+      <span
+        className={cn(
+          "absolute -right-1 -top-1 flex aspect-square min-w-5 items-center justify-center rounded-full bg-foreground px-1 font-sans text-xs tabular-nums text-background shadow-md group-hover:bg-foreground/80 group-hover:text-background/80",
+          qty > 99 ? "-right-2 -top-2 scale-[0.6]" : qty > 9 ? "-right-1 -top-1 scale-[0.8]" : "",
+        )}
       >
-        <ShoppingCart size={20} className="group-hover:text-foreground/80" />
-        <span className="sr-only">Ouvrir le panier</span>
-        <span
-          className={cn(
-            "absolute -right-1 -top-1 flex aspect-square min-w-5 items-center justify-center rounded-full bg-foreground px-1 font-sans text-xs tabular-nums text-background shadow-md group-hover:bg-foreground/80 group-hover:text-background/80",
-            qty > 99
-              ? "-right-2 -top-2 scale-[0.6]"
-              : qty > 9
-                ? "-right-1 -top-1 scale-[0.8]"
-                : "",
-          )}
-        >
-          {qty}
-        </span>
-      </Button>
-    );
-  },
-);
+        {qty}
+      </span>
+    </Button>
+  );
+});
 CartIcon.displayName = "CartIcon";
 
 export const CartButton = () => {
@@ -55,9 +42,7 @@ export const CartButton = () => {
 
   const cart = useCart();
 
-  const totalQuantity = Object.values(cart.quantities).filter(
-    (qte) => qte > 0,
-  ).length;
+  const totalQuantity = Object.values(cart.quantities).filter((qte) => qte > 0).length;
 
   if (!isMounted) {
     return <CartIcon qty={0} />;
@@ -66,7 +51,7 @@ export const CartButton = () => {
     <>
       <Suspense fallback={null}>
         {" "}
-        <AutoCloseSheet setIsOpen={setIsOpen} />{" "}
+        <AutoCloseSheet setIsOpen={() => setIsOpen(false)} />{" "}
       </Suspense>
       <Sheet onOpenChange={setIsOpen} open={isOpen}>
         <SheetTrigger asChild>
@@ -80,19 +65,14 @@ export const CartButton = () => {
                 className="mt-6 flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {" "}
-                Passer commande{" "}
-                <HiOutlineExternalLink className="h-4 w-4 shrink-0" />
+                Passer commande <HiOutlineExternalLink className="h-4 w-4 shrink-0" />
               </Link>
             </SheetTitle>
             <SheetDescription>Contenue de votre panier</SheetDescription>
           </SheetHeader>
 
           <div className="lg:col-span-7">
-            {cart.items.length === 0 && (
-              <p className="text-secondary-foreground">
-                Aucun produit dans le panier
-              </p>
-            )}
+            {cart.items.length === 0 && <p className="text-secondary-foreground">Aucun produit dans le panier</p>}
             <ul>
               <AnimatePresence>
                 {cart.items.map((item) => (

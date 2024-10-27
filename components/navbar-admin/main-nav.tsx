@@ -1,24 +1,10 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import {
-  Box,
-  Calendar,
-  LayoutDashboardIcon,
-  ListOrderedIcon,
-  LogOut,
-  MapPin,
-  PackageIcon,
-  PhoneCallIcon,
-  PresentationIcon,
-  RowsIcon,
-  ShoppingBasket,
-  Store,
-  Users,
-} from "lucide-react";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PiInvoice } from "../react-icons";
+import { adminRoutes } from "./mobile-nav";
 
 export function MainNav({ className }: React.HTMLAttributes<HTMLElement>) {
   const pathname = usePathname();
@@ -43,99 +29,3 @@ export function MainNav({ className }: React.HTMLAttributes<HTMLElement>) {
     </nav>
   );
 }
-
-export const MainAdminRoutes = (pathname: string) => [
-  {
-    href: `/admin/invoices`,
-    label: "Factures",
-    active: pathname.startsWith(`/admin/invoices`),
-    Icone: PiInvoice,
-  },
-
-  {
-    href: `/admin/amap`,
-    label: "AMAP",
-    active: pathname.startsWith(`/admin/amap`),
-    Icone: ShoppingBasket,
-  },
-  {
-    href: `/admin/calendar`,
-    label: "Calendrier",
-    active: pathname.startsWith(`/admin/calendar`),
-    Icone: Calendar,
-  },
-  {
-    href: `/admin/users`,
-    label: "Clients",
-    active: pathname.startsWith(`/admin/users`),
-    Icone: Users,
-  },
-];
-
-export const SecondaryAdminRoutes = (pathname: string) => [
-  {
-    href: `/admin`,
-    label: "Résumé",
-    active: pathname === `/admin`,
-    Icone: LayoutDashboardIcon,
-  },
-
-  {
-    href: `/`,
-    label: "Accueil",
-    active: false,
-    Icone: PresentationIcon,
-  },
-
-  {
-    href: `/admin/contacts`,
-    label: "Contacts",
-    active: pathname.startsWith(`/admin/contacts`),
-    Icone: PhoneCallIcon,
-  },
-  {
-    href: `/admin/shops`,
-    label: "Magasins",
-    active: pathname.startsWith(`/admin/shops`),
-    Icone: Store,
-  },
-  {
-    href: `/admin/categories`,
-    label: "Categories",
-    active: pathname.startsWith(`/admin/categories`),
-    Icone: RowsIcon,
-  },
-  {
-    href: `/admin/products`,
-    label: "Produits",
-    active: pathname.startsWith(`/admin/products`),
-    Icone: PackageIcon,
-  },
-
-  {
-    href: `/admin/orders`,
-    label: "Commandes",
-    active: pathname.startsWith(`/admin/orders`),
-    Icone: ListOrderedIcon,
-  },
-  {
-    href: `/admin/stocks`,
-    label: "Stocks",
-    active: pathname.startsWith(`/admin/stocks`),
-    Icone: Box,
-  },
-  {
-    href: `/admin/direction`,
-    label: "Direction",
-    active: pathname.startsWith(`/admin/direction`),
-    Icone: MapPin,
-  },
-  {
-    href: `/logout`,
-    label: "Se deconnecter",
-    active: false,
-    Icone: LogOut,
-  },
-];
-
-export const adminRoutes = (pathname: string) => [...MainAdminRoutes(pathname), ...SecondaryAdminRoutes(pathname)];

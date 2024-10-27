@@ -14,6 +14,7 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import ReactQueryProvider from "@/providers/react-query-provider";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.laiteriedupontrobert.fr"),

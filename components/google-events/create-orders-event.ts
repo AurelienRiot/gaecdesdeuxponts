@@ -7,6 +7,7 @@ import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 import deleteEvent from "./delete-events";
 import getEventsList from "./get-events-list";
 import getAllOrders from "./get-orders-for-events";
+import { displayQuantity } from ".";
 
 export default async function createOrdersEvent(data: { date: Date }) {
   const start = formatInTimeZone(data.date, timeZone, "yyyy-MM-dd");
@@ -72,21 +73,21 @@ export default async function createOrdersEvent(data: { date: Date }) {
 }
 
 async function createDescription({ startDate, endDate }: { startDate: Date; endDate: Date }) {
-  const { productQuantities, formattedOrders, groupedAMAPOrders } = await getAllOrders({ startDate, endDate });
+  const productQuantities = await getAllOrders({ startDate, endDate });
   if (productQuantities.aggregateProducts.length === 0) return null;
   // "<font color='red'> Aucune commande </font>";
 
-  const amapOrdersDescription =
-    Object.values(groupedAMAPOrders)
-      .map(
-        (order) =>
-          `<br /><strong><a href="${process.env.NEXT_PUBLIC_URL}/admin/shop/${order.shopId}">${order.shopName}</a></strong> <br />` +
-          order.orderItems
-            .map((item) => `<strong>${item.name}</strong> : ${item.quantity}${item.unit || ""}`)
-            .join("<br />") +
-          `<br /><a href="https://maps.google.com/?q=${order.address}">Adresse</a><br />`,
-      )
-      .join("<br />") + "<br />";
+  // const amapOrdersDescription =
+  //   Object.values(groupedAMAPOrders)
+  //     .map(
+  //       (order) =>
+  //         `<br /><strong><a href="${process.env.NEXT_PUBLIC_URL}/admin/shop/${order.shopId}">${order.shopName}</a></strong> <br />` +
+  //         order.orderItems
+  //           .map((item) => `<strong>${item.name}</strong> : ${item.quantity}${item.unit || ""}`)
+  //           .join("<br />") +
+  //         `<br /><a href="https://maps.google.com/?q=${order.address}">Adresse</a><br />`,
+  //     )
+  //     .join("<br />") + "<br />";
 
   const header = `<h2><a href="${process.env.NEXT_PUBLIC_URL}/admin/calendar/${getLocalIsoString(startDate)}">Voir les commandes sur le site</a></h2> <br /><h3><font color='green'>Résumer des produits </font></h3>`;
   const totaleQuantity =
@@ -101,23 +102,36 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
     productQuantities.aggregateProducts
       .map(
         (item) =>
-          `<strong>${item.name}</strong> : ${numberFormat2Decimals(item.quantity)}${item.unit || ""} ${item.name.includes("Casier") ? ` (${Math.round(item.quantity * 12)})` : ""}`,
+          `<strong>${item.productName}</strong> : ${displayQuantity(item.productName, item.totalQuantity)}${item.unit || ""}`,
       )
       .join("<br />") + "<br />";
 
-  const orderDescriptions =
-    formattedOrders.length === 0
-      ? ""
-      : formattedOrders
+  const productByUser =
+    productQuantities.aggregateProducts
+      .map((item) => {
+        const product = `<h3><strong>${item.productName}</strong> : </h3> `;
+        const users = item.users
           .map(
-            (order) =>
-              `<a href="${process.env.NEXT_PUBLIC_URL}/admin/users/${order.userId}">${order.company ? order.company : order.name}</a><br /><strong><a href="${process.env.NEXT_PUBLIC_URL}/admin/orders/${order.id}"><font color='${order.shippingEmail ? "green" : "red"}'>${order.shippingEmail ? "BL envoyé" : "Acceder à la commande"} </font></a></strong> <br />` +
-              order.orderItems
-                .map((item) => `<strong>${item.name}</strong> : ${item.quantity}${item.unit || ""}`)
-                .join("<br />") +
-              `<br /><a href="https://maps.google.com/?q=${order.shippingAddress}">Adresse</a><br />`,
+            (user) =>
+              `<a href="${process.env.NEXT_PUBLIC_URL}/admin/users/${user.userId}">${user.userName}</a> : ${displayQuantity(item.productName, user.quantity)}${item.unit || ""}`,
           )
           .join("<br />");
+        return `${product}  ${users} <br />`;
+      })
+      .join("<br />") + "<br />";
+  // const orderDescriptions =
+  //   formattedOrders.length === 0
+  //     ? ""
+  //     : formattedOrders
+  //         .map(
+  //           (order) =>
+  //             `<a href="${process.env.NEXT_PUBLIC_URL}/admin/users/${order.userId}">${order.company ? order.company : order.name}</a><br /><strong><a href="${process.env.NEXT_PUBLIC_URL}/admin/orders/${order.id}"><font color='${order.shippingEmail ? "green" : "red"}'>${order.shippingEmail ? "BL envoyé" : "Acceder à la commande"} </font></a></strong> <br />` +
+  //             order.orderItems
+  //               .map((item) => `<strong>${item.name}</strong> : ${item.quantity}${item.unit || ""}`)
+  //               .join("<br />") +
+  //             `<br /><a href="https://maps.google.com/?q=${order.shippingAddress}">Adresse</a><br />`,
+  //         )
+  //         .join("<br />");
 
   // const uniqueShippingAddresses = [...new Set(formattedOrders.map((order) => `${order.shippingAddress}`))];
   // const googleDirectionUrl=createDirectionUrl({addresses:uniqueShippingAddresses})
@@ -126,5 +140,5 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
   //   ? ""
   //   : `<strong><a  href="${googleDirectionUrl}">Voir le parcours</a></strong> <br /><br />`;
 
-  return header + totaleQuantity + "<br />" + productDescriptions + amapOrdersDescription + orderDescriptions;
+  return header + totaleQuantity + "<br />" + productDescriptions + "<br />" + +productByUser;
 }

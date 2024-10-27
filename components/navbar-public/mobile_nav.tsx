@@ -13,7 +13,7 @@ const MobileNav = ({ children }: { children: React.ReactNode }) => {
     <>
       <Suspense fallback={null}>
         {" "}
-        <AutoCloseSheet setIsOpen={setIsOpen} />{" "}
+        <AutoCloseSheet setIsOpen={() => setIsOpen(false)} />
       </Suspense>
       <Sheet onOpenChange={setIsOpen} open={isOpen}>
         <SheetTrigger>

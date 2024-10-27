@@ -16,6 +16,7 @@ import getOrderForConfirmation from "../server-actions/get-order-for-confirmatio
 import { createShippingPDF64StringAction } from "../server-actions/pdf64-string-actions";
 import { SendBL } from "../server-actions/send-bl-action";
 import { PdfButton } from "./pdf-button";
+import { useOrdersQueryClient } from "@/app/(routes)/admin/calendar/_components/orders-query";
 
 export function DisplayShippingOrder({
   orderId,
@@ -30,6 +31,7 @@ export function DisplayShippingOrder({
   const { serverAction, loading } = useServerAction(createShippingPDF64StringAction);
   const { serverAction: orderAction, loading: loading2 } = useServerAction(getOrderForConfirmation);
   const router = useRouter();
+  const { refectOrders } = useOrdersQueryClient();
   const confirm = useConfirm();
 
   const onViewFile = async () => {
@@ -87,7 +89,13 @@ export function DisplayShippingOrder({
     if (!result) {
       return;
     }
-    toastServerAction({ data: { orderId }, onSuccess: () => setSend(true) });
+    toastServerAction({
+      data: { orderId },
+      onSuccess: () => {
+        setSend(true);
+        refectOrders();
+      },
+    });
   };
 
   return (

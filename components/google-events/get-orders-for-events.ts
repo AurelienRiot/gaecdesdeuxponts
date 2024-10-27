@@ -1,226 +1,23 @@
-import prismadb from "@/lib/prismadb";
-import { addressFormatter } from "@/lib/utils";
-import { addDays } from "date-fns";
-import { getUnitLabel } from "../product/product-function";
-import { getTotalMilk } from "../product";
+import { getGroupedAMAPOrders } from "@/app/(routes)/admin/calendar/_functions/get-amap-orders";
+import { getOrdersByDate } from "@/app/(routes)/admin/calendar/_functions/get-orders";
+import { extractProductQuantities, getAmapOrdersForTheDay } from ".";
 
 export const getAllOrders = async ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
   // return dummieDate;
   const [orders, amapOrders] = await Promise.all([
-    prismadb.order.findMany({
-      where: {
-        dateOfShipping: {
-          gte: startDate,
-          lte: endDate,
-        },
-        NOT: { shop: null },
-        deletedAt: null,
-      },
-      select: {
-        id: true,
-        index: true,
-        shippingEmail: true,
-        shop: { select: { address: true } },
-        orderItems: { select: { itemId: true, name: true, quantity: true, unit: true, price: true } },
-        user: { select: { company: true, email: true, image: true, name: true, id: true, address: true } },
-      },
-    }),
+    getOrdersByDate({ from: startDate, to: endDate }),
 
-    prismadb.aMAPOrder
-      .findMany({
-        where: {
-          endDate: {
-            gte: addDays(new Date(), -1), // new Date(),
-          },
-        },
-        select: {
-          shippingDays: true,
-          user: { select: { name: true, email: true, id: true } },
-          amapItems: { select: { itemId: true, name: true, quantity: true, unit: true, price: true } },
-          shop: { select: { name: true, address: true, id: true, imageUrl: true } },
-        },
-      })
-      .then((orders) => orders.filter((order) => order.shippingDays.some((day) => day >= startDate && day < endDate)))
-      .then((orders) =>
-        orders.map((order) => ({
-          shopName: order.shop.name,
-          shopId: order.shop.id,
-          address: order.shop.address,
-          image: order.shop.imageUrl,
-          orderItems: order.amapItems.map((item) => ({
-            itemId: item.itemId,
-            name: item.name,
-            price: item.price,
-            quantity: item.quantity,
-            unit: getUnitLabel(item.unit).quantity,
-          })),
-        })),
-      ),
+    getGroupedAMAPOrders(),
   ]);
 
-  const groupedAMAPOrders = amapOrders.reduce(
-    (acc, order) => {
-      const key = order.shopName;
-      if (!acc[key]) {
-        acc[key] = order;
-      } else {
-        const newItems = acc[key].orderItems;
-        for (const item of order.orderItems) {
-          const existingItem = newItems.find((i) => i.itemId === item.itemId);
-          if (existingItem) {
-            existingItem.quantity += item.quantity;
-          } else {
-            newItems.push(item);
-          }
-        }
-        acc[key] = { ...order, orderItems: newItems };
-      }
-      return acc;
-    },
-    {} as Record<string, (typeof amapOrders)[0]>,
-  );
+  const todayAmapOrders = getAmapOrdersForTheDay(amapOrders, startDate);
 
-  const formattedOrders = orders
-    .map((order) => ({
-      id: order.id,
-      userId: order.user.id,
-      shippingAddress: order.shop?.address || addressFormatter(order.user?.address),
-      shippingEmail: order.shippingEmail,
-      name: order.user?.name,
-      index: order.index,
-      company: order.user?.company,
-      image: order.user?.image,
-      orderItems: order.orderItems.map((item) => ({
-        itemId: item.itemId,
-        name: item.name,
-        price: item.price,
-        quantity: item.quantity,
-        unit: getUnitLabel(item.unit).quantity,
-      })),
-    }))
-    .sort((a, b) => {
-      if (a.index === null) return -1;
-      if (b.index === null) return 1;
-      return (a.index ?? 0) - (b.index ?? 0);
-    });
+  const productQuantities = extractProductQuantities(orders.data, todayAmapOrders);
 
-  // if (formattedOrders.length > 1) {
-  //   const waypoints = formattedOrders.map((order) => order.shippingAddress || "");
-
-  //   const orderWaypoints = await directionGoogle({ origin: origin.label, destination: destination.label, waypoints });
-  //   if (orderWaypoints.success && orderWaypoints.data) {
-  //     formattedOrders = orderWaypoints.data.map((index) => formattedOrders[index]);
-  //   }
-  // }
-
-  const productQuantities = extractProductQuantities(
-    orders
-      .flatMap((order) =>
-        order.orderItems.map((item) => ({
-          itemId: item.itemId,
-          name: item.name,
-          price: item.price,
-          unit: getUnitLabel(item.unit).quantity,
-          quantity: item.quantity,
-        })),
-      )
-      .concat(Object.values(groupedAMAPOrders).flatMap((order) => order.orderItems.map((item) => item))),
-  );
-
-  return { productQuantities, formattedOrders, groupedAMAPOrders };
+  return productQuantities;
 };
 
 export default getAllOrders;
-
-export type ProductQuantities = {
-  itemId: string;
-  name: string;
-  price: number;
-  unit: string;
-  quantity: number;
-};
-
-const excludedNames = new Set(["Consigne bouteille verre 1L", "Bouteille verre 1L", "Consigne bouteille verre"]);
-
-const aggregationRules: { match: RegExp; aggregateTo: string }[] = [
-  {
-    match: /^Lait cru bouteille verre 1L$/i,
-    aggregateTo: "Casier lait cru 1L",
-  },
-  {
-    match: /^(Lait cru bouteille verre 1L consignée|Lait cru bio 1L)$/i,
-    aggregateTo: "Casier lait cru consignée 1L",
-  },
-];
-
-function getAggregateProducts(products: ProductQuantities[]): ProductQuantities[] {
-  const aggregatedMap: Map<string, { quantity: number; itemId: string; unit: string; price: number }> = new Map();
-
-  for (const product of products) {
-    const { name, quantity, itemId, unit, price } = product;
-
-    // Skip excluded product names
-    if (excludedNames.has(name) || quantity <= 0) {
-      continue;
-    }
-
-    let aggregatedName: string | null = null;
-
-    for (const rule of aggregationRules) {
-      if (rule.match.test(name)) {
-        aggregatedName = rule.aggregateTo;
-        break;
-      }
-    }
-
-    if (aggregatedName) {
-      // Aggregate under the specified name
-      const existing = aggregatedMap.get(aggregatedName);
-      if (existing) {
-        existing.quantity += quantity;
-      } else {
-        aggregatedMap.set(aggregatedName, { quantity, itemId, unit, price });
-      }
-    } else {
-      // Otherwise, aggregate by the original product name
-      const key = name;
-      const existing = aggregatedMap.get(key);
-      if (existing) {
-        existing.quantity += quantity;
-      } else {
-        aggregatedMap.set(key, { quantity, itemId, unit, price });
-      }
-    }
-  }
-
-  // Convert the aggregated map to an array of ProductQuantities
-  const aggregatedProducts: ProductQuantities[] = [];
-
-  for (const [name, { quantity, itemId, unit, price }] of aggregatedMap.entries()) {
-    aggregatedProducts.push({
-      name,
-      itemId,
-      price,
-      unit,
-      quantity: name.includes("Casier") ? quantity / 12 : quantity,
-    });
-  }
-
-  return aggregatedProducts;
-}
-
-export function extractProductQuantities(productQuantities: ProductQuantities[]): {
-  aggregateProducts: ProductQuantities[];
-  totaleQuantity: { name: string; quantity: number; unit: string }[];
-} {
-  const aggregateProducts = getAggregateProducts(productQuantities);
-  const totaleLiters = getTotalMilk(aggregateProducts);
-
-  return {
-    aggregateProducts,
-    totaleQuantity: [{ name: "lait cru", quantity: Number(totaleLiters.toFixed(1)), unit: "L" }],
-  };
-}
 
 const dummieDate = {
   productQuantities: [

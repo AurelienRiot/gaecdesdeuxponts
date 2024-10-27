@@ -38,6 +38,8 @@ export function useOrdersQueryClient() {
   //   queryClient.setQueryData(["userProfile"], fn);
   // };
 
-  const refectOrders = () => queryClient.invalidateQueries({ queryKey: ["fetchOrders"] });
+  const refectOrders = () => {
+    setTimeout(() => queryClient.invalidateQueries({ queryKey: ["fetchOrders"] }), 0);
+  };
   return { refectOrders };
 }

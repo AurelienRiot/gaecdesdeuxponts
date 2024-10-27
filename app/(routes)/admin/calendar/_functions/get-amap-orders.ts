@@ -1,12 +1,12 @@
 "server only";
+import { getUnitLabel } from "@/components/product/product-function";
 import { getUserName } from "@/components/table-custom-fuction";
 import { createProduct, createProductList } from "@/components/table-custom-fuction/cell-orders";
 import prismadb from "@/lib/prismadb";
 import { addDays } from "date-fns/addDays";
 import { unstable_cache } from "next/cache";
 import type { AMAPColumn } from "../../amap/_components/columns";
-import { getUnitLabel } from "@/components/product/product-function";
-import type { ProductQuantities } from "@/components/google-events/get-orders-for-events";
+import type { ProductQuantities } from "@/components/google-events";
 
 export const getAMAPOrders = unstable_cache(
   async ({ from, to }: { from: Date; to: Date }) => {
@@ -56,6 +56,7 @@ export const getAMAPOrders = unstable_cache(
   { revalidate: 60 * 60 * 24, tags: ["amap-orders"] },
 );
 
+export type GetGroupedAMAPOrdersType = Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
 export const getGroupedAMAPOrders = unstable_cache(
   async () => {
     const amapOrders = await prismadb.aMAPOrder.findMany({

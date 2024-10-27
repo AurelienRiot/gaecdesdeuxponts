@@ -1,11 +1,11 @@
 "server only";
-import type { ProductQuantities } from "@/components/google-events/get-orders-for-events";
 import { getUnitLabel } from "@/components/product/product-function";
 import { getUserName } from "@/components/table-custom-fuction";
 import { type Status, createDatePickUp, createStatus } from "@/components/table-custom-fuction/cell-orders";
 import prismadb from "@/lib/prismadb";
 import { addressFormatter, currencyFormatter } from "@/lib/utils";
 import type { Point } from "../../direction/_components/direction-schema";
+import type { ProductQuantities } from "@/components/google-events";
 
 export const getOrdersByDate = async ({ from, to }: { from: Date; to: Date }) => {
   const orders = await prismadb.order.findMany({

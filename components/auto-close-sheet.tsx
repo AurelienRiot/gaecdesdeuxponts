@@ -5,13 +5,13 @@ import { useEffect } from "react";
 const AutoCloseSheet = ({
   setIsOpen,
 }: {
-  setIsOpen: (isOpen: boolean) => void;
+  setIsOpen: () => void;
 }) => {
   const pathName = usePathname();
   const searchParams = useSearchParams();
   useEffect(() => {
     if (pathName && searchParams) {
-      setIsOpen(false);
+      setIsOpen();
     }
   }, [pathName, searchParams, setIsOpen]);
 

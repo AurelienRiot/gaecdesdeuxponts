@@ -9,10 +9,12 @@ import getOrderForConfirmation from "../server-actions/get-order-for-confirmatio
 import { toast } from "sonner";
 import { ModalDescription } from "./display-shipping-order";
 import { useRouter } from "next/navigation";
+import { useOrdersQueryClient } from "@/app/(routes)/admin/calendar/_components/orders-query";
 
 export const DisplayCreateInvoice = ({ orderIds, disabled }: { orderIds: string[]; disabled?: boolean }) => {
   const { serverAction, loading } = useServerAction(createInvoiceAction);
   const { serverAction: orderAction, loading: loading2 } = useServerAction(getOrderForConfirmation);
+  const { refectOrders } = useOrdersQueryClient();
   const confirm = useConfirm();
 
   const router = useRouter();
@@ -47,7 +49,13 @@ export const DisplayCreateInvoice = ({ orderIds, disabled }: { orderIds: string[
         return;
       }
     }
-    serverAction({ data: { orderIds, sendEmail }, onSuccess: () => router.refresh() });
+    serverAction({
+      data: { orderIds, sendEmail },
+      onSuccess: () => {
+        refectOrders();
+        router.refresh();
+      },
+    });
   };
 
   return (

@@ -33,11 +33,12 @@ export function scrollToElement(id: string, behavior: "smooth" | "instant" = "sm
 }
 
 export default function EventPage({ amapOrders, initialDateArray: dateArray }: EventsPageProps) {
-  const { data: allOrders, isFetching, error } = useOrdersQuery(dateArray);
+  const { data: allOrders, isFetching, error, status, fetchStatus } = useOrdersQuery(dateArray);
 
   useLayoutEffect(() => {
     scrollToElement(getLocalIsoString(new Date()), "instant");
   }, []);
+  console.log({ error, status, fetchStatus });
   return (
     <>
       <div className="flex flex-row gap-4  pb-6 overflow-y-hidden mx-auto flex-auto w-full overflow-x-scroll">

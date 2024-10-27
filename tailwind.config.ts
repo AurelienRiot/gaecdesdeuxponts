@@ -8,7 +8,7 @@ module.exports = {
   content: ["./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}"],
   theme: {
     container: {
-      center: true,
+      center: "true",
       padding: "2rem",
       screens: {
         "2xl": "1400px",
@@ -30,9 +30,9 @@ module.exports = {
         "2xl": "0 25px 50px -12px rgb(0 0 0 / 0.25), 0 20px 25px -10px rgb(0 0 0 / 0.25)",
       },
       transitionDuration: {
-        2000: "2000ms",
-        5000: "5000ms",
-        6000: "6000ms",
+        "2000": "2000ms",
+        "5000": "5000ms",
+        "6000": "6000ms",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
@@ -79,6 +79,16 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar-background))",
+          foreground: "hsl(var(--sidebar-foreground))",
+          primary: "hsl(var(--sidebar-primary))",
+          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+          accent: "hsl(var(--sidebar-accent))",
+          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+          border: "hsl(var(--sidebar-border))",
+          ring: "hsl(var(--sidebar-ring))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -120,30 +130,50 @@ module.exports = {
           },
         },
         "load-bar": {
-          "0%": { width: "25%", left: "-25%" },
-          "100%": { width: "25%", left: "100%" },
+          "0%": {
+            width: "25%",
+            left: "-25%",
+          },
+          "100%": {
+            width: "25%",
+            left: "100%",
+          },
         },
         "accordion-down": {
-          from: { height: 0 },
-          to: { height: "var(--radix-accordion-content-height)" },
+          from: {
+            height: "0",
+          },
+          to: {
+            height: "var(--radix-accordion-content-height)",
+          },
         },
         "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: 0 },
+          from: {
+            height: "var(--radix-accordion-content-height)",
+          },
+          to: {
+            height: "0",
+          },
         },
         "collapsible-down": {
-          from: { maxHeight: 0, opacity: 0 },
+          from: {
+            maxHeight: "0",
+            opacity: "0",
+          },
           to: {
             maxHeight: "var(--radix-collapsible-content-height)",
-            opacity: 1,
+            opacity: "1",
           },
         },
         "collapsible-up": {
           from: {
             maxHeight: "var(--radix-collapsible-content-height)",
-            opacity: 1,
+            opacity: "1",
           },
-          to: { maxHeight: 0, opacity: 0 },
+          to: {
+            maxHeight: "0",
+            opacity: "0",
+          },
         },
         "reveal-in": {
           "0%": {
@@ -166,13 +196,20 @@ module.exports = {
           },
         },
         "bg-to-primary": {
-          "0%": { backgroundColor: "transparent" },
-          "100%": { backgroundColor: "hsl(var(--primary))" },
+          "0%": {
+            backgroundColor: "transparent",
+          },
+          "100%": {
+            backgroundColor: "hsl(var(--primary))",
+          },
         },
-
         "bg-to-transparent": {
-          "0%": { backgroundColor: "hsl(var(--primary))" },
-          "100%": { backgroundColor: "transparent" },
+          "0%": {
+            backgroundColor: "hsl(var(--primary))",
+          },
+          "100%": {
+            backgroundColor: "transparent",
+          },
         },
         blob: {
           "0%, 100%": {
@@ -200,8 +237,12 @@ module.exports = {
           },
         },
         shine: {
-          from: { backgroundPosition: "200% 0" },
-          to: { backgroundPosition: "-200% 0" },
+          from: {
+            backgroundPosition: "200% 0",
+          },
+          to: {
+            backgroundPosition: "-200% 0",
+          },
         },
         aurora: {
           from: {
@@ -218,19 +259,19 @@ module.exports = {
         },
         opacity: {
           "0%": {
-            opacity: 0,
+            opacity: "0",
             transform: "translate(-50%,-50%) scale(0)",
           },
           "33%": {
-            opacity: 1,
+            opacity: "1",
             transform: "translate(-50%,-50%) scale(0.33)",
           },
           "67%": {
-            opacity: 0.5,
+            opacity: "0.5",
             transform: "translate(-50%,-50%) scale(0.67)",
           },
           "100%": {
-            opacity: 0,
+            opacity: "0",
             transform: "translate(-50%,-50%) scale(1)",
           },
         },
@@ -250,35 +291,41 @@ module.exports = {
         },
         "disappear-top": disappearTop(3),
         "hide-element": {
-          "95%": { display: "block", opacity: "1", visibility: "visible" },
-          "100%": { display: "none", visibility: "hidden", opacity: "0" },
+          "95%": {
+            display: "block",
+            opacity: "1",
+            visibility: "visible",
+          },
+          "100%": {
+            display: "none",
+            visibility: "hidden",
+            opacity: "0",
+          },
         },
         "caret-blink": {
-          "0%,70%,100%": { opacity: "1" },
-          "20%,50%": { opacity: "0" },
+          "0%,70%,100%": {
+            opacity: "1",
+          },
+          "20%,50%": {
+            opacity: "0",
+          },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-
         "collapsible-down": "collapsible-down 0.2s ease-out ",
         "collapsible-up": "collapsible-up 0.2s ease-out ",
-
         "checkbox-in": "reveal-in .2s ease-out .2s forwards",
         "checkbox-out": "reveal-out .2s ease-out forwards",
         "checkbox-bg-in": "bg-to-primary .2s ease-out forwards",
         "checkbox-bg-out": "bg-to-transparent .2s ease-out .2s forwards",
-
         "load-bar": "load-bar 1s linear infinite",
-
         blob: "blob 15s linear infinite",
-
         shine: "shine 10s ease-out infinite",
         aurora: "aurora 60s linear infinite",
         scroll: "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
         heartbeat: "heartbeat 2s infinite ease-in-out",
-
         "caret-blink": "caret-blink 1.25s ease-out infinite",
       },
     },
