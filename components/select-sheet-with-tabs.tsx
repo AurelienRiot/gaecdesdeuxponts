@@ -58,7 +58,7 @@ function SelectSheetWithTabs<V extends { key: string }, T extends string>({
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         {typeof trigger === "string" ? (
-          <Button className={triggerClassName} variant="outline">
+          <Button type="button" className={triggerClassName} variant="outline">
             {trigger}
           </Button>
         ) : (

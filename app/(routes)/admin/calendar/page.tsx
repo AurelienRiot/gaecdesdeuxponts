@@ -61,6 +61,7 @@ async function CalendarPage() {
           <Separator />
 
           <EventPage amapOrders={amapOrders} initialDateArray={dateArray} />
+
           <div className="flex justify-between p-4 max-w-[500px] mx-auto w-full">
             <UpdatePage />
             <TodayFocus startMonth={new Date(dateArray[0])} endMonth={new Date(dateArray[dateArray.length - 1])} />

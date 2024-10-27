@@ -266,6 +266,7 @@ const SelectProductName = ({
               trigger={
                 selectedProduct ? (
                   <Button
+                    type="button"
                     variant="outline"
                     disabled={form.formState.isSubmitting}
                     className={cn(
@@ -274,7 +275,7 @@ const SelectProductName = ({
                       quantity < 0 ? negativeQuantityStyle : "",
                     )}
                   >
-                    {products.find((product) => product.id === selectedProduct.itemId)?.product.isPro && (
+                    {products.find((product) => product.id === selectedProduct?.itemId)?.product.isPro && (
                       <Badge variant="orange" className="mr-2">
                         Pro
                       </Badge>

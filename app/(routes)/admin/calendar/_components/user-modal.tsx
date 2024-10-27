@@ -67,15 +67,10 @@ function UserModal() {
             <Button variant={"outline"} className="w-full" onClick={() => setIsUserModalOpen(false)}>
               Fermer
             </Button>
-            <Button
-              variant={"green"}
-              className="w-full"
-              onClick={() => {
-                () => setIsUserModalOpen(false);
-                router.push(`/admin/users/${user.id}`);
-              }}
-            >
-              Consulter
+            <Button variant={"green"} asChild className="w-full">
+              <Link onClick={() => setIsUserModalOpen(false)} href={`/admin/users/${user.id}`}>
+                Consulter
+              </Link>
             </Button>
           </div>
         </>
@@ -174,7 +169,8 @@ const UserInfo = () => {
 };
 
 function DisplayUserOrders() {
-  const { user } = useUserModal();
+  const { user, setIsUserModalOpen } = useUserModal();
+  const router = useRouter();
   if (!user) return null;
 
   return (
@@ -199,7 +195,9 @@ function DisplayUserOrders() {
           <div className="flex justify-between items-center">
             <StatusCell status={order.status} />
             <Button asChild variant="secondary" className="text-sm border-dashed border">
-              <Link href={`/admin/orders/${order.id}`}>Éditer</Link>
+              <Link onClick={() => setIsUserModalOpen(false)} href={`/admin/orders/${order.id}`}>
+                Éditer
+              </Link>
             </Button>
           </div>
         </div>
