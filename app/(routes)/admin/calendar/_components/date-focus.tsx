@@ -3,9 +3,18 @@
 import DateModal from "@/components/date-modal";
 import { getLocalIsoString } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
-import { scrollToElement } from "./events-page";
 
-function TodayFocus({ className, startMonth, endMonth }: { className?: string; startMonth: Date; endMonth: Date }) {
+function TodayFocus({
+  className,
+  startMonth,
+  endMonth,
+  scrollToElement,
+}: {
+  className?: string;
+  startMonth: Date;
+  endMonth: Date;
+  scrollToElement: (id: string) => void;
+}) {
   return (
     <DateModal
       trigger={"Date"}

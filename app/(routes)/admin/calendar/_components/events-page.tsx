@@ -6,39 +6,44 @@ import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
 import { addDays } from "date-fns";
 import { ListOrdered } from "lucide-react";
-import { useLayoutEffect } from "react";
+import { useCallback, useRef } from "react";
+import { Virtuoso, type VirtuosoHandle } from "react-virtuoso";
 import type { getGroupedAMAPOrders } from "../_functions/get-amap-orders";
 import type { CalendarOrdersType } from "../_functions/get-orders";
+import TodayFocus from "./date-focus";
 import DisplayAmap from "./display-amap";
 import DisplayOrder from "./display-order";
 import { useOrdersModal } from "./orders-modal";
 import { useOrdersQuery } from "./orders-query";
 import SummarizeProducts from "./summarize-products";
+import UpdatePage from "./update-page";
 
 type EventsPageProps = {
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
   initialDateArray: string[];
 };
 
-export function scrollToElement(id: string, behavior: "smooth" | "instant" = "smooth") {
-  const element = document.getElementById(id);
-  if (element) {
-    element.scrollIntoView({
-      behavior, // or 'auto'
-      block: "nearest", // 'start', 'center', 'end', or 'nearest'
-      inline: "center", // 'start', 'center', 'end', or 'nearest'
-    });
-  } else {
-    console.warn(`Element with id '${id}' not found inside the container.`);
-  }
-}
-
 export default function EventPage({ amapOrders, initialDateArray: dateArray }: EventsPageProps) {
   const { data: allOrders, error, fetchStatus } = useOrdersQuery(dateArray);
+  const virtuosoRef = useRef<VirtuosoHandle>(null);
 
-  useLayoutEffect(() => {
-    scrollToElement(getLocalIsoString(new Date()), "instant");
-  }, []);
+  const scrollToElement = useCallback(
+    (id: string, behavior: "smooth" | "auto" = "smooth") => {
+      const index = dateArray.findIndex((date) => date === id);
+
+      const element = virtuosoRef.current;
+      if (element) {
+        element.scrollIntoView({
+          index,
+          behavior,
+          align: "center",
+        });
+      } else {
+        console.warn(`Element with id '${id}' not found inside the container.`);
+      }
+    },
+    [dateArray],
+  );
   return (
     <>
       {fetchStatus === "fetching" && (
@@ -63,42 +68,10 @@ export default function EventPage({ amapOrders, initialDateArray: dateArray }: E
           {error.message}
         </div>
       )}
-      {/* <div style={{ width: "100vw", height: "100%" }}>
-        <AutoSizer>
-          {({ height, width }) => (
-            <List
-              layout="horizontal"
-              width={width}
-              height={height}
-              itemSize={352}
-              itemCount={dateArray.length}
-            >
-              {({ index, style }) => {
-                const date = dateArray[index];
-                const dailyOrders = allOrders
-                  ?.filter((order) => getLocalIsoString(order.shippingDate) === date)
-                  .sort((a, b) => {
-                    if (a.index === null) return -1;
-                    if (b.index === null) return 1;
-                    return (a.index ?? 0) - (b.index ?? 0);
-                  });
-                return (
-                  <div style={style}>
-                    <RenderEvent
-                      date={date}
-                      allOrders={allOrders}
-                      amapOrders={amapOrders}
-                      dailyOrders={dailyOrders}
-                      key={date}
-                    />
-                  </div>
-                );
-              }}
-            </List>
-          )}
-        </AutoSizer>
-      </div> */}
-      {/* <Virtuoso
+
+      <Virtuoso
+        ref={virtuosoRef}
+        initialTopMostItemIndex={dateArray.findIndex((date) => date === getLocalIsoString(new Date()))}
         data={dateArray}
         horizontalDirection
         itemContent={(_, date) => {
@@ -116,14 +89,16 @@ export default function EventPage({ amapOrders, initialDateArray: dateArray }: E
               amapOrders={amapOrders}
               dailyOrders={dailyOrders}
               key={date}
-              className="mx-4 pb-6 h-full [[data-index]_&]:relative  absolute inset-0"
+              className="mx-4 pb-6 
+              
+              "
             />
           );
         }}
         className="flex flex-row  overflow-y-hidden mx-auto  flex-auto w-full overflow-x-scroll relative "
-      /> */}
+      />
 
-      <div className="flex flex-row gap-4  pb-6 overflow-y-hidden mx-auto flex-auto w-full overflow-x-scroll">
+      {/* <div className="flex flex-row gap-4  pb-6 overflow-y-hidden mx-auto flex-auto w-full overflow-x-scroll">
         {dateArray.map((date, index) => {
           const dailyOrders = allOrders
             ?.filter((order) => getLocalIsoString(order.shippingDate) === date)
@@ -142,6 +117,14 @@ export default function EventPage({ amapOrders, initialDateArray: dateArray }: E
             />
           );
         })}
+      </div> */}
+      <div className="flex justify-between p-4 max-w-[500px] mx-auto w-full">
+        <UpdatePage />
+        <TodayFocus
+          startMonth={new Date(dateArray[0])}
+          endMonth={new Date(dateArray[dateArray.length - 1])}
+          scrollToElement={scrollToElement}
+        />
       </div>
     </>
   );
@@ -161,7 +144,7 @@ function RenderEvent({
   className?: string;
 }) {
   return (
-    <div key={date} id={date} className={cn("flex-shrink-0  w-[320px] h-full space-y-2 ", className)}>
+    <div key={date} id={date} className={cn(" w-[320px] h-full  space-y-2 relative ", className)}>
       <h2 className="text-xl font-semibold capitalize text-center flex justify-between items-center p-2 z-50">
         <span>{dateFormatter(new Date(date), { days: true })}</span>
         {dailyOrders && dailyOrders.length > 0 && <IconReorder dailyOrders={dailyOrders} />}
@@ -187,7 +170,6 @@ function IconReorder({ dailyOrders }: { dailyOrders: CalendarOrdersType[] }) {
         setOrders(dailyOrders);
         setIsOrderModalOpen(true);
       }}
-      className=""
     />
   );
 }
@@ -214,30 +196,25 @@ function DatePage({
   }));
 
   return (
-    <>
-      <ul className="space-y-4 overflow-y-auto h-full relative" style={{ height: `calc(100% - 36px)` }}>
-        <SummarizeProducts dailyOrders={dailyOrders} amapOrders={amapData} />
-        <DisplayAmap amapOrders={amapData} />
-        {dailyOrders.length === 0 ? (
-          <p className="text-center w-full max-w-sm">Aucune commande</p>
-        ) : (
-          dailyOrders.map((order, index) => {
-            const newOrder = allOrders.some((nextOrder) => {
-              return (
-                nextOrder.user.id === order.user.id &&
-                addDays(new Date(date), 1).getTime() < nextOrder.shippingDate.getTime()
-              );
-            });
-            const otherOrders = allOrders.filter((otherOrder) => {
-              return (
-                otherOrder.user.id === order.user.id
-                //  && otherOrder.shippingDate.getTime() <= addDays(new Date(date), 1).getTime()
-              );
-            });
-            return <DisplayOrder key={order.id} order={order} newOrder={newOrder} otherOrders={otherOrders} />;
-          })
-        )}
-      </ul>
-    </>
+    <ul className="space-y-4 overflow-y-auto h-full absolute left-0 top-10" style={{ height: `calc(100% - 50px)` }}>
+      <SummarizeProducts dailyOrders={dailyOrders} amapOrders={amapData} />
+      <DisplayAmap amapOrders={amapData} />
+      {dailyOrders.length === 0 ? (
+        <p className="text-center w-full max-w-sm">Aucune commande</p>
+      ) : (
+        dailyOrders.map((order, index) => {
+          const newOrder = allOrders.some((nextOrder) => {
+            return (
+              nextOrder.user.id === order.user.id &&
+              addDays(new Date(date), 1).getTime() < nextOrder.shippingDate.getTime()
+            );
+          });
+          const otherOrders = allOrders.filter((otherOrder) => {
+            return otherOrder.user.id === order.user.id;
+          });
+          return <DisplayOrder key={order.id} order={order} newOrder={newOrder} otherOrders={otherOrders} />;
+        })
+      )}
+    </ul>
   );
 }
