@@ -4,12 +4,13 @@ import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
 import { type ShopFormValues, schema } from "../_components/shop-schema";
+import { ADMIN } from "@/components/auth";
 
 async function createShop(data: ShopFormValues) {
   return await safeServerAction({
     schema,
     data,
-    roles: ["admin"],
+    roles: ADMIN,
     serverAction: async (data) => {
       const sameShop = await prismadb.shop.findUnique({
         where: {

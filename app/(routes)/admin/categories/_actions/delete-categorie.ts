@@ -1,5 +1,6 @@
 "use server";
 
+import { ADMIN } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
@@ -12,7 +13,7 @@ const deleteSchema = z.object({
 async function deleteCategorie(data: z.infer<typeof deleteSchema>) {
   return await safeServerAction({
     data,
-    roles: ["admin"],
+    roles: ADMIN,
     schema: deleteSchema,
     serverAction: async (data) => {
       const { name } = data;

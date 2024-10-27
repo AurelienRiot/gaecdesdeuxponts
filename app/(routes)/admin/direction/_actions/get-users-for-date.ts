@@ -4,6 +4,7 @@ import safeServerAction from "@/lib/server-action";
 import { addressFormatter } from "@/lib/utils";
 import { z } from "zod";
 import type { Point } from "../_components/direction-schema";
+import { READ_ONLY_ADMIN } from "@/components/auth";
 
 const schema = z.object({
   from: z.date(),
@@ -13,7 +14,7 @@ const schema = z.object({
 async function getUsersForDate(data: z.infer<typeof schema>) {
   return await safeServerAction({
     data,
-    roles: ["admin", "readOnlyAdmin"],
+    roles: READ_ONLY_ADMIN,
     schema,
     serverAction: async ({ from, to }) => {
       const orders = await prismadb.order.findMany({

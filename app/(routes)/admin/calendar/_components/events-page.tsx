@@ -3,6 +3,7 @@ import Spinner from "@/components/animations/spinner";
 import { IconButton } from "@/components/ui/button";
 import NoResults from "@/components/ui/no-results";
 import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
+import { cn } from "@/lib/utils";
 import { addDays } from "date-fns";
 import { ListOrdered } from "lucide-react";
 import { useLayoutEffect } from "react";
@@ -13,9 +14,6 @@ import DisplayOrder from "./display-order";
 import { useOrdersModal } from "./orders-modal";
 import { useOrdersQuery } from "./orders-query";
 import SummarizeProducts from "./summarize-products";
-import { cn } from "@/lib/utils";
-import { AutoSizer } from "react-virtualized";
-import { FixedSizeList as List } from "react-window";
 
 type EventsPageProps = {
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;

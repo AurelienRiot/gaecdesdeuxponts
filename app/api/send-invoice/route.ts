@@ -1,3 +1,4 @@
+import { ADMIN } from "@/components/auth";
 import { sendInvoice } from "@/components/pdf/server-actions/create-and-send-invoice";
 import { safeRouteAPI } from "@/lib/server-action";
 import type { NextRequest } from "next/server";
@@ -11,7 +12,7 @@ export async function POST(request: NextRequest) {
   return await safeRouteAPI({
     request,
     schema,
-    roles: ["admin"],
+    roles: ADMIN,
     serverError: "[SEND_INVOICE]",
     serverAction: async ({ invoiceId }) => {
       return await sendInvoice(invoiceId);

@@ -1,6 +1,6 @@
 "use server";
 
-import { checkReadOnlyAdmin } from "@/components/auth/checkAuth";
+import { READ_ONLY_ADMIN } from "@/components/auth";
 import { directionGoogle } from "@/components/google-events/direction-google";
 import safeServerAction from "@/lib/server-action";
 import { directionSchema, type DirectionFormValues } from "../../direction/_components/direction-schema";
@@ -9,7 +9,7 @@ async function getDirection(data: DirectionFormValues) {
   return await safeServerAction({
     data,
     schema: directionSchema,
-    roles: ["admin", "readOnlyAdmin"],
+    roles: READ_ONLY_ADMIN,
     serverAction: async ({ destination, origin, waypoints }) => {
       const orderedWaipoints = await directionGoogle({
         origin: origin.label,

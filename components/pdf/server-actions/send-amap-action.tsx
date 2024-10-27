@@ -9,6 +9,7 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import { z } from "zod";
 import AmapPDF from "../create-amap";
 import { createAMAPData } from "../pdf-data";
+import { ADMIN } from "@/components/auth";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
@@ -20,7 +21,7 @@ export async function SendAMAP(data: z.infer<typeof AMAPSchema>) {
   return await safeServerAction({
     data,
     schema: AMAPSchema,
-    roles: ["admin"],
+    roles: ADMIN,
     serverAction: async ({ orderId }) => {
       const order = await prismadb.aMAPOrder.findUnique({
         where: {

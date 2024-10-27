@@ -1,5 +1,6 @@
 "use server";
 
+import { ADMIN } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
@@ -14,7 +15,7 @@ const changeArchived = async (data: z.infer<typeof schema>) => {
   return await safeServerAction({
     data,
     schema,
-    roles: ["admin"],
+    roles: ADMIN,
     serverAction: async (data) => {
       const { id, checkState } = data;
       if (checkState === "indeterminate") {

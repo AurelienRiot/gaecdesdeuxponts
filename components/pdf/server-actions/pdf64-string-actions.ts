@@ -1,4 +1,5 @@
 "use server";
+import { READ_ONLY_ADMIN } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { z } from "zod";
@@ -12,7 +13,7 @@ export async function createShippingPDF64StringAction(data: z.infer<typeof pdf64
   return await safeServerAction({
     data,
     schema: pdf64StringSchema,
-    roles: ["admin", "readOnlyAdmin"],
+    roles: READ_ONLY_ADMIN,
     serverAction: async ({ orderId }) => {
       return await createShippingPDF64String(orderId);
     },
@@ -26,7 +27,7 @@ export async function createAMAPPDF64StringAction(data: z.infer<typeof amapPdf64
   return await safeServerAction({
     data,
     schema: amapPdf64StringSchema,
-    roles: ["admin", "readOnlyAdmin"],
+    roles: READ_ONLY_ADMIN,
     serverAction: async ({ orderId }) => {
       const order = await prismadb.aMAPOrder.findUnique({
         where: {
@@ -62,7 +63,7 @@ export async function createInvoicePDF64StringAction(data: z.infer<typeof invoic
   return await safeServerAction({
     data,
     schema: invoicePDF64StringSchema,
-    roles: ["admin", "readOnlyAdmin"],
+    roles: READ_ONLY_ADMIN,
     serverAction: async ({ invoiceId }) => {
       return await createInvoicePDF64String(invoiceId);
     },

@@ -1,5 +1,6 @@
 "use server";
 
+import { ADMIN } from "@/components/auth";
 import safeServerAction from "@/lib/server-action";
 import { z } from "zod";
 
@@ -13,7 +14,7 @@ async function montlyInvoicePaid(data: z.infer<typeof schema>) {
   return await safeServerAction({
     data,
     schema,
-    roles: ["admin"],
+    roles: ADMIN,
     serverAction: async (data) => {
       const { date, orderIds, isPaid } = data;
       // await prismadb.order.updateMany({

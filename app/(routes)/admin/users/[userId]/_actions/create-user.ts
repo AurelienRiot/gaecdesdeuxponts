@@ -4,12 +4,13 @@ import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
 import { schema, type UserFormValues } from "../_components/user-schema";
+import { ADMIN } from "@/components/auth";
 
 async function createUser(data: UserFormValues) {
   return await safeServerAction({
     data,
     schema,
-    roles: ["admin"],
+    roles: ADMIN,
     serverAction: async (data) => {
       const {
         email,

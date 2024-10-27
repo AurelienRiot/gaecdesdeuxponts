@@ -1,6 +1,5 @@
 "use server";
 
-import { getSessionUser } from "@/actions/get-user";
 import ContactSend from "@/components/email/contact-send";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";

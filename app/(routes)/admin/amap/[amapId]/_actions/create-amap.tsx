@@ -5,12 +5,13 @@ import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { schema, type AMAPFormValues } from "../_components/amap-schema";
+import { ADMIN } from "@/components/auth";
 
 async function createAMAP(data: AMAPFormValues) {
   return await safeServerAction({
     schema: schema,
     data,
-    roles: ["admin"],
+    roles: ADMIN,
     serverAction: async ({
       id,
       amapItems,

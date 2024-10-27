@@ -8,12 +8,13 @@ import { orderSchema, type OrderFormValues } from "../_components/order-schema";
 import { createCustomer } from "@/components/pdf/pdf-data";
 import { createId } from "@/lib/id";
 import getOrdersIndex from "../_functions/get-orders-index";
+import { ADMIN } from "@/components/auth";
 
 async function createOrder(data: OrderFormValues) {
   return await safeServerAction({
     schema: orderSchema,
     data,
-    roles: ["admin"],
+    roles: ADMIN,
     serverAction: async ({ datePickUp, orderItems, totalPrice, userId, dateOfEdition, dateOfShipping, shopId }) => {
       const index = await getOrdersIndex(userId, dateOfShipping);
 

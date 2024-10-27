@@ -1,4 +1,5 @@
 "use server";
+import { ADMIN } from "@/components/auth";
 import createOrdersEvent from "@/components/google-events/create-orders-event";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
@@ -14,7 +15,7 @@ async function deleteAMAP(data: z.infer<typeof deleteSchema>) {
   return await safeServerAction({
     data,
     schema: deleteSchema,
-    roles: ["admin"],
+    roles: ADMIN,
     serverAction: async ({ id, nextShippingDay }) => {
       await prismadb.aMAPOrder
         .delete({

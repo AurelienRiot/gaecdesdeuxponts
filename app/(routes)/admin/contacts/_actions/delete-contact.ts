@@ -1,5 +1,6 @@
 "use server";
 
+import { ADMIN } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { z } from "zod";
@@ -12,7 +13,7 @@ async function deleteContact(data: z.infer<typeof schema>) {
   return await safeServerAction({
     data,
     schema,
-    roles: ["admin"],
+    roles: ADMIN,
     serverAction: async (data) => {
       const { id } = data;
       const contact = await prismadb.contact.deleteMany({

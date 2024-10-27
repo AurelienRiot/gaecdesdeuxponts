@@ -5,6 +5,7 @@ import { rateLimit } from "./rate-limit";
 import type { Role } from "@prisma/client";
 import { type NextRequest, NextResponse } from "next/server";
 import { nanoid } from "./id";
+import { USER } from "@/components/auth";
 
 export type ZodError = {
   [x: string]: string[] | undefined;
@@ -49,7 +50,7 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E>({
   serverAction,
   schema,
   ignoreCheckUser,
-  roles = ["admin", "readOnlyAdmin", "user", "pro"],
+  roles = USER,
   rateLimited,
 }: SafeServerActionType<D, R, E>): Promise<ReturnTypeServerAction<R, E>> {
   const timerLabel = `Total Execution Time - ${nanoid(5)}`;
@@ -130,7 +131,7 @@ export async function safeRouteAPI<D extends z.ZodTypeAny, R, E>({
   serverAction,
   schema,
   ignoreCheckUser,
-  roles = ["admin", "readOnlyAdmin", "user", "pro"],
+  roles = USER,
   rateLimited,
   request,
   serverError = "[ERROR]",

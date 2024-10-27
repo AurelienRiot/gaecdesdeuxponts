@@ -8,6 +8,7 @@ import { z } from "zod";
 import { orderSchema, type OrderFormValues } from "../_components/order-schema";
 import { createCustomer } from "@/components/pdf/pdf-data";
 import getOrdersIndex from "../_functions/get-orders-index";
+import { ADMIN } from "@/components/auth";
 
 async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date | null }) {
   return await safeServerAction({
@@ -15,7 +16,7 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
       prevDateOfShipping: z.date().optional().nullable(),
     }),
     data,
-    roles: ["admin"],
+    roles: ADMIN,
     serverAction: async ({
       datePickUp,
       id,

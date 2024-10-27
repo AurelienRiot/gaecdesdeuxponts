@@ -5,6 +5,7 @@ import type { ReturnTypeServerAction } from "@/lib/server-action";
 import safeServerAction from "@/lib/server-action";
 import cloudinary from "cloudinary";
 import { z } from "zod";
+import { ADMIN, READ_ONLY_ADMIN } from "../auth";
 import { checkReadOnlyAdmin } from "../auth/checkAuth";
 import { getUserName } from "../table-custom-fuction";
 
@@ -63,7 +64,7 @@ async function listFiles(): Promise<ReturnTypeServerAction<Ressources[], undefin
   return await safeServerAction({
     schema: z.void(),
     data: undefined,
-    roles: ["admin", "readOnlyAdmin"],
+    roles: READ_ONLY_ADMIN,
     serverAction: async () => {
       try {
         const files = await cloudinary.v2.api.resources({
@@ -100,7 +101,7 @@ const deleteObjectSchema = z.object({
 async function deleteObject(data: z.infer<typeof deleteObjectSchema>) {
   return await safeServerAction({
     schema: deleteObjectSchema,
-    roles: ["admin"],
+    roles: ADMIN,
     data,
     serverAction: async (data) => {
       const { publicID } = data;

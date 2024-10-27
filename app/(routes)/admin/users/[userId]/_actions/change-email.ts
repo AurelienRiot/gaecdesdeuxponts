@@ -1,5 +1,6 @@
 "use server";
 
+import { ADMIN } from "@/components/auth";
 import { emailSchema } from "@/components/zod-schema";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
@@ -15,7 +16,7 @@ async function changeEmail(data: z.infer<typeof schema>) {
   return await safeServerAction({
     data,
     schema,
-    roles: ["admin"],
+    roles: ADMIN,
     serverAction: async ({ email, id }) => {
       const user = await prismadb.user.findUnique({
         where: {

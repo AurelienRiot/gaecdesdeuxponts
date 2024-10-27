@@ -62,6 +62,7 @@ enum Role {
   user
   admin
   pro
+  shipping
   trackOnlyUser
   readOnlyAdmin
   deleted
