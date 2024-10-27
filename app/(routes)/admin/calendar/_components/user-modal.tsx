@@ -129,8 +129,6 @@ const UserInfo = () => {
         </div>
       </div>
       <ScrollArea className="max-h-[50dvh] overflow-y-auto pb-2">
-        <DisplayUserOrders />
-
         {user.company ? (
           <div className="mb-4">
             <h3 className="text-sm font-medium text-gray-500">Nom</h3>
@@ -169,6 +167,7 @@ const UserInfo = () => {
             ))}
           </div>
         )}
+        <DisplayUserOrders />
       </ScrollArea>
     </div>
   );
