@@ -1,17 +1,17 @@
 "use server";
 
+import { SHIPPING_ONLY } from "@/components/auth";
 import createOrdersEvent from "@/components/google-events/create-orders-event";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { schema, type AMAPFormValues } from "../_components/amap-schema";
-import { ADMIN } from "@/components/auth";
 
 async function createAMAP(data: AMAPFormValues) {
   return await safeServerAction({
     schema: schema,
     data,
-    roles: ADMIN,
+    roles: SHIPPING_ONLY,
     serverAction: async ({
       id,
       amapItems,

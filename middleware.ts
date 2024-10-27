@@ -41,8 +41,10 @@ export async function middleware(req: NextRequest) {
     }
 
     if (path.startsWith("/admin")) {
-      if (role !== "admin" && role !== "readOnlyAdmin") {
+      if (!["shipping", "admin", "readOnlyAdmin"].includes(role)) {
         return redirectToLogin(req);
+      }
+      if (role === "shipping" && (path.startsWith("/admin/invoices") || path === "/admin")) {
       }
     }
 
@@ -50,7 +52,7 @@ export async function middleware(req: NextRequest) {
       if (!["user", "pro", "admin", "readOnlyAdmin"].includes(role)) {
         return redirectToLogin(req);
       }
-      if (role === "admin" || role === "readOnlyAdmin") {
+      if (!["shipping", "admin", "readOnlyAdmin"].includes(role)) {
         return NextResponse.redirect(new URL("/admin/calendar", req.url));
       }
       if (path.startsWith("/profile/produits-pro")) {

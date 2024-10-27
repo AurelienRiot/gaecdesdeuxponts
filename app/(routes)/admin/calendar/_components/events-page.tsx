@@ -45,7 +45,6 @@ export default function EventPage({ amapOrders, initialDateArray: dateArray }: E
     [dateArray],
   );
 
-  console.log(allOrders?.length);
   return (
     <>
       {fetchStatus === "fetching" && (
@@ -71,36 +70,36 @@ export default function EventPage({ amapOrders, initialDateArray: dateArray }: E
         </div>
       )}
 
-      {allOrders && (
-        <Virtuoso
-          ref={virtuosoRef}
-          initialTopMostItemIndex={dateArray.findIndex((date) => date === getLocalIsoString(new Date()))}
-          data={dateArray}
-          horizontalDirection
-          itemContent={(_, date) => {
-            const dailyOrders = allOrders
-              ?.filter((order) => getLocalIsoString(order.shippingDate) === date)
-              .sort((a, b) => {
-                if (a.index === null) return -1;
-                if (b.index === null) return 1;
-                return (a.index ?? 0) - (b.index ?? 0);
-              });
-            return (
-              <RenderEvent
-                date={date}
-                allOrders={allOrders}
-                amapOrders={amapOrders}
-                dailyOrders={dailyOrders}
-                key={date}
-                className="mx-4 pb-6 
+      {/* {allOrders && ( */}
+      <Virtuoso
+        ref={virtuosoRef}
+        initialTopMostItemIndex={dateArray.findIndex((date) => date === getLocalIsoString(new Date()))}
+        data={dateArray}
+        horizontalDirection
+        itemContent={(_, date) => {
+          const dailyOrders = allOrders
+            ?.filter((order) => getLocalIsoString(order.shippingDate) === date)
+            .sort((a, b) => {
+              if (a.index === null) return -1;
+              if (b.index === null) return 1;
+              return (a.index ?? 0) - (b.index ?? 0);
+            });
+          return (
+            <RenderEvent
+              date={date}
+              allOrders={allOrders}
+              amapOrders={amapOrders}
+              dailyOrders={dailyOrders}
+              key={date}
+              className="mx-4 pb-6 
               
               "
-              />
-            );
-          }}
-          className="flex flex-row  overflow-y-hidden mx-auto  flex-auto w-full overflow-x-scroll relative "
-        />
-      )}
+            />
+          );
+        }}
+        className="flex flex-row  overflow-y-hidden mx-auto  flex-auto w-full overflow-x-scroll relative "
+      />
+      {/* )} */}
       {/* <div className="flex flex-row gap-4  pb-6 overflow-y-hidden mx-auto flex-auto w-full overflow-x-scroll">
         {dateArray.map((date, index) => {
           const dailyOrders = allOrders

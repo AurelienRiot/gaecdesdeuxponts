@@ -1,15 +1,15 @@
 "use server";
 
+import { SHIPPING_ONLY } from "@/components/auth";
 import createOrdersEvent from "@/components/google-events/create-orders-event";
+import { createCustomer } from "@/components/pdf/pdf-data";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
-import { orderSchema, type OrderFormValues } from "../_components/order-schema";
-import { createCustomer } from "@/components/pdf/pdf-data";
-import getOrdersIndex from "../_functions/get-orders-index";
-import { ADMIN } from "@/components/auth";
 import { formatOrders } from "../../../calendar/_functions/get-orders";
+import { orderSchema, type OrderFormValues } from "../_components/order-schema";
+import getOrdersIndex from "../_functions/get-orders-index";
 
 async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date | null }) {
   return await safeServerAction({
@@ -17,7 +17,7 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
       prevDateOfShipping: z.date().optional().nullable(),
     }),
     data,
-    roles: ADMIN,
+    roles: SHIPPING_ONLY,
     serverAction: async ({
       datePickUp,
       id,

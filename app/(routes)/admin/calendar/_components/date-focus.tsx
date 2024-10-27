@@ -13,7 +13,7 @@ function TodayFocus({
   className?: string;
   startMonth: Date;
   endMonth: Date;
-  scrollToElement: (id: string) => void;
+  scrollToElement: (id: string, behavior: "smooth" | "auto") => void;
 }) {
   return (
     <DateModal
@@ -21,7 +21,7 @@ function TodayFocus({
       triggerClassName={cn("text-primary border-dashed w-fit", className)}
       onValueChange={(date) => {
         if (!date) return;
-        scrollToElement(getLocalIsoString(date));
+        scrollToElement(getLocalIsoString(date), "auto");
       }}
       modifiers={{
         disabled: (date) => date < startMonth || date > endMonth,

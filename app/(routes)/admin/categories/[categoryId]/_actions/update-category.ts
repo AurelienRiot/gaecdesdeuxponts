@@ -1,6 +1,6 @@
 "use server";
 
-import { ADMIN } from "@/components/auth";
+import { SHIPPING_ONLY } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
@@ -10,7 +10,7 @@ async function updateCategory(data: CategoryFormValues) {
   return await safeServerAction({
     data,
     schema,
-    roles: ADMIN,
+    roles: SHIPPING_ONLY,
     serverAction: async (data) => {
       const { imageUrl, name, description, id } = data;
       const sameCategory = await prismadb.category.findUnique({

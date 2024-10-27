@@ -1,16 +1,16 @@
 "use server";
 
+import { SHIPPING_ONLY } from "@/components/auth";
 import type { AMAPType } from "@/components/pdf/pdf-data";
 import { generatePdfSring64 } from "@/components/pdf/pdf-fuction";
 import safeServerAction from "@/lib/server-action";
 import { schema, type AMAPFormulaireValues } from "../_components/amap-formulaire/amap-formulaire-schema";
-import { ADMIN } from "@/components/auth";
 
 async function createAMAPFormulaire(data: AMAPFormulaireValues) {
   return await safeServerAction({
     schema: schema,
     data,
-    roles: ADMIN,
+    roles: SHIPPING_ONLY,
     serverAction: async ({ amapItems, daysOfAbsence, shippingDays, startDate, endDate, shopId }) => {
       const AMAPData: AMAPType = {
         customer: {

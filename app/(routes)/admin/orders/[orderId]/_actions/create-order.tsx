@@ -1,6 +1,6 @@
 "use server";
 
-import { ADMIN } from "@/components/auth";
+import { SHIPPING_ONLY } from "@/components/auth";
 import createOrdersEvent from "@/components/google-events/create-orders-event";
 import { createCustomer } from "@/components/pdf/pdf-data";
 import { createId } from "@/lib/id";
@@ -15,7 +15,7 @@ async function createOrder(data: OrderFormValues) {
   return await safeServerAction({
     schema: orderSchema,
     data,
-    roles: ADMIN,
+    roles: SHIPPING_ONLY,
     serverAction: async ({ datePickUp, orderItems, totalPrice, userId, dateOfEdition, dateOfShipping, shopId }) => {
       const index = await getOrdersIndex(userId, dateOfShipping);
 

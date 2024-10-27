@@ -1,16 +1,16 @@
 "use server";
+import { SHIPPING_ONLY } from "@/components/auth";
 import { defaultAddress } from "@/components/zod-schema/address-schema";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
 import { schema, type UserFormValues } from "../_components/user-schema";
-import { ADMIN } from "@/components/auth";
 
 async function updateUser(data: UserFormValues) {
   return await safeServerAction({
     data,
     schema,
-    roles: ADMIN,
+    roles: SHIPPING_ONLY,
     serverAction: async ({
       id,
       name,

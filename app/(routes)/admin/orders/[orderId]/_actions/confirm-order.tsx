@@ -1,7 +1,7 @@
 "use server";
 
 import { updateStocks } from "@/actions/update-stocks";
-import { ADMIN } from "@/components/auth";
+import { SHIPPING_ONLY } from "@/components/auth";
 import createOrdersEvent from "@/components/google-events/create-orders-event";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
@@ -17,7 +17,7 @@ async function confirmOrder(data: z.infer<typeof confirmOrderSchema>) {
   return await safeServerAction({
     schema: confirmOrderSchema,
     data,
-    roles: ADMIN,
+    roles: SHIPPING_ONLY,
     serverAction: async ({ confirm, id }) => {
       const order = await prismadb.order.update({
         where: {

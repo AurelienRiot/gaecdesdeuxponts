@@ -1,5 +1,5 @@
 "use server";
-import { READ_ONLY_ADMIN } from "@/components/auth";
+import { SHIPPING } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { z } from "zod";
@@ -14,7 +14,7 @@ const schema = z.array(
 async function updateOrdersIndex(data: z.infer<typeof schema>) {
   return await safeServerAction({
     data,
-    roles: READ_ONLY_ADMIN,
+    roles: SHIPPING,
     schema,
     serverAction: async (orders) => {
       for (const order of orders) {

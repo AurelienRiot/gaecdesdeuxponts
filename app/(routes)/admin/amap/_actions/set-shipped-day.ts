@@ -1,5 +1,5 @@
 "use server";
-import { ADMIN } from "@/components/auth";
+import { ADMIN, SHIPPING_ONLY } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { z } from "zod";
@@ -14,7 +14,7 @@ async function setShippedDay(data: z.infer<typeof deleteSchema>) {
   return await safeServerAction({
     data,
     schema: deleteSchema,
-    roles: ADMIN,
+    roles: SHIPPING_ONLY,
     serverAction: async ({ id, shippedDay, checked }) => {
       if (!checked) {
         const amapOrder = await prismadb.aMAPOrder.findUnique({

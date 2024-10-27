@@ -1,5 +1,5 @@
 "use server";
-import { ADMIN } from "@/components/auth";
+import { SHIPPING_ONLY } from "@/components/auth";
 import createOrdersEvent from "@/components/google-events/create-orders-event";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
@@ -15,7 +15,7 @@ async function deleteOrder(data: z.infer<typeof deleteSchema>) {
   return await safeServerAction({
     data,
     schema: deleteSchema,
-    roles: ADMIN,
+    roles: SHIPPING_ONLY,
     serverAction: async (data) => {
       const { id } = data;
       await prismadb.order

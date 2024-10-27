@@ -1,4 +1,5 @@
 "use server";
+import { SHIPPING_ONLY } from "@/components/auth";
 import safeServerAction from "@/lib/server-action";
 import z from "zod";
 
@@ -9,6 +10,7 @@ const schema = z.object({
 export default async function updateStock(formdata: FormData) {
   await safeServerAction({
     schema,
+    roles: SHIPPING_ONLY,
     data: Object.fromEntries(formdata.entries()) as unknown as z.infer<typeof schema>,
     serverAction: async ({ id, quantity }) => {
       console.log({ id, quantity });

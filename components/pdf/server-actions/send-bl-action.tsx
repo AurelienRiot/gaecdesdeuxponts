@@ -1,4 +1,6 @@
 "use server";
+import { updateStocks } from "@/actions/update-stocks";
+import { SHIPPING } from "@/components/auth";
 import { SendBLEmail } from "@/components/email/send-bl";
 import createOrdersEvent from "@/components/google-events/create-orders-event";
 import { dateFormatter } from "@/lib/date-utils";
@@ -11,8 +13,6 @@ import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import ShippingOrder from "../create-shipping";
 import { createPDFData } from "../pdf-data";
-import { updateStocks } from "@/actions/update-stocks";
-import { ADMIN } from "@/components/auth";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
@@ -24,7 +24,7 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
   return await safeServerAction({
     data,
     schema: BLSchema,
-    roles: ADMIN,
+    roles: SHIPPING,
     serverAction: async ({ orderId }) => {
       const order = await prismadb.order.findUnique({
         where: {

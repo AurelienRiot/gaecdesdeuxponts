@@ -1,16 +1,16 @@
 "use server";
 
+import { SHIPPING_ONLY } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
 import { type CategoryFormValues, schema } from "../_components/category-schema";
-import { ADMIN } from "@/components/auth";
 
 async function createCategory(data: CategoryFormValues) {
   return await safeServerAction({
     data,
     schema,
-    roles: ADMIN,
+    roles: SHIPPING_ONLY,
     serverAction: async (data) => {
       const { imageUrl, name, description } = data;
       const sameCategory = await prismadb.category.findUnique({

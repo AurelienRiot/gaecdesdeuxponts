@@ -1,6 +1,6 @@
 "use server";
 
-import { ADMIN } from "@/components/auth";
+import { SHIPPING_ONLY } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { z } from "zod";
@@ -13,7 +13,7 @@ const getOrderForConfirmation = async (data: z.infer<typeof orderForConfirmation
   return await safeServerAction({
     data,
     schema: orderForConfirmationSchema,
-    roles: ADMIN,
+    roles: SHIPPING_ONLY,
     serverAction: async ({ orderId }) => {
       const order = await prismadb.order.findUnique({
         where: {

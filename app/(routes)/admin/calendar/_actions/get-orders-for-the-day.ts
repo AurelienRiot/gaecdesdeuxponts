@@ -1,5 +1,5 @@
 "use server";
-import { READ_ONLY_ADMIN } from "@/components/auth";
+import { SHIPPING } from "@/components/auth";
 import safeServerAction from "@/lib/server-action";
 import { addDelay } from "@/lib/utils";
 import { addHours } from "date-fns";
@@ -13,11 +13,8 @@ async function getOrdersForTheDay(data: z.infer<typeof schema>) {
   return await safeServerAction({
     data,
     schema: schema,
-    roles: READ_ONLY_ADMIN,
+    roles: SHIPPING,
     serverAction: async ({ date }) => {
-      const startDate = date;
-      const endDate = addHours(date, 24);
-      await addDelay(500);
       // const orders = await prismadb.order.findMany({
       //   where: {
       //     dateOfShipping: {
