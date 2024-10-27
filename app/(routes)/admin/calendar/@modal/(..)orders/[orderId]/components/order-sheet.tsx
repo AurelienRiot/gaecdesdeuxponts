@@ -10,7 +10,6 @@ function OrderSheet({ orderId, children }: { orderId?: string; children: React.R
       open={true}
       onOpenChange={() => {
         router.back();
-        router.refresh();
       }}
       modal
     >

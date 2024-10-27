@@ -14,11 +14,11 @@ import { createId } from "@/lib/id";
 import type { ProductWithMain, UserWithAddress } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ProductStock, Shop } from "@prisma/client";
-import { useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useOrdersQueryClient } from "../../../calendar/_components/orders-query";
 import validateInvoice from "../../../invoices/_actions/validate-invoice";
 import { deleteOrder } from "../../_actions/delete-orders";
 import confirmOrder from "../_actions/confirm-order";
@@ -31,7 +31,6 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
-import { useOrdersQueryClient } from "../../../calendar/_components/orders-query";
 
 export type OrderFormProps = {
   initialData:

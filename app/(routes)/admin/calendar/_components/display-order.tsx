@@ -11,6 +11,7 @@ import { type MouseEvent, MouseEventHandler, useState } from "react";
 import type { CalendarOrdersType } from "../_functions/get-orders";
 import DisplayItem from "./display-item";
 import { useUserModal } from "./user-modal";
+import { useRouter } from "next/navigation";
 
 interface DisplayOrderProps {
   order: CalendarOrdersType;
@@ -21,13 +22,19 @@ interface DisplayOrderProps {
 
 const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, newOrder, otherOrders }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const router = useRouter();
 
   return (
     <>
       <Card className={cn("w-full max-w-sm ", className)}>
         <CardHeader
           className="flex relative items-center justify-start py-2 px-4 cursor-pointer "
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={() => {
+            if (!isExpanded) {
+              router.prefetch(`/admin/orders/${order.id}`);
+            }
+            setIsExpanded(!isExpanded);
+          }}
         >
           {newOrder && <IconButton className="size-4 p-0.5 text-green-500 absolute top-0.5 left-0.5 " Icon={Check} />}
           <div className="grid grid-cols-11  items-center w-full">
@@ -74,6 +81,7 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, newOrder,
 
 function SetUserModal({ order, otherOrders }: { order: CalendarOrdersType; otherOrders: CalendarOrdersType[] }) {
   const { setUser, setIsUserModalOpen } = useUserModal();
+  const router = useRouter();
 
   function setUserForModal(e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) {
     e.stopPropagation();
@@ -83,6 +91,7 @@ function SetUserModal({ order, otherOrders }: { order: CalendarOrdersType; other
       date: order.shippingDate,
     });
     setIsUserModalOpen(true);
+    router.prefetch(`/admin/users/${order.user.id}`);
   }
   return (
     <button type="button" onClick={setUserForModal} className="col-span-5  ">

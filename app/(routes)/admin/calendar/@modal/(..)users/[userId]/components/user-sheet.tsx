@@ -10,7 +10,6 @@ function UserSheet({ children }: { children: React.ReactNode }) {
       open={true}
       onOpenChange={() => {
         router.back();
-        router.refresh();
       }}
       modal
     >
