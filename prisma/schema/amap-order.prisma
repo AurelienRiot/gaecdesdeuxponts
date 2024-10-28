@@ -1,37 +1,35 @@
-
-
 model AMAPOrder {
-  id         String @unique @id @default(cuid())
+  id            String     @id @unique @default(cuid())
   dateOfEdition DateTime
-  startDate DateTime
-  endDate DateTime
+  startDate     DateTime
+  endDate       DateTime
   daysOfAbsence DateTime[]
-  shippingDays DateTime[]
+  shippingDays  DateTime[]
   shippedDays   DateTime[]
-  totalPrice Float
-  totalPaid   Float @default(0)
-  amapItems   AMAPItem[]
-  userId     String  
-  user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  shopId     String
-  shop       Shop @relation(fields: [shopId], references: [id])
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  totalPrice    Float
+  totalPaid     Float      @default(0)
+  amapItems     AMAPItem[]
+  userId        String
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shopId        String
+  shop          Shop       @relation(fields: [shopId], references: [id])
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
 
   @@index([userId])
   @@index([shopId])
 }
 
 model AMAPItem {
-  id           String @unique @id @default(cuid())
-  itemId       String
-  price        Float
-  quantity     Float @default(1)
-  unit         String?
-  name         String
-  description  String @db.VarChar(1000)
-  orderId      String
-  order        AMAPOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  id          String    @id @unique @default(cuid())
+  itemId      String
+  price       Float
+  quantity    Float     @default(1)
+  unit        String?
+  name        String
+  description String    @db.VarChar(1000)
+  orderId     String
+  order       AMAPOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   @@index([orderId])
 }

@@ -1,36 +1,31 @@
-
-
 model Contact {
-  id        String   @unique @id @default(cuid())
+  id        String   @id @unique @default(cuid())
   name      String
   email     String
-  phone     String? 
+  phone     String?
   subject   String
-  message   String   @db.VarChar(1000) 
-  createdAt DateTime @default(now()) 
-  updatedAt DateTime @updatedAt 
+  message   String   @db.VarChar(1000)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  userId    String? 
-  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
-
 }
 
-
 model Comment {
-   id        String    @unique @id @default(cuid())
-   name      String
-   company   String?
-   note      Int
-   message   String    @db.VarChar(1000) 
+  id         String   @id @unique @default(cuid())
+  name       String
+  company    String?
+  note       Int
+  message    String   @db.VarChar(1000)
   isArchived Boolean  @default(false)
-  createdAt  DateTime @default(now()) 
-  updatedAt  DateTime @updatedAt 
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-  userId     String? 
-  user       User?     @relation(fields: [userId], references: [id])
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
 
-   @@index([userId])
+  @@index([userId])
 }

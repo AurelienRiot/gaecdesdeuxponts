@@ -1,42 +1,40 @@
 model Route {
-  id          Int   @unique  @id @default(autoincrement())
-  name        String @unique
-  origin      Origin? @relation("Origin")
+  id          Int          @id @unique @default(autoincrement())
+  name        String       @unique
+  origin      Origin?      @relation("Origin")
   destination Destination? @relation("Destination")
-  waypoints   Waypoint[]  @relation("Waypoints")
-  }
+  waypoints   Waypoint[]   @relation("Waypoints")
+}
 
 model Waypoint {
-  id                    Int  @unique   @id @default(autoincrement())
-  label                 String
-  lat                   Float
-  long                  Float
-  routeId  Int 
-  route Route @relation("Waypoints",fields: [routeId], references: [id],onDelete: Cascade)
+  id      Int    @id @unique @default(autoincrement())
+  label   String
+  lat     Float
+  long    Float
+  routeId Int
+  route   Route  @relation("Waypoints", fields: [routeId], references: [id], onDelete: Cascade)
 
-  @@index([ routeId])
+  @@index([routeId])
 }
 
 model Origin {
-  id                    Int  @unique   @id @default(autoincrement())
-  label                 String
-  lat                   Float
-  long                  Float
-  routeId  Int @unique
-  route Route @relation("Origin",fields: [routeId], references: [id],onDelete: Cascade)
+  id      Int    @id @unique @default(autoincrement())
+  label   String
+  lat     Float
+  long    Float
+  routeId Int    @unique
+  route   Route  @relation("Origin", fields: [routeId], references: [id], onDelete: Cascade)
 
-
-  @@index([ routeId])
+  @@index([routeId])
 }
 
 model Destination {
-  id                    Int  @unique   @id @default(autoincrement())
-  label                 String
-  lat                   Float
-  long                  Float
-  routeId  Int @unique
-  route Route @relation("Destination",fields: [routeId], references: [id],onDelete: Cascade)
+  id      Int    @id @unique @default(autoincrement())
+  label   String
+  lat     Float
+  long    Float
+  routeId Int    @unique
+  route   Route  @relation("Destination", fields: [routeId], references: [id], onDelete: Cascade)
 
-
-  @@index([ routeId])
+  @@index([routeId])
 }

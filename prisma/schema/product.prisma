@@ -1,59 +1,56 @@
 model MainProduct {
- id            String @unique @id @default(cuid())
- name          String @unique
- categoryName  String
- category      Category @relation("CategoryToProduct", fields: [categoryName], references: [name])
- productSpecs  String @db.Text
- imagesUrl     String[]
- products      Product[] @relation("MainProductToProduct")
- isArchived    Boolean @default(false)
- isPro         Boolean @default(false)
- createdAt     DateTime @default(now())
- updatedAt     DateTime @updatedAt
+  id           String    @id @unique @default(cuid())
+  name         String    @unique
+  categoryName String
+  category     Category  @relation("CategoryToProduct", fields: [categoryName], references: [name])
+  productSpecs String    @db.Text
+  imagesUrl    String[]
+  products     Product[] @relation("MainProductToProduct")
+  isArchived   Boolean   @default(false)
+  isPro        Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   @@index([categoryName])
-
 }
 
-
 model Product {
-  id           String @unique @id @default(cuid())
-  index        Int @default(0)
-  productName  String
-  product      MainProduct @relation("MainProductToProduct", fields: [productName], references: [name],onDelete: Cascade)
-  name         String 
-  description  String @db.VarChar(1000)
-  price        Float
-  tax          Float @default(1.055) 
-  isFeatured   Boolean @default(false)
-  isArchived   Boolean @default(false)
-  imagesUrl    String[]
-  options      Option[] @relation("ProductToOption")
-  unit         Unit? 
-  stocks       ProductStock[]
+  id          String         @id @unique @default(cuid())
+  index       Int            @default(0)
+  productName String
+  product     MainProduct    @relation("MainProductToProduct", fields: [productName], references: [name], onDelete: Cascade)
+  name        String
+  description String         @db.VarChar(1000)
+  price       Float
+  tax         Float          @default(1.055)
+  isFeatured  Boolean        @default(false)
+  isArchived  Boolean        @default(false)
+  imagesUrl   String[]
+  options     Option[]       @relation("ProductToOption")
+  unit        Unit?
+  stocks      ProductStock[]
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([productName])
 }
 
 enum Unit {
-centgramme
-Kilogramme
-Litre
+  centgramme
+  Kilogramme
+  Litre
 }
 
-
 model Option {
-  id             String   @unique @id @default(cuid())
-  index          Int @default(0)
-  name           String
-  value          String
-  productId      String   
-  product        Product  @relation("ProductToOption", fields: [productId], references: [id], onDelete: Cascade)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id        String   @id @unique @default(cuid())
+  index     Int      @default(0)
+  name      String
+  value     String
+  productId String
+  product   Product  @relation("ProductToOption", fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([productId])
-  }
+}

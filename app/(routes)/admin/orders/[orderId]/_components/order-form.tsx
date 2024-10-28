@@ -252,7 +252,6 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
             onSuccess={() => {
               refectOrders();
               router.back();
-              router.refresh();
             }}
           />
         )}

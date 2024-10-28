@@ -1,61 +1,60 @@
-
 model Account {
-  id                 String @unique  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String  @id @unique @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
-  user               User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@index([userId])
 }
 
 model Session {
-  id           String   @unique @id @default(cuid())
+  id           String   @id @unique @default(cuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
 
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
 
 model User {
-  id               String    @unique @id @default(cuid())
-  name             String?
-  company          String?
-  raisonSocial     String?
-  email            String?   @unique
-  emailVerified    DateTime?
-  phone            String? 
-  image            String?
-  notes            String?
-  completed        Boolean @default(true)
-  role             Role @default(user)
-  links            Link[]
-  orders           Order[]
-  amapOrders       AMAPOrder[]
-  invoices         Invoice[]
-  accounts         Account[]
-  sessions         Session[]
-  address          Address? 
-  billingAddress   BillingAddress? 
-  messages         Contact[]
-  comments         Comment[]
-  notifications    Notification? 
-  ccInvoice        String[]
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt 
+  id             String          @id @unique @default(cuid())
+  name           String?
+  company        String?
+  raisonSocial   String?
+  email          String?         @unique
+  emailVerified  DateTime?
+  phone          String?
+  image          String?
+  notes          String?
+  completed      Boolean         @default(true)
+  role           Role            @default(user)
+  links          Link[]
+  orders         Order[]
+  amapOrders     AMAPOrder[]
+  invoices       Invoice[]
+  accounts       Account[]
+  sessions       Session[]
+  address        Address?
+  billingAddress BillingAddress?
+  messages       Contact[]
+  comments       Comment[]
+  notifications  Notification?
+  ccInvoice      String[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 }
 
 enum Role {
@@ -79,19 +78,17 @@ model VerificationToken {
 }
 
 model Notification {
-    id         Int  @unique @id @default(autoincrement())
+  id                Int     @id @unique @default(autoincrement())
   sendShippingEmail Boolean @default(true)
   sendInvoiceEmail  Boolean @default(true)
-  userId String @unique
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String  @unique
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
-
 }
 
-
 model Address {
-  id         String  @unique @id @default(cuid())
+  id         String   @id @unique @default(cuid())
   label      String?
   line1      String?
   line2      String?
@@ -101,18 +98,16 @@ model Address {
   country    String?
   latitude   Float?
   longitude  Float?
-  userId     String  @unique  
-  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt  DateTime @default(now()) 
-  updatedAt  DateTime @updatedAt 
-
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@index([userId])
-
 }
 
 model BillingAddress {
-  id         String   @unique @id @default(cuid())
+  id         String   @id @unique @default(cuid())
   label      String?
   line1      String
   line2      String?
@@ -124,20 +119,18 @@ model BillingAddress {
   longitude  Float?
   userId     String   @unique
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt  DateTime @default(now()) 
-  updatedAt  DateTime @updatedAt 
-
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@index([userId])
-
 }
 
 model Link {
-  id         Int     @unique @id @default(autoincrement())
-  label      String
-  value      String
-  userId     String  
-  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     Int    @id @unique @default(autoincrement())
+  label  String
+  value  String
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
