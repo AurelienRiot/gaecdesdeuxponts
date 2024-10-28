@@ -17,6 +17,7 @@ export function MainNav({ className }: React.HTMLAttributes<HTMLElement>) {
         <Link
           key={route.href}
           href={route.href}
+          onClick={(e) => e.stopPropagation()}
           className={cn(
             "text-xs font-medium underline-offset-4 transition-colors hover:underline xl:text-sm",
             route.active ? "text-primary" : "text-muted-foreground",

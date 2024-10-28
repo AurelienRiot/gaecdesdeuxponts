@@ -89,7 +89,7 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
   //     )
   //     .join("<br />") + "<br />";
 
-  const header = `<h2><a href="${process.env.NEXT_PUBLIC_URL}/admin/calendar/${getLocalIsoString(startDate)}">Voir les commandes sur le site</a></h2> <br /><h3><font color='green'>Résumer des produits </font></h3>`;
+  const header = `<h2><a href="${process.env.NEXT_PUBLIC_URL}/admin/calendar">Voir les commandes sur le site</a></h2> <br /><h3><font color='green'>Résumer des produits </font></h3>`;
   const totaleQuantity =
     productQuantities.totaleQuantity
       .map(
@@ -109,16 +109,17 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
   const productByUser =
     productQuantities.aggregateProducts
       .map((item) => {
-        const product = `<h3><strong>${item.productName}</strong> : </h3> `;
+        const product = `<h3><strong>${item.productName}</strong> : </h3>`;
         const users = item.users
           .map(
             (user) =>
               `<a href="${process.env.NEXT_PUBLIC_URL}/admin/users/${user.userId}">${user.userName}</a> : ${displayQuantity(item.productName, user.quantity)}${item.unit || ""}`,
           )
           .join("<br />");
-        return `${product}  ${users} <br />`;
+        return `${product}${users} <br />`;
       })
       .join("<br />") + "<br />";
+
   // const orderDescriptions =
   //   formattedOrders.length === 0
   //     ? ""
@@ -139,6 +140,6 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
   // formattedOrders.length === 0
   //   ? ""
   //   : `<strong><a  href="${googleDirectionUrl}">Voir le parcours</a></strong> <br /><br />`;
-
-  return header + totaleQuantity + "<br />" + productDescriptions + "<br />" + +productByUser;
+  console.log(header + totaleQuantity + "<br />" + productDescriptions + "<br />" + productByUser);
+  return header + totaleQuantity + "<br />" + productDescriptions + "<br />" + productByUser;
 }

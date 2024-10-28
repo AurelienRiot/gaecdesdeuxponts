@@ -3,7 +3,7 @@ import { updateStocks } from "@/actions/update-stocks";
 import { SHIPPING } from "@/components/auth";
 import { SendBLEmail } from "@/components/email/send-bl";
 import createOrdersEvent from "@/components/google-events/create-orders-event";
-import { dateFormatter } from "@/lib/date-utils";
+import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
@@ -42,6 +42,7 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
           },
         },
       });
+
       if (!order) {
         return {
           success: false,
@@ -61,6 +62,22 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
           success: false,
           message: "Le client n'a pas d'email, revalider la commande aprés avoir changé son email",
         };
+      }
+      const today = new Date();
+
+      if (
+        !order.dateOfEdition ||
+        new Date(getLocalIsoString(order.dateOfEdition)) < new Date(getLocalIsoString(order.dateOfShipping))
+      ) {
+        await prismadb.order.update({
+          where: {
+            id: order.id,
+          },
+          data: {
+            dateOfEdition: today,
+          },
+        });
+        order.dateOfEdition = today;
       }
 
       if (!order.user.notifications || order.user.notifications.sendShippingEmail) {
@@ -105,11 +122,11 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
           id: order.id,
         },
         data: {
-          shippingEmail: new Date(),
+          shippingEmail: today,
         },
       });
 
-      createOrdersEvent({ date: order.dateOfShipping });
+      // createOrdersEvent({ date: order.dateOfShipping });
       revalidateTag("orders");
 
       return {
