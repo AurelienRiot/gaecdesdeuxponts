@@ -28,8 +28,8 @@ function StockCard({ title, name, stock, id }: StockCardProps) {
             <span>{stock === undefined ? <Skeleton size={"sm"} /> : stock}</span>
           </div>
           <form action={updateStock} className="space-y-1">
-            <input type="hidden" name="name" value={name} />
-            <Label htmlFor={name}>Mettre à jour le Stock:</Label>
+            <input type="hidden" name="id" value={id} />
+            <Label>Mettre à jour le Stock:</Label>
             <div className="flex gap-2 ">
               <Input type={"number"} required name={"quantity"} placeholder="quantité" className="w-3/5" />
 

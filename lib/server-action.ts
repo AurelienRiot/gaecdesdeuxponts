@@ -55,6 +55,7 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E>({
 }: SafeServerActionType<D, R, E>): Promise<ReturnTypeServerAction<R, E>> {
   const timerLabel = `Total Execution Time - ${nanoid(5)}`;
   console.time(timerLabel);
+
   try {
     const user = await checkUser();
 
