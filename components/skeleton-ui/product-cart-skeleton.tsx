@@ -1,4 +1,4 @@
-import { FaInfo } from "react-icons/fa";
+import { FaInfo } from "../react-icons";
 import { IconButton } from "../ui/button";
 import Currency from "../ui/currency";
 import { Skeleton } from "./skeleton";

@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { makeProductUrl } from "./product-function";
 import { IconButton } from "../ui/button";
-import { FaInfo } from "react-icons/fa";
+import { FaInfo } from "../react-icons";
 
 interface ProductCartProps {
   data: MainProduct;
@@ -41,10 +41,7 @@ const MainProductCart: React.FC<ProductCartProps> = ({ data }) => {
       </Link>
       <div className="space-y-4">
         <div className="flex items-center justify-center gap-2">
-          <Link
-            href={url}
-            className=" text-xl font-semibold  text-primary hover:underline hover:underline-offset-2"
-          >
+          <Link href={url} className=" text-xl font-semibold  text-primary hover:underline hover:underline-offset-2">
             {data.name}
           </Link>
         </div>

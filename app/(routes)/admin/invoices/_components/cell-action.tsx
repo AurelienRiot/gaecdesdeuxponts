@@ -1,6 +1,7 @@
 "use client";
 
 import { sendInvoiceAction } from "@/components/pdf/server-actions/create-send-invoice-action";
+import { MdPaid } from "@/components/react-icons";
 import { Button } from "@/components/ui/button";
 import { useConfirm } from "@/components/ui/confirm-dialog";
 import {
@@ -14,7 +15,6 @@ import { useToastPromise } from "@/components/ui/sonner";
 import useServerAction from "@/hooks/use-server-action";
 import { Copy, MoreHorizontal, Send, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { MdPaid } from "react-icons/md";
 import { toast } from "sonner";
 import deleteInvoice from "../_actions/delete-invoice";
 import validateInvoice from "../_actions/validate-invoice";

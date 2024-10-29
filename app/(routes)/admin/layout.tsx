@@ -11,7 +11,7 @@ export default async function AdminLayout({
   return (
     <SidebarProvider>
       <AdminSidebar />
-      <div className="relative h-full pb-20 md:pb-0 w-full">
+      <div className="relative h-full pb-20 w-full">
         {/* <AdminColorSchema /> */}
         <Navbar />
 

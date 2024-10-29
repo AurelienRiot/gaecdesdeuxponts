@@ -1,9 +1,11 @@
 "use client";
 import { getMapLinks } from "@/components/google-events";
+import { StatusCell } from "@/components/table-custom-fuction/cell-orders";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import NoResults from "@/components/ui/no-results";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { dateFormatter } from "@/lib/date-utils";
 import { formatFrenchPhoneNumber } from "@/lib/utils";
 import Image from "next/image";
@@ -12,8 +14,6 @@ import { useRouter } from "next/navigation";
 import { createContext, useContext, useState } from "react";
 import type { CalendarOrdersType } from "../_functions/get-orders";
 import DisplayItem from "./display-item";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { StatusCell } from "@/components/table-custom-fuction/cell-orders";
 
 type UserModalProps = CalendarOrdersType["user"] & { orders: CalendarOrdersType[]; date: Date };
 
@@ -170,7 +170,6 @@ const UserInfo = () => {
 
 function DisplayUserOrders() {
   const { user, setIsUserModalOpen } = useUserModal();
-  const router = useRouter();
   if (!user) return null;
 
   return (

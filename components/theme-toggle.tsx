@@ -2,13 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import useIsComponentMounted from "@/hooks/use-mounted";
-import { interpolate } from "flubber";
-import {
-  motion,
-  useAnimate,
-  useMotionValue,
-  useTransform,
-} from "framer-motion";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
 export function ThemeToggle() {
@@ -26,99 +20,101 @@ export function ThemeToggle() {
       className=" bg-transparent  px-0 py-0 text-foreground "
       type="button"
     >
-      <AnimatedIcon
+      {/* <AnimatedIcon
         className="h-6 w-6 transition-all duration-300 "
         theme={theme}
-      />
+      /> */}
+
+      {theme === "light" ? <Moon className="h-6 w-6" /> : <Sun className="h-6 w-6" />}
 
       <span className="sr-only w-0">Changer de thème</span>
     </Button>
   );
 }
 
-const AnimatedIcon = ({
-  className,
-  theme,
-}: {
-  className: string;
-  theme: string | undefined;
-}) => {
-  const isMounted = useIsComponentMounted();
-  const [scope, animate] = useAnimate();
-  const progress = useMotionValue(theme === "dark" ? 0 : 1);
-  const indexOfPath = useMotionValue(theme === "dark" ? 1 : 0);
-  const strokeWidth = useTransform(progress, [0, 1], [3, 0]);
+// const AnimatedIcon = ({
+//   className,
+//   theme,
+// }: {
+//   className: string;
+//   theme: string | undefined;
+// }) => {
+//   const isMounted = useIsComponentMounted();
+//   const [scope, animate] = useAnimate();
+//   const progress = useMotionValue(theme === "dark" ? 0 : 1);
+//   const indexOfPath = useMotionValue(theme === "dark" ? 1 : 0);
+//   const strokeWidth = useTransform(progress, [0, 1], [3, 0]);
 
-  const path = useTransform(progress, [0, 1], [sun, moon], {
-    mixer: (a, b) => interpolate(a, b, { maxSegmentLength: 1 }),
-  });
+//   const path = useTransform(progress, [0, 1], [sun, moon], {
+//     mixer: (a, b) => interpolate(a, b, { maxSegmentLength: 1 }),
+//   });
 
-  if (!isMounted)
-    return (
-      <svg
-        className={className}
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d={moon} />
-      </svg>
-    );
+//   if (!isMounted)
+//     return (
+//       <svg
+//         className={className}
+//         xmlns="http://www.w3.org/2000/svg"
+//         width="24"
+//         height="24"
+//         viewBox="0 0 24 24"
+//         fill="none"
+//         stroke="currentColor"
+//         strokeWidth="2"
+//         strokeLinecap="round"
+//         strokeLinejoin="round"
+//       >
+//         <path d={moon} />
+//       </svg>
+//     );
 
-  const animatePath = () => {
-    progress.stop();
-    animate(progress, indexOfPath.get(), {
-      duration: 0.5,
-      ease: "easeInOut",
-    });
-    if (indexOfPath.get() === 0) {
-      indexOfPath.set(1);
-    } else {
-      indexOfPath.set(0);
-    }
-  };
+//   const animatePath = () => {
+//     progress.stop();
+//     animate(progress, indexOfPath.get(), {
+//       duration: 0.5,
+//       ease: "easeInOut",
+//     });
+//     if (indexOfPath.get() === 0) {
+//       indexOfPath.set(1);
+//     } else {
+//       indexOfPath.set(0);
+//     }
+//   };
 
-  return (
-    <motion.svg
-      className={className}
-      ref={scope}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      onClick={animatePath}
-    >
-      <motion.path d={path} />
-      <motion.path d={ray1} strokeWidth={strokeWidth} />
-      <motion.path d={ray2} strokeWidth={strokeWidth} />
-      <motion.path d={ray3} strokeWidth={strokeWidth} />
-      <motion.path d={ray4} strokeWidth={strokeWidth} />
-      <motion.path d={ray5} strokeWidth={strokeWidth} />
-      <motion.path d={ray6} strokeWidth={strokeWidth} />
-      <motion.path d={ray7} strokeWidth={strokeWidth} />
-      <motion.path d={ray8} strokeWidth={strokeWidth} />
-    </motion.svg>
-  );
-};
+//   return (
+//     <motion.svg
+//       className={className}
+//       ref={scope}
+//       xmlns="http://www.w3.org/2000/svg"
+//       width="24"
+//       height="24"
+//       viewBox="0 0 24 24"
+//       fill="none"
+//       stroke="currentColor"
+//       strokeWidth="2"
+//       strokeLinecap="round"
+//       strokeLinejoin="round"
+//       onClick={animatePath}
+//     >
+//       <motion.path d={path} />
+//       <motion.path d={ray1} strokeWidth={strokeWidth} />
+//       <motion.path d={ray2} strokeWidth={strokeWidth} />
+//       <motion.path d={ray3} strokeWidth={strokeWidth} />
+//       <motion.path d={ray4} strokeWidth={strokeWidth} />
+//       <motion.path d={ray5} strokeWidth={strokeWidth} />
+//       <motion.path d={ray6} strokeWidth={strokeWidth} />
+//       <motion.path d={ray7} strokeWidth={strokeWidth} />
+//       <motion.path d={ray8} strokeWidth={strokeWidth} />
+//     </motion.svg>
+//   );
+// };
 
-const sun = "M 8 12 a 4 4 0 0 1 8 0 a 4 4 0 0 1 -8 0";
-const moon = "M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z";
-const ray1 = "M12 2v2";
-const ray2 = "M12 20v2";
-const ray3 = "m4.93 4.93 1.41 1.41";
-const ray4 = "m17.66 17.66 1.41 1.41";
-const ray5 = "M2 12h2";
-const ray6 = "M20 12h2";
-const ray7 = "m6.34 17.66-1.41 1.41";
-const ray8 = "m19.07 4.93-1.41 1.41";
+// const sun = "M 8 12 a 4 4 0 0 1 8 0 a 4 4 0 0 1 -8 0";
+// const moon = "M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z";
+// const ray1 = "M12 2v2";
+// const ray2 = "M12 20v2";
+// const ray3 = "m4.93 4.93 1.41 1.41";
+// const ray4 = "m17.66 17.66 1.41 1.41";
+// const ray5 = "M2 12h2";
+// const ray6 = "M20 12h2";
+// const ray7 = "m6.34 17.66-1.41 1.41";
+// const ray8 = "m19.07 4.93-1.41 1.41";

@@ -2,11 +2,11 @@ import Currency from "@/components/ui/currency";
 import type { ProductWithOptionsAndMain } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
-import { FaInfo } from "react-icons/fa";
 import { Badge } from "../ui/badge";
 import { IconButton } from "../ui/button";
 import AddToCartButton, { BulkQuantity } from "./cart-buttons";
 import { hasOptionWithValue, makeProductUrl } from "./product-function";
+import { FaInfo } from "../react-icons";
 
 interface ProductCartProps {
   data: ProductWithOptionsAndMain;
@@ -67,18 +67,9 @@ const ProductCart: React.FC<ProductCartProps> = ({ data }) => {
       <div className="flex flex-wrap items-center justify-between gap-2 text-primary">
         <Currency className="text-lg" value={value || 0} unit={data.unit} />
         {hasOptionWithValue(data.options, "Vrac") ? (
-          <BulkQuantity
-            product={data}
-            className="text-xs"
-            iconClassName="hidden"
-          />
+          <BulkQuantity product={data} className="text-xs" iconClassName="hidden" />
         ) : (
-          <AddToCartButton
-            data={data}
-            type="text"
-            iconClassName="hidden"
-            className="text-xs"
-          />
+          <AddToCartButton data={data} type="text" iconClassName="hidden" className="text-xs" />
         )}
       </div>
     </div>
