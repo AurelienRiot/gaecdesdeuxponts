@@ -7,20 +7,11 @@ import { displayQuantity } from ".";
 import deleteEvent from "./delete-events";
 import getEventsList from "./get-events-list";
 import getAllOrders from "./get-orders-for-events";
-import { fromZonedTime } from "date-fns-tz";
 
 export default async function createOrdersEvent(date: Date) {
   const offset = getDateOffset(date);
-  const startDate = subMinutes(addMinutes(date, offset).setHours(0, 0, 0, 0), offset);
-  const startDate2 = fromZonedTime(getLocalIsoString(date), timeZone);
+  const startDate = subMinutes(addMinutes(date, offset).setUTCHours(0, 0, 0, 0), offset);
   const endDate = addDays(startDate, 1);
-  console.log({ startDate, startDate2, test: new Date(addMinutes(date, offset).setHours(0, 0, 0, 0)) });
-  // await devOnly(async () => {
-  //   const start2 = new Date(addHours(date, 2).setHours(0, 0, 0, 0));
-  //   const end2 = addHours(start2, 24);
-  //   console.log({ start2, end2 });
-  //   console.log({ startDate, endDate });
-  // });
 
   // console.log({ date: date, startDate, endDate });
   // return { success: true, message: "Agenda mise à jour" };
