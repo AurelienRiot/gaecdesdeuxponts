@@ -101,12 +101,12 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
       await Promise.all([
         (async () => {
           if (dateOfShipping) {
-            await createOrdersEvent({ date: dateOfShipping });
+            await createOrdersEvent(dateOfShipping);
           }
         })(),
         (async () => {
           if (prevDateOfShipping && prevDateOfShipping.getDate() !== dateOfShipping?.getDate()) {
-            await createOrdersEvent({ date: prevDateOfShipping });
+            await createOrdersEvent(prevDateOfShipping);
           }
         })(),
       ]);

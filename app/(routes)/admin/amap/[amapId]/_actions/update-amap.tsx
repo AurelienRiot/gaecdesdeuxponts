@@ -69,7 +69,7 @@ async function updateAMAP(data: AMAPFormValues) {
         }
       })();
       if (nextDayShippingDay) {
-        const event = await createOrdersEvent({ date: nextDayShippingDay });
+        const event = await createOrdersEvent(nextDayShippingDay);
         if (!event.success) {
           console.log(event.message);
         }

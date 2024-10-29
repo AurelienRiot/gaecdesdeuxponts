@@ -52,7 +52,7 @@ async function createAMAP(data: AMAPFormValues) {
         },
       });
 
-      const event = await createOrdersEvent({ date: startDate });
+      const event = await createOrdersEvent(startDate);
       if (!event.success) {
         console.log(event.message);
       }

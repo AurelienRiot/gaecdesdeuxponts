@@ -67,7 +67,7 @@ async function createOrder(data: OrderFormValues) {
         },
       });
 
-      await createOrdersEvent({ date: dateOfShipping || datePickUp });
+      await createOrdersEvent(dateOfShipping || datePickUp);
       revalidateTag("orders");
       return {
         success: true,

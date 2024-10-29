@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@date-fns/tz':
+        specifier: ^1.1.2
+        version: 1.1.2
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.53.1(react@18.3.1))

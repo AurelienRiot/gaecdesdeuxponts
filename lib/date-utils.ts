@@ -1,4 +1,5 @@
-import { formatInTimeZone } from "date-fns-tz";
+import { tzOffset } from "@date-fns/tz";
+import { addMinutes, format } from "date-fns";
 import { addDays } from "date-fns/addDays";
 import { fr } from "date-fns/locale";
 
@@ -7,17 +8,22 @@ export const ONE_DAY = 24 * 60 * 60 * 1000;
 export const MIN_DAYS_FOR_PICK_UP = 3;
 
 export const dateFormatter = (date: Date, options?: { hours?: boolean; days?: boolean; customFormat?: string }) => {
-  if (options?.customFormat) return formatInTimeZone(date, timeZone, options.customFormat, { locale: fr });
+  const localDate = addMinutes(date, getDateOffset(date));
+  if (options?.customFormat) return format(localDate, options.customFormat, { locale: fr });
 
-  if (options?.hours) return formatInTimeZone(date, timeZone, "d MMMM yyyy, HH:mm", { locale: fr });
+  if (options?.hours) return format(localDate, "d MMMM yyyy, HH:mm", { locale: fr });
 
-  if (options?.days) return formatInTimeZone(date, timeZone, "EEEE d MMMM yyyy", { locale: fr });
+  if (options?.days) return format(localDate, "EEEE d MMMM yyyy", { locale: fr });
 
-  return formatInTimeZone(date, timeZone, "d MMMM yyyy", { locale: fr });
+  return format(localDate, "d MMMM yyyy", { locale: fr });
 };
 
 export const isDateDisabled = (date: Date) => {
   return date.getDay() === 0 || date < addDays(new Date(), MIN_DAYS_FOR_PICK_UP);
+};
+
+export const getDateOffset = (date: Date) => {
+  return tzOffset(timeZone, date);
 };
 
 export function formDateDayMonth(date: Date) {
@@ -27,7 +33,7 @@ export function formDateDayMonth(date: Date) {
 }
 
 export function getLocalIsoString(date: Date) {
-  return formatInTimeZone(date, timeZone, "yyyy-MM-dd");
+  return format(addMinutes(date, getDateOffset(date)), "yyyy-MM-dd");
 }
 
 export const dateMonthYear = (dates: (Date | null)[]) => {

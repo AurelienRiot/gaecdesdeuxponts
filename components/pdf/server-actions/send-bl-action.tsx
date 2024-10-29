@@ -2,7 +2,6 @@
 import { updateStocks } from "@/actions/update-stocks";
 import { SHIPPING } from "@/components/auth";
 import { SendBLEmail } from "@/components/email/send-bl";
-import createOrdersEvent from "@/components/google-events/create-orders-event";
 import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";

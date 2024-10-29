@@ -2,7 +2,6 @@
 
 import { updateStocks } from "@/actions/update-stocks";
 import { SHIPPING_ONLY } from "@/components/auth";
-import createOrdersEvent from "@/components/google-events/create-orders-event";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";

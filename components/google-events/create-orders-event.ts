@@ -1,29 +1,28 @@
 import { calendarAPI } from "@/lib/api-google";
-import { dateFormatter, getLocalIsoString, timeZone } from "@/lib/date-utils";
+import { dateFormatter, getDateOffset, getLocalIsoString, timeZone } from "@/lib/date-utils";
 import { createId } from "@/lib/id";
 import { numberFormat2Decimals } from "@/lib/utils";
-import { addHours } from "date-fns";
-import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
+import { addDays, addMinutes, subMinutes } from "date-fns";
+import { displayQuantity } from ".";
 import deleteEvent from "./delete-events";
 import getEventsList from "./get-events-list";
 import getAllOrders from "./get-orders-for-events";
-import { displayQuantity } from ".";
+import { fromZonedTime } from "date-fns-tz";
 
-export default async function createOrdersEvent(data: { date: Date }) {
-  const start = formatInTimeZone(data.date, timeZone, "yyyy-MM-dd");
-  const end = formatInTimeZone(addHours(data.date, 24), timeZone, "yyyy-MM-dd");
-
-  const startDate = fromZonedTime(start, timeZone);
-  const endDate = fromZonedTime(end, timeZone);
-
+export default async function createOrdersEvent(date: Date) {
+  const offset = getDateOffset(date);
+  const startDate = subMinutes(addMinutes(date, offset).setHours(0, 0, 0, 0), offset);
+  const startDate2 = fromZonedTime(getLocalIsoString(date), timeZone);
+  const endDate = addDays(startDate, 1);
+  console.log({ startDate, startDate2, test: new Date(addMinutes(date, offset).setHours(0, 0, 0, 0)) });
   // await devOnly(async () => {
-  //   const start2 = new Date(addHours(data.date, 2).setHours(0, 0, 0, 0));
+  //   const start2 = new Date(addHours(date, 2).setHours(0, 0, 0, 0));
   //   const end2 = addHours(start2, 24);
   //   console.log({ start2, end2 });
   //   console.log({ startDate, endDate });
   // });
 
-  // console.log({ date: data.date, startDate, endDate });
+  // console.log({ date: date, startDate, endDate });
   // return { success: true, message: "Agenda mise à jour" };
 
   const events = await getEventsList({ startDate, endDate });
@@ -49,16 +48,16 @@ export default async function createOrdersEvent(data: { date: Date }) {
       calendarId: process.env.CALENDAR_ID,
       requestBody: {
         id,
-        summary: `Commandes ${dateFormatter(data.date, { customFormat: "EEEE d" })}`,
+        summary: `Commandes ${dateFormatter(date, { customFormat: "EEEE d" })}`,
         description: description,
         start: {
           // dateTime: new Date().toISOString(),
-          date: start,
+          date: getLocalIsoString(startDate),
           timeZone,
         },
         end: {
           // dateTime: new Date(new Date().getTime() + 2 * 60 * 60 * 1000).toISOString(),
-          date: end,
+          date: getLocalIsoString(endDate),
           timeZone,
         },
       },
@@ -140,6 +139,5 @@ async function createDescription({ startDate, endDate }: { startDate: Date; endD
   // formattedOrders.length === 0
   //   ? ""
   //   : `<strong><a  href="${googleDirectionUrl}">Voir le parcours</a></strong> <br /><br />`;
-  console.log(header + totaleQuantity + "<br />" + productDescriptions + "<br />" + productByUser);
   return header + totaleQuantity + "<br />" + productDescriptions + "<br />" + productByUser;
 }
