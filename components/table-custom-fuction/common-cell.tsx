@@ -30,6 +30,7 @@ type NameCellProps = {
   url?: string;
   imageSize?: number;
   displayImage?: boolean;
+  displayName?: boolean;
   completed?: boolean;
   className?: string;
 };
@@ -39,6 +40,7 @@ function NameCell({
   name,
   url,
   displayImage = true,
+  displayName = true,
   imageSize = 32,
   completed = true,
   className,
@@ -75,6 +77,7 @@ const NameWithImage = ({
   image,
   imageSize = 16,
   displayImage = true,
+  displayName = true,
   completed = true,
   className,
 }: NameCellProps) => (
@@ -104,7 +107,9 @@ const NameWithImage = ({
       )
     ) : null}
     {/* {name} */}
-    <span className={cn("font-medium text-xs truncate", !completed ? "text-destructive" : "")}>{name}</span>
+    {displayName && (
+      <span className={cn("font-medium text-xs truncate", !completed ? "text-destructive" : "")}>{name}</span>
+    )}
   </div>
 );
 

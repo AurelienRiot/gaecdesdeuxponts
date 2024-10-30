@@ -6,7 +6,7 @@ import { dateFormatter, dateMonthYear } from "@/lib/date-utils";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
 import type { ReturnTypeServerAction } from "@/lib/server-action";
-import { addressFormatter, currencyFormatter, formatFrenchPhoneNumber } from "@/lib/utils";
+import { addDelay, addressFormatter, currencyFormatter, formatFrenchPhoneNumber } from "@/lib/utils";
 import { render } from "@react-email/render";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { revalidateTag } from "next/cache";
@@ -60,81 +60,83 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean) {
 
   try {
     if (!fullInvoice.user.notifications || fullInvoice.user.notifications.sendInvoiceEmail) {
-      // if (process.env.NODE_ENV === "production") {
-      const pdfBuffer =
-        type === "monthly"
-          ? await renderToBuffer(
-              <MonthlyInvoice data={createMonthlyInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
-            )
-          : await renderToBuffer(
-              <Invoice dataInvoice={createInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
-            );
-      const text = reminder
-        ? await render(
-            SendReminderInvoiceEmail({
-              date,
-              baseUrl,
-              id: fullInvoice.id,
-              price: currencyFormatter.format(fullInvoice.totalPrice),
-              email: fullInvoice.customer.email,
-              type,
-            }),
-            { plainText: true },
-          )
-        : await render(
-            SendInvoiceEmail({
-              date,
-              baseUrl,
-              id: fullInvoice.id,
-              price: currencyFormatter.format(fullInvoice.totalPrice),
-              email: fullInvoice.customer.email,
-              type,
-            }),
-            { plainText: true },
-          );
-
-      const html = reminder
-        ? await render(
-            SendReminderInvoiceEmail({
-              date,
-              baseUrl,
-              id: fullInvoice.id,
-              price: currencyFormatter.format(fullInvoice.totalPrice),
-              email: fullInvoice.customer.email,
-              type,
-            }),
-          )
-        : await render(
-            SendInvoiceEmail({
-              date,
-              baseUrl,
-              id: fullInvoice.id,
-              price: currencyFormatter.format(fullInvoice.totalPrice),
-              email: fullInvoice.customer.email,
-              type,
-            }),
-          );
-
-      await transporter.sendMail({
-        from: "laiteriedupontrobert@gmail.com",
-        to: fullInvoice.customer.email,
-        // to: "pub.demystify390@passmail.net",
-        cc: fullInvoice.user.ccInvoice,
-        subject:
+      if (process.env.NODE_ENV === "production") {
+        const pdfBuffer =
           type === "monthly"
-            ? `Facture Mensuelle ${date}  - Laiterie du Pont Robert`
-            : `Facture du ${dateFormatter(fullInvoice.dateOfEdition)} - Laiterie du Pont Robert`,
-        text,
-        html,
-        attachments: [
-          {
-            filename: type === "monthly" ? `Facture mensuelle ${date}.pdf` : `Facture ${fullInvoice.id}`,
-            content: pdfBuffer,
-            contentType: "application/pdf",
-          },
-        ],
-      });
-      // }
+            ? await renderToBuffer(
+                <MonthlyInvoice data={createMonthlyInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
+              )
+            : await renderToBuffer(
+                <Invoice dataInvoice={createInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
+              );
+        const text = reminder
+          ? await render(
+              SendReminderInvoiceEmail({
+                date,
+                baseUrl,
+                id: fullInvoice.id,
+                price: currencyFormatter.format(fullInvoice.totalPrice),
+                email: fullInvoice.customer.email,
+                type,
+              }),
+              { plainText: true },
+            )
+          : await render(
+              SendInvoiceEmail({
+                date,
+                baseUrl,
+                id: fullInvoice.id,
+                price: currencyFormatter.format(fullInvoice.totalPrice),
+                email: fullInvoice.customer.email,
+                type,
+              }),
+              { plainText: true },
+            );
+
+        const html = reminder
+          ? await render(
+              SendReminderInvoiceEmail({
+                date,
+                baseUrl,
+                id: fullInvoice.id,
+                price: currencyFormatter.format(fullInvoice.totalPrice),
+                email: fullInvoice.customer.email,
+                type,
+              }),
+            )
+          : await render(
+              SendInvoiceEmail({
+                date,
+                baseUrl,
+                id: fullInvoice.id,
+                price: currencyFormatter.format(fullInvoice.totalPrice),
+                email: fullInvoice.customer.email,
+                type,
+              }),
+            );
+
+        await transporter.sendMail({
+          from: "laiteriedupontrobert@gmail.com",
+          to: fullInvoice.customer.email,
+          // to: "pub.demystify390@passmail.net",
+          cc: fullInvoice.user.ccInvoice,
+          subject:
+            type === "monthly"
+              ? `Facture Mensuelle ${date}  - Laiterie du Pont Robert`
+              : `Facture du ${dateFormatter(fullInvoice.dateOfEdition)} - Laiterie du Pont Robert`,
+          text,
+          html,
+          attachments: [
+            {
+              filename: type === "monthly" ? `Facture mensuelle ${date}.pdf` : `Facture ${fullInvoice.id}`,
+              content: pdfBuffer,
+              contentType: "application/pdf",
+            },
+          ],
+        });
+      } else {
+        await addDelay(2000);
+      }
     }
 
     await prismadb.invoice.update({

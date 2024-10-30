@@ -8,7 +8,7 @@ export const ONE_DAY = 24 * 60 * 60 * 1000;
 export const MIN_DAYS_FOR_PICK_UP = 3;
 
 export const dateFormatter = (date: Date, options?: { hours?: boolean; days?: boolean; customFormat?: string }) => {
-  const localDate = addMinutes(date, getDateOffset(date));
+  const localDate = addMinutes(new Date(date), getDateOffset(date));
   if (options?.customFormat) return format(localDate, options.customFormat, { locale: fr });
 
   if (options?.hours) return format(localDate, "d MMMM yyyy, HH:mm", { locale: fr });
@@ -19,21 +19,21 @@ export const dateFormatter = (date: Date, options?: { hours?: boolean; days?: bo
 };
 
 export const isDateDisabled = (date: Date) => {
-  return date.getDay() === 0 || date < addDays(new Date(), MIN_DAYS_FOR_PICK_UP);
+  return new Date(date).getDay() === 0 || new Date(date) < addDays(new Date(), MIN_DAYS_FOR_PICK_UP);
 };
 
 export const getDateOffset = (date: Date) => {
-  return tzOffset(timeZone, date);
+  return tzOffset(timeZone, new Date(date));
 };
 
 export function formDateDayMonth(date: Date) {
-  return `${date.getDate()} ${new Date(2024, date.getMonth(), 1).toLocaleString("fr", {
+  return `${new Date(date).getDate()} ${new Date(2024, new Date(date).getMonth(), 1).toLocaleString("fr", {
     month: "short",
   })}`;
 }
 
 export function getLocalIsoString(date: Date) {
-  return format(addMinutes(date, getDateOffset(date)), "yyyy-MM-dd");
+  return format(addMinutes(new Date(date), getDateOffset(date)), "yyyy-MM-dd");
 }
 
 export const dateMonthYear = (dates: (Date | null)[]) => {
