@@ -194,7 +194,7 @@ function OPTForm({ email, setSuccess }: { email: string; setSuccess: React.Dispa
         setSuccess(false);
         return;
       }
-      router.push(url);
+      window.open(url, "_self");
     }
     function onError(errorData?: string) {
       if (errorData) {

@@ -51,7 +51,7 @@ export const CartButton = () => {
     <>
       <Suspense fallback={null}>
         {" "}
-        <AutoCloseSheet setIsOpen={() => setIsOpen(false)} />{" "}
+        <AutoCloseSheet onChange={() => setIsOpen(false)} />{" "}
       </Suspense>
       <Sheet onOpenChange={setIsOpen} open={isOpen}>
         <SheetTrigger asChild>

@@ -10,7 +10,7 @@ export async function createInvoicePDF64String(invoiceId: string) {
     },
     include: {
       customer: true,
-      user: { select: { id: true } },
+      user: { include: { notifications: true } },
       orders: {
         include: { invoiceOrderItems: true },
       },
@@ -20,6 +20,12 @@ export async function createInvoicePDF64String(invoiceId: string) {
     return {
       success: false,
       message: "La facture n'existe pas",
+    };
+  }
+  if (!fullInvoice.customer) {
+    return {
+      success: false,
+      message: "Le client n'existe pas",
     };
   }
   const type = fullInvoice.orders.length === 1 ? "single" : "monthly";

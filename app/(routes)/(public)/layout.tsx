@@ -10,7 +10,7 @@ export default async function PublicLayout({
   return (
     <>
       <PublicHeader />
-      <main id="main-content" className="pt-16 ">
+      <main id="main-content" className="pt-20 ">
         {children}
       </main>
       <CookiesBanner />

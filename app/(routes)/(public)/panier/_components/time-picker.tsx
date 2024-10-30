@@ -89,7 +89,7 @@ const TimePicker = ({ className, date, shopId }: HourPickerProps) => {
         </Popover>
       </div>
       <p className="pr-4 text-sm text-muted-foreground">
-        Venex aux heures de la traite entre 8h30-9h30 et 18h-19h pour avoir du lait frais.
+        Venez aux heures de la traite entre 8h30-9h30 et 18h-19h pour avoir du lait frais.
       </p>
     </>
   );

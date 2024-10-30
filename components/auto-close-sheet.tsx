@@ -1,19 +1,27 @@
 "use client";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const AutoCloseSheet = ({
-  setIsOpen,
+  onChange,
 }: {
-  setIsOpen: () => void;
+  onChange: () => void;
 }) => {
   const pathName = usePathname();
   const searchParams = useSearchParams();
+  const [prevState, setPrevState] = useState<{ pathname: string; search: string }>({
+    pathname: pathName,
+    search: searchParams.toString(),
+  });
   useEffect(() => {
-    if (pathName && searchParams) {
-      setIsOpen();
+    if (pathName !== prevState.pathname || searchParams.toString() !== prevState.search) {
+      onChange();
+      setPrevState({
+        pathname: pathName,
+        search: searchParams.toString(),
+      });
     }
-  }, [pathName, searchParams, setIsOpen]);
+  }, [pathName, prevState, onChange, searchParams]);
 
   return null;
 };

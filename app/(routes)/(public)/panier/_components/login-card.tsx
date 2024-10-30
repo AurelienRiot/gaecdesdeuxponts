@@ -1,4 +1,5 @@
 import { EmailButton, GoogleButton } from "@/components/auth/auth-button";
+import AuthLink from "@/components/navbar-public/auth-link";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
@@ -28,10 +29,11 @@ const LoginCard = ({
   }
 
   return (
-    <Card className={cn("mt-6 flex h-[450px] max-w-[500px] flex-col justify-between", className)}>
+    <Card className={cn("mt-6 flex  max-w-[500px] flex-col justify-between", className)}>
       <CardHeader className="text-center text-2xl font-semibold ">Connecté vous pour valider votre commande</CardHeader>
       <CardContent className="flex  flex-col items-center justify-center">
-        <GoogleButton callbackUrl={callbackUrl} />
+        <AuthLink callbackUrl={callbackUrl} />
+        {/* <GoogleButton callbackUrl={callbackUrl} />
       </CardContent>
       <CardContent className="flex  flex-col items-center justify-center">
         <div
@@ -44,7 +46,7 @@ after:flex-grow  after:bg-primary/30  `}
         </div>
       </CardContent>
       <CardContent className="flex  flex-col items-center justify-center">
-        <EmailButton callbackUrl={callbackUrl} />
+        <EmailButton callbackUrl={callbackUrl} /> */}
       </CardContent>
     </Card>
   );
