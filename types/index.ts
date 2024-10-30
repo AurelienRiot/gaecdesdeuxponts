@@ -8,6 +8,7 @@ import type {
   InvoiceOrder,
   InvoiceOrderItem,
   MainProduct,
+  Notification,
   Option as OptionType,
   Order,
   OrderItem,
@@ -104,6 +105,7 @@ export interface AMAPOrderWithItemsAndUser extends AMAPOrderWithItems {
 }
 
 export interface FullInvoice extends Invoice {
+  user: User & { notifications: Notification | null };
   customer: Customer | null;
   orders: InvoiceOrderWithItems[];
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { sendInvoiceAction } from "@/components/pdf/server-actions/create-send-invoice-action";
-import { MdPaid } from "@/components/react-icons";
+import { BsSendPlus, MdPaid } from "@/components/react-icons";
 import { Button } from "@/components/ui/button";
 import { useConfirm } from "@/components/ui/confirm-dialog";
 import {
@@ -27,11 +27,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
   const { serverAction, loading } = useServerAction(deleteInvoice);
   const { serverAction: validateInvoiceAction, loading: validateLoading } = useServerAction(validateInvoice);
-  const { toastServerAction, loading: toastLoading } = useToastPromise({
+  const { toastServerAction: invoiceToast, loading: invoiceToastLoading } = useToastPromise({
     serverAction: sendInvoiceAction,
     message: "Envoie de la facture",
     errorMessage: "Erreur lors de l'envoi de la facture",
   });
+
   const confirm = useConfirm();
 
   const onDelete = async () => {
@@ -51,16 +52,28 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     });
   };
 
+  async function onSendReminder() {
+    const result = await confirm({
+      title: `Confirmation de l'envoi du rappel de la facture pour ${data.name}`,
+      description: "Etes-vous sur de vouloir envoyer ce rappel ?",
+    });
+    if (!result) {
+      return;
+    }
+
+    invoiceToast({ data: { invoiceId: data.id, reminder: true }, onSuccess: () => router.refresh() });
+  }
+
   async function onSendEmail() {
     const result = await confirm({
-      title: "Confirmation de l'envoi de la facture",
+      title: `Confirmation de l'envoi de la facture pour ${data.name}`,
       description: "Etes-vous sur de vouloir envoyer cette facture ?",
     });
     if (!result) {
       return;
     }
 
-    toastServerAction({ data: { invoiceId: data.id }, onSuccess: () => router.refresh() });
+    invoiceToast({ data: { invoiceId: data.id }, onSuccess: () => router.refresh() });
   }
 
   function onPaid() {
@@ -90,9 +103,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <Copy className="mr-2 h-4 w-4" />
             Copier Id
           </DropdownMenuItem>
-          <DropdownMenuItem disabled={loading || toastLoading} onClick={onSendEmail}>
+          <DropdownMenuItem disabled={loading || invoiceToastLoading} onClick={onSendEmail}>
             <Send className="mr-2 h-4 w-4" />
             Envoyer par mail
+          </DropdownMenuItem>
+          <DropdownMenuItem disabled={loading || invoiceToastLoading} onClick={onSendReminder}>
+            <BsSendPlus className="mr-2 h-4 w-4" />
+            Envoyer un rappel
           </DropdownMenuItem>
           <DropdownMenuItem disabled={loading || validateLoading} onClick={onPaid}>
             <MdPaid className="mr-2 h-4 w-4" />

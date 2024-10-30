@@ -41,6 +41,7 @@ export async function createInvoiceAction(data: z.infer<typeof createInvoiceSche
 
 const monthlyInvoiceSchema = z.object({
   invoiceId: z.string(),
+  reminder: z.boolean().optional(),
 });
 
 export async function sendInvoiceAction(data: z.infer<typeof monthlyInvoiceSchema>) {
@@ -48,9 +49,9 @@ export async function sendInvoiceAction(data: z.infer<typeof monthlyInvoiceSchem
     data,
     schema: monthlyInvoiceSchema,
     roles: ADMIN,
-    serverAction: async ({ invoiceId }) => {
+    serverAction: async ({ invoiceId, reminder }) => {
       // await addDelay(2000);
-      return await sendInvoice(invoiceId);
+      return await sendInvoice(invoiceId, reminder);
     },
   });
 }

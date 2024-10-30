@@ -19,7 +19,7 @@ const Invoice = ({
   return (
     <MainDocument
       customer={dataInvoice.customer}
-      title={`Facture ${dataInvoice.order.id}`}
+      title={`Facture ${dataInvoice.invoiceId}`}
       details={<Details pdfData={dataInvoice} title="Facture" />}
       invoice
     >

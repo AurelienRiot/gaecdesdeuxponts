@@ -62,13 +62,13 @@ const Footer = ({ baseUrl }: { baseUrl: string }) => (
 
 const Notification = ({ baseUrl }: { baseUrl: string }) => (
   <Text className="text-left text-xs">
-    Vous pouvez désactiver l'envoi de mails pour les bons de livraison et les factures sur votre profil sur le site.
+    Vous pouvez désactiver l'envoi de mails pour les bons de livraison et les factures sur votre profil sur le site.{" "}
     <a href={`${baseUrl}/profile`} target="_blank" rel="noreferrer" className="text-blue-500 underline">
       Désactiver
     </a>
     .
     <br />
-    Si le lien ne fonctionne pas, copiez et collez cette URL dans votre navigateur:
+    Si le lien ne fonctionne pas, copiez et collez cette URL dans votre navigateur :{" "}
     <span className="text-blue-500 underline">{`${baseUrl}/profile`}</span>
   </Text>
 );
