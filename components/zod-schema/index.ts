@@ -8,6 +8,8 @@ const emailSchema = z
     required_error: "L'email est obligatoire",
   })
   .email({ message: "L'email doit être un email valide" })
+  .min(1, { message: "Veuillez entrer votre email" })
+  .max(100, { message: "L'email ne peut pas dépasser 100 caractères" })
   .trim()
   .toLowerCase();
 const nameSchema = z.string().min(1, { message: "Le nom est obligatoire" }).trim();

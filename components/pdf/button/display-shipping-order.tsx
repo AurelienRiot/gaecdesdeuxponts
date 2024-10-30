@@ -1,5 +1,6 @@
 "use client";
 
+import { useOrdersQueryClient } from "@/app/(routes)/admin/calendar/_components/orders-query";
 import { useConfirm } from "@/components/ui/confirm-dialog";
 import { useToastPromise } from "@/components/ui/sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -16,7 +17,6 @@ import getOrderForConfirmation from "../server-actions/get-order-for-confirmatio
 import { createShippingPDF64StringAction } from "../server-actions/pdf64-string-actions";
 import { SendBL } from "../server-actions/send-bl-action";
 import { PdfButton } from "./pdf-button";
-import { useOrdersQueryClient } from "@/app/(routes)/admin/calendar/_components/orders-query";
 
 export function DisplayShippingOrder({
   orderId,
@@ -31,7 +31,7 @@ export function DisplayShippingOrder({
   const { serverAction, loading } = useServerAction(createShippingPDF64StringAction);
   const { serverAction: orderAction, loading: loading2 } = useServerAction(getOrderForConfirmation);
   const router = useRouter();
-  const { mutateUser } = useOrdersQueryClient();
+  const { mutateOrders } = useOrdersQueryClient();
   const confirm = useConfirm();
 
   const onViewFile = async () => {
@@ -93,7 +93,7 @@ export function DisplayShippingOrder({
       data: { orderId },
       onSuccess: () => {
         setSend(true);
-        mutateUser((prev) =>
+        mutateOrders((prev) =>
           prev.map((order) => (order.id === orderId ? { ...order, status: "Commande livrée" } : order)),
         );
         // refectOrders();

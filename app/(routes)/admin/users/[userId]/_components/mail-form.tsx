@@ -6,13 +6,12 @@ import { DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
 import useServerAction from "@/hooks/use-server-action";
-import { useQueryClient } from "@tanstack/react-query";
 import { Clipboard, ClipboardCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import changeEmail from "../_actions/change-email";
 import { useOrdersQueryClient } from "../../../calendar/_components/orders-query";
+import changeEmail from "../_actions/change-email";
 
 function MailForm({ email, id }: { email: string | null; id: string }) {
   const [display, setDisplay] = useState(false);

@@ -15,10 +15,10 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
 import useServerAction from "@/hooks/use-server-action";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useOrdersQueryClient } from "../../../calendar/_components/orders-query";
 import deleteUser from "../../_actions/delete-user";
 import updateUser from "../_actions/update-user";
 import type { GetUserPageDataProps } from "../_functions/get-user-page-data";
@@ -27,7 +27,6 @@ import MailForm from "./mail-form";
 import SelectRole from "./select-role";
 import UserLinks from "./user-links";
 import { schema, type UserFormValues } from "./user-schema";
-import { useOrdersQueryClient } from "../../../calendar/_components/orders-query";
 
 interface UserFormProps {
   initialData: GetUserPageDataProps["formatedUser"];

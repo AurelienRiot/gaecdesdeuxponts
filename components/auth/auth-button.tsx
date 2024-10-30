@@ -15,7 +15,7 @@ import { Icons } from "../icons";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "../ui/input-otp";
-import { optSchema } from "../zod-schema";
+import { emailSchema, optSchema } from "../zod-schema";
 import useServerAction from "@/hooks/use-server-action";
 import validateOTP from "./validate-otp";
 import { useRouter } from "next/navigation";
@@ -77,11 +77,7 @@ export const GoogleButton = ({ callbackUrl }: { callbackUrl: string }) => {
 };
 
 const formSchema = z.object({
-  email: z
-    .string({ required_error: "Veuillez entrer votre email" })
-    .email({ message: "L'email n'est pas un email valide" })
-    .min(1, { message: "Veuillez entrer votre email" })
-    .max(100, { message: "L'email ne peut pas dépasser 100 caractères" }),
+  email: emailSchema,
 });
 
 type EmailFormValues = z.infer<typeof formSchema>;
@@ -91,14 +87,14 @@ export const EmailButton = ({ callbackUrl, emaillogin }: { callbackUrl: string; 
   const form = useForm<EmailFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: emaillogin,
+      email: emaillogin || "",
     },
   });
 
   const onSubmit = useCallback(
     async (data: EmailFormValues) => {
       await signIn("email", {
-        email: data.email.trim().toLowerCase(),
+        email: data.email,
         redirect: false,
         callbackUrl,
       })

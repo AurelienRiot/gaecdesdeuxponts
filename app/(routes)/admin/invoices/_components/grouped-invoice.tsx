@@ -128,7 +128,7 @@ function GroupedInvoicePage({ proUserWithOrders }: { proUserWithOrders: UserWith
     <>
       <Button onClick={() => setShowModal(true)}> Envoie groupé de facture </Button>
       <Modal
-        className="left-[50%] top-[50%] lining-nums max-h-[90%] w-[90%] max-w-[700px] "
+        className="left-[50%] top-[50%] lining-nums max-h-[90%]  "
         title={`Envoie groupé de facture (${orderIdsArray.length})`}
         isOpen={showModal}
         onClose={() => setShowModal(false)}
@@ -158,7 +158,7 @@ function GroupedInvoicePage({ proUserWithOrders }: { proUserWithOrders: UserWith
               {} as Record<string, typeof user.orders>,
             );
             return (
-              <AccordionItem key={index} value={name} className="relative cursor-pointer">
+              <AccordionItem key={index} value={name} className="relative cursor-pointer w-full">
                 <label htmlFor={name} className="absolute -left-2 top-2 size-10  flex items-center justify-center">
                   <Checkbox
                     id={name}
@@ -173,7 +173,7 @@ function GroupedInvoicePage({ proUserWithOrders }: { proUserWithOrders: UserWith
                   />{" "}
                 </label>
 
-                <AccordionTrigger className="ml-8 lining-nums">
+                <AccordionTrigger className="ml-8 lining-nums w-full">
                   <div className="flex gap-2">
                     <NameWithImage name={name} image={user.image} imageSize={12} />
                     <p className="text-gray-500 flex gap-2 ">

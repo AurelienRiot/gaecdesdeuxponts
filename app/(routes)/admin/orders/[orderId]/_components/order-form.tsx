@@ -51,7 +51,7 @@ export type OrderFormProps = {
 
 export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, users, shops, referer, className }) => {
   const router = useRouter();
-  const { refectOrders, mutateUser } = useOrdersQueryClient();
+  const { refectOrders, mutateOrders } = useOrdersQueryClient();
   const prevDateOfShipping = initialData?.dateOfShipping ? new Date(initialData.dateOfShipping) : undefined;
   const { serverAction: createOrderAction } = useServerAction(createOrder);
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
@@ -126,7 +126,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
 
     function onSuccess() {
       router.replace(`/admin/orders/${initialData?.id}?referer=${encodeURIComponent(referer)}#button-container`);
-      mutateUser((prev) =>
+      mutateOrders((prev) =>
         prev.map((order) =>
           order.id === initialData?.id
             ? { ...order, status: !initialData.shippingEmail ? "Commande livrée" : "Commande validée" }
@@ -191,8 +191,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
             }
             result.shippingDate = new Date(result.shippingDate);
             result.createdAt = new Date(result.createdAt);
-            mutateUser((prev) => prev.filter((order) => order.id !== result.id).concat(result));
-            // refectOrders();
+            mutateOrders((prev) => prev.filter((order) => order.id !== result.id).concat(result));
             router.replace(`/admin/orders/${result.id}?referer=${encodeURIComponent(referer)}#button-container`);
           },
           toastOptions: { position: "top-center" },
@@ -207,16 +206,10 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
             }
             result.shippingDate = new Date(result.shippingDate);
             result.createdAt = new Date(result.createdAt);
-            mutateUser((prev) => prev.filter((order) => order.id !== result.id).concat(result));
-            // refectOrders();
+            mutateOrders((prev) => prev.filter((order) => order.id !== result.id).concat(result));
             router.back();
           },
         });
-
-    // prevDateOfShipping &&
-    //   queryClient.invalidateQueries({
-    //     queryKey: ["fetchDailyOrders", { date: getLocalIsoString(prevDateOfShipping) }],
-    //   });
   };
 
   function onNewOrder(date?: Date) {
@@ -250,7 +243,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
             }}
             isSubmitting={form.formState.isSubmitting}
             onSuccess={() => {
-              refectOrders();
+              mutateOrders((prev) => prev.filter((order) => order.id !== initialData.id));
               router.back();
             }}
           />

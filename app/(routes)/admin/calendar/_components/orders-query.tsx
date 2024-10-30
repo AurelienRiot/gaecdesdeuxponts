@@ -46,5 +46,5 @@ export function useOrdersQueryClient() {
   const refectOrders = () => {
     setTimeout(() => queryClient.invalidateQueries({ queryKey: ["fetchOrders"] }), 0);
   };
-  return { refectOrders, mutateUser: mutateOrders };
+  return { refectOrders, mutateOrders };
 }
