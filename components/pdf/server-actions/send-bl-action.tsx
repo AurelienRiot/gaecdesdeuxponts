@@ -1,7 +1,7 @@
 "use server";
 import { updateStocks } from "@/actions/update-stocks";
 import { SHIPPING } from "@/components/auth";
-import { SendBLEmail } from "@/components/email/send-bl";
+import SendBLEmail from "@/components/email/send-bl";
 import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";

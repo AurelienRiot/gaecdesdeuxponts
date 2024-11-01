@@ -4,7 +4,6 @@ const SendInvoiceEmail = (props: InvoiceEmailProps) => (
   <MainBody
     baseUrl={props.baseUrl}
     previewText={`Votre facture ${props.type === "single" ? `du ${props.date}` : `mensuelle de ${props.date}`}`}
-    notifications
   >
     <SendInvoiceBody {...props} />
   </MainBody>

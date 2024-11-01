@@ -2,7 +2,7 @@ import { Text } from "@react-email/components";
 import MainBody from "./common";
 
 const SendReminderInvoiceEmail = (props: ReminderInvoiceEmailProps) => (
-  <MainBody baseUrl={props.baseUrl} previewText={`Rappel de paiement de facture en attente`} notifications>
+  <MainBody baseUrl={props.baseUrl} previewText={`Rappel de paiement de facture en attente`}>
     <ReminderSendInvoiceBody {...props} />
   </MainBody>
 );

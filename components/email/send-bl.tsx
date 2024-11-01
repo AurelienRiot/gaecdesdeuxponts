@@ -1,5 +1,5 @@
-import { Section, Text } from "@react-email/components";
-import MainBody, { ButtonRedirect } from "./common";
+import { Text } from "@react-email/components";
+import MainBody from "./common";
 
 export interface BLEmailProps {
   baseUrl: string;
@@ -8,8 +8,8 @@ export interface BLEmailProps {
   email: string;
 }
 
-export const SendBLEmail = ({ date, baseUrl, id, email }: BLEmailProps) => (
-  <MainBody baseUrl={baseUrl} previewText={`Votre bon de livraison Laiterie du Pont Robert`} notifications>
+const SendBLEmail = ({ date, baseUrl, id, email }: BLEmailProps) => (
+  <MainBody baseUrl={baseUrl} previewText={`Votre bon de livraison Laiterie du Pont Robert`}>
     <SendBLBody baseUrl={baseUrl} date={date} id={id} email={email} />
   </MainBody>
 );
@@ -33,7 +33,7 @@ const SendBLBody = ({ date, baseUrl, id, email }: BLEmailProps) => (
         "Si vous avez des questions ou des préoccupations concernant votre commande, n'hésitez pas à nous contacter à laiteriedupontrobert@gmail.com ou au 06.72.06.45.55."
       }
     </Text>
-    <Section className="text-center">
+    {/* <Section className="text-center">
       <Text className="text-center text-base">
         Retrouver les informations de votre commande dans votre espace client en vous connectant avec votre adresse
         email : {email}
@@ -43,8 +43,10 @@ const SendBLBody = ({ date, baseUrl, id, email }: BLEmailProps) => (
         href={`${baseUrl}/profile/commandes?emaillogin=${encodeURIComponent(email)}`}
         text="Voir ma commande"
       />
-    </Section>
+    </Section> */}
 
     <Text className="text-center text-base">Merci pour votre confiance.</Text>
   </>
 );
+
+export default SendBLEmail;

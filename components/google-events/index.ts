@@ -95,7 +95,7 @@ export function groupUsersByProduct(
       const { itemId, name, unit, quantity, price } = product;
 
       // **Exclude products with negative quantity**
-      if (quantity <= 0 || price <= 0 || excludedNames.has(name)) {
+      if (quantity <= 0 || price < 0 || excludedNames.has(name)) {
         break; // Skip this product
       }
 

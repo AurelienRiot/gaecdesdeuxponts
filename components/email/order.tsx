@@ -35,7 +35,7 @@ const OrderBody = ({ date, price, baseUrl, id, email }: OrderEmailProps) => (
         "Si vous avez des questions ou des préoccupations concernant votre commande, n'hésitez pas à nous contacter à laiteriedupontrobert@gmail.com ou au 06.72.06.45.55."
       }
     </Text>
-    <Section className="text-center">
+    {/* <Section className="text-center">
       <Text className="text-center text-base">
         Retrouver les informations de votre commande dans votre espace client
       </Text>
@@ -44,7 +44,7 @@ const OrderBody = ({ date, price, baseUrl, id, email }: OrderEmailProps) => (
         href={`${baseUrl}/profile/commandes?emaillogin=${encodeURIComponent(email)}`}
         text="Voir ma commande"
       />
-    </Section>
+    </Section> */}
 
     <Text className="text-center text-base">Merci pour votre confiance.</Text>
   </>
