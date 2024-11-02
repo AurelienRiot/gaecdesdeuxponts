@@ -382,9 +382,27 @@ const BsSendPlus = (props: LucideProps) => (
     <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5"></path>
   </svg>
 );
+
+const PiMagnifyingGlassLight = (props: LucideProps) => (
+  <svg
+    stroke="currentColor"
+    fill="currentColor"
+    stroke-width="0"
+    viewBox="0 0 256 256"
+    height="1em"
+    width="1em"
+    xmlns="http://www.w3.org/2000/svg"
+    data-darkreader-inline-fill=""
+    data-darkreader-inline-stroke=""
+    {...props}
+  >
+    <path d="M228.24,219.76l-51.38-51.38a86.15,86.15,0,1,0-8.48,8.48l51.38,51.38a6,6,0,0,0,8.48-8.48ZM38,112a74,74,0,1,1,74,74A74.09,74.09,0,0,1,38,112Z"></path>
+  </svg>
+);
 export {
   LuMilk,
   LuMapPin,
+  PiMagnifyingGlassLight,
   FaInfo,
   FaFileInvoiceDollar,
   PiPackageDuotone,

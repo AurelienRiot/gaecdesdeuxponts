@@ -1,6 +1,6 @@
 "use client";
 
-import { type LucideProps, X } from "lucide-react";
+import { X } from "lucide-react";
 import * as React from "react";
 
 import { Badge } from "@/components/ui/badge";
@@ -407,7 +407,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
               }}
               placeholder={hidePlaceholderWhenSelected && selected.length !== 0 ? "" : placeholder}
               className={cn(
-                "ml-2 flex-1 bg-transparent focus:text-base  outline-none placeholder:text-muted-foreground",
+                "ml-2 flex-1 bg-transparent   outline-none placeholder:text-muted-foreground",
                 inputProps?.className,
               )}
             />

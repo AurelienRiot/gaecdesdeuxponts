@@ -1,7 +1,7 @@
 "use client";
 
 import type { DialogProps } from "@radix-ui/react-dialog";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { PiMagnifyingGlassLight } from "@/components/react-icons";
 import { Command as CommandPrimitive } from "cmdk";
 import * as React from "react";
 
@@ -42,11 +42,11 @@ const CommandInput = React.forwardRef<
 >(({ className, showIcon = true, ...props }, ref) =>
   showIcon ? (
     <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
-      <MagnifyingGlassIcon className="mr-2 size-4 shrink-0 opacity-50" />
+      <PiMagnifyingGlassLight className="mr-2 size-4 shrink-0 opacity-50" />
       <CommandPrimitive.Input
         ref={ref}
         className={cn(
-          "flex h-10 w-full rounded-md bg-transparent px-1 py-3 text-sm focus:text-base outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+          "flex h-10 w-full rounded-md bg-transparent px-1 py-3 text-sm  outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
           className,
         )}
         {...props}
@@ -56,7 +56,7 @@ const CommandInput = React.forwardRef<
     <CommandPrimitive.Input
       ref={ref}
       className={cn(
-        "flex h-10 w-full rounded-md bg-transparent py-3 text-sm focus:text-base outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+        "flex h-10 w-full rounded-md bg-transparent py-3 text-sm  outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       {...props}
