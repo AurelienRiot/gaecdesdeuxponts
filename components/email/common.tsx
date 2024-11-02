@@ -18,17 +18,7 @@ const MainBody = ({
   <Html lang="fr">
     <Head />
     <Preview>{previewText}</Preview>
-    <Tailwind
-      config={{
-        theme: {
-          extend: {
-            colors: {
-              primary: "#0f172a",
-            },
-          },
-        },
-      }}
-    >
+    <Tailwind>
       <Body style={main} className="mx-auto my-auto bg-white px-2 font-sans">
         <Container className="mx-auto my-[40px] max-w-2xl rounded border border-solid border-[#eaeaea] p-[20px]">
           {children}
@@ -81,11 +71,7 @@ export const ButtonRedirect = ({
   text: string;
 }) => (
   <>
-    <Button
-      className="rounded-lg bg-green-500 px-6 py-3 text-center text-base text-primary"
-      href={href}
-      target="_blank"
-    >
+    <Button className="rounded-lg bg-[#052e16] px-6 py-3 text-center text-base text-white" href={href} target="_blank">
       {text}
     </Button>
     <Text className="mt-2 text-center text-sm">

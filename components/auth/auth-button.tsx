@@ -99,6 +99,7 @@ export const EmailButton = ({ callbackUrl, emaillogin }: { callbackUrl: string; 
         callbackUrl,
       })
         .then((res) => {
+          console.log(res);
           if (res?.error) {
             toast.error("Erreur veuillez réessayer", { position: "top-center" });
           } else {
@@ -170,7 +171,6 @@ export const EmailButton = ({ callbackUrl, emaillogin }: { callbackUrl: string; 
 };
 
 function OPTForm({ email, setSuccess }: { email: string; setSuccess: React.Dispatch<React.SetStateAction<boolean>> }) {
-  const router = useRouter();
   const { serverAction } = useServerAction(validateOTP);
   const form = useForm<z.infer<typeof optSchema>>({
     resolver: zodResolver(optSchema),
