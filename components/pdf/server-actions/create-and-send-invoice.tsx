@@ -171,6 +171,16 @@ export async function createInvoice(
       id: {
         in: orderIds,
       },
+      OR: [
+        { invoiceOrder: { none: {} } },
+        {
+          invoiceOrder: {
+            every: {
+              invoice: { deletedAt: { not: null } },
+            },
+          },
+        },
+      ],
     },
     include: {
       user: { include: { address: true, billingAddress: true } },

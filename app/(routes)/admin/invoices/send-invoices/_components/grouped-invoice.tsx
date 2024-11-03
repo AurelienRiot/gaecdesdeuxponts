@@ -86,100 +86,70 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
     toast.success("Envoi des factures en cours...");
 
     try {
-      await Promise.all(
-        Object.keys(invoiceRecord).map(async (invoiceId) => {
-          return ky
-            .post("/api/send-invoice", { json: { invoiceId }, timeout: 15000 })
-            .then(async (res) => {
-              const result = (await res.json()) as { message: string };
-              // toast.success(result.message);
-              setInvoiceLoading((prev) => ({
-                ...prev,
-                [invoiceId]: { state: "success", name: prev[invoiceId].name },
-              }));
-            })
-            .catch(async (kyError: HTTPError) => {
-              setInvoiceLoading((prev) => ({
-                ...prev,
-                [invoiceId]: { state: "error", name: prev[invoiceId].name },
-              }));
-              if (kyError.response) {
-                const errorData = await kyError.response.text();
-                console.error(errorData);
-                toast.error(errorData, { duration: 10000 });
-              } else {
-                const error = kyError as TimeoutError;
-                console.error("Erreur timeout");
-              }
-            });
-        }),
-      );
+      const chunkSize = 5;
+      let cumulativeCount = 0;
+      for (let i = 0; i < Object.keys(invoiceRecord).length; i += chunkSize) {
+        const chunk = Object.keys(invoiceRecord).slice(i, i + chunkSize);
+        const chunkRes = await Promise.all(
+          chunk.map((invoiceId) => {
+            return ky
+              .post("/api/send-invoice", { json: { invoiceId }, timeout: 15000 })
+              .then(async (res) => {
+                const result = (await res.json()) as { message: string };
+                // toast.success(result.message);
+                setInvoiceLoading((prev) => ({
+                  ...prev,
+                  [invoiceId]: { state: "success", name: prev[invoiceId].name },
+                }));
+                return true;
+              })
+              .catch(async (kyError: HTTPError) => {
+                setInvoiceLoading((prev) => ({
+                  ...prev,
+                  [invoiceId]: { state: "error", name: prev[invoiceId].name },
+                }));
+                if (kyError.response) {
+                  const errorData = await kyError.response.text();
+                  console.error(errorData);
+                  toast.error(errorData, { duration: 10000 });
+                } else {
+                  const error = kyError as TimeoutError;
+                  console.error("Erreur timeout");
+                }
+                return false;
+              });
+          }),
+        );
+        cumulativeCount += chunk.length;
+        const currentCount = cumulativeCount;
+        toast.success(`Facture envoyée : ${currentCount} sur ${orderIdsArray.length}`, {
+          position: "bottom-center",
+        });
+        // if (!chunkRes.every((res) => res)) {
+        //   toast.error("Une erreur est survenue lors de l'envoi des factures, veuillez recharger la page", {
+        //     position: "top-center",
+        //     duration: 10000,
+        //   });
+
+        // } else {
+
+        // }
+      }
     } catch (error) {
       toast.error("Une erreur est survenue lors de l'envoi des factures, veuillez recharger la page", {
         position: "top-center",
         duration: 10000,
       });
       setLoading(false);
-      // router.push("/admin/invoices");
       return;
     }
 
     setLoading(false);
-    router.push("/admin/invoices");
+    // router.push("/admin/invoices");
     toast.success(`Toutes les factures sont envoyées`, {
       position: "top-center",
       duration: 10000,
     });
-
-    // const chunkSize = 5;
-    // let cumulativeCount = 0;
-    // for (let i = 0; i < invoiceIds.length; i += chunkSize) {
-    //   const chunk = invoiceIds.slice(i, i + chunkSize);
-    //   const chunkRes = await Promise.all(
-    //     chunk.map((invoiceId) => {
-    //       return ky
-    //         .post("/api/send-invoice", { json: { invoiceId }, timeout: 15000 })
-    //         .then(async (responce) => {
-    //           const res = await responce.text();
-    //           // toast.success(res);
-    //           return true;
-    //         })
-    //         .catch(async (kyError: HTTPError) => {
-    //           if (kyError.response) {
-    //             const errorData = await kyError.response.text();
-    //             console.error(errorData);
-    //             toast.error(errorData, { duration: 10000 });
-    //           } else {
-    //             const error = kyError as TimeoutError;
-    //             console.error("Erreur timeout");
-    //             // toast.error("Erreur dans l'envoi des factures, veuillez recharger la page");
-    //           }
-    //           return false;
-    //         });
-    //     }),
-    //   );
-    //   if (!chunkRes.every((res) => res)) {
-    //     toast.error("Une erreur est survenue lors de l'envoi des factures, veuillez recharger la page", {
-    //       position: "top-center",
-    //       duration: 10000,
-    //     });
-    //     // router.refresh();
-    //     return;
-    //   }
-    //   cumulativeCount += chunk.length;
-    //   const currentCount = cumulativeCount;
-    //   toast.success(`Facture envoyée : ${currentCount} sur ${orderIdsArray.length}`, {
-    //     position: "bottom-center",
-    //   });
-    //   if (currentCount === orderIdsArray.length) {
-    //     toast.success(`Toutes les factures sont envoyées`, {
-    //       position: "top-center",
-    //       duration: 10000,
-    //     });
-    //   }
-    // }
-    // setLoading(false);
-    // router.push("/admin/invoices");
   }
 
   return (
