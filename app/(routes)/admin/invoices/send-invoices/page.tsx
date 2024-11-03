@@ -3,6 +3,8 @@ import { getUsersWithOrders } from "../_functions/get-users-with-orders";
 import { Separator } from "@/components/ui/separator";
 import GroupedInvoice from "./_components/grouped-invoice";
 
+export const dynamic = "force-dynamic";
+
 async function SendInvoicesPage() {
   const allUsers = await getUsersWithOrders();
 
