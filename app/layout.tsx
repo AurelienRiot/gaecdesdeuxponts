@@ -276,16 +276,19 @@ export default function RootLayout({
 
 const DebugScreens = async () =>
   await devOnly(async () => (
-    <div className="fixed bottom-0 left-0 z-[1200] bg-foreground p-2 text-background">
-      <ul className="text-xs font-semibold">
-        <li className="block xs:hidden">{" < 400px"}</li>
-        <li className="hidden xs:block sm:hidden">{"xs > 400px "}</li>
-        <li className="hidden sm:block md:hidden">{"sm > 640px "}</li>
-        <li className="hidden md:block lg:hidden">{"md > 768px "}</li>
-        <li className="hidden lg:block xl:hidden">{"lg > 1024x "}</li>
-        <li className="hidden xl:block 2xl:hidden">{"xl > 1220px"}</li>
-        <li className="hidden 2xl:block 3xl:hidden">{"2xl > 1440px"}</li>
-        <li className="hidden 3xl:block">{"3xl > 1700px"}</li>
-      </ul>
-    </div>
+    <>
+      <div className="fixed top-0 left-0 z-[1200] bg-destructive p-2 rounded-br text-xs text-background">DEV</div>
+      <div className="fixed bottom-0 left-0 z-[1200] bg-foreground p-2 text-background">
+        <ul className="text-xs font-semibold">
+          <li className="block xs:hidden">{" < 400px"}</li>
+          <li className="hidden xs:block sm:hidden">{"xs > 400px "}</li>
+          <li className="hidden sm:block md:hidden">{"sm > 640px "}</li>
+          <li className="hidden md:block lg:hidden">{"md > 768px "}</li>
+          <li className="hidden lg:block xl:hidden">{"lg > 1024x "}</li>
+          <li className="hidden xl:block 2xl:hidden">{"xl > 1220px"}</li>
+          <li className="hidden 2xl:block 3xl:hidden">{"2xl > 1440px"}</li>
+          <li className="hidden 3xl:block">{"3xl > 1700px"}</li>
+        </ul>
+      </div>
+    </>
   ));

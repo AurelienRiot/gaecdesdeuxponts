@@ -33,6 +33,7 @@ export async function getUsersWithOrders() {
       image: true,
       name: true,
       company: true,
+      email: true,
       orders: {
         where: {
           deletedAt: null,

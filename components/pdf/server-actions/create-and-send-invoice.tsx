@@ -135,7 +135,7 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean) {
           ],
         });
       } else {
-        await addDelay(2000);
+        await addDelay(Math.random() * (5000 - 2000) + 2000);
       }
     }
 
@@ -165,7 +165,7 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean) {
 export async function createInvoice(
   orderIds: string[],
   previousID: string | null,
-): Promise<ReturnTypeServerAction<{ invoiceId: string }>> {
+): Promise<ReturnTypeServerAction<{ invoiceId: string; name: string }>> {
   const orders = await prismadb.order.findMany({
     where: {
       id: {
@@ -191,6 +191,8 @@ export async function createInvoice(
       message: "Toutes les commandes ne sont pas du meme client",
     };
   }
+
+  const name = getUserName(orders[0].user);
 
   const shippingAddress = orders[0].user.address ? addressFormatter(orders[0].user.address, true) : "";
   const billingAddress = orders[0].user.billingAddress
@@ -243,8 +245,8 @@ export async function createInvoice(
   revalidateTag("invoices");
   return {
     success: true,
-    message: `Facture crée pour ${orders[0].user.name}`,
-    data: { invoiceId: invoice.id },
+    message: `Facture crée pour ${name}`,
+    data: { invoiceId: invoice.id, name },
   };
 }
 

@@ -3,7 +3,7 @@
 import { getUserName } from "@/components/table-custom-fuction";
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Button, LoadingButton } from "@/components/ui/button";
+import { Button, IconButton, LoadingButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Modal } from "@/components/ui/modal";
 import useServerAction from "@/hooks/use-server-action";
@@ -15,15 +15,22 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { UserWithOrdersForInvoices } from "../../_functions/get-users-with-orders";
 import createGroupedMonthlyInvoice from "../../_actions/send-grouped-monthly-invoice";
+import { nanoid } from "@/lib/id";
+import { Check, CheckIcon, X } from "lucide-react";
+import Spinner from "@/components/animations/spinner";
+
+function previousMonthOrders(order: { dateOfShipping: Date | null }) {
+  const currentDate = new Date();
+  const orderDate = order.dateOfShipping ? new Date(order.dateOfShipping) : new Date();
+  return orderDate.getTime() < new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getTime();
+}
 
 const createOrderIdsRecord = (userWithOrdersForInvoices: UserWithOrdersForInvoices) =>
   userWithOrdersForInvoices.reduce(
     (acc, user) => {
       acc[user.id] = user.orders
         .filter((order) => {
-          const currentDate = new Date();
-          const orderDate = order.dateOfShipping ? new Date(order.dateOfShipping) : new Date();
-          return orderDate.getTime() < new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getTime();
+          return previousMonthOrders(order);
         })
         .map((order) => order.id);
       return acc;
@@ -32,17 +39,16 @@ const createOrderIdsRecord = (userWithOrdersForInvoices: UserWithOrdersForInvoic
   );
 
 function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoices: UserWithOrdersForInvoices }) {
-  const { serverAction } = useServerAction(createGroupedMonthlyInvoice);
+  const { serverAction: createInvoicesAction } = useServerAction(createGroupedMonthlyInvoice);
   const [loading, setLoading] = useState(false);
+  const [invoiceLoading, setInvoiceLoading] = useState<
+    Record<string, { state: "loading" | "success" | "error"; name: string }>
+  >({}); // New state to track per-invoice loading status
+  const [displayInvoices, setDisplayInvoices] = useState(false);
   const router = useRouter();
   const [orderIdsRecord, setOrderIdsRecord] = useState(createOrderIdsRecord(userWithOrdersForInvoices));
   const orderIdsArray = Object.values(orderIdsRecord).filter((orderIds) => orderIds.length > 0);
 
-  useEffect(() => {
-    if (userWithOrdersForInvoices) {
-      setOrderIdsRecord(createOrderIdsRecord(userWithOrdersForInvoices));
-    }
-  }, [userWithOrdersForInvoices]);
   async function sendInvoices(sendEmail: boolean) {
     setLoading(true);
     if (orderIdsArray.length === 0) {
@@ -51,37 +57,52 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
       return;
     }
 
-    const chunkSize = 5;
-    const response = await serverAction({ data: orderIdsArray }).catch((errorData) => errorData);
+    const response = await createInvoicesAction({ data: orderIdsArray });
     if (!response) {
       toast.error("Une erreur est survenue lors de la création des factures, veuillez recharger la page");
       setLoading(false);
-      router.refresh();
       return;
     }
+    const invoiceRecord: typeof invoiceLoading = {};
+    for (const [index, invoice] of response.entries()) {
+      if (!invoice.success) {
+        const orderId = orderIdsArray[index][0];
+        const user = userWithOrdersForInvoices.find((user) => user.orders.some((order) => order.id === orderId));
+        user &&
+          toast.error(`Une erreur est survenue lors de la creation de la facture pour le client ${getUserName(user)}`);
+      } else {
+        invoiceRecord[invoice.data.invoiceId] = { state: "loading", name: invoice.data.name };
+      }
+    }
+
     if (!sendEmail) {
       console.log(response);
       setLoading(false);
-      router.refresh();
+      router.push("/admin/invoices");
       return;
     }
+    setInvoiceLoading(invoiceRecord);
+    setDisplayInvoices(true);
     toast.success("Envoi des factures en cours...");
-    const invoiceIds = (response as (string | undefined)[]).filter(
-      (invoiceId): invoiceId is string => typeof invoiceId === "string",
-    );
-    let cumulativeCount = 0;
-    for (let i = 0; i < invoiceIds.length; i += chunkSize) {
-      const chunk = invoiceIds.slice(i, i + chunkSize);
-      const chunkRes = await Promise.all(
-        chunk.map((invoiceId) => {
+
+    try {
+      await Promise.all(
+        Object.keys(invoiceRecord).map(async (invoiceId) => {
           return ky
             .post("/api/send-invoice", { json: { invoiceId }, timeout: 15000 })
-            .then(async (responce) => {
-              const res = await responce.text();
-              // toast.success(res);
-              return true;
+            .then(async (res) => {
+              const result = (await res.json()) as { message: string };
+              // toast.success(result.message);
+              setInvoiceLoading((prev) => ({
+                ...prev,
+                [invoiceId]: { state: "success", name: prev[invoiceId].name },
+              }));
             })
             .catch(async (kyError: HTTPError) => {
+              setInvoiceLoading((prev) => ({
+                ...prev,
+                [invoiceId]: { state: "error", name: prev[invoiceId].name },
+              }));
               if (kyError.response) {
                 const errorData = await kyError.response.text();
                 console.error(errorData);
@@ -89,38 +110,120 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
               } else {
                 const error = kyError as TimeoutError;
                 console.error("Erreur timeout");
-                // toast.error("Erreur dans l'envoi des factures, veuillez recharger la page");
               }
-              return false;
             });
         }),
       );
-      if (!chunkRes.every((res) => res)) {
-        toast.error("Une erreur est survenue lors de l'envoi des factures, veuillez recharger la page", {
-          position: "top-center",
-          duration: 10000,
-        });
-        router.refresh();
-        return;
-      }
-      cumulativeCount += chunk.length;
-      const currentCount = cumulativeCount;
-      toast.success(`Facture envoyée : ${currentCount} sur ${orderIdsArray.length}`, {
-        position: "bottom-center",
+    } catch (error) {
+      toast.error("Une erreur est survenue lors de l'envoi des factures, veuillez recharger la page", {
+        position: "top-center",
+        duration: 10000,
       });
-      if (currentCount === orderIdsArray.length) {
-        toast.success(`Toutes les factures sont envoyées`, {
-          position: "top-center",
-          duration: 10000,
-        });
-      }
+      setLoading(false);
+      // router.push("/admin/invoices");
+      return;
     }
+
     setLoading(false);
-    router.refresh();
+    router.push("/admin/invoices");
+    toast.success(`Toutes les factures sont envoyées`, {
+      position: "top-center",
+      duration: 10000,
+    });
+
+    // const chunkSize = 5;
+    // let cumulativeCount = 0;
+    // for (let i = 0; i < invoiceIds.length; i += chunkSize) {
+    //   const chunk = invoiceIds.slice(i, i + chunkSize);
+    //   const chunkRes = await Promise.all(
+    //     chunk.map((invoiceId) => {
+    //       return ky
+    //         .post("/api/send-invoice", { json: { invoiceId }, timeout: 15000 })
+    //         .then(async (responce) => {
+    //           const res = await responce.text();
+    //           // toast.success(res);
+    //           return true;
+    //         })
+    //         .catch(async (kyError: HTTPError) => {
+    //           if (kyError.response) {
+    //             const errorData = await kyError.response.text();
+    //             console.error(errorData);
+    //             toast.error(errorData, { duration: 10000 });
+    //           } else {
+    //             const error = kyError as TimeoutError;
+    //             console.error("Erreur timeout");
+    //             // toast.error("Erreur dans l'envoi des factures, veuillez recharger la page");
+    //           }
+    //           return false;
+    //         });
+    //     }),
+    //   );
+    //   if (!chunkRes.every((res) => res)) {
+    //     toast.error("Une erreur est survenue lors de l'envoi des factures, veuillez recharger la page", {
+    //       position: "top-center",
+    //       duration: 10000,
+    //     });
+    //     // router.refresh();
+    //     return;
+    //   }
+    //   cumulativeCount += chunk.length;
+    //   const currentCount = cumulativeCount;
+    //   toast.success(`Facture envoyée : ${currentCount} sur ${orderIdsArray.length}`, {
+    //     position: "bottom-center",
+    //   });
+    //   if (currentCount === orderIdsArray.length) {
+    //     toast.success(`Toutes les factures sont envoyées`, {
+    //       position: "top-center",
+    //       duration: 10000,
+    //     });
+    //   }
+    // }
+    // setLoading(false);
+    // router.push("/admin/invoices");
   }
 
   return (
     <>
+      {displayInvoices && (
+        <div className="fixed top-4 left-4 max-w-sm w-full p-4 bg-background rounded-lg shadow-md z-50 space-y-3 overflow-auto max-h-[70vh]">
+          {Object.values(invoiceLoading).map((object) => (
+            <div
+              key={object.name}
+              className="flex items-center justify-between border rounded-lg p-3 shadow-sm transition-all duration-300 ease-in-out bg-gray-50"
+            >
+              <div className="flex items-center gap-2">
+                <div className="font-semibold text-gray-800">{object.name}</div>
+              </div>
+              <div>
+                {object.state === "loading" && (
+                  <div className="flex items-center gap-2 text-blue-600">
+                    <Spinner className="size-6 animate-spin" />
+                    <span className="text-sm">En cours...</span>
+                  </div>
+                )}
+                {object.state === "success" && (
+                  <div className="flex items-center gap-2 text-green-500">
+                    <Check className="size-6" />
+                    <span className="text-sm">Terminé</span>
+                  </div>
+                )}
+                {object.state === "error" && (
+                  <div className="flex items-center gap-2 text-red-500">
+                    <X className="size-6" />
+                    <span className="text-sm">Erreur</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+          <IconButton
+            Icon={X}
+            iconClassName="size-4"
+            onClick={() => setDisplayInvoices(false)}
+            className="absolute -top-1 right-0  p-1 bg-red-500 text-white rounded-full"
+          />
+        </div>
+      )}
       <Accordion type="multiple" className="relative  flex w-full max-w-xl mx-auto flex-col gap-4 px-4">
         {userWithOrdersForInvoices.map((user, index) => {
           const ordersId = orderIdsRecord[user.id];
@@ -156,7 +259,14 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
                   checked={ordersId?.length > 0}
                   onCheckedChange={(check) =>
                     setOrderIdsRecord((prev) =>
-                      check ? { ...prev, [user.id]: user.orders.map((order) => order.id) } : { ...prev, [user.id]: [] },
+                      check
+                        ? {
+                            ...prev,
+                            [user.id]: user.orders
+                              .filter((order) => previousMonthOrders(order))
+                              .map((order) => order.id),
+                          }
+                        : { ...prev, [user.id]: [] },
                     )
                   }
                 />{" "}

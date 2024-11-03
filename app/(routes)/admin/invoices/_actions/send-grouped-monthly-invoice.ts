@@ -18,39 +18,43 @@ export default async function createGroupedMonthlyInvoice(data: z.infer<typeof g
         orderBy: { createdAt: "desc" },
         select: { id: true },
       });
-      let previousInvoiceId = previousInvoice?.id || null;
-      const monthlyInvoices: { success: boolean; message: string; data?: string }[] = [];
+
+      let previousInvoiceId = previousInvoice?.id;
+      const monthlyInvoices: ({ success: true; data: { invoiceId: string; name: string } } | { success: false })[] = [];
       for (const orderIds of orderArray) {
-        const invoice = await createInvoice(orderIds, previousInvoiceId);
+        const invoice = await createInvoice(orderIds, previousInvoiceId || null);
 
         if (!invoice.success) {
           console.log(invoice.message);
           monthlyInvoices.push(invoice);
-          continue; // Continue processing other orders or decide to break
+          continue;
         }
 
         if (!invoice.data) {
           monthlyInvoices.push({
             success: false,
-            message: "Une erreur est survenue lors de la création de la facture",
           });
           continue;
         }
 
         previousInvoiceId = invoice.data.invoiceId;
-        monthlyInvoices.push({ success: true, message: "", data: invoice.data.invoiceId });
+        monthlyInvoices.push({ success: true, data: invoice.data });
       }
 
       const allSuccess = monthlyInvoices.every((invoice) => invoice.success);
 
-      const allIds = monthlyInvoices.map((invoice) => invoice.data);
+      // const allData = monthlyInvoices.map((invoice) => invoice.data);
 
       revalidateTag("invoices");
       revalidateTag("orders");
       revalidateTag("users");
-      return allSuccess
-        ? { success: true, message: "Toutes les factures ont été créées", data: allIds }
-        : { success: false, message: "Une erreur est survenue lors de la création des factures", data: allIds };
+      return {
+        success: true,
+        message: allSuccess
+          ? "Toutes les factures ont été créées"
+          : "Une erreur est survenue lors de la création des factures",
+        data: monthlyInvoices,
+      };
     },
   });
 }
