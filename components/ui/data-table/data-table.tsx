@@ -9,6 +9,7 @@ import { DataTableToolbar } from "@/components/ui/data-table/data-table-toolbar"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useDataTable } from "@/hooks/use-data-table";
 import type { DataTableFilterableColumn, DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
+import DownloadElement from "@/components/dowload-element-by-id";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -21,6 +22,7 @@ interface DataTableProps<TData, TValue> {
   newRowLink?: string;
   emptyRows?: boolean;
   deleteRowsAction?: React.MouseEventHandler<HTMLButtonElement>;
+  dowloadButton?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -34,6 +36,7 @@ export function DataTable<TData, TValue>({
   newRowLink,
   emptyRows,
   deleteRowsAction,
+  dowloadButton,
 }: DataTableProps<TData, TValue>) {
   const { table } = useDataTable({
     data,
@@ -58,7 +61,13 @@ export function DataTable<TData, TValue>({
           deleteRowsAction={deleteRowsAction}
         />
       )}
-      <div className="rounded-md border">
+      <div className="rounded-md border relative" id="datatable table">
+        {dowloadButton && (
+          <DownloadElement
+            id="datatable table"
+            className="absolute right-0.5 top-0.5 p-0.5 size-5 flex justify-center items-center z-10"
+          />
+        )}
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

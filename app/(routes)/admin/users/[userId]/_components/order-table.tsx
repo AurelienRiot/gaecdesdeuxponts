@@ -62,6 +62,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({ data }) => {
         columns={columns}
         data={filteredOrders}
         emptyRows
+        dowloadButton
       />
     </>
   );

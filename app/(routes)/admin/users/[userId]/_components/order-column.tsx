@@ -131,19 +131,19 @@ export const filterableColumns = ({
 
 export const viewOptionsColumns: DataTableViewOptionsColumn<OrderColumn>[] = [
   {
+    id: "id",
+    title: "Commandes",
+  },
+  {
     id: "products",
     title: "Produits",
   },
 
   {
     id: "totalPrice",
-    title: "Prix",
+    title: "Prix total",
   },
 
-  {
-    id: "id",
-    title: "Facture",
-  },
   {
     id: "status",
     title: "Statut",
