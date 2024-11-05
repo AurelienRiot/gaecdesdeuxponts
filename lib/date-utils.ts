@@ -36,6 +36,10 @@ export function getLocalIsoString(date: Date) {
   return format(addMinutes(new Date(date), getDateOffset(date)), "yyyy-MM-dd");
 }
 
+export function getLocalDay(date: Date) {
+  return new Date(getLocalIsoString(date)).getDay();
+}
+
 export const dateMonthYear = (dates: (Date | null)[]) => {
   const orderDates = (dates.filter((date) => date !== null) as Date[]).sort((a, b) => a.getTime() - b.getTime());
   const months = new Set(

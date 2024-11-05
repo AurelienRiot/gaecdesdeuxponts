@@ -4,14 +4,17 @@ import PublicHeader from "@/components/navbar-public/header";
 
 export default async function PublicLayout({
   children,
+  modal,
 }: {
   children: React.ReactNode;
+  modal: React.ReactNode;
 }) {
   return (
     <>
       <PublicHeader />
       <main id="main-content" className="pt-20 ">
         {children}
+        {modal}
       </main>
       <CookiesBanner />
       <Footer />

@@ -53,3 +53,21 @@ model ShippingCustomer {
 
   @@index([orderId])
 }
+
+model DayOrder {
+  day           Int            @id @unique
+  dayOrderUsers DayOrderUser[]
+}
+
+model DayOrderUser {
+  id         Int      @id @unique @default(autoincrement())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dayOrderId Int
+  dayOrder   DayOrder @relation(fields: [dayOrderId], references: [day], onDelete: Cascade)
+  index      Int
+
+  @@unique([dayOrderId, userId])
+  @@index([userId])
+  @@index([dayOrderId])
+}

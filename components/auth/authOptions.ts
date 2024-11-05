@@ -15,7 +15,7 @@ const secret = process.env.NEXTAUTH_SECRET;
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   adapter: PrismaAdapter(prismadb),
-  session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
+  session: { strategy: "jwt", maxAge: 360 * 24 * 60 * 60 },
   pages: {
     signIn: "/login",
     error: "/login",

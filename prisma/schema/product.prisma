@@ -15,20 +15,21 @@ model MainProduct {
 }
 
 model Product {
-  id          String         @id @unique @default(cuid())
-  index       Int            @default(0)
-  productName String
-  product     MainProduct    @relation("MainProductToProduct", fields: [productName], references: [name], onDelete: Cascade)
-  name        String
-  description String         @db.VarChar(1000)
-  price       Float
-  tax         Float          @default(1.055)
-  isFeatured  Boolean        @default(false)
-  isArchived  Boolean        @default(false)
-  imagesUrl   String[]
-  options     Option[]       @relation("ProductToOption")
-  unit        Unit?
-  stocks      ProductStock[]
+  id                   String                @id @unique @default(cuid())
+  index                Int                   @default(0)
+  productName          String
+  product              MainProduct           @relation("MainProductToProduct", fields: [productName], references: [name], onDelete: Cascade)
+  name                 String
+  description          String                @db.VarChar(1000)
+  price                Float
+  tax                  Float                 @default(1.055)
+  isFeatured           Boolean               @default(false)
+  isArchived           Boolean               @default(false)
+  imagesUrl            String[]
+  options              Option[]              @relation("ProductToOption")
+  unit                 Unit?
+  stocks               ProductStock[]
+  defaultOrderProducts DefaultOrderProduct[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

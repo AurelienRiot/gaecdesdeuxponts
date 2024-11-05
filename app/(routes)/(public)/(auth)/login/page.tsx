@@ -1,6 +1,7 @@
 import { getSessionUser } from "@/actions/get-user";
 import { Logout } from "@/components/auth/auth";
 import { EmailButton, GoogleButton } from "@/components/auth/auth-button";
+import { addDelay } from "@/lib/utils";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 

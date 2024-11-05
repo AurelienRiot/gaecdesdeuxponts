@@ -51,7 +51,8 @@ async function CalendarPage() {
             />
 
             <Link
-              href="/admin/orders/new"
+              // href="/admin/orders/new"
+              href="/admin/calendar/day-order"
               className=" p-2 h-fit border bg-green-500 rounded-full cursor-pointer flex gap-2"
             >
               <Plus className="size-4 text-green-100 stroke-[3]" />

@@ -49,7 +49,7 @@ const ProfilTab = async () => {
           </p>
         </div>
       </div>
-      <NotificationsCheckbox />
+      {/* <NotificationsCheckbox /> */}
       <Button asChild variant={"expandIcon"} iconPlacement="right" Icon={PencilLine}>
         <Link href="/profile/parametres">Modifier votre profile</Link>
       </Button>
