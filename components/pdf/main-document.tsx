@@ -117,9 +117,18 @@ const CompanyStyles = StyleSheet.create({
   headerContainer: {
     marginTop: 10,
   },
-  logo: {
+  logoContainer: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 4,
     marginBottom: 10,
+  },
+  logo1: {
     width: 80,
+    height: 80,
+  },
+  logo2: {
+    width: 117,
     height: 80,
   },
   contact: {
@@ -143,8 +152,12 @@ export const Company = () => (
 );
 
 const Logo = () => (
-  // eslint-disable-next-line jsx-a11y/alt-text
-  <Image style={CompanyStyles.logo} src="https://www.laiteriedupontrobert.fr/logo-font-blanc.png" cache={false} />
+  <View style={CompanyStyles.logoContainer}>
+    {/* eslint-disable-next-line jsx-a11y/alt-text */}
+    <Image style={CompanyStyles.logo1} src="https://www.laiteriedupontrobert.fr/logo-font-blanc.png" cache={false} />
+    {/* eslint-disable-next-line jsx-a11y/alt-text */}
+    <Image style={CompanyStyles.logo2} src="https://www.laiteriedupontrobert.fr/certification-bio.webp" cache={false} />
+  </View>
 );
 
 const thankYouMsgStyles = StyleSheet.create({
