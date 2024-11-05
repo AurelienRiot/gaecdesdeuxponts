@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import Image from "next/image";
-import { ScrollToTarget } from "@/lib/scroll-to-traget";
+import { scrollToId } from "@/lib/scroll-to-traget";
 import type { AMAPFormValues } from "./amap-schema";
 
 const SelectShop = ({ shops }: { shops: Shop[] }) => {
@@ -55,7 +55,7 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
             </PopoverTrigger>
             <PopoverContent side="bottom" avoidCollisions={false} className="w-[200px] p-0">
               <Command>
-                <CommandInput onFocus={() => ScrollToTarget("shop-input")} placeholder="Nom du magasin" />
+                <CommandInput onFocus={() => scrollToId("shop-input")} placeholder="Nom du magasin" />
                 <CommandList>
                   {shops.map((shop) => (
                     <CommandItem key={shop.id} value={shop.id} keywords={[shop.name]} onSelect={onValueChange}>

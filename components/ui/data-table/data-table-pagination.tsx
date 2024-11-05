@@ -3,7 +3,7 @@ import type { Table } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useRouter } from "next/navigation";
+import { scrollToId } from "@/lib/scroll-to-traget";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
@@ -16,7 +16,6 @@ export function DataTablePagination<TData>({
   pageSizeOptions = [5, 10, 20, 30, 40, 50],
   selectedRows,
 }: DataTablePaginationProps<TData>) {
-  const router = useRouter();
   return (
     <div className="flex w-full flex-col items-center justify-end gap-4 overflow-auto px-2 py-1 sm:flex-row sm:gap-8">
       {selectedRows && (
@@ -56,7 +55,7 @@ export function DataTablePagination<TData>({
             className="hidden size-8 p-0 lg:flex"
             onClick={() => {
               table.setPageIndex(0);
-              router.replace("#datatable");
+              scrollToId("datatable");
             }}
             disabled={!table.getCanPreviousPage()}
           >
@@ -68,7 +67,7 @@ export function DataTablePagination<TData>({
             className="size-8 p-0"
             onClick={() => {
               table.previousPage();
-              router.replace("#datatable");
+              scrollToId("datatable");
             }}
             disabled={!table.getCanPreviousPage()}
           >
@@ -80,7 +79,7 @@ export function DataTablePagination<TData>({
             className="size-8 p-0"
             onClick={() => {
               table.nextPage();
-              router.replace("#datatable");
+              scrollToId("datatable");
             }}
             disabled={!table.getCanNextPage()}
           >
@@ -92,7 +91,7 @@ export function DataTablePagination<TData>({
             className="hidden size-8 p-0 lg:flex"
             onClick={() => {
               table.setPageIndex(table.getPageCount() - 1);
-              router.replace("#datatable");
+              scrollToId("datatable");
             }}
             disabled={!table.getCanNextPage()}
           >

@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ScrollToTarget } from "@/lib/scroll-to-traget";
+import { scrollToId } from "@/lib/scroll-to-traget";
 import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
@@ -47,7 +47,7 @@ function PerUserItems({
         </PopoverTrigger>
         <PopoverContent side="bottom" avoidCollisions={false} className="w-[200px] p-0">
           <Command>
-            <CommandInput placeholder="Nom du client" onFocus={() => ScrollToTarget("quantite-produits")} />
+            <CommandInput placeholder="Nom du client" onFocus={() => scrollToId("quantite-produits")} />
             <CommandList>
               {Object.entries(data).map(([key, value]) => (
                 <CommandItem key={key} value={key} onSelect={onValueChange}>
