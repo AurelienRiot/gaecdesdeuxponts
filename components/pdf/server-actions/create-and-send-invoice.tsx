@@ -220,7 +220,7 @@ export async function createInvoice(
       customer: {
         create: {
           name: orders[0].user.name || "",
-          company: orders[0].user.company,
+          company: orders[0].user.raisonSocial || orders[0].user.company,
           email: orders[0].user.email || "",
           phone: formatFrenchPhoneNumber(orders[0].user.phone),
           shippingAddress,
