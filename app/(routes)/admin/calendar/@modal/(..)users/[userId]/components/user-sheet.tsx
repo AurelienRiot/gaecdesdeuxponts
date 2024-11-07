@@ -1,4 +1,4 @@
-import { SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 function UserSheet({ children }: { children: React.ReactNode }) {
   return (

@@ -1,4 +1,4 @@
-import { SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 function OrderSheet({ orderId, children }: { orderId?: string; children: React.ReactNode }) {
   return (
