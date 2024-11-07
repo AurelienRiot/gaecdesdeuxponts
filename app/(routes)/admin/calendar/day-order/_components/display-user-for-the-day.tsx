@@ -11,8 +11,8 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import updateDayOrder from "../_actions/update-day-order";
 import type { GetDayOrdersType } from "../_functions/get-day-orders";
-import type { GetUsersType } from "../_functions/get-users";
 import UserModal from "./user-modal";
+import type { UsersForOrderType } from "../../../orders/[orderId]/_functions/get-users-for-orders";
 
 function DisplayUserForTheDay({
   dayOrdersForDay,
@@ -21,7 +21,7 @@ function DisplayUserForTheDay({
   index,
 }: {
   dayOrdersForDay: GetDayOrdersType[number]["dayOrderUsers"] | undefined;
-  users: GetUsersType;
+  users: UsersForOrderType[];
   day: string;
   index: number;
 }) {
@@ -82,7 +82,7 @@ function DisplayUserForTheDay({
   );
 }
 
-function OrderItem({ user }: { user: GetUsersType[number] }) {
+function OrderItem({ user }: { user: UsersForOrderType }) {
   // const y = useMotionValue(0);
   // const boxShadow = useRaisedShadow(y);
   const controls = useDragControls();

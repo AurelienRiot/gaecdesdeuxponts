@@ -14,6 +14,7 @@ import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-schema";
+import type { UsersForOrderType } from "../_functions/get-users-for-orders";
 
 export const negativeQuantityStyle =
   "bg-destructive hover:bg-destructive/90 hover:text-destructive-foreground text-destructive-foreground";
@@ -23,7 +24,7 @@ export const ShippingProducts = ({
   user,
 }: {
   products: (ProductWithMain & { stocks: ProductStock[] })[];
-  user?: UserWithAddress | null;
+  user?: UsersForOrderType | null;
 }) => {
   const form = useFormContext<OrderFormValues>();
   const items = form.watch("orderItems");
@@ -86,7 +87,7 @@ function ProductName({
   products,
   user,
 }: {
-  user?: UserWithAddress | null;
+  user?: UsersForOrderType | null;
   productIndex: number;
   products: (ProductWithMain & { stocks: ProductStock[] })[];
 }) {
@@ -216,7 +217,7 @@ const SelectProductName = ({
   quantity,
   user,
 }: {
-  user?: UserWithAddress | null;
+  user?: UsersForOrderType | null;
   productIndex: number;
   quantity: number;
   products: (ProductWithMain & { stocks: ProductStock[] })[];

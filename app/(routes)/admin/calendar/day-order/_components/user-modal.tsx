@@ -1,9 +1,9 @@
 import SelectSheetWithTabs, { sortUserByRole } from "@/components/select-sheet-with-tabs";
 import { Plus, User } from "lucide-react";
 import { useCallback } from "react";
-import type { GetUsersType } from "../_functions/get-users";
+import type { UsersForOrderType } from "../../../orders/[orderId]/_functions/get-users-for-orders";
 
-function UserModal({ onValueChange, users }: { onValueChange: (value: string) => void; users: GetUsersType }) {
+function UserModal({ onValueChange, users }: { onValueChange: (value: string) => void; users: UsersForOrderType[] }) {
   const sortedUsers = useCallback(() => sortUserByRole(users), [users]);
   return (
     <SelectSheetWithTabs

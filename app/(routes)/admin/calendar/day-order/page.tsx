@@ -1,13 +1,13 @@
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
+import { DAYS_OF_WEEK } from "@/lib/date-utils";
+import getUsersForOrders from "../../orders/[orderId]/_functions/get-users-for-orders";
 import DisplayUserForTheDay from "./_components/display-user-for-the-day";
 import getDayOrders from "./_functions/get-day-orders";
-import getUsers from "./_functions/get-users";
-import { DAYS_OF_WEEK } from "@/lib/date-utils";
 
 async function DayOrderPage() {
   const dayOrders = await getDayOrders();
-  const users = await getUsers();
+  const users = await getUsersForOrders();
 
   return (
     <div className=" space-y-2 " style={{ height: `calc(100dvh - 80px)` }}>

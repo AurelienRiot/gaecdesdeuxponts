@@ -177,7 +177,16 @@ function SelectContent<V extends { key: string }, T extends string>({
 
 export default SelectSheetWithTabs;
 
-export function sortUserByRole(users: User[]) {
+export function sortUserByRole(
+  users: {
+    name?: string | null;
+    id: string;
+    company?: string | null;
+    email?: string | null;
+    role: Role;
+    image?: string | null;
+  }[],
+) {
   const groupedRoles = users.reduce(
     (acc, user) => {
       // Find or create the group for the user's role

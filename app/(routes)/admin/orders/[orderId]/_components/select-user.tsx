@@ -3,16 +3,14 @@ import { getUserName } from "@/components/table-custom-fuction";
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import type { UserWithAddress } from "@/types";
-import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
+import type { UsersForOrderType } from "../_functions/get-users-for-orders";
 import type { OrderFormValues } from "./order-schema";
 
-const SelectUser = ({ users }: { users: UserWithAddress[] }) => {
+const SelectUser = ({ users }: { users: UsersForOrderType[] }) => {
   const form = useFormContext<OrderFormValues>();
-  const router = useRouter();
   const userId = form.watch("userId");
   const name = (() => {
     const user = users.find((user) => user.id === userId);

@@ -31,6 +31,7 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
+import type { UsersForOrderType } from "../_functions/get-users-for-orders";
 
 export type OrderFormProps = {
   initialData:
@@ -44,7 +45,7 @@ export type OrderFormProps = {
     | null;
   products: (ProductWithMain & { stocks: ProductStock[] })[];
   shops: Shop[];
-  users: UserWithAddress[];
+  users: UsersForOrderType[];
   referer: string;
   className?: string;
 };
