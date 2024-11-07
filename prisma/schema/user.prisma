@@ -143,9 +143,12 @@ model DefaultOrder {
   defaultOrderProducts DefaultOrderProduct[]
   userId               String
   user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shopId               String?
+  defaultShop          Shop?                 @relation(fields: [shopId], references: [id], onDelete: Cascade)
 
   @@unique([userId, day])
   @@index([userId])
+  @@index([shopId])
 }
 
 model DefaultOrderProduct {

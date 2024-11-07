@@ -7,6 +7,7 @@ import { headers } from "next/headers";
 import { Suspense } from "react";
 import Loading from "../../_loading";
 import OrderSheet from "./components/order-sheet";
+import { getUnitLabel } from "@/components/product/product-function";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +16,12 @@ async function IntercepteOrderPage({
   searchParams,
 }: {
   params: { orderId: string };
-  searchParams: { id: string | undefined; referer: string | undefined; dateOfShipping: string | undefined };
+  searchParams: {
+    newOrderId: string;
+    userId: string | undefined;
+    referer: string | undefined;
+    dateOfShipping: string | undefined;
+  };
 }) {
   const headersList = headers();
   const headerReferer = headersList.get("referer");
@@ -24,15 +30,15 @@ async function IntercepteOrderPage({
       ? decodeURIComponent(searchParams.referer || "/admin/calendar")
       : headerReferer;
   const dateOfShipping = searchParams.dateOfShipping ? new Date(searchParams.dateOfShipping) : undefined;
-  const orderId = params.orderId === "new" ? decodeURIComponent(searchParams.id || "new") : params.orderId;
   return (
     <OrderSheet orderId={params.orderId}>
       <Suspense fallback={<Loading />}>
         <DisplayOrderForm
-          orderId={orderId}
+          orderId={params.orderId}
           referer={referer}
+          newOrderId={searchParams.newOrderId}
+          userId={searchParams.userId}
           dateOfShipping={dateOfShipping}
-          newOrder={params.orderId === "new"}
         />
       </Suspense>
     </OrderSheet>
@@ -43,15 +49,31 @@ export default IntercepteOrderPage;
 
 async function DisplayOrderForm({
   orderId,
+  newOrderId,
   referer,
   dateOfShipping,
-  newOrder,
-}: { orderId: string; dateOfShipping?: Date; referer: string; newOrder?: boolean }) {
+  userId,
+}: { orderId: string; newOrderId: string; dateOfShipping?: Date; referer: string; userId: string | undefined }) {
   const [products, shops, users, initialData] = await Promise.all([
     getProductsForOrders(),
     getShopsForOrders(),
     getUsersForOrders(),
-    getShippingOrder(orderId, dateOfShipping, newOrder),
+    getShippingOrder({ orderId, dateOfShipping, userId, newOrderId }),
   ]);
+
+  if (initialData && orderId === "new") {
+    for (const item of initialData.orderItems) {
+      const product = products.find((product) => product.id === item.itemId);
+      if (product) {
+        item.name = product.name;
+        item.description = product.description;
+        item.categoryName = product.product.categoryName;
+        item.stocks = product.stocks.map((stock) => stock.stockId);
+        item.tax = product.tax;
+        item.unit = getUnitLabel(product.unit).quantity;
+      }
+    }
+  }
+
   return <OrderForm products={products} initialData={initialData} users={users} shops={shops} referer={referer} />;
 }

@@ -25,8 +25,9 @@ async function DefaultProductsPage({
   return (
     <div className=" space-y-2 " style={{ height: `calc(100dvh - 80px)` }}>
       <div className="max-w-[90vw] md:max-w-[500px] mx-auto flex pt-2 gap-4 items-center justify-between">
+        <ButtonBackward />
         <Heading
-          title={`Commandes par default par jour`}
+          title={`Commandes par default par jour pour ${user.company || user.name}`}
           description=""
           className=" w-fit  text-center mx-auto"
           titleClassName=" text-lg sm:text-2xl md:text-3xl"

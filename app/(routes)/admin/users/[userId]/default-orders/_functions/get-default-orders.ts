@@ -11,6 +11,8 @@ async function getDefaultOrders(id?: string) {
     },
     select: {
       role: true,
+      name: true,
+      company: true,
       defaultOrders: { include: { defaultOrderProducts: true } },
     },
   });

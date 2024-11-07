@@ -13,7 +13,12 @@ const OrderFormPage = async ({
   searchParams,
 }: {
   params: { orderId: string };
-  searchParams: { id: string | undefined; referer: string | undefined; dateOfShipping: string | undefined };
+  searchParams: {
+    newOrderId: string | undefined;
+    userId: string | undefined;
+    referer: string | undefined;
+    dateOfShipping: string | undefined;
+  };
 }) => {
   const headersList = headers();
   const headerReferer = headersList.get("referer");
@@ -22,15 +27,18 @@ const OrderFormPage = async ({
       ? decodeURIComponent(searchParams.referer || "/admin/orders")
       : headerReferer;
   const dateOfShipping = searchParams.dateOfShipping ? new Date(searchParams.dateOfShipping) : undefined;
-  const orderId = params.orderId === "new" ? decodeURIComponent(searchParams.id || "new") : params.orderId;
 
   const [products, shops, users, initialData] = await Promise.all([
     getProductsForOrders(),
     getShopsForOrders(),
     getUsersForOrders(),
-    getShippingOrder(orderId, dateOfShipping, params.orderId === "new"),
+    getShippingOrder({
+      orderId: params.orderId,
+      dateOfShipping,
+      userId: searchParams.userId,
+      newOrderId: searchParams.newOrderId,
+    }),
   ]);
-
   if (initialData && params.orderId === "new") {
     for (const item of initialData.orderItems) {
       const product = products.find((product) => product.id === item.itemId);
@@ -38,7 +46,6 @@ const OrderFormPage = async ({
         item.name = product.name;
         item.description = product.description;
         item.categoryName = product.product.categoryName;
-        item.price = product.price;
         item.stocks = product.stocks.map((stock) => stock.stockId);
         item.tax = product.tax;
         item.unit = getUnitLabel(product.unit).quantity;

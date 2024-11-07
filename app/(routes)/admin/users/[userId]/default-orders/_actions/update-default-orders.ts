@@ -1,9 +1,10 @@
 "use server";
 
-import safeServerAction from "@/lib/server-action";
-import { defaultOrderSchema, type DefaultOrderFormValues } from "../_components/schema";
 import { SHIPPING } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import safeServerAction from "@/lib/server-action";
+import { revalidateTag } from "next/cache";
+import { defaultOrderSchema, type DefaultOrderFormValues } from "../_components/schema";
 
 async function updateDefaultOrdersAction(data: DefaultOrderFormValues) {
   return await safeServerAction({
@@ -28,21 +29,29 @@ async function updateDefaultOrdersAction(data: DefaultOrderFormValues) {
           },
         });
       } else {
-        await prismadb.defaultOrderProduct.deleteMany({
-          where: {
-            defaultOrderId: defaultOrder.id,
-          },
-        });
-        await prismadb.defaultOrder.update({
-          where: {
-            id: defaultOrder.id,
-          },
-          data: {
-            defaultOrderProducts: { create: defaultOrderProducts },
-          },
-        });
+        if (defaultOrderProducts.length === 0) {
+          await prismadb.defaultOrder.delete({
+            where: {
+              id: defaultOrder.id,
+            },
+          });
+        } else {
+          await prismadb.defaultOrderProduct.deleteMany({
+            where: {
+              defaultOrderId: defaultOrder.id,
+            },
+          });
+          await prismadb.defaultOrder.update({
+            where: {
+              id: defaultOrder.id,
+            },
+            data: {
+              defaultOrderProducts: { create: defaultOrderProducts },
+            },
+          });
+        }
       }
-
+      revalidateTag("defaultOrders");
       return { success: true, message: "Commande par défault mise à jour" };
     },
   });
