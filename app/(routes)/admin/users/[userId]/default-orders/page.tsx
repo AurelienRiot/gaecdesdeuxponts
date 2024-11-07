@@ -6,6 +6,8 @@ import getProductsForOrders from "../../../orders/[orderId]/_functions/get-produ
 import DisplayDefaultOrderForTheDay from "./_components/display-default-order-for-the-day";
 import getDefaultOrders from "./_functions/get-default-orders";
 
+export const dynamic = "force-dynamic";
+
 async function DefaultProductsPage({
   params,
 }: {

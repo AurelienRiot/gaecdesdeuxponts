@@ -1,10 +1,7 @@
 import { CreateUserForm } from "@/app/(routes)/admin/users/[userId]/_components/create-user-form";
 import { UserForm } from "@/app/(routes)/admin/users/[userId]/_components/user-form";
 import prismadb from "@/lib/prismadb";
-import { Suspense } from "react";
-import Loading from "../../_loading";
 import UserSheet from "./components/user-sheet";
-import { addDelay } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -15,9 +12,7 @@ async function IntercepteUserPage({
 }) {
   return (
     <UserSheet>
-      <Suspense fallback={<Loading />}>
-        <DisplayUserForm userId={params.userId} />
-      </Suspense>
+      <DisplayUserForm userId={params.userId} />
     </UserSheet>
   );
 }

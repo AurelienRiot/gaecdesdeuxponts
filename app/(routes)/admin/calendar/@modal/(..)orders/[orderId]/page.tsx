@@ -3,11 +3,10 @@ import getShippingOrder from "@/app/(routes)/admin/orders/[orderId]/_functions/g
 import getProductsForOrders from "@/app/(routes)/admin/orders/[orderId]/_functions/get-products-for-orders";
 import getShopsForOrders from "@/app/(routes)/admin/orders/[orderId]/_functions/get-shops-for-orders";
 import getUsersForOrders from "@/app/(routes)/admin/orders/[orderId]/_functions/get-users-for-orders";
-import { headers } from "next/headers";
-import { Suspense } from "react";
-import Loading from "../../_loading";
-import OrderSheet from "./components/order-sheet";
 import { getUnitLabel } from "@/components/product/product-function";
+import { headers } from "next/headers";
+import OrderSheet from "./components/order-sheet";
+import { addDelay } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +22,7 @@ async function IntercepteOrderPage({
     dateOfShipping: string | undefined;
   };
 }) {
+  await addDelay(2000);
   const headersList = headers();
   const headerReferer = headersList.get("referer");
   const referer =
@@ -32,15 +32,13 @@ async function IntercepteOrderPage({
   const dateOfShipping = searchParams.dateOfShipping ? new Date(searchParams.dateOfShipping) : undefined;
   return (
     <OrderSheet orderId={params.orderId}>
-      <Suspense fallback={<Loading />}>
-        <DisplayOrderForm
-          orderId={params.orderId}
-          referer={referer}
-          newOrderId={searchParams.newOrderId}
-          userId={searchParams.userId}
-          dateOfShipping={dateOfShipping}
-        />
-      </Suspense>
+      <DisplayOrderForm
+        orderId={params.orderId}
+        referer={referer}
+        newOrderId={searchParams.newOrderId}
+        userId={searchParams.userId}
+        dateOfShipping={dateOfShipping}
+      />
     </OrderSheet>
   );
 }

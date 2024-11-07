@@ -5,6 +5,8 @@ import getUsersForOrders from "../../orders/[orderId]/_functions/get-users-for-o
 import DisplayUserForTheDay from "./_components/display-user-for-the-day";
 import getDayOrders from "./_functions/get-day-orders";
 
+export const dynamic = "force-dynamic";
+
 async function DayOrderPage() {
   const dayOrders = await getDayOrders();
   const users = await getUsersForOrders();
