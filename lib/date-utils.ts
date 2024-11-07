@@ -7,6 +7,8 @@ export const timeZone = "Europe/Paris";
 export const ONE_DAY = 24 * 60 * 60 * 1000;
 export const MIN_DAYS_FOR_PICK_UP = 3;
 
+export const DAYS_OF_WEEK = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+
 export const dateFormatter = (date: Date, options?: { hours?: boolean; days?: boolean; customFormat?: string }) => {
   const localDate = addMinutes(new Date(date), getDateOffset(date));
   if (options?.customFormat) return format(localDate, options.customFormat, { locale: fr });

@@ -11,8 +11,8 @@ function UserModal({ onValueChange, users }: { onValueChange: (value: string) =>
       title="Selectionner le client"
       trigger={
         <button type="button" className=" p-2 h-fit border bg-blue-500 rounded-full cursor-pointer flex gap-2">
-          <Plus className="size-4 text-green-100 stroke-[3]" />
-          <User className="size-4 text-green-100 stroke-[3]" />
+          <Plus className="size-4 text-blue-100 stroke-[3]" />
+          <User className="size-4 text-blue-100 stroke-[3]" />
         </button>
       }
       selectedValue={null}

@@ -2,6 +2,8 @@ import { priorityMap } from "@/components/product";
 import prismadb from "@/lib/prismadb";
 import { unstable_cache } from "next/cache";
 
+export type GetProductsForOrdersType = Awaited<ReturnType<typeof getProductsForOrders>>;
+
 const getProductsForOrders = unstable_cache(
   async () => {
     const products = await prismadb.product.findMany({

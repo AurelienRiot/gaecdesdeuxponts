@@ -19,7 +19,6 @@ async function updateDayOrder(data: z.infer<typeof schema>) {
         where: { day },
         include: { dayOrderUsers: true },
       });
-      console.dir({ dayOrder }, { depth: Number.POSITIVE_INFINITY });
       if (dayOrder) {
         await prismadb.dayOrderUser.deleteMany({
           where: {

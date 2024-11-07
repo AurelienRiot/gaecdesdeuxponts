@@ -15,7 +15,7 @@ import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-schema";
 
-const negativeQuantityStyle =
+export const negativeQuantityStyle =
   "bg-destructive hover:bg-destructive/90 hover:text-destructive-foreground text-destructive-foreground";
 
 export const ShippingProducts = ({

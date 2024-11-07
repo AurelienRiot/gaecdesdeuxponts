@@ -3,8 +3,7 @@ import { Separator } from "@/components/ui/separator";
 import DisplayUserForTheDay from "./_components/display-user-for-the-day";
 import getDayOrders from "./_functions/get-day-orders";
 import getUsers from "./_functions/get-users";
-
-const DAYS_OF_WEEK = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+import { DAYS_OF_WEEK } from "@/lib/date-utils";
 
 async function DayOrderPage() {
   const dayOrders = await getDayOrders();

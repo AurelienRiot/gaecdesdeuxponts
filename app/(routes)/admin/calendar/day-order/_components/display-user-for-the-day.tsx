@@ -1,19 +1,18 @@
 "use client";
 import { getUserName } from "@/components/table-custom-fuction";
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
+import { Button } from "@/components/ui/button";
 import NoResults from "@/components/ui/no-results";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import useServerAction from "@/hooks/use-server-action";
 import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import { Grip } from "lucide-react";
-import { memo, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import updateDayOrder from "../_actions/update-day-order";
 import type { GetDayOrdersType } from "../_functions/get-day-orders";
 import type { GetUsersType } from "../_functions/get-users";
 import UserModal from "./user-modal";
-import { nanoid } from "@/lib/id";
-import useServerAction from "@/hooks/use-server-action";
-import updateDayOrder from "../_actions/update-day-order";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 
 function DisplayUserForTheDay({
   dayOrdersForDay,
@@ -33,7 +32,6 @@ function DisplayUserForTheDay({
   }, [dayOrdersForDay]);
 
   function onUpdateDayOrder() {
-    console.log(localDayOrdersForDay);
     if (!localDayOrdersForDay || localDayOrdersForDay.length === 0) {
       toast.error("Veuillez sélectionner au moins un client");
       return;

@@ -52,7 +52,7 @@ model User {
   messages       Contact[]
   comments       Comment[]
   notifications  Notification?
-  defauldOrders  DefaultOrder[]
+  defaultOrders  DefaultOrder[]
   dayOrderUsers  DayOrderUser[]
   ccInvoice      String[]
   createdAt      DateTime        @default(now())
