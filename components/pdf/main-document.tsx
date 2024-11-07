@@ -156,7 +156,7 @@ const Logo = () => (
     {/* eslint-disable-next-line jsx-a11y/alt-text */}
     <Image style={CompanyStyles.logo1} src="https://www.laiteriedupontrobert.fr/logo-font-blanc.png" cache={false} />
     {/* eslint-disable-next-line jsx-a11y/alt-text */}
-    <Image style={CompanyStyles.logo2} src="https://www.laiteriedupontrobert.fr/certification-bio.jpeg" cache={false} />
+    {/* <Image style={CompanyStyles.logo2} src="https://www.laiteriedupontrobert.fr/certification-bio.jpeg" cache={false} /> */}
   </View>
 );
 
