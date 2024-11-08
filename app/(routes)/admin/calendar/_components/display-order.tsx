@@ -67,7 +67,12 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, newOrder,
                   <p className="text-xs font-semibold">Total : {order.totalPrice}</p>
                   {/* <p className="text-[10px] text-gray-500">Livraison {relativeDate}</p> */}
                 </div>
-                <Button asChild variant="secondary" className="text-sm border-dashed border">
+                <Button
+                  onClick={() => console.log({ click: "clicked", date: new Date() })}
+                  asChild
+                  variant="secondary"
+                  className="text-sm border-dashed border"
+                >
                   <Link href={`/admin/orders/${order.id}`}>Éditer</Link>
                 </Button>
               </div>

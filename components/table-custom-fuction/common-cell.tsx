@@ -54,6 +54,7 @@ function NameCell({
             image={image}
             imageSize={imageSize}
             displayImage={displayImage}
+            displayName={displayName}
             completed={completed}
             className={cn("px-0", className)}
           />
@@ -64,6 +65,7 @@ function NameCell({
           image={image}
           imageSize={imageSize}
           displayImage={displayImage}
+          displayName={displayName}
           completed={completed}
           className={cn("px-0", className)}
         />
