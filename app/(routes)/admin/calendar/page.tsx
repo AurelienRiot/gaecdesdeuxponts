@@ -22,11 +22,6 @@ async function CalendarPage() {
   const from = addDays(new Date(), -20);
   const to = addDays(new Date(), 30);
   const dateArray = makeDateArray({ from, to });
-  // const [orders, amapOrders] = await Promise.all([getOrdersByDate({ from, to }), getGroupedAMAPOrders()]);
-  // const stocks = await getStocks();
-  // for (const stock of stocks) {
-  //   console.log(stock.name, " : ", stock.totalQuantity);
-  // }
   const amapOrders = await getGroupedAMAPOrders();
 
   return (

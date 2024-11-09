@@ -13,8 +13,8 @@ export default async function PublicLayout({
     <>
       <PublicHeader />
       <main id="main-content" className="pt-20 ">
-        {children}
         {modal}
+        {children}
       </main>
       <CookiesBanner />
       <Footer />
