@@ -173,9 +173,7 @@ function DisplayUserOrders() {
 
   return (
     <div className="mb-4 space-y-2">
-      <h3 className="text-sm font-medium text-gray-500">
-        {user.orders.length > 1 ? "Commandes précedentes" : "Commande précedente"}
-      </h3>
+      <h3 className="text-sm font-medium text-gray-500">Commandes</h3>
 
       {user.orders.map((order) => (
         <div key={order.id} className="space-y-2 p-3 rounded-md bg-secondary">

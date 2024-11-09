@@ -4,10 +4,8 @@ import { ONE_DAY } from "@/lib/date-utils";
 import { addDays } from "date-fns";
 import { Package, Plus, User } from "lucide-react";
 import Link from "next/link";
-import TodayFocus from "./_components/date-focus";
 import EventPage from "./_components/events-page";
 import { OrdersModalProvider } from "./_components/orders-modal";
-import UpdatePage from "./_components/update-page";
 import { UserModalProvider } from "./_components/user-modal";
 import { getGroupedAMAPOrders } from "./_functions/get-amap-orders";
 
@@ -21,7 +19,7 @@ function makeDateArray({ from, to }: { from: Date; to: Date }) {
 }
 
 async function CalendarPage() {
-  const from = addDays(new Date(), -14);
+  const from = addDays(new Date(), -20);
   const to = addDays(new Date(), 30);
   const dateArray = makeDateArray({ from, to });
   // const [orders, amapOrders] = await Promise.all([getOrdersByDate({ from, to }), getGroupedAMAPOrders()]);

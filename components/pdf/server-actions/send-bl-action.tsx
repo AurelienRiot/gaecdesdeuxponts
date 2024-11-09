@@ -12,6 +12,7 @@ import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import ShippingOrder from "../create-shipping";
 import { createPDFData } from "../pdf-data";
+import { addDelay } from "@/lib/utils";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
@@ -113,6 +114,13 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
             ],
           });
         }
+        //  else {
+        //   await addDelay(3000);
+        //   return {
+        //     success: false,
+        //     message: "Environnement de test",
+        //   };
+        // }
       }
       !order.shippingEmail && (await updateStocks(order.orderItems));
 
@@ -130,7 +138,7 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
 
       return {
         success: true,
-        message: "BL envoyé",
+        message: "",
       };
     },
   });

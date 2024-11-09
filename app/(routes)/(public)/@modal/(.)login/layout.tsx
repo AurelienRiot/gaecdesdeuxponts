@@ -1,10 +1,10 @@
 "use client";
+
 import { Modal } from "@/components/ui/modal";
 import { useRouter } from "next/navigation";
 
-function LoginSheet({ children }: { children: React.ReactNode }) {
+function ModalLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-
   return (
     <Modal
       isOpen={true}
@@ -18,4 +18,4 @@ function LoginSheet({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default LoginSheet;
+export default ModalLayout;

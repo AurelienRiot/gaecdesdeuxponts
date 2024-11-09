@@ -34,11 +34,11 @@ export function useUsersQuery() {
   return useQuery({
     queryFn: async () => await fetchUsers(),
     queryKey: ["fetchUsers"],
-    staleTime: 60 * 60 * 1000,
+    staleTime: 24 * 60 * 60 * 1000,
   });
 }
 
-export function useOrdersQueryClient() {
+export function useUsersQueryClient() {
   const queryClient = useQueryClient();
 
   const mutateUsers = (fn: (users: UsersForOrderType[]) => UsersForOrderType[]) => {
