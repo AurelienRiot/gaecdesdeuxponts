@@ -17,6 +17,7 @@ import { useOrdersModal } from "./orders-modal";
 import { useOrdersQuery } from "./orders-query";
 import SummarizeProducts from "./summarize-products";
 import UpdatePage from "./update-page";
+import { useUsersQuery } from "./users-query";
 
 type EventsPageProps = {
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
@@ -24,7 +25,8 @@ type EventsPageProps = {
 };
 
 export default function EventPage({ amapOrders, initialDateArray: dateArray }: EventsPageProps) {
-  const { data: allOrders, error, fetchStatus } = useOrdersQuery(dateArray);
+  const { data: orders, error: ordersError, fetchStatus: ordersFetchStatus } = useOrdersQuery(dateArray);
+  const { error: usersError, fetchStatus: usersFetchStatus } = useUsersQuery();
   const virtuosoRef = useRef<VirtuosoHandle>(null);
 
   const scrollToElement = useCallback(
@@ -46,7 +48,7 @@ export default function EventPage({ amapOrders, initialDateArray: dateArray }: E
   );
   return (
     <>
-      {fetchStatus === "fetching" && (
+      {(ordersFetchStatus === "fetching" || usersFetchStatus === "fetching") && (
         <div className="absolute left-1/2 translate-x-[-40%]    bottom-7 h-2 max-w-[200px]  w-[40%] overflow-hidden rounded border-2 bg-primary-foreground">
           <div className="absolute h-full animate-load-bar rounded bg-primary"></div>
           <div
@@ -56,28 +58,35 @@ export default function EventPage({ amapOrders, initialDateArray: dateArray }: E
         </div>
       )}
 
-      {fetchStatus === "paused" && (
+      {(ordersFetchStatus === "paused" || usersFetchStatus === "paused") && (
         <div className="absolute left-1/2 translate-x-[-35%]  text-destructive font-bold  bottom-6    overflow-hidden ">
           Aucune connection
         </div>
       )}
-      {error && (
+      {ordersError && (
         <div
           className="absolute left-1/2 -translate-x-1/2 translate-y-1/2 w-full max-w-[500px] pl-28 pr-20
             text-center  text-destructive font-bold  bottom-10 "
         >
-          {error.message}
+          {ordersError.message}
+        </div>
+      )}
+      {usersError && (
+        <div
+          className="absolute left-1/2 -translate-x-1/2 translate-y-1/2 w-full max-w-[500px] pl-28 pr-20
+            text-center  text-destructive font-bold  bottom-10 "
+        >
+          {usersError.message}
         </div>
       )}
 
-      {/* {allOrders && ( */}
       <Virtuoso
         ref={virtuosoRef}
         initialTopMostItemIndex={dateArray.findIndex((date) => date === getLocalIsoString(new Date()))}
         data={dateArray}
         horizontalDirection
         itemContent={(_, date) => {
-          const dailyOrders = allOrders
+          const dailyOrders = orders
             ?.filter((order) => getLocalIsoString(order.shippingDate) === date)
             .sort((a, b) => {
               if (a.index === null) return -1;
@@ -87,7 +96,7 @@ export default function EventPage({ amapOrders, initialDateArray: dateArray }: E
           return (
             <RenderEvent
               date={date}
-              allOrders={allOrders}
+              allOrders={orders}
               amapOrders={amapOrders}
               dailyOrders={dailyOrders}
               key={date}
@@ -99,27 +108,7 @@ export default function EventPage({ amapOrders, initialDateArray: dateArray }: E
         }}
         className="flex flex-row  overflow-y-hidden mx-auto  flex-auto w-full overflow-x-scroll relative "
       />
-      {/* )} */}
-      {/* <div className="flex flex-row gap-4  pb-6 overflow-y-hidden mx-auto flex-auto w-full overflow-x-scroll">
-        {dateArray.map((date, index) => {
-          const dailyOrders = allOrders
-            ?.filter((order) => getLocalIsoString(order.shippingDate) === date)
-            .sort((a, b) => {
-              if (a.index === null) return -1;
-              if (b.index === null) return 1;
-              return (a.index ?? 0) - (b.index ?? 0);
-            });
-          return (
-            <RenderEvent
-              date={date}
-              allOrders={allOrders}
-              amapOrders={amapOrders}
-              dailyOrders={dailyOrders}
-              key={date}
-            />
-          );
-        })}
-      </div> */}
+
       <div className="flex justify-between p-4 max-w-[500px] mx-auto w-full">
         <UpdatePage />
         <TodayFocus
@@ -207,12 +196,12 @@ function DatePage({
         dailyOrders.map((order, index) => {
           const newOrder = allOrders.some((nextOrder) => {
             return (
-              nextOrder.user.id === order.user.id &&
+              nextOrder.userId === order.userId &&
               addDays(new Date(date), 1).getTime() < nextOrder.shippingDate.getTime()
             );
           });
           const otherOrders = allOrders.filter((otherOrder) => {
-            return otherOrder.user.id === order.user.id;
+            return otherOrder.userId === order.userId;
           });
           return <DisplayOrder key={order.id} order={order} newOrder={newOrder} otherOrders={otherOrders} />;
         })

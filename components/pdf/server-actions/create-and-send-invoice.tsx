@@ -31,7 +31,7 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean) {
   if (!fullInvoice) {
     return {
       success: false,
-      message: "Aucune commande pour ce mois",
+      message: "La facture n'existe pas",
     };
   }
 

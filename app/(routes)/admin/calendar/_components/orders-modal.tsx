@@ -13,6 +13,7 @@ import { createContext, memo, useContext, useEffect, useState } from "react";
 import updateOrdersIndex from "../_actions/update-orders-index";
 import type { CalendarOrdersType } from "../_functions/get-orders";
 import { useOrdersQueryClient } from "./orders-query";
+import { useUsersQuery } from "./users-query";
 
 type OrdersModalContextType = {
   orders: CalendarOrdersType[] | null;
@@ -119,6 +120,9 @@ const MemoizedOrderItem = memo(OrderItem);
 function OrderItem({ order }: { order: CalendarOrdersType }) {
   // const y = useMotionValue(0);
   // const boxShadow = useRaisedShadow(y);
+  const { data: users } = useUsersQuery();
+  const user = users?.find((u) => u.id === order.userId);
+
   const controls = useDragControls();
   const backgroundColor = useMotionValue("var(--background)");
 
@@ -146,12 +150,14 @@ function OrderItem({ order }: { order: CalendarOrdersType }) {
       <div onPointerDown={handlePointerDown} className="flex gap-2 items-center justify-center p-2 cursor-pointer">
         <Grip className="size-4" />
       </div>
-      <NameWithImage
-        name={order.name}
-        image={order.user.image}
-        imageSize={12}
-        className="p-2 select-none pointer-events-none"
-      />
+      {user && (
+        <NameWithImage
+          name={order.userName}
+          image={user.image}
+          imageSize={12}
+          className="p-2 select-none pointer-events-none"
+        />
+      )}
     </Reorder.Item>
   );
 }

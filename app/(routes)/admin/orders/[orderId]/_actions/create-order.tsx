@@ -7,7 +7,7 @@ import { createId } from "@/lib/id";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
-import { formatOrders } from "../../../calendar/_functions/get-orders";
+import { formatOrder } from "../../../calendar/_functions/get-orders";
 import { orderSchema, type OrderFormValues } from "../_components/order-schema";
 import getOrdersIndex from "../_functions/get-orders-index";
 
@@ -72,7 +72,7 @@ async function createOrder(data: OrderFormValues) {
       return {
         success: true,
         message: "Commande crée",
-        data: formatOrders(order),
+        data: formatOrder(order),
       };
     },
   });

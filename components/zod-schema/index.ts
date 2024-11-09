@@ -32,4 +32,5 @@ const phoneSchema = z.string({ invalid_type_error: "Entrer un numéro de télép
   },
 );
 
-export { emailSchema, nameSchema, optSchema, phoneSchema };
+const emptySchema = z.object({});
+export { emailSchema, nameSchema, optSchema, phoneSchema, emptySchema };

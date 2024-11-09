@@ -11,7 +11,8 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import useServerAction from "@/hooks/use-server-action";
 import { createId } from "@/lib/id";
-import type { ProductWithMain, UserWithAddress } from "@/types";
+import { scrollToId } from "@/lib/scroll-to-traget";
+import type { ProductWithMain } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ProductStock, Shop } from "@prisma/client";
 import { Plus } from "lucide-react";
@@ -24,6 +25,7 @@ import { deleteOrder } from "../../_actions/delete-orders";
 import confirmOrder from "../_actions/confirm-order";
 import createOrder from "../_actions/create-order";
 import updateOrder from "../_actions/update-order";
+import type { UsersForOrderType } from "../_functions/get-users-for-orders";
 import FormDatePicker from "./date-picker";
 import { orderSchema, type OrderFormValues } from "./order-schema";
 import { ShippingProducts } from "./products";
@@ -31,7 +33,6 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
-import type { UsersForOrderType } from "../_functions/get-users-for-orders";
 
 export type OrderFormProps = {
   initialData:
@@ -46,11 +47,10 @@ export type OrderFormProps = {
   products: (ProductWithMain & { stocks: ProductStock[] })[];
   shops: Shop[];
   users: UsersForOrderType[];
-  referer: string;
   className?: string;
 };
 
-export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, users, shops, referer, className }) => {
+export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, users, shops, className }) => {
   const router = useRouter();
   const { refectOrders, mutateOrders } = useOrdersQueryClient();
   const prevDateOfShipping = initialData?.dateOfShipping ? new Date(initialData.dateOfShipping) : undefined;
@@ -126,7 +126,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
     }
 
     function onSuccess() {
-      router.replace(`/admin/orders/${initialData?.id}?referer=${encodeURIComponent(referer)}#button-container`);
+      router.replace(`/admin/orders/${initialData?.id}`);
       mutateOrders((prev) =>
         prev.map((order) =>
           order.id === initialData?.id
@@ -152,7 +152,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
       data: { id: initialData?.invoiceId, isPaid: !initialData.dateOfPayment },
       onSuccess: () => {
         refectOrders();
-        router.refresh();
+        router.replace(`/admin/orders/${initialData?.id}`);
       },
     });
   }
@@ -193,7 +193,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
             result.shippingDate = new Date(result.shippingDate);
             result.createdAt = new Date(result.createdAt);
             mutateOrders((prev) => prev.filter((order) => order.id !== result.id).concat(result));
-            router.replace(`/admin/orders/${result.id}?referer=${encodeURIComponent(referer)}#button-container`);
+            scrollToId("button-container");
           },
           toastOptions: { position: "top-center" },
         })
@@ -225,7 +225,6 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
     const milliseconds = dateOfPickUp.getMilliseconds();
     const urlParams = new URLSearchParams();
     urlParams.set("dateOfShipping", new Date(date.setHours(hours, minutes, seconds, milliseconds)).toISOString());
-    urlParams.set("referer", referer);
     urlParams.set("userId", form.getValues("userId"));
     urlParams.set("newOrderId", form.getValues("id"));
     toast.success("Création d'une nouvelle commande", { position: "top-center" });

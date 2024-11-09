@@ -95,8 +95,6 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
             return ky
               .post("/api/send-invoice", { json: { invoiceId }, timeout: 15000 })
               .then(async (res) => {
-                const result = (await res.json()) as { message: string };
-                // toast.success(result.message);
                 setInvoiceLoading((prev) => ({
                   ...prev,
                   [invoiceId]: { state: "success", name: prev[invoiceId].name },

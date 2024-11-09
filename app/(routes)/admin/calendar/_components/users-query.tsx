@@ -1,22 +1,33 @@
 "use client";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import ky, { type HTTPError } from "ky";
 import type { UsersForOrderType } from "../../orders/[orderId]/_functions/get-users-for-orders";
-import getUsersForOrdersAction from "../_actions/get-users-for-orders";
 
 async function fetchUsers() {
-  const responce = await getUsersForOrdersAction({});
-  // const responce = (await ky.post("/api/get-day-orders", { json: { from, to } }).json()) as Awaited<
-  //   ReturnType<typeof getDailyOrders>
-  // >;
-  if (!responce.success) {
-    throw new Error(responce.message);
-  }
-  if (!responce.data) {
+  const responce = await ky
+    .get("/api/calendar/users")
+    .then(async (res) => {
+      const result = (await res.json()) as UsersForOrderType[];
+      console.log(result);
+      return result;
+    })
+    .catch(async (kyError: HTTPError) => {
+      if (kyError.response) {
+        const errorData = await kyError.response.text();
+        console.error(errorData);
+        return errorData;
+      }
+
+      console.error("Erreur timeout");
+      return "Erreur";
+    });
+
+  if (typeof responce === "string") {
     throw new Error("Impossible de charger les commandes");
   }
 
-  return responce.data;
+  return responce;
 }
 
 export function useUsersQuery() {

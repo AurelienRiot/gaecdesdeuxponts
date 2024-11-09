@@ -62,7 +62,7 @@ export type GroupUsersByProduct = {
   totalQuantity: number;
   users: {
     userId: string;
-    image?: string | null;
+    userImage?: string | null;
     userName: string;
     quantity: number;
   }[];
@@ -87,9 +87,7 @@ export function groupUsersByProduct(
   const productMap = new Map<string, GroupUsersByProduct>();
 
   for (const order of orders) {
-    const userName = getUserName(order.user);
-    const userId = order.user.id;
-    const image = order.user.image;
+    const { userName, userId, userImage } = order;
 
     for (const product of order.productsList) {
       const { itemId, name, unit, quantity, price } = product;
@@ -127,7 +125,7 @@ export function groupUsersByProduct(
       const productOrder = productMap.get(aggregatedName);
       if (productOrder) {
         productOrder.users.push({
-          image,
+          userImage,
           userId,
           userName,
           quantity,
@@ -139,7 +137,7 @@ export function groupUsersByProduct(
   for (const order of amapOrders) {
     const userName = order.shopName;
     const userId = nanoid(5);
-    const image = order.shopImageUrl;
+    const userImage = order.shopImageUrl;
 
     for (const product of order.order?.items || []) {
       const { itemId, name, unit, quantity } = product;
@@ -161,7 +159,7 @@ export function groupUsersByProduct(
       const productOrder = productMap.get(name);
       if (productOrder) {
         productOrder.users.push({
-          image,
+          userImage,
           userId,
           userName,
           quantity,

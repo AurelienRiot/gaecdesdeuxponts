@@ -142,7 +142,7 @@ function SummarizeUserProducts({
                       deleted && " line-through  decoration-destructive",
                     )}
                   >
-                    <NameWithImage name={name} image={user.image} imageSize={8} className="col-span-7" />
+                    <NameWithImage name={name} image={user.userImage} imageSize={8} className="col-span-7" />
                     <p className="col-span-1">
                       : {user.quantity}
                       {product.unit}

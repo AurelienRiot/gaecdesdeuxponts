@@ -12,6 +12,9 @@ import type { CalendarOrdersType } from "../_functions/get-orders";
 import DisplayItem from "./display-item";
 import { useUserModal } from "./user-modal";
 import { useRouter } from "next/navigation";
+import { useUsersQuery } from "./users-query";
+import { toast } from "sonner";
+import { Skeleton } from "@/components/skeleton-ui/skeleton";
 
 interface DisplayOrderProps {
   order: CalendarOrdersType;
@@ -80,22 +83,31 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, newOrder,
 };
 
 function SetUserModal({ order, otherOrders }: { order: CalendarOrdersType; otherOrders: CalendarOrdersType[] }) {
+  const { data: users } = useUsersQuery();
+  const user = users?.find((u) => u.id === order.userId);
+  if (!user) {
+    return <Skeleton className="col-span-5 " size={"xs"} />;
+  }
   const { setUser, setIsUserModalOpen } = useUserModal();
   const router = useRouter();
 
   function setUserForModal(e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) {
     e.stopPropagation();
+    if (!user) {
+      toast.error("Utilisateur introuvable");
+      return;
+    }
     setUser({
-      ...order.user,
+      ...user,
       orders: otherOrders.sort((a, b) => b.shippingDate.getTime() - a.shippingDate.getTime()),
       date: order.shippingDate,
     });
     setIsUserModalOpen(true);
-    router.prefetch(`/admin/users/${order.user.id}`);
+    router.prefetch(`/admin/users/${order.userId}`);
   }
   return (
     <button type="button" onClick={setUserForModal} className="col-span-5  ">
-      <NameWithImage name={order.name} image={order.user.image} imageSize={12} completed={order.user.completed} />
+      <NameWithImage name={order.userName} image={order.userImage} imageSize={12} completed={user.completed} />
     </button>
   );
 }

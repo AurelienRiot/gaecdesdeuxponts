@@ -2,15 +2,13 @@
 
 import { SHIPPING } from "@/components/auth";
 import safeServerAction from "@/lib/server-action";
-import z from "zod";
 import getUsersForOrders from "../../orders/[orderId]/_functions/get-users-for-orders";
+import type { emptySchema } from "@/components/zod-schema";
+import type z from "zod";
 
-const schema = z.object({});
-
-async function getUsersForOrdersAction(data: z.infer<typeof schema>) {
+async function getUsersForOrdersAction(data: z.infer<typeof emptySchema>) {
   return await safeServerAction({
     data,
-    schema,
     roles: SHIPPING,
     serverAction: async () => {
       const users = await getUsersForOrders();

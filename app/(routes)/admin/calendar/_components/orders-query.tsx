@@ -1,27 +1,40 @@
 "use client";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import getDailyOrders from "../_actions/get-daily-orders";
+import ky, { type HTTPError } from "ky";
 import type { CalendarOrdersType } from "../_functions/get-orders";
 
 async function fetchOrders(dateArray: string[]) {
   const from = new Date(dateArray[0]);
   const to = new Date(dateArray[dateArray.length - 1]);
-  const responce = await getDailyOrders({ from, to });
-  // const responce = (await ky.post("/api/get-day-orders", { json: { from, to } }).json()) as Awaited<
-  //   ReturnType<typeof getDailyOrders>
-  // >;
-  if (!responce.success) {
-    throw new Error(responce.message);
-  }
-  if (!responce.data) {
+  const searchParams = new URLSearchParams({
+    from: from.toISOString(),
+    to: to.toISOString(),
+  });
+  const responce = await ky
+    .get(`/api/calendar/orders?${searchParams.toString()}`)
+    .then(async (res) => {
+      const result = (await res.json()) as CalendarOrdersType[];
+      return result;
+    })
+    .catch(async (kyError: HTTPError) => {
+      if (kyError.response) {
+        const errorData = await kyError.response.text();
+        console.error(errorData);
+        return errorData;
+      }
+      console.error("Erreur timeout");
+      return "Erreur";
+    });
+
+  if (typeof responce === "string") {
     throw new Error("Impossible de charger les commandes");
   }
-  for (const order of responce.data) {
+  for (const order of responce) {
     order.createdAt = new Date(order.createdAt);
     order.shippingDate = new Date(order.shippingDate);
   }
-  return responce.data;
+  return responce;
 }
 
 export function useOrdersQuery(dateArray: string[]) {
