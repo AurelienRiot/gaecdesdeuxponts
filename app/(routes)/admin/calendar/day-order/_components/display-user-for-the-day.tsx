@@ -1,7 +1,7 @@
 "use client";
 import { getUserName } from "@/components/table-custom-fuction";
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
-import { Button } from "@/components/ui/button";
+import { LoadingButton } from "@/components/ui/button";
 import NoResults from "@/components/ui/no-results";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useServerAction from "@/hooks/use-server-action";
@@ -9,10 +9,10 @@ import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import { Grip } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import type { UsersForOrderType } from "../../../orders/[orderId]/_functions/get-users-for-orders";
 import updateDayOrder from "../_actions/update-day-order";
 import type { GetDayOrdersType } from "../_functions/get-day-orders";
 import UserModal from "./user-modal";
-import type { UsersForOrderType } from "../../../orders/[orderId]/_functions/get-users-for-orders";
 
 function DisplayUserForTheDay({
   dayOrdersForDay,
@@ -25,7 +25,7 @@ function DisplayUserForTheDay({
   day: string;
   index: number;
 }) {
-  const { serverAction } = useServerAction(updateDayOrder);
+  const { serverAction, loading } = useServerAction(updateDayOrder);
   const [localDayOrdersForDay, setLocalDayOrdersForDay] = useState(dayOrdersForDay?.map(({ userId }) => userId));
   useEffect(() => {
     setLocalDayOrdersForDay(dayOrdersForDay?.map(({ userId }) => userId));
@@ -52,9 +52,9 @@ function DisplayUserForTheDay({
         />
       </div>
       {localDayOrdersForDay && localDayOrdersForDay.length > 0 ? (
-        <Button variant={"green"} className="w-full" onClick={onUpdateDayOrder}>
+        <LoadingButton disabled={loading} variant={"green"} className="w-full" onClick={onUpdateDayOrder}>
           Mettre a jour
-        </Button>
+        </LoadingButton>
       ) : null}
       {localDayOrdersForDay ? (
         <ScrollArea className="  overflow-auto p-2" style={{ height: `calc(100% - 50px)` }}>

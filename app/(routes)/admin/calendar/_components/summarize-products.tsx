@@ -8,7 +8,6 @@ import {
 import { DisplayProductIcon } from "@/components/product";
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { nanoid } from "@/lib/id";
 import { cn, numberFormat2Decimals } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
@@ -47,8 +46,8 @@ function SummarizeProducts({
       </CardHeader>
       <AnimateHeight display={isExpanded}>
         <CardContent className="py-2 px-4 bg-gradient-to-b from-green-200 dark:from-green-800 to-transparent to-[10px] space-y-4">
-          {productQuantities.totaleQuantity.map((item) => (
-            <p key={nanoid(5)} className="font-bold">
+          {productQuantities.totaleQuantity.map((item, index) => (
+            <p key={item.name + index} className="font-bold">
               {item.name} : {numberFormat2Decimals(item.quantity)}
               {item.unit}
             </p>
@@ -116,28 +115,28 @@ function SummarizeUserProducts({
   return (
     <div className="space-y-6">
       <h2 className="text-base">Clients par produits</h2>
-      {productQuantities.aggregateProducts.map((product) => {
+      {productQuantities.aggregateProducts.map((product, index) => {
         const totalQuantity = displayQuantity(
           product.productName,
           product.users.reduce((total, user) => (user.userName.includes("deleted") ? total : total + user.quantity), 0),
         );
         return (
-          <div key={nanoid(5)} className="space-y-2">
-            <h3 className="flex items-center gap-2">
+          <div key={product.productId + index} className="space-y-2">
+            <h3 className="flex flex-wrap items-center gap-2">
               <DisplayProductIcon name={product.productName} />
               <p
                 className={"text-sm font-medium underline underline-offset-2"}
               >{`${product.productName} (${totalQuantity}${product.unit})`}</p>
             </h3>
             <div className="space-y-2 ">
-              {product.users.map((user) => {
+              {product.users.map((user, index) => {
                 const deleted = user.userName.includes("deleted");
                 const name = user.userName.split("/")[0];
                 return (
                   <button
                     type="button"
                     onClick={() => handleClick(product.productName, name, deleted, user.userName)}
-                    key={nanoid(5)}
+                    key={user.userName + product.productId + index}
                     className={cn(
                       "grid grid-cols-8  items-center w-full",
                       deleted && " line-through  decoration-destructive",

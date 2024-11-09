@@ -2,7 +2,7 @@
 import type { GetProductsForOrdersType } from "@/app/(routes)/admin/orders/[orderId]/_functions/get-products-for-orders";
 import { getUserName } from "@/components/table-custom-fuction";
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
-import { Button, IconButton } from "@/components/ui/button";
+import { Button, IconButton, LoadingButton } from "@/components/ui/button";
 import NoResults from "@/components/ui/no-results";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useServerAction from "@/hooks/use-server-action";
@@ -42,8 +42,7 @@ function DisplayDefaultOrderForTheDay({
   role: Role;
   index: number;
 }) {
-  const { serverAction } = useServerAction(updateDefaultOrdersAction);
-  const router = useRouter();
+  const { serverAction, loading } = useServerAction(updateDefaultOrdersAction);
   // const [localDayOrdersForDay, setLocalDayOrdersForDay] = useState(dayOrdersForDay?.map(({ userId }) => userId));
   // useEffect(() => {
   //   setLocalDayOrdersForDay(dayOrdersForDay?.map(({ userId }) => userId));
@@ -70,12 +69,12 @@ function DisplayDefaultOrderForTheDay({
 
   const items = form.watch("defaultOrderProducts");
 
-  function onSubmit(data: DefaultOrderFormValues) {
+  async function onSubmit(data: DefaultOrderFormValues) {
     if (items.length === 0 || !items.every((item) => item.productId)) {
       toast.error("Completer tous les produits deja existant");
       return;
     }
-    serverAction({ data });
+    await serverAction({ data });
   }
 
   const deleteProduct = (prodIndex: number) => {
@@ -94,9 +93,9 @@ function DisplayDefaultOrderForTheDay({
             <Package className="size-4 text-green-100 stroke-[3]" />
           </button> */}
         </div>
-        <Button variant={"green"} className="w-full" type="submit">
+        <LoadingButton disabled={form.formState.isSubmitting} variant={"green"} className="w-full" type="submit">
           Mettre a jour
-        </Button>
+        </LoadingButton>
 
         <ScrollArea className="  overflow-auto " style={{ height: `calc(100% - 200px)` }}>
           <FormField

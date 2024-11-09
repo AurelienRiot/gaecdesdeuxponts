@@ -17,7 +17,6 @@ import { useOrdersModal } from "./orders-modal";
 import { useOrdersQuery } from "./orders-query";
 import SummarizeProducts from "./summarize-products";
 import UpdatePage from "./update-page";
-import { usePathname } from "next/navigation";
 
 type EventsPageProps = {
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
@@ -27,7 +26,6 @@ type EventsPageProps = {
 export default function EventPage({ amapOrders, initialDateArray: dateArray }: EventsPageProps) {
   const { data: allOrders, error, fetchStatus } = useOrdersQuery(dateArray);
   const virtuosoRef = useRef<VirtuosoHandle>(null);
-  const pathName = usePathname();
 
   const scrollToElement = useCallback(
     (id: string, behavior: "smooth" | "auto" = "smooth") => {
@@ -46,7 +44,6 @@ export default function EventPage({ amapOrders, initialDateArray: dateArray }: E
     },
     [dateArray],
   );
-  console.log({ pathName, date: new Date() });
   return (
     <>
       {fetchStatus === "fetching" && (
@@ -58,11 +55,7 @@ export default function EventPage({ amapOrders, initialDateArray: dateArray }: E
           ></div>
         </div>
       )}
-      {!(pathName === "/admin/calendar") && (
-        <div className="absolute left-1/2 translate-x-[-40%]    bottom-7  max-w-[200px]  w-[40%] overflow-hidden rounded border-2 bg-primary-foreground">
-          <Spinner className="size-6" />
-        </div>
-      )}
+
       {fetchStatus === "paused" && (
         <div className="absolute left-1/2 translate-x-[-35%]  text-destructive font-bold  bottom-6    overflow-hidden ">
           Aucune connection
