@@ -59,7 +59,7 @@ export const ProductWithOptions = ({
       price: 0,
     };
     form.setValue("products", [...products, newProduct]);
-    setTimeout(() => scrollToId(`#product-${newProduct.index}`), 10);
+    scrollToId(`product-${newProduct.index}`, 10);
   };
 
   const addOptions = () => {

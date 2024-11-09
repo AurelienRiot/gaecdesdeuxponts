@@ -58,7 +58,6 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
   const { serverAction: confirmOrderAction, loading } = useServerAction(confirmOrder);
   const { serverAction: validateInvoiceAction, loading: validateLoading } = useServerAction(validateInvoice);
-
   const title = initialData?.id
     ? { label: "Modifier la commande", color: "text-blue-500" }
     : initialData
@@ -134,6 +133,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
             : order,
         ),
       );
+      scrollToId("button-container", 1000);
     }
 
     await confirmOrderAction({
@@ -151,8 +151,9 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
     validateInvoiceAction({
       data: { id: initialData?.invoiceId, isPaid: !initialData.dateOfPayment },
       onSuccess: () => {
-        refectOrders();
         router.replace(`/admin/orders/${initialData?.id}`);
+        refectOrders();
+        scrollToId("button-container", 1000);
       },
     });
   }
