@@ -19,6 +19,7 @@ export default async function addNewStock(data: z.infer<typeof schema>) {
         },
       });
       revalidateTag("stocks");
+      revalidateTag("stocks-name");
       return { success: true, message: "Stock ajouté" };
     },
   });

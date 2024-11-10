@@ -2,9 +2,10 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { ONE_DAY } from "@/lib/date-utils";
 import { addDays } from "date-fns";
-import { Package, Plus, User } from "lucide-react";
+import { Plus, User } from "lucide-react";
 import Link from "next/link";
 import EventPage from "./_components/events-page";
+import NewOrderButton from "./_components/new-order-button";
 import { OrdersModalProvider } from "./_components/orders-modal";
 import { UserModalProvider } from "./_components/user-modal";
 import { getGroupedAMAPOrders } from "./_functions/get-amap-orders";
@@ -31,7 +32,7 @@ async function CalendarPage() {
           <div className="max-w-[90vw] md:max-w-[500px] mx-auto flex pt-2 gap-4 items-center justify-between">
             <Link
               href="/admin/users/new"
-              className=" p-2 h-fit border bg-blue-500 rounded-full cursor-pointer flex gap-2"
+              className=" p-2 h-fit border bg-blue-500 transition-colors hover:bg-blue-400 rounded-full cursor-pointer flex gap-2"
             >
               <Plus className="size-4 text-blue-100 stroke-[3]" />
               <User className="size-4 text-blue-100 stroke-[3]" />
@@ -43,14 +44,7 @@ async function CalendarPage() {
               titleClassName=" text-lg sm:text-2xl md:text-3xl"
             />
 
-            <Link
-              href="/admin/orders/new"
-              // href="/admin/calendar/day-order"
-              className=" p-2 h-fit border bg-green-500 rounded-full cursor-pointer flex gap-2"
-            >
-              <Plus className="size-4 text-green-100 stroke-[3]" />
-              <Package className="size-4 text-green-100 stroke-[3]" />
-            </Link>
+            <NewOrderButton />
           </div>
           <Separator />
 

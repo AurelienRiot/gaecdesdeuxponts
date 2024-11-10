@@ -1,7 +1,6 @@
-import { getUnitLabel } from "@/components/product/product-function";
 import ButtonBackward from "@/components/ui/button-backward";
 import { OrderForm } from "./_components/order-form";
-import getShippingOrder from "./_functions/get-order";
+import getShippingOrder, { updateProductsForOrder } from "./_functions/get-order";
 import getProductsForOrders from "./_functions/get-products-for-orders";
 import getShopsForOrders from "./_functions/get-shops-for-orders";
 import getUsersForOrders from "./_functions/get-users-for-orders";
@@ -31,24 +30,12 @@ const OrderFormPage = async ({
       newOrderId: searchParams.newOrderId,
     }),
   ]);
-  if (initialData && params.orderId === "new") {
-    for (const item of initialData.orderItems) {
-      const product = products.find((product) => product.id === item.itemId);
-      if (product) {
-        item.name = product.name;
-        item.description = product.description;
-        item.categoryName = product.product.categoryName;
-        item.stocks = product.stocks.map((stock) => stock.stockId);
-        item.tax = product.tax;
-        item.unit = getUnitLabel(product.unit).quantity;
-      }
-    }
-  }
+  const order = initialData && params.orderId === "new" ? updateProductsForOrder(initialData, products) : initialData;
 
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-6 p-8 pt-6">
-        <OrderForm products={products} initialData={initialData} users={users} shops={shops} />
+        <OrderForm products={products} initialData={order} users={users} shops={shops} />
         <ButtonBackward className="block" />
       </div>
     </div>

@@ -1,31 +1,26 @@
 "use client";
+import { negativeQuantityStyle } from "@/app/(routes)/admin/orders/[orderId]/_components/products";
 import type { GetProductsForOrdersType } from "@/app/(routes)/admin/orders/[orderId]/_functions/get-products-for-orders";
-import { getUserName } from "@/components/table-custom-fuction";
-import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
+import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import { GrPowerReset, LuPackageMinus } from "@/components/react-icons";
+import SelectSheetWithTabs, { sortProductByTabType } from "@/components/select-sheet-with-tabs";
+import { Badge } from "@/components/ui/badge";
 import { Button, IconButton, LoadingButton } from "@/components/ui/button";
-import NoResults from "@/components/ui/no-results";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { NumberInput } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useServerAction from "@/hooks/use-server-action";
-import { Reorder, useDragControls, useMotionValue } from "framer-motion";
-import { Grip, Package, Plus } from "lucide-react";
-import { toast } from "sonner";
-import type { GetDefaultOrdersType } from "../_functions/get-default-orders";
-import { useForm, useFormContext } from "react-hook-form";
-import { defaultOrderSchema, type DefaultOrderFormValues } from "./schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import updateDefaultOrdersAction from "../_actions/update-default-orders";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { useRouter } from "next/navigation";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
-import type { Role } from "@prisma/client";
-import SelectSheetWithTabs, { sortProductByTabType } from "@/components/select-sheet-with-tabs";
 import { cn } from "@/lib/utils";
-import { negativeQuantityStyle } from "@/app/(routes)/admin/orders/[orderId]/_components/products";
-import { Badge } from "@/components/ui/badge";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { Role } from "@prisma/client";
+import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { useCallback } from "react";
-import { GrPowerReset, LuPackageMinus } from "@/components/react-icons";
-import { NumberInput } from "@/components/ui/input";
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import { useForm, useFormContext } from "react-hook-form";
+import { toast } from "sonner";
+import updateDefaultOrdersAction from "../_actions/update-default-orders";
+import type { GetDefaultOrdersType } from "../_functions/get-default-orders";
+import { defaultOrderSchema, type DefaultOrderFormValues } from "./schema";
+import CheckboxForm from "@/components/chekbox-form";
 
 function DisplayDefaultOrderForTheDay({
   defaultOrderForDay,
@@ -42,16 +37,13 @@ function DisplayDefaultOrderForTheDay({
   role: Role;
   index: number;
 }) {
-  const { serverAction, loading } = useServerAction(updateDefaultOrdersAction);
-  // const [localDayOrdersForDay, setLocalDayOrdersForDay] = useState(dayOrdersForDay?.map(({ userId }) => userId));
-  // useEffect(() => {
-  //   setLocalDayOrdersForDay(dayOrdersForDay?.map(({ userId }) => userId));
-  // }, [dayOrdersForDay]);
+  const { serverAction } = useServerAction(updateDefaultOrdersAction);
 
   const form = useForm<DefaultOrderFormValues>({
     resolver: zodResolver(defaultOrderSchema),
     defaultValues: {
       day: index,
+      confirmed: true,
       userId,
       defaultOrderProducts: defaultOrderForDay?.defaultOrderProducts.map(({ price, productId, quantity }) => ({
         productId,
@@ -100,6 +92,21 @@ function DisplayDefaultOrderForTheDay({
         <ScrollArea className="  overflow-auto " style={{ height: `calc(100% - 200px)` }}>
           <FormField
             control={form.control}
+            name="confirmed"
+            render={({ field }) => (
+              <CheckboxForm
+                ref={field.ref}
+                checked={field.value}
+                onCheckedChange={field.onChange}
+                disabled={form.formState.isSubmitting}
+                title="Commande confirmer"
+                description="Indique si la commande doit être confirmer"
+                className="mb-2"
+              />
+            )}
+          />
+          <FormField
+            control={form.control}
             name="defaultOrderProducts"
             render={({ field }) => (
               <FormItem className="">
@@ -118,7 +125,7 @@ function DisplayDefaultOrderForTheDay({
                         />
                         <div className="flex gap-4">
                           <PriceInput productIndex={productIndex} products={products} selectedProduct={item} />
-                          <QuantityInput productIndex={productIndex} products={products} selectedProduct={item} />
+                          <QuantityInput productIndex={productIndex} selectedProduct={item} />
                           {productIndex > 0 || items.length > 1 ? (
                             <TrashButton
                               type="button"
@@ -322,11 +329,9 @@ const PriceInput = ({
 
 const QuantityInput = ({
   productIndex,
-  products,
   selectedProduct,
 }: {
   productIndex: number;
-  products: GetProductsForOrdersType;
   selectedProduct: DefaultOrderFormValues["defaultOrderProducts"][number];
 }) => {
   const form = useFormContext<DefaultOrderFormValues>();

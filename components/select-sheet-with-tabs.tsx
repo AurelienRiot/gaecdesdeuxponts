@@ -1,7 +1,7 @@
 "use client";
 import { cn, roundToDecimals } from "@/lib/utils";
 import type { ProductWithMain } from "@/types";
-import type { Role, User } from "@prisma/client";
+import type { Role } from "@prisma/client";
 import { TabsContent } from "@radix-ui/react-tabs";
 import * as React from "react";
 import { biocoopProducts, DisplayProductIcon, priorityMap } from "./product";
@@ -9,9 +9,9 @@ import { getUserName } from "./table-custom-fuction";
 import { NameWithImage } from "./table-custom-fuction/common-cell";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
+import { ScrollArea } from "./ui/scroll-area";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
-import { ScrollArea } from "./ui/scroll-area";
 
 type ValueType<V extends { key: string }> = { label: React.ReactNode; value: V; highlight?: boolean };
 type TabsType<T> = { label: string; value: T }[];
@@ -20,14 +20,16 @@ function SelectSheetWithTabs<V extends { key: string }, T extends string>({
   tabsValues,
   tabs,
   onSelected,
-  trigger,
+  trigger = "Selectionner",
   selectedValue,
   title,
   description,
   className,
   triggerClassName,
+  open: openProp,
+  onOpenChange: onOpenChangeProp,
 }: {
-  trigger: React.ReactNode | string;
+  trigger?: React.ReactNode | string;
   onSelected: (selected: V) => void;
   tabsValues: { values: ValueType<V>[]; tab: T }[];
   tabs: TabsType<T>;
@@ -36,13 +38,25 @@ function SelectSheetWithTabs<V extends { key: string }, T extends string>({
   description?: string;
   className?: string;
   triggerClassName?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }) {
-  const [isOpen, setIsOpen] = React.useState(false);
   const [contentHeight, setContentHeight] = React.useState("auto");
   const contentRef = React.useRef<HTMLDivElement>(null);
   const [currentTab, setCurrentTab] = React.useState<string | undefined>(
     tabsValues.find((value) => value.values.find((v) => v.value.key === selectedValue))?.tab,
   );
+
+  const [_open, _setOpen] = React.useState(false);
+  const open = openProp ?? _open;
+
+  const handleOpenChange = (newOpen: boolean) => {
+    if (onOpenChangeProp) {
+      onOpenChangeProp(newOpen); // Call the external handler if provided
+    } else {
+      _setOpen(newOpen); // Otherwise, update the internal state
+    }
+  };
 
   React.useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -55,7 +69,7 @@ function SelectSheetWithTabs<V extends { key: string }, T extends string>({
   }, [currentTab]);
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+    <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>
         {typeof trigger === "string" ? (
           <Button type="button" className={triggerClassName} variant="outline">
@@ -89,7 +103,7 @@ function SelectSheetWithTabs<V extends { key: string }, T extends string>({
             </TabsList>
 
             <SelectContent
-              setIsOpen={setIsOpen}
+              setIsOpen={handleOpenChange}
               // values={value.values}
               tabsValues={tabsValues}
               onSelected={onSelected}
@@ -113,7 +127,7 @@ function SelectContent<V extends { key: string }, T extends string>({
   onSelected: (selected: V) => void;
   selectedValue?: string | null;
   tabsValues: { values: ValueType<V>[]; tab: T }[];
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpen: (open: boolean) => void;
   currentTab?: string | undefined;
 }) {
   const scrollRef = React.useRef<HTMLDivElement>(null);

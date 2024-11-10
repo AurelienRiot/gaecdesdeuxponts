@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
 import { Checkbox, type CheckedState } from "./ui/checkbox";
 import { FormControl, FormDescription, FormItem, FormLabel } from "./ui/form";
+import { cn } from "@/lib/utils";
 
 interface CheckboxFormProps {
   checked?: boolean;
@@ -8,12 +9,15 @@ interface CheckboxFormProps {
   disabled?: boolean;
   title: string;
   description: string;
+  className?: string;
 }
 
 const CheckboxForm = forwardRef<HTMLButtonElement, CheckboxFormProps>(
-  ({ checked, onCheckedChange, disabled, title, description }, ref) => {
+  ({ checked, onCheckedChange, disabled, title, description, className }, ref) => {
     return (
-      <FormItem className="flex h-20  flex-row items-start space-x-3 space-y-0 rounded-md border bg-background">
+      <FormItem
+        className={cn("flex h-20  flex-row items-start space-x-3 space-y-0 rounded-md border bg-background", className)}
+      >
         <FormLabel className="p-4 flex cursor-pointer flex-row items-start space-x-3 space-y-0 w-full h-full">
           <FormControl>
             <Checkbox checked={checked} onCheckedChange={onCheckedChange} disabled={disabled} ref={ref} />

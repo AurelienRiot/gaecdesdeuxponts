@@ -11,7 +11,7 @@ async function updateDefaultOrdersAction(data: DefaultOrderFormValues) {
     data,
     roles: SHIPPING,
     schema: defaultOrderSchema,
-    serverAction: async ({ day, defaultOrderProducts, userId }) => {
+    serverAction: async ({ day, defaultOrderProducts, userId, confirmed }) => {
       const defaultOrder = await prismadb.defaultOrder.findUnique({
         where: {
           userId_day: {
@@ -25,6 +25,7 @@ async function updateDefaultOrdersAction(data: DefaultOrderFormValues) {
           data: {
             userId,
             day,
+            confirmed,
             defaultOrderProducts: { create: defaultOrderProducts },
           },
         });
@@ -46,6 +47,7 @@ async function updateDefaultOrdersAction(data: DefaultOrderFormValues) {
               id: defaultOrder.id,
             },
             data: {
+              confirmed,
               defaultOrderProducts: { create: defaultOrderProducts },
             },
           });

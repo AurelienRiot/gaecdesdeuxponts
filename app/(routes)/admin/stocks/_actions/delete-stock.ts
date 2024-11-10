@@ -18,6 +18,7 @@ export default async function deleteStock(data: z.infer<typeof schema>) {
         where: { id },
       });
       revalidateTag("stocks");
+      revalidateTag("stocks-name");
       return { success: true, message: "Stock supprimé" };
     },
   });

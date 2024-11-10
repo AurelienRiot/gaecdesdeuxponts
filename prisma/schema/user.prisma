@@ -140,6 +140,7 @@ model Link {
 model DefaultOrder {
   id                   Int                   @id @unique @default(autoincrement())
   day                  Int
+  confirmed            Boolean               @default(true)
   defaultOrderProducts DefaultOrderProduct[]
   userId               String
   user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)

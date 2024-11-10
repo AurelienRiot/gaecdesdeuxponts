@@ -1,5 +1,4 @@
 "use client";
-import DateModal from "@/components/date-modal";
 import DeleteButton from "@/components/delete-button";
 import { DisplayCreateInvoice } from "@/components/pdf/button/display-create-invoice";
 import { DisplayInvoice } from "@/components/pdf/button/display-invoice";
@@ -15,7 +14,6 @@ import { scrollToId } from "@/lib/scroll-to-traget";
 import type { ProductWithMain } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ProductStock, Shop } from "@prisma/client";
-import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -23,10 +21,11 @@ import { useOrdersQueryClient } from "../../../calendar/_components/orders-query
 import validateInvoice from "../../../invoices/_actions/validate-invoice";
 import { deleteOrder } from "../../_actions/delete-orders";
 import confirmOrder from "../_actions/confirm-order";
-import createOrder from "../_actions/create-order";
+import { createOrder } from "../_actions/create-order";
 import updateOrder from "../_actions/update-order";
 import type { UsersForOrderType } from "../_functions/get-users-for-orders";
 import FormDatePicker from "./date-picker";
+import NewOrderButton from "./new-order-button";
 import { orderSchema, type OrderFormValues } from "./order-schema";
 import { ShippingProducts } from "./products";
 import SelectShop from "./select-shop";
@@ -208,29 +207,11 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
             }
             result.shippingDate = new Date(result.shippingDate);
             result.createdAt = new Date(result.createdAt);
-            mutateOrders((prev) => prev.filter((order) => order.id !== result.id).concat(result));
+            mutateOrders((prev) => prev.concat(result));
             router.back();
           },
         });
   };
-
-  function onNewOrder(date?: Date) {
-    if (!date) {
-      toast.error("Veuillez choisir une date");
-      return;
-    }
-    const dateOfPickUp = form.getValues("datePickUp");
-    const hours = dateOfPickUp.getHours();
-    const minutes = dateOfPickUp.getMinutes();
-    const seconds = dateOfPickUp.getSeconds();
-    const milliseconds = dateOfPickUp.getMilliseconds();
-    const urlParams = new URLSearchParams();
-    urlParams.set("dateOfShipping", new Date(date.setHours(hours, minutes, seconds, milliseconds)).toISOString());
-    urlParams.set("userId", form.getValues("userId"));
-    urlParams.set("newOrderId", form.getValues("id"));
-    toast.success("Création d'une nouvelle commande", { position: "top-center" });
-    router.replace(`/admin/orders/new?${urlParams.toString()}`);
-  }
 
   return (
     <>
@@ -256,24 +237,24 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
           <div className="flex flex-wrap items-end gap-8">
             <SelectUser users={users} />
-            {!!initialData && (
+            {/* {!!initialData && (
               <FormField
                 control={form.control}
                 name="datePickUp"
                 render={({ field }) => (
                   <>
-                    {/* <FormDatePicker
+                    <FormDatePicker
                       {...field}
                       date={field.value}
                       onSelectDate={field.onChange}
                       title="Date de retrait"
                       button={"none"}
-                    /> */}
+                    />
                     {field.value && <TimePicker date={field.value} setDate={field.onChange} />}
                   </>
                 )}
               />
-            )}
+            )} */}
 
             <FormField
               control={form.control}
@@ -367,18 +348,8 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
         </div>
       )}
 
-      {!!initialData?.id && (
-        <DateModal
-          onValueChange={onNewOrder}
-          triggerClassName=" w-44 border-dashed border-2 text-primary"
-          trigger={
-            <>
-              {" "}
-              <Plus className="mr-2 h-4 w-4" />
-              Nouvelle commande
-            </>
-          }
-        />
+      {!!initialData?.id && !!user?.id && (
+        <NewOrderButton orderId={initialData.id} userId={user.id} dateOfPickUp={initialData.datePickUp} />
       )}
     </>
   );

@@ -20,7 +20,6 @@ const AuthLink = forwardRef<HTMLAnchorElement, AnchorHTMLAttributes<HTMLAnchorEl
                 : "/profile"
           }
           ref={ref}
-          prefetch={false}
         >
           {session.status === "authenticated" ? "Mon compte" : "Se connecter"}
         </Link>

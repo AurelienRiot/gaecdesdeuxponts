@@ -8,6 +8,7 @@ const defaultOrderProductsSchema = z.object({
 
 export const defaultOrderSchema = z.object({
   day: z.number(),
+  confirmed: z.boolean().default(true),
   userId: z.string().min(1, { message: "L'utilisateur est requis" }),
   defaultOrderProducts: z.array(defaultOrderProductsSchema),
 });

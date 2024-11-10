@@ -39,7 +39,7 @@ export function getLocalIsoString(date: Date) {
 }
 
 export function getLocalDay(date: Date) {
-  return new Date(getLocalIsoString(date)).getDay();
+  return new Date(getLocalIsoString(date)).getUTCDay();
 }
 
 export const dateMonthYear = (dates: (Date | null)[]) => {

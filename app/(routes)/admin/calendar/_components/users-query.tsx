@@ -9,7 +9,6 @@ async function fetchUsers() {
     .get("/api/calendar/users")
     .then(async (res) => {
       const result = (await res.json()) as UsersForOrderType[];
-      console.log(result);
       return result;
     })
     .catch(async (kyError: HTTPError) => {
