@@ -182,35 +182,40 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
       return;
     }
 
-    initialData?.id
-      ? await updateOrderAction({
-          data: { ...data, prevDateOfShipping },
-          onSuccess: (result) => {
-            if (!result) {
-              toast.error("Une erreur est survenue");
-              return;
-            }
-            result.shippingDate = new Date(result.shippingDate);
-            result.createdAt = new Date(result.createdAt);
-            mutateOrders((prev) => prev.filter((order) => order.id !== result.id).concat(result));
-            scrollToId("button-container");
-          },
-          toastOptions: { position: "top-center" },
-        })
-      : await createOrderAction({
-          data,
-          toastOptions: { position: "top-center" },
-          onSuccess: (result) => {
-            if (!result) {
-              toast.error("Une erreur est survenue");
-              return;
-            }
-            result.shippingDate = new Date(result.shippingDate);
-            result.createdAt = new Date(result.createdAt);
-            mutateOrders((prev) => prev.concat(result));
-            router.back();
-          },
-        });
+    if (initialData?.id) {
+      await updateOrderAction({
+        data: { ...data, prevDateOfShipping },
+        onSuccess: (result) => {
+          if (!result) {
+            toast.error("Une erreur est survenue");
+            return;
+          }
+          result.shippingDate = new Date(result.shippingDate);
+          result.createdAt = new Date(result.createdAt);
+          mutateOrders((prev) => prev.filter((order) => order.id !== result.id).concat(result));
+          scrollToId("button-container");
+        },
+        toastOptions: { position: "top-center" },
+      });
+    } else {
+      router.back();
+      createOrderAction({
+        data,
+        toastOptions: { position: "top-center" },
+        onSuccess: (result) => {
+          if (!result) {
+            toast.error("Une erreur est survenue");
+            return;
+          }
+          result.shippingDate = new Date(result.shippingDate);
+          result.createdAt = new Date(result.createdAt);
+          mutateOrders((prev) => prev.concat(result));
+        },
+        onError: () => {
+          router.forward();
+        },
+      });
+    }
   };
 
   return (
