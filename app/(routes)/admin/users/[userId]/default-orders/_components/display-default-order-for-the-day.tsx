@@ -89,7 +89,7 @@ function DisplayDefaultOrderForTheDay({
           Mettre a jour
         </LoadingButton>
 
-        <ScrollArea className="  overflow-auto " style={{ height: `calc(100% - 200px)` }}>
+        <ScrollArea className="  overflow-auto " style={{ maxHeight: `calc(100% - 200px)` }}>
           <FormField
             control={form.control}
             name="confirmed"
@@ -115,7 +115,7 @@ function DisplayDefaultOrderForTheDay({
                     {items.map((item, productIndex) => (
                       <div
                         key={item.productId + index}
-                        className="w-full rounded-md p-4 space-y-4 pb-4 thin-scrollbar bg-chart1/50 even:bg-chart2/50"
+                        className="w-full rounded-md p-4 space-y-4 pb-4  bg-chart1/50 even:bg-chart2/50"
                       >
                         <SelectProductName
                           role={role}

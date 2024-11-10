@@ -25,7 +25,7 @@ async function DefaultProductsPage({
     );
   }
   return (
-    <div className=" space-y-2 " style={{ height: `calc(100dvh - 80px)` }}>
+    <div className=" space-y-2 " style={{ height: `calc(100dvh - 100px)` }}>
       <div className="max-w-[90vw] md:max-w-[500px] mx-auto flex pt-2 gap-4 items-center justify-between">
         <ButtonBackward />
         <Heading

@@ -2,6 +2,9 @@ import { CreateUserForm } from "@/app/(routes)/admin/users/[userId]/_components/
 import { UserForm } from "@/app/(routes)/admin/users/[userId]/_components/user-form";
 import prismadb from "@/lib/prismadb";
 import UserSheet from "./components/user-sheet";
+import { SheetFooter } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +16,13 @@ async function IntercepteUserPage({
   return (
     <UserSheet>
       <DisplayUserForm userId={params.userId} />
+      <SheetFooter className="sm:justify-start px-4">
+        <Button asChild>
+          <Link replace href={`/admin/users/${params.userId}/default-orders`}>
+            Commandes par default par jour
+          </Link>
+        </Button>
+      </SheetFooter>
     </UserSheet>
   );
 }

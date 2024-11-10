@@ -5,6 +5,7 @@ import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
 import { defaultOrderSchema, type DefaultOrderFormValues } from "../_components/schema";
+import { DAYS_OF_WEEK } from "@/lib/date-utils";
 
 async function updateDefaultOrdersAction(data: DefaultOrderFormValues) {
   return await safeServerAction({
@@ -54,7 +55,7 @@ async function updateDefaultOrdersAction(data: DefaultOrderFormValues) {
         }
       }
       revalidateTag("defaultOrders");
-      return { success: true, message: "Commande par défault mise à jour" };
+      return { success: true, message: `Commande par défault de ${DAYS_OF_WEEK[day]}  mise à jour` };
     },
   });
 }
