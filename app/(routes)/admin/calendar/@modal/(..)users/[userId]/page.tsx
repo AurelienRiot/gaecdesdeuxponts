@@ -23,13 +23,6 @@ async function IntercepteUserPage({
         </SheetDescription>
       </SheetHeader>
       <DisplayUserForm userId={params.userId} />
-      <SheetFooter className="sm:justify-start px-4">
-        <Button asChild>
-          <Link replace href={`/admin/users/${params.userId}/default-orders`}>
-            Commandes par default par jour
-          </Link>
-        </Button>
-      </SheetFooter>
     </div>
   );
 }
@@ -60,5 +53,16 @@ async function DisplayUserForm({ userId }: { userId: string | "new" | undefined 
     );
   }
 
-  return <UserForm initialData={user} incomplete={true} />;
+  return (
+    <>
+      <UserForm initialData={user} incomplete={true} />
+      <SheetFooter className="sm:justify-start px-4">
+        <Button asChild>
+          <Link replace href={`/admin/users/${user.id}/default-orders`}>
+            Commandes par default par jour
+          </Link>
+        </Button>
+      </SheetFooter>
+    </>
+  );
 }
