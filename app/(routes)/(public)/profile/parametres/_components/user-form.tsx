@@ -14,7 +14,7 @@ import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { useUserQueryClient } from "../../_functions/user-query";
+import { useUserQueryClient } from "../../../../../../hooks/use-query/user-query";
 import deleteUser from "../_actions/delete-user";
 import updateUser from "../_actions/update-user";
 import { formSchema, type UserFormValues } from "./form-schema";

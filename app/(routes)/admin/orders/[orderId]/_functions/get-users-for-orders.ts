@@ -2,17 +2,21 @@
 import { getUserName } from "@/components/table-custom-fuction";
 import prismadb from "@/lib/prismadb";
 import { addressFormatter } from "@/lib/utils";
-import type { Address, BillingAddress, Link, Role, User } from "@prisma/client";
+import type { Role } from "@prisma/client";
 import { unstable_cache } from "next/cache";
+
+async function userPrismaQuery() {
+  return await prismadb.user.findMany({
+    where: {
+      role: { in: ["pro", "user", "trackOnlyUser"] },
+    },
+    include: { address: true, billingAddress: true, links: true, defaultOrders: { select: { day: true } } },
+  });
+}
 
 const getUsersForOrders = unstable_cache(
   async () => {
-    const users = await prismadb.user.findMany({
-      where: {
-        role: { in: ["pro", "user", "trackOnlyUser"] },
-      },
-      include: { address: true, billingAddress: true, links: true },
-    });
+    const users = await userPrismaQuery();
     return formatUsers(users).sort((a, b) => {
       return a.formattedName.localeCompare(b.formattedName, "fr", {
         sensitivity: "base",
@@ -20,7 +24,7 @@ const getUsersForOrders = unstable_cache(
     });
   },
   ["getUsers"],
-  { revalidate: 60 * 60 * 24, tags: ["users"] },
+  { revalidate: 60 * 60 * 24, tags: ["users", "defaultOrders"] },
 );
 export type GetUsersType = Awaited<ReturnType<typeof getUsersForOrders>>;
 
@@ -36,11 +40,10 @@ export type UsersForOrderType = {
   image?: string | null;
   address?: string | null;
   links: { label: string; value: string }[];
+  defaultDaysOrders: number[];
   notes: string | null;
 };
-function formatUsers(
-  users: (User & { address: Address | null; billingAddress: BillingAddress | null; links: Link[] })[],
-): UsersForOrderType[] {
+function formatUsers(users: Awaited<ReturnType<typeof userPrismaQuery>>): UsersForOrderType[] {
   return users.map((user) => {
     return {
       name: user.name,
@@ -54,6 +57,7 @@ function formatUsers(
       address: addressFormatter(user.address, false),
       notes: user.notes,
       links: user.links,
+      defaultDaysOrders: user.defaultOrders.map((order) => order.day),
       id: user.id,
     };
   });

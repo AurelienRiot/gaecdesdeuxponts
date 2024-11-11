@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { UserForm } from "./_components/user-form";
-import { useUserQuery } from "../_functions/user-query";
+import { useUserQuery } from "../../../../../hooks/use-query/user-query";
 
 const PageSettings = () => {
   const { data: user } = useUserQuery();

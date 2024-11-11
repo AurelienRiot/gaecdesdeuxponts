@@ -2,7 +2,7 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ky, { type HTTPError } from "ky";
-import type { CalendarOrdersType } from "../_functions/get-orders";
+import type { CalendarOrdersType } from "../../app/(routes)/admin/calendar/_functions/get-orders";
 
 async function fetchOrders(dateArray: string[]) {
   const from = new Date(dateArray[0]);
@@ -12,7 +12,7 @@ async function fetchOrders(dateArray: string[]) {
     to: to.toISOString(),
   });
   const responce = await ky
-    .get(`/api/calendar/orders?${searchParams.toString()}`)
+    .get(`/api/orders?${searchParams.toString()}`)
     .then(async (res) => {
       const result = (await res.json()) as CalendarOrdersType[];
       return result;

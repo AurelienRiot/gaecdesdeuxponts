@@ -1,5 +1,5 @@
 "use client";
-import { dateFormatter } from "@/lib/date-utils";
+import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
 import { fr } from "date-fns/locale";
 import * as React from "react";
@@ -10,13 +10,14 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui
 
 type DateModalProps = Omit<CalendarProps, "mode"> & {
   value?: Date;
-  onValueChange: (value?: Date) => void;
+  onValueChange: (value?: Date) => Promise<void> | void;
   triggerClassName?: string;
   trigger?: React.ReactNode;
+  highlighted?: Date[];
 };
 
 const DateModal = React.forwardRef<HTMLButtonElement, DateModalProps>(
-  ({ className, triggerClassName, onValueChange, value, defaultMonth, trigger, ...props }, ref) => {
+  ({ className, triggerClassName, onValueChange, value, defaultMonth, trigger, highlighted, ...props }, ref) => {
     const [isOpen, setIsOpen] = React.useState(false);
 
     return (
@@ -61,12 +62,19 @@ const DateModal = React.forwardRef<HTMLButtonElement, DateModalProps>(
             }}
             startMonth={new Date(new Date().getFullYear(), new Date().getMonth())}
             endMonth={new Date(new Date().getFullYear() + 2, 11)}
+            modifiers={{
+              highlighted: highlighted || [],
+            }}
+            modifiersClassNames={{
+              highlighted:
+                "bg-emerald-500 has-[button]:hover:!bg-emerald-500/90 border-b-2 border-primary font-semibold",
+            }}
             classNames={{
-              today: "bg-green-300 ",
+              today: "bg-accent hover:bg-accent/80 text-accent-foreground rounded-md ring-1 ring-primary/50 ",
             }}
             {...props}
           />
-          <QuickButtons onValueChange={onValueChange} setOpen={setIsOpen} />
+          <QuickButtons onValueChange={onValueChange} setOpen={setIsOpen} highlighted={highlighted} />
         </SheetContent>
       </Sheet>
     );
@@ -80,7 +88,12 @@ export default DateModal;
 function QuickButtons({
   onValueChange,
   setOpen,
-}: { onValueChange: (value?: Date) => void; setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
+  highlighted,
+}: {
+  onValueChange: (value?: Date) => void;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  highlighted?: Date[];
+}) {
   const nextMonday = new Date();
   nextMonday.setDate(nextMonday.getDate() + ((1 - nextMonday.getDay() + 7) % 7 || 7));
   const nextTuesday = new Date();
@@ -93,7 +106,9 @@ function QuickButtons({
   return (
     <div className="flex justify-center gap-4 items-center">
       <Button
-        variant="secondary"
+        variant={
+          highlighted?.some((date) => getLocalIsoString(date) === getLocalIsoString(nextMonday)) ? "green" : "secondary"
+        }
         className="text-xs sm:text-sm"
         onClick={() => {
           onValueChange?.(nextMonday);
@@ -103,7 +118,11 @@ function QuickButtons({
         Lundi
       </Button>
       <Button
-        variant="secondary"
+        variant={
+          highlighted?.some((date) => getLocalIsoString(date) === getLocalIsoString(nextTuesday))
+            ? "green"
+            : "secondary"
+        }
         className="text-xs sm:text-sm"
         onClick={() => {
           onValueChange?.(nextTuesday);
@@ -113,7 +132,11 @@ function QuickButtons({
         Mardi
       </Button>
       <Button
-        variant="secondary"
+        variant={
+          highlighted?.some((date) => getLocalIsoString(date) === getLocalIsoString(nextThursday))
+            ? "green"
+            : "secondary"
+        }
         className="text-xs sm:text-sm"
         onClick={() => {
           onValueChange?.(nextThursday);
@@ -123,7 +146,9 @@ function QuickButtons({
         Jeudi
       </Button>
       <Button
-        variant="secondary"
+        variant={
+          highlighted?.some((date) => getLocalIsoString(date) === getLocalIsoString(nextFriday)) ? "green" : "secondary"
+        }
         className="text-xs sm:text-sm"
         onClick={() => {
           onValueChange?.(nextFriday);

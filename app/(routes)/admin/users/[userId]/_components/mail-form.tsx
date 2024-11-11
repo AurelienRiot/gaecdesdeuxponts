@@ -10,7 +10,7 @@ import { Clipboard, ClipboardCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { useOrdersQueryClient } from "../../../calendar/_components/orders-query";
+import { useOrdersQueryClient } from "../../../../../../hooks/use-query/orders-query";
 import changeEmail from "../_actions/change-email";
 
 function MailForm({ email, id }: { email: string | null; id: string }) {

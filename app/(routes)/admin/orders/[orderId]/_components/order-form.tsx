@@ -17,7 +17,7 @@ import type { ProductStock, Shop } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { useOrdersQueryClient } from "../../../calendar/_components/orders-query";
+import { useOrdersQueryClient } from "../../../../../../hooks/use-query/orders-query";
 import validateInvoice from "../../../invoices/_actions/validate-invoice";
 import { deleteOrder } from "../../_actions/delete-orders";
 import confirmOrder from "../_actions/confirm-order";
@@ -30,7 +30,6 @@ import { orderSchema, type OrderFormValues } from "./order-schema";
 import { ShippingProducts } from "./products";
 import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
-import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
 
 export type OrderFormProps = {
@@ -116,6 +115,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
   const userId = form.watch("userId");
 
   const user = userId ? users.find((user) => user.id === userId) : null;
+  const defaultDaysOrders = user?.defaultDaysOrders;
 
   const onConfirm = async () => {
     if (!initialData?.id) {
@@ -354,7 +354,12 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
       )}
 
       {!!initialData?.id && !!user?.id && (
-        <NewOrderButton orderId={initialData.id} userId={user.id} dateOfPickUp={initialData.datePickUp} />
+        <NewOrderButton
+          orderId={initialData.id}
+          userId={user.id}
+          dateOfPickUp={initialData.datePickUp}
+          defaultDaysOrders={defaultDaysOrders}
+        />
       )}
     </>
   );

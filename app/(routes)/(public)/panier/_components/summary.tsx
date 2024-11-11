@@ -20,7 +20,7 @@ import DatePicker from "./date-picker";
 import LoginCard from "./login-card";
 import TimePicker from "./time-picker";
 import { addDelay } from "@/lib/utils";
-import { useUserQueryClient } from "../../profile/_functions/user-query";
+import { useUserQueryClient } from "../../../../../hooks/use-query/user-query";
 
 const getDateFromSearchParam = (param: string | null): Date | undefined => {
   if (param === null) return undefined;

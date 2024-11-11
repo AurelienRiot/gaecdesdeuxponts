@@ -8,8 +8,28 @@ import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useOrdersQueryClient } from "../../../calendar/_components/orders-query";
+import { useOrdersQueryClient } from "../../../../../../hooks/use-query/orders-query";
 import { createNewOrder } from "../_actions/create-order";
+import { addDays } from "date-fns";
+
+function getNextAvailableDate(availableDays?: number[]): Date | null {
+  if (!availableDays || availableDays.length === 0) {
+    return null;
+  }
+  let currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+  currentDate = addDays(currentDate, 1);
+
+  for (let i = 0; i < 7; i++) {
+    const dayOfWeek = currentDate.getDay();
+    if (availableDays.includes(dayOfWeek)) {
+      return currentDate;
+    }
+    currentDate = addDays(currentDate, 1);
+  }
+
+  return null;
+}
 
 export function createNewOrderUrl({ date, userId, orderId }: { date: Date; userId: string; orderId?: string }) {
   const urlParams = new URLSearchParams();
@@ -19,11 +39,17 @@ export function createNewOrderUrl({ date, userId, orderId }: { date: Date; userI
   return `/admin/orders/new?${urlParams.toString()}`;
 }
 
-function NewOrderButton({ userId, orderId, dateOfPickUp }: { userId: string; orderId: string; dateOfPickUp: Date }) {
+function NewOrderButton({
+  userId,
+  orderId,
+  dateOfPickUp,
+  defaultDaysOrders,
+}: { userId: string; orderId: string; dateOfPickUp: Date; defaultDaysOrders?: number[] }) {
   const router = useRouter();
   const [noConfirmation, setNoConfirmation] = useState<CheckedState>(true);
   const { serverAction, loading } = useServerAction(createNewOrder);
   const { mutateOrders } = useOrdersQueryClient();
+  const nextDay = getNextAvailableDate(defaultDaysOrders);
 
   const onDayClick = async (date?: Date) => {
     if (!date) {
@@ -56,12 +82,12 @@ function NewOrderButton({ userId, orderId, dateOfPickUp }: { userId: string; ord
       });
     }
   };
-
   return (
     <>
       <DateModal
         onValueChange={onDayClick}
         disabled={loading}
+        highlighted={nextDay ? [nextDay] : []}
         triggerClassName=" w-44 border-dashed border-2 text-primary"
         trigger={
           <>

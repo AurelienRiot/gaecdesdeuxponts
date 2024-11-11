@@ -12,7 +12,7 @@ const buttonVariants = cva(
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        green: "bg-green-500 text-primary-foreground hover:bg-green-500/90",
+        green: "bg-emerald-500 text-emerald-950 hover:bg-emerald-500/90",
         outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
@@ -22,7 +22,7 @@ const buttonVariants = cva(
         rounded:
           "w-auto rounded-full bg-primary text-primary-foreground px-5 py-3 disabled:cursor-not-allowed disabled:opacity-50  font-semibold hover:opacity-75  ",
         shadow:
-          " bg-green-500 border-2 shadow-[-5px_5px_0_black] dark:shadow-[-5px_5px_0_white] hover:bg-green-500/90 border-black active:shadow-none dark:active:shadow-none",
+          " bg-emerald-500 border-2 shadow-[-5px_5px_0_black] dark:shadow-[-5px_5px_0_white] hover:bg-emerald-500/90 text-emerald-950 border-black active:shadow-none dark:active:shadow-none",
         expandIcon: "group relative text-primary-foreground bg-primary hover:bg-primary/90",
         ringHover:
           "bg-primary text-primary-foreground transition-all duration-300 hover:bg-primary/90 hover:ring-2 hover:ring-primary/90 hover:ring-offset-2",
@@ -36,7 +36,7 @@ const buttonVariants = cva(
           "relative after:absolute after:bg-primary after:bottom-2 after:h-[1px] after:w-2/3 after:origin-bottom-left after:scale-x-100 hover:after:origin-bottom-right hover:after:scale-x-0 after:transition-transform after:ease-in-out after:duration-300",
         linkHover2:
           "relative after:absolute after:bg-primary after:bottom-2 after:h-[1px] after:w-2/3 after:origin-bottom-right after:scale-x-0 hover:after:origin-bottom-left hover:after:scale-x-100 after:transition-transform after:ease-in-out after:duration-300",
-        heartbeat: " animate-heartbeat  bg-green-500  text-primary",
+        heartbeat: " animate-heartbeat  bg-green-500  text-green-950",
       },
       size: {
         default: "h-10 px-4 py-2",

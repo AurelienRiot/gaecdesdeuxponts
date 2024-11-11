@@ -18,7 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useOrdersQueryClient } from "../../../calendar/_components/orders-query";
+import { useOrdersQueryClient } from "../../../../../../hooks/use-query/orders-query";
 import deleteUser from "../../_actions/delete-user";
 import updateUser from "../_actions/update-user";
 import type { GetUserPageDataProps } from "../_functions/get-user-page-data";

@@ -8,7 +8,7 @@ import type { DataTableFilterableColumn, DataTableSearchableColumn, DataTableVie
 import type { Shop } from "@prisma/client";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useSession } from "next-auth/react";
-import { useUserQuery } from "../../_functions/user-query";
+import { useUserQuery } from "../../../../../../hooks/use-query/user-query";
 
 export type OrderColumnType = {
   id: string;
