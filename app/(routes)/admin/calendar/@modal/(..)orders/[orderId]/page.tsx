@@ -1,5 +1,5 @@
 import OrderFormPage from "@/app/(routes)/admin/orders/[orderId]/page";
-import OrderSheet from "./components/order-sheet";
+import { SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 export const dynamic = "force-dynamic";
 
@@ -16,9 +16,17 @@ async function IntercepteOrderPage({
   };
 }) {
   return (
-    <OrderSheet orderId={params.orderId}>
+    <div className="space-y-6 w-full pb-6">
+      <SheetHeader className="sr-only">
+        <SheetTitle>
+          <span>{params.orderId === "new" ? "Nouvelle commande" : `Commande n°${params.orderId}`}</span>
+        </SheetTitle>
+        <SheetDescription className="">
+          {params.orderId === "new" ? "Créer une nouvelle commande" : "Modifier la commande"}
+        </SheetDescription>
+      </SheetHeader>
       <OrderFormPage params={params} searchParams={searchParams} />
-    </OrderSheet>
+    </div>
   );
 }
 

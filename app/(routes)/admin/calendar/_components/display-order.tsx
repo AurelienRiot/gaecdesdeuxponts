@@ -85,9 +85,6 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, newOrder,
 function SetUserModal({ order, otherOrders }: { order: CalendarOrdersType; otherOrders: CalendarOrdersType[] }) {
   const { data: users } = useUsersQuery();
   const user = users?.find((u) => u.id === order.userId);
-  if (!user) {
-    return <Skeleton className="col-span-5 " size={"xs"} />;
-  }
   const { setUser, setIsUserModalOpen } = useUserModal();
   const router = useRouter();
 
@@ -104,6 +101,9 @@ function SetUserModal({ order, otherOrders }: { order: CalendarOrdersType; other
     });
     setIsUserModalOpen(true);
     router.prefetch(`/admin/users/${order.userId}`);
+  }
+  if (!user) {
+    return <Skeleton className="col-span-5 " size={"xs"} />;
   }
   return (
     <button type="button" onClick={setUserForModal} className="col-span-5  ">
