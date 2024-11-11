@@ -10,7 +10,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui
 
 type DateModalProps = Omit<CalendarProps, "mode"> & {
   value?: Date;
-  onValueChange: (value?: Date) => Promise<void>;
+  onValueChange: (value?: Date) => Promise<void> | void;
   triggerClassName?: string;
   trigger?: React.ReactNode;
   highlighted?: Date[];
