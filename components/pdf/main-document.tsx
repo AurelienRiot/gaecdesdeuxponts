@@ -154,9 +154,17 @@ export const Company = () => (
 const Logo = () => (
   <View style={CompanyStyles.logoContainer}>
     {/* eslint-disable-next-line jsx-a11y/alt-text */}
-    <Image style={CompanyStyles.logo1} src="https://www.laiteriedupontrobert.fr/logo-font-blanc.png" cache={false} />
+    <Image
+      style={CompanyStyles.logo1}
+      src="https://res.cloudinary.com/dsztqh0k7/image/upload/v1731355725/static/ofelrvks6dcre6p3leda.png"
+      cache={false}
+    />
     {/* eslint-disable-next-line jsx-a11y/alt-text */}
-    <Image style={CompanyStyles.logo2} src="https://www.laiteriedupontrobert.fr/certification-bio.jpeg" cache={false} />
+    <Image
+      style={CompanyStyles.logo2}
+      src="https://res.cloudinary.com/dsztqh0k7/image/upload/v1731355732/static/xvx7zx5jmcweiecdq0do.jpg"
+      cache={false}
+    />
   </View>
 );
 
