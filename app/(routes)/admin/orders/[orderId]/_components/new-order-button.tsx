@@ -8,7 +8,7 @@ import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useOrdersQueryClient } from "../../../calendar/_components/orders-query";
+import { useOrdersQueryClient } from "../../../../../../hooks/use-query/orders-query";
 import { createNewOrder } from "../_actions/create-order";
 import { addDays } from "date-fns";
 

@@ -14,10 +14,10 @@ import TodayFocus from "./date-focus";
 import DisplayAmap from "./display-amap";
 import DisplayOrder from "./display-order";
 import { useOrdersModal } from "./orders-modal";
-import { useOrdersQuery } from "./orders-query";
+import { useOrdersQuery } from "../../../../../hooks/use-query/orders-query";
 import SummarizeProducts from "./summarize-products";
 import UpdatePage from "./update-page";
-import { useUsersQuery } from "./users-query";
+import { useUsersQuery } from "../../../../../hooks/use-query/users-query";
 
 type EventsPageProps = {
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;

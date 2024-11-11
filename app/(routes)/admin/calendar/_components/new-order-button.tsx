@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import { createNewOrderUrl } from "../../orders/[orderId]/_components/new-order-button";
-import { useUsersQuery } from "./users-query";
+import { useUsersQuery } from "../../../../../hooks/use-query/users-query";
 
 function NewOrderButton() {
   const router = useRouter();

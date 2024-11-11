@@ -1,6 +1,6 @@
 "use client";
 
-import { useOrdersQueryClient } from "@/app/(routes)/admin/calendar/_components/orders-query";
+import { useOrdersQueryClient } from "@/hooks/use-query/orders-query";
 import Spinner from "@/components/animations/spinner";
 import { Button } from "@/components/ui/button";
 import { useConfirm } from "@/components/ui/confirm-dialog";

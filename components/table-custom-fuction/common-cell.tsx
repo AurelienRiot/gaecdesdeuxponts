@@ -2,6 +2,7 @@
 import useServerAction from "@/hooks/use-server-action";
 import { dateFormatter } from "@/lib/date-utils";
 import type { ReturnTypeServerAction } from "@/lib/server-action";
+import { cn } from "@/lib/utils";
 import type { Row } from "@tanstack/react-table";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,7 +13,6 @@ import { AutosizeTextarea } from "../ui/autosize-textarea";
 import { Button } from "../ui/button";
 import { Checkbox, type CheckedState } from "../ui/checkbox";
 import Currency from "../ui/currency";
-import { cn } from "@/lib/utils";
 
 type DateCellProps = {
   date: Date;
@@ -91,15 +91,10 @@ const NameWithImage = ({
           alt="user"
           width={imageSize * 2}
           height={imageSize}
-          className="object-contain rounded-sm bg-white"
+          style={{ width: imageSize * 2, height: imageSize * 2 }}
+          className="object-contain rounded-sm bg-transparent"
         />
       ) : (
-        // <div
-        //   style={{ width: imageSize * 2, height: imageSize * 2 }}
-        //   className=" rounded-full bg-gray-200 flex items-center justify-center shrink-0 "
-        // >
-        //   <span className="text-gray-600 font-semibold text-xs no-underline">{name.charAt(0)}</span>
-        // </div>
         <div
           style={{ width: imageSize * 2, height: imageSize * 2 }}
           className=" rounded-full bg-gray-200 flex items-center justify-center shrink-0"
@@ -108,7 +103,6 @@ const NameWithImage = ({
         </div>
       )
     ) : null}
-    {/* {name} */}
     {displayName && (
       <span className={cn("font-medium text-xs truncate", !completed ? "text-destructive" : "")}>{name}</span>
     )}

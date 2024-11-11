@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { addressFormatter } from "@/lib/utils";
 import Link from "next/link";
 import { formatPhoneNumber } from "react-phone-number-input";
-import { useUserQuery } from "../../_functions/user-query";
+import { useUserQuery } from "../../../../../../hooks/use-query/user-query";
 
 export const UserName = () => {
   const { data: user } = useUserQuery();

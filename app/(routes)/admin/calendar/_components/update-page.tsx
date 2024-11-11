@@ -1,8 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useOrdersQueryClient } from "./orders-query";
-import { useUsersQueryClient } from "./users-query";
+import { useOrdersQueryClient } from "../../../../../hooks/use-query/orders-query";
+import { useUsersQueryClient } from "../../../../../hooks/use-query/users-query";
 
 function UpdatePage({ className }: { className?: string }) {
   const { refectOrders } = useOrdersQueryClient();

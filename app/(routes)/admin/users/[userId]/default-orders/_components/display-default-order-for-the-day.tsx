@@ -2,6 +2,7 @@
 import { negativeQuantityStyle } from "@/app/(routes)/admin/orders/[orderId]/_components/products";
 import type { GetProductsForOrdersType } from "@/app/(routes)/admin/orders/[orderId]/_functions/get-products-for-orders";
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import CheckboxForm from "@/components/chekbox-form";
 import { GrPowerReset, LuPackageMinus } from "@/components/react-icons";
 import SelectSheetWithTabs, { sortProductByTabType } from "@/components/select-sheet-with-tabs";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +10,7 @@ import { Button, IconButton, LoadingButton } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { NumberInput } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useUsersQueryClient } from "@/hooks/use-query/users-query";
 import useServerAction from "@/hooks/use-server-action";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,8 +22,6 @@ import { toast } from "sonner";
 import updateDefaultOrdersAction from "../_actions/update-default-orders";
 import type { GetDefaultOrdersType } from "../_functions/get-default-orders";
 import { defaultOrderSchema, type DefaultOrderFormValues } from "./schema";
-import CheckboxForm from "@/components/chekbox-form";
-import { useUsersQueryClient } from "@/app/(routes)/admin/calendar/_components/users-query";
 
 function DisplayDefaultOrderForTheDay({
   defaultOrderForDay,
@@ -90,7 +90,7 @@ function DisplayDefaultOrderForTheDay({
           Mettre a jour
         </LoadingButton>
 
-        <ScrollArea className="  overflow-auto " style={{ maxHeight: `calc(100% - 200px)` }}>
+        <ScrollArea className="  overflow-auto " style={{ maxHeight: `calc(100dvh - 325px)` }}>
           <FormField
             control={form.control}
             name="confirmed"

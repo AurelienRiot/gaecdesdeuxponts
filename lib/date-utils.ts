@@ -43,7 +43,9 @@ export function getLocalDay(date: Date) {
 }
 
 export const dateMonthYear = (dates: (Date | null)[]) => {
-  const orderDates = (dates.filter((date) => date !== null) as Date[]).sort((a, b) => a.getTime() - b.getTime());
+  const orderDates = (dates.filter((date) => date !== null) as Date[]).sort(
+    (a, b) => new Date(a).getTime() - new Date(b).getTime(),
+  );
   const months = new Set(
     orderDates.map((date) =>
       date.toLocaleString("fr-FR", {
@@ -51,7 +53,7 @@ export const dateMonthYear = (dates: (Date | null)[]) => {
       }),
     ),
   );
-  const year = orderDates[0].getFullYear();
+  const year = new Date(orderDates[0]).getFullYear();
   return `${Array.from(months).join(" - ")} ${year}`;
 };
 

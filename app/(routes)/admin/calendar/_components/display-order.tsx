@@ -12,7 +12,7 @@ import type { CalendarOrdersType } from "../_functions/get-orders";
 import DisplayItem from "./display-item";
 import { useUserModal } from "./user-modal";
 import { useRouter } from "next/navigation";
-import { useUsersQuery } from "./users-query";
+import { useUsersQuery } from "../../../../../hooks/use-query/users-query";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/skeleton-ui/skeleton";
 

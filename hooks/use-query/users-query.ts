@@ -2,11 +2,11 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ky, { type HTTPError } from "ky";
-import type { UsersForOrderType } from "../../orders/[orderId]/_functions/get-users-for-orders";
+import type { UsersForOrderType } from "../../app/(routes)/admin/orders/[orderId]/_functions/get-users-for-orders";
 
 async function fetchUsers() {
   const responce = await ky
-    .get("/api/calendar/users")
+    .get("/api/users")
     .then(async (res) => {
       const result = (await res.json()) as UsersForOrderType[];
       return result;

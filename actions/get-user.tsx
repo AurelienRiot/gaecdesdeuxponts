@@ -2,6 +2,7 @@ import { authOptions } from "@/components/auth/authOptions";
 import { defaultNotifications } from "@/components/user";
 import prismadb from "@/lib/prismadb";
 import { getServerSession } from "next-auth";
+import { unstable_cache } from "next/cache";
 
 export const getSessionUser = async () => {
   const session = await getServerSession(authOptions);
@@ -48,17 +49,12 @@ export const getUserWithAdress = async () => {
   return user;
 };
 
-export type GetUserReturnType = Awaited<ReturnType<typeof GetUser>>;
+export type GetUserType = Awaited<ReturnType<typeof getUser>>;
 
-const GetUser = async () => {
-  const sessionUser = await getSessionUser();
-  if (!sessionUser) {
-    return null;
-  }
-
+const getUser = unstable_cache(async (userId: string) => {
   const user = await prismadb.user.findUnique({
     where: {
-      id: sessionUser.id,
+      id: userId,
     },
     include: {
       notifications: { select: { sendInvoiceEmail: true, sendShippingEmail: true } },
@@ -97,15 +93,15 @@ const GetUser = async () => {
     console.log("creating default notifications");
     await prismadb.notification.create({
       data: {
-        userId: sessionUser.id,
+        userId,
       },
     });
   }
 
   return user ? { ...user, notifications: user.notifications ? user.notifications : defaultNotifications } : null;
-};
+});
 
-export default GetUser;
+export default getUser;
 
 const testUser = {
   id: "cltioydna0000iegfbsdhjb0g",

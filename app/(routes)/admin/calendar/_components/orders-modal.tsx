@@ -8,7 +8,7 @@ import { Grip } from "lucide-react";
 import { createContext, memo, useContext, useEffect, useState } from "react";
 import updateOrdersIndex from "../_actions/update-orders-index";
 import type { CalendarOrdersType } from "../_functions/get-orders";
-import { useOrdersQueryClient } from "./orders-query";
+import { useOrdersQueryClient } from "../../../../../hooks/use-query/orders-query";
 import { useRaisedShadow } from "./use-raised-shadow";
 
 type OrdersModalContextType = {

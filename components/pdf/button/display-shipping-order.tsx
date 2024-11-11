@@ -1,6 +1,6 @@
 "use client";
 
-import { useOrdersQueryClient } from "@/app/(routes)/admin/calendar/_components/orders-query";
+import { useOrdersQueryClient } from "@/hooks/use-query/orders-query";
 import { useConfirm } from "@/components/ui/confirm-dialog";
 import { useToastPromise } from "@/components/ui/sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
