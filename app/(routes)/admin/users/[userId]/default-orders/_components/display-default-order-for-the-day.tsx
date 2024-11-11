@@ -21,6 +21,7 @@ import updateDefaultOrdersAction from "../_actions/update-default-orders";
 import type { GetDefaultOrdersType } from "../_functions/get-default-orders";
 import { defaultOrderSchema, type DefaultOrderFormValues } from "./schema";
 import CheckboxForm from "@/components/chekbox-form";
+import { useUsersQueryClient } from "@/app/(routes)/admin/calendar/_components/users-query";
 
 function DisplayDefaultOrderForTheDay({
   defaultOrderForDay,
@@ -38,7 +39,7 @@ function DisplayDefaultOrderForTheDay({
   index: number;
 }) {
   const { serverAction } = useServerAction(updateDefaultOrdersAction);
-
+  const { refectUsers } = useUsersQueryClient();
   const form = useForm<DefaultOrderFormValues>({
     resolver: zodResolver(defaultOrderSchema),
     defaultValues: {
@@ -66,7 +67,7 @@ function DisplayDefaultOrderForTheDay({
       toast.error("Completer tous les produits deja existant");
       return;
     }
-    await serverAction({ data });
+    await serverAction({ data, onSuccess: () => refectUsers() });
   }
 
   const deleteProduct = (prodIndex: number) => {

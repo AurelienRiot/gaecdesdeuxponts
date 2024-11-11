@@ -30,7 +30,6 @@ import { orderSchema, type OrderFormValues } from "./order-schema";
 import { ShippingProducts } from "./products";
 import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
-import TimePicker from "./time-picker";
 import TotalPrice from "./total-price";
 
 export type OrderFormProps = {
@@ -116,6 +115,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
   const userId = form.watch("userId");
 
   const user = userId ? users.find((user) => user.id === userId) : null;
+  const defaultDaysOrders = user?.defaultDaysOrders;
 
   const onConfirm = async () => {
     if (!initialData?.id) {
@@ -354,7 +354,12 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
       )}
 
       {!!initialData?.id && !!user?.id && (
-        <NewOrderButton orderId={initialData.id} userId={user.id} dateOfPickUp={initialData.datePickUp} />
+        <NewOrderButton
+          orderId={initialData.id}
+          userId={user.id}
+          dateOfPickUp={initialData.datePickUp}
+          defaultDaysOrders={defaultDaysOrders}
+        />
       )}
     </>
   );
