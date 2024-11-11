@@ -1,5 +1,4 @@
 "use client";
-import DateModal from "@/components/date-modal";
 import DeleteButton from "@/components/delete-button";
 import { DisplayCreateInvoice } from "@/components/pdf/button/display-create-invoice";
 import { DisplayInvoice } from "@/components/pdf/button/display-invoice";
@@ -11,10 +10,10 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import useServerAction from "@/hooks/use-server-action";
 import { createId } from "@/lib/id";
-import type { ProductWithMain, UserWithAddress } from "@/types";
+import { scrollToId } from "@/lib/scroll-to-traget";
+import type { ProductWithMain } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ProductStock, Shop } from "@prisma/client";
-import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -22,9 +21,11 @@ import { useOrdersQueryClient } from "../../../calendar/_components/orders-query
 import validateInvoice from "../../../invoices/_actions/validate-invoice";
 import { deleteOrder } from "../../_actions/delete-orders";
 import confirmOrder from "../_actions/confirm-order";
-import createOrder from "../_actions/create-order";
+import { createOrder } from "../_actions/create-order";
 import updateOrder from "../_actions/update-order";
+import type { UsersForOrderType } from "../_functions/get-users-for-orders";
 import FormDatePicker from "./date-picker";
+import NewOrderButton from "./new-order-button";
 import { orderSchema, type OrderFormValues } from "./order-schema";
 import { ShippingProducts } from "./products";
 import SelectShop from "./select-shop";
@@ -44,12 +45,11 @@ export type OrderFormProps = {
     | null;
   products: (ProductWithMain & { stocks: ProductStock[] })[];
   shops: Shop[];
-  users: UserWithAddress[];
-  referer: string;
+  users: UsersForOrderType[];
   className?: string;
 };
 
-export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, users, shops, referer, className }) => {
+export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, users, shops, className }) => {
   const router = useRouter();
   const { refectOrders, mutateOrders } = useOrdersQueryClient();
   const prevDateOfShipping = initialData?.dateOfShipping ? new Date(initialData.dateOfShipping) : undefined;
@@ -57,7 +57,6 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
   const { serverAction: confirmOrderAction, loading } = useServerAction(confirmOrder);
   const { serverAction: validateInvoiceAction, loading: validateLoading } = useServerAction(validateInvoice);
-
   const title = initialData?.id
     ? { label: "Modifier la commande", color: "text-blue-500" }
     : initialData
@@ -125,7 +124,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
     }
 
     function onSuccess() {
-      router.replace(`/admin/orders/${initialData?.id}?referer=${encodeURIComponent(referer)}#button-container`);
+      router.replace(`/admin/orders/${initialData?.id}`);
       mutateOrders((prev) =>
         prev.map((order) =>
           order.id === initialData?.id
@@ -133,6 +132,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
             : order,
         ),
       );
+      scrollToId("button-container", 1000);
     }
 
     await confirmOrderAction({
@@ -150,8 +150,9 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
     validateInvoiceAction({
       data: { id: initialData?.invoiceId, isPaid: !initialData.dateOfPayment },
       onSuccess: () => {
+        router.replace(`/admin/orders/${initialData?.id}`);
         refectOrders();
-        router.refresh();
+        scrollToId("button-container", 1000);
       },
     });
   }
@@ -181,54 +182,41 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
       return;
     }
 
-    initialData?.id
-      ? await updateOrderAction({
-          data: { ...data, prevDateOfShipping },
-          onSuccess: (result) => {
-            if (!result) {
-              toast.error("Une erreur est survenue");
-              return;
-            }
-            result.shippingDate = new Date(result.shippingDate);
-            result.createdAt = new Date(result.createdAt);
-            mutateOrders((prev) => prev.filter((order) => order.id !== result.id).concat(result));
-            router.replace(`/admin/orders/${result.id}?referer=${encodeURIComponent(referer)}#button-container`);
-          },
-          toastOptions: { position: "top-center" },
-        })
-      : await createOrderAction({
-          data,
-          toastOptions: { position: "top-center" },
-          onSuccess: (result) => {
-            if (!result) {
-              toast.error("Une erreur est survenue");
-              return;
-            }
-            result.shippingDate = new Date(result.shippingDate);
-            result.createdAt = new Date(result.createdAt);
-            mutateOrders((prev) => prev.filter((order) => order.id !== result.id).concat(result));
-            router.back();
-          },
-        });
-  };
-
-  function onNewOrder(date?: Date) {
-    if (!date) {
-      toast.error("Veuillez choisir une date");
-      return;
+    if (initialData?.id) {
+      await updateOrderAction({
+        data: { ...data, prevDateOfShipping },
+        onSuccess: (result) => {
+          if (!result) {
+            toast.error("Une erreur est survenue");
+            return;
+          }
+          result.shippingDate = new Date(result.shippingDate);
+          result.createdAt = new Date(result.createdAt);
+          mutateOrders((prev) => prev.filter((order) => order.id !== result.id).concat(result));
+          scrollToId("button-container");
+        },
+        toastOptions: { position: "top-center" },
+      });
+    } else {
+      router.back();
+      createOrderAction({
+        data,
+        toastOptions: { position: "top-center" },
+        onSuccess: (result) => {
+          if (!result) {
+            toast.error("Une erreur est survenue");
+            return;
+          }
+          result.shippingDate = new Date(result.shippingDate);
+          result.createdAt = new Date(result.createdAt);
+          mutateOrders((prev) => prev.concat(result));
+        },
+        onError: () => {
+          router.forward();
+        },
+      });
     }
-    const dateOfPickUp = form.getValues("datePickUp");
-    const hours = dateOfPickUp.getHours();
-    const minutes = dateOfPickUp.getMinutes();
-    const seconds = dateOfPickUp.getSeconds();
-    const milliseconds = dateOfPickUp.getMilliseconds();
-    const urlParams = new URLSearchParams();
-    urlParams.set("dateOfShipping", new Date(date.setHours(hours, minutes, seconds, milliseconds)).toISOString());
-    urlParams.set("referer", referer);
-    urlParams.set("id", form.getValues("id"));
-    toast.success("Création d'une nouvelle commande", { position: "top-center" });
-    router.replace(`/admin/orders/new?${urlParams.toString()}`);
-  }
+  };
 
   return (
     <>
@@ -254,24 +242,24 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
           <div className="flex flex-wrap items-end gap-8">
             <SelectUser users={users} />
-            {!!initialData && (
+            {/* {!!initialData && (
               <FormField
                 control={form.control}
                 name="datePickUp"
                 render={({ field }) => (
                   <>
-                    {/* <FormDatePicker
+                    <FormDatePicker
                       {...field}
                       date={field.value}
                       onSelectDate={field.onChange}
                       title="Date de retrait"
                       button={"none"}
-                    /> */}
+                    />
                     {field.value && <TimePicker date={field.value} setDate={field.onChange} />}
                   </>
                 )}
               />
-            )}
+            )} */}
 
             <FormField
               control={form.control}
@@ -365,18 +353,8 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
         </div>
       )}
 
-      {!!initialData?.id && (
-        <DateModal
-          onValueChange={onNewOrder}
-          triggerClassName=" w-44 border-dashed border-2 text-primary"
-          trigger={
-            <>
-              {" "}
-              <Plus className="mr-2 h-4 w-4" />
-              Nouvelle commande
-            </>
-          }
-        />
+      {!!initialData?.id && !!user?.id && (
+        <NewOrderButton orderId={initialData.id} userId={user.id} dateOfPickUp={initialData.datePickUp} />
       )}
     </>
   );

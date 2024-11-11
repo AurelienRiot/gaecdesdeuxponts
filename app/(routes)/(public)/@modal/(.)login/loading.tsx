@@ -1,5 +1,4 @@
 import { Skeleton } from "@/components/skeleton-ui/skeleton";
-import React from "react";
 import { cn } from "@/lib/utils";
 
 const Loading = ({ className }: { className?: string }) => {

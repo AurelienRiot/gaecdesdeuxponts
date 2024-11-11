@@ -8,14 +8,15 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { NumberInput } from "@/components/ui/input";
 import { createId } from "@/lib/id";
 import { cn } from "@/lib/utils";
-import type { ProductWithMain, UserWithAddress } from "@/types";
+import type { ProductWithMain } from "@/types";
 import type { ProductStock } from "@prisma/client";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
+import type { UsersForOrderType } from "../_functions/get-users-for-orders";
 import type { OrderFormValues } from "./order-schema";
 
-const negativeQuantityStyle =
+export const negativeQuantityStyle =
   "bg-destructive hover:bg-destructive/90 hover:text-destructive-foreground text-destructive-foreground";
 
 export const ShippingProducts = ({
@@ -23,12 +24,11 @@ export const ShippingProducts = ({
   user,
 }: {
   products: (ProductWithMain & { stocks: ProductStock[] })[];
-  user?: UserWithAddress | null;
+  user?: UsersForOrderType | null;
 }) => {
   const form = useFormContext<OrderFormValues>();
-  const items = form.watch("orderItems");
 
-  const addProduct = () => {
+  const addProduct = (items: OrderFormValues["orderItems"]) => {
     if (items.every((item) => item.itemId)) {
       const newItems = {
         itemId: "",
@@ -57,7 +57,7 @@ export const ShippingProducts = ({
           <FormLabel>Produits</FormLabel>
           <FormControl>
             <div className="space-y-4">
-              {items.map((item, productIndex) => (
+              {field.value.map((item, productIndex) => (
                 <div key={item.id} className="w-fit rounded-md p-4 pb-4 thin-scrollbar bg-chart1/50 even:bg-chart2/50">
                   <ProductName user={user} products={products} productIndex={productIndex} />
                 </div>
@@ -70,7 +70,12 @@ export const ShippingProducts = ({
             </p>
           )}
           <div className="flex flex-wrap items-end gap-4">
-            <Button type="button" variant="outline" className="whitespace-nowrap border-dashed" onClick={addProduct}>
+            <Button
+              type="button"
+              variant="outline"
+              className="whitespace-nowrap border-dashed"
+              onClick={() => addProduct(field.value)}
+            >
               <PlusCircledIcon className="mr-2 size-4" />
               {"Ajouter un produit"}
             </Button>
@@ -86,14 +91,15 @@ function ProductName({
   products,
   user,
 }: {
-  user?: UserWithAddress | null;
+  user?: UsersForOrderType | null;
   productIndex: number;
   products: (ProductWithMain & { stocks: ProductStock[] })[];
 }) {
   const form = useFormContext<OrderFormValues>();
   const items = form.watch("orderItems");
-  const selectedProduct = items[productIndex];
-  const quantity = selectedProduct.quantity;
+  const item = items[productIndex];
+  const quantity = item.quantity;
+  const product = products.find((p) => p.id === item.itemId);
 
   const deleteProduct = () => {
     const newItems = items.filter((_, index) => index !== productIndex);
@@ -101,13 +107,12 @@ function ProductName({
   };
 
   function addNegativeProduct() {
-    if (selectedProduct) {
+    if (item) {
       const newItem = {
         ...items[productIndex],
         id: createId("orderItem"),
         quantity: -1,
       };
-      console.log(newItem);
       const newItems = [...items.slice(0, productIndex + 1), newItem, ...items.slice(productIndex + 1)];
       form.setValue("orderItems", newItems);
     }
@@ -118,7 +123,7 @@ function ProductName({
       <div className="flex flex-wrap items-center gap-4">
         <SelectProductName
           user={user}
-          selectedProduct={selectedProduct}
+          product={product}
           products={products}
           productIndex={productIndex}
           quantity={quantity}
@@ -135,7 +140,7 @@ function ProductName({
                   Icon={GrPowerReset}
                   className="border-dashed p-2 bg-transparent"
                   iconClassName="size-3"
-                  onClick={() => field.onChange(selectedProduct?.price)}
+                  onClick={() => field.onChange(product?.price)}
                   type="button"
                 />
               </FormLabel>
@@ -212,34 +217,33 @@ function ProductName({
 const SelectProductName = ({
   productIndex,
   products,
-  selectedProduct,
+  product,
   quantity,
   user,
 }: {
-  user?: UserWithAddress | null;
+  user?: UsersForOrderType | null;
   productIndex: number;
   quantity: number;
   products: (ProductWithMain & { stocks: ProductStock[] })[];
-  selectedProduct?: OrderFormValues["orderItems"][number];
+  product?: ProductWithMain & { stocks: ProductStock[] };
 }) => {
   const form = useFormContext<OrderFormValues>();
-
   function onSelectedProduct(value: string) {
-    const product = products.find((product) => product.id === value);
-    if (!product) {
+    const selectedProduct = products.find((p) => p.id === value);
+    if (!selectedProduct) {
       toast.error("Produit introuvable");
       return;
     }
-    form.setValue(`orderItems.${productIndex}.name`, product.name);
-    form.setValue(`orderItems.${productIndex}.categoryName`, product.product.categoryName);
-    form.setValue(`orderItems.${productIndex}.itemId`, product.id);
-    form.setValue(`orderItems.${productIndex}.unit`, product.unit);
-    form.setValue(`orderItems.${productIndex}.tax`, product.tax);
-    form.setValue(`orderItems.${productIndex}.description`, product.description);
-    form.setValue(`orderItems.${productIndex}.price`, product.price);
+    form.setValue(`orderItems.${productIndex}.name`, selectedProduct.name);
+    form.setValue(`orderItems.${productIndex}.categoryName`, selectedProduct.product.categoryName);
+    form.setValue(`orderItems.${productIndex}.itemId`, selectedProduct.id);
+    form.setValue(`orderItems.${productIndex}.unit`, selectedProduct.unit);
+    form.setValue(`orderItems.${productIndex}.tax`, selectedProduct.tax);
+    form.setValue(`orderItems.${productIndex}.description`, selectedProduct.description);
+    form.setValue(`orderItems.${productIndex}.price`, selectedProduct.price);
     form.setValue(
       `orderItems.${productIndex}.stocks`,
-      product.stocks.map((stock) => stock.stockId),
+      selectedProduct.stocks.map((stock) => stock.stockId),
     );
   }
   const groupedProducts = sortProductByTabType(
@@ -264,7 +268,7 @@ const SelectProductName = ({
               triggerClassName="w-full"
               title="Selectionner le produit"
               trigger={
-                selectedProduct ? (
+                product ? (
                   <Button
                     type="button"
                     variant="outline"
@@ -275,7 +279,7 @@ const SelectProductName = ({
                       quantity < 0 ? negativeQuantityStyle : "",
                     )}
                   >
-                    {products.find((product) => product.id === selectedProduct?.itemId)?.product.isPro && (
+                    {product.product.isPro && (
                       <Badge variant="orange" className="mr-2">
                         Pro
                       </Badge>
@@ -286,7 +290,7 @@ const SelectProductName = ({
                   "Sélectionner le produit"
                 )
               }
-              selectedValue={selectedProduct?.id}
+              selectedValue={product?.id}
               tabsValues={groupedProducts}
               tabs={[
                 { value: "favories", label: "Favoris" },

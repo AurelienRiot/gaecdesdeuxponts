@@ -52,7 +52,7 @@ model User {
   messages       Contact[]
   comments       Comment[]
   notifications  Notification?
-  defauldOrders  DefaultOrder[]
+  defaultOrders  DefaultOrder[]
   dayOrderUsers  DayOrderUser[]
   ccInvoice      String[]
   createdAt      DateTime        @default(now())
@@ -140,12 +140,16 @@ model Link {
 model DefaultOrder {
   id                   Int                   @id @unique @default(autoincrement())
   day                  Int
+  confirmed            Boolean               @default(true)
   defaultOrderProducts DefaultOrderProduct[]
   userId               String
   user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shopId               String?
+  defaultShop          Shop?                 @relation(fields: [shopId], references: [id], onDelete: Cascade)
 
   @@unique([userId, day])
   @@index([userId])
+  @@index([shopId])
 }
 
 model DefaultOrderProduct {

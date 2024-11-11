@@ -1,10 +1,9 @@
 import { CreateUserForm } from "@/app/(routes)/admin/users/[userId]/_components/create-user-form";
 import { UserForm } from "@/app/(routes)/admin/users/[userId]/_components/user-form";
+import { Button } from "@/components/ui/button";
+import { SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import prismadb from "@/lib/prismadb";
-import { Suspense } from "react";
-import Loading from "../../_loading";
-import UserSheet from "./components/user-sheet";
-import { addDelay } from "@/lib/utils";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -14,11 +13,17 @@ async function IntercepteUserPage({
   params: { userId: string | "new" | undefined };
 }) {
   return (
-    <UserSheet>
-      <Suspense fallback={<Loading />}>
-        <DisplayUserForm userId={params.userId} />
-      </Suspense>
-    </UserSheet>
+    <div className="space-y-6 w-full">
+      <SheetHeader className="sr-only">
+        <SheetTitle>
+          <span>Page utilisateur</span>
+        </SheetTitle>
+        <SheetDescription className="">
+          {params.userId === "new" ? "Créer un nouvel utilisateur" : "Modifier l'utilisateur"}
+        </SheetDescription>
+      </SheetHeader>
+      <DisplayUserForm userId={params.userId} />
+    </div>
   );
 }
 
@@ -48,5 +53,16 @@ async function DisplayUserForm({ userId }: { userId: string | "new" | undefined 
     );
   }
 
-  return <UserForm initialData={user} incomplete={true} />;
+  return (
+    <>
+      <UserForm initialData={user} incomplete={true} />
+      <SheetFooter className="sm:justify-start px-4">
+        <Button asChild>
+          <Link replace href={`/admin/users/${user.id}/default-orders`}>
+            Commandes par default par jour
+          </Link>
+        </Button>
+      </SheetFooter>
+    </>
+  );
 }

@@ -14,13 +14,12 @@ const AuthLink = forwardRef<HTMLAnchorElement, AnchorHTMLAttributes<HTMLAnchorEl
           {...props}
           href={
             !session.data
-              ? `/login?${callbackUrl ? `callbackUrl=${callbackUrl}` : ""}`
+              ? `/login${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`
               : session.data.user.role === "admin"
                 ? "/admin/calendar"
                 : "/profile"
           }
           ref={ref}
-          prefetch={false}
         >
           {session.status === "authenticated" ? "Mon compte" : "Se connecter"}
         </Link>

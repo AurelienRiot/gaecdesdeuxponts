@@ -29,7 +29,6 @@ async function confirmOrder(data: z.infer<typeof confirmOrderSchema>) {
       });
       await updateStocks(order.orderItems, !confirm);
 
-      // await createOrdersEvent({ date: new Date() });
       revalidateTag("orders");
 
       return {

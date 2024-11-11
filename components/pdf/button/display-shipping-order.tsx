@@ -23,11 +23,12 @@ export function DisplayShippingOrder({
   isSend,
   disabled,
 }: { orderId: string; isSend: boolean; disabled?: boolean }) {
-  const { toastServerAction, loading: toastLoading } = useToastPromise({
-    serverAction: SendBL,
-    message: "Envoi du BL",
-    errorMessage: "Envoi du BL annulé",
-  });
+  // const { toastServerAction, loading: toastLoading } = useToastPromise({
+  //   serverAction: SendBL,
+  //   message: "Envoi du BL",
+  //   errorMessage: "Envoi du BL annulé",
+  // });
+  const { serverAction: sendBLAction, loading: sendBLLoading } = useServerAction(SendBL);
   const { serverAction, loading } = useServerAction(createShippingPDF64StringAction);
   const { serverAction: orderAction, loading: loading2 } = useServerAction(getOrderForConfirmation);
   const router = useRouter();
@@ -89,21 +90,21 @@ export function DisplayShippingOrder({
     if (!result) {
       return;
     }
-    toastServerAction({
+    toast.success("BL envoyé", { position: "top-center" });
+    sendBLAction({
       data: { orderId },
       onSuccess: () => {
         setSend(true);
         mutateOrders((prev) =>
           prev.map((order) => (order.id === orderId ? { ...order, status: "Commande livrée" } : order)),
         );
-        // refectOrders();
       },
     });
   };
 
   return (
     <PdfButton
-      disabled={loading || toastLoading || loading2 || disabled}
+      disabled={loading || sendBLLoading || loading2 || disabled}
       onViewFile={onViewFile}
       onSaveFile={onSaveFile}
       onSendFile={onSendFile}

@@ -13,6 +13,7 @@ import {
   PresentationIcon,
   RowsIcon,
   ShoppingBasket,
+  Shuffle,
   Store,
   Users,
 } from "lucide-react";
@@ -198,6 +199,12 @@ export const SecondaryAdminRoutes = (pathname: string) => [
     label: "Direction",
     active: pathname.startsWith(`/admin/direction`),
     Icone: MapPin,
+  },
+  {
+    href: `/admin/calendar/day-order`,
+    label: "Ordre des commandes par jour",
+    active: pathname.startsWith(`/admin/calendar/day-order`),
+    Icone: Shuffle,
   },
   {
     href: `/logout`,

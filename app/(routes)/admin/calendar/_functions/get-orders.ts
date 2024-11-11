@@ -10,7 +10,7 @@ import { addressFormatter, currencyFormatter } from "@/lib/utils";
 
 export const getOrdersByDate = async ({ from, to }: { from: Date; to: Date }) => {
   const orders = await getOrders({ from, to });
-  const formattedOrders = orders.map((order) => formatOrders(order));
+  const formattedOrders = orders.map((order) => formatOrder(order));
   return { success: true, data: formattedOrders, message: "Commandes trouvées" };
 };
 
@@ -27,7 +27,7 @@ async function getOrders({ from, to }: { from: Date; to: Date }) {
     include: {
       orderItems: true,
       shop: true,
-      user: { include: { address: true, billingAddress: true, links: true } },
+      user: { select: { email: true, name: true, company: true, address: true, image: true } },
       invoiceOrder: {
         select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
         orderBy: { createdAt: "desc" },
@@ -37,23 +37,25 @@ async function getOrders({ from, to }: { from: Date; to: Date }) {
   });
 }
 
-export function formatOrders(order: GetOrdersType[0]): CalendarOrdersType {
+export function formatOrder(order: GetOrdersType[number]): CalendarOrdersType {
   return {
     id: order.id,
-    name: getUserName(order.user),
+    userName: getUserName(order.user),
+    userId: order.userId,
+    userImage: order.user.image,
     index: order.index,
-    user: {
-      name: order.user.name,
-      email: order.user.email,
-      company: order.user.company,
-      completed: order.user.completed,
-      image: order.user.image,
-      phone: order.user.phone,
-      address: addressFormatter(order.user.address, false),
-      notes: order.user.notes,
-      links: order.user.links,
-      id: order.user.id,
-    },
+    // user: {
+    //   name: order.user.name,
+    //   email: order.user.email,
+    //   company: order.user.company,
+    //   completed: order.user.completed,
+    //   image: order.user.image,
+    //   phone: order.user.phone,
+    //   address: addressFormatter(order.user.address, false),
+    //   notes: order.user.notes,
+    //   links: order.user.links,
+    //   id: order.user.id,
+    // },
     shippingDate: createDatePickUp({ dateOfShipping: order.dateOfShipping, datePickUp: order.datePickUp }),
     productsList: order.orderItems.map((item) => ({
       itemId: item.itemId,
@@ -77,20 +79,22 @@ export function formatOrders(order: GetOrdersType[0]): CalendarOrdersType {
 
 export type CalendarOrdersType = {
   id: string;
-  name: string;
   index: number | null;
-  user: {
-    id: string;
-    name?: string | null;
-    completed?: boolean;
-    email?: string | null;
-    phone?: string | null;
-    company?: string | null;
-    image?: string | null;
-    address?: string | null;
-    links: { label: string; value: string }[];
-    notes: string | null;
-  };
+  userName: string;
+  userId: string;
+  userImage?: string | null;
+  // user: {
+  //   id: string;
+  //   name?: string | null;
+  //   completed?: boolean;
+  //   email?: string | null;
+  //   phone?: string | null;
+  //   company?: string | null;
+  //   image?: string | null;
+  //   address?: string | null;
+  //   links: { label: string; value: string }[];
+  //   notes: string | null;
+  // };
   shippingDate: Date;
   totalPrice: string;
   status: Status;

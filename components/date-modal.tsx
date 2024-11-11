@@ -55,8 +55,8 @@ const DateModal = React.forwardRef<HTMLButtonElement, DateModalProps>(
             selected={value}
             defaultMonth={value ? value : defaultMonth}
             locale={fr}
-            onSelect={(date) => {
-              onValueChange?.(date);
+            onSelect={async (date) => {
+              await onValueChange(date);
               setIsOpen(false);
             }}
             startMonth={new Date(new Date().getFullYear(), new Date().getMonth())}

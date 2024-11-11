@@ -1,28 +1,20 @@
-import { getDateOffset, getLocalIsoString } from "@/lib/date-utils";
+import { getLocalIsoString } from "@/lib/date-utils";
 import prismadb from "@/lib/prismadb";
-import { addDays, subDays, subMinutes } from "date-fns";
 
 async function getOrdersIndex(userId: string, dateOfShipping?: Date | null) {
   if (!dateOfShipping) return null;
-  const localDate = getLocalIsoString(dateOfShipping);
-  const offset = getDateOffset(dateOfShipping);
-  const beginDay = subDays(subMinutes(new Date(localDate), offset), 7);
-  const endDay = addDays(beginDay, 1);
-  console.log({ localDate, offset });
-  const order = await prismadb.order.findMany({
+  const day = new Date(getLocalIsoString(dateOfShipping)).getUTCDay();
+  const dayOrder = await prismadb.dayOrder.findUnique({
     where: {
-      userId,
-      dateOfShipping: {
-        gte: beginDay,
-        lt: endDay,
-      },
-      deletedAt: null,
+      day,
     },
-    orderBy: { dateOfShipping: "desc" },
-    select: { userId: true, index: true },
+    select: {
+      dayOrderUsers: true,
+    },
   });
-  if (order.length === 0) return null;
-  return order[0].index;
+  if (!dayOrder || dayOrder.dayOrderUsers.length === 0) return null;
+  const index = dayOrder.dayOrderUsers.find((user) => user.userId === userId)?.index;
+  return index ?? null;
 }
 
 export default getOrdersIndex;

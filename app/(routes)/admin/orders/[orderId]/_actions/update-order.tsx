@@ -7,7 +7,7 @@ import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
-import { formatOrders } from "../../../calendar/_functions/get-orders";
+import { formatOrder } from "../../../calendar/_functions/get-orders";
 import { orderSchema, type OrderFormValues } from "../_components/order-schema";
 import getOrdersIndex from "../_functions/get-orders-index";
 
@@ -115,7 +115,7 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
       return {
         success: true,
         message: "Commande mis à jour",
-        data: formatOrders(updadedOrders),
+        data: formatOrder(updadedOrders),
       };
     },
   });

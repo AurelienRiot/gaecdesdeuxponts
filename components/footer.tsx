@@ -14,7 +14,6 @@ const Footer = ({ className }: { className?: string }) => {
           <ul className="flex flex-col justify-center gap-6 text-center sm:flex-row">
             <li>
               <Link
-                prefetch={false}
                 href="/mention-legal"
                 className="text-sm font-medium transition-colors hover:text-green-500 hover:underline"
               >
@@ -23,7 +22,6 @@ const Footer = ({ className }: { className?: string }) => {
             </li>
             <li>
               <Link
-                prefetch={false}
                 href="/pdf/Politique-de-confidentialite.pdf"
                 className="text-sm font-medium transition-colors hover:text-green-500 hover:underline"
                 target="_blank"
@@ -33,7 +31,6 @@ const Footer = ({ className }: { className?: string }) => {
             </li>
             <li>
               <Link
-                prefetch={false}
                 href="/conditions-generales-de-vente"
                 className="text-sm font-medium transition-colors hover:text-green-500 hover:underline"
               >
@@ -42,7 +39,6 @@ const Footer = ({ className }: { className?: string }) => {
             </li>
             <li>
               <Link
-                prefetch={false}
                 href="/contact#contact"
                 scroll={true}
                 className="text-sm font-medium transition-colors hover:text-green-500 hover:underline"

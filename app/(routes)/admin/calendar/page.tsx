@@ -2,12 +2,11 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { ONE_DAY } from "@/lib/date-utils";
 import { addDays } from "date-fns";
-import { Package, Plus, User } from "lucide-react";
+import { Plus, User } from "lucide-react";
 import Link from "next/link";
-import TodayFocus from "./_components/date-focus";
 import EventPage from "./_components/events-page";
+import NewOrderButton from "./_components/new-order-button";
 import { OrdersModalProvider } from "./_components/orders-modal";
-import UpdatePage from "./_components/update-page";
 import { UserModalProvider } from "./_components/user-modal";
 import { getGroupedAMAPOrders } from "./_functions/get-amap-orders";
 
@@ -21,14 +20,9 @@ function makeDateArray({ from, to }: { from: Date; to: Date }) {
 }
 
 async function CalendarPage() {
-  const from = addDays(new Date(), -14);
+  const from = addDays(new Date(), -20);
   const to = addDays(new Date(), 30);
   const dateArray = makeDateArray({ from, to });
-  // const [orders, amapOrders] = await Promise.all([getOrdersByDate({ from, to }), getGroupedAMAPOrders()]);
-  // const stocks = await getStocks();
-  // for (const stock of stocks) {
-  //   console.log(stock.name, " : ", stock.totalQuantity);
-  // }
   const amapOrders = await getGroupedAMAPOrders();
 
   return (
@@ -38,10 +32,10 @@ async function CalendarPage() {
           <div className="max-w-[90vw] md:max-w-[500px] mx-auto flex pt-2 gap-4 items-center justify-between">
             <Link
               href="/admin/users/new"
-              className=" p-2 h-fit border bg-blue-500 rounded-full cursor-pointer flex gap-2"
+              className=" p-2 h-fit border bg-blue-500 transition-colors hover:bg-blue-400 rounded-full cursor-pointer flex gap-2"
             >
-              <Plus className="size-4 text-green-100 stroke-[3]" />
-              <User className="size-4 text-green-100 stroke-[3]" />
+              <Plus className="size-4 text-blue-100 stroke-[3]" />
+              <User className="size-4 text-blue-100 stroke-[3]" />
             </Link>
             <Heading
               title={`Calendrier des commandes`}
@@ -50,14 +44,7 @@ async function CalendarPage() {
               titleClassName=" text-lg sm:text-2xl md:text-3xl"
             />
 
-            <Link
-              href="/admin/orders/new"
-              // href="/admin/calendar/day-order"
-              className=" p-2 h-fit border bg-green-500 rounded-full cursor-pointer flex gap-2"
-            >
-              <Plus className="size-4 text-green-100 stroke-[3]" />
-              <Package className="size-4 text-green-100 stroke-[3]" />
-            </Link>
+            <NewOrderButton />
           </div>
           <Separator />
 

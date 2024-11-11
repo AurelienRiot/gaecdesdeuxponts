@@ -176,7 +176,7 @@ function calculateOverallTotals(orders: DataOrder[]) {
   }
 
   return {
-    totalTTC,
-    totalHT,
+    totalTTC: Math.round(totalTTC * 100) / 100,
+    totalHT: Math.round(totalHT * 100) / 100,
   };
 }

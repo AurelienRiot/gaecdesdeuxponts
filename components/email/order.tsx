@@ -1,5 +1,5 @@
-import { Section, Text } from "@react-email/components";
-import MainBody, { ButtonRedirect } from "./common";
+import { Text } from "@react-email/components";
+import MainBody from "./common";
 
 const OrderEmail = ({ date, baseUrl, price, id, email }: OrderEmailProps) => (
   <MainBody baseUrl={baseUrl} previewText={`Votre commande d'un montant de ${price}`}>

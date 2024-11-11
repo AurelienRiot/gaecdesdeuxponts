@@ -8,19 +8,20 @@ import { Button, IconButton } from "@/components/ui/button";
 import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input, NumberInput } from "@/components/ui/input";
+import MultipleSelector, { type Option } from "@/components/ui/multiple-selector";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { createId } from "@/lib/id";
+import { scrollToId } from "@/lib/scroll-to-traget";
 import { cn, getPercentage } from "@/lib/utils";
 import { type Stock, Unit } from "@prisma/client";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { Check, ChevronLeft, ChevronRight, ChevronsDown, ChevronsUp, ChevronsUpDown, X } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { toast } from "sonner";
 import OptionValueForm from "./options-values-form";
 import type { ProductFormValues } from "./product-schema";
-import MultipleSelector, { type Option } from "@/components/ui/multiple-selector";
 
 export const ProductWithOptions = ({
   optionsArray,
@@ -30,13 +31,16 @@ export const ProductWithOptions = ({
   stocks: Stock[];
 }) => {
   const [listChanges, setListChanges] = useState(0);
-  const router = useRouter();
 
   const form = useFormContext<ProductFormValues>();
   const products = form.watch("products");
   const options = products[0].options;
 
   const addProduct = () => {
+    if (!products.every((item) => item.id)) {
+      toast.error("Completer tous les produits deja existant");
+      return;
+    }
     const newProduct = {
       id: createId("product"),
       index: products.length,
@@ -55,7 +59,7 @@ export const ProductWithOptions = ({
       price: 0,
     };
     form.setValue("products", [...products, newProduct]);
-    setTimeout(() => router.push(`#product-${newProduct.index}`), 10);
+    scrollToId(`product-${newProduct.index}`, 10);
   };
 
   const addOptions = () => {

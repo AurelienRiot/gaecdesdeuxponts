@@ -26,7 +26,11 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
   const { serverAction, loading } = useServerAction(deleteInvoice);
-  const { serverAction: validateInvoiceAction, loading: validateLoading } = useServerAction(validateInvoice);
+  const { toastServerAction: validateInvoiceAction, loading: validateLoading } = useToastPromise({
+    serverAction: validateInvoice,
+    message: "Validation de la facture",
+    errorMessage: "Erreur lors de la validation de la facture",
+  });
   const { toastServerAction: invoiceToast, loading: invoiceToastLoading } = useToastPromise({
     serverAction: sendInvoiceAction,
     message: "Envoie de la facture",
@@ -78,6 +82,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
   function onPaid() {
     validateInvoiceAction({
+      delay: false,
       data: { id: data.id, isPaid: data.status !== "Payé" },
       onSuccess: () => router.refresh(),
     });

@@ -10,12 +10,12 @@ import { dateFormatter } from "@/lib/date-utils";
 import { formatFrenchPhoneNumber } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { createContext, useContext, useState } from "react";
+import type { UsersForOrderType } from "../../orders/[orderId]/_functions/get-users-for-orders";
 import type { CalendarOrdersType } from "../_functions/get-orders";
 import DisplayItem from "./display-item";
 
-type UserModalProps = CalendarOrdersType["user"] & { orders: CalendarOrdersType[]; date: Date };
+type UserModalProps = UsersForOrderType & { orders: CalendarOrdersType[]; date: Date };
 
 type UserModalContextType = {
   user: UserModalProps | null;
@@ -51,7 +51,6 @@ export function useUserModal() {
 }
 
 function UserModal() {
-  const router = useRouter();
   const { user, isUserModalOpen, setIsUserModalOpen } = useUserModal();
   return (
     <Modal
@@ -174,9 +173,7 @@ function DisplayUserOrders() {
 
   return (
     <div className="mb-4 space-y-2">
-      <h3 className="text-sm font-medium text-gray-500">
-        {user.orders.length > 1 ? "Commandes précedentes" : "Commande précedente"}
-      </h3>
+      <h3 className="text-sm font-medium text-gray-500">Commandes</h3>
 
       {user.orders.map((order) => (
         <div key={order.id} className="space-y-2 p-3 rounded-md bg-secondary">
