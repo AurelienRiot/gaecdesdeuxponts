@@ -39,9 +39,8 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, newOrder,
             setIsExpanded(!isExpanded);
           }}
         >
-          {newOrder && <IconButton className="size-4 p-0.5 text-green-500 absolute top-0.5 left-0.5 " Icon={Check} />}
           <div className="grid grid-cols-11  items-center w-full">
-            <SetUserModal order={order} otherOrders={otherOrders} />
+            <SetUserModal order={order} otherOrders={otherOrders} newOrder={newOrder} />
 
             <StatusCell status={order.status} className="col-span-5 justify-center" />
             <div className="flex justify-end">
@@ -82,7 +81,11 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, newOrder,
   );
 };
 
-function SetUserModal({ order, otherOrders }: { order: CalendarOrdersType; otherOrders: CalendarOrdersType[] }) {
+function SetUserModal({
+  order,
+  otherOrders,
+  newOrder,
+}: { order: CalendarOrdersType; otherOrders: CalendarOrdersType[]; newOrder?: boolean }) {
   const { data: users } = useUsersQuery();
   const user = users?.find((u) => u.id === order.userId);
   const { setUser, setIsUserModalOpen } = useUserModal();
@@ -106,7 +109,17 @@ function SetUserModal({ order, otherOrders }: { order: CalendarOrdersType; other
     return <Skeleton className="col-span-5 " size={"xs"} />;
   }
   return (
-    <button type="button" onClick={setUserForModal} className="col-span-5  ">
+    <button type="button" onClick={setUserForModal} className="col-span-5 relavive ">
+      {newOrder && (
+        <span
+          className={
+            "flex z-10  p-[1px] text-green-500 absolute top-0.5 left-0.5 items-center justify-center rounded-full border bg-background shadow-md transition-all hover:scale-110 active:scale-95"
+          }
+        >
+          <Check className="size-3" />
+          <span className="sr-only">{"Nouvelle commande crée"}</span>
+        </span>
+      )}
       <NameWithImage name={order.userName} image={order.userImage} imageSize={12} completed={user.completed} />
     </button>
   );

@@ -136,7 +136,7 @@ function RenderEvent({
 }) {
   return (
     <div key={date} id={date} className={cn(" w-[320px] h-full  space-y-2 relative ", className)}>
-      <h2 className="text-xl font-semibold capitalize text-center flex justify-between items-center p-2 z-50">
+      <h2 className="text-xl font-semibold capitalize text-center flex justify-between items-center p-2 z-50 w-full">
         <span>{dateFormatter(new Date(date), { days: true })}</span>
         {dailyOrders && dailyOrders.length > 0 && <IconReorder dailyOrders={dailyOrders} />}
       </h2>
@@ -187,11 +187,14 @@ function DatePage({
   }));
 
   return (
-    <ul className="space-y-4 overflow-y-auto h-full absolute left-0 top-10" style={{ height: `calc(100% - 50px)` }}>
+    <ul
+      className="space-y-4 overflow-y-auto h-full absolute left-0 top-10 w-full"
+      style={{ height: `calc(100% - 50px)` }}
+    >
       <SummarizeProducts dailyOrders={dailyOrders} amapOrders={amapData} />
       <DisplayAmap amapOrders={amapData} />
       {dailyOrders.length === 0 ? (
-        <p className="text-center w-full max-w-sm">Aucune commande</p>
+        <p className="pl-2 text-left">Aucune commande</p>
       ) : (
         dailyOrders.map((order, index) => {
           const newOrder = allOrders.some((nextOrder) => {

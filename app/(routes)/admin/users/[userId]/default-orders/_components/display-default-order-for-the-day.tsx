@@ -43,7 +43,7 @@ function DisplayDefaultOrderForTheDay({
     resolver: zodResolver(defaultOrderSchema),
     defaultValues: {
       day: index,
-      confirmed: true,
+      confirmed: defaultOrderForDay?.confirmed ?? true,
       userId,
       defaultOrderProducts: defaultOrderForDay?.defaultOrderProducts.map(({ price, productId, quantity }) => ({
         productId,
