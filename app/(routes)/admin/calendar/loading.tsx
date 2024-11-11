@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 const Loading = ({ className }: { className?: string }) => {
   return (
-    <div className="absolute inset-0 bg-foreground/30">
+    <div className="absolute inset-0 bg-foreground/30 z-50">
       <div
         className={cn(
           "mt-20  flex min-h-0 flex-col flex-wrap items-center justify-center",

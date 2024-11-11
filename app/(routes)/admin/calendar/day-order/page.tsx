@@ -12,7 +12,7 @@ async function DayOrderPage() {
   const users = await getUsersForOrders();
 
   return (
-    <div className=" space-y-2 " style={{ height: `calc(100dvh - 80px)` }}>
+    <div className=" space-y-2 ">
       <div className="max-w-[90vw] md:max-w-[500px] mx-auto flex pt-2 gap-4 items-center justify-between">
         <Heading
           title={`Ordre des commandes par jour`}

@@ -13,6 +13,7 @@ import type { UsersForOrderType } from "../../../orders/[orderId]/_functions/get
 import updateDayOrder from "../_actions/update-day-order";
 import type { GetDayOrdersType } from "../_functions/get-day-orders";
 import UserModal from "./user-modal";
+import { useRaisedShadow } from "../../_components/use-raised-shadow";
 
 function DisplayUserForTheDay({
   dayOrdersForDay,
@@ -57,24 +58,23 @@ function DisplayUserForTheDay({
         </LoadingButton>
       ) : null}
       {localDayOrdersForDay ? (
-        <ScrollArea className="  overflow-auto p-2" style={{ height: `calc(100% - 50px)` }}>
-          <Reorder.Group
-            as="ul"
-            values={localDayOrdersForDay}
-            onReorder={setLocalDayOrdersForDay}
-            className="flex flex-col gap-2   relative"
-            axis="y"
-            layoutScroll
-          >
-            {localDayOrdersForDay.map((userId, index) => {
-              const user = users.find((user) => user.id === userId);
-              if (!user) {
-                return <NoResults key={userId} />;
-              }
-              return <OrderItem key={userId} user={user} />;
-            })}
-          </Reorder.Group>
-        </ScrollArea>
+        <Reorder.Group
+          as="ul"
+          values={localDayOrdersForDay}
+          onReorder={setLocalDayOrdersForDay}
+          className="flex flex-col gap-2   p-2 relative"
+          style={{ height: `calc(100dvh - 280px)`, overflowY: "scroll" }}
+          axis="y"
+          layoutScroll
+        >
+          {localDayOrdersForDay.map((userId, index) => {
+            const user = users.find((user) => user.id === userId);
+            if (!user) {
+              return <NoResults key={userId} />;
+            }
+            return <OrderItem key={userId} user={user} />;
+          })}
+        </Reorder.Group>
       ) : (
         "Aucun client pour ce jour"
       )}
@@ -83,32 +83,30 @@ function DisplayUserForTheDay({
 }
 
 function OrderItem({ user }: { user: UsersForOrderType }) {
-  // const y = useMotionValue(0);
-  // const boxShadow = useRaisedShadow(y);
+  const y = useMotionValue(0);
+  const boxShadow = useRaisedShadow(y);
   const controls = useDragControls();
-  const backgroundColor = useMotionValue("var(--background)");
 
   const handlePointerDown = (e: React.PointerEvent) => {
     e.preventDefault();
     e.stopPropagation();
     controls.start(e);
-    backgroundColor.set("var(--blue-300)");
   };
 
   return (
     <Reorder.Item
-      // style={{ boxShadow, y }}
+      style={{ boxShadow, y }}
       value={user.id}
       dragListener={false}
       dragControls={controls}
-      onDragEnd={() => {
-        backgroundColor.set("var(--background)");
-      }}
       as="li"
-      style={{ backgroundColor }}
-      className={`p-2 border rounded-md flex gap-2 transition-colors`}
+      className={`p-2 border rounded-md flex gap-2 transition-colors bg-background`}
     >
-      <div onPointerDown={handlePointerDown} className="flex gap-2 items-center justify-center p-2 cursor-pointer">
+      <div
+        onPointerDown={handlePointerDown}
+        style={{ touchAction: "none" }}
+        className="flex gap-2 items-center justify-center p-2 cursor-pointer"
+      >
         <Grip className="size-4" />
       </div>
       <NameWithImage
