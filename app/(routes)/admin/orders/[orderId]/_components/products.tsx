@@ -27,8 +27,9 @@ export const ShippingProducts = ({
   user?: UsersForOrderType | null;
 }) => {
   const form = useFormContext<OrderFormValues>();
+  const items = form.watch("orderItems");
 
-  const addProduct = (items: OrderFormValues["orderItems"]) => {
+  const addProduct = () => {
     if (items.every((item) => item.itemId)) {
       const newItems = {
         itemId: "",
@@ -57,7 +58,7 @@ export const ShippingProducts = ({
           <FormLabel>Produits</FormLabel>
           <FormControl>
             <div className="space-y-4">
-              {field.value.map((item, productIndex) => (
+              {items.map((item, productIndex) => (
                 <div key={item.id} className="w-fit rounded-md p-4 pb-4 thin-scrollbar bg-chart1/50 even:bg-chart2/50">
                   <ProductName user={user} products={products} productIndex={productIndex} />
                 </div>
@@ -70,12 +71,7 @@ export const ShippingProducts = ({
             </p>
           )}
           <div className="flex flex-wrap items-end gap-4">
-            <Button
-              type="button"
-              variant="outline"
-              className="whitespace-nowrap border-dashed"
-              onClick={() => addProduct(field.value)}
-            >
+            <Button type="button" variant="outline" className="whitespace-nowrap border-dashed" onClick={addProduct}>
               <PlusCircledIcon className="mr-2 size-4" />
               {"Ajouter un produit"}
             </Button>

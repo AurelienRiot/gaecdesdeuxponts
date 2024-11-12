@@ -65,9 +65,10 @@ function NewOrderButton({
     if (!noConfirmation) {
       router.replace(url);
     } else {
-      serverAction({
+      await serverAction({
         data: { dateOfShipping, userId, newOrderId: orderId },
         onSuccess: (result) => {
+          console.log("client trigger success");
           if (!result) {
             toast.error("Une erreur est survenue");
             return;
