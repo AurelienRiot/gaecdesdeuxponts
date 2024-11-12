@@ -3,17 +3,17 @@ import { getUserName } from "@/components/table-custom-fuction";
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { LoadingButton } from "@/components/ui/button";
 import NoResults from "@/components/ui/no-results";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import useServerAction from "@/hooks/use-server-action";
 import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import { Grip } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { UsersForOrderType } from "../../../orders/[orderId]/_functions/get-users-for-orders";
+import { useRaisedShadow } from "../../_components/use-raised-shadow";
 import updateDayOrder from "../_actions/update-day-order";
 import type { GetDayOrdersType } from "../_functions/get-day-orders";
 import UserModal from "./user-modal";
-import { useRaisedShadow } from "../../_components/use-raised-shadow";
+import scrollToLastChild from "@/lib/scroll-to-last-child";
 
 function DisplayUserForTheDay({
   dayOrdersForDay,
@@ -26,6 +26,7 @@ function DisplayUserForTheDay({
   day: string;
   index: number;
 }) {
+  const containerRef = useRef<HTMLUListElement>(null);
   const { serverAction, loading } = useServerAction(updateDayOrder);
   const [localDayOrdersForDay, setLocalDayOrdersForDay] = useState(dayOrdersForDay?.map(({ userId }) => userId));
   useEffect(() => {
@@ -47,9 +48,10 @@ function DisplayUserForTheDay({
         </h2>
         <UserModal
           users={users.filter(({ id }) => !localDayOrdersForDay?.includes(id))}
-          onValueChange={(userId) =>
-            setLocalDayOrdersForDay((prev) => (prev && prev?.length > 0 ? [...prev, userId] : [userId]))
-          }
+          onValueChange={(userId) => {
+            setLocalDayOrdersForDay((prev) => (prev && prev?.length > 0 ? [...prev, userId] : [userId]));
+            scrollToLastChild(containerRef);
+          }}
         />
       </div>
       {localDayOrdersForDay && localDayOrdersForDay.length > 0 ? (
@@ -60,6 +62,7 @@ function DisplayUserForTheDay({
       {localDayOrdersForDay ? (
         <Reorder.Group
           as="ul"
+          ref={containerRef}
           values={localDayOrdersForDay}
           onReorder={setLocalDayOrdersForDay}
           className="flex flex-col gap-2   p-2 relative"

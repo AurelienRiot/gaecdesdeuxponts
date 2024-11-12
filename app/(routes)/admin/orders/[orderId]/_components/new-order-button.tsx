@@ -65,8 +65,6 @@ function NewOrderButton({
     if (!noConfirmation) {
       router.replace(url);
     } else {
-      router.back();
-
       serverAction({
         data: { dateOfShipping, userId, newOrderId: orderId },
         onSuccess: (result) => {
@@ -80,6 +78,7 @@ function NewOrderButton({
         },
         onError: () => router.push(url),
       });
+      router.back();
     }
   };
   return (

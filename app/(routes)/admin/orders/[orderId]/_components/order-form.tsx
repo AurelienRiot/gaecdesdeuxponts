@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import useServerAction from "@/hooks/use-server-action";
 import { createId } from "@/lib/id";
-import { scrollToId } from "@/lib/scroll-to-traget";
+import { scrollToId } from "@/lib/scroll-to-id";
 import type { ProductWithMain } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ProductStock, Shop } from "@prisma/client";
@@ -31,6 +31,7 @@ import { ShippingProducts } from "./products";
 import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TotalPrice from "./total-price";
+import { cn } from "@/lib/utils";
 
 export type OrderFormProps = {
   initialData:
@@ -198,7 +199,6 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
         toastOptions: { position: "top-center" },
       });
     } else {
-      router.back();
       createOrderAction({
         data,
         toastOptions: { position: "top-center" },
@@ -215,6 +215,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
           router.forward();
         },
       });
+      router.back();
     }
   };
 
@@ -314,7 +315,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
                 onClick={onConfirm}
                 disabled={form.formState.isSubmitting || loading || validateLoading}
                 variant={initialData.shippingEmail ? "destructive" : "default"}
-                className="w-fit block"
+                className={cn("w-fit block", user?.role === "pro" && "hidden sm:inline-flex")}
               >
                 {initialData.shippingEmail ? "Annuler la livraison" : "Confirmer la livraison"}
               </Button>
