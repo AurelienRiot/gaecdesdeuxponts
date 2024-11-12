@@ -50,7 +50,7 @@ function DisplayUserForTheDay({
           users={users.filter(({ id }) => !localDayOrdersForDay?.includes(id))}
           onValueChange={(userId) => {
             setLocalDayOrdersForDay((prev) => (prev && prev?.length > 0 ? [...prev, userId] : [userId]));
-            scrollToLastChild(containerRef);
+            scrollToLastChild(containerRef.current);
           }}
         />
       </div>

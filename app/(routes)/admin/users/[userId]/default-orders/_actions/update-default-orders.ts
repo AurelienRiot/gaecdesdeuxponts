@@ -13,6 +13,8 @@ async function updateDefaultOrdersAction(data: DefaultOrderFormValues) {
     roles: SHIPPING,
     schema: defaultOrderSchema,
     serverAction: async ({ day, defaultOrderProducts, userId, confirmed }) => {
+      revalidateTag("defaultOrders");
+
       const defaultOrder = await prismadb.defaultOrder.findUnique({
         where: {
           userId_day: {
@@ -21,7 +23,7 @@ async function updateDefaultOrdersAction(data: DefaultOrderFormValues) {
           },
         },
       });
-      if (!defaultOrder) {
+      if (!defaultOrder && defaultOrderProducts.length === 0) {
         await prismadb.defaultOrder.create({
           data: {
             userId,
@@ -30,31 +32,32 @@ async function updateDefaultOrdersAction(data: DefaultOrderFormValues) {
             defaultOrderProducts: { create: defaultOrderProducts },
           },
         });
-      } else {
-        if (defaultOrderProducts.length === 0) {
-          await prismadb.defaultOrder.delete({
-            where: {
-              id: defaultOrder.id,
-            },
-          });
-        } else {
-          await prismadb.defaultOrderProduct.deleteMany({
-            where: {
-              defaultOrderId: defaultOrder.id,
-            },
-          });
-          await prismadb.defaultOrder.update({
-            where: {
-              id: defaultOrder.id,
-            },
-            data: {
-              confirmed,
-              defaultOrderProducts: { create: defaultOrderProducts },
-            },
-          });
-        }
       }
-      revalidateTag("defaultOrders");
+      if (!defaultOrder) {
+        return { success: false, message: "Aucun produits dans la commande par défault" };
+      }
+      if (defaultOrderProducts.length === 0) {
+        await prismadb.defaultOrder.delete({
+          where: {
+            id: defaultOrder.id,
+          },
+        });
+      } else {
+        await prismadb.defaultOrderProduct.deleteMany({
+          where: {
+            defaultOrderId: defaultOrder.id,
+          },
+        });
+        await prismadb.defaultOrder.update({
+          where: {
+            id: defaultOrder.id,
+          },
+          data: {
+            confirmed,
+            defaultOrderProducts: { create: defaultOrderProducts },
+          },
+        });
+      }
       return { success: true, message: `Commande par défault de ${DAYS_OF_WEEK[day]}  mise à jour` };
     },
   });

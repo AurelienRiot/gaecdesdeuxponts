@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import updateDefaultOrdersAction from "../_actions/update-default-orders";
 import type { GetDefaultOrdersType } from "../_functions/get-default-orders";
 import { defaultOrderSchema, type DefaultOrderFormValues } from "./schema";
+import scrollToLastChild from "@/lib/scroll-to-last-child";
 
 function DisplayDefaultOrderForTheDay({
   defaultOrderForDay,
@@ -46,24 +47,19 @@ function DisplayDefaultOrderForTheDay({
       day: index,
       confirmed: defaultOrderForDay?.confirmed ?? true,
       userId,
-      defaultOrderProducts: defaultOrderForDay?.defaultOrderProducts.map(({ price, productId, quantity }) => ({
-        productId,
-        price,
-        quantity,
-      })) || [
-        {
-          productId: "",
-          price: undefined,
-          quantity: 1,
-        },
-      ],
+      defaultOrderProducts:
+        defaultOrderForDay?.defaultOrderProducts.map(({ price, productId, quantity }) => ({
+          productId,
+          price,
+          quantity,
+        })) || [],
     },
   });
 
   const items = form.watch("defaultOrderProducts");
 
   async function onSubmit(data: DefaultOrderFormValues) {
-    if (items.length === 0 || !items.every((item) => item.productId)) {
+    if (items.length > 0 && !items.every((item) => item.productId)) {
       toast.error("Completer tous les produits deja existant");
       return;
     }
@@ -90,22 +86,24 @@ function DisplayDefaultOrderForTheDay({
           Mettre a jour
         </LoadingButton>
 
-        <ScrollArea className="  overflow-auto " style={{ maxHeight: `calc(100dvh - 325px)` }}>
-          <FormField
-            control={form.control}
-            name="confirmed"
-            render={({ field }) => (
-              <CheckboxForm
-                ref={field.ref}
-                checked={field.value}
-                onCheckedChange={field.onChange}
-                disabled={form.formState.isSubmitting}
-                title="Commande confirmer"
-                description="Indique si la commande doit être confirmer"
-                className="mb-2"
-              />
-            )}
-          />
+        <ScrollArea id={`scroll-area-${index}`} className="overflow-auto " style={{ height: `calc(100dvh - 280px)` }}>
+          {items.length > 0 && (
+            <FormField
+              control={form.control}
+              name="confirmed"
+              render={({ field }) => (
+                <CheckboxForm
+                  ref={field.ref}
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  disabled={form.formState.isSubmitting}
+                  title="Commande confirmer"
+                  description="Indique si la commande doit être confirmer"
+                  className="mb-2"
+                />
+              )}
+            />
+          )}
           <FormField
             control={form.control}
             name="defaultOrderProducts"
@@ -127,17 +125,16 @@ function DisplayDefaultOrderForTheDay({
                         <div className="flex gap-4">
                           <PriceInput productIndex={productIndex} products={products} selectedProduct={item} />
                           <QuantityInput productIndex={productIndex} selectedProduct={item} />
-                          {productIndex > 0 || items.length > 1 ? (
-                            <TrashButton
-                              type="button"
-                              disabled={form.formState.isSubmitting}
-                              variant="destructive"
-                              size="sm"
-                              className="mt-auto"
-                              onClick={() => deleteProduct(productIndex)}
-                              iconClassName="size-6"
-                            />
-                          ) : null}
+
+                          <TrashButton
+                            type="button"
+                            disabled={form.formState.isSubmitting}
+                            variant="destructive"
+                            size="sm"
+                            className="mt-auto"
+                            onClick={() => deleteProduct(productIndex)}
+                            iconClassName="size-6"
+                          />
                         </div>
                       </div>
                     ))}
@@ -148,7 +145,7 @@ function DisplayDefaultOrderForTheDay({
                     {form.formState.errors.defaultOrderProducts?.message || "Veuillez completer tous les champs"}
                   </p>
                 )}
-                <AddProductButton />
+                <AddProductButton index={index} />
               </FormItem>
             )}
           />
@@ -158,7 +155,7 @@ function DisplayDefaultOrderForTheDay({
   );
 }
 
-function AddProductButton() {
+function AddProductButton({ index }: { index: number }) {
   const form = useFormContext<DefaultOrderFormValues>();
   const products = form.watch("defaultOrderProducts");
   const addProduct = () => {
@@ -174,6 +171,8 @@ function AddProductButton() {
         quantity: 1,
       },
     ]);
+    const scrollArea = document.getElementById(`scroll-area-${index}`);
+    scrollToLastChild(scrollArea);
   };
 
   return (

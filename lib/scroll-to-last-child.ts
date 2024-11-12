@@ -1,6 +1,6 @@
-const scrollToLastChild = (containerRef: React.RefObject<HTMLElement>) => {
+const scrollToLastChild = (element?: HTMLElement | null) => {
   setTimeout(() => {
-    containerRef.current?.lastElementChild?.scrollIntoView({
+    element?.lastElementChild?.scrollIntoView({
       behavior: "smooth",
       block: "end",
     });

@@ -83,7 +83,7 @@ const NameWithImage = ({
   completed = true,
   className,
 }: NameCellProps) => (
-  <div className={cn("flex items-center justify-start gap-2 w-full", className)}>
+  <div className={cn("flex items-center justify-start gap-2 w-full font-medium text-xs", className)}>
     {displayImage ? (
       image ? (
         <Image
@@ -103,9 +103,7 @@ const NameWithImage = ({
         </div>
       )
     ) : null}
-    {displayName && (
-      <span className={cn("font-medium text-xs truncate", !completed ? "text-destructive" : "")}>{name}</span>
-    )}
+    {displayName && <span className={cn(" truncate", !completed ? "text-destructive" : "")}>{name}</span>}
   </div>
 );
 

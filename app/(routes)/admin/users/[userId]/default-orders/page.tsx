@@ -29,14 +29,14 @@ async function DefaultProductsPage({
     <div className=" space-y-2 h-full">
       <div className="max-w-[90vw] md:max-w-[500px] mx-auto flex pt-2 gap-4 items-center justify-between ">
         <ButtonBackward />
-        <ChangeUser />
+        <ChangeUser userId={userId} />
       </div>
-      <Heading
+      {/* <Heading
         title={`${user.company || user.name}`}
         description=""
         className=" w-fit  text-center mx-auto"
         titleClassName="text-base xs:text-lg sm:text-2xl md:text-3xl"
-      />
+      /> */}
       <Separator />
 
       <div className="flex flex-row w-full gap-4  overflow-y-hidden mx-auto px-4  overflow-x-scroll relative h-full">
