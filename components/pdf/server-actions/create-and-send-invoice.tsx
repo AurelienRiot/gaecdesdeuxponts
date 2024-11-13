@@ -66,6 +66,7 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean): Promis
   }
 
   const name = getUserName(fullInvoice.customer);
+  const email = fullInvoice.customer.email;
 
   const type = fullInvoice.orders.length === 1 ? "single" : "monthly";
   const date =
@@ -76,63 +77,72 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean): Promis
   try {
     if (!fullInvoice.user.notifications || fullInvoice.user.notifications.sendInvoiceEmail) {
       if (process.env.NODE_ENV === "production") {
-        const pdfBuffer =
-          type === "monthly"
-            ? await renderToBuffer(
-                <MonthlyInvoice data={createMonthlyInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
-              )
-            : await renderToBuffer(
-                <Invoice dataInvoice={createInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
-              );
-        const text = reminder
-          ? await render(
-              SendReminderInvoiceEmail({
-                date,
-                baseUrl,
-                id: fullInvoice.id,
-                price: currencyFormatter.format(fullInvoice.totalPrice),
-                email: fullInvoice.customer.email,
-                type,
-              }),
-              { plainText: true },
-            )
-          : await render(
-              SendInvoiceEmail({
-                date,
-                baseUrl,
-                id: fullInvoice.id,
-                price: currencyFormatter.format(fullInvoice.totalPrice),
-                email: fullInvoice.customer.email,
-                type,
-              }),
-              { plainText: true },
-            );
-
-        const html = reminder
-          ? await render(
-              SendReminderInvoiceEmail({
-                date,
-                baseUrl,
-                id: fullInvoice.id,
-                price: currencyFormatter.format(fullInvoice.totalPrice),
-                email: fullInvoice.customer.email,
-                type,
-              }),
-            )
-          : await render(
-              SendInvoiceEmail({
-                date,
-                baseUrl,
-                id: fullInvoice.id,
-                price: currencyFormatter.format(fullInvoice.totalPrice),
-                email: fullInvoice.customer.email,
-                type,
-              }),
-            );
+        const [pdfBuffer, text, html] = await Promise.all([
+          (async () => {
+            return type === "monthly"
+              ? await renderToBuffer(
+                  <MonthlyInvoice
+                    data={createMonthlyInvoicePDFData(fullInvoice)}
+                    isPaid={!!fullInvoice.dateOfPayment}
+                  />,
+                )
+              : await renderToBuffer(
+                  <Invoice dataInvoice={createInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
+                );
+          })(),
+          (async () => {
+            return reminder
+              ? await render(
+                  SendReminderInvoiceEmail({
+                    date,
+                    baseUrl,
+                    id: fullInvoice.id,
+                    price: currencyFormatter.format(fullInvoice.totalPrice),
+                    email,
+                    type,
+                  }),
+                  { plainText: true },
+                )
+              : await render(
+                  SendInvoiceEmail({
+                    date,
+                    baseUrl,
+                    id: fullInvoice.id,
+                    price: currencyFormatter.format(fullInvoice.totalPrice),
+                    email,
+                    type,
+                  }),
+                  { plainText: true },
+                );
+          })(),
+          (async () => {
+            return reminder
+              ? await render(
+                  SendReminderInvoiceEmail({
+                    date,
+                    baseUrl,
+                    id: fullInvoice.id,
+                    price: currencyFormatter.format(fullInvoice.totalPrice),
+                    email,
+                    type,
+                  }),
+                )
+              : await render(
+                  SendInvoiceEmail({
+                    date,
+                    baseUrl,
+                    id: fullInvoice.id,
+                    price: currencyFormatter.format(fullInvoice.totalPrice),
+                    email,
+                    type,
+                  }),
+                );
+          })(),
+        ]);
 
         await transporter.sendMail({
           from: "laiteriedupontrobert@gmail.com",
-          to: fullInvoice.customer.email,
+          to: email,
           // to: "pub.demystify390@passmail.net",
           cc: fullInvoice.user.ccInvoice,
           subject:
