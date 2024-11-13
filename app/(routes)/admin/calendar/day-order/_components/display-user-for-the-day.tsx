@@ -3,17 +3,17 @@ import { getUserName } from "@/components/table-custom-fuction";
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { LoadingButton } from "@/components/ui/button";
 import NoResults from "@/components/ui/no-results";
+import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";
 import useServerAction from "@/hooks/use-server-action";
+import scrollToLastChild from "@/lib/scroll-to-last-child";
 import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import { Grip } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import type { UsersForOrderType } from "../../../orders/[orderId]/_functions/get-users-for-orders";
 import { useRaisedShadow } from "../../_components/use-raised-shadow";
 import updateDayOrder from "../_actions/update-day-order";
 import type { GetDayOrdersType } from "../_functions/get-day-orders";
 import UserModal from "./user-modal";
-import scrollToLastChild from "@/lib/scroll-to-last-child";
 
 function DisplayUserForTheDay({
   dayOrdersForDay,
@@ -22,7 +22,7 @@ function DisplayUserForTheDay({
   index,
 }: {
   dayOrdersForDay: GetDayOrdersType[number]["dayOrderUsers"] | undefined;
-  users: UsersForOrderType[];
+  users: UserForOrderType[];
   day: string;
   index: number;
 }) {
@@ -85,7 +85,7 @@ function DisplayUserForTheDay({
   );
 }
 
-function OrderItem({ user }: { user: UsersForOrderType }) {
+function OrderItem({ user }: { user: UserForOrderType }) {
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
   const controls = useDragControls();

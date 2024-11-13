@@ -8,9 +8,11 @@ import { Form, FormButton, FormField } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";
 import useServerAction from "@/hooks/use-server-action";
 import { createId } from "@/lib/id";
 import { scrollToId } from "@/lib/scroll-to-id";
+import { cn } from "@/lib/utils";
 import type { ProductWithMain } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ProductStock, Shop } from "@prisma/client";
@@ -23,7 +25,6 @@ import { deleteOrder } from "../../_actions/delete-orders";
 import confirmOrder from "../_actions/confirm-order";
 import { createOrder } from "../_actions/create-order";
 import updateOrder from "../_actions/update-order";
-import type { UsersForOrderType } from "../_functions/get-users-for-orders";
 import FormDatePicker from "./date-picker";
 import NewOrderButton from "./new-order-button";
 import { orderSchema, type OrderFormValues } from "./order-schema";
@@ -31,7 +32,6 @@ import { ShippingProducts } from "./products";
 import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TotalPrice from "./total-price";
-import { cn } from "@/lib/utils";
 
 export type OrderFormProps = {
   initialData:
@@ -45,7 +45,7 @@ export type OrderFormProps = {
     | null;
   products: (ProductWithMain & { stocks: ProductStock[] })[];
   shops: Shop[];
-  users: UsersForOrderType[];
+  users: UserForOrderType[];
   className?: string;
 };
 

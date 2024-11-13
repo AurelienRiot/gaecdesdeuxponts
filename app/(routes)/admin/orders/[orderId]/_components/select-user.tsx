@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
-import type { UsersForOrderType } from "../_functions/get-users-for-orders";
 import type { OrderFormValues } from "./order-schema";
+import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";
 
-const SelectUser = ({ users }: { users: UsersForOrderType[] }) => {
+const SelectUser = ({ users }: { users: UserForOrderType[] }) => {
   const form = useFormContext<OrderFormValues>();
   const userId = form.watch("userId");
   const name = (() => {

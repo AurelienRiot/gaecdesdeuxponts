@@ -1,10 +1,9 @@
 import type { GetGroupedAMAPOrdersType } from "@/app/(routes)/admin/calendar/_functions/get-amap-orders";
-import type { CalendarOrdersType } from "@/app/(routes)/admin/calendar/_functions/get-orders";
 import { destination as dest, origin as ori } from "@/app/(routes)/admin/direction/_components/direction-schema";
-import { getUserName } from "../table-custom-fuction";
-import { nanoid } from "@/lib/id";
 import { getLocalIsoString } from "@/lib/date-utils";
+import { nanoid } from "@/lib/id";
 import { getTotalMilk } from "../product";
+import type { CalendarOrderType } from "../zod-schema/calendar-orders";
 const googleDirectionUrl = "https://www.google.fr/maps/dir";
 
 export const createDirectionUrl = ({
@@ -47,14 +46,6 @@ export function getAmapOrdersForTheDay(amapOrders: GetGroupedAMAPOrdersType, dat
   }));
 }
 
-export type ProductQuantities = {
-  itemId: string;
-  name: string;
-  price: number;
-  unit: string;
-  quantity: number;
-};
-
 export type GroupUsersByProduct = {
   productId: string;
   productName: string;
@@ -81,7 +72,7 @@ const aggregationRules: { match: RegExp; aggregateTo: string }[] = [
 ];
 
 export function groupUsersByProduct(
-  orders: CalendarOrdersType[],
+  orders: CalendarOrderType[],
   amapOrders: GetAmapOrdersForTheDay,
 ): GroupUsersByProduct[] {
   const productMap = new Map<string, GroupUsersByProduct>();
@@ -171,7 +162,7 @@ export function groupUsersByProduct(
   return Array.from(productMap.values());
 }
 
-export function extractProductQuantities(orders: CalendarOrdersType[], amapOrders: GetAmapOrdersForTheDay) {
+export function extractProductQuantities(orders: CalendarOrderType[], amapOrders: GetAmapOrdersForTheDay) {
   const aggregateProducts = groupUsersByProduct(orders, amapOrders);
   const totaleRawMilk = getTotalMilk(
     aggregateProducts

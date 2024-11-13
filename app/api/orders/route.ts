@@ -13,7 +13,7 @@ const schema = z.object({
 
 export async function GET(request: NextRequest) {
   return await safeRouteAPI({
-    searchParamsReq: true,
+    method: "GET",
     request,
     schema,
     roles: SHIPPING,

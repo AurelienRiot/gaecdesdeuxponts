@@ -115,7 +115,7 @@ type BaseRouteAPIType<D extends z.ZodTypeAny> = {
   rateLimited?: boolean;
   request: NextRequest;
   serverError?: string;
-  searchParamsReq?: Boolean;
+  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 };
 
 type SafeRouteAPIType<D extends z.ZodTypeAny, R, E> = BaseRouteAPIType<D> &
@@ -145,15 +145,15 @@ export async function safeRouteAPI<D extends z.ZodTypeAny, R, E>({
   roles = USER,
   rateLimited,
   request,
-  searchParamsReq = false,
   serverError = "[ERROR]",
+  method,
 }: SafeRouteAPIType<D, R, E>): Promise<NextResponse> {
   const timerLabel = `Total Execution Time - ${nanoid(5)}`;
   console.time(timerLabel);
   try {
     const { searchParams } = new URL(request.url);
     const searchParamsEntries = Object.fromEntries(searchParams.entries());
-    const data = searchParamsReq ? searchParamsEntries : await request.json();
+    const data = method === "GET" ? searchParamsEntries : await request.json();
     const user = await checkUser();
 
     if (rateLimited) {

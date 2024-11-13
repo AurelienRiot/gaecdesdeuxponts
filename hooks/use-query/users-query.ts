@@ -1,37 +1,13 @@
 "use client";
 
+import { userForOrderSchema, type UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";
+import customKy from "@/lib/custom-ky";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import ky, { type HTTPError } from "ky";
-import type { UsersForOrderType } from "../../app/(routes)/admin/orders/[orderId]/_functions/get-users-for-orders";
-
-async function fetchUsers() {
-  const responce = await ky
-    .get("/api/users")
-    .then(async (res) => {
-      const result = (await res.json()) as UsersForOrderType[];
-      return result;
-    })
-    .catch(async (kyError: HTTPError) => {
-      if (kyError.response) {
-        const errorData = await kyError.response.text();
-        console.error(errorData);
-        return errorData;
-      }
-
-      console.error("Erreur timeout");
-      return "Erreur";
-    });
-
-  if (typeof responce === "string") {
-    throw new Error("Impossible de charger les commandes");
-  }
-
-  return responce;
-}
+import { z } from "zod";
 
 export function useUsersQuery() {
   return useQuery({
-    queryFn: async () => await fetchUsers(),
+    queryFn: async () => await customKy("/api/users", "GET", z.array(userForOrderSchema)),
     queryKey: ["fetchUsers"],
     staleTime: 24 * 60 * 60 * 1000,
   });
@@ -40,9 +16,9 @@ export function useUsersQuery() {
 export function useUsersQueryClient() {
   const queryClient = useQueryClient();
 
-  const mutateUsers = (fn: (users: UsersForOrderType[]) => UsersForOrderType[]) => {
+  const mutateUsers = (fn: (users: UserForOrderType[]) => UserForOrderType[]) => {
     setTimeout(() => {
-      queryClient.setQueryData(["fetchUsers"], (users?: UsersForOrderType[] | null) => {
+      queryClient.setQueryData(["fetchUsers"], (users?: UserForOrderType[] | null) => {
         if (users) return fn(users);
       });
     }, 0);

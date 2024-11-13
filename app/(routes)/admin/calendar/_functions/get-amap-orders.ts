@@ -6,7 +6,7 @@ import prismadb from "@/lib/prismadb";
 import { addDays } from "date-fns/addDays";
 import { unstable_cache } from "next/cache";
 import type { AMAPColumn } from "../../amap/_components/columns";
-import type { ProductQuantities } from "@/components/google-events";
+import type { ProductQuantities } from "@/components/zod-schema/calendar-orders";
 
 export const getAMAPOrders = unstable_cache(
   async ({ from, to }: { from: Date; to: Date }) => {

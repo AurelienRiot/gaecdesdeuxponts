@@ -2,22 +2,22 @@
 import Spinner from "@/components/animations/spinner";
 import { IconButton } from "@/components/ui/button";
 import NoResults from "@/components/ui/no-results";
+import type { CalendarOrderType } from "@/components/zod-schema/calendar-orders";
 import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
 import { addDays } from "date-fns";
 import { ListOrdered } from "lucide-react";
 import { useCallback, useRef } from "react";
 import { Virtuoso, type VirtuosoHandle } from "react-virtuoso";
+import { useOrdersQuery } from "../../../../../hooks/use-query/orders-query";
+import { useUsersQuery } from "../../../../../hooks/use-query/users-query";
 import type { getGroupedAMAPOrders } from "../_functions/get-amap-orders";
-import type { CalendarOrdersType } from "../_functions/get-orders";
 import TodayFocus from "./date-focus";
 import DisplayAmap from "./display-amap";
 import DisplayOrder from "./display-order";
 import { useOrdersModal } from "./orders-modal";
-import { useOrdersQuery } from "../../../../../hooks/use-query/orders-query";
 import SummarizeProducts from "./summarize-products";
 import UpdatePage from "./update-page";
-import { useUsersQuery } from "../../../../../hooks/use-query/users-query";
 
 type EventsPageProps = {
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
@@ -128,8 +128,8 @@ function RenderEvent({
   amapOrders,
   className,
 }: {
-  dailyOrders?: CalendarOrdersType[];
-  allOrders?: CalendarOrdersType[];
+  dailyOrders?: CalendarOrderType[];
+  allOrders?: CalendarOrderType[];
   date: string;
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
   className?: string;
@@ -150,7 +150,7 @@ function RenderEvent({
   );
 }
 
-function IconReorder({ dailyOrders }: { dailyOrders: CalendarOrdersType[] }) {
+function IconReorder({ dailyOrders }: { dailyOrders: CalendarOrderType[] }) {
   const { setOrders, setIsOrderModalOpen } = useOrdersModal();
 
   return (
@@ -172,8 +172,8 @@ function DatePage({
   allOrders,
 }: {
   date: string;
-  dailyOrders: CalendarOrdersType[];
-  allOrders: CalendarOrdersType[];
+  dailyOrders: CalendarOrderType[];
+  allOrders: CalendarOrderType[];
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
 }) {
   if (!dailyOrders) {

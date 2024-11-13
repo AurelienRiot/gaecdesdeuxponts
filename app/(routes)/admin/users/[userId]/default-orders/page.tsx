@@ -1,11 +1,10 @@
 import ButtonBackward from "@/components/ui/button-backward";
-import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { DAYS_OF_WEEK } from "@/lib/date-utils";
 import getProductsForOrders from "../../../orders/[orderId]/_functions/get-products-for-orders";
+import ChangeUser from "./_components/change-user";
 import DisplayDefaultOrderForTheDay from "./_components/display-default-order-for-the-day";
 import getDefaultOrders from "./_functions/get-default-orders";
-import ChangeUser from "./_components/change-user";
 
 export const dynamic = "force-dynamic";
 

@@ -1,26 +1,26 @@
 "use client";
 import { AnimateHeight } from "@/components/animations/animate-size";
+import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { StatusCell } from "@/components/table-custom-fuction/cell-orders";
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
-import { Button, IconButton } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import type { CalendarOrderType } from "@/components/zod-schema/calendar-orders";
 import { cn } from "@/lib/utils";
 import { Check, ChevronDown } from "lucide-react";
 import Link from "next/link";
-import { type MouseEvent, MouseEventHandler, useState } from "react";
-import type { CalendarOrdersType } from "../_functions/get-orders";
+import { useRouter } from "next/navigation";
+import { type MouseEvent, useState } from "react";
+import { toast } from "sonner";
+import { useUsersQuery } from "../../../../../hooks/use-query/users-query";
 import DisplayItem from "./display-item";
 import { useUserModal } from "./user-modal";
-import { useRouter } from "next/navigation";
-import { useUsersQuery } from "../../../../../hooks/use-query/users-query";
-import { toast } from "sonner";
-import { Skeleton } from "@/components/skeleton-ui/skeleton";
 
 interface DisplayOrderProps {
-  order: CalendarOrdersType;
+  order: CalendarOrderType;
   className?: string;
   newOrder?: boolean;
-  otherOrders: CalendarOrdersType[];
+  otherOrders: CalendarOrderType[];
 }
 
 const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, newOrder, otherOrders }) => {
@@ -85,7 +85,7 @@ function SetUserModal({
   order,
   otherOrders,
   newOrder,
-}: { order: CalendarOrdersType; otherOrders: CalendarOrdersType[]; newOrder?: boolean }) {
+}: { order: CalendarOrderType; otherOrders: CalendarOrderType[]; newOrder?: boolean }) {
   const { data: users } = useUsersQuery();
   const user = users?.find((u) => u.id === order.userId);
   const { setUser, setIsUserModalOpen } = useUserModal();

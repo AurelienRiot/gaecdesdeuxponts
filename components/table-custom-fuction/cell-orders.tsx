@@ -11,6 +11,7 @@ import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { NameCell } from "./common-cell";
 import { FaFileInvoiceDollar } from "../react-icons";
+import { type Status, status } from "../zod-schema/status";
 
 type ProductCellProps = {
   products: string;
@@ -150,10 +151,6 @@ function createProduct(items: OrderItem[] | AMAPItem[]) {
     })
     .join(", ");
 }
-
-const status = ["À confirmer", "Commande validée", "Commande livrée", "En attente de paiement", "Payé"] as const;
-
-type Status = (typeof status)[number];
 
 type OrderForStatus = {
   dateOfEdition?: Date | null;

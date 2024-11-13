@@ -11,14 +11,14 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn, numberFormat2Decimals } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
-import type { CalendarOrdersType } from "../_functions/get-orders";
 import DisplayItem from "./display-item";
+import type { CalendarOrderType } from "@/components/zod-schema/calendar-orders";
 
 function SummarizeProducts({
   dailyOrders,
   amapOrders,
   className,
-}: { dailyOrders: CalendarOrdersType[]; amapOrders: GetAmapOrdersForTheDay; className?: string }) {
+}: { dailyOrders: CalendarOrderType[]; amapOrders: GetAmapOrdersForTheDay; className?: string }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const [productQuantities, setProductQuantities] = useState(extractProductQuantities(dailyOrders, amapOrders));

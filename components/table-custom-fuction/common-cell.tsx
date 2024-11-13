@@ -31,7 +31,7 @@ type NameCellProps = {
   imageSize?: number;
   displayImage?: boolean;
   displayName?: boolean;
-  completed?: boolean;
+  completed?: boolean | null;
   className?: string;
 };
 

@@ -9,8 +9,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useOrdersQueryClient } from "../../../../../../hooks/use-query/orders-query";
-import { createNewOrder } from "../_actions/create-order";
 import { addDays } from "date-fns";
+import customKy from "@/lib/custom-ky";
+import { calendarOrderSchema } from "@/components/zod-schema/calendar-orders";
 
 function getNextAvailableDate(availableDays?: number[]): Date | null {
   if (!availableDays || availableDays.length === 0) {
@@ -47,7 +48,6 @@ function NewOrderButton({
 }: { userId: string; orderId: string; dateOfPickUp: Date; defaultDaysOrders?: number[] }) {
   const router = useRouter();
   const [noConfirmation, setNoConfirmation] = useState<CheckedState>(true);
-  const { serverAction, loading } = useServerAction(createNewOrder);
   const { mutateOrders } = useOrdersQueryClient();
   const nextDay = getNextAvailableDate(defaultDaysOrders);
 
@@ -65,20 +65,28 @@ function NewOrderButton({
     if (!noConfirmation) {
       router.replace(url);
     } else {
-      await serverAction({
-        data: { dateOfShipping, userId, newOrderId: orderId },
-        onSuccess: (result) => {
-          console.log("client trigger success");
-          if (!result) {
-            toast.error("Une erreur est survenue");
-            return;
-          }
-          result.shippingDate = new Date(result.shippingDate);
-          result.createdAt = new Date(result.createdAt);
+      customKy("/api/order", "POST", calendarOrderSchema, { json: { dateOfShipping, userId, newOrderId: orderId } })
+        .then((result) => {
           mutateOrders((prev) => prev.concat(result));
-        },
-        onError: () => router.push(url),
-      });
+        })
+        .catch((error) => {
+          router.push(url);
+          toast.error(error.message);
+        });
+      // await serverAction({
+      //   data: { dateOfShipping, userId, newOrderId: orderId },
+      //   onSuccess: (result) => {
+      //     console.log("client trigger success");
+      //     if (!result) {
+      //       toast.error("Une erreur est survenue");
+      //       return;
+      //     }
+      //     result.shippingDate = new Date(result.shippingDate);
+      //     result.createdAt = new Date(result.createdAt);
+      //     mutateOrders((prev) => prev.concat(result));
+      //   },
+      //   onError: () => router.push(url),
+      // });
       router.back();
     }
   };
@@ -86,7 +94,6 @@ function NewOrderButton({
     <>
       <DateModal
         onValueChange={onDayClick}
-        disabled={loading}
         highlighted={nextDay ? [nextDay] : []}
         triggerClassName=" w-44 border-dashed border-2 text-primary"
         trigger={

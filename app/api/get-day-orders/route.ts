@@ -13,6 +13,7 @@ const schema = z.object({
 
 export async function POST(request: NextRequest) {
   return await safeRouteAPI({
+    method: "POST",
     request,
     schema,
     roles: SHIPPING,

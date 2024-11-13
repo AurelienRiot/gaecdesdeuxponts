@@ -13,8 +13,8 @@ import type { ProductStock } from "@prisma/client";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import type { UsersForOrderType } from "../_functions/get-users-for-orders";
 import type { OrderFormValues } from "./order-schema";
+import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";
 
 export const negativeQuantityStyle =
   "bg-destructive hover:bg-destructive/90 hover:text-destructive-foreground text-destructive-foreground";
@@ -24,7 +24,7 @@ export const ShippingProducts = ({
   user,
 }: {
   products: (ProductWithMain & { stocks: ProductStock[] })[];
-  user?: UsersForOrderType | null;
+  user?: UserForOrderType | null;
 }) => {
   const form = useFormContext<OrderFormValues>();
   const items = form.watch("orderItems");
@@ -87,7 +87,7 @@ function ProductName({
   products,
   user,
 }: {
-  user?: UsersForOrderType | null;
+  user?: UserForOrderType | null;
   productIndex: number;
   products: (ProductWithMain & { stocks: ProductStock[] })[];
 }) {
@@ -217,7 +217,7 @@ const SelectProductName = ({
   quantity,
   user,
 }: {
-  user?: UsersForOrderType | null;
+  user?: UserForOrderType | null;
   productIndex: number;
   quantity: number;
   products: (ProductWithMain & { stocks: ProductStock[] })[];
