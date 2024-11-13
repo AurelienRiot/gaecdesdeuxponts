@@ -230,10 +230,15 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
               id: initialData.id,
               dateOfShipping: initialData.dateOfShipping ? new Date(initialData.dateOfShipping) : undefined,
             }}
+            onBeforeDelete={() => {
+              router.back();
+            }}
             isSubmitting={form.formState.isSubmitting}
             onSuccess={() => {
               mutateOrders((prev) => prev.filter((order) => order.id !== initialData.id));
-              router.back();
+            }}
+            onError={() => {
+              router.forward();
             }}
           />
         )}

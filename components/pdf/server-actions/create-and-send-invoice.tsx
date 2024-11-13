@@ -16,7 +16,12 @@ import { createInvoicePDFData, createMonthlyInvoicePDFData } from "../pdf-data";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
-export async function sendInvoice(invoiceId: string, reminder?: boolean) {
+export type SendInvoiceReturnType = ReturnTypeServerAction<
+  { invoiceId: string; userId: string },
+  { invoiceId: string; userId?: string; incomplete?: boolean }
+>;
+
+export async function sendInvoice(invoiceId: string, reminder?: boolean): Promise<SendInvoiceReturnType> {
   const fullInvoice = await prismadb.invoice.findUnique({
     where: {
       id: invoiceId,
@@ -32,6 +37,7 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean) {
     return {
       success: false,
       message: "La facture n'existe pas",
+      errorData: { invoiceId },
     };
   }
 
@@ -39,6 +45,7 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean) {
     return {
       success: false,
       message: "Le client n'existe pas",
+      errorData: { invoiceId, userId: fullInvoice.user.id },
     };
   }
 
@@ -46,7 +53,7 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean) {
     return {
       success: false,
       message: "Le client n'a pas d'email, revalider la commande aprés avoir changé son email",
-      errorData: { incomplete: true, userId: fullInvoice.user.id },
+      errorData: { incomplete: true, userId: fullInvoice.user.id, invoiceId },
     };
   }
 
@@ -54,6 +61,7 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean) {
     return {
       success: false,
       message: "Pas d'envoie de facture pour utilisateur en suivie seulement",
+      errorData: { invoiceId, userId: fullInvoice.user.id },
     };
   }
 
@@ -67,7 +75,7 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean) {
 
   try {
     if (!fullInvoice.user.notifications || fullInvoice.user.notifications.sendInvoiceEmail) {
-      if (process.env.NODE_ENV === "production") {
+      if (process.env.NODE_ENV !== "production") {
         const pdfBuffer =
           type === "monthly"
             ? await renderToBuffer(
@@ -142,7 +150,16 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean) {
           ],
         });
       } else {
-        await addDelay(Math.random() * (5000 - 2000) + 2000);
+        await addDelay(Math.random() * (3000 - 1000) + 1000);
+        // This block of code simulates throwing an error randomly every 5 requests
+        if (Math.random() < 0.2) {
+          // 20% chance of throwing an error
+          return {
+            success: false,
+            message: `Erreur pour ${name}`,
+            errorData: { invoiceId, userId: fullInvoice.user.id },
+          };
+        }
       }
     }
 
@@ -158,6 +175,7 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean) {
     return {
       success: false,
       message: `Erreur lors de l'envoi de la facture de ${name}`,
+      errorData: { invoiceId, userId: fullInvoice.user.id },
     };
   }
 
@@ -166,6 +184,7 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean) {
   return {
     success: true,
     message: `Facture envoyée pour ${name}`,
+    data: { invoiceId, userId: fullInvoice.user.id },
   };
 }
 

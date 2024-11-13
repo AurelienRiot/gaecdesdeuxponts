@@ -149,7 +149,7 @@ export async function safeRouteAPI<D, R, E>({
   try {
     const { searchParams } = new URL(request.url);
     const searchParamsEntries = Object.fromEntries(searchParams.entries());
-    const data = method === "GET" ? searchParamsEntries : await request.json();
+    const data = method === "GET" || method === "DELETE" ? searchParamsEntries : await request.json();
     const user = await checkUser();
 
     if (rateLimited) {

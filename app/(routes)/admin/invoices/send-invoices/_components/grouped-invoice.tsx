@@ -1,23 +1,22 @@
 "use client";
 
+import Spinner from "@/components/animations/spinner";
 import { getUserName } from "@/components/table-custom-fuction";
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Button, IconButton, LoadingButton } from "@/components/ui/button";
+import { IconButton, LoadingButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Modal } from "@/components/ui/modal";
 import useServerAction from "@/hooks/use-server-action";
 import { dateFormatter } from "@/lib/date-utils";
 import { currencyFormatter } from "@/lib/utils";
 import ky, { type HTTPError, type TimeoutError } from "ky";
+import { Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
-import type { UserWithOrdersForInvoices } from "../../_functions/get-users-with-orders";
 import createGroupedMonthlyInvoice from "../../_actions/send-grouped-monthly-invoice";
-import { nanoid } from "@/lib/id";
-import { Check, CheckIcon, X } from "lucide-react";
-import Spinner from "@/components/animations/spinner";
+import type { UserWithOrdersForInvoices } from "../../_functions/get-users-with-orders";
+import type { SendInvoiceReturnType } from "@/components/pdf/server-actions/create-and-send-invoice";
 
 function previousMonthOrders(order: { dateOfShipping: Date | null }) {
   const currentDate = new Date();
@@ -148,6 +147,106 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
       position: "top-center",
       duration: 10000,
     });
+  }
+
+  async function sendTestInvoices() {
+    setLoading(true);
+    const invoiceArray = [
+      "FA_2024_0065",
+      "FA_2024_0064",
+      "FA_2024_0063",
+      "FA_2024_0062",
+      "FA_2024_0061",
+      "FA_2024_0060",
+      "FA_2024_0059",
+      "FA_2024_0058",
+      "FA_2024_0057",
+      "FA_2024_0056",
+      "FA_2024_0055",
+      "FA_2024_0054",
+      "FA_2024_0053",
+      "FA_2024_0052",
+      "FA_2024_0051",
+    ];
+
+    const invoiceRecord = invoiceArray.reduce(
+      (acc, invoiceId) => {
+        acc[invoiceId] = { state: "loading", name: invoiceId };
+        return acc;
+      },
+      {} as Record<
+        string,
+        {
+          state: "loading" | "success" | "error";
+          name: string;
+        }
+      >,
+    );
+
+    setInvoiceLoading(invoiceRecord);
+    setDisplayInvoices(true);
+    toast.success("Envoi des factures en cours...");
+
+    const chunkSize = 10;
+    let cumulativeCount = 0;
+    const recordLength = Object.keys(invoiceRecord).length;
+    for (let i = 0; i < recordLength; i += chunkSize) {
+      const chunk = Object.keys(invoiceRecord).slice(i, i + chunkSize);
+      try {
+        const response = await ky.patch("/api/send-invoice", {
+          json: { invoiceIds: chunk }, // Sending the array of invoice IDs as JSON
+        });
+
+        if (!response?.body) {
+          toast.error("Une erreur est survenue lors de l'envoi des factures, veuillez recharger la page");
+          return;
+        }
+        // Assuming the response is a stream, we can read it
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break; // Exit the loop if done
+
+          // Decode the value and parse it as JSON
+          const jsonString = decoder.decode(value);
+          const result = JSON.parse(jsonString) as SendInvoiceReturnType;
+
+          if (!result.success) {
+            toast.error(result.message, {
+              position: "top-center",
+              duration: 5000,
+            });
+            if (result.errorData) {
+              const invoiceId = result.errorData.invoiceId;
+              setInvoiceLoading((prev) => ({
+                ...prev,
+                [invoiceId]: { state: "error", name: prev[invoiceId].name },
+              }));
+            }
+          } else {
+            if (result.data) {
+              const invoiceId = result.data.invoiceId;
+              setInvoiceLoading((prev) => ({
+                ...prev,
+                [invoiceId]: { state: "success", name: prev[invoiceId].name },
+              }));
+            }
+          }
+        }
+      } catch (error) {
+        const errorData = await (error as HTTPError).response.text();
+        console.error("Error fetching invoices:", errorData);
+        toast.error("Une erreur est survenue lors de l'envoi des factures, veuillez recharger la page");
+      }
+      cumulativeCount += chunk.length;
+      const currentCount = cumulativeCount;
+      toast.success(`Facture envoyée : ${currentCount} sur ${recordLength}`, {
+        position: "bottom-center",
+      });
+    }
+    setLoading(false);
   }
 
   return (
@@ -322,7 +421,8 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
           disabled={loading}
           variant={"shine"}
           className="w-fit  from-green-600 via-green-600/80 to-green-600"
-          onClick={() => sendInvoices(true)}
+          // onClick={() => sendInvoices(true)}
+          onClick={sendTestInvoices}
         >
           Créer et envoyer les factures
         </LoadingButton>
