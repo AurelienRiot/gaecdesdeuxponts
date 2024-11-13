@@ -75,7 +75,7 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean): Promis
 
   try {
     if (!fullInvoice.user.notifications || fullInvoice.user.notifications.sendInvoiceEmail) {
-      if (process.env.NODE_ENV !== "production") {
+      if (process.env.NODE_ENV === "production") {
         const pdfBuffer =
           type === "monthly"
             ? await renderToBuffer(
@@ -152,14 +152,14 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean): Promis
       } else {
         await addDelay(Math.random() * (3000 - 1000) + 1000);
         // This block of code simulates throwing an error randomly every 5 requests
-        if (Math.random() < 0.2) {
-          // 20% chance of throwing an error
-          return {
-            success: false,
-            message: `Erreur pour ${name}`,
-            errorData: { invoiceId, userId: fullInvoice.user.id },
-          };
-        }
+        // if (Math.random() < 0.2) {
+        //   // 20% chance of throwing an error
+        //   return {
+        //     success: false,
+        //     message: `Erreur pour ${name}`,
+        //     errorData: { invoiceId, userId: fullInvoice.user.id },
+        //   };
+        // }
       }
     }
 

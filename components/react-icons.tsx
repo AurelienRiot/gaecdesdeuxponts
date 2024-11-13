@@ -341,7 +341,7 @@ const MdPaid = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="currentColor"
-    stroke-width="0"
+    strokeWidth="0"
     viewBox="0 0 24 24"
     height="1em"
     width="1em"
@@ -356,7 +356,7 @@ const FaInfo = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="currentColor"
-    stroke-width="0"
+    strokeWidth="0"
     viewBox="0 0 192 512"
     height="1em"
     width="1em"
@@ -371,7 +371,7 @@ const BsSendPlus = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="currentColor"
-    stroke-width="0"
+    strokeWidth="0"
     viewBox="0 0 16 16"
     height="1em"
     width="1em"
@@ -387,7 +387,7 @@ const PiMagnifyingGlassLight = (props: LucideProps) => (
   <svg
     stroke="currentColor"
     fill="currentColor"
-    stroke-width="0"
+    strokeWidth="0"
     viewBox="0 0 256 256"
     height="1em"
     width="1em"

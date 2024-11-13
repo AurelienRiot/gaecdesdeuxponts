@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import createGroupedMonthlyInvoice from "../../_actions/send-grouped-monthly-invoice";
 import type { UserWithOrdersForInvoices } from "../../_functions/get-users-with-orders";
 import type { SendInvoiceReturnType } from "@/components/pdf/server-actions/create-and-send-invoice";
+import useKy from "@/hooks/use-ky";
 
 function previousMonthOrders(order: { dateOfShipping: Date | null }) {
   const currentDate = new Date();
@@ -92,7 +93,7 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
         const chunkRes = await Promise.all(
           chunk.map((invoiceId) => {
             return ky
-              .post("/api/send-invoice", { json: { invoiceId }, timeout: 15000 })
+              .post("/api/send-invoices", { json: { invoiceId }, timeout: 15000 })
               .then(async (res) => {
                 setInvoiceLoading((prev) => ({
                   ...prev,
@@ -149,39 +150,70 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
     });
   }
 
-  async function sendTestInvoices() {
+  async function sendTestInvoices(sendEmail: boolean) {
     setLoading(true);
-    const invoiceArray = [
-      "FA_2024_0065",
-      "FA_2024_0064",
-      "FA_2024_0063",
-      "FA_2024_0062",
-      "FA_2024_0061",
-      "FA_2024_0060",
-      "FA_2024_0059",
-      "FA_2024_0058",
-      "FA_2024_0057",
-      "FA_2024_0056",
-      "FA_2024_0055",
-      "FA_2024_0054",
-      "FA_2024_0053",
-      "FA_2024_0052",
-      "FA_2024_0051",
-    ];
+    // const invoiceArray = [
+    //   "FA_2024_0065",
+    //   "FA_2024_0064",
+    //   "FA_2024_0063",
+    //   "FA_2024_0062",
+    //   "FA_2024_0061",
+    //   "FA_2024_0060",
+    //   "FA_2024_0059",
+    //   "FA_2024_0058",
+    //   "FA_2024_0057",
+    //   "FA_2024_0056",
+    //   "FA_2024_0055",
+    //   "FA_2024_0054",
+    //   "FA_2024_0053",
+    //   "FA_2024_0052",
+    //   "FA_2024_0051",
+    // ];
 
-    const invoiceRecord = invoiceArray.reduce(
-      (acc, invoiceId) => {
-        acc[invoiceId] = { state: "loading", name: invoiceId };
-        return acc;
-      },
-      {} as Record<
-        string,
-        {
-          state: "loading" | "success" | "error";
-          name: string;
-        }
-      >,
-    );
+    // const invoiceRecord = invoiceArray.reduce(
+    //   (acc, invoiceId) => {
+    //     acc[invoiceId] = { state: "loading", name: invoiceId };
+    //     return acc;
+    //   },
+    //   {} as Record<
+    //     string,
+    //     {
+    //       state: "loading" | "success" | "error";
+    //       name: string;
+    //     }
+    //   >,
+    // );
+
+    if (orderIdsArray.length === 0) {
+      toast.error("Veuillez sélectionner au moins un client");
+      setLoading(false);
+      return;
+    }
+
+    const response = await createInvoicesAction({ data: orderIdsArray });
+    if (!response) {
+      toast.error("Une erreur est survenue lors de la création des factures, veuillez recharger la page");
+      setLoading(false);
+      return;
+    }
+    const invoiceRecord: typeof invoiceLoading = {};
+    for (const [index, invoice] of response.entries()) {
+      if (!invoice.success) {
+        const orderId = orderIdsArray[index][0];
+        const user = userWithOrdersForInvoices.find((user) => user.orders.some((order) => order.id === orderId));
+        user &&
+          toast.error(`Une erreur est survenue lors de la creation de la facture pour le client ${getUserName(user)}`);
+      } else {
+        invoiceRecord[invoice.data.invoiceId] = { state: "loading", name: invoice.data.name };
+      }
+    }
+
+    if (!sendEmail) {
+      console.log(response);
+      setLoading(false);
+      router.push("/admin/invoices");
+      return;
+    }
 
     setInvoiceLoading(invoiceRecord);
     setDisplayInvoices(true);
@@ -193,7 +225,7 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
     for (let i = 0; i < recordLength; i += chunkSize) {
       const chunk = Object.keys(invoiceRecord).slice(i, i + chunkSize);
       try {
-        const response = await ky.patch("/api/send-invoice", {
+        const response = await ky.post("/api/send-invoices", {
           json: { invoiceIds: chunk }, // Sending the array of invoice IDs as JSON
         });
 
@@ -236,9 +268,24 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
           }
         }
       } catch (error) {
-        const errorData = await (error as HTTPError).response.text();
-        console.error("Error fetching invoices:", errorData);
-        toast.error("Une erreur est survenue lors de l'envoi des factures, veuillez recharger la page");
+        setInvoiceLoading((prev) => {
+          const updatedInvoices = chunk.reduce(
+            (acc, invoiceId) => {
+              acc[invoiceId] = { state: "error", name: prev[invoiceId].name };
+              return acc;
+            },
+            {} as typeof invoiceLoading,
+          );
+          return { ...prev, ...updatedInvoices };
+        });
+        const kyError = error as HTTPError;
+        if (kyError.response) {
+          const errorData = await kyError.response.text();
+          console.error(errorData);
+          toast.error(errorData, { duration: 10000 });
+        } else {
+          toast.error("Une erreur est survenue lors de l'envoi des factures, veuillez recharger la page");
+        }
       }
       cumulativeCount += chunk.length;
       const currentCount = cumulativeCount;
@@ -422,7 +469,7 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
           variant={"shine"}
           className="w-fit  from-green-600 via-green-600/80 to-green-600"
           // onClick={() => sendInvoices(true)}
-          onClick={sendTestInvoices}
+          onClick={() => sendTestInvoices(true)}
         >
           Créer et envoyer les factures
         </LoadingButton>

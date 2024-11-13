@@ -715,7 +715,7 @@ export const Icons = {
   ),
   TotalPrice: (props: LucideProps) => (
     <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" {...props}>
-      <rect x="20" y="10" width="60" height="80" rx="5" ry="5" fill="white" stroke="black" stroke-width="2" />
+      <rect x="20" y="10" width="60" height="80" rx="5" ry="5" fill="white" stroke="black" strokeWidth="2" />
       <text x="50" y="25" font-size="12" text-anchor="middle" fill="black">
         Prix
       </text>
@@ -725,13 +725,13 @@ export const Icons = {
       <text x="50" y="65" font-size="12" text-anchor="middle" fill="black">
         €
       </text>
-      <line x1="20" y1="30" x2="80" y2="30" stroke="black" stroke-width="1" />
-      <line x1="20" y1="50" x2="80" y2="50" stroke="black" stroke-width="1" />
-      <line x1="20" y1="70" x2="80" y2="70" stroke="black" stroke-width="1" />
-      <line x1="30" y1="90" x2="40" y2="80" stroke="black" stroke-width="2" />
-      <line x1="40" y1="80" x2="50" y2="90" stroke="black" stroke-width="2" />
-      <line x1="50" y1="90" x2="60" y2="80" stroke="black" stroke-width="2" />
-      <line x1="60" y1="80" x2="70" y2="90" stroke="black" stroke-width="2" />
+      <line x1="20" y1="30" x2="80" y2="30" stroke="black" strokeWidth="1" />
+      <line x1="20" y1="50" x2="80" y2="50" stroke="black" strokeWidth="1" />
+      <line x1="20" y1="70" x2="80" y2="70" stroke="black" strokeWidth="1" />
+      <line x1="30" y1="90" x2="40" y2="80" stroke="black" strokeWidth="2" />
+      <line x1="40" y1="80" x2="50" y2="90" stroke="black" strokeWidth="2" />
+      <line x1="50" y1="90" x2="60" y2="80" stroke="black" strokeWidth="2" />
+      <line x1="60" y1="80" x2="70" y2="90" stroke="black" strokeWidth="2" />
     </svg>
   ),
   Invoice: (props: LucideProps) => (
