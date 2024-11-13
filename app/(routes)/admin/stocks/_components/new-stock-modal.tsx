@@ -8,13 +8,14 @@ import { Modal } from "@/components/ui/modal";
 import useServerAction from "@/hooks/use-server-action";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { z } from "zod";
 import addNewStock from "../_actions/add-new-stock";
 import type { schema } from "./schema";
 
 function NewStockModal() {
   const [open, setOpen] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
   const { serverAction, zodErrors } = useServerAction(addNewStock);
   async function onSumbit(formdata: FormData) {
@@ -22,6 +23,7 @@ function NewStockModal() {
       data: Object.fromEntries(formdata.entries()) as unknown as z.infer<typeof schema>,
       onSuccess: () => {
         router.refresh();
+        formRef.current?.reset();
         setOpen(false);
       },
     });
@@ -32,7 +34,7 @@ function NewStockModal() {
         <Plus className="mr-2  h-4 w-4" /> Ajouter un stock
       </Button>
       <Modal isOpen={open} onClose={() => setOpen(false)} title="Ajouter un stock" description="Ajouter un stock">
-        <form action={onSumbit} className="space-y-4">
+        <form ref={formRef} action={onSumbit} className="space-y-4">
           <div className="space-y-1">
             <Label htmlFor={"name"}>Nom</Label>
             <Input type="text" name="name" />

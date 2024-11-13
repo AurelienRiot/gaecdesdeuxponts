@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   return await safeRouteAPI({
-    searchParamsReq: true,
+    method: "GET",
     request,
     roles: SHIPPING,
     serverError: "[GET_USERS_FOR_ORDERS]",

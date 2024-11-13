@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import Image from "next/image";
-import { scrollToId } from "@/lib/scroll-to-traget";
+import { scrollToId } from "@/lib/scroll-to-id";
 import type { AMAPFormValues } from "./amap-schema";
 
 const SelectShop = ({ shops }: { shops: Shop[] }) => {

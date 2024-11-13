@@ -9,8 +9,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useOrdersQueryClient } from "../../../../../../hooks/use-query/orders-query";
-import { createNewOrder } from "../_actions/create-order";
 import { addDays } from "date-fns";
+import customKy from "@/lib/custom-ky";
+import { calendarOrderSchema } from "@/components/zod-schema/calendar-orders";
+import useKy from "@/hooks/use-ky";
 
 function getNextAvailableDate(availableDays?: number[]): Date | null {
   if (!availableDays || availableDays.length === 0) {
@@ -47,8 +49,8 @@ function NewOrderButton({
 }: { userId: string; orderId: string; dateOfPickUp: Date; defaultDaysOrders?: number[] }) {
   const router = useRouter();
   const [noConfirmation, setNoConfirmation] = useState<CheckedState>(true);
-  const { serverAction, loading } = useServerAction(createNewOrder);
   const { mutateOrders } = useOrdersQueryClient();
+  const { ky } = useKy("/api/order", "POST", calendarOrderSchema);
   const nextDay = getNextAvailableDate(defaultDaysOrders);
 
   const onDayClick = async (date?: Date) => {
@@ -65,28 +67,21 @@ function NewOrderButton({
     if (!noConfirmation) {
       router.replace(url);
     } else {
-      router.back();
-
-      serverAction({
+      ky({
         data: { dateOfShipping, userId, newOrderId: orderId },
         onSuccess: (result) => {
-          if (!result) {
-            toast.error("Une erreur est survenue");
-            return;
-          }
-          result.shippingDate = new Date(result.shippingDate);
-          result.createdAt = new Date(result.createdAt);
           mutateOrders((prev) => prev.concat(result));
         },
         onError: () => router.push(url),
       });
+
+      router.back();
     }
   };
   return (
     <>
       <DateModal
         onValueChange={onDayClick}
-        disabled={loading}
         highlighted={nextDay ? [nextDay] : []}
         triggerClassName=" w-44 border-dashed border-2 text-primary"
         trigger={

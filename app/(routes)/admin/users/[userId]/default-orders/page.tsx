@@ -1,11 +1,10 @@
 import ButtonBackward from "@/components/ui/button-backward";
-import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { DAYS_OF_WEEK } from "@/lib/date-utils";
 import getProductsForOrders from "../../../orders/[orderId]/_functions/get-products-for-orders";
+import ChangeUser from "./_components/change-user";
 import DisplayDefaultOrderForTheDay from "./_components/display-default-order-for-the-day";
 import getDefaultOrders from "./_functions/get-default-orders";
-import ChangeUser from "./_components/change-user";
 
 export const dynamic = "force-dynamic";
 
@@ -29,14 +28,14 @@ async function DefaultProductsPage({
     <div className=" space-y-2 h-full">
       <div className="max-w-[90vw] md:max-w-[500px] mx-auto flex pt-2 gap-4 items-center justify-between ">
         <ButtonBackward />
-        <ChangeUser />
+        <ChangeUser userId={userId} />
       </div>
-      <Heading
+      {/* <Heading
         title={`${user.company || user.name}`}
         description=""
         className=" w-fit  text-center mx-auto"
         titleClassName="text-base xs:text-lg sm:text-2xl md:text-3xl"
-      />
+      /> */}
       <Separator />
 
       <div className="flex flex-row w-full gap-4  overflow-y-hidden mx-auto px-4  overflow-x-scroll relative h-full">

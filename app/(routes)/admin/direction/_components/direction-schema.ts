@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-const pointSchema = z.object({
-  label: z.string({ required_error: "Rentrer une adresse" }).min(1, { message: "Rentrer une adresse" }),
+export const pointSchema = z.object({
+  label: z.string({ required_error: "Rentrer une adresse" }),
   latitude: z.coerce
     .number()
     .min(-90, { message: "Entrez une latitude valide" })
@@ -16,10 +16,14 @@ const pointSchema = z.object({
     .nullable(),
 });
 
+export const pointSchemaMin = pointSchema.extend({
+  label: pointSchema.shape.label.min(1, { message: "Rentrer une adresse" }), // Added minimum length validation
+});
+
 export const directionSchema = z.object({
-  origin: pointSchema,
-  destination: pointSchema,
-  waypoints: z.array(pointSchema).min(2, { message: "Entrez au moins deux points de passage" }),
+  origin: pointSchemaMin,
+  destination: pointSchemaMin,
+  waypoints: z.array(pointSchemaMin).min(2, { message: "Entrez au moins deux points de passage" }),
 });
 export type Point = z.infer<typeof pointSchema>;
 export const origin: Point = { label: "6 le Pont Robert 44290 Massérac" };

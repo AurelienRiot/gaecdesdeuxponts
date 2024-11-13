@@ -1,8 +1,8 @@
 "server only";
 import { getUserName } from "@/components/table-custom-fuction";
+import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";
 import prismadb from "@/lib/prismadb";
 import { addressFormatter } from "@/lib/utils";
-import type { Role } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 
 async function userPrismaQuery() {
@@ -26,24 +26,8 @@ const getUsersForOrders = unstable_cache(
   ["getUsers"],
   { revalidate: 60 * 60 * 24, tags: ["users", "defaultOrders"] },
 );
-export type GetUsersType = Awaited<ReturnType<typeof getUsersForOrders>>;
 
-export type UsersForOrderType = {
-  id: string;
-  name?: string | null;
-  formattedName: string;
-  role: Role;
-  completed?: boolean;
-  email?: string | null;
-  phone?: string | null;
-  company?: string | null;
-  image?: string | null;
-  address?: string | null;
-  links: { label: string; value: string }[];
-  defaultDaysOrders: number[];
-  notes: string | null;
-};
-function formatUsers(users: Awaited<ReturnType<typeof userPrismaQuery>>): UsersForOrderType[] {
+function formatUsers(users: Awaited<ReturnType<typeof userPrismaQuery>>): UserForOrderType[] {
   return users.map((user) => {
     return {
       name: user.name,

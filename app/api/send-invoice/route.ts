@@ -10,6 +10,7 @@ const schema = z.object({ invoiceId: z.string() });
 
 export async function POST(request: NextRequest) {
   return await safeRouteAPI({
+    method: "POST",
     request,
     schema,
     roles: ADMIN,

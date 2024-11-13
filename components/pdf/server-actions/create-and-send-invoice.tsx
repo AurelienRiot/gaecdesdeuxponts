@@ -50,6 +50,13 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean) {
     };
   }
 
+  if (fullInvoice.user.role === "trackOnlyUser") {
+    return {
+      success: false,
+      message: "Pas d'envoie de facture pour utilisateur en suivie seulement",
+    };
+  }
+
   const name = getUserName(fullInvoice.customer);
 
   const type = fullInvoice.orders.length === 1 ? "single" : "monthly";
@@ -199,6 +206,13 @@ export async function createInvoice(
     return {
       success: false,
       message: "Toutes les commandes ne sont pas du meme client",
+    };
+  }
+
+  if (orders[0].user.role === "trackOnlyUser") {
+    return {
+      success: false,
+      message: "Pas d'envoie de facture pour utilisateur en suivie seulement",
     };
   }
 

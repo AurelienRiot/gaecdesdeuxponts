@@ -6,16 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import NoResults from "@/components/ui/no-results";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import type { CalendarOrderType } from "@/components/zod-schema/calendar-orders";
+import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";
 import { dateFormatter } from "@/lib/date-utils";
 import { formatFrenchPhoneNumber } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { createContext, useContext, useState } from "react";
-import type { UsersForOrderType } from "../../orders/[orderId]/_functions/get-users-for-orders";
-import type { CalendarOrdersType } from "../_functions/get-orders";
 import DisplayItem from "./display-item";
 
-type UserModalProps = UsersForOrderType & { orders: CalendarOrdersType[]; date: Date };
+type UserModalProps = UserForOrderType & { orders: CalendarOrderType[]; date: Date };
 
 type UserModalContextType = {
   user: UserModalProps | null;

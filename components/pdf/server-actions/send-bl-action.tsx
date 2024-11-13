@@ -63,6 +63,12 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
           message: "Le client n'a pas d'email, revalider la commande aprés avoir changé son email",
         };
       }
+      if (order.user.role === "trackOnlyUser") {
+        return {
+          success: false,
+          message: "Pas d'envoie de bon de livraison pour utilisateur en suivie seulement",
+        };
+      }
       const today = new Date();
 
       if (
@@ -113,14 +119,13 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
               },
             ],
           });
+        } else {
+          await addDelay(3000);
+          // return {
+          //   success: false,
+          //   message: "Environnement de test",
+          // };
         }
-        //  else {
-        //   await addDelay(3000);
-        //   return {
-        //     success: false,
-        //     message: "Environnement de test",
-        //   };
-        // }
       }
       !order.shippingEmail && (await updateStocks(order.orderItems));
 

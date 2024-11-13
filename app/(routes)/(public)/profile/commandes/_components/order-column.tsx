@@ -7,7 +7,6 @@ import { DatePickUpHeader } from "@/components/table-custom-fuction/header-order
 import type { DataTableFilterableColumn, DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
 import type { Shop } from "@prisma/client";
 import type { ColumnDef } from "@tanstack/react-table";
-import { useSession } from "next-auth/react";
 import { useUserQuery } from "../../../../../../hooks/use-query/user-query";
 
 export type OrderColumnType = {

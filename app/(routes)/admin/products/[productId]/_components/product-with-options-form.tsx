@@ -12,7 +12,7 @@ import MultipleSelector, { type Option } from "@/components/ui/multiple-selector
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { createId } from "@/lib/id";
-import { scrollToId } from "@/lib/scroll-to-traget";
+import { scrollToId } from "@/lib/scroll-to-id";
 import { cn, getPercentage } from "@/lib/utils";
 import { type Stock, Unit } from "@prisma/client";
 import { PlusCircledIcon } from "@radix-ui/react-icons";

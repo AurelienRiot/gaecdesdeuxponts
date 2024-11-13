@@ -13,7 +13,7 @@ function ModalLayout({ children }: { children: React.ReactNode }) {
       }}
       modal
     >
-      <SheetContent className="overflow-y-scroll w-[90%] sm:max-w-sm md:max-w-md ">{children}</SheetContent>
+      <SheetContent className="overflow-y-scroll w-[90%] sm:max-w-sm md:max-w-md p-0">{children}</SheetContent>
     </Sheet>
   );
 }

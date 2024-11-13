@@ -13,8 +13,8 @@ import type { ProductStock } from "@prisma/client";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import type { UsersForOrderType } from "../_functions/get-users-for-orders";
 import type { OrderFormValues } from "./order-schema";
+import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";
 
 export const negativeQuantityStyle =
   "bg-destructive hover:bg-destructive/90 hover:text-destructive-foreground text-destructive-foreground";
@@ -24,11 +24,12 @@ export const ShippingProducts = ({
   user,
 }: {
   products: (ProductWithMain & { stocks: ProductStock[] })[];
-  user?: UsersForOrderType | null;
+  user?: UserForOrderType | null;
 }) => {
   const form = useFormContext<OrderFormValues>();
+  const items = form.watch("orderItems");
 
-  const addProduct = (items: OrderFormValues["orderItems"]) => {
+  const addProduct = () => {
     if (items.every((item) => item.itemId)) {
       const newItems = {
         itemId: "",
@@ -57,7 +58,7 @@ export const ShippingProducts = ({
           <FormLabel>Produits</FormLabel>
           <FormControl>
             <div className="space-y-4">
-              {field.value.map((item, productIndex) => (
+              {items.map((item, productIndex) => (
                 <div key={item.id} className="w-fit rounded-md p-4 pb-4 thin-scrollbar bg-chart1/50 even:bg-chart2/50">
                   <ProductName user={user} products={products} productIndex={productIndex} />
                 </div>
@@ -70,12 +71,7 @@ export const ShippingProducts = ({
             </p>
           )}
           <div className="flex flex-wrap items-end gap-4">
-            <Button
-              type="button"
-              variant="outline"
-              className="whitespace-nowrap border-dashed"
-              onClick={() => addProduct(field.value)}
-            >
+            <Button type="button" variant="outline" className="whitespace-nowrap border-dashed" onClick={addProduct}>
               <PlusCircledIcon className="mr-2 size-4" />
               {"Ajouter un produit"}
             </Button>
@@ -91,7 +87,7 @@ function ProductName({
   products,
   user,
 }: {
-  user?: UsersForOrderType | null;
+  user?: UserForOrderType | null;
   productIndex: number;
   products: (ProductWithMain & { stocks: ProductStock[] })[];
 }) {
@@ -221,7 +217,7 @@ const SelectProductName = ({
   quantity,
   user,
 }: {
-  user?: UsersForOrderType | null;
+  user?: UserForOrderType | null;
   productIndex: number;
   quantity: number;
   products: (ProductWithMain & { stocks: ProductStock[] })[];

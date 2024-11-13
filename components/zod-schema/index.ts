@@ -33,4 +33,7 @@ const phoneSchema = z.string({ invalid_type_error: "Entrer un numéro de télép
 );
 
 const emptySchema = z.object({});
-export { emailSchema, nameSchema, optSchema, phoneSchema, emptySchema };
+
+const roleSchema = z.enum(["admin", "user", "pro", "shipping", "trackOnlyUser", "readOnlyAdmin", "deleted"]);
+
+export { emailSchema, nameSchema, optSchema, phoneSchema, emptySchema, roleSchema };

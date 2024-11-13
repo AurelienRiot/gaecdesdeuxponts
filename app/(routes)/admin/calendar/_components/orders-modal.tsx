@@ -2,18 +2,18 @@
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Modal } from "@/components/ui/modal";
 import NoResults from "@/components/ui/no-results";
+import type { CalendarOrderType } from "@/components/zod-schema/calendar-orders";
 import useServerAction from "@/hooks/use-server-action";
 import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import { Grip } from "lucide-react";
 import { createContext, memo, useContext, useEffect, useState } from "react";
-import updateOrdersIndex from "../_actions/update-orders-index";
-import type { CalendarOrdersType } from "../_functions/get-orders";
 import { useOrdersQueryClient } from "../../../../../hooks/use-query/orders-query";
+import updateOrdersIndex from "../_actions/update-orders-index";
 import { useRaisedShadow } from "./use-raised-shadow";
 
 type OrdersModalContextType = {
-  orders: CalendarOrdersType[] | null;
-  setOrders: React.Dispatch<React.SetStateAction<CalendarOrdersType[] | null>>;
+  orders: CalendarOrderType[] | null;
+  setOrders: React.Dispatch<React.SetStateAction<CalendarOrderType[] | null>>;
   isOrderModalOpen: boolean;
   setIsOrderModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -23,7 +23,7 @@ export const OrdersModalContext = createContext<OrdersModalContextType | undefin
 export const OrdersModalProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const [orders, setOrders] = useState<CalendarOrdersType[] | null>(null);
+  const [orders, setOrders] = useState<CalendarOrderType[] | null>(null);
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
 
   return (
@@ -78,7 +78,7 @@ function ReorderItem({
   localOrders,
   setLocalOrders,
 }: {
-  orders: CalendarOrdersType[] | null;
+  orders: CalendarOrderType[] | null;
   localOrders?: string[];
   setLocalOrders: React.Dispatch<React.SetStateAction<string[] | undefined>>;
 }) {
@@ -118,7 +118,7 @@ function ReorderItem({
 
 const MemoizedOrderItem = memo(OrderItem);
 
-function OrderItem({ order }: { order: CalendarOrdersType }) {
+function OrderItem({ order }: { order: CalendarOrderType }) {
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
 

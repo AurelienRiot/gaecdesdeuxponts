@@ -3,7 +3,7 @@ import type { Table } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { scrollToId } from "@/lib/scroll-to-traget";
+import { scrollToId } from "@/lib/scroll-to-id";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;

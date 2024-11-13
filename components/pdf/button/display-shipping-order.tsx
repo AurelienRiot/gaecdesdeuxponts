@@ -28,7 +28,7 @@ export function DisplayShippingOrder({
   //   message: "Envoi du BL",
   //   errorMessage: "Envoi du BL annulé",
   // });
-  const { serverAction: sendBLAction, loading: sendBLLoading } = useServerAction(SendBL);
+  const { serverAction: sendBLAction } = useServerAction(SendBL);
   const { serverAction, loading } = useServerAction(createShippingPDF64StringAction);
   const { serverAction: orderAction, loading: loading2 } = useServerAction(getOrderForConfirmation);
   const router = useRouter();
@@ -104,7 +104,7 @@ export function DisplayShippingOrder({
 
   return (
     <PdfButton
-      disabled={loading || sendBLLoading || loading2 || disabled}
+      disabled={loading || loading2 || disabled}
       onViewFile={onViewFile}
       onSaveFile={onSaveFile}
       onSendFile={onSendFile}

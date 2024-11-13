@@ -1,6 +1,6 @@
 import { checkUser } from "@/components/auth/checkAuth";
 import type { Session } from "next-auth";
-import type { z } from "zod";
+import type { z, ZodSchema } from "zod";
 import { rateLimit } from "./rate-limit";
 import type { Role } from "@prisma/client";
 import { type NextRequest, NextResponse } from "next/server";
@@ -27,29 +27,29 @@ export type ReturnTypeServerAction<R = undefined, E = undefined> =
       zodError?: ZodError;
     };
 
-type BaseServerActionType<D extends z.ZodTypeAny> = {
-  schema?: D;
+type BaseServerActionType<D> = {
+  schema?: ZodSchema<D>;
   roles?: Role[];
-  data: z.infer<D>;
+  data: D;
   rateLimited?: boolean;
 };
 
-type SafeServerActionType<D extends z.ZodTypeAny, R, E> = BaseServerActionType<D> &
+type SafeServerActionType<D, R, E> = BaseServerActionType<D> &
   (
     | {
         ignoreCheckUser?: false;
-        serverAction: (data: z.infer<D>, user: Session["user"]) => Promise<ReturnTypeServerAction<R, E>>;
+        serverAction: (data: D, user: Session["user"]) => Promise<ReturnTypeServerAction<R, E>>;
       }
     | {
         ignoreCheckUser: true;
-        serverAction: (data: z.infer<D>, user: Session["user"] | null) => Promise<ReturnTypeServerAction<R, E>>;
+        serverAction: (data: D, user: Session["user"] | null) => Promise<ReturnTypeServerAction<R, E>>;
       }
   );
 
-async function safeServerAction<D extends z.ZodTypeAny, R, E>({
+async function safeServerAction<D, R, E>({
   data,
   serverAction,
-  schema = emptySchema as unknown as D,
+  schema = emptySchema as unknown as ZodSchema<D>,
   ignoreCheckUser,
   roles = USER,
   rateLimited,
@@ -109,51 +109,47 @@ async function safeServerAction<D extends z.ZodTypeAny, R, E>({
   }
 }
 
-type BaseRouteAPIType<D extends z.ZodTypeAny> = {
-  schema?: D;
+type BaseRouteAPIType<D> = {
+  schema?: ZodSchema<D>;
   roles?: Role[];
   rateLimited?: boolean;
   request: NextRequest;
   serverError?: string;
-  searchParamsReq?: Boolean;
+  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 };
 
-type SafeRouteAPIType<D extends z.ZodTypeAny, R, E> = BaseRouteAPIType<D> &
+type SafeRouteAPIType<D, R, E> = BaseRouteAPIType<D> &
   (
     | {
         ignoreCheckUser?: false;
-        serverAction: (
-          data: z.infer<D>,
-          user: Session["user"],
-          request: NextRequest,
-        ) => Promise<ReturnTypeServerAction<R, E>>;
+        serverAction: (data: D, user: Session["user"], request: NextRequest) => Promise<ReturnTypeServerAction<R, E>>;
       }
     | {
         ignoreCheckUser: true;
         serverAction: (
-          data: z.infer<D>,
+          data: D,
           user: Session["user"] | null,
           request: NextRequest,
         ) => Promise<ReturnTypeServerAction<R, E>>;
       }
   );
 
-export async function safeRouteAPI<D extends z.ZodTypeAny, R, E>({
+export async function safeRouteAPI<D, R, E>({
   serverAction,
-  schema = emptySchema as unknown as D,
+  schema = emptySchema as unknown as ZodSchema<D>,
   ignoreCheckUser,
   roles = USER,
   rateLimited,
   request,
-  searchParamsReq = false,
   serverError = "[ERROR]",
+  method,
 }: SafeRouteAPIType<D, R, E>): Promise<NextResponse> {
   const timerLabel = `Total Execution Time - ${nanoid(5)}`;
   console.time(timerLabel);
   try {
     const { searchParams } = new URL(request.url);
     const searchParamsEntries = Object.fromEntries(searchParams.entries());
-    const data = searchParamsReq ? searchParamsEntries : await request.json();
+    const data = method === "GET" ? searchParamsEntries : await request.json();
     const user = await checkUser();
 
     if (rateLimited) {
