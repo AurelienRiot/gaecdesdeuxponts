@@ -1,52 +1,46 @@
 "use client";
-import type { ReturnTypeServerAction, ZodError } from "@/lib/server-action";
+import customKy from "@/lib/custom-ky";
+import type { Options } from "ky";
 import { useCallback, useState } from "react";
 import { toast, type ExternalToast } from "sonner";
+import type { ZodSchema } from "zod";
 
-function useKy<D, R, E = undefined>(action: (data: D) => Promise<ReturnTypeServerAction<R, E>>) {
+function useKy<D>(url: string, method: `GET` | `POST` | `PUT` | `PATCH` | `DELETE`, schema: ZodSchema<D>) {
   const [loading, setLoading] = useState(false);
-  const [zodErrors, setZodErrors] = useState<ZodError>();
   const ky = useCallback(
     async ({
       data,
       toastOptions = { position: "top-center" },
+      options,
       onSuccess,
       onError,
       onFinally,
     }: {
-      data: D;
+      data: any;
       onFinally?: () => void;
-      onError?: (errorData?: E) => void;
-      onSuccess?: (result?: R) => void;
+      onError?: () => void;
+      onSuccess?: (result: D) => void;
       toastOptions?: ExternalToast;
+      options?: Omit<Options, "method">;
     }) => {
       setLoading(true);
 
-      return await action(data)
+      return await customKy(url, method, schema, { json: data, ...options })
         .then(async (result) => {
-          if (!result.success) {
-            setZodErrors(result.zodError);
-            await onError?.(result.errorData);
-            result.message ? toast.error(result.message, toastOptions) : null;
-            return;
-          }
-          await onSuccess?.(result.data);
-          result.message ? toast.success(result.message, toastOptions) : null;
-          return result.data;
+          await onSuccess?.(result);
         })
-        .catch(async () => {
+        .catch(async (error) => {
           await onError?.();
-          toast.error("Une erreur est survenue", toastOptions);
+          toast.error(error.message, toastOptions);
         })
         .finally(async () => {
           await onFinally?.();
           setLoading(false);
         });
     },
-    [action],
+    [method, url, schema],
   );
 
-  return { ky, loading, zodErrors };
+  return { ky, loading };
 }
-
 export default useKy;

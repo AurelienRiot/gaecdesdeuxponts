@@ -12,6 +12,7 @@ import { useOrdersQueryClient } from "../../../../../../hooks/use-query/orders-q
 import { addDays } from "date-fns";
 import customKy from "@/lib/custom-ky";
 import { calendarOrderSchema } from "@/components/zod-schema/calendar-orders";
+import useKy from "@/hooks/use-ky";
 
 function getNextAvailableDate(availableDays?: number[]): Date | null {
   if (!availableDays || availableDays.length === 0) {
@@ -49,6 +50,7 @@ function NewOrderButton({
   const router = useRouter();
   const [noConfirmation, setNoConfirmation] = useState<CheckedState>(true);
   const { mutateOrders } = useOrdersQueryClient();
+  const { ky } = useKy("/api/order", "POST", calendarOrderSchema);
   const nextDay = getNextAvailableDate(defaultDaysOrders);
 
   const onDayClick = async (date?: Date) => {
@@ -65,28 +67,14 @@ function NewOrderButton({
     if (!noConfirmation) {
       router.replace(url);
     } else {
-      customKy("/api/order", "POST", calendarOrderSchema, { json: { dateOfShipping, userId, newOrderId: orderId } })
-        .then((result) => {
+      ky({
+        data: { dateOfShipping, userId, newOrderId: orderId },
+        onSuccess: (result) => {
           mutateOrders((prev) => prev.concat(result));
-        })
-        .catch((error) => {
-          router.push(url);
-          toast.error(error.message);
-        });
-      // await serverAction({
-      //   data: { dateOfShipping, userId, newOrderId: orderId },
-      //   onSuccess: (result) => {
-      //     console.log("client trigger success");
-      //     if (!result) {
-      //       toast.error("Une erreur est survenue");
-      //       return;
-      //     }
-      //     result.shippingDate = new Date(result.shippingDate);
-      //     result.createdAt = new Date(result.createdAt);
-      //     mutateOrders((prev) => prev.concat(result));
-      //   },
-      //   onError: () => router.push(url),
-      // });
+        },
+        onError: () => router.push(url),
+      });
+
       router.back();
     }
   };
