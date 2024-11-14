@@ -1,7 +1,6 @@
 import { ADMIN } from "@/components/auth";
 import { sendInvoice } from "@/components/pdf/server-actions/create-and-send-invoice";
 import { safeAPIRoute } from "@/lib/api-route";
-import { addDelay } from "@/lib/utils";
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 
@@ -31,7 +30,7 @@ async function* sendInvoices(invoiceIds: string[]) {
   const pendingPromises = invoiceIds.map((invoiceId, index) => {
     const promise = (async () => {
       if (index !== 0) {
-        await setTimeout(() => {}, 500);
+        await new Promise((resolve) => setTimeout(resolve, 500));
       }
       const response = await sendInvoice(invoiceId);
       return encoder.encode(JSON.stringify(response) + "\n");
