@@ -1,6 +1,7 @@
 import { ADMIN } from "@/components/auth";
 import { sendInvoice } from "@/components/pdf/server-actions/create-and-send-invoice";
 import { safeAPIRoute } from "@/lib/api-route";
+import { addDelay } from "@/lib/utils";
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 
@@ -27,18 +28,21 @@ export async function POST(request: NextRequest) {
 async function* sendInvoices(invoiceIds: string[]) {
   const encoder = new TextEncoder();
 
-  const pendingPromises = invoiceIds.map((invoiceId) => {
+  const pendingPromises = invoiceIds.map((invoiceId, index) => {
     const promise = (async () => {
+      if (index !== 0) {
+        await addDelay(100);
+      }
       const response = await sendInvoice(invoiceId);
       return encoder.encode(JSON.stringify(response) + "\n");
     })();
-    return { promise, invoiceId };
+    return { promise };
   });
 
   while (pendingPromises.length > 0) {
     // Wait for the fastest promise to resolve
     const { result, promise } = await Promise.race(
-      pendingPromises.map(({ promise, invoiceId }) => promise.then((result) => ({ result, promise }))),
+      pendingPromises.map(({ promise }) => promise.then((result) => ({ result, promise }))),
     );
 
     // Remove the resolved promise from the array
