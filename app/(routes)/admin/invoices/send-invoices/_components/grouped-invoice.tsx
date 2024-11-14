@@ -1,6 +1,7 @@
 "use client";
 
 import Spinner from "@/components/animations/spinner";
+import type { SendInvoiceReturnType } from "@/components/pdf/server-actions/create-and-send-invoice";
 import { getUserName } from "@/components/table-custom-fuction";
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -9,15 +10,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import useServerAction from "@/hooks/use-server-action";
 import { dateFormatter } from "@/lib/date-utils";
 import { currencyFormatter } from "@/lib/utils";
-import ky, { type HTTPError, type TimeoutError } from "ky";
+import ky, { type HTTPError } from "ky";
 import { Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import createGroupedMonthlyInvoice from "../../_actions/send-grouped-monthly-invoice";
 import type { UserWithOrdersForInvoices } from "../../_functions/get-users-with-orders";
-import type { SendInvoiceReturnType } from "@/components/pdf/server-actions/create-and-send-invoice";
-import useKy from "@/hooks/use-ky";
 
 function previousMonthOrders(order: { dateOfShipping: Date | null }) {
   const currentDate = new Date();
@@ -126,6 +125,7 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
       try {
         const response = await ky.post("/api/send-invoices", {
           json: { invoiceIds: chunk }, // Sending the array of invoice IDs as JSON
+          timeout: 20000,
         });
 
         if (!response?.body) {
