@@ -51,107 +51,6 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
 
   async function sendInvoices(sendEmail: boolean) {
     setLoading(true);
-    if (orderIdsArray.length === 0) {
-      toast.error("Veuillez sélectionner au moins un client");
-      setLoading(false);
-      return;
-    }
-
-    const response = await createInvoicesAction({ data: orderIdsArray });
-    if (!response) {
-      toast.error("Une erreur est survenue lors de la création des factures, veuillez recharger la page");
-      setLoading(false);
-      return;
-    }
-    const invoiceRecord: typeof invoiceLoading = {};
-    for (const [index, invoice] of response.entries()) {
-      if (!invoice.success) {
-        const orderId = orderIdsArray[index][0];
-        const user = userWithOrdersForInvoices.find((user) => user.orders.some((order) => order.id === orderId));
-        user &&
-          toast.error(`Une erreur est survenue lors de la creation de la facture pour le client ${getUserName(user)}`);
-      } else {
-        invoiceRecord[invoice.data.invoiceId] = { state: "loading", name: invoice.data.name };
-      }
-    }
-
-    if (!sendEmail) {
-      console.log(response);
-      setLoading(false);
-      router.push("/admin/invoices");
-      return;
-    }
-    setInvoiceLoading(invoiceRecord);
-    setDisplayInvoices(true);
-    toast.success("Envoi des factures en cours...");
-
-    try {
-      const chunkSize = 5;
-      let cumulativeCount = 0;
-      for (let i = 0; i < Object.keys(invoiceRecord).length; i += chunkSize) {
-        const chunk = Object.keys(invoiceRecord).slice(i, i + chunkSize);
-        const chunkRes = await Promise.all(
-          chunk.map((invoiceId) => {
-            return ky
-              .post("/api/send-invoices", { json: { invoiceId }, timeout: 15000 })
-              .then(async (res) => {
-                setInvoiceLoading((prev) => ({
-                  ...prev,
-                  [invoiceId]: { state: "success", name: prev[invoiceId].name },
-                }));
-                return true;
-              })
-              .catch(async (kyError: HTTPError) => {
-                setInvoiceLoading((prev) => ({
-                  ...prev,
-                  [invoiceId]: { state: "error", name: prev[invoiceId].name },
-                }));
-                if (kyError.response) {
-                  const errorData = await kyError.response.text();
-                  console.error(errorData);
-                  toast.error(errorData, { duration: 10000 });
-                } else {
-                  const error = kyError as TimeoutError;
-                  console.error("Erreur timeout");
-                }
-                return false;
-              });
-          }),
-        );
-        cumulativeCount += chunk.length;
-        const currentCount = cumulativeCount;
-        toast.success(`Facture envoyée : ${currentCount} sur ${orderIdsArray.length}`, {
-          position: "bottom-center",
-        });
-        // if (!chunkRes.every((res) => res)) {
-        //   toast.error("Une erreur est survenue lors de l'envoi des factures, veuillez recharger la page", {
-        //     position: "top-center",
-        //     duration: 10000,
-        //   });
-
-        // } else {
-
-        // }
-      }
-    } catch (error) {
-      toast.error("Une erreur est survenue lors de l'envoi des factures, veuillez recharger la page", {
-        position: "top-center",
-        duration: 10000,
-      });
-      setLoading(false);
-      return;
-    }
-
-    setLoading(false);
-    // router.push("/admin/invoices");
-    toast.success(`Toutes les factures sont envoyées`, {
-      position: "top-center",
-      duration: 10000,
-    });
-  }
-
-  async function sendTestInvoices(sendEmail: boolean) {
-    setLoading(true);
     // const invoiceArray = [
     //   "FA_2024_0065",
     //   "FA_2024_0064",
@@ -237,41 +136,38 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
 
+        let buffer = "";
         while (true) {
           const { done, value } = await reader.read();
           if (done) break; // Exit the loop if done
 
-          // Decode the value and parse it as JSON
-          const jsonString = decoder.decode(value);
-          const result = JSON.parse(jsonString) as SendInvoiceReturnType;
+          // Decode the chunk and accumulate it in the buffer
+          buffer += decoder.decode(value, { stream: true });
+          // Split the buffer on newlines to get complete JSON strings
+          const lines = buffer.split("\n");
 
-          if (!result.success) {
-            toast.error(result.message, {
-              position: "top-center",
-              duration: 5000,
-            });
-            if (result.errorData) {
-              const invoiceId = result.errorData.invoiceId;
-              setInvoiceLoading((prev) => ({
-                ...prev,
-                [invoiceId]: { state: "error", name: prev[invoiceId].name },
-              }));
-            }
-          } else {
-            if (result.data) {
-              const invoiceId = result.data.invoiceId;
-              setInvoiceLoading((prev) => ({
-                ...prev,
-                [invoiceId]: { state: "success", name: prev[invoiceId].name },
-              }));
-            }
+          // Keep the last partial line in the buffer
+          buffer = lines.pop() || "";
+
+          // Decode the value and parse it as JSONg
+          for (const line of lines) {
+            if (line.trim() === "") continue; // Skip empty lines
+            const result = JSON.parse(line) as SendInvoiceReturnType;
+            // Process the result (e.g., update UI, log success)
+            updateData(result);
           }
+        }
+        if (buffer.trim() !== "") {
+          const result = JSON.parse(buffer) as SendInvoiceReturnType;
+          updateData(result);
         }
       } catch (error) {
         setInvoiceLoading((prev) => {
           const updatedInvoices = chunk.reduce(
             (acc, invoiceId) => {
-              acc[invoiceId] = { state: "error", name: prev[invoiceId].name };
+              if (prev[invoiceId].state === "loading") {
+                acc[invoiceId] = { state: "error", name: prev[invoiceId].name };
+              }
               return acc;
             },
             {} as typeof invoiceLoading,
@@ -284,9 +180,11 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
           console.error(errorData);
           toast.error(errorData, { duration: 10000 });
         } else {
+          console.error(error);
           toast.error("Une erreur est survenue lors de l'envoi des factures, veuillez recharger la page");
         }
       }
+
       cumulativeCount += chunk.length;
       const currentCount = cumulativeCount;
       toast.success(`Facture envoyée : ${currentCount} sur ${recordLength}`, {
@@ -294,6 +192,30 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
       });
     }
     setLoading(false);
+
+    function updateData(result: SendInvoiceReturnType) {
+      if (!result.success) {
+        toast.error(result.message, {
+          position: "top-center",
+          duration: 5000,
+        });
+        if (result.errorData) {
+          const invoiceId = result.errorData.invoiceId;
+          setInvoiceLoading((prev) => ({
+            ...prev,
+            [invoiceId]: { state: "error", name: prev[invoiceId].name },
+          }));
+        }
+      } else {
+        if (result.data) {
+          const invoiceId = result.data.invoiceId;
+          setInvoiceLoading((prev) => ({
+            ...prev,
+            [invoiceId]: { state: "success", name: prev[invoiceId].name },
+          }));
+        }
+      }
+    }
   }
 
   return (
@@ -469,7 +391,7 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
           variant={"shine"}
           className="w-fit  from-green-600 via-green-600/80 to-green-600"
           // onClick={() => sendInvoices(true)}
-          onClick={() => sendTestInvoices(true)}
+          onClick={() => sendInvoices(true)}
         >
           Créer et envoyer les factures
         </LoadingButton>

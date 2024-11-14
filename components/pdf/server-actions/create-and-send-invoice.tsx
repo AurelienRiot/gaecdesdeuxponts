@@ -186,6 +186,7 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean): Promis
       },
     });
   } catch (error) {
+    console.log(error);
     return {
       success: false,
       message: `Erreur lors de l'envoi de la facture de ${name}`,
