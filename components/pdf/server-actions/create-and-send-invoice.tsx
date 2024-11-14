@@ -140,25 +140,29 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean): Promis
           })(),
         ]);
 
-        await transporter.sendMail({
-          from: "laiteriedupontrobert@gmail.com",
-          to: email,
-          // to: "pub.demystify390@passmail.net",
-          cc: fullInvoice.user.ccInvoice,
-          subject:
-            type === "monthly"
-              ? `Facture Mensuelle ${date}  - Laiterie du Pont Robert`
-              : `Facture du ${dateFormatter(fullInvoice.dateOfEdition)} - Laiterie du Pont Robert`,
-          text,
-          html,
-          attachments: [
-            {
-              filename: type === "monthly" ? `Facture mensuelle ${date}.pdf` : `Facture ${fullInvoice.id}`,
-              content: pdfBuffer,
-              contentType: "application/pdf",
-            },
-          ],
-        });
+        if (pdfBuffer && text && html) {
+          console.log("All ready to send");
+        }
+
+        // await transporter.sendMail({
+        //   from: "laiteriedupontrobert@gmail.com",
+        //   to: email,
+        //   // to: "pub.demystify390@passmail.net",
+        //   cc: fullInvoice.user.ccInvoice,
+        //   subject:
+        //     type === "monthly"
+        //       ? `Facture Mensuelle ${date}  - Laiterie du Pont Robert`
+        //       : `Facture du ${dateFormatter(fullInvoice.dateOfEdition)} - Laiterie du Pont Robert`,
+        //   text,
+        //   html,
+        //   attachments: [
+        //     {
+        //       filename: type === "monthly" ? `Facture mensuelle ${date}.pdf` : `Facture ${fullInvoice.id}`,
+        //       content: pdfBuffer,
+        //       contentType: "application/pdf",
+        //     },
+        //   ],
+        // });
       } else {
         await addDelay(Math.random() * (3000 - 1000) + 1000);
         // This block of code simulates throwing an error randomly every 5 requests

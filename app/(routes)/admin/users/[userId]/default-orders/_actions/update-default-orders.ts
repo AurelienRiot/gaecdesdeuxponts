@@ -23,7 +23,10 @@ async function updateDefaultOrdersAction(data: DefaultOrderFormValues) {
           },
         },
       });
-      if (!defaultOrder && defaultOrderProducts.length === 0) {
+      if (!defaultOrder) {
+        if (defaultOrderProducts.length === 0) {
+          return { success: false, message: "Aucun produits dans la commande par défault" };
+        }
         await prismadb.defaultOrder.create({
           data: {
             userId,
@@ -32,10 +35,9 @@ async function updateDefaultOrdersAction(data: DefaultOrderFormValues) {
             defaultOrderProducts: { create: defaultOrderProducts },
           },
         });
+        return { success: true, message: `Commande par défault de ${DAYS_OF_WEEK[day]}  crée` };
       }
-      if (!defaultOrder) {
-        return { success: false, message: "Aucun produits dans la commande par défault" };
-      }
+
       if (defaultOrderProducts.length === 0) {
         await prismadb.defaultOrder.delete({
           where: {

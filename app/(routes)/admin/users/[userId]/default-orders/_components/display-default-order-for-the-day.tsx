@@ -59,7 +59,8 @@ function DisplayDefaultOrderForTheDay({
   const items = form.watch("defaultOrderProducts");
 
   async function onSubmit(data: DefaultOrderFormValues) {
-    if (items.length > 0 && !items.every((item) => item.productId)) {
+    console.log(data);
+    if (data.defaultOrderProducts.length > 0 && !data.defaultOrderProducts.every((item) => item.productId)) {
       toast.error("Completer tous les produits deja existant");
       return;
     }
