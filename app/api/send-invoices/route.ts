@@ -27,32 +27,37 @@ export async function POST(request: NextRequest) {
 async function* sendInvoices(invoiceIds: string[]) {
   const encoder = new TextEncoder();
 
-  const pendingPromises = invoiceIds.map((invoiceId, index) => {
-    const promise = (async () => {
-      if (index !== 0) {
-        await new Promise((resolve) => setTimeout(resolve, 500 + 10 * index));
-      }
-      const response = await sendInvoice(invoiceId);
-      return encoder.encode(JSON.stringify(response) + "\n");
-    })();
-    return { promise };
-  });
-
-  while (pendingPromises.length > 0) {
-    // Wait for the fastest promise to resolve
-    const { result, promise } = await Promise.race(
-      pendingPromises.map(({ promise }) => promise.then((result) => ({ result, promise }))),
-    );
-
-    // Remove the resolved promise from the array
-    const index = pendingPromises.findIndex((p) => p.promise === promise);
-    if (index !== -1) {
-      pendingPromises.splice(index, 1);
-    }
-
-    // Yield the result
-    yield result;
+  for (const invoiceId of invoiceIds) {
+    const response = await sendInvoice(invoiceId);
+    yield encoder.encode(JSON.stringify(response) + "\n");
   }
+
+  // const pendingPromises = invoiceIds.map((invoiceId, index) => {
+  //   const promise = (async () => {
+  //     if (index !== 0) {
+  //       await new Promise((resolve) => setTimeout(resolve, 500 + 10 * index));
+  //     }
+  //     const response = await sendInvoice(invoiceId);
+  //     return encoder.encode(JSON.stringify(response) + "\n");
+  //   })();
+  //   return { promise };
+  // });
+
+  // while (pendingPromises.length > 0) {
+  //   // Wait for the fastest promise to resolve
+  //   const { result, promise } = await Promise.race(
+  //     pendingPromises.map(({ promise }) => promise.then((result) => ({ result, promise }))),
+  //   );
+
+  //   // Remove the resolved promise from the array
+  //   const index = pendingPromises.findIndex((p) => p.promise === promise);
+  //   if (index !== -1) {
+  //     pendingPromises.splice(index, 1);
+  //   }
+
+  //   // Yield the result
+  //   yield result;
+  // }
 }
 
 function iteratorToStream(iterator: any) {
