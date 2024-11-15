@@ -117,7 +117,7 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
     setDisplayInvoices(true);
     toast.success("Envoi des factures en cours...");
 
-    const chunkSize = 5;
+    const chunkSize = 10;
     let cumulativeCount = 0;
     const recordLength = Object.keys(invoiceRecord).length;
     for (let i = 0; i < recordLength; i += chunkSize) {

@@ -30,7 +30,7 @@ async function* sendInvoices(invoiceIds: string[]) {
   const pendingPromises = invoiceIds.map((invoiceId, index) => {
     const promise = (async () => {
       if (index !== 0) {
-        await new Promise((resolve) => setTimeout(resolve, 500 + index * 10));
+        await new Promise((resolve) => setTimeout(resolve, 500 + 10 * index));
       }
       const response = await sendInvoice(invoiceId);
       return encoder.encode(JSON.stringify(response) + "\n");
