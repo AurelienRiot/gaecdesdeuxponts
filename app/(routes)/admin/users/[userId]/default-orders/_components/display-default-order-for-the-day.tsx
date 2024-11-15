@@ -23,10 +23,13 @@ import updateDefaultOrdersAction from "../_actions/update-default-orders";
 import type { GetDefaultOrdersType } from "../_functions/get-default-orders";
 import { defaultOrderSchema, type DefaultOrderFormValues } from "./schema";
 import scrollToLastChild from "@/lib/scroll-to-last-child";
+import type { AllShopsType } from "@/app/(routes)/admin/direction/_functions/get-shops";
+import SelectShop from "./select-shop";
 
 function DisplayDefaultOrderForTheDay({
   defaultOrderForDay,
   products,
+  shops,
   day,
   index,
   userId,
@@ -34,6 +37,7 @@ function DisplayDefaultOrderForTheDay({
 }: {
   defaultOrderForDay: NonNullable<GetDefaultOrdersType>["defaultOrders"][number] | undefined;
   products: GetProductsForOrdersType;
+  shops: AllShopsType;
   day: string;
   userId: string;
   role: Role;
@@ -47,6 +51,7 @@ function DisplayDefaultOrderForTheDay({
       day: index,
       confirmed: defaultOrderForDay?.confirmed ?? true,
       userId,
+      shopId: defaultOrderForDay?.shopId,
       defaultOrderProducts:
         defaultOrderForDay?.defaultOrderProducts.map(({ price, productId, quantity }) => ({
           productId,
@@ -105,6 +110,7 @@ function DisplayDefaultOrderForTheDay({
               )}
             />
           )}
+          <SelectShop shops={shops} />
           <FormField
             control={form.control}
             name="defaultOrderProducts"

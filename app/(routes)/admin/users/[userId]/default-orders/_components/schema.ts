@@ -10,6 +10,7 @@ export const defaultOrderSchema = z.object({
   day: z.number(),
   confirmed: z.boolean().default(true),
   userId: z.string().min(1, { message: "L'utilisateur est requis" }),
+  shopId: z.string().optional().nullable(),
   defaultOrderProducts: z.array(defaultOrderProductsSchema),
 });
 
