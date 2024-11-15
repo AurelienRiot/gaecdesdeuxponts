@@ -60,7 +60,7 @@ async function* sendInvoices(invoiceIds: string[]) {
   // }
 }
 
-function iteratorToStream(iterator: any) {
+function iteratorToStream<T>(iterator: AsyncGenerator<T, void, unknown>) {
   return new ReadableStream({
     async pull(controller) {
       const { value, done } = await iterator.next();

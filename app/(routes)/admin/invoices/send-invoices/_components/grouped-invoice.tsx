@@ -37,12 +37,12 @@ const createOrderIdsRecord = (userWithOrdersForInvoices: UserWithOrdersForInvoic
     {} as Record<string, string[]>,
   );
 
+type InvoiceLoadingType = Record<string, { state: "loading" | "success" | "error"; name: string }>;
+
 function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoices: UserWithOrdersForInvoices }) {
   const { serverAction: createInvoicesAction } = useServerAction(createGroupedMonthlyInvoice);
   const [loading, setLoading] = useState(false);
-  const [invoiceLoading, setInvoiceLoading] = useState<
-    Record<string, { state: "loading" | "success" | "error"; name: string }>
-  >({}); // New state to track per-invoice loading status
+  const [invoiceLoading, setInvoiceLoading] = useState<InvoiceLoadingType>({}); // New state to track per-invoice loading status
   const [displayInvoices, setDisplayInvoices] = useState(false);
   const router = useRouter();
   const [orderIdsRecord, setOrderIdsRecord] = useState(createOrderIdsRecord(userWithOrdersForInvoices));
@@ -117,7 +117,7 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
     setDisplayInvoices(true);
     toast.success("Envoi des factures en cours...");
 
-    const chunkSize = 10;
+    const chunkSize = 5;
     let cumulativeCount = 0;
     const recordLength = Object.keys(invoiceRecord).length;
     for (let i = 0; i < recordLength; i += chunkSize) {

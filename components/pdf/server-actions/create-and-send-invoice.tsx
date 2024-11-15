@@ -76,94 +76,92 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean): Promis
 
   try {
     if (!fullInvoice.user.notifications || fullInvoice.user.notifications.sendInvoiceEmail) {
-      // if (process.env.NODE_ENV === "production") {
-      const [pdfBuffer, text, html] = await Promise.all([
-        (async () => {
-          return type === "monthly"
-            ? await renderToBuffer(
-                <MonthlyInvoice data={createMonthlyInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
-              )
-            : await renderToBuffer(
-                <Invoice dataInvoice={createInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
-              );
-        })(),
-        (async () => {
-          return reminder
-            ? await render(
-                SendReminderInvoiceEmail({
-                  date,
-                  baseUrl,
-                  id: fullInvoice.id,
-                  price: currencyFormatter.format(fullInvoice.totalPrice),
-                  email,
-                  type,
-                }),
-                { plainText: true },
-              )
-            : await render(
-                SendInvoiceEmail({
-                  date,
-                  baseUrl,
-                  id: fullInvoice.id,
-                  price: currencyFormatter.format(fullInvoice.totalPrice),
-                  email,
-                  type,
-                }),
-                { plainText: true },
-              );
-        })(),
-        (async () => {
-          return reminder
-            ? await render(
-                SendReminderInvoiceEmail({
-                  date,
-                  baseUrl,
-                  id: fullInvoice.id,
-                  price: currencyFormatter.format(fullInvoice.totalPrice),
-                  email,
-                  type,
-                }),
-              )
-            : await render(
-                SendInvoiceEmail({
-                  date,
-                  baseUrl,
-                  id: fullInvoice.id,
-                  price: currencyFormatter.format(fullInvoice.totalPrice),
-                  email,
-                  type,
-                }),
-              );
-        })(),
-      ]);
+      if (process.env.NODE_ENV === "production") {
+        const [pdfBuffer, text, html] = await Promise.all([
+          (async () => {
+            return type === "monthly"
+              ? await renderToBuffer(
+                  <MonthlyInvoice
+                    data={createMonthlyInvoicePDFData(fullInvoice)}
+                    isPaid={!!fullInvoice.dateOfPayment}
+                  />,
+                )
+              : await renderToBuffer(
+                  <Invoice dataInvoice={createInvoicePDFData(fullInvoice)} isPaid={!!fullInvoice.dateOfPayment} />,
+                );
+          })(),
+          (async () => {
+            return reminder
+              ? await render(
+                  SendReminderInvoiceEmail({
+                    date,
+                    baseUrl,
+                    id: fullInvoice.id,
+                    price: currencyFormatter.format(fullInvoice.totalPrice),
+                    email,
+                    type,
+                  }),
+                  { plainText: true },
+                )
+              : await render(
+                  SendInvoiceEmail({
+                    date,
+                    baseUrl,
+                    id: fullInvoice.id,
+                    price: currencyFormatter.format(fullInvoice.totalPrice),
+                    email,
+                    type,
+                  }),
+                  { plainText: true },
+                );
+          })(),
+          (async () => {
+            return reminder
+              ? await render(
+                  SendReminderInvoiceEmail({
+                    date,
+                    baseUrl,
+                    id: fullInvoice.id,
+                    price: currencyFormatter.format(fullInvoice.totalPrice),
+                    email,
+                    type,
+                  }),
+                )
+              : await render(
+                  SendInvoiceEmail({
+                    date,
+                    baseUrl,
+                    id: fullInvoice.id,
+                    price: currencyFormatter.format(fullInvoice.totalPrice),
+                    email,
+                    type,
+                  }),
+                );
+          })(),
+        ]);
 
-      if (pdfBuffer && text && html) {
-        console.log("All ready to send");
+        await transporter.sendMail({
+          from: "laiteriedupontrobert@gmail.com",
+          to: email,
+          // to: "pub.demystify390@passmail.net",
+          cc: fullInvoice.user.ccInvoice,
+          subject:
+            type === "monthly"
+              ? `Facture Mensuelle ${date}  - Laiterie du Pont Robert`
+              : `Facture du ${dateFormatter(fullInvoice.dateOfEdition)} - Laiterie du Pont Robert`,
+          text,
+          html,
+          attachments: [
+            {
+              filename: type === "monthly" ? `Facture mensuelle ${date}.pdf` : `Facture ${fullInvoice.id}`,
+              content: pdfBuffer,
+              contentType: "application/pdf",
+            },
+          ],
+        });
+      } else {
+        await addDelay(Math.random() * (3000 - 1000) + 1000);
       }
-
-      // await transporter.sendMail({
-      //   from: "laiteriedupontrobert@gmail.com",
-      //   to: email,
-      //   // to: "pub.demystify390@passmail.net",
-      //   cc: fullInvoice.user.ccInvoice,
-      //   subject:
-      //     type === "monthly"
-      //       ? `Facture Mensuelle ${date}  - Laiterie du Pont Robert`
-      //       : `Facture du ${dateFormatter(fullInvoice.dateOfEdition)} - Laiterie du Pont Robert`,
-      //   text,
-      //   html,
-      //   attachments: [
-      //     {
-      //       filename: type === "monthly" ? `Facture mensuelle ${date}.pdf` : `Facture ${fullInvoice.id}`,
-      //       content: pdfBuffer,
-      //       contentType: "application/pdf",
-      //     },
-      //   ],
-      // });
-      // } else {
-      //   await addDelay(Math.random() * (3000 - 1000) + 1000);
-
-      // }
     }
 
     await prismadb.invoice.update({
