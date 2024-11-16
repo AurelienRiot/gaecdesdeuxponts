@@ -1,10 +1,10 @@
-import { optionalStringSchema } from "@/components/zod-schema";
+import { nameSchema, optionalStringSchema } from "@/components/zod-schema";
 import { isValidPhoneNumber } from "libphonenumber-js";
 import { z } from "zod";
 
 export const schema = z.object({
   id: z.string(),
-  name: z.string().min(1, { message: "Le nom est requis" }),
+  name: nameSchema,
   imageUrl: z.string().optional(),
   lat: z.coerce.number().min(-90).max(90),
   long: z.coerce.number().min(-180).max(180),
