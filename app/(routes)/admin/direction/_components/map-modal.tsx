@@ -1,12 +1,12 @@
-import { LocationAutocomplete } from "@/actions/adress-autocompleteFR";
+import { locationAutocomplete } from "@/actions/adress-autocompleteFR";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { GrMapLocation } from "react-icons/gr";
 import { MapContainer, TileLayer, useMapEvent } from "react-leaflet";
 import { toast } from "sonner";
 import type { Point } from "./direction-schema";
+import { MapPinned } from "lucide-react";
 
 function MapModal({ onValueChange }: { onValueChange: (address: Point) => void }) {
   const [open, setOpen] = useState(false);
@@ -19,7 +19,7 @@ function MapModal({ onValueChange }: { onValueChange: (address: Point) => void }
         className={cn(" w-full text-left  pl-2 relative flex justify-start ")}
         onClick={() => setOpen(true)}
       >
-        <GrMapLocation className="h-4 w-4 mr-2" />
+        <MapPinned className="h-4 w-4 mr-2" />
         {"Chercher sur la carte"}
       </Button>
       <Dialog open={open} onOpenChange={() => setOpen(false)} modal={true}>
@@ -50,7 +50,7 @@ function MapSelect({ onValueChange }: { onValueChange: (address: Point) => void 
 
 function MapClickHandler({ onValueChange }: { onValueChange: (address: Point) => void }) {
   useMapEvent("click", async (e) => {
-    const address = await LocationAutocomplete({ latitude: e.latlng.lat, longitude: e.latlng.lng });
+    const address = await locationAutocomplete({ latitude: e.latlng.lat, longitude: e.latlng.lng });
     if (address.length === 0) {
       toast.error("Adresse introuvable");
       return;

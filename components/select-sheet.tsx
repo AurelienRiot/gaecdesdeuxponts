@@ -114,7 +114,7 @@ function SelectSheetContent<T extends { key: string }>({
               }}
               variant={value.value.key === selectedValue ? "green" : value.highlight ? "secondary" : "outline"}
               className="w-full"
-              key={value.value.key}
+              key={value.value.key + index}
               onClick={() => {
                 setIsOpen(false);
                 onSelected(value.value);

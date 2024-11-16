@@ -1,5 +1,6 @@
 "use client";
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import { GrPowerReset } from "@/components/react-icons";
 import SelectSheet from "@/components/select-sheet";
 import { Button, IconButton } from "@/components/ui/button";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -8,7 +9,6 @@ import { cn } from "@/lib/utils";
 import type { Product } from "@prisma/client";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { useFormContext } from "react-hook-form";
-import { GrPowerReset } from "react-icons/gr";
 import { toast } from "sonner";
 import type { AMAPFormValues } from "./amap-schema";
 

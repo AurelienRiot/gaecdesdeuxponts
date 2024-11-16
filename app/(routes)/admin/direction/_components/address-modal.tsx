@@ -9,11 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
 import { cn } from "@/lib/utils";
 import "leaflet/dist/leaflet.css";
-import { House, Tractor } from "lucide-react";
+import { House, Tractor, User } from "lucide-react";
 import dynamicImport from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { FaRegUser } from "react-icons/fa";
 import "../../../(public)/ou-nous-trouver/_components/marker.css";
 import type { UserAndShop } from "./direction-form";
 import type { DirectionFormValues, Point } from "./direction-schema";
@@ -110,7 +109,7 @@ function AddressSelect({
       trigger={
         <Button variant="outline" role="combobox" id="select-address" className={cn("w-full justify-between pl-2")}>
           <span className="flex items-center">
-            <FaRegUser className="h-4 w-4 mr-2 inline" />
+            <User className="h-4 w-4 mr-2 inline" />
             Rechercher un client
           </span>
         </Button>

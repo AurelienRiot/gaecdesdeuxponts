@@ -4,10 +4,9 @@ import useCart from "@/hooks/use-cart";
 import useIsComponentMounted from "@/hooks/use-mounted";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { ShoppingCart } from "lucide-react";
+import { ExternalLink, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { Suspense, forwardRef, useState } from "react";
-import { HiOutlineExternalLink } from "react-icons/hi";
 import AutoCloseSheet from "../auto-close-sheet";
 import CartItem from "../cart-item";
 import { Button } from "../ui/button";
@@ -65,7 +64,7 @@ export const CartButton = () => {
                 className="mt-6 flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {" "}
-                Passer commande <HiOutlineExternalLink className="h-4 w-4 shrink-0" />
+                Passer commande <ExternalLink className="h-4 w-4 shrink-0" />
               </Link>
             </SheetTitle>
             <SheetDescription>Contenue de votre panier</SheetDescription>
