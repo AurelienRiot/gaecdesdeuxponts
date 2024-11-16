@@ -23,6 +23,8 @@ const optSchema = z.object({
   email: emailSchema,
 });
 
+const optionalStringSchema = z.string().trim().optional();
+
 const phoneSchema = z.string({ invalid_type_error: "Entrer un numéro de téléphone" }).refine(
   (value) => {
     return value === "" || isValidPhoneNumber(value);
@@ -36,4 +38,4 @@ const emptySchema = z.object({});
 
 const roleSchema = z.enum(["admin", "user", "pro", "shipping", "trackOnlyUser", "readOnlyAdmin", "deleted"]);
 
-export { emailSchema, nameSchema, optSchema, phoneSchema, emptySchema, roleSchema };
+export { emailSchema, nameSchema, optSchema, phoneSchema, emptySchema, roleSchema, optionalStringSchema };

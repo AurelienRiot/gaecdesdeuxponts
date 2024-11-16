@@ -120,6 +120,7 @@ function AddressSelect({
         value: { key: item.address, longitude: item.longitude, latitude: item.latitude },
       }))}
       onSelected={(value) => {
+        if (!value) return;
         onValueChange({ label: value.key, longitude: value.longitude, latitude: value.latitude });
       }}
     />

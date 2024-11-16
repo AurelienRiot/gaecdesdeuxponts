@@ -78,7 +78,7 @@ function DisplayDefaultOrderForTheDay({
   };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-[320px] h-full  space-y-2 relative flex-shrink-0">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-[320px] h-full  space-y-4 relative flex-shrink-0">
         <div className="flex justify-between">
           <h2 className="text-xl font-semibold capitalize text-center flex justify-between items-center p-2 mx-auto">
             {day}
@@ -92,70 +92,73 @@ function DisplayDefaultOrderForTheDay({
           Mettre a jour
         </LoadingButton>
 
-        <ScrollArea id={`scroll-area-${index}`} className="overflow-auto " style={{ height: `calc(100dvh - 280px)` }}>
-          {items.length > 0 && (
+        <ScrollArea className="overflow-auto " style={{ height: `calc(100dvh - 280px)` }}>
+          <div id={`scroll-area-${index}`} className="space-y-4 h-full">
+            {items.length > 0 && (
+              <>
+                <SelectShop shops={shops} />
+                <FormField
+                  control={form.control}
+                  name="confirmed"
+                  render={({ field }) => (
+                    <CheckboxForm
+                      ref={field.ref}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={form.formState.isSubmitting}
+                      title="Commande confirmer"
+                      description="Indique si la commande doit être confirmer"
+                    />
+                  )}
+                />
+              </>
+            )}
             <FormField
               control={form.control}
-              name="confirmed"
+              name="defaultOrderProducts"
               render={({ field }) => (
-                <CheckboxForm
-                  ref={field.ref}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  disabled={form.formState.isSubmitting}
-                  title="Commande confirmer"
-                  description="Indique si la commande doit être confirmer"
-                  className="mb-2"
-                />
+                <FormItem className="">
+                  <FormControl>
+                    <div className="space-y-4">
+                      {items.map((item, productIndex) => (
+                        <div
+                          key={item.productId + index}
+                          className="w-full rounded-md p-4 space-y-4   bg-chart1/50 even:bg-chart2/50"
+                        >
+                          <SelectProductName
+                            role={role}
+                            products={products}
+                            productIndex={productIndex}
+                            selectedProduct={item}
+                          />
+                          <div className="flex gap-4">
+                            <PriceInput productIndex={productIndex} products={products} selectedProduct={item} />
+                            <QuantityInput productIndex={productIndex} selectedProduct={item} />
+
+                            <TrashButton
+                              type="button"
+                              disabled={form.formState.isSubmitting}
+                              variant="destructive"
+                              size="sm"
+                              className="mt-auto"
+                              onClick={() => deleteProduct(productIndex)}
+                              iconClassName="size-6"
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </FormControl>
+                  {form.formState.errors.defaultOrderProducts && (
+                    <p className={"text-sm font-medium text-destructive"}>
+                      {form.formState.errors.defaultOrderProducts?.message || "Veuillez completer tous les champs"}
+                    </p>
+                  )}
+                  <AddProductButton index={index} />
+                </FormItem>
               )}
             />
-          )}
-          <SelectShop shops={shops} />
-          <FormField
-            control={form.control}
-            name="defaultOrderProducts"
-            render={({ field }) => (
-              <FormItem className="">
-                <FormControl>
-                  <div className="space-y-4">
-                    {items.map((item, productIndex) => (
-                      <div
-                        key={item.productId + index}
-                        className="w-full rounded-md p-4 space-y-4 pb-4  bg-chart1/50 even:bg-chart2/50"
-                      >
-                        <SelectProductName
-                          role={role}
-                          products={products}
-                          productIndex={productIndex}
-                          selectedProduct={item}
-                        />
-                        <div className="flex gap-4">
-                          <PriceInput productIndex={productIndex} products={products} selectedProduct={item} />
-                          <QuantityInput productIndex={productIndex} selectedProduct={item} />
-
-                          <TrashButton
-                            type="button"
-                            disabled={form.formState.isSubmitting}
-                            variant="destructive"
-                            size="sm"
-                            className="mt-auto"
-                            onClick={() => deleteProduct(productIndex)}
-                            iconClassName="size-6"
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </FormControl>
-                {form.formState.errors.defaultOrderProducts && (
-                  <p className={"text-sm font-medium text-destructive"}>
-                    {form.formState.errors.defaultOrderProducts?.message || "Veuillez completer tous les champs"}
-                  </p>
-                )}
-                <AddProductButton index={index} />
-              </FormItem>
-            )}
-          />
+          </div>
         </ScrollArea>
       </form>
     </Form>
@@ -183,12 +186,10 @@ function AddProductButton({ index }: { index: number }) {
   };
 
   return (
-    <div className="flex flex-wrap items-end gap-4">
-      <Button type="button" variant="outline" className="whitespace-nowrap border-dashed" onClick={addProduct}>
-        <PlusCircledIcon className="mr-2 size-4" />
-        {"Ajouter un produit"}
-      </Button>
-    </div>
+    <Button type="button" variant="outline" className="whitespace-nowrap border-dashed" onClick={addProduct}>
+      <PlusCircledIcon className="mr-2 size-4" />
+      {"Ajouter un produit"}
+    </Button>
   );
 }
 

@@ -1,3 +1,4 @@
+import { nameSchema } from "@/components/zod-schema";
 import { z } from "zod";
 
 const OptionSchema = z.object({
@@ -9,7 +10,7 @@ const OptionSchema = z.object({
 const productSchema = z.object({
   id: z.string(),
   index: z.number(),
-  name: z.string().min(1, { message: "Le nom est requis" }),
+  name: nameSchema,
   description: z.string(),
   stocks: z.array(z.string()),
   price: z.coerce.number({ message: "Le prix doit être un nombre", invalid_type_error: "Le prix doit être un nombre" }),
@@ -24,7 +25,7 @@ const productSchema = z.object({
 export const mainProductSchema = z.object({
   id: z.string(),
   categoryName: z.string().min(1, { message: "La catégorie est requise" }),
-  name: z.string().min(1, { message: "Le nom est requis" }),
+  name: nameSchema,
   productSpecs: z.string().min(1, { message: "Les spécifications sont requises" }),
   isArchived: z.boolean().default(false),
   isPro: z.boolean().default(false),

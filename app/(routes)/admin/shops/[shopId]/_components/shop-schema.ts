@@ -1,3 +1,4 @@
+import { optionalStringSchema } from "@/components/zod-schema";
 import { isValidPhoneNumber } from "libphonenumber-js";
 import { z } from "zod";
 
@@ -19,8 +20,8 @@ export const schema = z.object({
     },
   ),
   email: z.string().email({ message: "L'email est invalide" }).optional(),
-  website: z.string().optional(),
-  description: z.string(),
+  website: optionalStringSchema,
+  description: optionalStringSchema,
   isArchived: z.boolean().default(false),
 });
 

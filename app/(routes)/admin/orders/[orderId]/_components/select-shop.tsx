@@ -33,15 +33,6 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
         <FormItem className="flex flex-col gap-2">
           <FormLabel id="shop-input" className="flex items-center justify-between gap-2">
             <span>Lieu de retrait/livraison</span>
-            <Button
-              variant={"outline"}
-              onClick={() => onValueChange(undefined)}
-              type="button"
-              size={"xs"}
-              className="border-dashed text-xs whitespace-nowrap"
-            >
-              À domicile
-            </Button>
           </FormLabel>
           <SelectSheet
             triggerClassName="w-full"
@@ -56,12 +47,13 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
               )
             }
             selectedValue={shopId}
+            defaultValue={"À domicile"}
             values={shops.map((shop) => ({
               label: <NameWithImage name={shop.name} image={shop.imageUrl} />,
               value: { key: shop.id },
             }))}
             onSelected={(value) => {
-              onValueChange(value.key);
+              onValueChange(value?.key);
             }}
           />
 

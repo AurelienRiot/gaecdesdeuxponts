@@ -239,6 +239,7 @@ const SelectProductName = ({
                 value: { key: product.id },
               }))}
               onSelected={(value) => {
+                if (!value) return;
                 onValueChange(value.key);
               }}
             />
