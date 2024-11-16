@@ -21,7 +21,7 @@ export const schema = z.object({
   ),
   email: z.string().email({ message: "L'email est invalide" }).optional(),
   website: optionalStringSchema,
-  description: optionalStringSchema,
+  description: z.string(),
   isArchived: z.boolean().default(false),
 });
 
