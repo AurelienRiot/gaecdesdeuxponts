@@ -36,4 +36,46 @@ async function customKy<T>(
   }
 }
 
+export async function streamKy<T>(
+  url: string,
+  method: `GET` | `POST` | `PUT` | `PATCH` | `DELETE`,
+  onResult: (result: T) => void,
+  onError: (error: unknown) => void,
+  options?: Omit<Options, "method">,
+): Promise<void> {
+  try {
+    const response = await ky(url, { method, ...options });
+
+    if (!response?.body) {
+      throw new Error("No response body received");
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() || "";
+
+      for (const line of lines) {
+        if (line.trim() === "") continue;
+        const result = JSON.parse(line) as T;
+        onResult(result);
+      }
+    }
+
+    if (buffer.trim() !== "") {
+      const result = JSON.parse(buffer) as T;
+      onResult(result);
+    }
+  } catch (error) {
+    onError(error);
+  }
+}
+
 export default customKy;

@@ -7,7 +7,6 @@ import {
   LayoutDashboardIcon,
   ListOrderedIcon,
   LogOut,
-  MapPin,
   PackageIcon,
   PhoneCallIcon,
   PresentationIcon,
@@ -19,7 +18,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PiInvoice } from "../react-icons";
+import { GiPathDistance, PiInvoice } from "../react-icons";
 import { useSidebar } from "../ui/sidebar";
 
 function MobileNav({ className }: { className?: string }) {
@@ -198,7 +197,7 @@ export const SecondaryAdminRoutes = (pathname: string) => [
     href: `/admin/direction`,
     label: "Direction",
     active: pathname.startsWith(`/admin/direction`),
-    Icone: MapPin,
+    Icone: GiPathDistance,
   },
   {
     href: `/admin/calendar/day-order`,
