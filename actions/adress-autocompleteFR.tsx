@@ -66,7 +66,7 @@ const AddressAutocomplete = async (value: string): Promise<Suggestion[]> => {
   return suggestions;
 };
 
-export const LocationAutocomplete = async ({
+export const locationAutocomplete = async ({
   latitude,
   longitude,
 }: {
@@ -84,7 +84,7 @@ export const LocationAutocomplete = async ({
       )
       .json();
 
-    const { features } = await fetchResponceSchema.parse(response);
+    const { features } = fetchResponceSchema.parse(response);
     const suggestions: Suggestion[] = features.map((feature) => ({
       label: feature.properties.label,
       city: feature.properties.city,

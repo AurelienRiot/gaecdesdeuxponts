@@ -115,7 +115,7 @@ function transToGroupOption(options: Option[], groupBy?: string) {
 }
 
 function removePickedOption(groupOption: GroupOption, picked: Option[]) {
-  const cloneOption = JSON.parse(JSON.stringify(groupOption)) as GroupOption;
+  const cloneOption = { ...groupOption };
 
   for (const [key, value] of Object.entries(cloneOption)) {
     cloneOption[key] = value.filter((val) => !picked.find((p) => p.value === val.value));
@@ -314,7 +314,6 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
     }, [creatable, emptyIndicator, onSearch, options]);
 
     const selectables = React.useMemo<GroupOption>(() => removePickedOption(options, selected), [options, selected]);
-
     /** Avoid Creatable Selector freezing or lagging when paste a long string. */
     const commandFilter = React.useCallback(() => {
       if (commandProps?.filter) {
@@ -424,9 +423,10 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
                   {CreatableItem()}
                   {!selectFirstItem && <CommandItem value="-" className="hidden" />}
                   {Object.entries(selectables).map(([key, dropdowns]) => (
-                    <CommandGroup key={key} heading={key} className="h-full overflow-auto">
+                    <CommandGroup key={key} heading={key} className="h-full overflow-auto max-h-[200px]">
                       <>
                         {dropdowns.map((option) => {
+                          const Icon = option.Icon;
                           return (
                             <CommandItem
                               key={option.value}
@@ -448,6 +448,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
                               }}
                               className={cn("cursor-pointer", option.disable && "cursor-default text-muted-foreground")}
                             >
+                              {Icon ? <Icon className="size-4 mr-1" /> : null}
                               {option.label}
                             </CommandItem>
                           );

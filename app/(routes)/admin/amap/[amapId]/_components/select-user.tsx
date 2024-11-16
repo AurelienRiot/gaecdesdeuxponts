@@ -58,6 +58,7 @@ const SelectUser = ({ users }: { users: User[] }) => {
               value: { key: user.id },
             }))}
             onSelected={(value) => {
+              if (!value) return;
               onValueChange(value.key);
             }}
           />

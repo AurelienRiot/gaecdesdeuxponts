@@ -16,8 +16,7 @@ async function deleteOrder(data: z.infer<typeof deleteSchema>) {
     data,
     schema: deleteSchema,
     roles: SHIPPING_ONLY,
-    serverAction: async (data) => {
-      const { id } = data;
+    serverAction: async ({ id }) => {
       await prismadb.order
         .update({
           where: { id },

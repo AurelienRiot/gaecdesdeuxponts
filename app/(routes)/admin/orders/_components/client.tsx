@@ -130,6 +130,7 @@ function SelectDate() {
       trigger={"Filtrer par date"}
       values={selectDate}
       onSelected={(value) => {
+        if (!value) return;
         handleValueChange(value.key);
       }}
     />

@@ -1,11 +1,11 @@
 import getUser from "@/actions/get-user";
-import { safeRouteAPI } from "@/lib/server-action";
+import { safeAPIRoute } from "@/lib/api-route";
 import type { NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
-  return await safeRouteAPI({
+  return await safeAPIRoute({
     method: "GET",
     request,
     serverError: "[GET_USERS_FOR_PROFILE]",

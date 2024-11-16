@@ -12,7 +12,7 @@ async function updateDefaultOrdersAction(data: DefaultOrderFormValues) {
     data,
     roles: SHIPPING,
     schema: defaultOrderSchema,
-    serverAction: async ({ day, defaultOrderProducts, userId, confirmed }) => {
+    serverAction: async ({ day, defaultOrderProducts, shopId, userId, confirmed }) => {
       revalidateTag("defaultOrders");
 
       const defaultOrder = await prismadb.defaultOrder.findUnique({
@@ -23,19 +23,22 @@ async function updateDefaultOrdersAction(data: DefaultOrderFormValues) {
           },
         },
       });
-      if (!defaultOrder && defaultOrderProducts.length === 0) {
+      if (!defaultOrder) {
+        if (defaultOrderProducts.length === 0) {
+          return { success: false, message: "Aucun produits dans la commande par défault" };
+        }
         await prismadb.defaultOrder.create({
           data: {
             userId,
             day,
+            shopId,
             confirmed,
             defaultOrderProducts: { create: defaultOrderProducts },
           },
         });
+        return { success: true, message: `Commande par défault de ${DAYS_OF_WEEK[day]}  crée` };
       }
-      if (!defaultOrder) {
-        return { success: false, message: "Aucun produits dans la commande par défault" };
-      }
+
       if (defaultOrderProducts.length === 0) {
         await prismadb.defaultOrder.delete({
           where: {
@@ -54,6 +57,7 @@ async function updateDefaultOrdersAction(data: DefaultOrderFormValues) {
           },
           data: {
             confirmed,
+            shopId,
             defaultOrderProducts: { create: defaultOrderProducts },
           },
         });

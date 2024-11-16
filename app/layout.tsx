@@ -243,7 +243,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className="scroll-p-16 scroll-smooth" suppressHydrationWarning>
+    <html lang="fr" className=" scroll-smooth" suppressHydrationWarning>
       <body
         id="root"
         className={cn(

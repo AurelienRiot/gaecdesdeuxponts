@@ -1,5 +1,4 @@
-"use client";
-import { LocationAutocomplete, Suggestion } from "@/actions/adress-autocompleteFR";
+import { locationAutocomplete } from "@/actions/adress-autocompleteFR";
 import { sortShops } from "@/components/display-shops/address-input";
 import { IconButton } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/use-local-storage";
@@ -75,7 +74,7 @@ export const LocationMarker = ({
   const handleLocationFound = async (e: GeolocationPosition) => {
     const { latitude, longitude } = e.coords;
     console.log({ latitude, longitude });
-    const address = await LocationAutocomplete({ latitude, longitude });
+    const address = await locationAutocomplete({ latitude, longitude });
     if (address.length === 0) {
       onAddressFound({ latitude, longitude });
       setLoading(false);

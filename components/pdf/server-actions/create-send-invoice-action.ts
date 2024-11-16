@@ -34,7 +34,14 @@ export async function createInvoiceAction(data: z.infer<typeof createInvoiceSche
           message: "Une erreur est survenue lors de l'envoi de la facture",
         };
       }
-      return await sendInvoice(invoice.data.invoiceId);
+      const result = await sendInvoice(invoice.data.invoiceId);
+      if (!result.success) {
+        return {
+          success: false,
+          message: "Une erreur est survenue lors de l'envoi de la facture",
+        };
+      }
+      return invoice;
     },
   });
 }

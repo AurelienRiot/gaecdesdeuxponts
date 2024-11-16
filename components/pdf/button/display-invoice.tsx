@@ -64,7 +64,7 @@ export function DisplayInvoice({
   };
 
   const onSendFile = async (setSend: (send: boolean) => void) => {
-    function onError(result?: { incomplete: boolean; userId: string }) {
+    function onError(result?: { invoiceId: string; userId?: string; incomplete?: boolean }) {
       if (result?.incomplete) {
         router.push(`/admin/users/${result.userId}?incomplete=true`);
         toast.error("Utilisateur incomplet", { position: "top-center" });

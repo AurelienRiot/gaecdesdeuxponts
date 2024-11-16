@@ -5,6 +5,7 @@ import getProductsForOrders from "../../../orders/[orderId]/_functions/get-produ
 import ChangeUser from "./_components/change-user";
 import DisplayDefaultOrderForTheDay from "./_components/display-default-order-for-the-day";
 import getDefaultOrders from "./_functions/get-default-orders";
+import { getAllShops } from "../../../direction/_functions/get-shops";
 
 export const dynamic = "force-dynamic";
 
@@ -14,8 +15,8 @@ async function DefaultProductsPage({
   params: { userId: string | "new" | undefined };
 }) {
   const userId = params.userId;
-  const user = await getDefaultOrders(userId);
-  const products = await getProductsForOrders();
+  const [user, shops, products] = await Promise.all([getDefaultOrders(userId), getAllShops(), getProductsForOrders()]);
+
   if (!user || !userId) {
     return (
       <>
@@ -46,6 +47,7 @@ async function DefaultProductsPage({
             <DisplayDefaultOrderForTheDay
               userId={userId}
               products={products}
+              shops={shops}
               defaultOrderForDay={defaultOrderForDay}
               index={index}
               day={day}

@@ -10,7 +10,9 @@ type DeleteButtonProps<D, R, E = undefined> = {
   data: D;
   action: (data: D) => Promise<ReturnTypeServerAction<R, E>>;
   isSubmitting?: boolean;
-  onSuccess?: () => void;
+  onBeforeDelete?: () => void;
+  onSuccess?: (data?: R) => void;
+  onError?: (error?: E) => void;
   children?: React.ReactNode;
   className?: string;
   iconClassName?: string;
@@ -23,6 +25,8 @@ function DeleteButton<D, R, E = undefined>({
   isSubmitting,
   action,
   onSuccess,
+  onError,
+  onBeforeDelete,
   children,
   className,
   iconClassName,
@@ -33,7 +37,8 @@ function DeleteButton<D, R, E = undefined>({
   const { serverAction, loading } = useServerAction(action);
 
   const onDelete = async () => {
-    await serverAction({ data, onSuccess, onFinally: () => setOpen(false) });
+    onBeforeDelete?.();
+    await serverAction({ data, onSuccess, onError, onFinally: () => setOpen(false) });
   };
   return (
     <>

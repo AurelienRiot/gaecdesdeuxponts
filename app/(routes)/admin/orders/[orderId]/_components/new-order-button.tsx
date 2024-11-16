@@ -3,16 +3,14 @@
 import DateModal from "@/components/date-modal";
 import { Checkbox, type CheckedState } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import useServerAction from "@/hooks/use-server-action";
+import { calendarOrderSchema } from "@/components/zod-schema/calendar-orders";
+import useKy from "@/hooks/use-ky";
+import { addDays } from "date-fns";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useOrdersQueryClient } from "../../../../../../hooks/use-query/orders-query";
-import { addDays } from "date-fns";
-import customKy from "@/lib/custom-ky";
-import { calendarOrderSchema } from "@/components/zod-schema/calendar-orders";
-import useKy from "@/hooks/use-ky";
+import { useOrdersQueryClient } from "@/hooks/use-query/orders-query";
 
 function getNextAvailableDate(availableDays?: number[]): Date | null {
   if (!availableDays || availableDays.length === 0) {
@@ -48,7 +46,7 @@ function NewOrderButton({
   defaultDaysOrders,
 }: { userId: string; orderId: string; dateOfPickUp: Date; defaultDaysOrders?: number[] }) {
   const router = useRouter();
-  const [noConfirmation, setNoConfirmation] = useState<CheckedState>(true);
+  const [noConfirmation, setNoConfirmation] = useState<CheckedState>(false);
   const { mutateOrders } = useOrdersQueryClient();
   const { ky } = useKy("/api/order", "POST", calendarOrderSchema);
   const nextDay = getNextAvailableDate(defaultDaysOrders);

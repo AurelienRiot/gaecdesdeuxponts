@@ -1,49 +1,53 @@
 "use client";
 
+import Spinner from "@/components/animations/spinner";
+import type { SendInvoiceReturnType } from "@/components/pdf/server-actions/create-and-send-invoice";
 import { getUserName } from "@/components/table-custom-fuction";
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Button, IconButton, LoadingButton } from "@/components/ui/button";
+import { IconButton, LoadingButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Modal } from "@/components/ui/modal";
 import useServerAction from "@/hooks/use-server-action";
+import { streamKy } from "@/lib/custom-ky";
 import { dateFormatter } from "@/lib/date-utils";
 import { currencyFormatter } from "@/lib/utils";
-import ky, { type HTTPError, type TimeoutError } from "ky";
+import type { HTTPError } from "ky";
+import { Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
-import type { UserWithOrdersForInvoices } from "../../_functions/get-users-with-orders";
 import createGroupedMonthlyInvoice from "../../_actions/send-grouped-monthly-invoice";
-import { nanoid } from "@/lib/id";
-import { Check, CheckIcon, X } from "lucide-react";
-import Spinner from "@/components/animations/spinner";
+import type { UserWithOrdersForInvoices } from "../../_functions/get-users-with-orders";
 
 function previousMonthOrders(order: { dateOfShipping: Date | null }) {
   const currentDate = new Date();
   const orderDate = order.dateOfShipping ? new Date(order.dateOfShipping) : new Date();
   return orderDate.getTime() < new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getTime();
 }
+type OrderIdsRecord = Record<string, string[]>;
+function resetOrderIdsRecord(record: OrderIdsRecord) {
+  return Object.keys(record).reduce((acc, key) => {
+    acc[key] = [];
+    return acc;
+  }, {} as OrderIdsRecord);
+}
 
 const createOrderIdsRecord = (userWithOrdersForInvoices: UserWithOrdersForInvoices) =>
-  userWithOrdersForInvoices.reduce(
-    (acc, user) => {
-      acc[user.id] = user.orders
-        .filter((order) => {
-          return previousMonthOrders(order);
-        })
-        .map((order) => order.id);
-      return acc;
-    },
-    {} as Record<string, string[]>,
-  );
+  userWithOrdersForInvoices.reduce((acc, user) => {
+    acc[user.id] = user.orders
+      .filter((order) => {
+        return previousMonthOrders(order);
+      })
+      .map((order) => order.id);
+    return acc;
+  }, {} as OrderIdsRecord);
+
+type InvoiceLoadingType = Record<string, { state: "loading" | "success" | "error"; name: string }>;
 
 function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoices: UserWithOrdersForInvoices }) {
   const { serverAction: createInvoicesAction } = useServerAction(createGroupedMonthlyInvoice);
   const [loading, setLoading] = useState(false);
-  const [invoiceLoading, setInvoiceLoading] = useState<
-    Record<string, { state: "loading" | "success" | "error"; name: string }>
-  >({}); // New state to track per-invoice loading status
+  const [invoiceLoading, setInvoiceLoading] = useState<InvoiceLoadingType>({});
   const [displayInvoices, setDisplayInvoices] = useState(false);
   const router = useRouter();
   const [orderIdsRecord, setOrderIdsRecord] = useState(createOrderIdsRecord(userWithOrdersForInvoices));
@@ -51,6 +55,38 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
 
   async function sendInvoices(sendEmail: boolean) {
     setLoading(true);
+    // const invoiceArray = [
+    //   "FA_2024_0065",
+    //   "FA_2024_0064",
+    //   "FA_2024_0063",
+    //   "FA_2024_0062",
+    //   "FA_2024_0061",
+    //   "FA_2024_0060",
+    //   "FA_2024_0059",
+    //   "FA_2024_0058",
+    //   "FA_2024_0057",
+    //   "FA_2024_0056",
+    //   "FA_2024_0055",
+    //   "FA_2024_0054",
+    //   "FA_2024_0053",
+    //   "FA_2024_0052",
+    //   "FA_2024_0051",
+    // ];
+
+    // const invoiceRecord = invoiceArray.reduce(
+    //   (acc, invoiceId) => {
+    //     acc[invoiceId] = { state: "loading", name: invoiceId };
+    //     return acc;
+    //   },
+    //   {} as Record<
+    //     string,
+    //     {
+    //       state: "loading" | "success" | "error";
+    //       name: string;
+    //     }
+    //   >,
+    // );
+
     if (orderIdsArray.length === 0) {
       toast.error("Veuillez sélectionner au moins un client");
       setLoading(false);
@@ -81,73 +117,78 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
       router.push("/admin/invoices");
       return;
     }
+
+    router.refresh();
+    setOrderIdsRecord((prev) => resetOrderIdsRecord(prev));
     setInvoiceLoading(invoiceRecord);
     setDisplayInvoices(true);
-    toast.success("Envoi des factures en cours...");
-
-    try {
-      const chunkSize = 5;
-      let cumulativeCount = 0;
-      for (let i = 0; i < Object.keys(invoiceRecord).length; i += chunkSize) {
-        const chunk = Object.keys(invoiceRecord).slice(i, i + chunkSize);
-        const chunkRes = await Promise.all(
-          chunk.map((invoiceId) => {
-            return ky
-              .post("/api/send-invoice", { json: { invoiceId }, timeout: 15000 })
-              .then(async (res) => {
-                setInvoiceLoading((prev) => ({
-                  ...prev,
-                  [invoiceId]: { state: "success", name: prev[invoiceId].name },
-                }));
-                return true;
-              })
-              .catch(async (kyError: HTTPError) => {
-                setInvoiceLoading((prev) => ({
-                  ...prev,
-                  [invoiceId]: { state: "error", name: prev[invoiceId].name },
-                }));
-                if (kyError.response) {
-                  const errorData = await kyError.response.text();
-                  console.error(errorData);
-                  toast.error(errorData, { duration: 10000 });
-                } else {
-                  const error = kyError as TimeoutError;
-                  console.error("Erreur timeout");
-                }
-                return false;
-              });
-          }),
-        );
-        cumulativeCount += chunk.length;
-        const currentCount = cumulativeCount;
-        toast.success(`Facture envoyée : ${currentCount} sur ${orderIdsArray.length}`, {
-          position: "bottom-center",
-        });
-        // if (!chunkRes.every((res) => res)) {
-        //   toast.error("Une erreur est survenue lors de l'envoi des factures, veuillez recharger la page", {
-        //     position: "top-center",
-        //     duration: 10000,
-        //   });
-
-        // } else {
-
-        // }
-      }
-    } catch (error) {
-      toast.error("Une erreur est survenue lors de l'envoi des factures, veuillez recharger la page", {
-        position: "top-center",
-        duration: 10000,
-      });
-      setLoading(false);
-      return;
-    }
-
-    setLoading(false);
-    // router.push("/admin/invoices");
-    toast.success(`Toutes les factures sont envoyées`, {
-      position: "top-center",
-      duration: 10000,
+    toast.success("Envoi des factures en cours...", {
+      position: "bottom-center",
     });
+
+    const chunkSize = 5;
+    let cumulativeCount = 0;
+    const recordLength = Object.keys(invoiceRecord).length;
+    for (let i = 0; i < recordLength; i += chunkSize) {
+      const chunk = Object.keys(invoiceRecord).slice(i, i + chunkSize);
+      async function onError(error: unknown) {
+        setInvoiceLoading((prev) => {
+          const updatedInvoices = chunk.reduce(
+            (acc, invoiceId) => {
+              if (prev[invoiceId].state === "loading") {
+                acc[invoiceId] = { state: "error", name: prev[invoiceId].name };
+              }
+              return acc;
+            },
+            {} as typeof invoiceLoading,
+          );
+          return { ...prev, ...updatedInvoices };
+        });
+        const kyError = error as HTTPError;
+        if (kyError.response) {
+          const errorData = await kyError.response.text();
+          console.error(errorData);
+          toast.error(errorData, { duration: 10000 });
+        } else {
+          console.error(error);
+          toast.error("Une erreur est survenue lors de l'envoi des factures, veuillez recharger la page");
+        }
+      }
+      function updateData(result: SendInvoiceReturnType) {
+        if (!result.success) {
+          toast.error(result.message, {
+            position: "top-center",
+            duration: 5000,
+          });
+          if (result.errorData) {
+            const invoiceId = result.errorData.invoiceId;
+            setInvoiceLoading((prev) => ({
+              ...prev,
+              [invoiceId]: { state: "error", name: prev[invoiceId].name },
+            }));
+          }
+        } else {
+          if (result.data) {
+            const invoiceId = result.data.invoiceId;
+            setInvoiceLoading((prev) => ({
+              ...prev,
+              [invoiceId]: { state: "success", name: prev[invoiceId].name },
+            }));
+          }
+        }
+      }
+      await streamKy("/api/send-invoices", "POST", updateData, onError, {
+        json: { invoiceIds: chunk },
+        timeout: 20000,
+      });
+
+      cumulativeCount += chunk.length;
+      const currentCount = cumulativeCount;
+      toast.success(`Facture envoyée : ${currentCount} sur ${recordLength}`, {
+        position: "bottom-center",
+      });
+    }
+    setLoading(false);
   }
 
   return (
@@ -192,7 +233,7 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
           />
         </div>
       )}
-      <Accordion type="multiple" className="relative  flex w-full max-w-xl mx-auto flex-col gap-4 px-4">
+      <Accordion type="multiple" className="relative  flex w-full sm:max-w-xl max-w-[90vw] mx-auto flex-col gap-4 px-4">
         {userWithOrdersForInvoices.map((user, index) => {
           const ordersId = orderIdsRecord[user.id];
           const totalPrice = user.orders
@@ -230,9 +271,9 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
                       check
                         ? {
                             ...prev,
-                            [user.id]: user.orders
-                              .filter((order) => previousMonthOrders(order))
-                              .map((order) => order.id),
+                            [user.id]: user.orders.some((order) => previousMonthOrders(order))
+                              ? user.orders.filter((order) => previousMonthOrders(order)).map((order) => order.id)
+                              : user.orders.map((order) => order.id),
                           }
                         : { ...prev, [user.id]: [] },
                     )
@@ -322,6 +363,7 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
           disabled={loading}
           variant={"shine"}
           className="w-fit  from-green-600 via-green-600/80 to-green-600"
+          // onClick={() => sendInvoices(true)}
           onClick={() => sendInvoices(true)}
         >
           Créer et envoyer les factures

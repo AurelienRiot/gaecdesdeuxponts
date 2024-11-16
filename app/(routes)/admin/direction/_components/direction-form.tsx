@@ -13,14 +13,11 @@ import { addressFormatter, cn, svgToDataUri } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Address } from "@prisma/client";
 import "leaflet/dist/leaflet.css";
-import { Plus, X } from "lucide-react";
+import { CircleDot, MapPin, MapPinned, Plus, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { forwardRef, useEffect, useState } from "react";
 import { useForm, useFormContext } from "react-hook-form";
-import { FaDotCircle } from "react-icons/fa";
-import { FaMapLocationDot } from "react-icons/fa6";
-import { GiPositionMarker } from "react-icons/gi";
 import { toast } from "sonner";
 import "../../../(public)/ou-nous-trouver/_components/marker.css";
 import getDirection from "../../calendar/_actions/get-direction";
@@ -210,7 +207,7 @@ function SuccessModal({
           target="_blank"
           className="flex items-center justify-center bg-blue-500 text-white font-bold py-2 px-4 rounded-md shadow-md hover:bg-blue-600 transition-colors duration-200"
         >
-          <FaMapLocationDot className="h-5 w-5 mr-3" />
+          <MapPinned className="h-5 w-5 mr-3" />
           Accéder au trajet optimisé
         </Link>
         {reorderedWaypoints.map((value, index) => {
@@ -370,15 +367,15 @@ const ButtonAddressModal = forwardRef<HTMLButtonElement, ButtonAddressModalProps
       >
         {index === "origin" ? (
           <div className="pb-3 pt-12 bg-background absolute -top-11 -left-8 ">
-            <GiPositionMarker className="size-6 text-red-600 " />
+            <MapPin className="size-6 text-red-600 " />
           </div>
         ) : index === "destination" ? (
           <div className="pb-10 pt-2 bg-background absolute -top-1 -left-8 ">
-            <GiPositionMarker className="size-6 text-green-600 " />
+            <MapPin className="size-6 text-green-600 " />
           </div>
         ) : (
           <div className="pb-[14px] pt-2 bg-background absolute top-1 -left-[29px] ">
-            <FaDotCircle className="size-4 text-blue-600 " />
+            <CircleDot className="size-4 text-blue-600 " />
           </div>
         )}
         <span className="absolute inset-0 bg-gradient-to-r from-transparent via-background from-80% via-95% to-transparent  " />

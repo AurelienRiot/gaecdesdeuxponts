@@ -1,6 +1,6 @@
 import { getOrdersByDate } from "@/app/(routes)/admin/calendar/_functions/get-orders";
 import { SHIPPING } from "@/components/auth";
-import { safeRouteAPI } from "@/lib/server-action";
+import { safeAPIRoute } from "@/lib/api-route";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 
@@ -12,7 +12,7 @@ const schema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  return await safeRouteAPI({
+  return await safeAPIRoute({
     method: "POST",
     request,
     schema,

@@ -1,6 +1,7 @@
 import { getToken } from "next-auth/jwt";
 import { cookies } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
+import { SHIPPING, USER } from "./components/auth";
 
 const secret = process.env.NEXTAUTH_SECRET;
 const baseUrl = process.env.NEXT_PUBLIC_URL;
@@ -41,23 +42,24 @@ export async function middleware(req: NextRequest) {
     }
 
     if (path.startsWith("/admin")) {
-      if (!["shipping", "admin", "readOnlyAdmin"].includes(role)) {
-        return redirectToLogin(req);
+      if (!SHIPPING.includes(role)) {
+        return redirectToLogin(req, "admin");
       }
       if (role === "shipping" && (path.startsWith("/admin/invoices") || path === "/admin")) {
+        return redirectToLogin(req, "admin");
       }
     }
 
     if (path.startsWith("/profile")) {
-      if (!["user", "pro", "admin", "readOnlyAdmin"].includes(role)) {
+      if (!USER.includes(role)) {
         return redirectToLogin(req);
       }
-      if (["shipping", "admin", "readOnlyAdmin"].includes(role)) {
+      if (SHIPPING.includes(role)) {
         return NextResponse.redirect(new URL("/admin/calendar", req.url));
       }
       if (path.startsWith("/profile/produits-pro")) {
         if (role !== "pro") {
-          return redirectToLogin(req);
+          return redirectToLogin(req, "pro");
         }
       }
     }
@@ -73,11 +75,11 @@ export const config = {
   matcher: ["/admin/:path*", "/profile/:path*"],
 };
 
-const redirectToLogin = (req: NextRequest) => {
+const redirectToLogin = (req: NextRequest, error?: string) => {
   const emaillogin = req.nextUrl.searchParams.get("emaillogin");
   return NextResponse.redirect(
     new URL(
-      `/login?callbackUrl=${encodeURIComponent(req.url)}${emaillogin ? `&emaillogin=${emaillogin}` : ""}`,
+      `/login?callbackUrl=${encodeURIComponent(req.url)}${emaillogin ? `&emaillogin=${emaillogin}` : ""}${error ? `&error=${error}` : ""}`,
       req.url,
     ),
   );

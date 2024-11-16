@@ -77,9 +77,9 @@ const PageLaFerme = () => {
               contribue à la beauté paysagère de la région.
             </p>
             <p>
-              Depuis le sommet du Rocher du Vau, à moins d’un kilomètre, la vue sur la vallée est spectaculaire, surtout
-              au début du printemps. Nous sommes fiers de notre engagement en faveur de pratiques agro-écologiques et de
-              notre contribution à la préservation de ce précieux écosystème.
+              Depuis le sommet du Rocher du Veau, à moins d’un kilomètre, la vue sur la vallée est spectaculaire,
+              surtout au début du printemps. Nous sommes fiers de notre engagement en faveur de pratiques
+              agro-écologiques et de notre contribution à la préservation de ce précieux écosystème.
             </p>
           </div>
         </div>

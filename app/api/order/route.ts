@@ -3,7 +3,7 @@ import createOrderAction from "@/app/(routes)/admin/orders/[orderId]/_functions/
 import getShippingOrder, { updateProductsForOrder } from "@/app/(routes)/admin/orders/[orderId]/_functions/get-order";
 import getProductsForOrders from "@/app/(routes)/admin/orders/[orderId]/_functions/get-products-for-orders";
 import { SHIPPING_ONLY } from "@/components/auth";
-import { safeRouteAPI } from "@/lib/server-action";
+import { safeAPIRoute } from "@/lib/api-route";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 
@@ -16,7 +16,7 @@ const newOrderSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  return await safeRouteAPI({
+  return await safeAPIRoute({
     method: "POST",
     request,
     schema: newOrderSchema,

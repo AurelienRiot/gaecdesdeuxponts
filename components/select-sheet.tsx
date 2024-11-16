@@ -12,15 +12,17 @@ function SelectSheet<T extends { key: string }>({
   onSelected,
   trigger,
   selectedValue,
+  defaultValue,
   title,
   description,
   className,
   triggerClassName,
 }: {
   trigger: React.ReactNode | string;
-  onSelected: (selected: T) => void;
+  onSelected: (selected?: T) => void;
   values: ValueType<T>[];
   selectedValue?: string | null;
+  defaultValue?: string | null;
   title: string;
   description?: string;
   className?: string;
@@ -42,7 +44,23 @@ function SelectSheet<T extends { key: string }>({
       <SheetContent side={"bottom"} className="pb-6">
         <div className={cn("mx-auto w-full max-w-sm ", className)}>
           <SheetHeader>
-            <SheetTitle>{title}</SheetTitle>
+            <SheetTitle className="flex items-center justify-between  ">
+              <span>{title}</span>
+              {!!defaultValue && (
+                <Button
+                  variant={"outline"}
+                  onClick={() => {
+                    onSelected(undefined);
+                    setIsOpen(false);
+                  }}
+                  type="button"
+                  size={"xs"}
+                  className="border-dashed text-xs whitespace-nowrap font-normal font-serif"
+                >
+                  {defaultValue}
+                </Button>
+              )}
+            </SheetTitle>
             {!!description && <SheetDescription>{description}</SheetDescription>}
           </SheetHeader>
           <SelectSheetContent
@@ -96,7 +114,7 @@ function SelectSheetContent<T extends { key: string }>({
               }}
               variant={value.value.key === selectedValue ? "green" : value.highlight ? "secondary" : "outline"}
               className="w-full"
-              key={value.value.key}
+              key={value.value.key + index}
               onClick={() => {
                 setIsOpen(false);
                 onSelected(value.value);

@@ -1,14 +1,14 @@
+import type { AllShopsType } from "@/app/(routes)/admin/direction/_functions/get-shops";
 import SelectSheet from "@/components/select-sheet";
 import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import type { Shop } from "@prisma/client";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import type { OrderFormValues } from "./order-schema";
+import type { DefaultOrderFormValues } from "./schema";
 
-const SelectShop = ({ shops }: { shops: Shop[] }) => {
-  const form = useFormContext<OrderFormValues>();
+const SelectShop = ({ shops }: { shops: AllShopsType }) => {
+  const form = useFormContext<DefaultOrderFormValues>();
   const shopId = form.watch("shopId");
   const shop = shops.find((shop) => shop.id === shopId);
 
@@ -30,12 +30,9 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
       control={form.control}
       name="shopId"
       render={({ field }) => (
-        <FormItem className="flex flex-col gap-2">
-          <FormLabel id="shop-input" className="flex items-center justify-between gap-2">
-            <span>Lieu de retrait/livraison</span>
-          </FormLabel>
+        <FormItem className=" mb-4 flex items-center justify-center">
           <SelectSheet
-            triggerClassName="w-full"
+            triggerClassName="w-full "
             title="Selectionner le lieu de retrait"
             trigger={
               shop ? (
