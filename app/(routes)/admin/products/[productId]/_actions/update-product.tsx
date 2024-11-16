@@ -25,16 +25,22 @@ export async function updateProduct(data: ProductFormValues) {
           message: "Un produit avec ce nom existe déja",
         };
       }
-
-      await prismadb.product.deleteMany({
-        where: {
-          product: {
-            id,
+      const [deleted, defaultOrderProducts] = await Promise.all([
+        prismadb.product.deleteMany({
+          where: {
+            product: {
+              id,
+            },
           },
-        },
-      });
+        }),
+        prismadb.defaultOrderProduct.findMany({
+          where: {
+            productId: id,
+          },
+        }),
+      ]);
 
-      const product = await prismadb.mainProduct.update({
+      await prismadb.mainProduct.update({
         where: {
           id,
         },
@@ -73,6 +79,9 @@ export async function updateProduct(data: ProductFormValues) {
                       value: option.value,
                     };
                   }),
+                },
+                defaultOrderProducts: {
+                  create: defaultOrderProducts,
                 },
               };
             }),
