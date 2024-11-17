@@ -3,7 +3,7 @@
 import { SHIPPING_ONLY } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { type CategoryFormValues, schema } from "../_components/category-schema";
 
 async function createCategory(data: CategoryFormValues) {
@@ -33,6 +33,7 @@ async function createCategory(data: CategoryFormValues) {
         },
       });
       revalidateTag("categories");
+      revalidatePath("/category", "layout");
 
       return {
         success: true,

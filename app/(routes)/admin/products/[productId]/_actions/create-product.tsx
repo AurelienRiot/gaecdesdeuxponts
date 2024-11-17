@@ -1,10 +1,10 @@
 "use server";
 
+import { ADMIN } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { mainProductSchema, type ProductFormValues } from "../_components/product-schema";
-import { ADMIN } from "@/components/auth";
 
 export async function createProduct(data: ProductFormValues) {
   return await safeServerAction({
@@ -69,7 +69,7 @@ export async function createProduct(data: ProductFormValues) {
 
       revalidateTag("categories");
       revalidateTag("products");
-      revalidateTag("products");
+      revalidatePath("/category", "layout");
       return {
         success: true,
         message: "Produit creé",

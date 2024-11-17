@@ -3,7 +3,7 @@
 import { ADMIN } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const schema = z.object({
@@ -34,6 +34,7 @@ const changeArchived = async (data: z.infer<typeof schema>) => {
       });
       revalidateTag("products");
       revalidateTag("categories");
+      revalidatePath("/category", "layout");
 
       return {
         success: true,
