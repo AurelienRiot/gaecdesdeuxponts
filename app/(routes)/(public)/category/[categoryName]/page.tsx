@@ -1,4 +1,4 @@
-import { getCategoryByName } from "@/actions/get-category";
+import { getCategories, getCategoryByName } from "@/actions/get-category";
 import { getMainProductsByCategoryName } from "@/actions/get-products";
 import Billboard from "@/components/billboard/billboard";
 import NotFound from "@/components/not-found";
@@ -8,7 +8,13 @@ import NoResults from "@/components/ui/no-results";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-export const dynamic = "force-dynamic";
+export async function generateStaticParams() {
+  const categories = await getCategories();
+
+  return categories.map((category) => ({
+    categoryName: category.name,
+  }));
+}
 
 interface CategoryPageProps {
   params: {

@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import type { UserStatus } from "./_components/card-user";
 import UserClient from "./_components/client";
-import { getProUsersWithOrders as getAllUsers } from "./_functions/get-all-users";
+import getAllUsers from "./_functions/get-all-users";
 
 export const dynamic = "force-dynamic";
 
@@ -41,7 +41,6 @@ const UserPage = async () => {
     <div className="m-4">
       <div className="flex flex-col items-center justify-between sm:flex-row gap-y-2">
         <Heading title={`Clients (${allUsers.length})`} description="Liste des clients" />
-        {/* <GroupedInvoicePage proUserWithOrders={proUserWithOrders} /> */}
         <Button asChild>
           <Link href={`/admin/users/new`}>
             <Plus className="mr-2 h-4 w-4" />

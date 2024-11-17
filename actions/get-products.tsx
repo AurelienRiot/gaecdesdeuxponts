@@ -1,22 +1,26 @@
 import prismadb from "@/lib/prismadb";
 import { unstable_cache } from "next/cache";
 
-export const getProducts = async () => {
-  const products = await prismadb.product.findMany({
-    where: {
-      isArchived: false,
-      product: {
+export const getProducts = unstable_cache(
+  async () => {
+    const products = await prismadb.product.findMany({
+      where: {
         isArchived: false,
-        isPro: false,
+        product: {
+          isArchived: false,
+          isPro: false,
+        },
       },
-    },
-    include: { options: { orderBy: { index: "asc" } }, product: true },
-    orderBy: {
-      index: "asc",
-    },
-  });
-  return products;
-};
+      include: { options: { orderBy: { index: "asc" } }, product: true },
+      orderBy: {
+        index: "asc",
+      },
+    });
+    return products;
+  },
+  ["getProducts"],
+  { revalidate: 60 * 60 * 24 * 7, tags: ["products", "categories"] },
+);
 
 export const getProductsByCategoryName = unstable_cache(
   async (categoryName: string) => {
