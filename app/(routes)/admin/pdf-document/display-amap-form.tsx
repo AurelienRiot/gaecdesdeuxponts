@@ -3,7 +3,7 @@ import AmapPDFForm from "@/components/pdf/formulaire-amap";
 import { AMAPData } from "@/components/pdf/pdf-data";
 import { PDFViewer } from "@react-pdf/renderer";
 
-const DisplayOrder = () => {
+const DisplayFormAMAP = () => {
   return (
     <PDFViewer className="h-full w-full ">
       <AmapPDFForm data={AMAPData} />
@@ -11,4 +11,4 @@ const DisplayOrder = () => {
   );
 };
 
-export default DisplayOrder;
+export default DisplayFormAMAP;

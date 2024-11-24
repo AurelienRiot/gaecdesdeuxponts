@@ -49,7 +49,7 @@ async function createOrderAction({
     include: {
       orderItems: true,
       shop: true,
-      user: { include: { address: true, billingAddress: true, links: true } },
+      user: { include: { address: true, billingAddress: true } },
       invoiceOrder: {
         select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
         orderBy: { createdAt: "desc" },

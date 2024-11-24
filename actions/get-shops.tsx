@@ -5,17 +5,28 @@ const farmShopId = process.env.NEXT_PUBLIC_FARM_ID;
 
 const getShops = unstable_cache(
   async () => {
-    const shops = await prismadb.shop.findMany({
-      where: {
-        isArchived: false,
-      },
-      orderBy: {
-        updatedAt: "desc",
-      },
-    });
-    const farmShop = await prismadb.shop.findUnique({
-      where: { id: farmShopId },
-    });
+    const [shops, farmShop] = await Promise.all([
+      prismadb.shop.findMany({
+        where: {
+          isArchived: false,
+        },
+        include: {
+          links: true,
+          shopHours: { orderBy: { day: "asc" } },
+        },
+        orderBy: {
+          updatedAt: "desc",
+        },
+      }),
+      prismadb.shop.findUnique({
+        where: { id: farmShopId },
+        include: {
+          links: true,
+          shopHours: { orderBy: { day: "asc" } },
+        },
+      }),
+    ]);
+
     return { shops, farmShop };
   },
   ["getShops"],

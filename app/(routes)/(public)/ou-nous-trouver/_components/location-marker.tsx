@@ -3,11 +3,12 @@ import { sortShops } from "@/components/display-shops/address-input";
 import { IconButton } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { cn } from "@/lib/utils";
-import type { Shop } from "@prisma/client";
+import type { FullShop } from "@/types";
 import { Locate } from "lucide-react";
-import { usePostHog } from "posthog-js/react";
+import posthog from "posthog-js";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { useMap } from "react-leaflet";
+
 import { toast } from "sonner";
 
 const LocationMarkerFunction = ({
@@ -19,13 +20,12 @@ const LocationMarkerFunction = ({
 }: {
   className?: string;
   setCoordinates: Dispatch<SetStateAction<{ long: number | undefined; lat: number | undefined }>>;
-  setSortedShops: Dispatch<SetStateAction<Shop[]>>;
-  shops: Shop[];
+  setSortedShops: Dispatch<SetStateAction<FullShop[]>>;
+  shops: FullShop[];
   setPin: Dispatch<SetStateAction<{ label: string; lat: number; long: number } | undefined>>;
 }) => {
   const map = useMap();
   const { getValue } = useLocalStorage("cookies-banner");
-  const posthog = usePostHog();
 
   const onAddressFound = async ({
     address,
@@ -47,7 +47,7 @@ const LocationMarkerFunction = ({
     });
     setSortedShops(sortShops({ lat: latitude, long: longitude, shops }));
     if (accept) {
-      posthog?.capture("localisation_trouvée", {
+      posthog.capture("localisation_trouvée", {
         latitude,
         longitude,
         adresse: address ?? "Erreur de localisation",

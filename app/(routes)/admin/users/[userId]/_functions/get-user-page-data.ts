@@ -7,14 +7,15 @@ import {
 } from "@/components/table-custom-fuction/cell-orders";
 import prismadb from "@/lib/prismadb";
 import { currencyFormatter } from "@/lib/utils";
-import type { Address, BillingAddress, Link, User } from "@prisma/client";
+import type { Address, BillingAddress, Shop, User } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 import type { OrderColumn } from "../_components/order-column";
 
 export interface GetUserPageDataProps {
   formatedUser: User & {
     address: Address | null;
-    links: Link[];
+    shop: Shop | null;
+    // links: Link[];
     billingAddress: BillingAddress | null;
   };
   formattedOrders: OrderColumn[];
@@ -29,7 +30,7 @@ const getUserPageData = unstable_cache(
       include: {
         address: true,
         billingAddress: true,
-        links: true,
+        shop: true,
         orders: {
           where: {
             deletedAt: null,
@@ -74,7 +75,7 @@ const getUserPageData = unstable_cache(
     return { formatedUser, formattedOrders };
   },
   ["getUserPageData"],
-  { revalidate: 60 * 60 * 10, tags: ["users", "orders", "amap-orders", "invoices", "notifications"] },
+  { revalidate: 60 * 60 * 10, tags: ["users", "orders", "amap-orders", "invoices", "notifications", "shops"] },
 );
 
 export default getUserPageData;

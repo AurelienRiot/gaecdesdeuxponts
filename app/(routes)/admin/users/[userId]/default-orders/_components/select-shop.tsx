@@ -1,8 +1,8 @@
 import type { AllShopsType } from "@/app/(routes)/admin/direction/_functions/get-shops";
 import SelectSheet from "@/components/select-sheet";
-import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Button } from "@/components/ui/button";
-import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { NameWithImage } from "@/components/user";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { DefaultOrderFormValues } from "./schema";

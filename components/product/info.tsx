@@ -3,11 +3,11 @@ import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
 import type { ProductWithOptionsAndMain } from "@/types";
 import Link from "next/link";
+import type { OptionsArray } from ".";
 import DisplayMinimalTiptapEditor from "../minimal-tiptap/display-minimal-tiptap";
 import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
 import AddToCartButton, { BulkQuantity, CustomQuantityAddToCart } from "./cart-buttons";
-import type { OptionsArray } from ".";
 
 interface InfoProps {
   product: ProductWithOptionsAndMain;

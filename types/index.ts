@@ -7,6 +7,7 @@ import type {
   Invoice,
   InvoiceOrder,
   InvoiceOrderItem,
+  Link,
   MainProduct,
   Notification,
   Option as OptionType,
@@ -16,6 +17,7 @@ import type {
   Role,
   ShippingCustomer,
   Shop,
+  ShopHours,
   User,
 } from "@prisma/client";
 
@@ -26,6 +28,10 @@ export interface SearchParams {
 export type Prettify<T> = {
   [K in keyof T]: T[K];
 } & {};
+
+export type Nullable<T> = {
+  [P in keyof T]?: T[P] | null;
+};
 
 export type Option = {
   label: string;
@@ -111,6 +117,11 @@ export interface FullInvoice extends Invoice {
 }
 export interface InvoiceOrderWithItems extends InvoiceOrder {
   invoiceOrderItems: InvoiceOrderItem[];
+}
+
+export interface FullShop extends Shop {
+  links: Link[];
+  shopHours: ShopHours[];
 }
 
 export type ExtendedRole = Role | "unauthenticated";

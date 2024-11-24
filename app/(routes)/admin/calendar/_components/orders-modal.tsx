@@ -1,5 +1,5 @@
 "use client";
-import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
+import { NameWithImage } from "@/components/user";
 import { Modal } from "@/components/ui/modal";
 import NoResults from "@/components/ui/no-results";
 import type { CalendarOrderType } from "@/components/zod-schema/calendar-orders";

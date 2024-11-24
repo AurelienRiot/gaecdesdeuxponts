@@ -6,6 +6,12 @@ import { IdType, createId } from "@/lib/id";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { toast } from "sonner";
+// import DisplayContratAMAP from "./display-amap";
+// import DisplayFormAMAP from "./display-amap-form";
+// import DisplayInvoice from "./display-invoice";
+// import DisplayMonthlyInvoice from "./display-monthly-invoice";
+// import DisplayOrder from "./display-order";
+// import DisplayShippingOrder from "./display-shipping-order";
 
 const DisplayInvoice = dynamic(() => import("./display-invoice"), {
   ssr: false,
@@ -41,7 +47,7 @@ const TestPage = () => {
         </Button>
         <DisplayId />
       </div>
-      <Tabs defaultValue="invoice" className="h-full w-full max-w-[1000px]">
+      <Tabs defaultValue="monthlyInvoice" className="h-full w-full max-w-[1000px]">
         <TabsList className="flex w-full gap-2">
           <TabsTrigger value="invoice">Facture</TabsTrigger>
           <TabsTrigger value="monthlyInvoice">Facture mensuelle</TabsTrigger>

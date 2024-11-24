@@ -12,7 +12,7 @@ async function fetchOrders(dateArray: string[]) {
     from: from.toISOString(),
     to: to.toISOString(),
   });
-  return await customKy("/api/orders", "GET", z.array(calendarOrderSchema), { searchParams });
+  return await customKy("/api/orders", z.array(calendarOrderSchema), { method: "GET", searchParams });
 }
 
 export function useOrdersQuery(dateArray: string[]) {

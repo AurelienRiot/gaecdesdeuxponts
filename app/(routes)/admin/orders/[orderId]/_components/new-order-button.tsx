@@ -48,7 +48,7 @@ function NewOrderButton({
   const router = useRouter();
   const [noConfirmation, setNoConfirmation] = useState<CheckedState>(false);
   const { mutateOrders } = useOrdersQueryClient();
-  const { ky } = useKy("/api/order", "POST", calendarOrderSchema);
+  const { ky } = useKy("/api/order", calendarOrderSchema);
   const nextDay = getNextAvailableDate(defaultDaysOrders);
 
   const onDayClick = async (date?: Date) => {
@@ -71,6 +71,9 @@ function NewOrderButton({
           mutateOrders((prev) => prev.concat(result));
         },
         onError: () => router.push(url),
+        options: {
+          method: "POST",
+        },
       });
 
       router.back();

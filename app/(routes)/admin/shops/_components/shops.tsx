@@ -2,20 +2,21 @@
 import { AddressInput } from "@/components/display-shops/address-input";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
-import type { Shop } from "@prisma/client";
+import type { Shop, ShopHours } from "@prisma/client";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import NameInput from "@/components/display-shops/name-input";
 import { ShopCard } from "@/components/display-shops/shop-card";
 import { Toggle } from "@/components/ui/toggle";
+import type { FullShop } from "@/types";
 
-const DisplayShop = ({ data }: { data: Shop[] }) => {
+const DisplayShop = ({ data }: { data: FullShop[] }) => {
   const [coordinates, setCoordinates] = useState<{
     long: number | undefined;
     lat: number | undefined;
   }>({ lat: undefined, long: undefined });
-  const [sortedShops, setSortedShops] = useState<Shop[]>(data.filter((shop) => shop.isArchived === false));
+  const [sortedShops, setSortedShops] = useState<FullShop[]>(data.filter((shop) => shop.isArchived === false));
   const router = useRouter();
 
   const onPressedChange = (value: boolean) => {

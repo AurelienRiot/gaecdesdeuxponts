@@ -1,13 +1,13 @@
 import type { Suggestion } from "@/actions/adress-autocompleteFR";
 import { haversine } from "@/lib/math";
-import type { Shop } from "@prisma/client";
+import type { FullShop } from "@/types";
 import type { Dispatch, SetStateAction } from "react";
 import SearchAddress from "../search-address";
 
 type AddressInputProps = {
-  setSortedShops: Dispatch<SetStateAction<Shop[]>>;
+  setSortedShops: Dispatch<SetStateAction<FullShop[]>>;
   setCoordinates: Dispatch<SetStateAction<{ long: number | undefined; lat: number | undefined }>>;
-  shops: Shop[];
+  shops: FullShop[];
   className?: string;
 };
 
@@ -27,7 +27,7 @@ export const sortShops = ({
 }: {
   long: number | undefined;
   lat: number | undefined;
-  shops: Shop[];
+  shops: FullShop[];
 }) => {
   if (long !== undefined && lat !== undefined) {
     const shopsWithDistance = shops.map((shop) => ({

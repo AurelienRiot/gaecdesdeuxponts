@@ -1,17 +1,18 @@
 import { getRelativeDate } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
-import type { AMAPItem, OrderItem, Shop } from "@prisma/client";
+import type { FullShop } from "@/types";
+import type { AMAPItem, OrderItem } from "@prisma/client";
 import type { Row } from "@tanstack/react-table";
 import { CheckCircle, CreditCard, Hourglass, Search, Truck } from "lucide-react";
 import Link from "next/link";
 import { ShopCard } from "../display-shops/shop-card";
 import { getUnitLabel } from "../product/product-function";
+import { FaFileInvoiceDollar } from "../react-icons";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { NameCell } from "./common-cell";
-import { FaFileInvoiceDollar } from "../react-icons";
 import { type Status, status } from "../zod-schema/status";
+import { NameCell } from "./common-cell";
 
 type ProductCellProps = {
   products: string;
@@ -95,7 +96,7 @@ function AdminShopNameCell({ shopName, shopId, shopImage }: AdminShopNameCellPro
 
 type ShopNameCellProps = {
   shopName: string;
-  shop?: Shop;
+  shop?: FullShop;
 };
 function ShopNameCell({ shopName, shop }: ShopNameCellProps) {
   return shop ? (

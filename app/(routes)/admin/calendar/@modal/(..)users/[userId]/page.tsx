@@ -41,7 +41,7 @@ async function DisplayUserForm({ userId }: { userId: string | "new" | undefined 
     include: {
       address: true,
       billingAddress: true,
-      links: true,
+      shop: { include: { links: true } },
     },
   });
 

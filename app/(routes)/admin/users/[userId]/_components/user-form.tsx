@@ -25,7 +25,6 @@ import type { GetUserPageDataProps } from "../_functions/get-user-page-data";
 import CcInvoiceForm from "./cc-invoice-form";
 import MailForm from "./mail-form";
 import SelectRole from "./select-role";
-import UserLinks from "./user-links";
 import { schema, type UserFormValues } from "./user-schema";
 
 interface UserFormProps {
@@ -57,7 +56,6 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
       ccInvoice: initialData.ccInvoice,
       role: ["user", "pro", "trackOnlyUser"].includes(initialData.role) ? (initialData.role as "user") : "user",
       notes: initialData.notes || "",
-      links: initialData.links || [],
       address: {
         label: initialData.address?.label || "",
         city: initialData.address?.city || "",
@@ -232,7 +230,6 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
                     </FormItem>
                   )}
                 />
-                <UserLinks />
 
                 {role === "pro" && <CcInvoiceForm />}
                 <FormField

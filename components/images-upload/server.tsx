@@ -8,6 +8,7 @@ import { z } from "zod";
 import { ADMIN, READ_ONLY_ADMIN } from "../auth";
 import { checkReadOnlyAdmin } from "../auth/checkAuth";
 import { getUserName } from "../table-custom-fuction";
+import { createImageUrl } from "../images";
 
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -105,7 +106,7 @@ async function deleteObject(data: z.infer<typeof deleteObjectSchema>) {
     data,
     serverAction: async (data) => {
       const { publicID } = data;
-      const imageUrl = `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${publicID}`;
+      const imageUrl = createImageUrl(publicID);
       const productsWithImage = await prismadb.product.findMany({
         where: {
           imagesUrl: {

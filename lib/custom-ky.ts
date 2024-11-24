@@ -3,14 +3,9 @@ import { z, type ZodSchema } from "zod";
 
 export const defaultSchema = z.object({ message: z.string() });
 
-async function customKy<T>(
-  url: string,
-  method: `GET` | `POST` | `PUT` | `PATCH` | `DELETE`,
-  schema: ZodSchema<T>,
-  options?: Omit<Options, "method">,
-): Promise<T> {
+async function customKy<T>(url: string, schema: ZodSchema<T>, options?: Options): Promise<T> {
   try {
-    const response = await ky(url, { method, ...options });
+    const response = await ky(url, options);
 
     const jsonData = await response.json();
 
@@ -38,13 +33,12 @@ async function customKy<T>(
 
 export async function streamKy<T>(
   url: string,
-  method: `GET` | `POST` | `PUT` | `PATCH` | `DELETE`,
   onResult: (result: T) => void,
   onError: (error: unknown) => void,
-  options?: Omit<Options, "method">,
+  options?: Options,
 ): Promise<void> {
   try {
-    const response = await ky(url, { method, ...options });
+    const response = await ky(url, options);
 
     if (!response?.body) {
       throw new Error("No response body received");

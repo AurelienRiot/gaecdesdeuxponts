@@ -1,6 +1,6 @@
 "use client";
 import { getUserName } from "@/components/table-custom-fuction";
-import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
+import { NameWithImage } from "@/components/user";
 import { LoadingButton } from "@/components/ui/button";
 import NoResults from "@/components/ui/no-results";
 import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";

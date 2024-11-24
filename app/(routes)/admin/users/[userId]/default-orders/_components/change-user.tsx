@@ -1,6 +1,6 @@
 "use client";
 import SelectSheetWithTabs, { sortUserByRole } from "@/components/select-sheet-with-tabs";
-import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
+import { NameWithImage } from "@/components/user";
 import { Button } from "@/components/ui/button";
 import { useUsersQuery } from "@/hooks/use-query/users-query";
 import { useRouter } from "next/navigation";

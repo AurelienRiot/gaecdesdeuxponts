@@ -20,7 +20,7 @@ const UserPage = async () => {
     orders: user.orders.filter(
       (order) =>
         order.dateOfShipping &&
-        order.dateOfShipping.getTime() <=
+        new Date(order.dateOfShipping).getTime() <=
           new Date(new Date().setFullYear(new Date().getFullYear(), new Date().getMonth(), 1)).setHours(0, 0, 0, 0),
     ),
   }));

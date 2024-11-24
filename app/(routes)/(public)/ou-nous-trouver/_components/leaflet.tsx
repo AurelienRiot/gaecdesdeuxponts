@@ -1,5 +1,5 @@
 import { ShopCard } from "@/components/display-shops/shop-card";
-import type { Shop } from "@prisma/client";
+import type { FullShop } from "@/types";
 import type { Dispatch, SetStateAction } from "react";
 import { MapContainer, Marker, Popup, TileLayer, Tooltip, useMapEvent } from "react-leaflet";
 import MapFocus from "./map-focus";
@@ -12,11 +12,11 @@ const Leaflet = ({
   coordinates,
   setSortedShops,
 }: {
-  shops: Shop[];
-  farmShop: Shop | null;
+  shops: FullShop[];
+  farmShop: FullShop | null;
   setCoordinates: Dispatch<SetStateAction<{ long: number | undefined; lat: number | undefined }>>;
   coordinates: { long: number | undefined; lat: number | undefined };
-  setSortedShops: Dispatch<SetStateAction<Shop[]>>;
+  setSortedShops: Dispatch<SetStateAction<FullShop[]>>;
 }) => {
   return (
     <MapContainer

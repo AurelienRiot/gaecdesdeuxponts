@@ -12,14 +12,11 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
 import { deleteObject, getSignature, listFiles } from "./server";
+import { cloudinaryAPIUrl, createImageUrl } from "../images";
 
 export const getFileKey = (url: string): string => {
   const parts = url.split("/");
   return `farm/${parts[parts.length - 1]}`;
-};
-
-export const makeURL = (key: string) => {
-  return `https://res.cloudinary.com/dsztqh0k7/image/upload/v1709823732/${key}`;
 };
 
 const MAX_FILE_SIZE = 2000000;
@@ -34,7 +31,7 @@ type UploadImageProps = {
 async function fetchAllFiles() {
   return await listFiles().then((res) => {
     if (res.success && res.data) {
-      return res.data.map((item) => makeURL(item.public_id));
+      return res.data.map((item) => createImageUrl(item.public_id));
     }
     throw new Error(res.message || "Impossible de charger les fichiers");
   });
@@ -123,9 +120,9 @@ function InputImage({ selectedFiles, setSelectedFiles, multipleImages }: InputIm
 
     queryClient.invalidateQueries({ queryKey: ["listUploadedFiles"] });
     if (multipleImages) {
-      setSelectedFiles([...selectedFiles, ...validUrls.map((item) => makeURL(item.publicId))]);
+      setSelectedFiles([...selectedFiles, ...validUrls.map((item) => createImageUrl(item.publicId))]);
     } else {
-      setSelectedFiles([makeURL(validUrls[0].publicId)]);
+      setSelectedFiles([createImageUrl(validUrls[0].publicId)]);
     }
     setLoading(false);
   }
@@ -142,7 +139,7 @@ function InputImage({ selectedFiles, setSelectedFiles, multipleImages }: InputIm
 
       // const originalFileName = file.name;
       // const fileNameWithoutExtension =
-      //   originalFileName.substring(0, originalFileName.lastIndexOf(".")) ||
+      //   originalFileName.substring(0, originalFileName.lastIndexOf("./react-icons")) ||
       //   originalFileName;
       // const randomString = nanoid(10); // Generate a random string of 5 characters
 
@@ -156,8 +153,7 @@ function InputImage({ selectedFiles, setSelectedFiles, multipleImages }: InputIm
       formdata.append("file", file);
       formdata.append("folder", "farm");
 
-      const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`;
-      const response = await fetch(url, {
+      const response = await fetch(cloudinaryAPIUrl, {
         method: "POST",
         body: formdata,
         cache: "no-store",

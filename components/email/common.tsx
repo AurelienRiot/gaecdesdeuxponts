@@ -1,4 +1,5 @@
 import { Body, Button, Container, Head, Hr, Html, Img, Preview, Tailwind, Text } from "@react-email/components";
+import { signature } from "../images";
 
 const main = {
   fontFamily:
@@ -39,13 +40,7 @@ const Footer = ({ baseUrl }: { baseUrl: string }) => (
     </Text>
     <Hr className="my-5 border-[#cccccc]" />
     <a href={baseUrl} target="_blank" rel="noreferrer">
-      <Img
-        src={`${baseUrl}/signature.webp`}
-        width="230"
-        height="75"
-        alt="Signature Laiterie du Pont Robert"
-        className="mr-auto"
-      />
+      <Img src={signature} width="230" height="75" alt="Signature Laiterie du Pont Robert" className="mr-auto" />
     </a>
   </>
 );

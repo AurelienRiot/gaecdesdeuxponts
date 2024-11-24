@@ -13,10 +13,7 @@ const MapDisplay = ({
 }) => {
   return (
     <div
-      className={cn(
-        " relative mb-16 hidden items-start  justify-start  sm:flex sm:justify-center  lg:mb-0",
-        className,
-      )}
+      className={cn(" relative mb-16 hidden items-start  justify-start  sm:flex sm:justify-center  lg:mb-0", className)}
     >
       <PinContainer title="Laiterie du Pont Robert" href={href}>
         <Image
@@ -49,11 +46,7 @@ export const PinContainer = ({
   containerClassName?: string;
 }) => {
   return (
-    <Link
-      className={cn("group/pin relative  cursor-pointer ", containerClassName)}
-      href={href}
-      target={"_blank"}
-    >
+    <Link className={cn("group/pin relative  cursor-pointer ", containerClassName)} href={href} target={"_blank"}>
       <div
         style={{
           perspective: "1000px",
@@ -67,9 +60,7 @@ export const PinContainer = ({
          [transform:translate(-50%,-50%)_rotateX(40deg)_scale(0.8)]
           "
         >
-          <div className={cn(" relative overflow-clip rounded-2xl", className)}>
-            {children}
-          </div>
+          <div className={cn(" relative overflow-clip rounded-2xl", className)}>{children}</div>
         </div>
       </div>
       <PinPerspective title={title} />
@@ -83,9 +74,7 @@ export const PinPerspective = ({ title }: { title?: string }) => {
       <div className=" inset-0 -mt-7 h-full w-full  flex-none">
         <div className="absolute inset-x-0 top-0  flex justify-center group-hover/btn:opacity-40">
           <p className="relative z-10 flex items-center space-x-2 rounded-full bg-zinc-950 px-4 py-0.5 ring-1 ring-white/10 ">
-            <span className="relative z-20 inline-block py-0.5 text-xs font-bold text-white ">
-              {title}
-            </span>
+            <span className="relative z-20 inline-block py-0.5 text-xs font-bold text-white ">{title}</span>
 
             <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-orange-400/0 via-orange-400/90 to-emerald-400/0 transition-opacity duration-500 "></span>
           </p>

@@ -2,8 +2,8 @@
 import { cn } from "@/lib/utils";
 import * as React from "react";
 import { Button } from "./ui/button";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { ScrollArea } from "./ui/scroll-area";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 
 type ValueType<T extends { key: string }> = { label: React.ReactNode; value: T; highlight?: boolean };
 
@@ -95,7 +95,7 @@ function SelectSheetContent<T extends { key: string }>({
       const selectedItem = itemRefs.current[values.findIndex((value) => value.value.key === selectedValue)];
       if (selectedItem) {
         selectedItem.scrollIntoView({
-          behavior: "smooth",
+          behavior: "instant",
           block: "center",
         });
       }
@@ -108,6 +108,7 @@ function SelectSheetContent<T extends { key: string }>({
         <div className=" flex flex-col gap-2 items-center justify-center">
           {values.map((value, index) => (
             <Button
+              id={value.value.key}
               style={{ touchAction: "pan-y" }}
               ref={(el) => {
                 itemRefs.current[index] = el;

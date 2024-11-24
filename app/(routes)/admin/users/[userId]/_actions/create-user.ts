@@ -25,7 +25,6 @@ async function createUser(data: UserFormValues) {
         id,
         completed,
         notes,
-        links,
         ccInvoice,
       } = data;
       const user = await prismadb.user.findUnique({
@@ -51,12 +50,6 @@ async function createUser(data: UserFormValues) {
           completed,
           role,
           ccInvoice: role === "pro" ? ccInvoice : [],
-          links: {
-            create: links.map(({ label, value }) => ({
-              label,
-              value,
-            })),
-          },
           address: {
             create: address ?? defaultAddress,
           },

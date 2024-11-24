@@ -4,7 +4,7 @@ import { Button, IconButton } from "@/components/ui/button";
 
 import SearchAddress from "@/components/search-address";
 import SelectSheet from "@/components/select-sheet";
-import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
+import { NameWithImage } from "@/components/user";
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
 import { cn } from "@/lib/utils";

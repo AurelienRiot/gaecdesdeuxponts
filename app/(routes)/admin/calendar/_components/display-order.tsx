@@ -2,7 +2,7 @@
 import { AnimateHeight } from "@/components/animations/animate-size";
 import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { StatusCell } from "@/components/table-custom-fuction/cell-orders";
-import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
+import { NameWithImage } from "@/components/user";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import type { CalendarOrderType } from "@/components/zod-schema/calendar-orders";

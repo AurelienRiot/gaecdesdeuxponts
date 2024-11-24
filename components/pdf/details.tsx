@@ -6,7 +6,8 @@ import type { AMAPType, InvoicePDFDate, MonthlyPDFDataType, PDFData } from "./pd
 const detailsStyles = StyleSheet.create({
   container: {
     flexDirection: "column",
-    marginTop: 14,
+    gap: 4,
+    marginTop: 10,
   },
 });
 
@@ -27,7 +28,6 @@ const noStyles = StyleSheet.create({
   invoiceDateContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",
-    marginTop: 2,
   },
   invoiceDate: {
     fontSize: 12,
@@ -103,21 +103,6 @@ function OrderNumber({ data }: { data: DetailsProps }) {
   );
 }
 
-const headingStyles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    marginTop: 4,
-    justifyContent: "flex-end",
-  },
-  reportTitle: {
-    color: mainColor,
-    letterSpacing: 4,
-    fontSize: 25,
-    textAlign: "center",
-    textTransform: "uppercase",
-  },
-});
-
 const FacturationDate = ({ data }: { data: DetailsProps }) =>
   data.title === "Facture" || data.title === "Facture mensuelle"
     ? !!data.pdfData.dateOfPayment && (
@@ -156,6 +141,21 @@ function EditionDate({ data }: { data: DetailsProps }) {
     </View>
   );
 }
+
+const headingStyles = StyleSheet.create({
+  titleContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginBottom: 20,
+  },
+  reportTitle: {
+    color: mainColor,
+    letterSpacing: 4,
+    fontSize: 25,
+    textAlign: "center",
+    textTransform: "uppercase",
+  },
+});
 
 const InvoiceTitle = ({ title }: { title: string }) => (
   <View style={headingStyles.titleContainer}>

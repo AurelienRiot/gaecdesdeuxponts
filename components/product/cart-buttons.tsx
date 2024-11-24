@@ -243,7 +243,7 @@ export const BulkQuantity = ({
                   className="w-[70px]"
                   {...field}
                   value={field.value || ""}
-                  onChange={(e) => field.onChange(e.target.value.replace(",", "."))}
+                  onChange={(e) => field.onChange(e.target.value.replace(",", "./react-icons"))}
                 />
               </FormControl>
               <span className="flex h-full items-center justify-center">{getUnitLabel(product.unit).quantity}</span>

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { roleSchema } from "./index";
+import { shopHoursSchema } from "@/app/(routes)/admin/shops/[shopId]/_components/shop-schema";
 
 export const userForOrderSchema = z.object({
   id: z.string(),
@@ -13,6 +14,7 @@ export const userForOrderSchema = z.object({
   image: z.string().nullable(),
   address: z.string().nullable(),
   links: z.array(z.object({ label: z.string(), value: z.string() })),
+  shopHours: z.array(shopHoursSchema),
   defaultDaysOrders: z.array(z.number()),
   notes: z.string().nullable(),
 });

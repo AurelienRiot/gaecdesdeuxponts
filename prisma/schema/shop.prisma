@@ -11,12 +11,41 @@ model Shop {
   description   String
   imageUrl      String?
   website       String?
+  links         Link[]
   order         Order[]
   amapOrders    AMAPOrder[]
   defaultOrders DefaultOrder[]
+  shopHours     ShopHours[]
+  userId        String?        @unique
+  user          User?          @relation(fields: [userId], references: [id])
   isArchived    Boolean        @default(false)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+}
+
+model ShopHours {
+  id         Int       @unique @default(autoincrement())
+  shopId     String
+  day        Int
+  isClosed   Boolean   @default(false)
+  openHour1  DateTime
+  closeHour1 DateTime
+  openHour2  DateTime?
+  closeHour2 DateTime?
+
+  shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@index([shopId])
+}
+
+model Link {
+  id     Int    @id @unique @default(autoincrement())
+  label  String
+  value  String
+  shopId String
+  shop   Shop   @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@index([shopId])
 }
 
 enum ShopType {

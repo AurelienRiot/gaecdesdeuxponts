@@ -15,22 +15,34 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import useServerAction from "@/hooks/use-server-action";
 import { createId } from "@/lib/id";
+import type { Nullable } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { Shop } from "@prisma/client";
+import type { Link, Shop, ShopHours } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useForm, type UseFormReturn } from "react-hook-form";
 import createShop from "../_actions/create-shop";
 import deleteShop from "../_actions/delete-shop";
 import updateShop from "../_actions/update-shop";
-import { schema, type ShopFormValues } from "./shop-schema";
+import ShopHoursModal from "./shop-hours";
+import ShopLinks from "./shop-links";
+import { schema, TYPE, type ShopFormValues } from "./shop-schema";
 
-const TYPE: { value: Shop["type"]; label: string }[] = [
-  { value: "sell", label: "Vente" },
-  { value: "product", label: "Production" },
-  { value: "both", label: "Vente et production" },
-  { value: "amap", label: "AMAP" },
-];
-const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
+export const defaultHours = {
+  isClosed: false,
+  openHour1: new Date(new Date().setHours(8, 0, 0, 0)),
+  closeHour1: new Date(new Date().setHours(19, 0, 0, 0)),
+  openHour2: new Date(new Date().setHours(15, 30, 0, 0)),
+  closeHour2: new Date(new Date().setHours(19, 0, 0, 0)),
+};
+
+export type ShopPageType = Nullable<
+  Shop & {
+    links: Link[];
+    shopHours: ShopHours[];
+  }
+> | null;
+
+const ShopForm = ({ initialData }: { initialData: ShopPageType }) => {
   const router = useRouter();
 
   const { serverAction: createShopAction } = useServerAction(createShop);
@@ -42,12 +54,15 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
       id: initialData?.id || createId("shop"),
       name: initialData?.name || "",
       imageUrl: initialData?.imageUrl || "",
+      userId: initialData?.userId || "",
       description: initialData?.description || "",
-      type: initialData?.type,
+      type: initialData?.type || undefined,
       lat: initialData?.lat || undefined,
       long: initialData?.long || undefined,
       tags: initialData?.tags || [],
       address: initialData?.address || "",
+      links: initialData?.links || [],
+      shopHours: initialData?.shopHours || [],
       phone: initialData?.phone || "",
       website: initialData?.website || "",
       email: initialData?.email || undefined,
@@ -61,24 +76,23 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
 
   const onSubmit = async (data: ShopFormValues) => {
     function onSuccess() {
-      router.push(`/admin/shops`);
-      router.refresh();
+      router.back();
+      // router.refresh();
     }
-    initialData ? await updateShopAction({ data, onSuccess }) : await createShopAction({ data, onSuccess });
+    initialData?.id ? await updateShopAction({ data, onSuccess }) : await createShopAction({ data, onSuccess });
   };
 
   return (
     <>
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
-        {initialData && (
+        {initialData?.id && (
           <DeleteButton
             action={deleteShop}
             data={{ id: initialData.id }}
             isSubmitting={form.formState.isSubmitting}
             onSuccess={() => {
-              router.push(`/admin/shops`);
-              router.refresh();
+              router.back();
             }}
           />
         )}
@@ -86,7 +100,7 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
       <Separator />
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8 p-4">
+        <form onSubmit={form.handleSubmit(onSubmit, (errors) => console.log(errors))} className="w-full space-y-8 p-4">
           <FormField
             control={form.control}
             name="imageUrl"
@@ -142,7 +156,7 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="website"
               render={({ field }) => (
@@ -159,8 +173,9 @@ const ShopForm = ({ initialData }: { initialData: Shop | null }) => {
                   <FormMessage />
                 </FormItem>
               )}
-            />
-
+            /> */}
+            <ShopLinks />
+            <ShopHoursModal />
             <FormField
               control={form.control}
               name="phone"

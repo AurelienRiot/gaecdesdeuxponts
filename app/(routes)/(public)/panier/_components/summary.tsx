@@ -18,7 +18,7 @@ import { toast } from "sonner";
 import { createCheckOut } from "../_actions/check-out";
 import DatePicker from "./date-picker";
 import LoginCard from "./login-card";
-import TimePicker from "./time-picker";
+import CartTimePicker from "./cart-time-picker";
 import { addDelay } from "@/lib/utils";
 import { useUserQueryClient } from "../../../../../hooks/use-query/user-query";
 
@@ -138,7 +138,7 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
             <Currency value={totalPrice} />
           </div>
         </div>
-        <DatePicker date={date} shopId={shopId} /> {isMounted && date && <TimePicker date={date} shopId={shopId} />}
+        <DatePicker date={date} shopId={shopId} /> {isMounted && date && <CartTimePicker date={date} shopId={shopId} />}
         {/* 
         <PickUpPlace
           date={date}

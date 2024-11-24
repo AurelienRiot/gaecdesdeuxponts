@@ -14,6 +14,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { createContext, useContext, useState } from "react";
 import DisplayItem from "./display-item";
+import { linkNames } from "@/components/react-icons/links";
+import DisplayHours from "@/components/display-shops/display-hours";
 
 type UserModalProps = UserForOrderType & { orders: CalendarOrderType[]; date: Date };
 
@@ -140,7 +142,33 @@ const UserInfo = () => {
             </Button>
           </div>
         ) : null}
+        {user.shopHours.length > 0 ? (
+          <div className="mb-4">
+            <h3 className="text-sm font-medium text-gray-500">Horraires</h3>
+            <DisplayHours shopHours={user.shopHours} />
+          </div>
+        ) : null}
 
+        {user.links.length > 0 && (
+          <div className="mb-4">
+            <h3 className="text-sm font-medium text-gray-500">Liens</h3>
+
+            {user.links.map(({ value, label }) => {
+              const Icon = linkNames.find((link) => label === link.label)?.Icon;
+              return (
+                <Button key={value} asChild variant={"link"}>
+                  <Link
+                    href={value.startsWith("http://") || value.startsWith("https://") ? value : `https://${value}`}
+                    target="_blank"
+                  >
+                    {Icon && <Icon className="mr-2 size-4" />}
+                    {label}
+                  </Link>
+                </Button>
+              );
+            })}
+          </div>
+        )}
         {user.notes ? (
           <div className="mb-4">
             <h3 className="text-sm font-medium text-gray-500">Notes</h3>
@@ -148,19 +176,6 @@ const UserInfo = () => {
             <AutosizeTextarea className="border-0 focus-visible:ring-0 select-text" readOnly value={user.notes} />
           </div>
         ) : null}
-        {user.links.length > 0 && (
-          <div className="mb-4">
-            <h3 className="text-sm font-medium text-gray-500">Liens</h3>
-
-            {user.links.map(({ value, label }) => (
-              <Button key={value} asChild variant={"link"}>
-                <Link href={value} target="_blank">
-                  {label}
-                </Link>
-              </Button>
-            ))}
-          </div>
-        )}
         <DisplayUserOrders />
       </ScrollArea>
     </div>

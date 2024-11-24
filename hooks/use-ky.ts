@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 import { toast, type ExternalToast } from "sonner";
 import type { ZodSchema } from "zod";
 
-function useKy<D>(url: string, method: `GET` | `POST` | `PUT` | `PATCH` | `DELETE`, schema: ZodSchema<D>) {
+function useKy<D>(url: string, schema: ZodSchema<D>) {
   const [loading, setLoading] = useState(false);
   const ky = useCallback(
     async ({
@@ -21,11 +21,11 @@ function useKy<D>(url: string, method: `GET` | `POST` | `PUT` | `PATCH` | `DELET
       onError?: () => void;
       onSuccess?: (result: D) => void;
       toastOptions?: ExternalToast;
-      options?: Omit<Options, "method">;
+      options?: Options;
     }) => {
       setLoading(true);
 
-      return await customKy(url, method, schema, { json: data, ...options })
+      return await customKy(url, schema, { json: data, ...options })
         .then(async (result) => {
           await onSuccess?.(result);
         })
@@ -38,7 +38,7 @@ function useKy<D>(url: string, method: `GET` | `POST` | `PUT` | `PATCH` | `DELET
           setLoading(false);
         });
     },
-    [method, url, schema],
+    [url, schema],
   );
 
   return { ky, loading };

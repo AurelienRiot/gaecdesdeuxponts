@@ -54,7 +54,7 @@ function extractLiters(productName: string): number | null {
       const numberString = match[1]
         .replace(/[Ll]iter(s)?|cl/i, "")
         .trim()
-        .replace(",", ".");
+        .replace(",", "./react-icons");
       let number = Number.parseFloat(numberString);
       if (match[3].toLowerCase() === "cl") {
         number /= 100; // Convert centiliters to liters

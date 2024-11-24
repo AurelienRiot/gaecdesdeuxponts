@@ -2,11 +2,11 @@
 import { AddressInput } from "@/components/display-shops/address-input";
 import NameInput from "@/components/display-shops/name-input";
 import { ShopCard } from "@/components/display-shops/shop-card";
-import type { Shop } from "@prisma/client";
+import type { FullShop } from "@/types";
 import "leaflet/dist/leaflet.css";
-import "./marker.css";
 import dynamicImport from "next/dynamic";
 import { useState } from "react";
+import "./marker.css";
 
 const Leaflet = dynamicImport(() => import("./leaflet"), {
   ssr: false,
@@ -16,14 +16,14 @@ const PlacePicker = ({
   shops,
   farmShop,
 }: {
-  shops: Shop[];
-  farmShop: Shop | null;
+  shops: FullShop[];
+  farmShop: FullShop | null;
 }) => {
   const [coordinates, setCoordinates] = useState<{
     long: number | undefined;
     lat: number | undefined;
   }>({ lat: undefined, long: undefined });
-  const [sortedShops, setSortedShops] = useState<Shop[]>(shops);
+  const [sortedShops, setSortedShops] = useState<FullShop[]>(shops);
   return (
     <>
       <Leaflet

@@ -14,14 +14,23 @@ export const watermarkColor = "rgb(255, 0, 0)";
 //     { src: "https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-600.ttf", fontWeight: 600 },
 //   ],
 // });
-
-Font.register({
-  family: "Inter",
-  fonts: [
-    { src: "https://www.laiteriedupontrobert.fr/fonts/inter.ttf", fontWeight: 400 },
-    { src: "https://www.laiteriedupontrobert.fr/fonts/inter-bold.ttf", fontWeight: 600 },
-  ],
-});
+if (typeof window === "undefined") {
+  Font.register({
+    family: "Inter",
+    fonts: [
+      { src: "app/pdf/fonts/inter.ttf", fontWeight: 400 },
+      { src: "app/pdf/fonts/inter-bold.ttf", fontWeight: 600 },
+    ],
+  });
+} else {
+  Font.register({
+    family: "Inter",
+    fonts: [
+      { src: "/fonts/inter.ttf", fontWeight: 400 },
+      { src: "/fonts/inter-bold.ttf", fontWeight: 600 },
+    ],
+  });
+}
 
 export const MainStyles = StyleSheet.create({
   page: {
@@ -154,19 +163,16 @@ export const Company = () => (
 const Logo = () => (
   <View style={CompanyStyles.logoContainer}>
     {/* eslint-disable-next-line jsx-a11y/alt-text */}
-    <Image
-      style={CompanyStyles.logo1}
-      src="https://res.cloudinary.com/dsztqh0k7/image/upload/v1731355725/static/ofelrvks6dcre6p3leda.png"
-      cache={false}
-    />
+    <Image style={CompanyStyles.logo1} src={getImagePath("logo-font-blanc.png")} cache={false} />
     {/* eslint-disable-next-line jsx-a11y/alt-text */}
-    <Image
-      style={CompanyStyles.logo2}
-      src="https://res.cloudinary.com/dsztqh0k7/image/upload/v1731355732/static/xvx7zx5jmcweiecdq0do.jpg"
-      cache={false}
-    />
+    <Image style={CompanyStyles.logo2} src={getImagePath("certification-bio.jpeg")} cache={false} />
   </View>
 );
+
+const getImagePath = (image: string) => {
+  const isClient = typeof window !== "undefined";
+  return isClient ? `/${image}` : `app/pdf/images/${image}`;
+};
 
 const thankYouMsgStyles = StyleSheet.create({
   titleContainer: {

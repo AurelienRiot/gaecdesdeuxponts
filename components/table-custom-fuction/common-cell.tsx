@@ -13,6 +13,7 @@ import { AutosizeTextarea } from "../ui/autosize-textarea";
 import { Button } from "../ui/button";
 import { Checkbox, type CheckedState } from "../ui/checkbox";
 import Currency from "../ui/currency";
+import { NameWithImage, type NameWithImageProps } from "../user";
 
 type DateCellProps = {
   date: Date;
@@ -24,17 +25,6 @@ function DateCell({ date, hours, days }: DateCellProps) {
   return <div className="text-left">{dateFormatter(date, { hours, days })}</div>;
 }
 
-type NameCellProps = {
-  name: string;
-  image?: string | null;
-  url?: string;
-  imageSize?: number;
-  displayImage?: boolean;
-  displayName?: boolean;
-  completed?: boolean | null;
-  className?: string;
-};
-
 function NameCell({
   image,
   name,
@@ -44,7 +34,7 @@ function NameCell({
   imageSize = 32,
   completed = true,
   className,
-}: NameCellProps) {
+}: NameWithImageProps) {
   return (
     <Button asChild variant={url ? "link" : "ghost"}>
       {url ? (
@@ -73,39 +63,6 @@ function NameCell({
     </Button>
   );
 }
-
-const NameWithImage = ({
-  name,
-  image,
-  imageSize = 16,
-  displayImage = true,
-  displayName = true,
-  completed = true,
-  className,
-}: NameCellProps) => (
-  <div className={cn("flex items-center justify-start gap-2 w-full font-medium text-xs", className)}>
-    {displayImage ? (
-      image ? (
-        <Image
-          src={image}
-          alt="user"
-          width={imageSize * 2}
-          height={imageSize}
-          style={{ width: imageSize * 2, height: imageSize * 2 }}
-          className="object-contain rounded-sm bg-transparent"
-        />
-      ) : (
-        <div
-          style={{ width: imageSize * 2, height: imageSize * 2 }}
-          className=" rounded-full bg-gray-200 flex items-center justify-center shrink-0"
-        >
-          <span className="text-gray-600 font-semibold text-xs no-underline">{name.charAt(0)}</span>
-        </div>
-      )
-    ) : null}
-    {displayName && <span className={cn(" truncate", !completed ? "text-destructive" : "")}>{name}</span>}
-  </div>
-);
 
 type PhoneCellProps = {
   phone: string;
@@ -221,4 +178,4 @@ function NameWithImageCell<T>({
   );
 }
 
-export { CheckboxCell, DateCell, NameCell, NameWithImage, NameWithImageCell, OptionsCell, PhoneCell, TextCell };
+export { CheckboxCell, DateCell, NameCell, NameWithImageCell, OptionsCell, PhoneCell, TextCell };

@@ -4,8 +4,9 @@ import { sortShops } from "@/components/display-shops/address-input";
 import SearchAddress from "@/components/search-address";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { cn } from "@/lib/utils";
-import type { Shop } from "@prisma/client";
-import { usePostHog } from "posthog-js/react";
+import type { FullShop } from "@/types";
+import { posthog } from "posthog-js";
+import {} from "posthog-js/react";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { Marker, useMap } from "react-leaflet";
 import { toast } from "sonner";
@@ -19,14 +20,13 @@ const MapFocus = ({
   setSortedShops,
 }: {
   className?: string;
-  setSortedShops: Dispatch<SetStateAction<Shop[]>>;
-  shops: Shop[];
+  setSortedShops: Dispatch<SetStateAction<FullShop[]>>;
+  shops: FullShop[];
   setCoordinates: Dispatch<SetStateAction<{ long: number | undefined; lat: number | undefined }>>;
 }) => {
   const { getValue } = useLocalStorage("cookies-banner");
   const [pin, setPin] = useState<{ label: string; lat: number; long: number } | undefined>(undefined);
   const map = useMap();
-  const posthog = usePostHog();
 
   function onSelectAddress({ label, longitude, latitude }: Suggestion) {
     const { accept } = getValue();

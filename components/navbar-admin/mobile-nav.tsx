@@ -18,8 +18,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { GiPathDistance, PiInvoice } from "../react-icons";
 import { useSidebar } from "../ui/sidebar";
+import { GiPathDistance, PiInvoice } from "../react-icons";
 
 function MobileNav({ className }: { className?: string }) {
   const pathname = usePathname();

@@ -6,7 +6,7 @@ import {
   type GroupUsersByProduct,
 } from "@/components/google-events";
 import { DisplayProductIcon } from "@/components/product";
-import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
+import { NameWithImage } from "@/components/user";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn, numberFormat2Decimals } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";

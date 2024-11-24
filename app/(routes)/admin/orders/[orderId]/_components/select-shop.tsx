@@ -1,5 +1,5 @@
 import SelectSheet from "@/components/select-sheet";
-import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
+import { NameWithImage } from "@/components/user";
 import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import type { Shop } from "@prisma/client";

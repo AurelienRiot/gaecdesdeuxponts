@@ -13,7 +13,6 @@ import {
   type DayPickerProps,
   type DropdownProps,
 } from "react-day-picker";
-import { ScrollArea } from "./scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
 
 export type CalendarProps = DayPickerProps & {

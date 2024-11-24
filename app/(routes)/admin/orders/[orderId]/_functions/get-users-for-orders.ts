@@ -10,7 +10,12 @@ async function userPrismaQuery() {
     where: {
       role: { in: ["pro", "user", "trackOnlyUser"] },
     },
-    include: { address: true, billingAddress: true, links: true, defaultOrders: { select: { day: true } } },
+    include: {
+      address: true,
+      billingAddress: true,
+      shop: { include: { links: true, shopHours: { orderBy: { day: "asc" } } } },
+      defaultOrders: { select: { day: true } },
+    },
   });
 }
 
@@ -24,7 +29,7 @@ const getUsersForOrders = unstable_cache(
     });
   },
   ["getUsers"],
-  { revalidate: 60 * 60 * 24, tags: ["users", "defaultOrders"] },
+  { revalidate: 60 * 60 * 24, tags: ["users", "defaultOrders", "shops"] },
 );
 
 function formatUsers(users: Awaited<ReturnType<typeof userPrismaQuery>>): UserForOrderType[] {
@@ -40,7 +45,8 @@ function formatUsers(users: Awaited<ReturnType<typeof userPrismaQuery>>): UserFo
       phone: user.phone,
       address: addressFormatter(user.address, false),
       notes: user.notes,
-      links: user.links,
+      links: user.shop?.links || [],
+      shopHours: user.shop?.shopHours || [],
       defaultDaysOrders: user.defaultOrders.map((order) => order.day),
       id: user.id,
     };

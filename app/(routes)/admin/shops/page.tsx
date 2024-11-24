@@ -25,6 +25,7 @@ export default ShopPage;
 
 const ServerShopPage = async () => {
   const shops = await prismadb.shop.findMany({
+    include: { links: true, shopHours: { orderBy: { day: "asc" } } },
     orderBy: {
       updatedAt: "desc",
     },
@@ -35,10 +36,7 @@ const ServerShopPage = async () => {
 const DisplayShopLoading = () => (
   <>
     <div className="flex flex-col items-center justify-between sm:flex-row">
-      <Heading
-        title={`Liste des magasins`}
-        description="Afficher et modifier les magasins"
-      />
+      <Heading title={`Liste des magasins`} description="Afficher et modifier les magasins" />
       <Button className="m-2 pb-6 pt-6 sm:ml-2 sm:pb-0 sm:pt-0">
         <Plus className="mr-2  h-4 w-4" />
         Ajouter un nouveau
@@ -46,12 +44,7 @@ const DisplayShopLoading = () => (
     </div>
 
     <div className="flex flex-wrap items-center justify-start gap-2">
-      <Button
-        disabled
-        variant="outline"
-        role="combobox"
-        className={" justify-between active:scale-100 "}
-      >
+      <Button disabled variant="outline" role="combobox" className={" justify-between active:scale-100 "}>
         Rechercher votre adresse
         <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
       </Button>

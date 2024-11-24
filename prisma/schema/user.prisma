@@ -41,7 +41,6 @@ model User {
   notes          String?
   completed      Boolean         @default(true)
   role           Role            @default(user)
-  links          Link[]
   orders         Order[]
   amapOrders     AMAPOrder[]
   invoices       Invoice[]
@@ -49,6 +48,7 @@ model User {
   sessions       Session[]
   address        Address?
   billingAddress BillingAddress?
+  shop           Shop?
   messages       Contact[]
   comments       Comment[]
   notifications  Notification?
@@ -123,16 +123,6 @@ model BillingAddress {
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-
-  @@index([userId])
-}
-
-model Link {
-  id     Int    @id @unique @default(autoincrement())
-  label  String
-  value  String
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }

@@ -6,12 +6,12 @@ import { TabsContent } from "@radix-ui/react-tabs";
 import * as React from "react";
 import { biocoopProducts, DisplayProductIcon, priorityMap } from "./product";
 import { getUserName } from "./table-custom-fuction";
-import { NameWithImage } from "./table-custom-fuction/common-cell";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { NameWithImage } from "./user";
 
 type ValueType<V extends { key: string }> = { label: React.ReactNode; value: V; highlight?: boolean };
 type TabsType<T> = { label: string; value: T }[];
@@ -136,7 +136,7 @@ function SelectContent<V extends { key: string }, T extends string>({
   React.useEffect(() => {
     const tabValues = tabsValues.find((value) => value.values.some((v) => v.value.key === selectedValue));
     if (!tabValues || tabValues?.tab !== currentTab) {
-      setTimeout(() => scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" }), 400);
+      setTimeout(() => scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" }), 0);
       return;
     }
     if (scrollRef.current && selectedValue) {
@@ -148,7 +148,7 @@ function SelectContent<V extends { key: string }, T extends string>({
             block: "center",
           });
         }
-      }, 400);
+      }, 0);
     }
   }, [selectedValue, tabsValues, currentTab]);
 
@@ -209,17 +209,23 @@ export function sortUserByRole(
         group = { values: [], tab: user.role };
         acc.push(group);
       }
-
+      const name = getUserName(user);
       // Add the user's ID and label to the group's values
       group.values.push({
-        value: { key: user.id },
-        label: <NameWithImage name={getUserName(user)} image={user.image} />,
+        value: { key: user.id, name },
+        label: <NameWithImage name={name} image={user.image} />,
       });
 
       return acc;
     },
-    [] as { values: { value: { key: string }; label: React.ReactNode }[]; tab: Role }[], // Initialize as an empty array
+    [] as { values: { value: { key: string; name: string }; label: React.ReactNode }[]; tab: Role }[], // Initialize as an empty array
   );
+  for (const group of groupedRoles) {
+    group.values.sort((a, b) => {
+      return a.value.name.localeCompare(b.value.name);
+    });
+  }
+
   return groupedRoles;
 }
 

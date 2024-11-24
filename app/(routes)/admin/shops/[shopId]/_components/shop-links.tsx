@@ -1,19 +1,20 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Check, ChevronsUpDown, PlusCircle, X } from "lucide-react";
-import { useFormContext } from "react-hook-form";
-import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import type { UserFormValues } from "./user-schema";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { ChevronsUpDown, PlusCircle, X } from "lucide-react";
+import { useState } from "react";
+import { useFormContext } from "react-hook-form";
+import type { ShopFormValues } from "./shop-schema";
+import { linkNames } from "@/components/react-icons/links";
 
-function UserLinks() {
-  const form = useFormContext<UserFormValues>();
+function ShopLinks() {
+  const form = useFormContext<ShopFormValues>();
   const links = form.watch("links");
 
   function removeEmailField(index: number) {
@@ -61,7 +62,7 @@ function UserLinks() {
               variant="outline"
               size="icon"
               onClick={() => removeEmailField(index)}
-              aria-label="Remove email field"
+              aria-label="Remove link"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -76,8 +77,6 @@ function UserLinks() {
   );
 }
 
-const linkNames = ["Facebook", "Instagram", "Site Web"];
-
 function ValueInput({
   value,
   onChange,
@@ -87,6 +86,7 @@ function ValueInput({
 }) {
   const [search, setSearch] = useState("");
   const [openValue, setOpenValue] = useState(false);
+  const Icon = linkNames.find(({ label }) => label === value)?.Icon;
   return (
     <Popover open={openValue} onOpenChange={setOpenValue}>
       <PopoverTrigger asChild>
@@ -95,7 +95,10 @@ function ValueInput({
           role="combobox"
           className={cn("w-full justify-between", value ? "" : "text-muted-foreground")}
         >
-          {value ? value : "nom"}
+          <div className="flex flex-row items-center gap-2">
+            {Icon && <Icon className=" size-4 " />}
+            {value ? value : "nom"}
+          </div>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -103,17 +106,18 @@ function ValueInput({
         <Command>
           <CommandInput value={search} onValueChange={setSearch} placeholder="Nom de la valeur" />
           <CommandList>
-            {linkNames.map((linkName) => (
+            {linkNames.map(({ label, Icon }) => (
               <CommandItem
-                key={linkName}
-                value={linkName}
+                key={label}
+                value={label}
                 onSelect={(currentValue) => {
                   onChange(currentValue);
                   setOpenValue(false);
                   setSearch("");
                 }}
               >
-                {linkName}
+                <Icon className="mr-2 size-4 " />
+                {label}
               </CommandItem>
             ))}
             {!!search && (
@@ -130,7 +134,7 @@ function ValueInput({
                   setSearch("");
                 }}
               >
-                {search}
+                {`Créer "${search}"`}
               </CommandItem>
             )}
           </CommandList>
@@ -140,4 +144,4 @@ function ValueInput({
   );
 }
 
-export default UserLinks;
+export default ShopLinks;

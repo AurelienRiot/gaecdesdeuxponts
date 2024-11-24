@@ -3,7 +3,7 @@
 import Spinner from "@/components/animations/spinner";
 import type { SendInvoiceReturnType } from "@/components/pdf/server-actions/create-and-send-invoice";
 import { getUserName } from "@/components/table-custom-fuction";
-import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
+import { NameWithImage } from "@/components/user";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { IconButton, LoadingButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -177,7 +177,8 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
           }
         }
       }
-      await streamKy("/api/send-invoices", "POST", updateData, onError, {
+      await streamKy("/api/send-invoices", updateData, onError, {
+        method: "POST",
         json: { invoiceIds: chunk },
         timeout: 20000,
       });

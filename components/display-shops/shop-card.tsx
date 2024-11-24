@@ -1,47 +1,29 @@
-"use client";
-import deleteShop from "@/app/(routes)/admin/shops/[shopId]/_actions/delete-shop";
-import { AlertModal } from "@/components/ui/alert-modal-form";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import useServerAction from "@/hooks/use-server-action";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { haversine } from "@/lib/math";
-import { cn } from "@/lib/utils";
-import type { Shop } from "@prisma/client";
-import { ClipboardEdit } from "lucide-react";
+import { cn, formatFrenchPhoneNumber } from "@/lib/utils";
+import type { FullShop } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { forwardRef, useState } from "react";
-import { formatPhoneNumber } from "react-phone-number-input";
+import { forwardRef } from "react";
 import { Icons } from "../icons";
 import { AutosizeTextarea } from "../ui/autosize-textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import DisplayHours from "./display-hours";
+import ShopDeleteButton from "./shop-delete-button";
 
-type ShopCardProps = Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> & {
-  shop: Shop;
+type ShopCardProps = React.HTMLAttributes<HTMLDivElement> & {
+  shop: FullShop;
   coordinates: { long: number | undefined; lat: number | undefined };
-  display: "admin" | "find" | "cart" | "profile";
-  onSelect?: (shopId: string) => void;
+  display: "admin" | "find" | "profile" | "cart";
 };
 
 export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
-  ({ shop, coordinates, display, className, onSelect, ...props }, ref) => {
+  ({ shop, coordinates, display, className, children, ...props }, ref) => {
     const distance = haversine(coordinates, { lat: shop.lat, long: shop.long });
-    const router = useRouter();
-    const [open, setOpen] = useState(false);
-    const { serverAction, loading } = useServerAction(deleteShop);
-
-    const onDelete = async () => {
-      function onSuccess() {
-        router.push(`/admin/categories`);
-        router.refresh();
-      }
-      serverAction({ data: { id: shop.id }, onSuccess, onFinally: () => setOpen(false) });
-    };
 
     return (
       <>
-        {display === "admin" && <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />}
         <Card
           data-state={display}
           className={cn("relative flex h-full w-full min-w-[300px]  max-w-[90vw] flex-col justify-between ", className)}
@@ -73,7 +55,7 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
             )}
             {!!shop.phone && (
               <Link href={`tel:${shop.phone}`} target="_blank">
-                {formatPhoneNumber(shop.phone)}
+                {formatFrenchPhoneNumber(shop.phone)}
               </Link>
             )}
             {!!shop.email && (
@@ -86,6 +68,7 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
                 {shop.website}
               </Link>
             )}
+            {shop.shopHours && <DisplayHours shopHours={shop.shopHours} />}
             {distance !== undefined && (
               <div>
                 {" "}
@@ -94,32 +77,8 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
               </div>
             )}
           </CardContent>
-          {display === "admin" && (
-            <CardFooter className="flex flex-row items-end justify-between  gap-2">
-              <Button variant="outline" disabled={loading} onClick={() => setOpen(true)} className="hover:underline">
-                Supprimer
-              </Button>
-              <Button variant={"expandIcon"} disabled={loading} iconPlacement="right" Icon={ClipboardEdit} asChild>
-                <Link href={`/admin/shops/${shop.id}`}>Modifier</Link>
-              </Button>
-            </CardFooter>
-          )}
-          {display === "cart" && (
-            <CardFooter className="flex flex-row  justify-center  gap-2">
-              <Button
-                variant={"expandIcon"}
-                iconPlacement="right"
-                Icon={Icons.pinMap}
-                className="place-items-end"
-                onClick={() => {
-                  onSelect?.(shop.id);
-                  setOpen(false);
-                }}
-              >
-                Selectionner
-              </Button>
-            </CardFooter>
-          )}
+          {display === "admin" && <ShopDeleteButton shopId={shop.id} />}
+          {children}
         </Card>
       </>
     );

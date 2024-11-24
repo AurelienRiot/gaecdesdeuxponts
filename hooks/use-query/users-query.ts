@@ -7,7 +7,7 @@ import { z } from "zod";
 
 export function useUsersQuery() {
   return useQuery({
-    queryFn: async () => await customKy("/api/users", "GET", z.array(userForOrderSchema)),
+    queryFn: async () => await customKy("/api/users", z.array(userForOrderSchema), { method: "GET" }),
     queryKey: ["fetchUsers"],
     staleTime: 24 * 60 * 60 * 1000,
   });

@@ -89,7 +89,7 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
         include: {
           orderItems: true,
           shop: true,
-          user: { include: { address: true, billingAddress: true, links: true } },
+          user: { select: { email: true, name: true, company: true, address: true, image: true } },
           invoiceOrder: {
             select: { invoice: { select: { id: true, invoiceEmail: true, dateOfPayment: true } } },
             orderBy: { createdAt: "desc" },

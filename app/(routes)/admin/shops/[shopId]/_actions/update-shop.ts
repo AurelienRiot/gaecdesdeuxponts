@@ -11,13 +11,40 @@ async function updateShop(data: ShopFormValues) {
     schema,
     data,
     roles: SHIPPING_ONLY,
-    serverAction: async (data) => {
-      await prismadb.shop.update({
+    serverAction: async ({ links, shopHours, ...data }) => {
+      const sameUser = await prismadb.shop.findFirst({
         where: {
-          id: data.id,
+          userId: data.userId,
         },
-        data,
       });
+      if (sameUser && sameUser.userId !== data.userId) {
+        return {
+          success: false,
+          message: "Un magasin avec ce client existe déja",
+        };
+      }
+      await Promise.all([
+        prismadb.link.deleteMany({
+          where: {
+            shopId: data.id,
+          },
+        }),
+        prismadb.shopHours.deleteMany({
+          where: {
+            shopId: data.id,
+          },
+        }),
+        prismadb.shop.update({
+          where: {
+            id: data.id,
+          },
+          data: {
+            ...data,
+            links: { create: links },
+            shopHours: { create: shopHours },
+          },
+        }),
+      ]);
 
       revalidateTag("shops");
       return {

@@ -1,6 +1,6 @@
 import SelectSheet from "@/components/select-sheet";
 import { getUserName } from "@/components/table-custom-fuction";
-import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
+import { NameWithImage } from "@/components/user";
 import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import type { User } from "@prisma/client";

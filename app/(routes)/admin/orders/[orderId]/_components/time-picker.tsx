@@ -1,5 +1,5 @@
 "use client";
-import { generateTimeOptions } from "@/app/(routes)/(public)/panier/_components/time-picker";
+import { generateTimeOptions } from "@/app/(routes)/(public)/panier/_components/cart-time-picker";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";

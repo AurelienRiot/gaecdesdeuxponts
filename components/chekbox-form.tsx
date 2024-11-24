@@ -10,15 +10,21 @@ interface CheckboxFormProps {
   title: string;
   description: string;
   className?: string;
+  labelClassName?: string;
 }
 
 const CheckboxForm = forwardRef<HTMLButtonElement, CheckboxFormProps>(
-  ({ checked, onCheckedChange, disabled, title, description, className }, ref) => {
+  ({ checked, onCheckedChange, disabled, title, description, className, labelClassName }, ref) => {
     return (
       <FormItem
         className={cn("flex h-20  flex-row items-start space-x-3 space-y-0 rounded-md border bg-background", className)}
       >
-        <FormLabel className="p-4 flex cursor-pointer flex-row items-start space-x-3 space-y-0 w-full h-full">
+        <FormLabel
+          className={cn(
+            "p-4 flex cursor-pointer flex-row items-start space-x-3 space-y-0 w-full h-full",
+            labelClassName,
+          )}
+        >
           <FormControl>
             <Checkbox checked={checked} onCheckedChange={onCheckedChange} disabled={disabled} ref={ref} />
           </FormControl>

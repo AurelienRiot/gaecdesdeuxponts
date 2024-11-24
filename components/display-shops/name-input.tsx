@@ -1,11 +1,11 @@
 "use client";
 import { Input } from "@/components/ui/input";
-import type { Shop } from "@prisma/client";
+import type { FullShop } from "@/types";
 import { type ChangeEvent, type Dispatch, type SetStateAction, useState } from "react";
 
 interface NameInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  setSortedShops: Dispatch<SetStateAction<Shop[]>>;
-  shops: Shop[];
+  setSortedShops: Dispatch<SetStateAction<FullShop[]>>;
+  shops: FullShop[];
 }
 
 const NameInput = ({ setSortedShops, shops, ...props }: NameInputProps) => {

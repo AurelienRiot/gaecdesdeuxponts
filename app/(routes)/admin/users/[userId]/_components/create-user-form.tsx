@@ -17,10 +17,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import createUser from "../_actions/create-user";
+import CcInvoiceForm from "./cc-invoice-form";
 import SelectRole from "./select-role";
 import { schema, type UserFormValues } from "./user-schema";
-import CcInvoiceForm from "./cc-invoice-form";
-import UserLinks from "./user-links";
 
 export const CreateUserForm = () => {
   const { serverAction } = useServerAction(createUser);
@@ -42,7 +41,6 @@ export const CreateUserForm = () => {
       phone: "",
       role: "pro",
       ccInvoice: [],
-      links: [],
       address: {
         label: "",
         city: "",
@@ -213,7 +211,6 @@ export const CreateUserForm = () => {
                   </FormItem>
                 )}
               />
-              <UserLinks />
               <CcInvoiceForm />
               <AddressForm />
               <BillingAddressForm />

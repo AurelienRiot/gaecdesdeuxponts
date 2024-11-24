@@ -1,12 +1,12 @@
 import { AnimateHeight } from "@/components/animations/animate-size";
 import type { GetAmapOrdersForTheDay } from "@/components/google-events";
-import { NameWithImage } from "@/components/table-custom-fuction/common-cell";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { nanoid } from "@/lib/id";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import DisplayItem from "./display-item";
+import { NameWithImage } from "@/components/user";
 
 export interface DisplayAmapProps {
   amapOrders: GetAmapOrdersForTheDay;
