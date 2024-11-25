@@ -14,12 +14,14 @@ export const watermarkColor = "rgb(255, 0, 0)";
 //     { src: "https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-600.ttf", fontWeight: 600 },
 //   ],
 // });
+
 if (typeof window === "undefined") {
+  console.log("server: ", process.cwd());
   Font.register({
     family: "Inter",
     fonts: [
-      { src: "app/pdf/fonts/inter.ttf", fontWeight: 400 },
-      { src: "app/pdf/fonts/inter-bold.ttf", fontWeight: 600 },
+      { src: `${process.cwd()}/app/pdf/fonts/inter.ttf`, fontWeight: 400 },
+      { src: `${process.cwd()}/app/pdf/fonts/inter-bold.ttf`, fontWeight: 600 },
     ],
   });
 } else {
@@ -171,7 +173,7 @@ const Logo = () => (
 
 const getImagePath = (image: string) => {
   const isClient = typeof window !== "undefined";
-  return isClient ? `/${image}` : `app/pdf/images/${image}`;
+  return isClient ? `/${image}` : `${process.cwd()}/app/pdf/images/${image}`;
 };
 
 const thankYouMsgStyles = StyleSheet.create({
