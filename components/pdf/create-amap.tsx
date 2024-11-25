@@ -31,7 +31,7 @@ export const AMAPStyle = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 600,
     marginBottom: 20,
     textIndent: 15,
   },
@@ -179,7 +179,7 @@ export function Description() {
   return (
     <View style={[AMAPStyle.container, { marginTop: 20 }]} break>
       <Text style={AMAPStyle.title}>Descriptif des produits</Text>
-      <Text style={{ fontWeight: "bold" }}>- Lait cru bio</Text>
+      <Text style={{ fontWeight: 600 }}>- Lait cru bio</Text>
       <Text style={[AMAPStyle.paragraph, { textIndent: 0, marginTop: 10 }]}>
         En provenance directe de la ferme, notre lait cru est riche en nutriments essentiels tels que les vitamines, les
         minéraux et les enzymes naturelles qui sont souvent détruits lors de la pasteurisation. Notre lait cru doit être
@@ -220,16 +220,16 @@ export function Commande({
       <InvoiceTableRow items={order.items} form={form} />
       <InvoiceTableFooter numberOfWeeks={numberOfWeeks} order={order} form={form} />
       <View style={{ marginTop: 10, display: "flex", flexDirection: "row", gap: 4 }}>
-        <Text style={{ fontWeight: "bold", textDecoration: "underline" }}>Semaine d'absence pévues :</Text>
+        <Text style={{ fontWeight: 600, textDecoration: "underline" }}>Semaine d'absence pévues :</Text>
         {!form && <Text>{order.dayOfAbsence.length}</Text>}
       </View>
 
       <View style={{ marginTop: 10, display: "flex", flexDirection: "row", gap: 4 }}>
-        <Text style={{ fontWeight: "bold", textDecoration: "underline" }}>Règlement :</Text>
+        <Text style={{ fontWeight: 600, textDecoration: "underline" }}>Règlement :</Text>
         <View style={{ fontSize: 10 }}>
           <Text>Si montant inférieur à 40 €, un seul chèque</Text>
           <Text>Si montant supérieur à 40 €, deux chèques encaissés au début et au milieu du contrat.</Text>
-          <Text style={{ fontWeight: "bold" }}>A l'ordre du Gaec des deux ponts</Text>
+          <Text style={{ fontWeight: 600 }}>A l'ordre du Gaec des deux ponts</Text>
         </View>
       </View>
 
@@ -270,7 +270,7 @@ const tableHeaderStyles = StyleSheet.create({
     alignItems: "center",
     height: 24,
     textAlign: "center",
-    fontWeight: "bold",
+    fontWeight: 600,
     flexGrow: 1,
     borderWidth: 1,
     borderBottomWidth: 0,
@@ -368,7 +368,7 @@ const tableFooterStyles = StyleSheet.create({
     borderLeft: 1,
     borderRight: 1,
     borderColor: borderColor,
-    // fontStyle: "bold",
+    // fontStyle: 600,
   },
   description: {
     width: "80%",
@@ -404,10 +404,7 @@ export const InvoiceTableFooter = ({
       </View>
       <View style={tableFooterStyles.row}>
         <Text
-          style={[
-            tableFooterStyles.description,
-            !form ? { fontWeight: "bold" } : { fontWeight: "bold", textAlign: "right" },
-          ]}
+          style={[tableFooterStyles.description, !form ? { fontWeight: 600 } : { fontWeight: 600, textAlign: "right" }]}
         >
           MONTANT TOTAL ( € )
         </Text>

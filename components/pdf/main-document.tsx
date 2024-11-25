@@ -1,4 +1,5 @@
-import { Document, Image, Page, StyleSheet, Text, View, Font, Link } from "@react-pdf/renderer";
+import { Document, Font, Image, Link, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { certificationBio, fontInter, fontInterBold, logoFondBlanc } from "../images";
 import type { PDFData } from "./pdf-data";
 
 export const tableRowsCount = 10;
@@ -15,24 +16,13 @@ export const watermarkColor = "rgb(255, 0, 0)";
 //   ],
 // });
 
-if (typeof window === "undefined") {
-  console.log("server: ", process.cwd());
-  Font.register({
-    family: "Inter",
-    fonts: [
-      { src: `${process.cwd()}/app/pdf/fonts/inter.ttf`, fontWeight: 400 },
-      { src: `${process.cwd()}/app/pdf/fonts/inter-bold.ttf`, fontWeight: 600 },
-    ],
-  });
-} else {
-  Font.register({
-    family: "Inter",
-    fonts: [
-      { src: "/fonts/inter.ttf", fontWeight: 400 },
-      { src: "/fonts/inter-bold.ttf", fontWeight: 600 },
-    ],
-  });
-}
+Font.register({
+  family: "Inter",
+  fonts: [
+    { src: fontInter, fontWeight: 400 },
+    { src: fontInterBold, fontWeight: 600 },
+  ],
+});
 
 export const MainStyles = StyleSheet.create({
   page: {
@@ -82,10 +72,12 @@ const MainDocument = ({
 
       <BillTo customer={customer} />
       {children}
-
       <Text
         style={MainStyles.pageNumbers}
-        render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`}
+        render={({ pageNumber, totalPages }) => {
+          console.log(pageNumber, totalPages);
+          return `Page ${pageNumber} / ${totalPages}`;
+        }}
         fixed
       />
       {invoice ? <InvoiceThankYouMsg /> : <ThankYouMsg />}
@@ -165,21 +157,18 @@ export const Company = () => (
 const Logo = () => (
   <View style={CompanyStyles.logoContainer}>
     {/* eslint-disable-next-line jsx-a11y/alt-text */}
-    <Image style={CompanyStyles.logo1} src={getImagePath("logo-font-blanc.png")} cache={false} />
+    <Image style={CompanyStyles.logo1} src={logoFondBlanc} cache={false} />
     {/* eslint-disable-next-line jsx-a11y/alt-text */}
-    <Image style={CompanyStyles.logo2} src={getImagePath("certification-bio.jpeg")} cache={false} />
+    <Image style={CompanyStyles.logo2} src={certificationBio} cache={false} />
   </View>
 );
-
-const getImagePath = (image: string) => {
-  const isClient = typeof window !== "undefined";
-  return isClient ? `/${image}` : `${process.cwd()}/app/pdf/images/${image}`;
-};
 
 const thankYouMsgStyles = StyleSheet.create({
   titleContainer: {
     flexDirection: "column",
     marginTop: 10,
+    lineHeight: 0.6,
+    gap: 4,
   },
   reportTitle: {
     fontSize: 12,

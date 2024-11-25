@@ -138,7 +138,7 @@ const tableRowStyles = StyleSheet.create({
     paddingLeft: 4,
     paddingRight: 4,
     flexWrap: "wrap",
-    fontWeight: "bold",
+    fontWeight: 600,
   },
 });
 
