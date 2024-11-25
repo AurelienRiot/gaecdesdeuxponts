@@ -30,25 +30,27 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, newOrder,
   return (
     <>
       <Card className={cn("w-full max-w-sm ", className)}>
-        <CardHeader
-          className="flex relative items-center justify-start py-2 px-4 cursor-pointer "
-          onClick={() => {
-            if (!isExpanded) {
-              router.prefetch(`/admin/orders/${order.id}`);
-            }
-            setIsExpanded(!isExpanded);
-          }}
-        >
+        <CardHeader className="flex relative items-center justify-start py-2 px-4  ">
           <div className="grid grid-cols-11  items-center w-full">
             <SetUserModal order={order} otherOrders={otherOrders} newOrder={newOrder} />
 
             <StatusCell status={order.status} className="col-span-5 justify-center" />
-            <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={() => {
+                if (!isExpanded) {
+                  router.prefetch(`/admin/orders/${order.id}`);
+                }
+                setIsExpanded(!isExpanded);
+              }}
+              className="flex justify-end relative"
+            >
+              <div className="absolute inset-0 -translate-x-2 -translate-y-3 py-5 px-6 bg-transparent"></div>
               <ChevronDown
                 data-state={isExpanded}
                 className="h-4 w-4 data-[state=true]:rotate-180 transition-transform duration-500"
               />
-            </div>
+            </button>
           </div>
         </CardHeader>
         <AnimateHeight display={isExpanded}>

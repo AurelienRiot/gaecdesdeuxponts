@@ -115,7 +115,7 @@ export const CreateUserForm = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input disabled={form.formState.isSubmitting} placeholder="email" {...field} />
+                      <Input type="email" disabled={form.formState.isSubmitting} placeholder="email" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

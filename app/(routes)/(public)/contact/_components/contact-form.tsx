@@ -106,6 +106,7 @@ export const ContactForm = (): React.ReactNode => {
                         placeholder="exemple@mail.com"
                         {...field}
                         autoComplete="email"
+                        type="email"
                       />
                     </div>
                   </FormControl>

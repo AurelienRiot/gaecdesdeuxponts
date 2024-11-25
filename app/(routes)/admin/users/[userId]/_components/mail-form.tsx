@@ -79,7 +79,7 @@ function EmailModal({ id, onClose, openModal }: { id: string; onClose: () => voi
     >
       <form action={onSumbit} className="space-y-4">
         <div className="space-y-4">
-          <Input name="email" id="email" placeholder="exemple@email.fr" className="col-span-3" />
+          <Input type="email" name="email" id="email" placeholder="exemple@email.fr" className="col-span-3" />
         </div>
         <DialogFooter>
           <FormLoadingButton>Mettre à jour l'email</FormLoadingButton>
