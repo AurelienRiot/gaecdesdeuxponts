@@ -11,13 +11,13 @@ async function updateShop(data: ShopFormValues) {
     schema,
     data,
     roles: SHIPPING_ONLY,
-    serverAction: async ({ links, shopHours, ...data }) => {
+    serverAction: async ({ links, shopHours, userId, ...data }) => {
       const sameUser = await prismadb.shop.findFirst({
         where: {
-          userId: data.userId,
+          userId: userId,
         },
       });
-      if (sameUser && sameUser.userId !== data.userId) {
+      if (sameUser && userId && sameUser.userId !== userId) {
         return {
           success: false,
           message: "Un magasin avec ce client existe déja",
@@ -40,6 +40,7 @@ async function updateShop(data: ShopFormValues) {
           },
           data: {
             ...data,
+            userId: userId ? userId : undefined,
             links: { create: links },
             shopHours: { create: shopHours },
           },

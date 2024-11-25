@@ -11,16 +11,16 @@ async function createShop(data: ShopFormValues) {
     schema,
     data,
     roles: SHIPPING_ONLY,
-    serverAction: async ({ links, shopHours, ...data }) => {
+    serverAction: async ({ links, shopHours, userId, ...data }) => {
       const [sameShop, sameUser] = await Promise.all([
         prismadb.shop.findFirst({
           where: {
             name: data.name,
           },
         }),
-        prismadb.shop.findFirst({
+        prismadb.shop.findUnique({
           where: {
-            userId: data.userId,
+            userId: userId,
           },
         }),
       ]);
@@ -30,7 +30,7 @@ async function createShop(data: ShopFormValues) {
           message: "Un magasin avec ce client existe déja",
         };
       }
-      if (sameShop) {
+      if (sameShop && userId) {
         return {
           success: false,
           message: "Un magasin avec ce nom existe déja",
@@ -38,7 +38,12 @@ async function createShop(data: ShopFormValues) {
       }
 
       await prismadb.shop.create({
-        data: { ...data, links: { create: links }, shopHours: { create: shopHours } },
+        data: {
+          ...data,
+          userId: userId ? userId : undefined,
+          links: { create: links },
+          shopHours: { create: shopHours },
+        },
       });
 
       revalidateTag("shops");

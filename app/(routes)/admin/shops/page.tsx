@@ -27,7 +27,7 @@ const ServerShopPage = async () => {
   const shops = await prismadb.shop.findMany({
     include: { links: true, shopHours: { orderBy: { day: "asc" } } },
     orderBy: {
-      updatedAt: "desc",
+      createdAt: "desc",
     },
   });
   return <DisplayShop data={shops} />;
