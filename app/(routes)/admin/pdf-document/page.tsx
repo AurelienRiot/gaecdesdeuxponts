@@ -36,7 +36,7 @@ const DisplayFormAMAP = dynamic(() => import("./display-amap-form"), {
 
 const TestPage = () => {
   return (
-    <div className="h-[calc(100vh-66px)] space-y-4 p-4">
+    <div className="h-[calc(100vh-200px)] space-y-4 p-4">
       <div className="flex gap-4">
         <Button
           onClick={() => {

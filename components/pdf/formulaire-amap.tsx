@@ -12,14 +12,6 @@ import Details from "./details";
 import { Company } from "./main-document";
 import type { AMAPType } from "./pdf-data";
 
-// Font.register({
-//   family: "Inter",
-//   fonts: [
-//     { src: "https://www.laiteriedupontrobert.fr/fonts/inter.ttf", fontWeight: 400 },
-//     { src: "https://www.laiteriedupontrobert.fr/fonts/inter-bold.ttf", fontWeight: 600 },
-//   ],
-// });
-
 const AmapPDFForm = ({ data }: { data: AMAPType }) => {
   // const numberOfWeeks = getNumberOfWeeks(
   //   data.contrat.startDate,
@@ -62,7 +54,7 @@ const DateDistribution = () => (
   <View style={[AMAPStyle.container, { marginTop: 40 }]}>
     <Text style={AMAPStyle.title}>Dates de distribution des produits laitiers</Text>
 
-    <Text style={{ marginBottom: 10, fontWeight: 600 }}>Barrer les dates où il n'y auras pas de livraison</Text>
+    <Text style={{ marginBottom: 10, fontWeight: "bold" }}>Barrer les dates où il n'y auras pas de livraison</Text>
     <Text>Septembre : le 03, le 10, le 17 et le 24 </Text>
     <Text>Octobre : le 01, le 08, le 15, le 22 et le 29 </Text>
     <Text>Novembre : le 05, le 12, le 19 et le 26 </Text>

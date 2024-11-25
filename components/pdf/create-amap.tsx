@@ -6,14 +6,6 @@ import { Company, ThankYouMsg, borderColor, foregroundColor, mainColor } from ".
 import type { AMAPType } from "./pdf-data";
 import { groupedDatesByMonth } from "@/lib/date-utils";
 
-// Font.register({
-//   family: "Inter",
-//   fonts: [
-//     { src: "https://www.laiteriedupontrobert.fr/fonts/inter.ttf", fontWeight: 400 },
-//     { src: "https://www.laiteriedupontrobert.fr/fonts/inter-bold.ttf", fontWeight: 600 },
-//   ],
-// });
-
 export const AMAPStyle = StyleSheet.create({
   page: {
     fontFamily: "Inter",
@@ -31,7 +23,7 @@ export const AMAPStyle = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 600,
+    fontWeight: "bold",
     marginBottom: 20,
     textIndent: 15,
   },
@@ -179,7 +171,7 @@ export function Description() {
   return (
     <View style={[AMAPStyle.container, { marginTop: 20 }]} break>
       <Text style={AMAPStyle.title}>Descriptif des produits</Text>
-      <Text style={{ fontWeight: 600 }}>- Lait cru bio</Text>
+      <Text style={{ fontWeight: "bold" }}>- Lait cru bio</Text>
       <Text style={[AMAPStyle.paragraph, { textIndent: 0, marginTop: 10 }]}>
         En provenance directe de la ferme, notre lait cru est riche en nutriments essentiels tels que les vitamines, les
         minéraux et les enzymes naturelles qui sont souvent détruits lors de la pasteurisation. Notre lait cru doit être
@@ -220,16 +212,16 @@ export function Commande({
       <InvoiceTableRow items={order.items} form={form} />
       <InvoiceTableFooter numberOfWeeks={numberOfWeeks} order={order} form={form} />
       <View style={{ marginTop: 10, display: "flex", flexDirection: "row", gap: 4 }}>
-        <Text style={{ fontWeight: 600, textDecoration: "underline" }}>Semaine d'absence pévues :</Text>
+        <Text style={{ fontWeight: "bold", textDecoration: "underline" }}>Semaine d'absence pévues :</Text>
         {!form && <Text>{order.dayOfAbsence.length}</Text>}
       </View>
 
       <View style={{ marginTop: 10, display: "flex", flexDirection: "row", gap: 4 }}>
-        <Text style={{ fontWeight: 600, textDecoration: "underline" }}>Règlement :</Text>
+        <Text style={{ fontWeight: "bold", textDecoration: "underline" }}>Règlement :</Text>
         <View style={{ fontSize: 10 }}>
           <Text>Si montant inférieur à 40 €, un seul chèque</Text>
           <Text>Si montant supérieur à 40 €, deux chèques encaissés au début et au milieu du contrat.</Text>
-          <Text style={{ fontWeight: 600 }}>A l'ordre du Gaec des deux ponts</Text>
+          <Text style={{ fontWeight: "bold" }}>A l'ordre du Gaec des deux ponts</Text>
         </View>
       </View>
 
@@ -270,7 +262,7 @@ const tableHeaderStyles = StyleSheet.create({
     alignItems: "center",
     height: 24,
     textAlign: "center",
-    fontWeight: 600,
+    fontWeight: "bold",
     flexGrow: 1,
     borderWidth: 1,
     borderBottomWidth: 0,
@@ -368,7 +360,7 @@ const tableFooterStyles = StyleSheet.create({
     borderLeft: 1,
     borderRight: 1,
     borderColor: borderColor,
-    // fontStyle: 600,
+    // fontStyle: "bold",
   },
   description: {
     width: "80%",
@@ -404,7 +396,10 @@ export const InvoiceTableFooter = ({
       </View>
       <View style={tableFooterStyles.row}>
         <Text
-          style={[tableFooterStyles.description, !form ? { fontWeight: 600 } : { fontWeight: 600, textAlign: "right" }]}
+          style={[
+            tableFooterStyles.description,
+            !form ? { fontWeight: "bold" } : { fontWeight: "bold", textAlign: "right" },
+          ]}
         >
           MONTANT TOTAL ( € )
         </Text>

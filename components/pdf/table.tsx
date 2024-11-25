@@ -22,7 +22,7 @@ export const ShippingTableStyles = StyleSheet.create({
     alignItems: "center",
     height: 24,
     textAlign: "center",
-    fontWeight: 600,
+    fontWeight: "bold",
     flexGrow: 1,
   },
   ref: {
@@ -58,7 +58,7 @@ export const ShippingTableStyles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingVertical: 2,
     alignItems: "center",
-    // fontStyle: 600,
+    // fontStyle: "bold",
   },
 
   refItem: {
@@ -93,7 +93,7 @@ export const ShippingTableStyles = StyleSheet.create({
     borderBottomWidth: 1,
     alignItems: "center",
     height: 24,
-    // fontStyle: 600,
+    // fontStyle: "bold",
     color: "white",
   },
   refBlank: {
@@ -134,7 +134,7 @@ export const invoiceTableHeaderStyles = StyleSheet.create({
     alignItems: "center",
     height: 24,
     textAlign: "center",
-    fontWeight: 600,
+    fontWeight: "bold",
     flexGrow: 1,
   },
   description: {
@@ -197,7 +197,7 @@ export const invoiceTableRowStyles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingVertical: 2,
     alignItems: "center",
-    // fontStyle: 600,
+    // fontStyle: "bold",
   },
   description: {
     width: "40%",
@@ -255,7 +255,7 @@ export const invoiceTableBlankSpaceStyles = StyleSheet.create({
     borderBottomWidth: 1,
     alignItems: "center",
     height: 24,
-    // fontStyle: 600,
+    // fontStyle: "bold",
     color: "white",
   },
   description: {
@@ -280,7 +280,7 @@ export const invoiceTableFooterStyles = StyleSheet.create({
     alignItems: "center",
     height: 24,
     fontSize: 12,
-    // fontStyle: 600,
+    // fontStyle: "bold",
   },
   description: {
     width: "85%",

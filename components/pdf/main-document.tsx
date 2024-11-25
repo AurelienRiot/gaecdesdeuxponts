@@ -19,10 +19,18 @@ export const watermarkColor = "rgb(255, 0, 0)";
 Font.register({
   family: "Inter",
   fonts: [
-    { src: fontInter, fontWeight: 400 },
-    { src: fontInterBold, fontWeight: 600 },
+    { src: "https://www.laiteriedupontrobert.fr/fonts/inter.ttf", fontWeight: 400 },
+    { src: "https://www.laiteriedupontrobert.fr/fonts/inter-bold.ttf", fontWeight: 600 },
   ],
 });
+
+// Font.register({
+//   family: "Inter",
+//   fonts: [
+//     { src: fontInter, fontWeight: 400 },
+//     { src: fontInterBold, fontWeight: 600 },
+//   ],
+// });
 
 export const MainStyles = StyleSheet.create({
   page: {
@@ -42,6 +50,7 @@ export const MainStyles = StyleSheet.create({
     marginTop: -10,
     justifyContent: "space-between",
   },
+
   pageNumbers: {
     position: "absolute",
     bottom: 5,
@@ -74,12 +83,10 @@ const MainDocument = ({
       {children}
       <Text
         style={MainStyles.pageNumbers}
-        render={({ pageNumber, totalPages }) => {
-          console.log(pageNumber, totalPages);
-          return `Page ${pageNumber} / ${totalPages}`;
-        }}
+        render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`}
         fixed
       />
+
       {invoice ? <InvoiceThankYouMsg /> : <ThankYouMsg />}
     </Page>
   </Document>
@@ -167,8 +174,6 @@ const thankYouMsgStyles = StyleSheet.create({
   titleContainer: {
     flexDirection: "column",
     marginTop: 10,
-    lineHeight: 0.6,
-    gap: 4,
   },
   reportTitle: {
     fontSize: 12,

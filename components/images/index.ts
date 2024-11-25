@@ -13,6 +13,6 @@ export const certificationBio = createImageUrl("static/xvx7zx5jmcweiecdq0do");
 
 export const logoFondBlanc = createImageUrl("static/ofelrvks6dcre6p3leda");
 
-export const fontInter = createRawUrl("static/oei9fb3ywzgponphu9di.ttf");
+export const fontInter = createRawUrl("static/kg0jzsnbzijs7qv9bwme.ttf");
 
-export const fontInterBold = createRawUrl("static/kg0jzsnbzijs7qv9bwme.ttf");
+export const fontInterBold = createRawUrl("static/oei9fb3ywzgponphu9di.ttf");
