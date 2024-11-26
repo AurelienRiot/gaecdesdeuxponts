@@ -34,8 +34,8 @@ export function useOrdersQueryClient() {
     }, 0);
   };
 
-  const refectOrders = () => {
+  const refecthOrders = () => {
     setTimeout(() => queryClient.invalidateQueries({ queryKey: ["fetchOrders"] }), 0);
   };
-  return { refectOrders, mutateOrders };
+  return { refecthOrders, mutateOrders };
 }

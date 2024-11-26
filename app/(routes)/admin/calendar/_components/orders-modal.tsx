@@ -47,7 +47,7 @@ export function useOrdersModal() {
 function OrdersModal() {
   const { serverAction } = useServerAction(updateOrdersIndex);
   const { orders, isOrderModalOpen, setIsOrderModalOpen } = useOrdersModal();
-  const { refectOrders } = useOrdersQueryClient();
+  const { refecthOrders } = useOrdersQueryClient();
   const [localOrders, setLocalOrders] = useState(orders?.map(({ id }) => id));
 
   useEffect(() => {
@@ -58,7 +58,7 @@ function OrdersModal() {
     setIsOrderModalOpen(false);
     if (!localOrders) return;
     function onSuccess() {
-      refectOrders();
+      refecthOrders();
     }
     const newOrders = localOrders.map((orderId, index) => ({ orderId, index: index + 1 }));
     serverAction({ data: newOrders, onSuccess });

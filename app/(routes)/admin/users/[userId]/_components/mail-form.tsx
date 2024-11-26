@@ -53,7 +53,7 @@ export default MailForm;
 
 function EmailModal({ id, onClose, openModal }: { id: string; onClose: () => void; openModal: boolean }) {
   const { serverAction } = useServerAction(changeEmail);
-  const { refectOrders } = useOrdersQueryClient();
+  const { refecthOrders } = useOrdersQueryClient();
   const router = useRouter();
 
   async function onSumbit(formData: FormData) {
@@ -62,7 +62,7 @@ function EmailModal({ id, onClose, openModal }: { id: string; onClose: () => voi
     serverAction({
       data: { email, id },
       onSuccess: () => {
-        refectOrders();
+        refecthOrders();
         router.refresh();
         onClose();
       },

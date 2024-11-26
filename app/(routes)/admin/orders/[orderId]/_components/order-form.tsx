@@ -51,7 +51,7 @@ export type OrderFormProps = {
 
 export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, users, shops, className }) => {
   const router = useRouter();
-  const { refectOrders, mutateOrders } = useOrdersQueryClient();
+  const { refecthOrders, mutateOrders } = useOrdersQueryClient();
   const prevDateOfShipping = initialData?.dateOfShipping ? new Date(initialData.dateOfShipping) : undefined;
   const { serverAction: createOrderAction } = useServerAction(createOrder);
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
@@ -125,7 +125,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
     }
 
     function onSuccess() {
-      router.replace(`/admin/orders/${initialData?.id}`);
+      router.replace(`/admin/orders/${initialData?.id}#button-container`);
       mutateOrders((prev) =>
         prev.map((order) =>
           order.id === initialData?.id
@@ -133,7 +133,6 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
             : order,
         ),
       );
-      scrollToId("button-container", 1000);
     }
 
     await confirmOrderAction({
@@ -151,9 +150,8 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
     validateInvoiceAction({
       data: { id: initialData?.invoiceId, isPaid: !initialData.dateOfPayment },
       onSuccess: () => {
-        router.replace(`/admin/orders/${initialData?.id}`);
-        refectOrders();
-        scrollToId("button-container", 1000);
+        router.replace(`/admin/orders/${initialData?.id}#button-container`);
+        refecthOrders();
       },
     });
   }

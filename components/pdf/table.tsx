@@ -56,7 +56,7 @@ export const ShippingTableStyles = StyleSheet.create({
     flexDirection: "row",
     borderBottomColor: borderColor,
     borderBottomWidth: 1,
-    paddingVertical: 2,
+    paddingVertical: 4,
     alignItems: "center",
     // fontStyle: "bold",
   },

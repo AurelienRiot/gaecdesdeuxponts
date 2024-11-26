@@ -2,7 +2,7 @@
 
 import DateModal from "@/components/date-modal";
 import { Checkbox, type CheckedState } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { baseLabelVariants, Label } from "@/components/ui/label";
 import { calendarOrderSchema } from "@/components/zod-schema/calendar-orders";
 import useKy from "@/hooks/use-ky";
 import { addDays } from "date-fns";
@@ -93,10 +93,10 @@ function NewOrderButton({
           </>
         }
       />
-      <div className="flex gap-2 pl-2">
-        <Label htmlFor="skip-confirmation">Créer sans confirmation</Label>
+      <label htmlFor="skip-confirmation" className="flex gap-2 pl-2 items-center  cursor-pointer ">
         <Checkbox id="skip-confirmation" checked={noConfirmation} onCheckedChange={setNoConfirmation} />
-      </div>
+        <span className={baseLabelVariants + "cursor-pointer"}>Créer sans confirmation</span>
+      </label>
     </>
   );
 }

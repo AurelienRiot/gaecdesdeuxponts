@@ -14,7 +14,7 @@ import { ModalDescription } from "./display-shipping-order";
 export const DisplayCreateInvoice = ({ orderIds, disabled }: { orderIds: string[]; disabled?: boolean }) => {
   const { serverAction, loading } = useServerAction(createInvoiceAction);
   const { serverAction: orderAction, loading: loading2 } = useServerAction(getOrderForConfirmation);
-  const { refectOrders } = useOrdersQueryClient();
+  const { refecthOrders } = useOrdersQueryClient();
   const confirm = useConfirm();
 
   const router = useRouter();
@@ -52,7 +52,7 @@ export const DisplayCreateInvoice = ({ orderIds, disabled }: { orderIds: string[
     serverAction({
       data: { orderIds, sendEmail },
       onSuccess: () => {
-        refectOrders();
+        refecthOrders();
         router.refresh();
       },
     });

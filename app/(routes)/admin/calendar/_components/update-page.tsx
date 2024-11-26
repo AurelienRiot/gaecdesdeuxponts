@@ -5,14 +5,14 @@ import { useOrdersQueryClient } from "../../../../../hooks/use-query/orders-quer
 import { useUsersQueryClient } from "../../../../../hooks/use-query/users-query";
 
 function UpdatePage({ className }: { className?: string }) {
-  const { refectOrders } = useOrdersQueryClient();
+  const { refecthOrders } = useOrdersQueryClient();
   const { refectUsers } = useUsersQueryClient();
   return (
     <Button
       variant="default"
       className={className}
       onClick={() => {
-        refectOrders();
+        refecthOrders();
         refectUsers();
       }}
     >

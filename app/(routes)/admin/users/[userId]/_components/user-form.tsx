@@ -34,7 +34,7 @@ interface UserFormProps {
 
 export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) => {
   const router = useRouter();
-  const { refectOrders } = useOrdersQueryClient();
+  const { refecthOrders } = useOrdersQueryClient();
   const { serverAction } = useServerAction(updateUser);
   const [open, setOpen] = useState(incomplete);
 
@@ -84,7 +84,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
     function onSuccess() {
       router.back();
       router.refresh();
-      refectOrders();
+      refecthOrders();
     }
     await serverAction({ data, onSuccess });
   };
@@ -100,7 +100,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
           data={{ email: initialData.email }}
           isSubmitting={form.formState.isSubmitting}
           onSuccess={() => {
-            refectOrders();
+            refecthOrders();
             router.back();
             router.refresh();
           }}
