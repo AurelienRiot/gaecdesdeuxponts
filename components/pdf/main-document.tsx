@@ -8,29 +8,11 @@ export const foregroundColor = "#000000";
 export const borderColor = "#000000";
 export const watermarkColor = "rgb(255, 0, 0)";
 
-// Font.register({
-//   family: "Open Sans",
-//   fonts: [
-//     { src: "https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-regular.ttf", fontWeight: 400 },
-//     { src: "https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-600.ttf", fontWeight: 600 },
-//   ],
-// });
-
-// Font.register({
-//   family: "Inter",
-//   fonts: [
-//     { src: "https://www.laiteriedupontrobert.fr/fonts/inter.ttf", fontWeight: 400 },
-//     { src: "https://www.laiteriedupontrobert.fr/fonts/inter-bold.ttf", fontWeight: 600 },
-//   ],
-// });
-
 Font.register({
   family: "Inter",
   fonts: [
-    // { src: fontInter, fontWeight: 400 },
-    // { src: fontInterBold, fontWeight: 600 },
-    { src: `${process.cwd()}/components/pdf/fonts/inter.ttf`, fontWeight: 400 },
-    { src: `${process.cwd()}/components/pdf/fonts/inter-bold.ttf`, fontWeight: 600 },
+    { src: fontInter, fontWeight: 400 },
+    { src: fontInterBold, fontWeight: 600 },
   ],
 });
 
