@@ -14,7 +14,7 @@ export const AMAPStyle = StyleSheet.create({
     paddingBottom: 40,
     paddingLeft: 20,
     paddingRight: 20,
-    lineHeight: 1.5,
+    // lineHeight: 1.5,
     position: "relative",
   },
   container: {
