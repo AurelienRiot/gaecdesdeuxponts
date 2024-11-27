@@ -13,6 +13,7 @@ import { Input, NumberInput } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { useUsersQueryClient } from "@/hooks/use-query/users-query";
 import useServerAction from "@/hooks/use-server-action";
 import { createId } from "@/lib/id";
 import type { Nullable } from "@/types";
@@ -44,6 +45,7 @@ export type ShopPageType = Nullable<
 
 const ShopForm = ({ initialData }: { initialData: ShopPageType }) => {
   const router = useRouter();
+  const { mutateUsers } = useUsersQueryClient();
 
   const { serverAction: createShopAction } = useServerAction(createShop);
   const { serverAction: updateShopAction } = useServerAction(updateShop);
@@ -76,8 +78,13 @@ const ShopForm = ({ initialData }: { initialData: ShopPageType }) => {
 
   const onSubmit = async (data: ShopFormValues) => {
     function onSuccess() {
+      mutateUsers((users) =>
+        users.map((user) =>
+          user.id === data.userId ? { ...user, links: data.links, shopHours: data.shopHours } : user,
+        ),
+      );
+
       router.back();
-      // router.refresh();
     }
     initialData?.id ? await updateShopAction({ data, onSuccess }) : await createShopAction({ data, onSuccess });
   };
