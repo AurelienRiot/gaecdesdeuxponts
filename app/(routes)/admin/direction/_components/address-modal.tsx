@@ -115,7 +115,7 @@ function AddressSelect({
         </Button>
       }
       values={usersAndShops.map((item) => ({
-        label: <NameWithImage name={item.label} image={item.image} />,
+        label: <NameWithImage name={item.name} image={item.image} />,
         value: { key: item.address, longitude: item.longitude, latitude: item.latitude },
       }))}
       onSelected={(value) => {

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "dev-https": "next dev --experimental-https --turbo",
+    "scan": "npx react-scan@latest https://localhost:3000 ",
     "build": " next build",
     "start": "next start",
     "lint": "npx @biomejs/biome lint --write ./app  ./components ./lib ./actions ./context ./hooks ./providers ./types",

@@ -27,11 +27,12 @@ import DatePicker from "./date-picker";
 import { destination, directionSchema, origin, type DirectionFormValues, type Point } from "./direction-schema";
 
 export type UserAndShop = {
-  label: string;
+  id: string;
+  name: string;
   address: string;
   image?: string | null;
-  latitude?: number;
-  longitude?: number;
+  latitude?: number | null;
+  longitude?: number | null;
 };
 
 export const DirectionForm = ({ usersAndShops }: { usersAndShops: UserAndShop[] }) => {
@@ -212,7 +213,7 @@ function SuccessModal({
         </Link>
         {reorderedWaypoints.map((value, index) => {
           const image = usersAndShops.find((shop) => shop.address === value.label)?.image;
-          const label = usersAndShops.find((shop) => shop.address === value.label)?.label;
+          const label = usersAndShops.find((shop) => shop.address === value.label)?.name;
           return (
             <div className="flex gap-1 justify-center items-center" key={index + value.label}>
               <div
@@ -354,7 +355,7 @@ type ButtonAddressModalProps = {
 const ButtonAddressModal = forwardRef<HTMLButtonElement, ButtonAddressModalProps>(
   ({ usersAndShops, onClick, value, index }, ref) => {
     const image = usersAndShops.find((u) => u.address === value.label)?.image;
-    const label = usersAndShops.find((u) => u.address === value.label)?.label;
+    const label = usersAndShops.find((u) => u.address === value.label)?.name;
 
     return (
       <Button

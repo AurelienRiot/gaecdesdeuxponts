@@ -9,6 +9,7 @@ const getUnlinkShop = unstable_cache(
       where: {
         userId: null,
       },
+      orderBy: { name: "asc" },
     });
   },
   ["getUnlinkShop"],

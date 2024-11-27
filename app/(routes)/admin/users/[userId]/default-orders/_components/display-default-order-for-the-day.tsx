@@ -1,4 +1,5 @@
 "use client";
+import type { AllShopsType } from "@/app/(routes)/admin/direction/_functions/get-shops";
 import { negativeQuantityStyle } from "@/app/(routes)/admin/orders/[orderId]/_components/products";
 import type { GetProductsForOrdersType } from "@/app/(routes)/admin/orders/[orderId]/_functions/get-products-for-orders";
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
@@ -12,6 +13,7 @@ import { NumberInput } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useUsersQueryClient } from "@/hooks/use-query/users-query";
 import useServerAction from "@/hooks/use-server-action";
+import scrollToLastChild from "@/lib/scroll-to-last-child";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Role } from "@prisma/client";
@@ -22,8 +24,6 @@ import { toast } from "sonner";
 import updateDefaultOrdersAction from "../_actions/update-default-orders";
 import type { GetDefaultOrdersType } from "../_functions/get-default-orders";
 import { defaultOrderSchema, type DefaultOrderFormValues } from "./schema";
-import scrollToLastChild from "@/lib/scroll-to-last-child";
-import type { AllShopsType } from "@/app/(routes)/admin/direction/_functions/get-shops";
 import SelectShop from "./select-shop";
 
 function DisplayDefaultOrderForTheDay({
