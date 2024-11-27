@@ -1,6 +1,5 @@
-import prismadb from "@/lib/prismadb";
-import { addressFormatter } from "@/lib/utils";
-import ShopForm, { type ShopPageType } from "./_components/shop-form";
+import ShopForm from "./_components/shop-form";
+import getShop from "./_functions/get-shop";
 
 const ShopsPage = async ({
   params,
@@ -11,32 +10,7 @@ const ShopsPage = async ({
     userId: string | undefined;
   };
 }) => {
-  let shop: ShopPageType = null;
-  if (params.shopId === "new" && searchParams.userId) {
-    const user = await prismadb.user.findUnique({
-      where: {
-        id: searchParams.userId,
-      },
-      include: { address: true },
-    });
-    shop = {
-      userId: searchParams.userId,
-      name: user?.company,
-      imageUrl: user?.image,
-      address: user?.address ? addressFormatter(user?.address, false) : null,
-      lat: user?.address?.latitude,
-      long: user?.address?.longitude,
-      email: user?.email,
-      phone: user?.phone,
-    };
-  } else {
-    shop = await prismadb.shop.findUnique({
-      where: {
-        id: params.shopId,
-      },
-      include: { links: true, shopHours: { orderBy: { day: "asc" } } },
-    });
-  }
+  const shop = await getShop({ params, searchParams });
 
   return (
     <div className="flex-col">

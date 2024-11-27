@@ -125,7 +125,6 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
     }
 
     function onSuccess() {
-      router.replace(`/admin/orders/${initialData?.id}#button-container`);
       mutateOrders((prev) =>
         prev.map((order) =>
           order.id === initialData?.id
@@ -133,6 +132,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
             : order,
         ),
       );
+      router.replace(`/admin/orders/${initialData?.id}#button-container`);
     }
 
     await confirmOrderAction({
@@ -150,7 +150,6 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
     validateInvoiceAction({
       data: { id: initialData?.invoiceId, isPaid: !initialData.dateOfPayment },
       onSuccess: () => {
-        router.replace(`/admin/orders/${initialData?.id}#button-container`);
         mutateOrders((prev) =>
           prev.map((order) =>
             order.id === initialData?.id
@@ -158,6 +157,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
               : order,
           ),
         );
+        router.replace(`/admin/orders/${initialData?.id}#button-container`);
       },
     });
   }

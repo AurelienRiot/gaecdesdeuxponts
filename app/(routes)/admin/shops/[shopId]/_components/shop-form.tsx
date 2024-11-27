@@ -70,9 +70,9 @@ const ShopForm = ({ initialData }: { initialData: ShopPageType }) => {
     },
   });
 
-  const title = initialData ? "Modifier le magasin" : "Créer un nouveau magasin";
-  const description = initialData ? "Modifier le magasin" : "Ajouter un nouveau magasin";
-  const action = initialData ? "Sauvegarder les changements" : "Créer le magasin";
+  const title = initialData?.id ? "Modifier le magasin" : "Créer un nouveau magasin";
+  const description = initialData?.id ? "Modifier le magasin" : "Ajouter un nouveau magasin";
+  const action = initialData?.id ? "Sauvegarder les changements" : "Créer le magasin";
 
   const onSubmit = async (data: ShopFormValues) => {
     function onSuccess() {

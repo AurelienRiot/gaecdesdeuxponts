@@ -1,8 +1,10 @@
 import { CreateUserForm } from "@/app/(routes)/admin/users/[userId]/_components/create-user-form";
+import ShopButton from "@/app/(routes)/admin/users/[userId]/_components/shop-button";
 import { UserForm } from "@/app/(routes)/admin/users/[userId]/_components/user-form";
+import getUnlinkShop from "@/app/(routes)/admin/users/[userId]/_functions/get-unllink-shop";
+import getUserPageData from "@/app/(routes)/admin/users/[userId]/_functions/get-user-page-data";
 import { Button } from "@/components/ui/button";
 import { SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import prismadb from "@/lib/prismadb";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -34,16 +36,17 @@ async function DisplayUserForm({ userId }: { userId: string | "new" | undefined 
     return <CreateUserForm />;
   }
 
-  const user = await prismadb.user.findUnique({
-    where: {
-      id: userId,
-    },
-    include: {
-      address: true,
-      billingAddress: true,
-      shop: { include: { links: true } },
-    },
-  });
+  const [user, shops] = await Promise.all([getUserPageData(userId), getUnlinkShop()]);
+  // const user = await prismadb.user.findUnique({
+  //   where: {
+  //     id: userId,
+  //   },
+  //   include: {
+  //     address: true,
+  //     billingAddress: true,
+  //     shop: { include: { links: true } },
+  //   },
+  // });
 
   if (!user) {
     return (
@@ -55,13 +58,14 @@ async function DisplayUserForm({ userId }: { userId: string | "new" | undefined 
 
   return (
     <>
-      <UserForm initialData={user} incomplete={true} />
-      <SheetFooter className="sm:justify-start px-4">
+      <UserForm initialData={user.formatedUser} incomplete={true} />
+      <SheetFooter className="flex-col sm:flex-col  justify-center sm:gap-2 px-4">
         <Button asChild>
-          <Link replace href={`/admin/users/${user.id}/default-orders`}>
+          <Link replace href={`/admin/users/${user.formatedUser.id}/default-orders`}>
             Commandes par default par jour
           </Link>
         </Button>
+        <ShopButton user={user.formatedUser} shops={shops} />
       </SheetFooter>
     </>
   );
