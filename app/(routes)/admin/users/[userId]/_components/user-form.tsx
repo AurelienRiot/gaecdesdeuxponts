@@ -13,12 +13,13 @@ import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Separator } from "@/components/ui/separator";
+import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";
+import { useUsersQueryClient } from "@/hooks/use-query/users-query";
 import useServerAction from "@/hooks/use-server-action";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useOrdersQueryClient } from "../../../../../../hooks/use-query/orders-query";
 import deleteUser from "../../_actions/delete-user";
 import updateUser from "../_actions/update-user";
 import type { GetUserPageDataProps } from "../_functions/get-user-page-data";
@@ -34,7 +35,7 @@ interface UserFormProps {
 
 export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) => {
   const router = useRouter();
-  const { refecthOrders } = useOrdersQueryClient();
+  const { mutateUsers } = useUsersQueryClient();
   const { serverAction } = useServerAction(updateUser);
   const [open, setOpen] = useState(incomplete);
 
@@ -80,11 +81,11 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
   });
 
   const onSubmit = async (data: UserFormValues) => {
-    data.name = data.name.trim();
-    function onSuccess() {
+    function onSuccess(result?: UserForOrderType) {
+      if (result) {
+        mutateUsers((users) => users.concat(result));
+      }
       router.back();
-      router.refresh();
-      refecthOrders();
     }
     await serverAction({ data, onSuccess });
   };
@@ -100,9 +101,8 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
           data={{ email: initialData.email }}
           isSubmitting={form.formState.isSubmitting}
           onSuccess={() => {
-            refecthOrders();
+            mutateUsers((users) => users.filter((user) => user.id !== initialData.id));
             router.back();
-            router.refresh();
           }}
         />
       </div>

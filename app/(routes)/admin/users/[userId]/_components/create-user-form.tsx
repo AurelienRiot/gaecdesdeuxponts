@@ -20,9 +20,12 @@ import createUser from "../_actions/create-user";
 import CcInvoiceForm from "./cc-invoice-form";
 import SelectRole from "./select-role";
 import { schema, type UserFormValues } from "./user-schema";
+import { useUsersQueryClient } from "@/hooks/use-query/users-query";
+import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";
 
 export const CreateUserForm = () => {
   const { serverAction } = useServerAction(createUser);
+  const { mutateUsers } = useUsersQueryClient();
   const router = useRouter();
 
   const title = "Créer l'utilisateur";
@@ -57,11 +60,11 @@ export const CreateUserForm = () => {
   const role = form.watch("role");
 
   const onSubmit = async (data: UserFormValues) => {
-    data.name = data.name.trim();
-    console.log(data);
-    function onSuccess() {
+    function onSuccess(result?: UserForOrderType) {
+      if (result) {
+        mutateUsers((users) => users.concat(result));
+      }
       router.back();
-      router.refresh();
     }
     await serverAction({ data, onSuccess });
   };

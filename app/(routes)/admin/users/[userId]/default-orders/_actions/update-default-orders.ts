@@ -62,7 +62,19 @@ async function updateDefaultOrdersAction(data: DefaultOrderFormValues) {
           },
         });
       }
-      return { success: true, message: `Commande par défault de ${DAYS_OF_WEEK[day]}  mise à jour` };
+      const defaultOrders = await prismadb.defaultOrder.findMany({
+        where: {
+          userId,
+        },
+        select: {
+          day: true,
+        },
+      });
+      return {
+        success: true,
+        message: `Commande par défault de ${DAYS_OF_WEEK[day]}  mise à jour`,
+        data: defaultOrders.map((order) => order.day),
+      };
     },
   });
 }

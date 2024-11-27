@@ -1,9 +1,9 @@
 "use client";
 
-import { useOrdersQueryClient } from "@/hooks/use-query/orders-query";
 import Spinner from "@/components/animations/spinner";
 import { Button } from "@/components/ui/button";
 import { useConfirm } from "@/components/ui/confirm-dialog";
+import { useOrdersQueryClient } from "@/hooks/use-query/orders-query";
 import useServerAction from "@/hooks/use-server-action";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -14,7 +14,7 @@ import { ModalDescription } from "./display-shipping-order";
 export const DisplayCreateInvoice = ({ orderIds, disabled }: { orderIds: string[]; disabled?: boolean }) => {
   const { serverAction, loading } = useServerAction(createInvoiceAction);
   const { serverAction: orderAction, loading: loading2 } = useServerAction(getOrderForConfirmation);
-  const { refecthOrders } = useOrdersQueryClient();
+  const { mutateOrders } = useOrdersQueryClient();
   const confirm = useConfirm();
 
   const router = useRouter();
@@ -52,7 +52,9 @@ export const DisplayCreateInvoice = ({ orderIds, disabled }: { orderIds: string[
     serverAction({
       data: { orderIds, sendEmail },
       onSuccess: () => {
-        refecthOrders();
+        mutateOrders((prev) =>
+          prev.map((order) => (orderIds.includes(order.id) ? { ...order, status: "En attente de paiement" } : order)),
+        );
         router.refresh();
       },
     });

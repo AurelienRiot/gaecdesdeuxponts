@@ -5,6 +5,7 @@ import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
 import { schema, type UserFormValues } from "../_components/user-schema";
+import { formatUser } from "../../../orders/[orderId]/_functions/get-users-for-orders";
 
 async function updateUser(data: UserFormValues) {
   return await safeServerAction({
@@ -37,7 +38,7 @@ async function updateUser(data: UserFormValues) {
         };
       }
 
-      await prismadb.user.update({
+      const updateUser = await prismadb.user.update({
         where: {
           id,
         },
@@ -69,12 +70,21 @@ async function updateUser(data: UserFormValues) {
               ? { delete: true }
               : undefined,
         },
+        include: {
+          address: true,
+          billingAddress: true,
+          shop: { include: { links: true, shopHours: { orderBy: { day: "asc" } } } },
+          defaultOrders: { select: { day: true } },
+        },
       });
       revalidateTag("users");
+
+      const data = formatUser(updateUser);
 
       return {
         success: true,
         message: "Utilisateur mis à jour",
+        data,
       };
     },
   });

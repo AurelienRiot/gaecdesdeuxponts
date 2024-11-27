@@ -44,7 +44,7 @@ function DisplayDefaultOrderForTheDay({
   index: number;
 }) {
   const { serverAction } = useServerAction(updateDefaultOrdersAction);
-  const { refectUsers } = useUsersQueryClient();
+  const { mutateUsers } = useUsersQueryClient();
   const form = useForm<DefaultOrderFormValues>({
     resolver: zodResolver(defaultOrderSchema),
     defaultValues: {
@@ -64,12 +64,18 @@ function DisplayDefaultOrderForTheDay({
   const items = form.watch("defaultOrderProducts");
 
   async function onSubmit(data: DefaultOrderFormValues) {
-    console.log(data);
     if (data.defaultOrderProducts.length > 0 && !data.defaultOrderProducts.every((item) => item.productId)) {
       toast.error("Completer tous les produits deja existant");
       return;
     }
-    await serverAction({ data, onSuccess: () => refectUsers() });
+    function onSuccess(result?: number[]) {
+      if (result) {
+        mutateUsers((users) =>
+          users.map((user) => (user.id === userId ? { ...user, defaultDaysOrders: result } : user)),
+        );
+      }
+    }
+    await serverAction({ data, onSuccess });
   }
 
   const deleteProduct = (prodIndex: number) => {

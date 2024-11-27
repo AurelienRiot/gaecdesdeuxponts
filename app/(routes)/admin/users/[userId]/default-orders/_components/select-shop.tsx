@@ -37,7 +37,7 @@ const SelectShop = ({ shops }: { shops: AllShopsType }) => {
             trigger={
               shop ? (
                 <Button variant="outline">
-                  <NameWithImage name={shop.name} image={shop.imageUrl} />
+                  <NameWithImage name={shop.name} image={shop.image} />
                 </Button>
               ) : (
                 "À domicile"
@@ -46,7 +46,7 @@ const SelectShop = ({ shops }: { shops: AllShopsType }) => {
             selectedValue={shopId}
             defaultValue={"À domicile"}
             values={shops.map((shop) => ({
-              label: <NameWithImage name={shop.name} image={shop.imageUrl} />,
+              label: <NameWithImage name={shop.name} image={shop.image} />,
               value: { key: shop.id },
             }))}
             onSelected={(value) => {

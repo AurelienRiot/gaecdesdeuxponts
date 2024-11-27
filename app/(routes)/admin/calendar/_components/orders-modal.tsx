@@ -4,7 +4,7 @@ import { Modal } from "@/components/ui/modal";
 import NoResults from "@/components/ui/no-results";
 import type { CalendarOrderType } from "@/components/zod-schema/calendar-orders";
 import useServerAction from "@/hooks/use-server-action";
-import { Reorder, useDragControls, useMotionValue } from "framer-motion";
+import { m, Reorder, useDragControls, useMotionValue } from "framer-motion";
 import { Grip } from "lucide-react";
 import { createContext, memo, useContext, useEffect, useState } from "react";
 import { useOrdersQueryClient } from "../../../../../hooks/use-query/orders-query";
@@ -47,7 +47,7 @@ export function useOrdersModal() {
 function OrdersModal() {
   const { serverAction } = useServerAction(updateOrdersIndex);
   const { orders, isOrderModalOpen, setIsOrderModalOpen } = useOrdersModal();
-  const { refecthOrders } = useOrdersQueryClient();
+  const { mutateOrders } = useOrdersQueryClient();
   const [localOrders, setLocalOrders] = useState(orders?.map(({ id }) => id));
 
   useEffect(() => {
@@ -56,11 +56,20 @@ function OrdersModal() {
 
   function closeModal() {
     setIsOrderModalOpen(false);
+
     if (!localOrders) return;
-    function onSuccess() {
-      refecthOrders();
-    }
     const newOrders = localOrders.map((orderId, index) => ({ orderId, index: index + 1 }));
+    function onSuccess() {
+      mutateOrders((prev) =>
+        prev.map((order) => {
+          const newOrder = newOrders.find((o) => o.orderId === order.id);
+          if (newOrder) {
+            return { ...order, index: newOrder.index };
+          }
+          return order;
+        }),
+      );
+    }
     serverAction({ data: newOrders, onSuccess });
   }
 

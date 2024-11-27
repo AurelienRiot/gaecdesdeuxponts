@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useOrdersQueryClient } from "../../../../../../hooks/use-query/orders-query";
 import changeEmail from "../_actions/change-email";
+import { useUsersQueryClient } from "@/hooks/use-query/users-query";
 
 function MailForm({ email, id }: { email: string | null; id: string }) {
   const [display, setDisplay] = useState(false);
@@ -53,7 +54,7 @@ export default MailForm;
 
 function EmailModal({ id, onClose, openModal }: { id: string; onClose: () => void; openModal: boolean }) {
   const { serverAction } = useServerAction(changeEmail);
-  const { refecthOrders } = useOrdersQueryClient();
+  const { mutateUsers } = useUsersQueryClient();
   const router = useRouter();
 
   async function onSumbit(formData: FormData) {
@@ -62,7 +63,7 @@ function EmailModal({ id, onClose, openModal }: { id: string; onClose: () => voi
     serverAction({
       data: { email, id },
       onSuccess: () => {
-        refecthOrders();
+        mutateUsers((users) => users.map((user) => (user.id === id ? { ...user, email } : user)));
         router.refresh();
         onClose();
       },

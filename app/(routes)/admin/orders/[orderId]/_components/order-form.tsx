@@ -51,7 +51,7 @@ export type OrderFormProps = {
 
 export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, users, shops, className }) => {
   const router = useRouter();
-  const { refecthOrders, mutateOrders } = useOrdersQueryClient();
+  const { mutateOrders } = useOrdersQueryClient();
   const prevDateOfShipping = initialData?.dateOfShipping ? new Date(initialData.dateOfShipping) : undefined;
   const { serverAction: createOrderAction } = useServerAction(createOrder);
   const { serverAction: updateOrderAction } = useServerAction(updateOrder);
@@ -151,7 +151,13 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
       data: { id: initialData?.invoiceId, isPaid: !initialData.dateOfPayment },
       onSuccess: () => {
         router.replace(`/admin/orders/${initialData?.id}#button-container`);
-        refecthOrders();
+        mutateOrders((prev) =>
+          prev.map((order) =>
+            order.id === initialData?.id
+              ? { ...order, status: initialData.dateOfPayment ? "En attente de paiement" : "Payé" }
+              : order,
+          ),
+        );
       },
     });
   }

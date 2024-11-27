@@ -19,7 +19,12 @@ export function useUsersQueryClient() {
   const mutateUsers = (fn: (users: UserForOrderType[]) => UserForOrderType[]) => {
     setTimeout(() => {
       queryClient.setQueryData(["fetchUsers"], (users?: UserForOrderType[] | null) => {
-        if (users) return fn(users);
+        if (users)
+          return fn(users).sort((a, b) => {
+            return a.formattedName.localeCompare(b.formattedName, "fr", {
+              sensitivity: "base",
+            });
+          });
       });
     }, 0);
   };
