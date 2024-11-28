@@ -1,27 +1,14 @@
 "use client";
 
 import { DisplayUserShippingOrder } from "@/components/pdf/button/display-user-shipping-order";
-import { ProductCell, StatusCell, statusArray, type Status } from "@/components/table-custom-fuction/cell-orders";
+import { ProductCell, StatusCell, statusArray } from "@/components/table-custom-fuction/cell-orders";
 import { DateCell } from "@/components/table-custom-fuction/common-cell";
 import { DatePickUpHeader } from "@/components/table-custom-fuction/header-orders";
+import { useUserQuery, type ProfileUserType } from "@/hooks/use-query/user-query";
 import type { DataTableFilterableColumn, DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
-import type { Shop } from "@prisma/client";
 import type { ColumnDef } from "@tanstack/react-table";
-import { useUserQuery } from "../../../../../../hooks/use-query/user-query";
 
-export type OrderColumnType = {
-  id: string;
-  datePickUp: Date;
-  totalPrice: string;
-  products: string;
-  status: Status;
-  productsList: { name: string; quantity?: string; unit?: string }[];
-  createdAt: Date;
-  delivered: boolean;
-  shopName: string;
-  shop?: Shop;
-};
-export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
+export const OrdersColumn: ColumnDef<ProfileUserType["orders"][number]>[] = [
   {
     accessorKey: "status",
     header: "N° de commande",
@@ -74,7 +61,7 @@ export const OrdersColumn: ColumnDef<OrderColumnType>[] = [
   // },
 ];
 
-export const filterableColumns = (): DataTableFilterableColumn<OrderColumnType>[] => {
+export const filterableColumns = (): DataTableFilterableColumn<ProfileUserType["orders"][number]>[] => {
   return [
     {
       id: "status",
@@ -84,14 +71,14 @@ export const filterableColumns = (): DataTableFilterableColumn<OrderColumnType>[
   ];
 };
 
-export const searchableColumns: DataTableSearchableColumn<OrderColumnType>[] = [
+export const searchableColumns: DataTableSearchableColumn<ProfileUserType["orders"][number]>[] = [
   {
     id: "id",
     title: "numéro de commande",
   },
 ];
 
-export const viewOptionsColumns: DataTableViewOptionsColumn<OrderColumnType>[] = [
+export const viewOptionsColumns: DataTableViewOptionsColumn<ProfileUserType["orders"][number]>[] = [
   {
     id: "products",
     title: "Produits",
@@ -109,10 +96,5 @@ export const viewOptionsColumns: DataTableViewOptionsColumn<OrderColumnType>[] =
   {
     id: "datePickUp",
     title: "Date de livraison",
-  },
-
-  {
-    id: "shopName",
-    title: "Lieu de retrait",
   },
 ];

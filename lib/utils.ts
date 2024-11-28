@@ -36,7 +36,10 @@ export function getPercentage(tax: number) {
   return `${(tax * 100) % 100}%`;
 }
 
-export const addressFormatter = (address: Address | null, full = true) => {
+export const addressFormatter = (
+  address: { line1?: string | null; postalCode?: string | null; city?: string | null; country?: string | null } | null,
+  full = true,
+) => {
   if (!address || !address.line1) {
     return "";
   }

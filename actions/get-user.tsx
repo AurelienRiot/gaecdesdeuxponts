@@ -1,6 +1,16 @@
+"server only";
 import { authOptions } from "@/components/auth/authOptions";
+import {
+  createDatePickUp,
+  createProduct,
+  createProductList,
+  createStatus,
+} from "@/components/table-custom-fuction/cell-orders";
 import { defaultNotifications } from "@/components/user";
+import type { ProfileUserType } from "@/hooks/use-query/user-query";
+import { dateFormatter, dateMonthYear } from "@/lib/date-utils";
 import prismadb from "@/lib/prismadb";
+import { currencyFormatter, formatFrenchPhoneNumber } from "@/lib/utils";
 import { getServerSession } from "next-auth";
 import { unstable_cache } from "next/cache";
 
@@ -89,6 +99,10 @@ const getUser = unstable_cache(async (userId: string) => {
       billingAddress: true,
     },
   });
+
+  if (!user) {
+    throw new Error("Utilisateur introuvable");
+  }
   if (user && !user.notifications) {
     console.log("creating default notifications");
     await prismadb.notification.create({
@@ -97,8 +111,45 @@ const getUser = unstable_cache(async (userId: string) => {
       },
     });
   }
+  const formatedUser: ProfileUserType = {
+    id: user.id,
+    name: user.name || "",
+    email: user.email || "",
+    phone: user.phone ? formatFrenchPhoneNumber(user.phone) : "",
+    company: user.company,
+    raisonSocial: user.raisonSocial,
+    image: user.image,
+    role: user.role,
+    orders: user.orders.map((order) => ({
+      id: order.id,
+      orderEmail: order.orderEmail,
+      productsList: createProductList(order.orderItems),
+      products: createProduct(order.orderItems),
+      totalPrice: currencyFormatter.format(order.totalPrice),
+      status: createStatus({ ...order, invoiceOrder: [] }),
+      datePickUp: createDatePickUp({ dateOfShipping: order.dateOfShipping, datePickUp: order.datePickUp }),
+      shopName: order.shop?.name || "Livraison à domicile",
+      shop: order.shop || undefined,
+      delivered: !!order.invoiceOrder?.[0]?.invoice?.id || !!order.shippingEmail,
+      createdAt: order.createdAt,
+    })),
+    address: user.address,
+    billingAddress: user.billingAddress,
+    notifications: user.notifications ? user.notifications : defaultNotifications,
+    invoices: user.invoices.map((invoice) => ({
+      id: invoice.id,
+      totalOrders: invoice.orders.length,
+      totalPrice: currencyFormatter.format(invoice.totalPrice),
+      status: invoice.dateOfPayment ? "Payé" : "En attente de paiement",
+      emailSend: !!invoice.invoiceEmail,
+      date:
+        invoice.orders.length > 1
+          ? dateMonthYear(invoice.orders.map((order) => (order.dateOfShipping ? new Date(order.dateOfShipping) : null)))
+          : dateFormatter(new Date(invoice.dateOfEdition)),
+    })),
+  };
 
-  return user ? { ...user, notifications: user.notifications ? user.notifications : defaultNotifications } : null;
+  return formatedUser;
 });
 
 export default getUser;

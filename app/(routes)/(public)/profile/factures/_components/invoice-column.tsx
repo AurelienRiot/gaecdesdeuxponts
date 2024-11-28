@@ -2,6 +2,7 @@
 
 import { DisplayUserInvoice } from "@/components/pdf/button/display-user-invoice";
 import { StatusCell, type Status } from "@/components/table-custom-fuction/cell-orders";
+import type { ProfileUserType } from "@/hooks/use-query/user-query";
 import type { ColumnDef } from "@tanstack/react-table";
 
 export type InvoiceColumnType = {
@@ -11,7 +12,7 @@ export type InvoiceColumnType = {
   status: Status;
   date: string;
 };
-export const InvoiceColumn: ColumnDef<InvoiceColumnType>[] = [
+export const InvoiceColumn: ColumnDef<ProfileUserType["invoices"][number]>[] = [
   {
     accessorKey: "id",
     header: "N° de facture",

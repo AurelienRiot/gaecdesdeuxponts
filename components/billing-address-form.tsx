@@ -140,7 +140,7 @@ const AddressInput = ({ label, addressKey, disabled, className, type = "text", .
             <div className={cn("relative p-2", className)} {...props}>
               <FloatingInput
                 ref={field.ref}
-                value={addressValue}
+                value={addressValue ?? undefined}
                 onChange={(e) => {
                   form.setValue(`billingAddress.${addressKey}`, e.target.value);
                   form.clearErrors(`billingAddress.${addressKey}`);

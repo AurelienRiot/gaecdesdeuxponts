@@ -120,7 +120,7 @@ const AddressInput = ({ label, addressKey, disabled, className, type = "text", .
         disabled={form.formState.isSubmitting || disabled}
         id={id}
         type="text"
-        value={addressValue}
+        value={addressValue ?? ""}
         onChange={(e) => {
           form.setValue(`address.${addressKey}`, e.target.value);
         }}

@@ -5,7 +5,6 @@ import { PencilLine } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { UserAddress, UserEmail, UserName, UserPhone } from "./_components/user-data";
-import NotificationsCheckbox from "./_components/notifications-checkbox";
 
 export const metadata: Metadata = {
   title: "Profile utilisateur",

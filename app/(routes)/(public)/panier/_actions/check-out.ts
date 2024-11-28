@@ -111,9 +111,6 @@ export const createCheckOut = async (data: CheckOutProps) =>
           datePickUp: date,
           shopId,
         });
-
-        revalidatePath("/profile/commandes");
-
         return {
           success: true,
           message: "Commande effectuée avec succès",

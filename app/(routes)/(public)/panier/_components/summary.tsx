@@ -10,17 +10,17 @@ import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import useIsComponentMounted from "@/hooks/use-mounted";
 import useServerAction from "@/hooks/use-server-action";
+import { addDelay } from "@/lib/utils";
 import type { ProductWithOptionsAndMain } from "@/types";
 import type { Shop } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+import { useUserQueryClient } from "../../../../../hooks/use-query/user-query";
 import { createCheckOut } from "../_actions/check-out";
+import CartTimePicker from "./cart-time-picker";
 import DatePicker from "./date-picker";
 import LoginCard from "./login-card";
-import CartTimePicker from "./cart-time-picker";
-import { addDelay } from "@/lib/utils";
-import { useUserQueryClient } from "../../../../../hooks/use-query/user-query";
 
 const getDateFromSearchParam = (param: string | null): Date | undefined => {
   if (param === null) return undefined;
@@ -106,7 +106,6 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
       router.push(`/profile/commandes?orderId=${result.orderId}`);
       await addDelay(500);
       cart.removeAll();
-      // await sendEmail({ data: { orderId: result.orderId } });
     }
     function onError(error: string[] | undefined) {
       if (error) {

@@ -1,46 +1,61 @@
 "use client";
 
-import type { GetUserType } from "@/actions/get-user";
+import { roleSchema } from "@/components/zod-schema";
+import { addressSchema } from "@/components/zod-schema/address-schema";
+import { billingAddressSchema } from "@/components/zod-schema/billing-address-schema";
+import { statusSchema } from "@/components/zod-schema/status";
+import customKy from "@/lib/custom-ky";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import ky, { type HTTPError } from "ky";
+import { z } from "zod";
 
-async function fetchUser() {
-  const responce = await ky
-    .get("/api/user")
-    .then(async (res) => {
-      const result = (await res.json()) as NonNullable<GetUserType>;
-      return result;
-    })
-    .catch(async (kyError: HTTPError) => {
-      if (kyError.response) {
-        const errorData = await kyError.response.text();
-        console.error(errorData);
-        return errorData;
-      }
+export const orderProfileSchema = z.object({
+  id: z.string(),
+  productsList: z.array(z.object({ name: z.string(), quantity: z.string(), unit: z.string().optional() })),
+  products: z.string(),
+  totalPrice: z.string(),
+  status: statusSchema,
+  datePickUp: z.coerce.date(),
+  orderEmail: z.coerce.date().nullable(),
+  shopName: z.string(),
+  delivered: z.boolean(),
+  createdAt: z.coerce.date(),
+});
 
-      console.error("Erreur timeout");
-      return "Erreur";
-    });
+const notificationsSchema = z.object({
+  sendShippingEmail: z.boolean(),
+  sendInvoiceEmail: z.boolean(),
+});
 
-  if (typeof responce === "string") {
-    throw new Error("Impossible de charger les commandes");
-  }
-  responce.createdAt = new Date(responce.createdAt);
-  responce.updatedAt = new Date(responce.updatedAt);
-  responce.emailVerified = responce.emailVerified ? new Date(responce.emailVerified) : null;
-  for (const order of responce.orders) {
-    order.createdAt = new Date(order.createdAt);
-    order.dateOfEdition = order.dateOfEdition ? new Date(order.dateOfEdition) : null;
-    order.dateOfShipping = order.dateOfShipping ? new Date(order.dateOfShipping) : null;
-    order.datePickUp = new Date(order.datePickUp);
-  }
+const invoiceSchema = z.object({
+  id: z.string(),
+  totalOrders: z.number(),
+  totalPrice: z.string(),
+  status: statusSchema,
+  emailSend: z.boolean(),
+  date: z.string(),
+});
 
-  return responce;
-}
+const userProfileSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string(),
+  phone: z.string().nullable(),
+  company: z.string().nullable(),
+  raisonSocial: z.string().nullable(),
+  image: z.string().nullable(),
+  role: roleSchema,
+  address: addressSchema.nullable(),
+  billingAddress: billingAddressSchema.nullable(),
+  notifications: notificationsSchema,
+  orders: z.array(orderProfileSchema),
+  invoices: z.array(invoiceSchema),
+});
+
+export type ProfileUserType = z.infer<typeof userProfileSchema>;
 
 export function useUserQuery() {
   return useQuery({
-    queryFn: async () => await fetchUser(),
+    queryFn: async () => await customKy("/api/user", userProfileSchema, { method: "GET" }),
     queryKey: ["userProfile"],
     staleTime: 10 * 60 * 1000,
   });
@@ -49,8 +64,12 @@ export function useUserQuery() {
 export function useUserQueryClient() {
   const queryClient = useQueryClient();
 
-  const mutateUser = (fn: (user?: GetUserType | null) => GetUserType | null | undefined) => {
-    queryClient.setQueryData(["userProfile"], fn);
+  const mutateUser = (fn: (orduserers: ProfileUserType) => ProfileUserType) => {
+    setTimeout(() => {
+      queryClient.setQueryData(["userProfile"], (user?: ProfileUserType | null) => {
+        if (user) return fn(user);
+      });
+    }, 0);
   };
 
   const refectUser = () => queryClient.invalidateQueries({ queryKey: ["userProfile"] });
