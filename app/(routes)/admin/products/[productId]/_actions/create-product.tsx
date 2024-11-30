@@ -11,8 +11,7 @@ export async function createProduct(data: ProductFormValues) {
     data,
     schema: mainProductSchema,
     roles: ADMIN,
-    serverAction: async (data) => {
-      const { id, name, imagesUrl, categoryName, productSpecs, isArchived, isPro, products } = data;
+    serverAction: async ({ id, name, imagesUrl, categoryName, productSpecs, isArchived, isPro, products }) => {
       const sameProduct = await prismadb.mainProduct.findUnique({
         where: {
           name,
@@ -46,6 +45,7 @@ export async function createProduct(data: ProductFormValues) {
                 isFeatured: product.isFeatured,
                 isArchived: product.isArchived,
                 imagesUrl: product.imagesUrl,
+                icon: product.icon,
                 stocks: {
                   create: product.stocks.map((stockId) => {
                     return {

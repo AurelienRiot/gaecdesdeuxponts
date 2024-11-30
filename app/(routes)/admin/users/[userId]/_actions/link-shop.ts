@@ -35,6 +35,7 @@ async function linkShop(data: z.infer<typeof linkShopSchema>) {
           billingAddress: true,
           shop: { include: { links: true, shopHours: { orderBy: { day: "asc" } } } },
           defaultOrders: { select: { day: true } },
+          favoriteProducts: { select: { productId: true } },
         },
       });
 

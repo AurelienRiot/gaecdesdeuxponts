@@ -1,5 +1,5 @@
 import { Icons } from "../icons";
-import { TbMilk, BsBasketFill, PiPackageDuotone, LuMilk } from "../react-icons";
+import { BsBasketFill, LuMilk, PiPackageDuotone, TbMilk } from "../react-icons";
 
 export const priorityMap: { [key: string]: number } = {
   "Lait cru bouteille verre 1L consignée": 1,
@@ -14,23 +14,21 @@ export type OptionsArray = {
   values: string[];
 }[];
 
-const productIcons = [
-  { label: "lait cru bouteille verre", Icon: LuMilk, color: "text-blue-500" },
-  { label: "lait cru bio 1l", Icon: Icons.CowMilk, color: "fill-blue-500" },
-  { label: "lait cru vrac", Icon: Icons.CowMilk, color: "fill-blue-500" },
-  { label: "bouteille", Icon: LuMilk, color: "text-gray-500" },
-  { label: "bidon", Icon: TbMilk, color: "text-green-700" },
-  { label: "casier", Icon: BsBasketFill, color: "text-red-500" },
+export const productIcons = [
+  { label: "bouteille bleue", Icon: LuMilk, color: "text-blue-500" },
+  { label: "pie vache bleue", Icon: Icons.CowMilk, color: "fill-blue-500" },
+  { label: "bouteille grise", Icon: LuMilk, color: "text-gray-500" },
+  { label: "bidon verre", Icon: TbMilk, color: "text-green-700" },
+  { label: "casier rouge", Icon: BsBasketFill, color: "text-red-500" },
+  { label: "package", Icon: PiPackageDuotone, color: "text-gray-500" },
 ];
 
-export const DisplayProductIcon = ({ name }: { name: string }) => {
-  const productName = name.toLowerCase();
-
-  for (const product of productIcons) {
-    if (productName.includes(product.label)) {
-      return <product.Icon className={`h-5 w-5 ${product.color}`} />;
-    }
+export const DisplayProductIcon = ({ icon }: { icon?: string | null }) => {
+  const productIcon = productIcons.find((product) => product.label === icon);
+  if (productIcon) {
+    return <productIcon.Icon className={`size-5 ${productIcon.color}`} />;
   }
+
   return <PiPackageDuotone className="h-5 w-5 text-gray-500" />;
 };
 

@@ -5,14 +5,13 @@ import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
+import { useUsersQueryClient } from "@/hooks/use-query/users-query";
 import useServerAction from "@/hooks/use-server-action";
 import { Clipboard, ClipboardCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { useOrdersQueryClient } from "../../../../../../hooks/use-query/orders-query";
 import changeEmail from "../_actions/change-email";
-import { useUsersQueryClient } from "@/hooks/use-query/users-query";
 
 function MailForm({ email, id }: { email: string | null; id: string }) {
   const [display, setDisplay] = useState(false);

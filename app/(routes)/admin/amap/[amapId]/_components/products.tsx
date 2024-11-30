@@ -205,7 +205,6 @@ const SelectProductName = ({
     form.setValue(`amapItems.${productIndex}.description`, product.description);
     form.setValue(`amapItems.${productIndex}.name`, product.name);
     form.setValue(`amapItems.${productIndex}.price`, product.price);
-    form.setValue(`amapItems.${productIndex}.quantity`, 1);
   }
   return (
     <FormField

@@ -19,13 +19,13 @@ import { useForm } from "react-hook-form";
 import deleteProduct from "../../_actions/delete-product";
 import { createProduct } from "../_actions/create-product";
 import { updateProduct } from "../_actions/update-product";
-import type { GetMainProductType } from "../_functions/get-main-product";
+import type { MainProductType } from "../_functions/get-main-product";
 import { mainProductSchema, type ProductFormValues } from "./product-schema";
 import ProductSpecs from "./product-specs";
 import { ProductWithOptions } from "./product-with-options-form";
 
 type ProductFormProps = {
-  initialData: GetMainProductType | null;
+  initialData: MainProductType | null;
   categories: Category[];
   optionsArray: OptionsArray;
   stocks: Stock[];
@@ -62,6 +62,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
         isFeatured: product.isFeatured,
         isArchived: product.isArchived,
         imagesUrl: product.imagesUrl,
+        icon: product.icon,
         options: product.options.map((option) => ({
           index: option.index,
           name: option.name,
@@ -74,6 +75,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
           id: createId("product"),
           description: "",
           tax: 1.055,
+          icon: undefined,
           price: undefined,
           isFeatured: false,
           isArchived: false,

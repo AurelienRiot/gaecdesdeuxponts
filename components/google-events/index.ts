@@ -51,6 +51,7 @@ export type GroupUsersByProduct = {
   productName: string;
   unit?: string;
   totalQuantity: number;
+  icon?: string | null;
   users: {
     userId: string;
     userImage?: string | null;
@@ -66,8 +67,8 @@ const aggregationRules: { match: RegExp; aggregateTo: string }[] = [
   //   aggregateTo: "Casier lait cru 1L",
   // },
   {
-    match: /^(Lait cru bouteille verre 1L consignée|Lait cru bio 1L)$/i,
-    aggregateTo: "Lait cru bouteille verre 1L consignée",
+    match: /^(Lait cru bio bouteille verre 1L consignée|Lait cru bio 1L)$/i,
+    aggregateTo: "Lait cru bio bouteille verre 1L consignée",
   },
 ];
 
@@ -102,6 +103,7 @@ export function groupUsersByProduct(
           productId: itemId,
           productName: aggregatedName,
           unit,
+          icon: product.icon,
           totalQuantity: quantity, // Initialize totalQuantity
           users: [],
         });
@@ -136,6 +138,7 @@ export function groupUsersByProduct(
         productMap.set(name, {
           productId: itemId,
           productName: name,
+          icon: product.icon,
           unit,
           totalQuantity: quantity, // Initialize totalQuantity
           users: [],

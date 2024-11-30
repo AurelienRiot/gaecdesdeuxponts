@@ -61,6 +61,7 @@ async function createUser(data: UserFormValues) {
           billingAddress: true,
           shop: { include: { links: true, shopHours: { orderBy: { day: "asc" } } } },
           defaultOrders: { select: { day: true } },
+          favoriteProducts: { select: { productId: true } },
         },
       });
       revalidateTag("users");

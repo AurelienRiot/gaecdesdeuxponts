@@ -123,7 +123,7 @@ function SummarizeUserProducts({
         return (
           <div key={product.productId + index} className="space-y-2">
             <h3 className="flex flex-wrap items-center gap-2">
-              <DisplayProductIcon name={product.productName} />
+              <DisplayProductIcon icon={product.icon} />
               <p
                 className={"text-sm font-medium underline underline-offset-2"}
               >{`${product.productName} (${totalQuantity}${product.unit})`}</p>

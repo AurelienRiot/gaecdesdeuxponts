@@ -1,13 +1,9 @@
 "server only";
 
 import prismadb from "@/lib/prismadb";
-import type { MainProduct, Option, Product, ProductStock, Unit } from "@prisma/client";
 
-export interface GetMainProductType extends MainProduct {
-  products: (Product & { options: Option[]; stocks: ProductStock[] })[];
-}
-
-export const getMainProduct = async (id?: string): Promise<GetMainProductType | null> => {
+export type MainProductType = NonNullable<Awaited<ReturnType<typeof getMainProduct>>>;
+export const getMainProduct = async (id?: string) => {
   if (!id) {
     return null;
   }

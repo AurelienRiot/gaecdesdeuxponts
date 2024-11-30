@@ -7,6 +7,7 @@ export const productQuantitiesSchema = z.object({
   name: z.string(),
   price: z.number(),
   unit: z.string(),
+  icon: z.string().nullable().optional(),
   quantity: z.number(),
 });
 export type ProductQuantities = z.infer<typeof productQuantitiesSchema>;

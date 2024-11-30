@@ -69,7 +69,7 @@ function FavoriteProducts({
                           Pro
                         </Badge>
                       )}
-                      <DisplayProductIcon name={product.name} />
+                      <DisplayProductIcon icon={product.icon} />
                       <span className="font-bold ">{product.name}</span>
                     </div>
                     <p className="ml-2">

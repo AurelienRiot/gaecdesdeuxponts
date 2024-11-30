@@ -22,6 +22,7 @@ import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import OptionValueForm from "./options-values-form";
 import type { ProductFormValues } from "./product-schema";
+import ProductIcon from "./product-icon";
 
 export const ProductWithOptions = ({
   optionsArray,
@@ -297,6 +298,7 @@ function ProductName({
             </FormItem>
           )}
         />
+        <ProductIcon productIndex={productIndex} />
         <FormField
           control={form.control}
           name={`products.${productIndex}.isArchived`}
@@ -574,7 +576,6 @@ const StockMultipleSelector = ({ selectedStocks, setSelectedStocks, disabled, st
     .map((id) => stocks.find((stock) => stock.value === id))
     .filter((option) => option !== undefined) as Option[];
 
-  console.log(selectedStocks);
   function setSelectedStockOptions(select: Option[]) {
     setSelectedStocks(select.map((option) => option.value));
   }

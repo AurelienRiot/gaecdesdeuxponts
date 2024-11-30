@@ -51,7 +51,7 @@ const DisplayAmap: React.FC<DisplayAmapProps> = ({ amapOrders, className }) => {
               <div>
                 <h4 className="text-xs font-semibold">Produits :</h4>
                 <ul className="text-xs space-y-0.5">
-                  <DisplayItem key={nanoid()} items={order.order.items} />
+                  <DisplayItem key={order.order.date + order.shopName} items={order.order.items} />
                 </ul>
               </div>
               {/* <div className="flex justify-between items-center">
