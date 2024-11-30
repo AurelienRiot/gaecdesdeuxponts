@@ -44,6 +44,7 @@ function initialProduct(products: Product[]) {
       itemId: item.id,
       unit: item.unit,
       description: item.description,
+      icon: item.icon,
       name: item.name,
       price: item.price,
       quantity: 1,

@@ -42,17 +42,17 @@ export const columns: ColumnDef<AMAPColumn>[] = [
             {nextDay ? (
               <>
                 <p className="text-left whitespace-nowrap">Prochaine livraison {getRelativeDate(nextDay)}</p>
-                <p>
+                {/* <p>
                   {daysInfuture.length} livraison{daysInfuture.length > 1 && "s"} restante
                   {daysInfuture.length > 1 && "s"}
-                </p>
+                </p> */}
               </>
             ) : (
               "Aucune livraison"
             )}
-            <p>
+            {/* <p>
               {row.original.shippedDays.length} livraison{row.original.shippedDays.length > 1 && "s"} éffectuée
-            </p>
+            </p> */}
           </Link>
         </Button>
       );

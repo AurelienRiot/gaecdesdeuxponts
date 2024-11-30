@@ -12,47 +12,27 @@ async function createAMAP(data: AMAPFormValues) {
     schema: schema,
     data,
     roles: SHIPPING_ONLY,
-    serverAction: async ({
-      id,
-      amapItems,
-      dateOfEdition,
-      daysOfAbsence,
-      endDate,
-      shippingDays,
-      shopId,
-      startDate,
-      totalPrice,
-      totalPaid,
-      userId,
-    }) => {
+    serverAction: async ({ amapItems, ...data }) => {
       await prismadb.aMAPOrder.create({
         data: {
-          id,
-          totalPrice,
-          totalPaid,
-          userId,
-          shippingDays,
-          daysOfAbsence,
-          dateOfEdition,
-          startDate,
-          endDate,
-          shopId,
+          ...data,
           amapItems: {
-            create: amapItems.map((product) => {
+            create: amapItems.map(({ itemId, price, quantity, unit, name, description, icon }) => {
               return {
-                itemId: product.itemId,
-                price: product.price,
-                quantity: product.quantity,
-                unit: product.unit,
-                name: product.name,
-                description: product.description,
+                itemId,
+                price,
+                quantity,
+                unit,
+                name,
+                icon,
+                description,
               };
             }),
           },
         },
       });
 
-      const event = await createOrdersEvent(startDate);
+      const event = await createOrdersEvent(data.startDate);
       if (!event.success) {
         console.log(event.message);
       }

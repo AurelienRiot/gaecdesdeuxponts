@@ -61,7 +61,7 @@ export type GroupUsersByProduct = {
 };
 const excludedNames = new Set(["Consigne bouteille verre 1L", "Bouteille verre 1L", "Consigne bouteille verre"]);
 
-const aggregationRules: { match: RegExp; aggregateTo: string }[] = [
+const aggregationRules: { match: RegExp; aggregateTo: string; icon: string }[] = [
   // {
   //   match: /^Lait cru bouteille verre 1L$/i,
   //   aggregateTo: "Casier lait cru 1L",
@@ -69,6 +69,7 @@ const aggregationRules: { match: RegExp; aggregateTo: string }[] = [
   {
     match: /^(Lait cru bio bouteille verre 1L consignée|Lait cru bio 1L)$/i,
     aggregateTo: "Lait cru bio bouteille verre 1L consignée",
+    icon: "bouteille blue",
   },
 ];
 
@@ -82,7 +83,7 @@ export function groupUsersByProduct(
     const { userName, userId, userImage } = order;
 
     for (const product of order.productsList) {
-      const { itemId, name, unit, quantity, price } = product;
+      const { itemId, name, unit, quantity, price, icon } = product;
 
       // **Exclude products with negative quantity**
       if (quantity <= 0 || price < 0 || excludedNames.has(name)) {
@@ -90,10 +91,12 @@ export function groupUsersByProduct(
       }
 
       let aggregatedName = name;
+      let aggregatedIcon = icon;
 
       for (const rule of aggregationRules) {
         if (rule.match.test(name)) {
           aggregatedName = rule.aggregateTo;
+          aggregatedIcon = rule.icon;
           break;
         }
       }
@@ -103,7 +106,7 @@ export function groupUsersByProduct(
           productId: itemId,
           productName: aggregatedName,
           unit,
-          icon: product.icon,
+          icon: aggregatedIcon,
           totalQuantity: quantity, // Initialize totalQuantity
           users: [],
         });
@@ -133,12 +136,12 @@ export function groupUsersByProduct(
     const userImage = order.shopImageUrl;
 
     for (const product of order.order?.items || []) {
-      const { itemId, name, unit, quantity } = product;
+      const { itemId, name, unit, quantity, icon } = product;
       if (!productMap.has(name)) {
         productMap.set(name, {
           productId: itemId,
           productName: name,
-          icon: product.icon,
+          icon,
           unit,
           totalQuantity: quantity, // Initialize totalQuantity
           users: [],
@@ -170,7 +173,7 @@ export function extractProductQuantities(orders: CalendarOrderType[], amapOrders
   const totaleRawMilk = getTotalMilk(
     aggregateProducts
       .filter((product) => product.productName.toLowerCase().includes("lait cru"))
-      .map((product) => ({ name: product.productName, quantity: product.totalQuantity })),
+      .map((product) => ({ name: product.productName, quantity: product.totalQuantity, icon: product.icon })),
   );
 
   return {

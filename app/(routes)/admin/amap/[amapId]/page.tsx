@@ -1,6 +1,9 @@
 import prismadb from "@/lib/prismadb";
 import { AMAPForm } from "./_components/amap-form";
 import AMAPFormulairePage from "./_components/amap-formulaire/formulaire-page";
+import getAmapProducts from "./_functions/get-amap-products";
+import getAmapUsers from "./_functions/get-amap-users";
+import getAmapShops from "./_functions/get-amap-shops";
 
 export const dynamic = "force-dynamic";
 
@@ -14,11 +17,9 @@ const AMAPFormPage = async ({ params }: { params: { amapId: string } }) => {
         amapItems: true,
       },
     }),
-    prismadb.user.findMany({ where: { role: { in: ["user", "trackOnlyUser"] } }, orderBy: { createdAt: "asc" } }),
-    (await prismadb.shop.findMany({ where: { type: "amap" } })).sort((a, b) =>
-      (a.name || "").localeCompare(b.name || ""),
-    ),
-    prismadb.product.findMany({ where: { productName: "Produits AMAP" } }),
+    getAmapUsers(),
+    getAmapShops(),
+    getAmapProducts(),
   ]);
   if (params.amapId === "formulaire") {
     return <AMAPFormulairePage shops={shops} products={products} />;

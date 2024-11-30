@@ -57,6 +57,7 @@ function SummarizeProducts({
               name: item.productName,
               quantity: item.totalQuantity,
               unit: item.unit,
+              icon: item.icon,
             }))}
           />
           <SummarizeUserProducts productQuantities={productQuantities} setProductQuantities={setProductQuantities} />

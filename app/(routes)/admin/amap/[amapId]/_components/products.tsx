@@ -11,6 +11,8 @@ import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { AMAPFormValues } from "./amap-schema";
+import SelectSheetWithTabs from "@/components/select-sheet-with-tabs";
+import { DisplayProductIcon } from "@/components/product";
 
 const negativeQuantityStyle = "bg-destructive text-destructive-foreground";
 
@@ -29,6 +31,7 @@ export const AMAPProducts = ({
         unit: "",
         price: 0,
         quantity: 1,
+        icon: null,
         name: "",
         description: "",
       };
@@ -204,6 +207,7 @@ const SelectProductName = ({
     form.setValue(`amapItems.${productIndex}.unit`, product.unit);
     form.setValue(`amapItems.${productIndex}.description`, product.description);
     form.setValue(`amapItems.${productIndex}.name`, product.name);
+    form.setValue(`amapItems.${productIndex}.icon`, product.icon);
     form.setValue(`amapItems.${productIndex}.price`, product.price);
   }
   return (
@@ -234,7 +238,12 @@ const SelectProductName = ({
               }
               selectedValue={selectedProduct?.itemId}
               values={products.map((product) => ({
-                label: product.name,
+                label: (
+                  <div className="flex items-center justify-center gap-2">
+                    <DisplayProductIcon icon={product.icon} />
+                    <span className="font-bold ">{product.name}</span>
+                  </div>
+                ),
                 value: { key: product.id },
               }))}
               onSelected={(value) => {

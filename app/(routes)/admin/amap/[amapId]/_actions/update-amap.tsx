@@ -52,6 +52,7 @@ async function updateAMAP(data: AMAPFormValues) {
                 price: product.price,
                 quantity: product.quantity,
                 unit: product.unit,
+                icon: product.icon,
                 name: product.name,
                 description: product.description,
               };

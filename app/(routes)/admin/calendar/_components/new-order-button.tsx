@@ -70,9 +70,6 @@ function SelectUser({
 }) {
   const { data: users } = useUsersQuery();
   const { tabs, tabsValue } = useMemo(() => (users ? getUserTab(users) : { tabs: [], tabsValue: [] }), [users]);
-  if (!users) {
-    return <Skeleton className="col-span-5 " size={"xs"} />;
-  }
 
   return (
     <SelectSheetWithTabs

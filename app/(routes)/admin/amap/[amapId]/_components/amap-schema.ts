@@ -16,6 +16,7 @@ export const schema = z.object({
       name: z.string().min(1, { message: "Le nom est requis" }),
       description: z.string().min(0, { message: "La description est requise" }),
       price: z.coerce.number(),
+      icon: z.string().optional().nullable(),
       unit: z.string().optional().nullable(),
       quantity: z.coerce.number(),
     }),

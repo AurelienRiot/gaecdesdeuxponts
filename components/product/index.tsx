@@ -15,8 +15,8 @@ export type OptionsArray = {
 }[];
 
 export const productIcons = [
-  { label: "bouteille bleue", Icon: LuMilk, color: "text-blue-500" },
-  { label: "pie vache bleue", Icon: Icons.CowMilk, color: "fill-blue-500" },
+  { label: "bouteille blue", Icon: LuMilk, color: "text-blue-500" },
+  { label: "pie vache blue", Icon: Icons.CowMilk, color: "fill-blue-500" },
   { label: "bouteille grise", Icon: LuMilk, color: "text-gray-500" },
   { label: "bidon verre", Icon: TbMilk, color: "text-green-700" },
   { label: "casier rouge", Icon: BsBasketFill, color: "text-red-500" },
@@ -25,11 +25,9 @@ export const productIcons = [
 
 export const DisplayProductIcon = ({ icon }: { icon?: string | null }) => {
   const productIcon = productIcons.find((product) => product.label === icon);
-  if (productIcon) {
-    return <productIcon.Icon className={`size-5 ${productIcon.color}`} />;
-  }
-
-  return <PiPackageDuotone className="h-5 w-5 text-gray-500" />;
+  const color = productIcon ? productIcon.color : "text-gray-500";
+  const Icon = productIcon ? productIcon.Icon : PiPackageDuotone;
+  return <Icon className={`size-5 ${color}`} />;
 };
 
 export function getTotalMilk(products: { name: string; quantity: number }[]) {

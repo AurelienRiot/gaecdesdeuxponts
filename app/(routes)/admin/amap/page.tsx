@@ -14,9 +14,6 @@ import AmapCards from "./_components/amap-cards";
 import { AMAPClient } from "./_components/client";
 import type { AMAPColumn } from "./_components/columns";
 import SelectShippingDay from "./_components/select-shipping-day";
-const DownloadCards = Dynamic.default(() => import("./_components/dowload-cards"), {
-  ssr: false,
-});
 
 export const dynamic = "force-dynamic";
 
@@ -67,9 +64,9 @@ async function AMAPPage(context: {
 
   return (
     <div className="space-y-4 p-8 pt-6">
-      <NextShipping formattedOrders={formattedOrders} shippingDay={context.searchParams.shippingDay} />
+      {/* <NextShipping formattedOrders={formattedOrders} shippingDay={context.searchParams.shippingDay} />
 
-      <Separator />
+      <Separator /> */}
       <div className="flex flex-col items-center justify-between sm:flex-row">
         <Heading title={`Contrat AMAP (${amapOrders.length})`} description="Liste des différents contrats AMAP" />
 
