@@ -75,7 +75,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
           id: createId("product"),
           description: "",
           tax: 1.055,
-          icon: undefined,
+          icon: null,
           price: undefined,
           isFeatured: false,
           isArchived: false,

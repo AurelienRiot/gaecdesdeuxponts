@@ -267,7 +267,6 @@ export function getProductTabs(products: ProductWithMain[], favoriteProducts: st
           </div>
         ),
         value: { key: product.id },
-        highlight: isFavorite,
       });
 
       return acc;

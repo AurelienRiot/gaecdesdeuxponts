@@ -27,6 +27,7 @@ model AMAPItem {
   quantity    Float     @default(1)
   unit        String?
   name        String
+  icon        String?
   description String    @db.VarChar(1000)
   orderId     String
   order       AMAPOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)

@@ -48,6 +48,7 @@ export function formatOrder(order: GetOrdersType[number]): CalendarOrderType {
       itemId: item.itemId,
       name: item.name,
       price: item.price,
+      icon: item.icon,
       quantity: item.quantity,
       unit: getUnitLabel(item.unit).quantity,
     })),

@@ -31,6 +31,7 @@ model OrderItem {
   unit         String?
   name         String
   categoryName String
+  icon         String?
   description  String   @db.VarChar(1000)
   stocks       String[]
   orderId      String

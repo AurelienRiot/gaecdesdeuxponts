@@ -40,6 +40,7 @@ export const ShippingProducts = ({
         quantity: 1,
         tax: 1.055,
         name: "",
+        icon: null,
         categoryName: "",
         description: "",
       };
@@ -235,6 +236,7 @@ const SelectProductName = ({
     form.setValue(`orderItems.${productIndex}.itemId`, selectedProduct.id);
     form.setValue(`orderItems.${productIndex}.unit`, selectedProduct.unit);
     form.setValue(`orderItems.${productIndex}.tax`, selectedProduct.tax);
+    form.setValue(`orderItems.${productIndex}.icon`, selectedProduct.icon);
     form.setValue(`orderItems.${productIndex}.description`, selectedProduct.description);
     form.setValue(`orderItems.${productIndex}.price`, selectedProduct.price);
     form.setValue(

@@ -52,6 +52,7 @@ export const ProductWithOptions = ({
       imagesUrl: [],
       tax: 1.055,
       stocks: [],
+      icon: null,
       options: products[0].options.map((option) => ({
         index: option.index,
         name: option.name,

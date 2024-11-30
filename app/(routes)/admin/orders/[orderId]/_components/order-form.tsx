@@ -95,6 +95,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
         tax: product.tax,
         quantity: product.quantity,
         name: product.name,
+        icon: product.icon,
         categoryName: product.categoryName,
         description: product.description,
       })) || [
@@ -103,6 +104,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
           itemId: "",
           unit: "",
           price: undefined,
+          icon: null,
           tax: 1.055,
           quantity: 1,
           name: "",

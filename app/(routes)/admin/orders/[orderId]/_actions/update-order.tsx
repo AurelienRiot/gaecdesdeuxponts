@@ -48,7 +48,7 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
           shopId,
           orderItems: {
             create: orderItems.map(
-              ({ categoryName, description, itemId, name, price, quantity, unit, tax, stocks }) => {
+              ({ categoryName, description, itemId, name, price, quantity, unit, tax, stocks, icon }) => {
                 return {
                   itemId,
                   price,
@@ -57,6 +57,7 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
                   unit,
                   tax,
                   name,
+                  icon,
                   categoryName,
                   description,
                 };

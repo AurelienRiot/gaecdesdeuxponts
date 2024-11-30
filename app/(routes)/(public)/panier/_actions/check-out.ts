@@ -7,7 +7,7 @@ import { createId } from "@/lib/id";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import type { ProductWithMain, UserWithAddress } from "@/types";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import * as z from "zod";
 
 export const getUserWithAdress = async (id: string) => {
@@ -143,6 +143,7 @@ async function createOrder({ totalPrice, productsWithQuantity, shopId, user, dat
         create: productsWithQuantity.map((product) => ({
           itemId: product.item.id,
           name: product.item.name,
+          icon: product.item.icon,
           description: product.item.description,
           categoryName: product.item.product.categoryName,
           price: product.item.price,

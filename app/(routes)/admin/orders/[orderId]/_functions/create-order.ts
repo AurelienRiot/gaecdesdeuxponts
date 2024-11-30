@@ -31,19 +31,22 @@ async function createOrderAction({
       shopId,
       index,
       orderItems: {
-        create: orderItems.map(({ categoryName, description, itemId, name, price, quantity, unit, tax, stocks }) => {
-          return {
-            itemId,
-            price,
-            stocks,
-            quantity,
-            unit,
-            name,
-            tax,
-            categoryName,
-            description,
-          };
-        }),
+        create: orderItems.map(
+          ({ categoryName, description, itemId, name, price, quantity, unit, tax, stocks, icon }) => {
+            return {
+              itemId,
+              price,
+              stocks,
+              quantity,
+              unit,
+              icon,
+              name,
+              tax,
+              categoryName,
+              description,
+            };
+          },
+        ),
       },
     },
     include: {
