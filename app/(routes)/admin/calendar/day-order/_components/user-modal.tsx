@@ -1,10 +1,10 @@
-import SelectSheetWithTabs, { sortUserByRole } from "@/components/select-sheet-with-tabs";
+import SelectSheetWithTabs, { getUserTab } from "@/components/select-sheet-with-tabs";
 import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";
 import { Plus, User } from "lucide-react";
-import { useCallback } from "react";
+import { useMemo } from "react";
 
 function UserModal({ onValueChange, users }: { onValueChange: (value: string) => void; users: UserForOrderType[] }) {
-  const sortedUsers = useCallback(() => sortUserByRole(users), [users]);
+  const { tabs, tabsValue } = useMemo(() => getUserTab(users), [users]);
   return (
     <SelectSheetWithTabs
       triggerClassName="w-full"
@@ -16,12 +16,8 @@ function UserModal({ onValueChange, users }: { onValueChange: (value: string) =>
         </button>
       }
       selectedValue={null}
-      tabs={[
-        { value: "pro", label: "Professionnel" },
-        { value: "user", label: "Particulier" },
-        { value: "trackOnlyUser", label: "Suivie uniquement" },
-      ]}
-      tabsValues={sortedUsers()}
+      tabs={tabs}
+      tabsValues={tabsValue}
       onSelected={(value) => {
         onValueChange(value.key);
       }}

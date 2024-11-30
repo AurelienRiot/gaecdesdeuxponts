@@ -191,7 +191,7 @@ function SelectContent<V extends { key: string }, T extends string>({
 
 export default SelectSheetWithTabs;
 
-export function sortUserByRole(
+export function getUserTab(
   users: {
     name?: string | null;
     id: string;
@@ -226,26 +226,29 @@ export function sortUserByRole(
     });
   }
 
-  return groupedRoles;
+  const tabs = [
+    { value: "pro", label: "Professionnel" },
+    { value: "user", label: "Particulier" },
+    { value: "trackOnlyUser", label: "Suivie uniquement" },
+  ];
+
+  return { tabsValue: groupedRoles, tabs };
 }
 
-type ProductTabType = "favories" | "others" | "biocoop";
+// type ProductTabType = "favories" | "others" | "biocoop";
 
-export function sortProductByTabType(products: ProductWithMain[]) {
-  const groupedRoles = products.reduce(
+export function getProductTabs(products: ProductWithMain[], favoriteProducts: string[] = []) {
+  const groupedProducts = products.reduce(
     (acc, product) => {
-      const tab = biocoopProducts.includes(product.name)
-        ? "biocoop"
-        : priorityMap[product.name]
-          ? "favories"
-          : "others";
+      const isFavorite = favoriteProducts.includes(product.id);
+      const tab = isFavorite ? "favories" : product.product.categoryName || "others";
+
       let group = acc.find((item) => item.tab === tab);
       if (!group) {
         group = { values: [], tab };
         acc.push(group);
       }
 
-      // Add the user's ID and label to the group's values
       group.values.push({
         label: (
           <div className="flex flex-col gap-2">
@@ -264,11 +267,27 @@ export function sortProductByTabType(products: ProductWithMain[]) {
           </div>
         ),
         value: { key: product.id },
+        highlight: isFavorite,
       });
 
       return acc;
     },
-    [] as { values: { value: { key: string }; label: React.ReactNode }[]; tab: ProductTabType }[], // Initialize as an empty array
+    [] as { values: ValueType<{ key: string }>[]; tab: string }[],
   );
-  return groupedRoles;
+
+  const sortedGroups = groupedProducts.sort((a, b) => {
+    if (a.tab === "favories") return -1;
+    if (b.tab === "favories") return 1;
+    return a.tab.localeCompare(b.tab);
+  });
+
+  const tabs = sortedGroups.map((group) => ({
+    value: group.tab,
+    label: group.tab === "favories" ? "Favoris" : group.tab,
+  }));
+
+  return {
+    tabsValues: sortedGroups,
+    tabs,
+  };
 }

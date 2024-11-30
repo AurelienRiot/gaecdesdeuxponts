@@ -15,6 +15,7 @@ async function userPrismaQuery() {
       billingAddress: true,
       shop: { include: { links: true, shopHours: { orderBy: { day: "asc" } } } },
       defaultOrders: { select: { day: true } },
+      favoriteProducts: { select: { productId: true } },
     },
   });
 }
@@ -31,7 +32,7 @@ const getUsersForOrders = unstable_cache(
       });
   },
   ["getUsers"],
-  { revalidate: 60 * 60 * 24, tags: ["users", "defaultOrders", "shops"] },
+  { revalidate: 60 * 60 * 24, tags: ["users", "defaultOrders", "shops", "favoriteProducts"] },
 );
 
 export function formatUser(user: Awaited<ReturnType<typeof userPrismaQuery>>[number]): UserForOrderType {
@@ -49,6 +50,7 @@ export function formatUser(user: Awaited<ReturnType<typeof userPrismaQuery>>[num
     links: user.shop?.links || [],
     shopHours: user.shop?.shopHours || [],
     defaultDaysOrders: user.defaultOrders.map((order) => order.day),
+    favoriteProducts: user.favoriteProducts.map((product) => product.productId),
     id: user.id,
   };
 }

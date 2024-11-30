@@ -5,7 +5,7 @@ import { createId } from "@/lib/id";
 import prismadb from "@/lib/prismadb";
 import { unstable_cache } from "next/cache";
 import type { OrderFormProps } from "../_components/order-form";
-import type { GetProductsForOrdersType } from "./get-products-for-orders";
+import type { ProductsForOrdersType } from "./get-products-for-orders";
 
 const getShippingOrder = async ({
   orderId,
@@ -145,7 +145,7 @@ const getDefaulOrder = async (
 
 export function updateProductsForOrder(
   order: NonNullable<OrderFormProps["initialData"]>,
-  products: GetProductsForOrdersType,
+  products: ProductsForOrdersType,
 ) {
   for (const item of order.orderItems) {
     const product = products.find((product) => product.id === item.itemId);

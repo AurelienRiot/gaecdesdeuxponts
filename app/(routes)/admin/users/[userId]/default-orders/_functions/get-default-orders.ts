@@ -13,6 +13,7 @@ async function getDefaultOrders(id?: string) {
       role: true,
       name: true,
       company: true,
+      favoriteProducts: { select: { productId: true } },
       defaultOrders: { include: { defaultOrderProducts: true } },
     },
   });

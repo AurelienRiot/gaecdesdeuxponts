@@ -30,34 +30,34 @@ model Session {
 }
 
 model User {
-  id              String           @id @unique @default(cuid())
-  name            String?
-  company         String?
-  raisonSocial    String?
-  email           String?          @unique
-  emailVerified   DateTime?
-  phone           String?
-  image           String?
-  notes           String?
-  completed       Boolean          @default(true)
-  role            Role             @default(user)
-  orders          Order[]
-  amapOrders      AMAPOrder[]
-  invoices        Invoice[]
-  accounts        Account[]
-  sessions        Session[]
-  address         Address?
-  billingAddress  BillingAddress?
-  shop            Shop?
-  messages        Contact[]
-  comments        Comment[]
-  notifications   Notification?
-  defaultOrders   DefaultOrder[]
-  defaultProducts DefaultProduct[]
-  dayOrderUsers   DayOrderUser[]
-  ccInvoice       String[]
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  id               String            @id @unique @default(cuid())
+  name             String?
+  company          String?
+  raisonSocial     String?
+  email            String?           @unique
+  emailVerified    DateTime?
+  phone            String?
+  image            String?
+  notes            String?
+  completed        Boolean           @default(true)
+  role             Role              @default(user)
+  orders           Order[]
+  amapOrders       AMAPOrder[]
+  invoices         Invoice[]
+  accounts         Account[]
+  sessions         Session[]
+  address          Address?
+  billingAddress   BillingAddress?
+  shop             Shop?
+  messages         Contact[]
+  comments         Comment[]
+  notifications    Notification?
+  defaultOrders    DefaultOrder[]
+  favoriteProducts FavoriteProduct[]
+  dayOrderUsers    DayOrderUser[]
+  ccInvoice        String[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
 }
 
 enum Role {
@@ -156,7 +156,7 @@ model DefaultOrderProduct {
   @@index([defaultOrderId])
 }
 
-model DefaultProduct {
+model FavoriteProduct {
   id        Int     @id @unique @default(autoincrement())
   userId    String
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -1,7 +1,7 @@
 "use client";
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import { GrPowerReset, LuPackageMinus } from "@/components/react-icons";
-import SelectSheetWithTabs, { sortProductByTabType } from "@/components/select-sheet-with-tabs";
+import SelectSheetWithTabs, { getProductTabs } from "@/components/select-sheet-with-tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button, IconButton } from "@/components/ui/button";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -242,13 +242,14 @@ const SelectProductName = ({
       selectedProduct.stocks.map((stock) => stock.stockId),
     );
   }
-  const groupedProducts = sortProductByTabType(
+  const { tabs, tabsValues } = getProductTabs(
     products.filter(
       (product) =>
         !user ||
         user.role === "trackOnlyUser" ||
         (user.role === "pro" ? product.product.isPro : !product.product.isPro),
     ),
+    user?.favoriteProducts,
   );
   return (
     <FormField
@@ -287,12 +288,8 @@ const SelectProductName = ({
                 )
               }
               selectedValue={product?.id}
-              tabsValues={groupedProducts}
-              tabs={[
-                { value: "favories", label: "Favoris" },
-                { value: "biocoop", label: "Biocoop" },
-                { value: "others", label: "Autres" },
-              ]}
+              tabsValues={tabsValues}
+              tabs={tabs}
               onSelected={(value) => {
                 onSelectedProduct(value.key);
               }}

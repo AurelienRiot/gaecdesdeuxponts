@@ -1,16 +1,21 @@
 "use client";
-import SelectSheetWithTabs, { sortUserByRole } from "@/components/select-sheet-with-tabs";
-import { NameWithImage } from "@/components/user";
+import SelectSheetWithTabs, { getUserTab } from "@/components/select-sheet-with-tabs";
+import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { NameWithImage } from "@/components/user";
 import { useUsersQuery } from "@/hooks/use-query/users-query";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useMemo } from "react";
 
 function ChangeUser({ userId }: { userId: string }) {
   const { data: users } = useUsersQuery();
   const router = useRouter();
-  const sortedUsers = useCallback(() => (users ? sortUserByRole(users) : []), [users]);
-  const user = users?.find((user) => user.id === userId);
+
+  const { tabs, tabsValue } = useMemo(() => (users ? getUserTab(users) : { tabs: [], tabsValue: [] }), [users]);
+  if (!users) {
+    return <Skeleton className="rounded-md h-8 w-16" size={"icon"} />;
+  }
+  const user = users.find((user) => user.id === userId);
   return (
     <SelectSheetWithTabs
       triggerClassName="w-fit whitespace-nowrap"
@@ -24,13 +29,9 @@ function ChangeUser({ userId }: { userId: string }) {
           "Changer de client"
         )
       }
-      tabs={[
-        { value: "pro", label: "Professionnel" },
-        { value: "user", label: "Particulier" },
-        { value: "trackOnlyUser", label: "Suivie uniquement" },
-      ]}
+      tabs={tabs}
       selectedValue={userId}
-      tabsValues={sortedUsers()}
+      tabsValues={tabsValue}
       onSelected={({ key }) => {
         router.push(`/admin/users/${key}/default-orders`);
       }}

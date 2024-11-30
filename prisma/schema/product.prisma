@@ -30,7 +30,7 @@ model Product {
   unit                 Unit?
   stocks               ProductStock[]
   defaultOrderProducts DefaultOrderProduct[]
-  defaultProducts      DefaultProduct[]
+  favoriteProducts     FavoriteProduct[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -1,13 +1,14 @@
 "use client";
 
 import DateModal from "@/components/date-modal";
-import SelectSheetWithTabs, { sortUserByRole } from "@/components/select-sheet-with-tabs";
+import SelectSheetWithTabs, { getUserTab } from "@/components/select-sheet-with-tabs";
 import { Package, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { createNewOrderUrl } from "../../orders/[orderId]/_components/new-order-button";
 import { useUsersQuery } from "../../../../../hooks/use-query/users-query";
+import { Skeleton } from "@/components/skeleton-ui/skeleton";
 
 function NewOrderButton() {
   const router = useRouter();
@@ -68,7 +69,10 @@ function SelectUser({
   onUserSelected: (userId: string) => void;
 }) {
   const { data: users } = useUsersQuery();
-  const sortedUsers = useCallback(() => (users ? sortUserByRole(users) : []), [users]);
+  const { tabs, tabsValue } = useMemo(() => (users ? getUserTab(users) : { tabs: [], tabsValue: [] }), [users]);
+  if (!users) {
+    return <Skeleton className="col-span-5 " size={"xs"} />;
+  }
 
   return (
     <SelectSheetWithTabs
@@ -76,12 +80,8 @@ function SelectUser({
       onOpenChange={onOpenChange}
       triggerClassName="hidden"
       title="Selectionner le client"
-      tabs={[
-        { value: "pro", label: "Professionnel" },
-        { value: "user", label: "Particulier" },
-        { value: "trackOnlyUser", label: "Suivie uniquement" },
-      ]}
-      tabsValues={sortedUsers()}
+      tabs={tabs}
+      tabsValues={tabsValue}
       onSelected={({ key }) => {
         onUserSelected(key);
       }}

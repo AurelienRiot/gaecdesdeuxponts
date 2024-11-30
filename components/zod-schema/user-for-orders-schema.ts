@@ -16,6 +16,7 @@ export const userForOrderSchema = z.object({
   links: z.array(z.object({ label: z.string(), value: z.string() })),
   shopHours: z.array(shopHoursSchema),
   defaultDaysOrders: z.array(z.number()),
+  favoriteProducts: z.array(z.string()),
   notes: z.string().nullable(),
 });
 

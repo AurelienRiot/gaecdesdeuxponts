@@ -1,12 +1,12 @@
-import SelectSheetWithTabs, { sortUserByRole } from "@/components/select-sheet-with-tabs";
+import SelectSheetWithTabs, { getUserTab } from "@/components/select-sheet-with-tabs";
 import { getUserName } from "@/components/table-custom-fuction";
-import { NameWithImage } from "@/components/user";
 import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { useCallback } from "react";
+import { NameWithImage } from "@/components/user";
+import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";
+import { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import type { OrderFormValues } from "./order-schema";
-import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";
 
 const SelectUser = ({ users }: { users: UserForOrderType[] }) => {
   const form = useFormContext<OrderFormValues>();
@@ -17,7 +17,7 @@ const SelectUser = ({ users }: { users: UserForOrderType[] }) => {
   })();
   const image = users.find((user) => user.id === userId)?.image;
 
-  const sortedUsers = useCallback(() => sortUserByRole(users), [users]);
+  const { tabs, tabsValue } = useMemo(() => getUserTab(users), [users]);
 
   return (
     <FormField
@@ -39,12 +39,8 @@ const SelectUser = ({ users }: { users: UserForOrderType[] }) => {
               )
             }
             selectedValue={userId}
-            tabs={[
-              { value: "pro", label: "Professionnel" },
-              { value: "user", label: "Particulier" },
-              { value: "trackOnlyUser", label: "Suivie uniquement" },
-            ]}
-            tabsValues={sortedUsers()}
+            tabs={tabs}
+            tabsValues={tabsValue}
             onSelected={({ key }) => {
               field.onChange(key);
             }}

@@ -1,11 +1,11 @@
 "use client";
 import type { AllShopsType } from "@/app/(routes)/admin/direction/_functions/get-shops";
 import { negativeQuantityStyle } from "@/app/(routes)/admin/orders/[orderId]/_components/products";
-import type { GetProductsForOrdersType } from "@/app/(routes)/admin/orders/[orderId]/_functions/get-products-for-orders";
+import type { ProductsForOrdersType } from "@/app/(routes)/admin/orders/[orderId]/_functions/get-products-for-orders";
 import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import CheckboxForm from "@/components/chekbox-form";
 import { GrPowerReset, LuPackageMinus } from "@/components/react-icons";
-import SelectSheetWithTabs, { sortProductByTabType } from "@/components/select-sheet-with-tabs";
+import SelectSheetWithTabs, { getProductTabs } from "@/components/select-sheet-with-tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button, IconButton, LoadingButton } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -16,9 +16,8 @@ import useServerAction from "@/hooks/use-server-action";
 import scrollToLastChild from "@/lib/scroll-to-last-child";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { Role } from "@prisma/client";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
-import { useCallback } from "react";
+import { useMemo } from "react";
 import { useForm, useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import updateDefaultOrdersAction from "../_actions/update-default-orders";
@@ -33,14 +32,14 @@ function DisplayDefaultOrderForTheDay({
   day,
   index,
   userId,
-  role,
+  favoriteProducts,
 }: {
   defaultOrderForDay: NonNullable<GetDefaultOrdersType>["defaultOrders"][number] | undefined;
-  products: GetProductsForOrdersType;
+  products: ProductsForOrdersType;
   shops: AllShopsType;
   day: string;
   userId: string;
-  role: Role;
+  favoriteProducts: string[];
   index: number;
 }) {
   const { serverAction } = useServerAction(updateDefaultOrdersAction);
@@ -74,6 +73,7 @@ function DisplayDefaultOrderForTheDay({
           users.map((user) => (user.id === userId ? { ...user, defaultDaysOrders: result } : user)),
         );
       }
+      favoriteProducts;
     }
     await serverAction({ data, onSuccess });
   }
@@ -132,10 +132,10 @@ function DisplayDefaultOrderForTheDay({
                           className="w-full rounded-md p-4 space-y-4   bg-chart1/50 even:bg-chart2/50"
                         >
                           <SelectProductName
-                            role={role}
                             products={products}
                             productIndex={productIndex}
                             selectedProduct={item}
+                            favoriteProducts={favoriteProducts}
                           />
                           <div className="flex gap-4">
                             <PriceInput productIndex={productIndex} products={products} selectedProduct={item} />
@@ -203,12 +203,12 @@ const SelectProductName = ({
   productIndex,
   products,
   selectedProduct,
-  role,
+  favoriteProducts,
 }: {
-  role: Role;
   productIndex: number;
-  products: GetProductsForOrdersType;
+  products: ProductsForOrdersType;
   selectedProduct: DefaultOrderFormValues["defaultOrderProducts"][number];
+  favoriteProducts: string[];
 }) => {
   const form = useFormContext<DefaultOrderFormValues>();
 
@@ -223,15 +223,7 @@ const SelectProductName = ({
     form.setValue(`defaultOrderProducts.${productIndex}.productId`, selectProduct.id);
     form.setValue(`defaultOrderProducts.${productIndex}.price`, selectProduct.price);
   }
-  const groupedProducts = useCallback(
-    () =>
-      sortProductByTabType(
-        products.filter(
-          (product) => role === "trackOnlyUser" || (role === "pro" ? product.product.isPro : !product.product.isPro),
-        ),
-      ),
-    [products, role],
-  );
+  const { tabsValues, tabs } = useMemo(() => getProductTabs(products, favoriteProducts), [products, favoriteProducts]);
 
   return (
     <FormField
@@ -270,12 +262,8 @@ const SelectProductName = ({
                 )
               }
               selectedValue={selectedProduct?.productId}
-              tabsValues={groupedProducts()}
-              tabs={[
-                { value: "favories", label: "Favoris" },
-                { value: "biocoop", label: "Biocoop" },
-                { value: "others", label: "Autres" },
-              ]}
+              tabsValues={tabsValues}
+              tabs={tabs}
               onSelected={(value) => {
                 onSelectedProduct(value.key);
               }}
@@ -295,7 +283,7 @@ const PriceInput = ({
   selectedProduct,
 }: {
   productIndex: number;
-  products: GetProductsForOrdersType;
+  products: ProductsForOrdersType;
   selectedProduct: DefaultOrderFormValues["defaultOrderProducts"][number];
 }) => {
   const form = useFormContext<DefaultOrderFormValues>();
