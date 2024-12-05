@@ -4,7 +4,7 @@ import prismadb from "@/lib/prismadb";
 
 export type MainProductType = NonNullable<Awaited<ReturnType<typeof getMainProduct>>>;
 export const getMainProduct = async (id?: string) => {
-  if (!id) {
+  if (!id || id === "new") {
     return null;
   }
   return await prismadb.mainProduct.findUnique({

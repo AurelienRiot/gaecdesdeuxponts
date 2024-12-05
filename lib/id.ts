@@ -12,6 +12,7 @@ export const IdType = [
   "order",
   "amap",
   "command",
+  "option",
   "orderItem",
 ] as const;
 
@@ -30,7 +31,8 @@ export function createId(type: (typeof IdType)[number], date?: Date | null) {
       return `MP_${nanoid(7)}`;
     case "orderItem":
       return `OI_${nanoid(7)}`;
-
+    case "option":
+      return `OP_${nanoid(7)}`;
     case "order":
       return `CM_${newDate.getDate().toString().padStart(2, "0")}-${(newDate.getMonth() + 1).toString().padStart(2, "0")}-${newDate.getFullYear() % 100}_${nanoid(5)}`;
     case "amap":

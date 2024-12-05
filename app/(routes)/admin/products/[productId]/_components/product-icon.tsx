@@ -7,22 +7,18 @@ import SelectSheet from "@/components/select-sheet";
 import { Button } from "@/components/ui/button";
 import { productIcons } from "@/components/product";
 
-function ProductIcon({
-  productIndex,
-}: {
-  productIndex: number;
-}) {
-  const form = useFormContext<ProductFormValues>();
+const values = productIcons.map(({ Icon, label, color }) => ({
+  value: { key: label },
+  label: <Icon className={`size-5 ${color}`} />,
+}));
 
-  const values = productIcons.map(({ Icon, label, color }) => ({
-    value: { key: label },
-    label: <Icon className={`size-5 ${color}`} />,
-  }));
+function ProductIcon() {
+  const form = useFormContext<ProductFormValues>();
 
   return (
     <FormField
       control={form.control}
-      name={`products.${productIndex}.icon`}
+      name={`icon`}
       render={({ field }) => (
         <FormItem className="flex flex-col gap-2">
           <FormLabel>Icone</FormLabel>

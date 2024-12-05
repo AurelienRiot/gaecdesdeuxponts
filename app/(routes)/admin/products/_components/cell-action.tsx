@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import useServerAction from "@/hooks/use-server-action";
-import deleteProduct from "../_actions/delete-product";
+import deleteMainProduct from "../_actions/delete-product";
 
 interface CellActionProps {
   data: ProductColumn;
@@ -24,7 +24,7 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const { serverAction, loading } = useServerAction(deleteProduct);
+  const { serverAction, loading } = useServerAction(deleteMainProduct);
 
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);

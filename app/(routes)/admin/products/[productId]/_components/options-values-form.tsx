@@ -1,3 +1,4 @@
+import type { OptionsArray } from "@/components/product";
 import { Button } from "@/components/ui/button";
 import { Command, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -6,33 +7,28 @@ import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import type { OptionsArray } from "@/components/product";
 import type { ProductFormValues } from "./product-schema";
 
 const OptionValueForm = ({
-  productIndex,
   optionIndex,
   optionsArray,
-  options,
 }: {
   optionsArray: OptionsArray;
-  productIndex: number;
   optionIndex: number;
-  options: { name: string; value: string }[];
 }) => {
   const form = useFormContext<ProductFormValues>();
+  const option = form.watch(`options.${optionIndex}`);
+
   const [openValue, setOpenValue] = useState(false);
   const [search, setSearch] = useState("");
 
   return (
     <FormField
       control={form.control}
-      name={`products.${productIndex}.options.${optionIndex}.value`}
+      name={`options.${optionIndex}.value`}
       render={({ field }) => (
         <FormItem className="w-44">
-          <FormLabel>
-            {form.getValues().products[productIndex].options[optionIndex].name || "Nom de l'option"}
-          </FormLabel>
+          <FormLabel>{option.name || "Nom de l'option"}</FormLabel>
           <FormControl>
             <Popover open={openValue} onOpenChange={setOpenValue}>
               <PopoverTrigger asChild>
@@ -46,14 +42,14 @@ const OptionValueForm = ({
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-0">
+              <PopoverContent className="w-[200px] z-[1300] p-0">
                 <Command>
                   <CommandInput value={search} onValueChange={setSearch} placeholder="Nom de la valeur" />
                   <CommandList>
-                    {optionsArray.map(
-                      ({ name, values }) =>
-                        options[optionIndex].name === name &&
-                        values.map((value) => (
+                    {optionsArray.map(({ name, values }) =>
+                      values
+                        .filter(() => name === option.name)
+                        .map((value) => (
                           <CommandItem
                             key={value}
                             value={value}
@@ -66,6 +62,7 @@ const OptionValueForm = ({
                             <Check
                               className={cn("mr-2 h-4 w-4", field.value === value ? "opacity-100" : "opacity-0")}
                             />
+
                             {value}
                           </CommandItem>
                         )),

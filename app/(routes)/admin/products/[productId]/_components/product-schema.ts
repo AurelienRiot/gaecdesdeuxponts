@@ -1,16 +1,23 @@
 import { nameSchema } from "@/components/zod-schema";
 import { z } from "zod";
 
-const OptionSchema = z.object({
+export const modalOptionSchema = z.object({
+  index: z.number(),
+  optionIds: z.array(z.string()),
+  name: nameSchema,
+});
+
+export const OptionSchema = z.object({
   index: z.number(),
   name: z.string().min(1, { message: "Le nom de l'option est requis" }),
   value: z.string().min(1, { message: "La valeur de l'option est requis" }),
 });
 
-const productSchema = z.object({
+export const productSchema = z.object({
   id: z.string(),
   index: z.number(),
   name: nameSchema,
+  mainProductId: z.string(),
   description: z.string(),
   stocks: z.array(z.string()),
   icon: z.string().optional().nullable(),
@@ -33,9 +40,13 @@ export const mainProductSchema = z.object({
   imagesUrl: z.array(z.string()).refine((data) => data.length > 0, {
     message: "Au moins une image est requise",
   }),
-  products: z.array(productSchema).nonempty("Veuillez ajouter au moins un produit"),
+  // products: z.array(productSchema).nonempty("Veuillez ajouter au moins un produit"),
 });
 
-export type ProductSchema = z.infer<typeof productSchema>;
+export type ModalOptionType = z.infer<typeof modalOptionSchema>;
 
-export type ProductFormValues = z.infer<typeof mainProductSchema>;
+export type OptionFormValues = z.infer<typeof OptionSchema>;
+
+export type ProductFormValues = z.infer<typeof productSchema>;
+
+export type MainProductFormValues = z.infer<typeof mainProductSchema>;

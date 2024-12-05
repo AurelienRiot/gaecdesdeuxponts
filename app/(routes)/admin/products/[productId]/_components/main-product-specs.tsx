@@ -1,10 +1,10 @@
-import { useFormContext } from "react-hook-form";
-import type { ProductFormValues } from "./product-schema";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { MinimalTiptapEditor } from "@/components/minimal-tiptap";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useFormContext } from "react-hook-form";
+import type { MainProductFormValues } from "./product-schema";
 
 const ProductSpecs = () => {
-  const form = useFormContext<ProductFormValues>();
+  const form = useFormContext<MainProductFormValues>();
   return (
     <FormField
       control={form.control}

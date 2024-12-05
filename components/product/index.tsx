@@ -27,7 +27,7 @@ export const DisplayProductIcon = ({ icon }: { icon?: string | null }) => {
   const productIcon = productIcons.find((product) => product.label === icon);
   const color = productIcon ? productIcon.color : "text-gray-500";
   const Icon = productIcon ? productIcon.Icon : PiPackageDuotone;
-  return <Icon className={`size-5 ${color}`} />;
+  return <Icon className={`size-5 shrink-0 ${color}`} />;
 };
 
 export function getTotalMilk(products: { name: string; quantity: number }[]) {

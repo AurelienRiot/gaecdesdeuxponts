@@ -3,88 +3,41 @@
 import CheckboxForm from "@/components/chekbox-form";
 import DeleteButton from "@/components/delete-button";
 import UploadImage from "@/components/images-upload/image-upload";
-import type { OptionsArray } from "@/components/product";
 import { Form, FormButton, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import useServerAction from "@/hooks/use-server-action";
-import { createId } from "@/lib/id";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { Category, Stock } from "@prisma/client";
+import type { Category } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import deleteProduct from "../../_actions/delete-product";
-import { createProduct } from "../_actions/create-product";
-import { updateProduct } from "../_actions/update-product";
-import type { MainProductType } from "../_functions/get-main-product";
-import { mainProductSchema, type ProductFormValues } from "./product-schema";
-import ProductSpecs from "./product-specs";
-import { ProductWithOptions } from "./product-with-options-form";
+import deleteMainProduct from "../../_actions/delete-product";
+import { createMainProduct } from "../_actions/create-main-product";
+import { updateMainProduct } from "../_actions/update-main-product";
+import { type MainProductFormValues, mainProductSchema } from "./product-schema";
+import ProductSpecs from "./main-product-specs";
 
-type ProductFormProps = {
-  initialData: MainProductType | null;
+type MainProductFormProps = {
+  initialData: MainProductFormValues;
   categories: Category[];
-  optionsArray: OptionsArray;
-  stocks: Stock[];
+  newProduct?: boolean;
 };
 
-export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categories, optionsArray, stocks }) => {
+export const MainProductForm: React.FC<MainProductFormProps> = ({ initialData, categories, newProduct }) => {
   const router = useRouter();
-  const { serverAction: createProductAction } = useServerAction(createProduct);
-  const { serverAction: updateProductAction } = useServerAction(updateProduct);
+  const { serverAction: createProductAction } = useServerAction(createMainProduct);
+  const { serverAction: updateProductAction } = useServerAction(updateMainProduct);
 
-  const title = initialData ? "Modifier le produit" : "Crée un nouveau produit";
-  const description = initialData ? "Modifier le produit" : "Ajouter un nouveau produit";
-  const action = initialData ? "Sauvegarder les changements" : "Crée le produit";
+  const title = newProduct ? "Crée un nouveau produit" : "Modifier le produit";
+  const description = newProduct ? "Ajouter un nouveau produit" : "Modifier le produit";
+  const action = newProduct ? "Crée le produit" : "Sauvegarder les changements";
 
-  const form = useForm<ProductFormValues>({
+  const form = useForm<MainProductFormValues>({
     resolver: zodResolver(mainProductSchema),
-    defaultValues: {
-      id: initialData?.id || createId("mainProduct"),
-      name: initialData?.name || "",
-      imagesUrl: initialData?.imagesUrl || [],
-      categoryName: initialData?.categoryName || "",
-      productSpecs: initialData?.productSpecs || "",
-      isArchived: initialData?.isArchived || false,
-      isPro: initialData?.isPro || false,
-      products: initialData?.products.map((product) => ({
-        id: product.id,
-        index: product.index,
-        name: product.name,
-        description: product.description,
-        price: product.price,
-        tax: product.tax,
-        unit: product.unit || undefined,
-        stocks: product.stocks.map((stock) => stock.stockId) || [],
-        isFeatured: product.isFeatured,
-        isArchived: product.isArchived,
-        imagesUrl: product.imagesUrl,
-        icon: product.icon,
-        options: product.options.map((option) => ({
-          index: option.index,
-          name: option.name,
-          value: option.value,
-        })),
-      })) || [
-        {
-          name: "",
-          index: 0,
-          id: createId("product"),
-          description: "",
-          tax: 1.055,
-          icon: null,
-          price: undefined,
-          isFeatured: false,
-          isArchived: false,
-          stocks: [],
-          imagesUrl: [],
-          options: [],
-        },
-      ],
-    },
+    defaultValues: initialData,
   });
 
   useEffect(() => {
@@ -92,21 +45,28 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
     return () => clearTimeout(timeoutId);
   }, [form]);
 
-  const onSubmit = async (data: ProductFormValues) => {
+  const onSubmit = async (data: MainProductFormValues) => {
     function onSuccess() {
-      router.push("/admin/products");
-      router.refresh();
+      router.replace(`/admin/products/${initialData.id}`, { scroll: false });
     }
-    initialData ? await updateProductAction({ data, onSuccess }) : await createProductAction({ data, onSuccess });
+    newProduct
+      ? await createProductAction({
+          data,
+          onSuccess,
+        })
+      : await updateProductAction({
+          data,
+          onSuccess,
+        });
   };
 
   return (
     <>
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
-        {initialData && (
+        {!newProduct && (
           <DeleteButton
-            action={deleteProduct}
+            action={deleteMainProduct}
             data={{ id: initialData.id }}
             isSubmitting={form.formState.isSubmitting}
             onSuccess={() => {
@@ -213,7 +173,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData, categorie
               )}
             />
           </div>
-          <ProductWithOptions stocks={stocks} optionsArray={optionsArray} />
+          {/* <ProductWithOptions stocks={stocks} optionsArray={optionsArray} /> */}
           <ProductSpecs />
 
           <FormButton className="ml-auto">{action}</FormButton>
