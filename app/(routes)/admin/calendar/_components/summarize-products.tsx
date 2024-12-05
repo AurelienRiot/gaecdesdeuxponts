@@ -6,13 +6,13 @@ import {
   type GroupUsersByProduct,
 } from "@/components/google-events";
 import { DisplayProductIcon } from "@/components/product";
-import { NameWithImage } from "@/components/user";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { NameWithImage } from "@/components/user";
+import type { CalendarOrderType } from "@/components/zod-schema/calendar-orders";
 import { cn, numberFormat2Decimals } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 import DisplayItem from "./display-item";
-import type { CalendarOrderType } from "@/components/zod-schema/calendar-orders";
 
 function SummarizeProducts({
   dailyOrders,
@@ -123,10 +123,10 @@ function SummarizeUserProducts({
         );
         return (
           <div key={product.productId + index} className="space-y-2">
-            <h3 className="flex flex-wrap items-center gap-2">
+            <h3 className="flex flex-wrap items-center gap-2 ">
               <DisplayProductIcon icon={product.icon} />
               <p
-                className={"text-sm font-medium underline underline-offset-2"}
+                className={"text-sm font-medium underline underline-offset-2 break-words whitespace-normal w-0 flex-1"}
               >{`${product.productName} (${totalQuantity}${product.unit})`}</p>
             </h3>
             <div className="space-y-2 ">

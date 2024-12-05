@@ -97,7 +97,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="p-0">
+          <Button variant="ghost" className="p-0 relative">
+            <div className="absolute inset-0 -translate-x-4  py-5 px-6 "></div>
             <span className="sr-only w-0">Ouvrir le menu</span>
             <MoreHorizontal className="h-4 w-4" />
           </Button>

@@ -9,12 +9,15 @@ function DisplayItem({
   return (
     <div className="mt-2 space-y-2">
       {items.map((item) => (
-        <div key={nanoid()} className={"flex gap-1 items-center justify-start "}>
-          {/* Icône conditionnelle selon le type de produit */}
+        <div key={nanoid()} className="flex gap-1 items-center justify-start">
           <DisplayProductIcon icon={item.icon} />
-          <p className={cn("text-sm  font-medium ", item.quantity < 0 ? "text-red-500" : " text-gray-700")}>
-            {item.name} : {displayQuantity(item.name, item.quantity)}
-            {item.unit || ""}
+          <p
+            className={cn(
+              "text-sm font-medium break-words whitespace-normal w-0 flex-1",
+              item.quantity < 0 ? "text-red-500" : "text-gray-700",
+            )}
+          >
+            {item.name} : {displayQuantity(item.name, item.quantity)} {item.unit || ""}
           </p>
         </div>
       ))}

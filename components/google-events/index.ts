@@ -80,14 +80,12 @@ export function groupUsersByProduct(
   const productMap = new Map<string, GroupUsersByProduct>();
 
   for (const order of orders) {
-    const { userName, userId, userImage } = order;
-
-    for (const product of order.productsList) {
+    const { userName, userId, userImage, productsList } = order;
+    for (const product of productsList) {
       const { itemId, name, unit, quantity, price, icon } = product;
-
       // **Exclude products with negative quantity**
       if (quantity <= 0 || price < 0 || excludedNames.has(name)) {
-        break; // Skip this product
+        continue; // Skip this product
       }
 
       let aggregatedName = name;
@@ -105,7 +103,7 @@ export function groupUsersByProduct(
         productMap.set(aggregatedName, {
           productId: itemId,
           productName: aggregatedName,
-          unit,
+          unit: unit,
           icon: aggregatedIcon,
           totalQuantity: quantity, // Initialize totalQuantity
           users: [],
@@ -124,7 +122,7 @@ export function groupUsersByProduct(
           userImage,
           userId,
           userName,
-          quantity,
+          quantity: product.quantity,
         });
       }
     }
