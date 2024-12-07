@@ -6,6 +6,7 @@ import getInvoices from "./_functions/get-invoices";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { InvoiceModalProvider } from "./_components/payment-method-modal";
+import { InvoiceCard } from "./_components/invoice-card";
 
 export const dynamic = "force-dynamic";
 
@@ -33,5 +34,14 @@ export default InvoicesPage;
 async function InvoiceTableServer() {
   const invoices = await getInvoices();
 
-  return <InvoiceTable data={invoices} />;
+  return (
+    <div>
+      {/* <InvoiceTable data={invoices} /> */}
+      <div className="flex flex-wrap gap-4 justify-center">
+        {invoices.map((invoice) => (
+          <InvoiceCard key={invoice.id} data={invoice} />
+        ))}
+      </div>
+    </div>
+  );
 }

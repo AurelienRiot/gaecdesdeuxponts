@@ -50,7 +50,7 @@ function InvoiceModal() {
   const onSubmit = async () => {
     if (!invoiceId || !paymentMethod) return;
 
-    await serverAction({ data: { id: invoiceId, isPaid: true, paymentMethod }, onSuccess: () => router.refresh() });
+    await serverAction({ data: { id: invoiceId, isPaid: true, paymentMethod } });
     setIsOpen(false);
   };
 

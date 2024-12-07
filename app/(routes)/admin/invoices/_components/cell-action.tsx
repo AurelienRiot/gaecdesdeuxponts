@@ -13,13 +13,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToastPromise } from "@/components/ui/sonner";
 import useServerAction from "@/hooks/use-server-action";
-import { Copy, MoreHorizontal, Repeat, Send, Trash } from "lucide-react";
+import { Copy, Download, FileSearch, Loader2, MoreHorizontal, Repeat, Send, Trash, View } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import deleteInvoice from "../_actions/delete-invoice";
 import validateInvoice from "../_actions/validate-invoice";
 import type { InvoiceColumn } from "./columns";
 import { useInvoiceModal } from "./payment-method-modal";
+import { onSaveSuccess, onViewSuccess } from "@/components/pdf/button/display-invoice";
+import { createInvoicePDF64StringAction } from "@/components/pdf/server-actions/pdf64-string-actions";
+import Spinner from "@/components/animations/spinner";
 
 interface CellActionProps {
   data: InvoiceColumn;
@@ -28,6 +31,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
   const { setInvoiceId, setIsOpen } = useInvoiceModal();
   const { serverAction, loading } = useServerAction(deleteInvoice);
+  const { serverAction: getInvoicePDF, loading: pdfLoading } = useServerAction(createInvoicePDF64StringAction);
   const { toastServerAction: validateInvoiceAction, loading: validateLoading } = useToastPromise({
     serverAction: validateInvoice,
     message: "Validation de la facture",
@@ -90,7 +94,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       validateInvoiceAction({
         delay: false,
         data: { id: data.id, isPaid: false, paymentMethod: null },
-        onSuccess: () => router.refresh(),
+        // onSuccess: () => router.refresh(),
       });
     }
   }
@@ -105,6 +109,14 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     toast.success("N° de facture copié");
   };
 
+  const onViewFile = async () => {
+    getInvoicePDF({ data: { invoiceId: data.id }, onSuccess: onViewSuccess });
+  };
+
+  const onSaveFile = async () => {
+    getInvoicePDF({ data: { invoiceId: data.id }, onSuccess: (result) => onSaveSuccess(data.id, result) });
+  };
+
   return (
     <>
       <DropdownMenu>
@@ -112,7 +124,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <Button variant="ghost" className="p-0 relative">
             <div className="absolute inset-0 -translate-x-4  py-5 px-6 "></div>
             <span className="sr-only w-0">Ouvrir le menu</span>
-            <MoreHorizontal className="h-4 w-4" />
+            {loading || validateLoading || invoiceToastLoading ? (
+              <Spinner className="size-4" />
+            ) : (
+              <MoreHorizontal className="h-4 w-4" />
+            )}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -133,10 +149,20 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
               </DropdownMenuItem>
             </>
           ) : (
-            <DropdownMenuItem disabled={loading || validateLoading} onClick={changePaymentMethod}>
-              <Repeat className="mr-2 h-4 w-4" />
-              Changer la méthode de paiement
-            </DropdownMenuItem>
+            <>
+              <DropdownMenuItem disabled={loading || validateLoading} onClick={changePaymentMethod}>
+                <Repeat className="mr-2 h-4 w-4" />
+                Changer la méthode de paiement
+              </DropdownMenuItem>
+              <DropdownMenuItem disabled={loading || validateLoading} onClick={onSaveFile}>
+                <Download className="mr-2 h-4 w-4" />
+                Télécharger la facture
+              </DropdownMenuItem>
+              <DropdownMenuItem disabled={loading || validateLoading} onClick={onViewFile}>
+                <FileSearch className="mr-2 h-4 w-4" />
+                Afficher la facture
+              </DropdownMenuItem>
+            </>
           )}
           <DropdownMenuItem disabled={loading || validateLoading} onClick={onPaid}>
             <MdPaid className="mr-2 h-4 w-4" />

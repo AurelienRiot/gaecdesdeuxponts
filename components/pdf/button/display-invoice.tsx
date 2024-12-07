@@ -12,6 +12,29 @@ import { sendInvoiceAction } from "../server-actions/create-send-invoice-action"
 import { PdfButton } from "./pdf-button";
 import { useRouter } from "next/navigation";
 
+export function onViewSuccess(result?: { base64String: string; date: string; type: string }) {
+  if (!result) {
+    toast.error("Erreur");
+    return;
+  }
+  const blob = base64ToBlob(result.base64String);
+  const url = URL.createObjectURL(blob);
+  window.open(url, "_blank");
+}
+
+export function onSaveSuccess(invoiceId: string, result?: { base64String: string; date: string; type: string }) {
+  if (!result) {
+    toast.error("Erreur");
+    return;
+  }
+  const blob = base64ToBlob(result.base64String);
+  const fileName =
+    result.type === "monthly"
+      ? `Facture Mensuelle ${result.date} - Laiterie du Pont Robert.pdf`
+      : `Facture ${invoiceId} - Laiterie du Pont Robert.pdf`;
+  saveAs(blob, fileName);
+}
+
 export function DisplayInvoice({
   invoiceId,
   isSend,
@@ -35,32 +58,11 @@ export function DisplayInvoice({
   const router = useRouter();
   const { serverAction, loading } = useServerAction(createInvoicePDF64StringAction);
   const onViewFile = async () => {
-    function onSuccess(result?: { base64String: string; date: string; type: string }) {
-      if (!result) {
-        toast.error("Erreur");
-        return;
-      }
-      const blob = base64ToBlob(result.base64String);
-      const url = URL.createObjectURL(blob);
-      window.open(url, "_blank");
-    }
-    await serverAction({ data: { invoiceId }, onSuccess });
+    await serverAction({ data: { invoiceId }, onSuccess: onViewSuccess });
   };
 
   const onSaveFile = async () => {
-    function onSuccess(result?: { base64String: string; date: string; type: string }) {
-      if (!result) {
-        toast.error("Erreur");
-        return;
-      }
-      const blob = base64ToBlob(result.base64String);
-      const fileName =
-        result.type === "monthly"
-          ? `Facture Mensuelle ${result.date} - Laiterie du Pont Robert.pdf`
-          : `Facture ${invoiceId} - Laiterie du Pont Robert.pdf`;
-      saveAs(blob, fileName);
-    }
-    await serverAction({ data: { invoiceId }, onSuccess });
+    await serverAction({ data: { invoiceId }, onSuccess: (result) => onSaveSuccess(invoiceId, result) });
   };
 
   const onSendFile = async (setSend: (send: boolean) => void) => {
