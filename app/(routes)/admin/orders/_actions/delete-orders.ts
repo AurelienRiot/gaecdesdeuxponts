@@ -1,6 +1,5 @@
 "use server";
 import { SHIPPING_ONLY } from "@/components/auth";
-import createOrdersEvent from "@/components/google-events/create-orders-event";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
@@ -32,9 +31,9 @@ async function deleteOrder(data: z.infer<typeof deleteSchema>) {
           };
         });
 
-      if (data.dateOfShipping) {
-        await createOrdersEvent(data.dateOfShipping);
-      }
+      // if (data.dateOfShipping) {
+      //   await createOrdersEvent(data.dateOfShipping);
+      // }
       revalidateTag("orders");
 
       return {

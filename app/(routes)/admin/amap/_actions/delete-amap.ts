@@ -1,6 +1,5 @@
 "use server";
 import { ADMIN } from "@/components/auth";
-import createOrdersEvent from "@/components/google-events/create-orders-event";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidateTag } from "next/cache";
@@ -29,12 +28,12 @@ async function deleteAMAP(data: z.infer<typeof deleteSchema>) {
           };
         });
 
-      if (nextShippingDay) {
-        const event = await createOrdersEvent(nextShippingDay);
-        if (!event.success) {
-          console.log(event.message);
-        }
-      }
+      // if (nextShippingDay) {
+      //   const event = await createOrdersEvent(nextShippingDay);
+      //   if (!event.success) {
+      //     console.log(event.message);
+      //   }
+      // }
       revalidateTag("amap-orders");
 
       return {

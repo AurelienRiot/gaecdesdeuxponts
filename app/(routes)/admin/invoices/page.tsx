@@ -5,6 +5,7 @@ import InvoiceTable from "./_components/table";
 import getInvoices from "./_functions/get-invoices";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { InvoiceModalProvider } from "./_components/payment-method-modal";
 
 export const dynamic = "force-dynamic";
 
@@ -18,9 +19,11 @@ async function InvoicesPage() {
         </Button>
       </div>
       <Separator />
-      <Suspense fallback={"Loading..."}>
-        <InvoiceTableServer />
-      </Suspense>
+      <InvoiceModalProvider>
+        <Suspense fallback={"Loading..."}>
+          <InvoiceTableServer />
+        </Suspense>
+      </InvoiceModalProvider>
     </div>
   );
 }

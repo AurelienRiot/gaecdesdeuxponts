@@ -1,7 +1,6 @@
 "use server";
 
 import { SHIPPING_ONLY } from "@/components/auth";
-import createOrdersEvent from "@/components/google-events/create-orders-event";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidatePath, revalidateTag } from "next/cache";
@@ -32,10 +31,10 @@ async function createAMAP(data: AMAPFormValues) {
         },
       });
 
-      const event = await createOrdersEvent(data.startDate);
-      if (!event.success) {
-        console.log(event.message);
-      }
+      // const event = await createOrdersEvent(data.startDate);
+      // if (!event.success) {
+      //   console.log(event.message);
+      // }
       revalidateTag("amap-orders");
       revalidatePath("/admin/calendar");
       return {

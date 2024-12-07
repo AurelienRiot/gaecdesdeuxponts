@@ -1,7 +1,6 @@
 "use server";
 
 import { SHIPPING_ONLY } from "@/components/auth";
-import createOrdersEvent from "@/components/google-events/create-orders-event";
 import { createCustomer } from "@/components/pdf/pdf-data";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
@@ -99,18 +98,18 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
         },
       });
 
-      await Promise.all([
-        (async () => {
-          if (dateOfShipping) {
-            await createOrdersEvent(dateOfShipping);
-          }
-        })(),
-        (async () => {
-          if (prevDateOfShipping && prevDateOfShipping.getDate() !== dateOfShipping?.getDate()) {
-            await createOrdersEvent(prevDateOfShipping);
-          }
-        })(),
-      ]);
+      // await Promise.all([
+      //   (async () => {
+      //     if (dateOfShipping) {
+      //       await createOrdersEvent(dateOfShipping);
+      //     }
+      //   })(),
+      //   (async () => {
+      //     if (prevDateOfShipping && prevDateOfShipping.getDate() !== dateOfShipping?.getDate()) {
+      //       await createOrdersEvent(prevDateOfShipping);
+      //     }
+      //   })(),
+      // ]);
       revalidateTag("orders");
 
       return {

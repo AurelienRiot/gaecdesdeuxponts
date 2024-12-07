@@ -1,6 +1,7 @@
 "use client";
 import { Button, LoadingButton } from "@/components/ui/button";
-import { addDelay, cn } from "@/lib/utils";
+import useServerAction from "@/hooks/use-server-action";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { LogIn, LogOut } from "lucide-react";
@@ -16,9 +17,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "../ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "../ui/input-otp";
 import { emailSchema, optSchema } from "../zod-schema";
-import useServerAction from "@/hooks/use-server-action";
 import validateOTP from "./validate-otp";
-import { useRouter } from "next/navigation";
 
 export const LoginButton = (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
   return (

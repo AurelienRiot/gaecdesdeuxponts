@@ -1,7 +1,6 @@
 "use server";
 
 import { SHIPPING_ONLY } from "@/components/auth";
-import createOrdersEvent from "@/components/google-events/create-orders-event";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
 import { revalidatePath, revalidateTag } from "next/cache";
@@ -60,21 +59,21 @@ async function updateAMAP(data: AMAPFormValues) {
           },
         },
       });
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const nextDayShippingDay = (() => {
-        for (const date of shippingDays.sort((a, b) => b.getTime() - a.getTime())) {
-          if (date.getTime() <= today.getTime()) {
-            return date;
-          }
-        }
-      })();
-      if (nextDayShippingDay) {
-        const event = await createOrdersEvent(nextDayShippingDay);
-        if (!event.success) {
-          console.log(event.message);
-        }
-      }
+      // const today = new Date();
+      // today.setHours(0, 0, 0, 0);
+      // const nextDayShippingDay = (() => {
+      //   for (const date of shippingDays.sort((a, b) => b.getTime() - a.getTime())) {
+      //     if (date.getTime() <= today.getTime()) {
+      //       return date;
+      //     }
+      //   }
+      // })();
+      // if (nextDayShippingDay) {
+      //   const event = await createOrdersEvent(nextDayShippingDay);
+      //   if (!event.success) {
+      //     console.log(event.message);
+      //   }
+      // }
       revalidateTag("amap-orders");
       revalidatePath("/admin/calendar");
       return {

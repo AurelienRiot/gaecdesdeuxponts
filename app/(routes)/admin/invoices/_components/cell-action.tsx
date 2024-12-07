@@ -13,18 +13,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToastPromise } from "@/components/ui/sonner";
 import useServerAction from "@/hooks/use-server-action";
-import { Copy, MoreHorizontal, Send, Trash } from "lucide-react";
+import { Copy, MoreHorizontal, Repeat, Send, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import deleteInvoice from "../_actions/delete-invoice";
 import validateInvoice from "../_actions/validate-invoice";
 import type { InvoiceColumn } from "./columns";
+import { useInvoiceModal } from "./payment-method-modal";
 
 interface CellActionProps {
   data: InvoiceColumn;
 }
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
+  const { setInvoiceId, setIsOpen } = useInvoiceModal();
   const { serverAction, loading } = useServerAction(deleteInvoice);
   const { toastServerAction: validateInvoiceAction, loading: validateLoading } = useToastPromise({
     serverAction: validateInvoice,
@@ -81,11 +83,21 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   }
 
   function onPaid() {
-    validateInvoiceAction({
-      delay: false,
-      data: { id: data.id, isPaid: data.status !== "Payé" },
-      onSuccess: () => router.refresh(),
-    });
+    if (data.status !== "Payé") {
+      setInvoiceId(data.id);
+      setIsOpen(true);
+    } else {
+      validateInvoiceAction({
+        delay: false,
+        data: { id: data.id, isPaid: false, paymentMethod: null },
+        onSuccess: () => router.refresh(),
+      });
+    }
+  }
+
+  function changePaymentMethod() {
+    setInvoiceId(data.id);
+    setIsOpen(true);
   }
 
   const onCopy = (id: string) => {
@@ -109,14 +121,23 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <Copy className="mr-2 h-4 w-4" />
             Copier Id
           </DropdownMenuItem>
-          <DropdownMenuItem disabled={loading || invoiceToastLoading} onClick={onSendEmail}>
-            <Send className="mr-2 h-4 w-4" />
-            Envoyer par mail
-          </DropdownMenuItem>
-          <DropdownMenuItem disabled={loading || invoiceToastLoading} onClick={onSendReminder}>
-            <BsSendPlus className="mr-2 h-4 w-4" />
-            Envoyer un rappel
-          </DropdownMenuItem>
+          {data.status !== "Payé" ? (
+            <>
+              <DropdownMenuItem disabled={loading || invoiceToastLoading} onClick={onSendEmail}>
+                <Send className="mr-2 h-4 w-4" />
+                Envoyer par mail
+              </DropdownMenuItem>
+              <DropdownMenuItem disabled={loading || invoiceToastLoading} onClick={onSendReminder}>
+                <BsSendPlus className="mr-2 h-4 w-4" />
+                Envoyer un rappel
+              </DropdownMenuItem>
+            </>
+          ) : (
+            <DropdownMenuItem disabled={loading || validateLoading} onClick={changePaymentMethod}>
+              <Repeat className="mr-2 h-4 w-4" />
+              Changer la méthode de paiement
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem disabled={loading || validateLoading} onClick={onPaid}>
             <MdPaid className="mr-2 h-4 w-4" />
             {data.status === "Payé" ? "Annuler le paiement" : "Valider le paiement"}

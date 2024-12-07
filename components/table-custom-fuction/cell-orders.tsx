@@ -1,9 +1,9 @@
 import { getRelativeDate } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
 import type { FullShop } from "@/types";
-import type { AMAPItem, OrderItem } from "@prisma/client";
+import type { AMAPItem, OrderItem, PaymentMethod } from "@prisma/client";
 import type { Row } from "@tanstack/react-table";
-import { CheckCircle, CreditCard, Hourglass, Search, Truck } from "lucide-react";
+import { Banknote, Check, CheckCircle, Coins, CreditCard, Hourglass, Landmark, Search, Truck } from "lucide-react";
 import Link from "next/link";
 import { ShopCard } from "../display-shops/shop-card";
 import { getUnitLabel } from "../product/product-function";
@@ -231,6 +231,51 @@ function StatusCell({ status, className }: StatusCellProps) {
   );
 }
 
+function PaymentMethodCell({ paymentMethod }: { paymentMethod: PaymentMethod }) {
+  const { Icon, color, hoverColor, label } = paymentMethodConfig[paymentMethod];
+  return (
+    <div className="flex gap-2 sm:gap-4">
+      <Badge
+        variant="secondary"
+        className={cn(color, hoverColor, "text-white text-xs px-2 py-0.5 flex items-center space-x-1")}
+      >
+        <Icon className="size-3" />
+        <span className="text-[10px]">{label}</span>
+      </Badge>
+    </div>
+  );
+}
+
+const paymentMethodConfig: Record<
+  PaymentMethod,
+  { Icon: React.ElementType; color: string; hoverColor: string; label: string }
+> = {
+  CASH: {
+    Icon: Coins,
+    color: "bg-blue-500",
+    hoverColor: "hover:bg-blue-500/90",
+    label: "Espece",
+  },
+  CHECK: {
+    Icon: Banknote,
+    color: "bg-blue-500",
+    hoverColor: "hover:bg-blue-500/90",
+    label: "Check",
+  },
+  TRANSFER: {
+    Icon: Landmark,
+    color: "bg-blue-500",
+    hoverColor: "hover:bg-blue-500/90",
+    label: "Virement",
+  },
+  CARD: {
+    Icon: CreditCard,
+    color: "bg-blue-500",
+    hoverColor: "hover:bg-blue-500/90",
+    label: "Carte bancaire",
+  },
+};
+
 function createDatePickUp({ dateOfShipping, datePickUp }: { datePickUp: Date; dateOfShipping: Date | null }) {
   return dateOfShipping ? dateOfShipping : datePickUp;
 }
@@ -244,6 +289,7 @@ export {
   ProductCell,
   ShopNameCell,
   statusArray,
+  PaymentMethodCell,
   StatusCell,
   type Status,
 };

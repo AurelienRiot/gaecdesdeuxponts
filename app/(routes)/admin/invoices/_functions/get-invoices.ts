@@ -27,6 +27,7 @@ const getInvoices = unstable_cache(
       totalOrders: invoice.orders.length,
       totalPrice: currencyFormatter.format(invoice.totalPrice),
       status: invoice.dateOfPayment ? "Payé" : "En attente de paiement",
+      paymentMethode: invoice.paymentMethod,
       emailSend: !!invoice.invoiceEmail,
       date:
         invoice.orders.length > 1

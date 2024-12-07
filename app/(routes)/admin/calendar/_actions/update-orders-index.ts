@@ -17,14 +17,16 @@ async function updateOrdersIndex(data: z.infer<typeof schema>) {
     roles: SHIPPING,
     schema,
     serverAction: async (orders) => {
-      for (const order of orders) {
-        await prismadb.order.update({
-          where: { id: order.orderId },
-          data: {
-            index: order.index,
-          },
-        });
-      }
+      await Promise.all(
+        orders.map((order) =>
+          prismadb.order.update({
+            where: { id: order.orderId },
+            data: {
+              index: order.index,
+            },
+          }),
+        ),
+      );
       return {
         success: true,
         message: "",

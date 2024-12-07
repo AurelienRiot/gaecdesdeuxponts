@@ -3,6 +3,7 @@ model Invoice {
   orders        InvoiceOrder[]
   totalPrice    Float
   dateOfPayment DateTime?
+  paymentMethod PaymentMethod?
   dateOfEdition DateTime
   invoiceEmail  DateTime?
   customer      Customer?
@@ -13,6 +14,13 @@ model Invoice {
   updatedAt     DateTime       @updatedAt
 
   @@index([userId])
+}
+
+enum PaymentMethod {
+  CARD
+  CASH
+  CHECK
+  TRANSFER
 }
 
 model InvoiceOrder {

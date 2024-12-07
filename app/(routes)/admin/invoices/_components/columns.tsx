@@ -1,13 +1,13 @@
 "use client";
 
-import { type Status, StatusCell } from "@/components/table-custom-fuction/cell-orders";
-import { DateCell, NameCell } from "@/components/table-custom-fuction/common-cell";
-import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
+import { DisplayInvoice } from "@/components/pdf/button/display-invoice";
+import { PaymentMethodCell, type Status, StatusCell } from "@/components/table-custom-fuction/cell-orders";
+import { NameCell } from "@/components/table-custom-fuction/common-cell";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
 import type { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
-import { DisplayInvoice } from "@/components/pdf/button/display-invoice";
+import type { PaymentMethod } from "@prisma/client";
 
 export type InvoiceColumn = {
   id: string;
@@ -17,6 +17,7 @@ export type InvoiceColumn = {
   totalPrice: string;
   totalOrders: number;
   status: Status;
+  paymentMethode: PaymentMethod | null;
   emailSend: boolean;
   date: string;
   createdAt: Date;
@@ -47,7 +48,14 @@ export const columns: ColumnDef<InvoiceColumn>[] = [
   {
     accessorKey: "status",
     header: "Statut",
-    cell: ({ row }) => <StatusCell status={row.original.status} />,
+    cell: ({ row }) => (
+      <div className="flex gap-2">
+        <StatusCell status={row.original.status} />
+        {row.original.paymentMethode && row.original.status === "Payé" && (
+          <PaymentMethodCell paymentMethod={row.original.paymentMethode} />
+        )}
+      </div>
+    ),
   },
   {
     accessorKey: "totalPrice",

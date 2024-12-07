@@ -1,13 +1,12 @@
 "server only";
 
-import prismadb from "@/lib/prismadb";
-import type { OrderFormValues } from "../_components/order-schema";
-import getOrdersIndex from "./get-orders-index";
-import { createId } from "@/lib/id";
 import { createCustomer } from "@/components/pdf/pdf-data";
-import createOrdersEvent from "@/components/google-events/create-orders-event";
+import { createId } from "@/lib/id";
+import prismadb from "@/lib/prismadb";
 import { revalidateTag } from "next/cache";
 import { formatOrder } from "../../../calendar/_functions/get-orders";
+import type { OrderFormValues } from "../_components/order-schema";
+import getOrdersIndex from "./get-orders-index";
 
 async function createOrderAction({
   datePickUp,
@@ -69,7 +68,7 @@ async function createOrderAction({
     },
   });
 
-  await createOrdersEvent(dateOfShipping || datePickUp);
+  // await createOrdersEvent(dateOfShipping || datePickUp);
   revalidateTag("orders");
   return {
     success: true,

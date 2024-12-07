@@ -74,11 +74,11 @@ async function safeServerAction<D, R, E>({
 
     const validatedData = schema.safeParse(data);
     if (!validatedData.success) {
-      console.log(validatedData.error.issues[0].message);
+      console.log(validatedData.error.issues[0]);
       console.timeEnd(timerLabel);
       return {
         success: false,
-        message: validatedData.error.issues[0].message,
+        message: "Données invalides",
         zodError: validatedData.error.flatten().fieldErrors,
       };
     }

@@ -59,18 +59,17 @@ function OrdersModal() {
 
     if (!localOrders) return;
     const newOrders = localOrders.map((orderId, index) => ({ orderId, index: index + 1 }));
-    function onSuccess() {
-      mutateOrders((prev) =>
-        prev.map((order) => {
-          const newOrder = newOrders.find((o) => o.orderId === order.id);
-          if (newOrder) {
-            return { ...order, index: newOrder.index };
-          }
-          return order;
-        }),
-      );
-    }
-    serverAction({ data: newOrders, onSuccess });
+
+    serverAction({ data: newOrders });
+    mutateOrders((prev) =>
+      prev.map((order) => {
+        const newOrder = newOrders.find((o) => o.orderId === order.id);
+        if (newOrder) {
+          return { ...order, index: newOrder.index };
+        }
+        return order;
+      }),
+    );
   }
 
   return (
