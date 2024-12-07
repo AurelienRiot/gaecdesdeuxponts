@@ -150,7 +150,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
       return;
     }
     validateInvoiceAction({
-      data: { id: initialData?.invoiceId, isPaid: !initialData.dateOfPayment },
+      data: { id: initialData?.invoiceId, isPaid: !initialData.dateOfPayment, paymentMethod: "CASH" },
       onSuccess: () => {
         mutateOrders((prev) =>
           prev.map((order) =>
