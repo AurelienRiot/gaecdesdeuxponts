@@ -5,7 +5,7 @@ import { PartenaireCards } from "./_components/partenaires";
 
 export const dynamic = "force-static";
 
-export default function Home() {
+export default async function Home() {
   return (
     <>
       {/* <TypewriterEffectSmooth
@@ -19,7 +19,6 @@ export default function Home() {
         <NosProduits title="Découvrer nos produits" />
       </Suspense> */}
       <FeaturesWithHeading />
-
       <Suspense fallback={null}>
         <PartenaireCards />
       </Suspense>
