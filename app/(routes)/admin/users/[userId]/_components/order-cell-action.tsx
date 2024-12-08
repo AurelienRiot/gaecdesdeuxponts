@@ -42,7 +42,7 @@ export const OrderCellAction: React.FC<OrderCellActionProps> = ({ data }) => {
       <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button variant="ghost" className="p-0 relative w-8">
             <span className="sr-only w-0">Open Menu</span>
             <MoreHorizontal className="h-4 w-4" />
           </Button>

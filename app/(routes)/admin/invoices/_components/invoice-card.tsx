@@ -1,12 +1,12 @@
-"use client";
-import { DisplayInvoice } from "@/components/pdf/button/display-invoice";
 import { PaymentMethodCell, StatusCell } from "@/components/table-custom-fuction/cell-orders";
-import { NameCell } from "@/components/table-custom-fuction/common-cell";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { NameWithImage } from "@/components/user";
+import { Package } from "lucide-react";
+import Link from "next/link";
 import { CellAction } from "./cell-action";
 import type { InvoiceColumn } from "./columns";
-import { ListOrdered, Package } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 
 export function InvoiceCard({
   data,
@@ -16,14 +16,13 @@ export function InvoiceCard({
   return (
     <Card className="w-full max-w-sm">
       <CardHeader className="flex-col items-center  gap-2 p-4 w-full">
-        <div className="flex items-center justify-between  w-full px-2">
-          <NameCell
-            name={data.name}
-            image={data.image}
-            imageSize={20}
-            className="font-semibold text-md"
-            url={data.userId ? `/admin/users/${data.userId}` : undefined}
-          />
+        <div className="flex items-center justify-between  w-full ">
+          <Link
+            href={data.userId ? `/admin/users/${data.userId}` : "#"}
+            className={buttonVariants({ variant: "link" })}
+          >
+            <NameWithImage name={data.name} image={data.image} className="font-semibold text-md px-0" />
+          </Link>
           <CellAction data={data} />
         </div>
         <span className="text-sm text-muted-foreground mr-auto">N° {data.id}</span>

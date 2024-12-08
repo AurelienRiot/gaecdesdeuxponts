@@ -1,7 +1,11 @@
 "use client";
 
+import DeleteButton from "@/components/animations/icons/delete";
+import Spinner from "@/components/animations/spinner";
+import { onSaveSuccess, onViewSuccess } from "@/components/pdf/button/display-invoice";
 import { sendInvoiceAction } from "@/components/pdf/server-actions/create-send-invoice-action";
-import { BsSendPlus, MdPaid } from "@/components/react-icons";
+import { createInvoicePDF64StringAction } from "@/components/pdf/server-actions/pdf64-string-actions";
+import { BsSendPlus } from "@/components/react-icons";
 import { Button } from "@/components/ui/button";
 import { useConfirm } from "@/components/ui/confirm-dialog";
 import {
@@ -13,16 +17,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToastPromise } from "@/components/ui/sonner";
 import useServerAction from "@/hooks/use-server-action";
-import { Copy, Download, FileSearch, Loader2, MoreHorizontal, Repeat, Send, Trash, View } from "lucide-react";
+import { BadgeEuro, Copy, Download, FileSearch, MoreHorizontal, Repeat, Send } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import deleteInvoice from "../_actions/delete-invoice";
 import validateInvoice from "../_actions/validate-invoice";
 import type { InvoiceColumn } from "./columns";
 import { useInvoiceModal } from "./payment-method-modal";
-import { onSaveSuccess, onViewSuccess } from "@/components/pdf/button/display-invoice";
-import { createInvoicePDF64StringAction } from "@/components/pdf/server-actions/pdf64-string-actions";
-import Spinner from "@/components/animations/spinner";
 
 interface CellActionProps {
   data: InvoiceColumn;
@@ -121,10 +122,10 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="p-0 relative">
-            <div className="absolute inset-0 -translate-x-4  py-5 px-6 "></div>
+          <Button variant="ghost" className="p-0 relative w-8">
+            <div className="absolute inset-0 -translate-x-4 -translate-y-4  py-8 px-8 "></div>
             <span className="sr-only w-0">Ouvrir le menu</span>
-            {loading || validateLoading || invoiceToastLoading ? (
+            {loading || validateLoading || invoiceToastLoading || pdfLoading ? (
               <Spinner className="size-4" />
             ) : (
               <MoreHorizontal className="h-4 w-4" />
@@ -150,10 +151,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             </>
           ) : (
             <>
-              <DropdownMenuItem disabled={loading || validateLoading} onClick={changePaymentMethod}>
-                <Repeat className="mr-2 h-4 w-4" />
-                Changer la méthode de paiement
-              </DropdownMenuItem>
               <DropdownMenuItem disabled={loading || validateLoading} onClick={onSaveFile}>
                 <Download className="mr-2 h-4 w-4" />
                 Télécharger la facture
@@ -162,16 +159,25 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
                 <FileSearch className="mr-2 h-4 w-4" />
                 Afficher la facture
               </DropdownMenuItem>
+              <DropdownMenuItem disabled={loading || validateLoading} onClick={changePaymentMethod}>
+                <Repeat className="mr-2 h-4 w-4" />
+                Changer la méthode de paiement
+              </DropdownMenuItem>
             </>
           )}
           <DropdownMenuItem disabled={loading || validateLoading} onClick={onPaid}>
-            <MdPaid className="mr-2 h-4 w-4" />
+            <BadgeEuro className="mr-2 h-4 w-4" />
             {data.status === "Payé" ? "Annuler le paiement" : "Valider le paiement"}
           </DropdownMenuItem>
-          <DropdownMenuItem disabled={loading} onClick={onDelete}>
-            <Trash className="mr-2 h-4 w-4" />
-            Supprimer
-          </DropdownMenuItem>
+          {/* <DropdownMenuItem
+            asChild
+            disabled={loading}
+            onClick={onDelete}
+            className="w-full
+          "
+          >
+            <DeleteButton svgClassName=" size-4">Supprimer</DeleteButton>
+          </DropdownMenuItem> */}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

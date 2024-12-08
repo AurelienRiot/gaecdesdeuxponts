@@ -1,12 +1,12 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
-import validateInvoice from "../_actions/validate-invoice";
-import { createContext, useContext, useState } from "react";
-import type { PaymentMethod } from "@prisma/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import useServerAction from "@/hooks/use-server-action";
-import { useRouter } from "next/navigation";
+import type { PaymentMethod } from "@prisma/client";
+import { createContext, useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
+import validateInvoice from "../_actions/validate-invoice";
 
 type InvoiceModalContextType = {
   invoiceId: string | null;
@@ -45,13 +45,15 @@ function InvoiceModal() {
   const { invoiceId, isOpen, setIsOpen } = useInvoiceModal();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
   const { serverAction, loading } = useServerAction(validateInvoice);
-  const router = useRouter();
 
   const onSubmit = async () => {
-    if (!invoiceId || !paymentMethod) return;
+    if (!invoiceId || !paymentMethod) {
+      toast.error("Erreur");
+      return;
+    }
 
-    await serverAction({ data: { id: invoiceId, isPaid: true, paymentMethod } });
     setIsOpen(false);
+    serverAction({ data: { id: invoiceId, isPaid: true, paymentMethod } });
   };
 
   return (

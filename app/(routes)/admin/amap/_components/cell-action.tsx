@@ -56,7 +56,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="p-0">
+          <Button variant="ghost" className="p-0 relative w-8">
             <span className="sr-only w-0">Ouvrir le menu</span>
             <MoreHorizontal className="h-4 w-4" />
           </Button>

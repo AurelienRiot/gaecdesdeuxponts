@@ -260,7 +260,7 @@ const paymentMethodConfig: Record<
     Icon: Banknote,
     color: "bg-blue-500",
     hoverColor: "hover:bg-blue-500/90",
-    label: "Check",
+    label: "Cheque",
   },
   TRANSFER: {
     Icon: Landmark,
