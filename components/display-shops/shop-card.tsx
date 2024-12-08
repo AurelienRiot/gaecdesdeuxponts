@@ -11,6 +11,7 @@ import { AutosizeTextarea } from "../ui/autosize-textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import DisplayHours from "./display-hours";
 import ShopDeleteButton from "./shop-delete-button";
+import { DisplayLink } from "../user";
 
 type ShopCardProps = React.HTMLAttributes<HTMLDivElement> & {
   shop: FullShop;
@@ -63,11 +64,11 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
                 {shop.email.toLocaleLowerCase()}
               </Link>
             )}
-            {!!shop.website && (
-              <Link href={shop.website} target="_blank" className="overflow-hidden text-ellipsis whitespace-nowrap">
-                {shop.website}
-              </Link>
-            )}
+            <div className="flex gap-2">
+              {shop.links.map(({ value, label }) => (
+                <DisplayLink key={value} value={value} label={label} className="px-0" />
+              ))}
+            </div>
             {shop.shopHours && <DisplayHours shopHours={shop.shopHours} />}
             {distance !== undefined && (
               <div>
@@ -109,7 +110,7 @@ export const CardInfo = ({ description, type }: { description: string; type: str
       </PopoverTrigger>
       <PopoverContent
         className={
-          "  w-[400px]   max-w-[90vw] overscroll-none    border-4 border-border p-0 outline-none hide-scrollbar"
+          "  w-[400px]  max-w-[90vw] overscroll-none    border-4 border-border p-0 outline-none hide-scrollbar"
         }
         align="center"
         side="bottom"

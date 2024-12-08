@@ -16,6 +16,7 @@ import { createContext, useContext, useState } from "react";
 import DisplayItem from "./display-item";
 import { linkNames } from "@/components/react-icons/links";
 import DisplayHours from "@/components/display-shops/display-hours";
+import { DisplayLink } from "@/components/user";
 
 type UserModalProps = UserForOrderType & { orders: CalendarOrderType[]; date: Date };
 
@@ -153,20 +154,9 @@ const UserInfo = () => {
           <div className="mb-4">
             <h3 className="text-sm font-medium text-gray-500">Liens</h3>
 
-            {user.links.map(({ value, label }) => {
-              const Icon = linkNames.find((link) => label === link.label)?.Icon;
-              return (
-                <Button key={value} asChild variant={"link"}>
-                  <Link
-                    href={value.startsWith("http://") || value.startsWith("https://") ? value : `https://${value}`}
-                    target="_blank"
-                  >
-                    {Icon && <Icon className="mr-2 size-4" />}
-                    {label}
-                  </Link>
-                </Button>
-              );
-            })}
+            {user.links.map(({ value, label }) => (
+              <DisplayLink key={value} value={value} label={label} />
+            ))}
           </div>
         )}
         {user.notes ? (

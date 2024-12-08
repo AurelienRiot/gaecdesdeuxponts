@@ -1,5 +1,8 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { linkNames } from "../react-icons/links";
+import { Button, buttonVariants } from "../ui/button";
+import Link from "next/link";
 
 export type DefaultNotifications = typeof defaultNotifications;
 
@@ -53,3 +56,17 @@ export const NameWithImage = ({
     {displayName && <span className={cn(" truncate", !completed ? "text-destructive" : "")}>{name}</span>}
   </div>
 );
+
+export const DisplayLink = ({ value, label, className }: { value: string; label: string; className?: string }) => {
+  const Icon = linkNames.find((link) => label === link.label)?.Icon;
+  return (
+    <Link
+      href={value.startsWith("http://") || value.startsWith("https://") ? value : `https://${value}`}
+      target="_blank"
+      className={cn(buttonVariants({ variant: "link" }), className)}
+    >
+      {Icon && <Icon className="mr-2 size-4" />}
+      {label}
+    </Link>
+  );
+};

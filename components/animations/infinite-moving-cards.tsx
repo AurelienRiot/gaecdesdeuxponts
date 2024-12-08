@@ -1,17 +1,15 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import React, { useEffect, useState } from "react";
-import { Icons } from "../icons";
-import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { formatFrenchPhoneNumber } from "@/lib/utils";
-import type { Shop } from "@prisma/client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn, formatFrenchPhoneNumber } from "@/lib/utils";
+import type { Shop, Link as ShopLink } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import { CardInfo } from "../display-shops/shop-card";
+import { Icons } from "../icons";
+import { DisplayLink } from "../user";
 
 export const InfiniteMovingCards = ({
   items,
@@ -20,7 +18,7 @@ export const InfiniteMovingCards = ({
   pauseOnHover = true,
   className,
 }: {
-  items: Shop[];
+  items: (Shop & { links: ShopLink[] })[];
   direction?: "left" | "right";
   speed?: "fast" | "normal" | "slow";
   pauseOnHover?: boolean;
@@ -116,7 +114,7 @@ const StarRating = ({ rating }: { rating: number }) => {
   );
 };
 
-function ShopCard({ shop }: { shop: Shop }) {
+function ShopCard({ shop }: { shop: Shop & { links: ShopLink[] } }) {
   return (
     <Card className="max-w-sm flex flex-col justify-center ">
       <CardHeader className="py-2">
@@ -153,11 +151,11 @@ function ShopCard({ shop }: { shop: Shop }) {
             {shop.email.toLocaleLowerCase()}
           </Link>
         )}
-        {!!shop.website && (
-          <Link href={shop.website} target="_blank">
-            {shop.website}
-          </Link>
-        )}
+        <div className="flex gap-2">
+          {shop.links.map(({ value, label }) => (
+            <DisplayLink key={value} value={value} label={label} className="px-0" />
+          ))}
+        </div>
       </CardContent>
     </Card>
   );
