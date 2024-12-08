@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn, formatFrenchPhoneNumber } from "@/lib/utils";
-import type { Shop, Link as ShopLink } from "@prisma/client";
+import type { FullShop } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -18,7 +18,7 @@ export const InfiniteMovingCards = ({
   pauseOnHover = true,
   className,
 }: {
-  items: (Shop & { links: ShopLink[] })[];
+  items: FullShop[];
   direction?: "left" | "right";
   speed?: "fast" | "normal" | "slow";
   pauseOnHover?: boolean;
@@ -114,7 +114,7 @@ const StarRating = ({ rating }: { rating: number }) => {
   );
 };
 
-function ShopCard({ shop }: { shop: Shop & { links: ShopLink[] } }) {
+function ShopCard({ shop }: { shop: FullShop }) {
   return (
     <Card className="max-w-sm flex flex-col justify-center ">
       <CardHeader className="py-2">

@@ -1,5 +1,5 @@
 import Container from "@/components/ui/container";
-import type { Shop } from "@prisma/client";
+import type { FullShop } from "@/types";
 import { Suspense } from "react";
 import CartItems from "./_components/cart-items";
 import Summary from "./_components/summary";
@@ -8,7 +8,7 @@ export const dynamic = "force-static";
 
 const CartPage = async () => {
   // const shops = await getShops();
-  const shops = [] as Shop[];
+  const shops = [] as FullShop[];
 
   return (
     <Container>

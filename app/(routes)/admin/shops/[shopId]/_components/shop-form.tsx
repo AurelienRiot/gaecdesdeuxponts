@@ -16,9 +16,8 @@ import { Separator } from "@/components/ui/separator";
 import { useUsersQueryClient } from "@/hooks/use-query/users-query";
 import useServerAction from "@/hooks/use-server-action";
 import { createId } from "@/lib/id";
-import type { Nullable } from "@/types";
+import type { FullShop } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { Link, Shop, ShopHours } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useForm, type UseFormReturn } from "react-hook-form";
 import createShop from "../_actions/create-shop";
@@ -27,8 +26,6 @@ import updateShop from "../_actions/update-shop";
 import ShopHoursModal from "./shop-hours";
 import ShopLinks from "./shop-links";
 import { schema, TYPE, type ShopFormValues } from "./shop-schema";
-import { useState } from "react";
-import { WheelPicker } from "./wheel-picker";
 
 export const defaultHours = {
   isClosed: false,
@@ -38,22 +35,9 @@ export const defaultHours = {
   closeHour2: new Date(new Date().setHours(19, 0, 0, 0)),
 };
 
-export type ShopPageType = Nullable<
-  Shop & {
-    links: Link[];
-    shopHours: ShopHours[];
-  }
-> | null;
-
-const options = Array.from({ length: 20 }, (_, i) => ({
-  value: `item-${i}`,
-  label: `Item ${i}`,
-}));
-
-const ShopForm = ({ initialData }: { initialData: ShopPageType }) => {
+const ShopForm = ({ initialData }: { initialData: FullShop | null }) => {
   const router = useRouter();
   const { mutateUsers } = useUsersQueryClient();
-  const [selected, setSelected] = useState(options[5].value);
   const { serverAction: createShopAction } = useServerAction(createShop);
   const { serverAction: updateShopAction } = useServerAction(updateShop);
 
