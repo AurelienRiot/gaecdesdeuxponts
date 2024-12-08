@@ -27,6 +27,8 @@ import updateShop from "../_actions/update-shop";
 import ShopHoursModal from "./shop-hours";
 import ShopLinks from "./shop-links";
 import { schema, TYPE, type ShopFormValues } from "./shop-schema";
+import { useState } from "react";
+import { WheelPicker } from "./wheel-picker";
 
 export const defaultHours = {
   isClosed: false,
@@ -43,10 +45,15 @@ export type ShopPageType = Nullable<
   }
 > | null;
 
+const options = Array.from({ length: 20 }, (_, i) => ({
+  value: `item-${i}`,
+  label: `Item ${i}`,
+}));
+
 const ShopForm = ({ initialData }: { initialData: ShopPageType }) => {
   const router = useRouter();
   const { mutateUsers } = useUsersQueryClient();
-
+  const [selected, setSelected] = useState(options[5].value);
   const { serverAction: createShopAction } = useServerAction(createShop);
   const { serverAction: updateShopAction } = useServerAction(updateShop);
 

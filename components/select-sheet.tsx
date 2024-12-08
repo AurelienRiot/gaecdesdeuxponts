@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 
-type ValueType<T extends { key: string }> = { label: React.ReactNode; value: T; highlight?: boolean };
+export type ValueType<T extends { key: string }> = { label: React.ReactNode; value: T; highlight?: boolean };
 
 function SelectSheet<T extends { key: string }>({
   values,
@@ -64,9 +64,11 @@ function SelectSheet<T extends { key: string }>({
             {!!description && <SheetDescription>{description}</SheetDescription>}
           </SheetHeader>
           <SelectSheetContent
-            setIsOpen={setIsOpen}
             values={values}
-            onSelected={onSelected}
+            onSelected={(selected) => {
+              onSelected(selected);
+              setIsOpen(false);
+            }}
             selectedValue={selectedValue}
           />
         </div>
@@ -79,16 +81,13 @@ function SelectSheetContent<T extends { key: string }>({
   values,
   onSelected,
   selectedValue,
-  setIsOpen,
 }: {
   onSelected: (selected: T) => void;
   values: ValueType<T>[];
   selectedValue?: string | null;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const itemRefs = React.useRef<(HTMLButtonElement | null)[]>([]);
-  // const { setIsOpen } = useSelectSheetContext();
 
   React.useEffect(() => {
     if (scrollRef.current && itemRefs.current[values.findIndex((value) => value.value.key === selectedValue)]) {
@@ -117,7 +116,6 @@ function SelectSheetContent<T extends { key: string }>({
               className="w-full"
               key={value.value.key + index}
               onClick={() => {
-                setIsOpen(false);
                 onSelected(value.value);
               }}
             >
