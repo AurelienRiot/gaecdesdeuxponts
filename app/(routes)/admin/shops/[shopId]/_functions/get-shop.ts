@@ -1,7 +1,7 @@
 "server only";
 import prismadb from "@/lib/prismadb";
 import { addressFormatter } from "@/lib/utils";
-import type { ShopPageType } from "../_components/shop-form";
+import type { FullShop, Nullable } from "@/types";
 
 async function getShop({
   params,
@@ -12,7 +12,7 @@ async function getShop({
     userId: string | undefined;
   };
 }) {
-  let shop: ShopPageType = null;
+  let shop: Nullable<FullShop> | null = null;
   if (params.shopId === "new" && searchParams.userId) {
     const user = await prismadb.user.findUnique({
       where: {

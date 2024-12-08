@@ -16,7 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import { useUsersQueryClient } from "@/hooks/use-query/users-query";
 import useServerAction from "@/hooks/use-server-action";
 import { createId } from "@/lib/id";
-import type { FullShop } from "@/types";
+import type { FullShop, Nullable } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm, type UseFormReturn } from "react-hook-form";
@@ -35,7 +35,7 @@ export const defaultHours = {
   closeHour2: new Date(new Date().setHours(19, 0, 0, 0)),
 };
 
-const ShopForm = ({ initialData }: { initialData: FullShop | null }) => {
+const ShopForm = ({ initialData }: { initialData: Nullable<FullShop> | null }) => {
   const router = useRouter();
   const { mutateUsers } = useUsersQueryClient();
   const { serverAction: createShopAction } = useServerAction(createShop);
