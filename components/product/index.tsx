@@ -1,14 +1,6 @@
 import { Icons } from "../icons";
 import { BsBasketFill, LuMilk, PiPackageDuotone, TbMilk } from "../react-icons";
 
-export const priorityMap: { [key: string]: number } = {
-  "Lait cru bouteille verre 1L consignée": 1,
-  "Lait cru bidon 5L": 3,
-  "Consigne bouteille verre 1L": 4,
-  "Lait cru bouteille verre 1L": 2,
-};
-export const biocoopProducts = ["Lait cru bio 1L", "Bouteille verre 1L"];
-
 export type OptionsArray = {
   name: string;
   values: string[];

@@ -1,4 +1,3 @@
-import { priorityMap } from "@/components/product";
 import prismadb from "@/lib/prismadb";
 import { unstable_cache } from "next/cache";
 
@@ -21,10 +20,7 @@ const getProductsForOrders = unstable_cache(
     });
 
     const sortedProducts = products.sort((a, b) => {
-      const aPriority = priorityMap[a.name] || Number.MAX_SAFE_INTEGER;
-      const bPriority = priorityMap[b.name] || Number.MAX_SAFE_INTEGER;
-
-      return aPriority - bPriority;
+      return a.name.localeCompare(b.name);
     });
     return sortedProducts;
   },

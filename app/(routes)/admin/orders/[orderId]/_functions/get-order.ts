@@ -153,6 +153,7 @@ export function updateProductsForOrder(
     const product = products.find((product) => product.id === item.itemId);
     if (product) {
       item.name = product.name;
+      item.icon = product.icon;
       item.description = product.description;
       item.categoryName = product.product.categoryName;
       item.stocks = product.stocks.map((stock) => stock.stockId);

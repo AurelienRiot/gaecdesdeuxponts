@@ -4,7 +4,7 @@ import type { ProductWithMain } from "@/types";
 import type { Role } from "@prisma/client";
 import { TabsContent } from "@radix-ui/react-tabs";
 import * as React from "react";
-import { biocoopProducts, DisplayProductIcon, priorityMap } from "./product";
+import { DisplayProductIcon } from "./product";
 import { getUserName } from "./table-custom-fuction";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
