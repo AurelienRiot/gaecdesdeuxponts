@@ -20,7 +20,7 @@ import { WheelPicker, type WheelPickerItem } from "@/components/ui/wheel-picker"
 import { DAYS_OF_WEEK, formatHours } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
 import { Clipboard, Copy, Minus, Plus } from "lucide-react";
-import { type Dispatch, type SetStateAction, useState } from "react";
+import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import type { z } from "zod";
 import { defaultHours } from "./shop-form";
@@ -230,6 +230,13 @@ function HourComponent({
     onChange(newDate);
     setOpen(false);
   }
+
+  useEffect(() => {
+    if (value) {
+      setSelectedHour(String(value.getHours()));
+      setSelectedMinute(String(value.getMinutes()));
+    }
+  }, [value]);
 
   return (
     <FormItem>
