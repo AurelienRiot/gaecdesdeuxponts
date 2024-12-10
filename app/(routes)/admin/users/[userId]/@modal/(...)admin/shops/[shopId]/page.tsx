@@ -9,8 +9,6 @@ async function IntercepteShopPage({
   params: { shopId: string };
   searchParams: {
     userId: string | undefined;
-    name: string | undefined;
-    image: string | undefined;
   };
 }) {
   return <ShopsPage params={params} searchParams={searchParams} />;

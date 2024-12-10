@@ -2,13 +2,12 @@ import ButtonBackward from "@/components/ui/button-backward";
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import ShopButton from "./_components/shop-button";
 import { CreateUserForm } from "./_components/create-user-form";
 import { OrderTable } from "./_components/order-table";
 import { UserForm } from "./_components/user-form";
-import getUserPageData, { type GetUserPageDataProps } from "./_functions/get-user-page-data";
 import getUnlinkShop from "./_functions/get-unllink-shop";
-import LinkShop from "./_components/link-shop";
-import type { Shop } from "@prisma/client";
+import getUserPageData from "./_functions/get-user-page-data";
 
 export const dynamic = "force-dynamic";
 
@@ -48,7 +47,7 @@ const UserPage = async ({
       <Button asChild>
         <Link href={`/admin/users/${user.formatedUser.id}/default-orders`}>Commandes par default par jour</Link>
       </Button>
-      <DisplayShop user={user.formatedUser} shops={shops} />
+      <ShopButton user={user.formatedUser} shops={shops} />
       <div>
         <OrderTable data={user.formattedOrders} />
       </div>
@@ -57,23 +56,3 @@ const UserPage = async ({
 };
 
 export default UserPage;
-
-function DisplayShop({ user, shops }: { user: GetUserPageDataProps["formatedUser"]; shops: Shop[] }) {
-  const searchParams = new URLSearchParams();
-  searchParams.set("userId", user.id);
-  user.company && searchParams.set("name", user.company);
-  user.image && searchParams.set("image", user.image);
-  return user.shop ? (
-    <Button asChild className="block w-fit">
-      <Link href={`/admin/shops/${user.shop.id}`}>Modifier le magasin</Link>
-    </Button>
-  ) : (
-    <div className="flex gap-4 flex-wrap items-center">
-      <Button asChild variant="outline">
-        <Link href={`/admin/shops/new?${searchParams.toString()}`}>Créer un magasin</Link>
-      </Button>
-
-      <LinkShop userId={user.id} shops={shops} />
-    </div>
-  );
-}

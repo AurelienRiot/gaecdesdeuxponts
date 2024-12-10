@@ -83,7 +83,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, incomplete }) =
   const onSubmit = async (data: UserFormValues) => {
     function onSuccess(result?: UserForOrderType) {
       if (result) {
-        mutateUsers((users) => users.concat(result));
+        mutateUsers((users) => users.filter((user) => user.id !== initialData.id).concat(result));
       }
       router.back();
     }

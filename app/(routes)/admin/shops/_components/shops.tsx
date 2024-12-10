@@ -1,15 +1,13 @@
 "use client";
-import { AddressInput } from "@/components/display-shops/address-input";
+import NameInput from "@/components/display-shops/name-input";
+import { ShopCard } from "@/components/display-shops/shop-card";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
-import type { Shop, ShopHours } from "@prisma/client";
+import { Toggle } from "@/components/ui/toggle";
+import type { FullShop } from "@/types";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import NameInput from "@/components/display-shops/name-input";
-import { ShopCard } from "@/components/display-shops/shop-card";
-import { Toggle } from "@/components/ui/toggle";
-import type { FullShop } from "@/types";
 
 const DisplayShop = ({ data }: { data: FullShop[] }) => {
   const [coordinates, setCoordinates] = useState<{
