@@ -11,6 +11,7 @@ async function IntercepteShopPage({
     userId: string | undefined;
   };
 }) {
+  console.log({ params, searchParams });
   return <ShopsPage params={params} searchParams={searchParams} />;
 }
 
