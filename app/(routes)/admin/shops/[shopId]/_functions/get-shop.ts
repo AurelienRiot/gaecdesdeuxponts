@@ -30,7 +30,7 @@ async function getShop({
       email: user?.email,
       phone: user?.phone,
     };
-    console.log(shop);
+    console.log({ user, shop });
   } else {
     shop = await prismadb.shop.findUnique({
       where: {
