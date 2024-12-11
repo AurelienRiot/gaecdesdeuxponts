@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useState } from "react";
 import AutoCloseSheet from "../auto-close-sheet";
+import { logoFondBlanc } from "../images";
 
 const MobileNav = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,16 +23,16 @@ const MobileNav = ({ children }: { children: React.ReactNode }) => {
         </SheetTrigger>
         <SheetContent side={"left"} className=" w-[90vw] overflow-x-visible px-2 py-8 xs:px-6">
           <SheetHeader>
-            <SheetTitle className="flex flex-wrap items-center justify-center gap-4">
+            <SheetTitle className="flex flex-wrap items-center justify-center gap-8 px-4 ">
               <Link href="/">
-                <Image alt="Logo" className="h-16 w-auto rounded-md" src="/logo-rect.webp" width={186} height={56} />
+                <Image alt="Logo" className="h-20 w-auto rounded-md p-1" src={logoFondBlanc} width={80} height={80} />
               </Link>
               <Image
                 alt="Logo Agriculture-biologique"
-                className="h-16 w-auto rounded-md bg-neutral-50 p-1"
+                className="h-20 w-auto rounded-md bg-neutral-50 p-1"
                 src="/Agriculture-biologique.png"
-                width={67}
-                height={56}
+                width={70}
+                height={80}
               />
             </SheetTitle>
           </SheetHeader>

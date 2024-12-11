@@ -11,9 +11,9 @@ import Vache from "@/public/vache.webp";
 import { QuestionMarkIcon } from "@radix-ui/react-icons";
 import { Milk } from "lucide-react";
 import Image from "next/image";
+import { GiCow } from "../react-icons";
 import AuthLink from "./auth-link";
 import NosProduits from "./nos-produits";
-import { GiCow } from "../react-icons";
 
 export function MainNav({
   className,

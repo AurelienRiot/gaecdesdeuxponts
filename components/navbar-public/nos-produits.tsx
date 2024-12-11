@@ -6,7 +6,7 @@ import {
   NavigationMenuListItem,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import type  { Category } from "@prisma/client";
+import type { Category } from "@prisma/client";
 import Image from "next/image";
 import { Suspense } from "react";
 
@@ -45,13 +45,7 @@ const CategoriesList = async () => {
 const CategoryImage = ({ category }: { category: Category }) => {
   return (
     <div className="relative mr-2 h-5 w-5 overflow-clip rounded-md">
-      <Image
-        src={category.imageUrl}
-        alt={category.name}
-        fill
-        sizes="20px"
-        className="h-full w-full object-cover"
-      />
+      <Image src={category.imageUrl} alt={category.name} fill sizes="20px" className="h-full w-full object-cover" />
     </div>
   );
 };

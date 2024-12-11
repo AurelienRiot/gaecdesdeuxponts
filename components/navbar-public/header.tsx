@@ -1,10 +1,10 @@
-import Link from "next/link";
-import MobileNav from "./mobile_nav";
 import Image from "next/image";
-import { MainNav } from "./main-nav";
+import Link from "next/link";
+import { logoBio, logoFondBlanc } from "../images";
 import AuthLink from "./auth-link";
-import { ThemeToggle } from "../theme-toggle";
 import { CartButton } from "./cart-button";
+import { MainNav } from "./main-nav";
+import MobileNav from "./mobile-nav";
 
 export const dynamic = "force-dynamic";
 
@@ -15,15 +15,15 @@ const PublicHeader = () => {
         <MobileNav>
           <MainNav orientation="vertical" className="mt-10" />
         </MobileNav>
-        <Link href="/" className="hidden min-[380px]:block">
-          <Image alt="Logo" className="h-16 w-auto rounded-md" src="/logo-rect.webp" width={155.86} height={56} />
+        <Link href="/" className="block">
+          <Image alt="Logo" className="h-16 w-auto rounded-md py-1" src={logoFondBlanc} width={80} height={80} />
         </Link>
         <Image
           alt="Logo Agriculture-biologique"
-          className="hidden h-16 w-auto rounded-md bg-neutral-50 p-1 sm:block"
-          src="/Agriculture-biologique.png"
-          width={60}
-          height={50}
+          className=" h-16 w-auto rounded-md bg-neutral-50 p-1 block"
+          src={logoBio}
+          width={64}
+          height={54}
         />
       </div>
 

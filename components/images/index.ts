@@ -11,6 +11,8 @@ export const cloudinaryAPIUrl = `https://api.cloudinary.com/v1_1/${process.env.N
 
 export const certificationBio = createImageUrl("static/xvx7zx5jmcweiecdq0do");
 
+export const logoBio = createImageUrl("static/romxatzb89gidilgmxrw");
+
 export const logoFondBlanc = createImageUrl("static/ofelrvks6dcre6p3leda");
 
 export const fontInter = createRawUrl("static/kg0jzsnbzijs7qv9bwme.ttf");
