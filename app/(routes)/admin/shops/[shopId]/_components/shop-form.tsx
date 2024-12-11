@@ -258,7 +258,7 @@ const ShopForm = ({ initialData }: { initialData: Nullable<FullShop> | null }) =
                         <SelectValue defaultValue={field.value} placeholder="Selectionner le type" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
+                    <SelectContent className="z-[1300]">
                       {TYPE.map(({ value, label }) => (
                         <SelectItem key={value} value={value}>
                           {label}
