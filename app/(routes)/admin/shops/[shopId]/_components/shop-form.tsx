@@ -59,7 +59,7 @@ const ShopForm = ({ initialData }: { initialData: Nullable<FullShop> | null }) =
       phone: initialData?.phone || "",
       website: initialData?.website || "",
       email: initialData?.email || undefined,
-      isArchived: initialData?.isArchived || false,
+      isArchived: initialData?.isArchived || true,
     },
   });
 

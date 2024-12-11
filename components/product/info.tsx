@@ -105,19 +105,11 @@ const OptionsDisplay = ({ optionsArray, product, sameProducts }: InfoProps) => {
               // }
 
               return (
-                <Badge
-                  key={value + i}
-                  variant={isActive ? "green" : !isAvailable ? "disable" : "outline"}
-                  className="py-1"
-                >
-                  {isAvailable ? (
-                    <Link href={productUrl} scroll={false}>
-                      {value}
-                    </Link>
-                  ) : (
-                    <span aria-disabled>{value}</span>
-                  )}
-                </Badge>
+                <Link key={value + i} aria-disabled={!isAvailable} href={isAvailable ? productUrl : "#"} scroll={false}>
+                  <Badge variant={isActive ? "green" : !isAvailable ? "disable" : "outline"} className="py-1">
+                    {value}
+                  </Badge>
+                </Link>
               );
             })}
           </div>
