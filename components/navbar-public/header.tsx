@@ -13,7 +13,7 @@ const PublicHeader = () => {
     <header className="fixed top-0 z-[1100] flex h-16 w-full items-center justify-between bg-background px-4 py-4 shadow-md sm:px-6">
       <div className="flex items-center justify-center gap-4">
         <MobileNav>
-          <MainNav orientation="vertical" className="mt-10" />
+          <MainNav orientation="vertical" />
         </MobileNav>
         <Link href="/" className="block">
           <Image alt="Logo" className="h-16 w-auto rounded-md py-1" src={logoFondBlanc} width={80} height={80} />
@@ -29,7 +29,7 @@ const PublicHeader = () => {
 
       <MainNav className="hidden lg:block" />
       <div className={"flex items-center sm:gap-x-4 sm:pr-2"}>
-        <AuthLink className="hidden sm:block" />
+        <AuthLink className=" lg:hidden" />
         {/* <ThemeToggle /> */}
         <CartButton />
       </div>

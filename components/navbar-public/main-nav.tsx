@@ -57,7 +57,7 @@ export function MainNav({
           <NavigationMenuLink href={"/contact"}>Contact</NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuLink asChild className="sm:hidden">
+          <NavigationMenuLink asChild>
             <AuthLink />
           </NavigationMenuLink>
         </NavigationMenuItem>
