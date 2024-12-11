@@ -71,7 +71,6 @@ async function safeServerAction<D, R, E>({
         };
       }
     }
-
     const validatedData = schema.safeParse(data);
     if (!validatedData.success) {
       console.log(validatedData.error.issues[0]);

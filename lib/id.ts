@@ -41,3 +41,9 @@ export function createId(type: (typeof IdType)[number], date?: Date | null) {
       return `commandes${reducedAlphabet()}`;
   }
 }
+
+export const sanitizeId = (id: string) =>
+  id
+    .toLowerCase()
+    .replace(/ /g, "-")
+    .replace(/[^\w-]+/g, "");

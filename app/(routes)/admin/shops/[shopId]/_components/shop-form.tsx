@@ -23,6 +23,7 @@ import { useForm, type UseFormReturn } from "react-hook-form";
 import createShop from "../_actions/create-shop";
 import deleteShop from "../_actions/delete-shop";
 import updateShop from "../_actions/update-shop";
+import IdForm from "./id-form";
 import ShopHoursModal from "./shop-hours";
 import ShopLinks from "./shop-links";
 import { schema, TYPE, type ShopFormValues } from "./shop-schema";
@@ -96,7 +97,7 @@ const ShopForm = ({ initialData }: { initialData: Nullable<FullShop> | null }) =
         )}
       </div>
       <Separator />
-
+      {initialData?.id && initialData?.name && <IdForm id={initialData.id} name={initialData.name} />}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit, (errors) => console.log(errors))} className="w-full space-y-8 p-4">
           <FormField

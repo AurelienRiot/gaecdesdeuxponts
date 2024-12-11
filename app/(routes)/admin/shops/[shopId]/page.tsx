@@ -10,7 +10,6 @@ const ShopsPage = async ({
     userId: string | undefined;
   };
 }) => {
-  console.log({ params, searchParams });
   const shop = await getShop({ params, searchParams });
 
   return (
