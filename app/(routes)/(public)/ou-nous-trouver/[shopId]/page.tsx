@@ -11,37 +11,10 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DisplayLink } from "@/components/user";
 import { formatFrenchPhoneNumber } from "@/lib/utils";
-
-const farmShopId = process.env.NEXT_PUBLIC_FARM_ID;
+import { getShop, getStaticParams, type ShopPageProps } from "./_functions/static-params";
 
 export async function generateStaticParams() {
-  const shops = await prismadb.shop.findMany({
-    where: {
-      isArchived: false,
-      id: {
-        not: farmShopId,
-      },
-    },
-    select: {
-      id: true,
-    },
-  });
-  return shops.map((shop) => ({
-    shopId: shop.id,
-  }));
-}
-
-interface ShopPageProps {
-  params: {
-    shopId: string;
-  };
-}
-
-async function getShop(id: string) {
-  return await prismadb.shop.findUnique({
-    where: { id },
-    include: { links: true, shopHours: true },
-  });
+  return await getStaticParams();
 }
 
 export async function generateMetadata({ params }: ShopPageProps): Promise<Metadata> {
