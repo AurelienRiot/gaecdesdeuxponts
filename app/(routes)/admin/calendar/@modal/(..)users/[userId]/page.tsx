@@ -59,7 +59,7 @@ async function DisplayUserForm({ userId }: { userId: string | "new" | undefined 
   return (
     <>
       <UserForm initialData={user.formatedUser} incomplete={true} />
-      <SheetFooter className="flex-col sm:flex-col  justify-center sm:gap-2 px-4">
+      <SheetFooter className="flex-col sm:flex-col justify-center gap-2 px-4 sm:space-x-0">
         <Button asChild>
           <Link replace href={`/admin/users/${user.formatedUser.id}/default-orders`}>
             Commandes par default par jour
