@@ -1,17 +1,16 @@
 import NotFound from "@/components/not-found";
 import Container from "@/components/ui/container";
 import prismadb from "@/lib/prismadb";
+import { Clock, LinkIcon, Mail, MapPin, Phone, Tag } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { MapPin, Phone, Mail, Clock, LinkIcon, Tag } from "lucide-react";
 
+import { tagOptions, typeTextRecord } from "@/components/display-shops";
+import { DisplayHoursContent } from "@/components/display-shops/display-hours";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DAYS_OF_WEEK } from "@/lib/date-utils";
-import { formatFrenchPhoneNumber } from "@/lib/utils";
-import { tagOptions, typeTextRecord } from "@/components/display-shops";
-import DisplayHours, { DisplayHoursContent } from "@/components/display-shops/display-hours";
 import { DisplayLink } from "@/components/user";
+import { formatFrenchPhoneNumber } from "@/lib/utils";
 
 const farmShopId = process.env.NEXT_PUBLIC_FARM_ID;
 
