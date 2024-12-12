@@ -3,7 +3,7 @@
 import { Modal } from "@/components/ui/modal";
 import { useRouter } from "next/navigation";
 
-function ModalLayout({ children }: { children: React.ReactNode }) {
+function ShopModalLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   return (
     <Modal
@@ -18,4 +18,4 @@ function ModalLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default ModalLayout;
+export default ShopModalLayout;

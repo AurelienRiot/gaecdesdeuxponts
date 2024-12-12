@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: ShopPageProps): Promise<Metad
   };
 }
 
-const ShopPage: React.FC<ShopPageProps> = async ({ params }) => {
+const ShopPage = async ({ params }: ShopPageProps) => {
   const shop = await getShop(params.shopId);
   if (!shop) {
     return <NotFound />;

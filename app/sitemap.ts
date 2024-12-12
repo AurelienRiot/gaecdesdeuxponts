@@ -2,13 +2,18 @@ import type { MetadataRoute } from "next";
 import { getCategories } from "@/actions/get-category";
 import { getProducts } from "@/actions/get-products";
 import { makeCategoryUrl, makeProductUrl } from "@/components/product/product-function";
+import getShops from "@/actions/get-shops";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://www.laiteriedupontrobert.fr";
-  const lastModified = new Date("2024-11-17");
+  const lastModified = new Date("2024-12-12");
 
-  const products = await getProducts();
-  const categories = await getCategories();
+  const [products, categories, shops] = await Promise.all([getProducts(), getCategories(), getShops()]);
+
+  const shopsSitemap = shops.shops.map((shop) => ({
+    url: `${baseUrl}/ou-nous-trouver/${shop.id}`,
+    lastModified: shop.updatedAt,
+  }));
 
   const productsSitemap = products.map((product) => ({
     url:
@@ -59,5 +64,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     ...categoriesSitemap,
     ...productsSitemap,
+    ...shopsSitemap,
   ];
 }

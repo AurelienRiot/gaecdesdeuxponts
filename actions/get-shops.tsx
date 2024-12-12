@@ -33,7 +33,7 @@ const getShops = unstable_cache(
     return { shops, farmShop };
   },
   ["getShops"],
-  { revalidate: 60 * 60 * 24 * 7, tags: ["shops"] },
+  { revalidate: false, tags: ["shops"] },
 );
 
 export default getShops;
