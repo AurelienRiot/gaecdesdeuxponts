@@ -1,15 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn, formatFrenchPhoneNumber } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import type { FullShop } from "@/types";
-import Image from "next/image";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { CardInfo } from "../display-shops/shop-card";
+import { SimpleShopCard } from "../display-shops/simple-shop-card";
 import { Icons } from "../icons";
-import { DisplayLink } from "../user";
 
 export const InfiniteMovingCards = ({
   items,
@@ -85,7 +80,7 @@ export const InfiniteMovingCards = ({
         )}
       >
         {items.map((shop, idx) => (
-          <ShopCard shop={shop} key={idx} />
+          <SimpleShopCard shop={shop} key={idx} />
         ))}
       </div>
     </div>
@@ -113,50 +108,3 @@ const StarRating = ({ rating }: { rating: number }) => {
     </div>
   );
 };
-
-function ShopCard({ shop }: { shop: FullShop }) {
-  return (
-    <Card className="max-w-sm flex flex-col justify-center ">
-      <CardHeader className="py-2">
-        <CardTitle className="flex  cursor-pointer items-center justify-left  gap-6">
-          {shop.imageUrl ? (
-            <Image
-              src={shop.imageUrl}
-              alt={shop.name}
-              width={64}
-              height={64}
-              className="rounded-sm object-contain h-10 sm:h-16 w-auto max-w-[20%]"
-            />
-          ) : null}
-          <span className="text-balance text-center text-lg sm:text-xl lg:text-2xl">{shop.name}</span>
-        </CardTitle>
-        <CardInfo description={shop.description} type={shop.type} />
-      </CardHeader>
-
-      <CardContent className="flex flex-col gap-2 text-xs">
-        {!!shop.address && (
-          <Button asChild variant={"link"} className="justify-start px-0">
-            <Link href={`https://maps.google.com/?q=${shop.address} ${shop.name} `} target="_blank">
-              {shop.address}
-            </Link>
-          </Button>
-        )}
-        {!!shop.phone && (
-          <Link href={`tel:${shop.phone}`} target="_blank">
-            {formatFrenchPhoneNumber(shop.phone)}
-          </Link>
-        )}
-        {!!shop.email && (
-          <Link href={`mailto:${shop.email.toLocaleLowerCase()}`} target="_blank">
-            {shop.email.toLocaleLowerCase()}
-          </Link>
-        )}
-        <div className="flex gap-2">
-          {shop.links.map(({ value, label }) => (
-            <DisplayLink key={value} value={value} label={label} className="px-0" />
-          ))}
-        </div>
-      </CardContent>
-    </Card>
-  );
-}

@@ -3,15 +3,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { haversine } from "@/lib/math";
 import { cn, formatFrenchPhoneNumber } from "@/lib/utils";
 import type { FullShop } from "@/types";
+import type { ShopType } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { forwardRef } from "react";
+import { typeTextRecord } from ".";
 import { Icons } from "../icons";
 import { AutosizeTextarea } from "../ui/autosize-textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { DisplayLink } from "../user";
 import DisplayHours from "./display-hours";
 import ShopDeleteButton from "./shop-delete-button";
-import { DisplayLink } from "../user";
 
 type ShopCardProps = React.HTMLAttributes<HTMLDivElement> & {
   shop: FullShop;
@@ -88,15 +90,9 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
 
 ShopCard.displayName = "ShopCard";
 
-export const CardInfo = ({ description, type }: { description: string; type: string }) => {
-  const typeText =
-    type === "sell"
-      ? "Acheter nos produits"
-      : type === "product"
-        ? "Acheter les produits fais avec notre lait"
-        : type === "amap"
-          ? "Commander nos produits laitiers"
-          : "Acheter nos produits ainsi que les produits fait avec notre lait";
+export const CardInfo = ({ description, type }: { description: string; type: ShopType }) => {
+  const typeText = typeTextRecord[type];
+
   if (!description) {
     return <p className="text-center">{typeText}</p>;
   }

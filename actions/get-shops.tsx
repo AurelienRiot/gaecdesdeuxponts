@@ -9,6 +9,9 @@ const getShops = unstable_cache(
       prismadb.shop.findMany({
         where: {
           isArchived: false,
+          id: {
+            not: farmShopId,
+          },
         },
         include: {
           links: true,
@@ -30,7 +33,7 @@ const getShops = unstable_cache(
     return { shops, farmShop };
   },
   ["getShops"],
-  { revalidate: 60 * 60 * 24, tags: ["shops"] },
+  { revalidate: 60 * 60 * 24 * 7, tags: ["shops"] },
 );
 
 export default getShops;

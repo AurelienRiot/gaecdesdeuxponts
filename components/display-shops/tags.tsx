@@ -1,31 +1,5 @@
 import MultipleSelector, { type Option } from "@/components/ui/multiple-selector";
-import {
-  FaConciergeBell,
-  GiBread,
-  GiPig,
-  GiVendingMachine,
-  IoRestaurantSharp,
-  LuCigarette,
-  LuCoffee,
-  MdLocalBar,
-  MdOutlineStorefront,
-  PiBasket,
-  PiFarm,
-} from "../react-icons";
-
-const tagOptions: Option[] = [
-  { label: "Bar", value: "bar", Icon: MdLocalBar },
-  { label: "Épicerie", value: "epicerie", Icon: MdOutlineStorefront },
-  { label: "Ferme", value: "ferme", Icon: PiFarm },
-  { label: "Tabac", value: "tabac", Icon: LuCigarette },
-  { label: "Café", value: "cafe", Icon: LuCoffee },
-  { label: "Boulangerie", value: "boulangerie", Icon: GiBread },
-  { label: "AMAP", value: "amap", Icon: PiBasket },
-  { label: "Restaurant", value: "restaurant", Icon: IoRestaurantSharp },
-  { label: "Traiteur", value: "caterer", Icon: FaConciergeBell },
-  { label: "Boucherie Charcuterie", value: "butcher", Icon: GiPig },
-  { label: "Distributeur", value: "distributeur", Icon: GiVendingMachine },
-];
+import { tagOptions } from ".";
 
 type TagsMultipleSelectorProps = {
   selectedTags: string[];

@@ -1,3 +1,4 @@
+"use client";
 import type { z } from "zod";
 import type { shopHoursSchema } from "../../app/(routes)/admin/shops/[shopId]/_components/shop-schema";
 import { DAYS_OF_WEEK, formatHours } from "@/lib/date-utils";
@@ -27,21 +28,32 @@ function DisplayHours({ shopHours }: { shopHours: z.infer<typeof shopHoursSchema
           <DialogHeader>
             <DialogTitle>Horraires</DialogTitle>
           </DialogHeader>
-          <div className="mt-4">
-            <ul className="space-y-2">
-              {shopHours.map((hours) => (
-                <li key={hours.day} className="flex justify-between items-center bg-secondary py-1 px-2 rounded-sm">
-                  <span className="font-medium">{DAYS_OF_WEEK[hours.day]}</span>
-                  <span className="text-gray-600">
-                    <DisplayHour hours={hours} />
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
         </DialogContent>
       </Dialog>
     </>
+  );
+}
+
+export function DisplayHoursContent({ shopHours }: { shopHours: z.infer<typeof shopHoursSchema>[] }) {
+  const currentDay = new Date().getDay();
+  return (
+    <div className="mt-4 ">
+      <ul className="space-y-2">
+        {shopHours.map((hours) => (
+          <li
+            key={hours.day}
+            className={`flex justify-between items-center p-3 rounded-lg transition-colors ${
+              hours.day === currentDay ? "bg-primary/10" : "bg-secondary"
+            }`}
+          >
+            <span className="font-medium">{DAYS_OF_WEEK[hours.day]}</span>
+            <span className={hours.isClosed ? "text-destructive" : "text-primary"}>
+              <DisplayHour hours={hours} />
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
@@ -54,9 +66,10 @@ function DisplayHour({ hours }: { hours: z.infer<typeof shopHoursSchema> }) {
       <span>{formatHours(hours.openHour1)}</span>
       {" - "}
       <span>{formatHours(hours.closeHour1)}</span>
+
       {hours.openHour2 && hours.closeHour2 && (
         <>
-          <br />
+          <span className="mx-1">&</span>
           <span>{formatHours(hours.openHour2)}</span>
           {" - "}
           <span>{formatHours(hours.closeHour2)}</span>
