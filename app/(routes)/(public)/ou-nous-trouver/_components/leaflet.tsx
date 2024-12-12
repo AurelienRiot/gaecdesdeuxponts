@@ -4,6 +4,7 @@ import type { Dispatch, SetStateAction } from "react";
 import { MapContainer, Marker, Popup, TileLayer, Tooltip, useMapEvent } from "react-leaflet";
 import MapFocus from "./map-focus";
 import { MakePin } from "./marker-pin";
+import { useRouter } from "next/navigation";
 
 const Leaflet = ({
   shops,
@@ -18,6 +19,7 @@ const Leaflet = ({
   coordinates: { long: number | undefined; lat: number | undefined };
   setSortedShops: Dispatch<SetStateAction<FullShop[]>>;
 }) => {
+  const router = useRouter();
   return (
     <MapContainer
       center={[47.6600571, -1.9121281]}
@@ -37,10 +39,19 @@ const Leaflet = ({
         setCoordinates={setCoordinates}
       />
       {shops.map((shop) => (
-        <Marker key={shop.id} position={[shop.lat, shop.long]} icon={MakePin("blue", shop.name, shop.imageUrl)}>
-          <Popup>
+        <Marker
+          key={shop.id}
+          eventHandlers={{
+            click: () => {
+              router.push(`/ou-nous-trouver/${shop.id}`);
+            },
+          }}
+          position={[shop.lat, shop.long]}
+          icon={MakePin("blue", shop.name, shop.imageUrl)}
+        >
+          {/* <Popup>
             <ShopCard display="find" shop={shop} key={shop.name} coordinates={coordinates} />{" "}
-          </Popup>
+          </Popup> */}
           <Tooltip direction="top" offset={[0, -65]} opacity={1}>
             <span>{"Afficher"}</span>
           </Tooltip>

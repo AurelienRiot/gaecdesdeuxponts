@@ -3,7 +3,7 @@
 import { SHIPPING_ONLY } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { type ShopFormValues, schema } from "../_components/shop-schema";
 
 async function updateShop(data: ShopFormValues) {
@@ -48,6 +48,7 @@ async function updateShop(data: ShopFormValues) {
       ]);
 
       revalidateTag("shops");
+      revalidatePath(`/ou-nous-trouver/${data.id}`);
       return {
         success: true,
         message: "Magasin mis à jour",
