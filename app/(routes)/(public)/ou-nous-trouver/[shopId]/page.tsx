@@ -1,6 +1,5 @@
 import NotFound from "@/components/not-found";
 import Container from "@/components/ui/container";
-import prismadb from "@/lib/prismadb";
 import { Clock, LinkIcon, Mail, MapPin, Phone, Tag } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -11,11 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DisplayLink } from "@/components/user";
 import { formatFrenchPhoneNumber } from "@/lib/utils";
-import { getShop, getStaticParams, type ShopPageProps } from "./_functions/static-params";
-
-export async function generateStaticParams() {
-  return await getStaticParams();
-}
+import { getShop, type ShopPageProps } from "./_functions/static-params";
 
 export async function generateMetadata({ params }: ShopPageProps): Promise<Metadata> {
   const shop = await getShop(params.shopId);
@@ -40,14 +35,16 @@ const ShopPage: React.FC<ShopPageProps> = async ({ params }) => {
   return (
     <Container className="max-w-3xl">
       <Card className="overflow-hidden">
-        <CardHeader className="relative p-0">
-          <Image
-            src={shop.imageUrl || "/skeleton-image.webp"}
-            alt={shop.name}
-            width={1200}
-            height={400}
-            className="w-full h-64 object-contain"
-          />
+        <CardHeader className="relative p-0 h-64">
+          {
+            <Image
+              fill
+              src={shop.imageUrl || "/skeleton-image.webp"}
+              alt={shop.name}
+              sizes="(max-width: 768px) 100vw,  768px"
+              className={shop.imageUrl ? "object-contain" : "object-cover"}
+            />
+          }
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
             <h1 className="text-3xl font-bold text-white">{shop.name}</h1>
             <p className="text-white/80">{typeText}</p>

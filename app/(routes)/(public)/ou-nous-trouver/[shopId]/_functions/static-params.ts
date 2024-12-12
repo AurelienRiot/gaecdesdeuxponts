@@ -1,4 +1,5 @@
 import prismadb from "@/lib/prismadb";
+import { unstable_cache } from "next/cache";
 
 const farmShopId = process.env.NEXT_PUBLIC_FARM_ID;
 
@@ -25,9 +26,13 @@ export interface ShopPageProps {
   };
 }
 
-export async function getShop(id: string) {
-  return await prismadb.shop.findUnique({
-    where: { id },
-    include: { links: true, shopHours: true },
-  });
-}
+export const getShop = unstable_cache(
+  async (id: string) => {
+    return await prismadb.shop.findUnique({
+      where: { id },
+      include: { links: true, shopHours: true },
+    });
+  },
+  ["getShop"],
+  { revalidate: false, tags: ["shops"] },
+);
