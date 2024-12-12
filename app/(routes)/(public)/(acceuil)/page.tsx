@@ -3,7 +3,8 @@ import FeaturesWithHeading from "./_components/features";
 import ImageAccueil from "./_components/image-accueil";
 import { PartenaireCards } from "./_components/partenaires";
 
-export const dynamic = "force-static";
+// export const dynamic = "force-static";
+export const revalidate = 604800;
 
 export default async function Home() {
   return (

@@ -70,7 +70,7 @@ const ShopPage = async ({ params }: ShopPageProps) => {
             </div>
             <div className="flex items-center">
               <Phone className="w-5 h-5 mr-2 text-muted-foreground" />
-              <span>{formatFrenchPhoneNumber(shop.phone)}</span>
+              <a href={`tel:${formatFrenchPhoneNumber(shop.phone)}`}>{formatFrenchPhoneNumber(shop.phone)}</a>
             </div>
             {shop.email && (
               <div className="flex items-center">

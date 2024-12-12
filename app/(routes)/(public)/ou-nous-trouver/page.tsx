@@ -9,8 +9,8 @@ import Image from "next/image";
 import { Suspense } from "react";
 import PlacePicker from "./_components/place";
 
-export const dynamic = "force-static";
-// export const revalidate = 604800;
+// export const dynamic = "force-static";
+export const revalidate = 604800;
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
