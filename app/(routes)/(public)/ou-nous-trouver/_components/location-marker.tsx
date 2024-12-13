@@ -13,14 +13,10 @@ import { toast } from "sonner";
 
 const LocationMarkerFunction = ({
   className,
-  setCoordinates,
   setPin,
-  setSortedShops,
   shops,
 }: {
   className?: string;
-  setCoordinates: Dispatch<SetStateAction<{ long: number | undefined; lat: number | undefined }>>;
-  setSortedShops: Dispatch<SetStateAction<FullShop[]>>;
   shops: FullShop[];
   setPin: Dispatch<SetStateAction<{ label: string; lat: number; long: number } | undefined>>;
 }) => {
@@ -41,11 +37,6 @@ const LocationMarkerFunction = ({
       long: longitude,
     });
 
-    setCoordinates({
-      long: longitude,
-      lat: latitude,
-    });
-    setSortedShops(sortShops({ lat: latitude, long: longitude, shops }));
     if (accept) {
       posthog.capture("localisation_trouvée", {
         latitude,

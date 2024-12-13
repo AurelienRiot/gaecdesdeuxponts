@@ -14,16 +14,17 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { DisplayLink } from "../user";
 import DisplayHours from "./display-hours";
 import ShopDeleteButton from "./shop-delete-button";
+import DisplayTags from "./display-tags";
 
 type ShopCardProps = React.HTMLAttributes<HTMLDivElement> & {
   shop: FullShop;
-  coordinates: { long: number | undefined; lat: number | undefined };
+  coordinates?: { long: number | undefined; lat: number | undefined };
   display: "admin" | "find" | "profile" | "cart";
 };
 
 export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
   ({ shop, coordinates, display, className, children, ...props }, ref) => {
-    const distance = haversine(coordinates, { lat: shop.lat, long: shop.long });
+    const distance = coordinates && haversine(coordinates, { lat: shop.lat, long: shop.long });
 
     return (
       <>
@@ -49,6 +50,7 @@ export const ShopCard = forwardRef<HTMLDivElement, ShopCardProps>(
             <CardInfo description={shop.description} type={shop.type} />
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
+            <DisplayTags shopTags={shop.tags} />
             {!!shop.address && (
               <Button asChild variant={"link"} className="justify-start px-0">
                 <Link href={`https://maps.google.com/?q=${shop.address} ${shop.name} `} target="_blank">

@@ -15,14 +15,10 @@ import { MakePin } from "./marker-pin";
 
 const MapFocus = ({
   className,
-  setCoordinates,
   shops,
-  setSortedShops,
 }: {
   className?: string;
-  setSortedShops: Dispatch<SetStateAction<FullShop[]>>;
   shops: FullShop[];
-  setCoordinates: Dispatch<SetStateAction<{ long: number | undefined; lat: number | undefined }>>;
 }) => {
   const { getValue } = useLocalStorage("cookies-banner");
   const [pin, setPin] = useState<{ label: string; lat: number; long: number } | undefined>(undefined);
@@ -49,22 +45,11 @@ const MapFocus = ({
       lat: latitude,
       long: longitude,
     });
-    setSortedShops(sortShops({ lat: latitude, long: longitude, shops }));
-    setCoordinates({
-      long: longitude,
-      lat: latitude,
-    });
   }
 
   return (
     <>
-      <LocationMarker
-        shops={shops}
-        setSortedShops={setSortedShops}
-        setPin={setPin}
-        setCoordinates={setCoordinates}
-        className="absolute right-3 top-3 z-[1000]"
-      />
+      <LocationMarker shops={shops} setPin={setPin} className="absolute right-3 top-3 z-[1000]" />
       <SearchAddress
         onValueChange={onSelectAddress}
         triggerClassName={cn("z-[400]  w-44  transition-all  p-4  shadow-md text-[0.65rem] ", className)}

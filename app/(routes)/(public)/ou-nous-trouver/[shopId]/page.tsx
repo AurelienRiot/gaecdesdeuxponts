@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DisplayLink } from "@/components/user";
 import { formatFrenchPhoneNumber } from "@/lib/utils";
 import { getShop, type ShopPageProps } from "./_functions/static-params";
+import DisplayTags from "@/components/display-shops/display-tags";
 
 export async function generateMetadata({ params }: ShopPageProps): Promise<Metadata> {
   const shop = await getShop(params.shopId);
@@ -31,9 +32,8 @@ const ShopPage = async ({ params }: ShopPageProps) => {
   }
 
   const typeText = typeTextRecord[shop.type];
-  const tags = tagOptions.filter((option) => shop.tags.includes(option.value));
   return (
-    <Container className="max-w-3xl">
+    <Container className="max-w-3xl mb-4">
       <Card className="overflow-hidden">
         <CardHeader className="relative p-0 h-64">
           {
@@ -46,31 +46,30 @@ const ShopPage = async ({ params }: ShopPageProps) => {
             />
           }
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
-            <h1 className="text-3xl font-bold text-white">{shop.name}</h1>
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">{shop.name}</h1>
             <p className="text-white/80">{typeText}</p>
           </div>
         </CardHeader>
         <CardContent className="grid gap-6 p-6">
-          <div className="flex flex-wrap gap-2">
-            {tags.map((tag) => {
-              const Icon = tag.Icon || Tag;
-              return (
-                <Badge key={tag.value} variant="secondary">
-                  <Icon className="w-4 h-4 mr-1" />
-                  {tag.label}
-                </Badge>
-              );
-            })}
-          </div>
+          <DisplayTags shopTags={shop.tags} />
           <p className="text-muted-foreground">{shop.description}</p>
           <div className="grid gap-4">
             <div className="flex items-center">
               <MapPin className="w-5 h-5 mr-2 text-muted-foreground" />
-              <span>{shop.address}</span>
+              <a
+                href={`https://maps.google.com/?q=${shop.address} ${shop.name} `}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                {shop.address}
+              </a>
             </div>
             <div className="flex items-center">
               <Phone className="w-5 h-5 mr-2 text-muted-foreground" />
-              <a href={`tel:${formatFrenchPhoneNumber(shop.phone)}`}>{formatFrenchPhoneNumber(shop.phone)}</a>
+              <a href={`tel:${formatFrenchPhoneNumber(shop.phone)}`} className="text-primary hover:underline">
+                {formatFrenchPhoneNumber(shop.phone)}
+              </a>
             </div>
             {shop.email && (
               <div className="flex items-center">

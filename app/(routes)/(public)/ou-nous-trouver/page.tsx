@@ -8,6 +8,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Suspense } from "react";
 import PlacePicker from "./_components/place";
+import Loading from "../loading";
+import ShowShops from "./_components/show-shops";
 
 // export const dynamic = "force-static";
 export const revalidate = 604800;
@@ -30,7 +32,7 @@ const OuNousTrouver = async () => {
           chez vous
         </p>
       </div>
-      <Suspense fallback={<PlaceLoading />}>
+      <Suspense fallback={<Loading />}>
         <ServerPlace />
       </Suspense>
     </Container>
@@ -42,7 +44,12 @@ export default OuNousTrouver;
 const ServerPlace = async () => {
   const { shops, farmShop } = await getShops();
 
-  return <PlacePicker shops={shops} farmShop={farmShop} />;
+  return (
+    <>
+      <PlacePicker shops={shops} farmShop={farmShop} />
+      <ShowShops shops={shops} />
+    </>
+  );
 };
 
 const PlaceLoading = () => (

@@ -1,6 +1,7 @@
 import type { ShopType } from "@prisma/client";
 import type { Option } from "../ui/multiple-selector";
 import {
+  FaCarrot,
   FaConciergeBell,
   GiBread,
   GiCupcake,
@@ -34,5 +35,6 @@ export const tagOptions: Option[] = [
   { label: "Restaurant", value: "restaurant", Icon: IoRestaurantSharp },
   { label: "Traiteur", value: "caterer", Icon: FaConciergeBell },
   { label: "Boucherie Charcuterie", value: "butcher", Icon: GiPig },
+  { label: "Marché", value: "market", Icon: FaCarrot },
   { label: "Distributeur", value: "distributeur", Icon: GiVendingMachine },
 ];

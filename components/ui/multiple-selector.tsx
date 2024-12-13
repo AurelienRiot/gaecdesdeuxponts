@@ -321,8 +321,16 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
       }
 
       if (creatable) {
-        return (value: string, search: string) => {
-          return value.toLowerCase().includes(search.toLowerCase()) ? 1 : -1;
+        return (value: string, search: string, keywords?: string[] | undefined) => {
+          const valueLower = value.toLowerCase();
+          const searchLower = search.toLowerCase();
+          if (valueLower.includes(searchLower)) {
+            return 1;
+          }
+          if (keywords?.some((keyword) => valueLower.includes(keyword.toLowerCase()))) {
+            return 1;
+          }
+          return -1;
         };
       }
       // Using default filter in `cmdk`. We don't have to provide it.
@@ -431,6 +439,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
                             <CommandItem
                               key={option.value}
                               value={option.value}
+                              keywords={option.label.split(" ")}
                               disabled={option.disable}
                               onMouseDown={(e) => {
                                 e.preventDefault();

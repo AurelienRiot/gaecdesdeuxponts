@@ -1,23 +1,16 @@
 import { ShopCard } from "@/components/display-shops/shop-card";
 import type { FullShop } from "@/types";
-import type { Dispatch, SetStateAction } from "react";
+import { useRouter } from "next/navigation";
 import { MapContainer, Marker, Popup, TileLayer, Tooltip, useMapEvent } from "react-leaflet";
 import MapFocus from "./map-focus";
 import { MakePin } from "./marker-pin";
-import { useRouter } from "next/navigation";
 
 const Leaflet = ({
   shops,
   farmShop,
-  setCoordinates,
-  coordinates,
-  setSortedShops,
 }: {
   shops: FullShop[];
   farmShop: FullShop | null;
-  setCoordinates: Dispatch<SetStateAction<{ long: number | undefined; lat: number | undefined }>>;
-  coordinates: { long: number | undefined; lat: number | undefined };
-  setSortedShops: Dispatch<SetStateAction<FullShop[]>>;
 }) => {
   const router = useRouter();
   return (
@@ -32,12 +25,7 @@ const Leaflet = ({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
       <ClickHandler />
-      <MapFocus
-        shops={shops}
-        setSortedShops={setSortedShops}
-        className="absolute left-12 top-3 "
-        setCoordinates={setCoordinates}
-      />
+      <MapFocus shops={shops} className="absolute left-12 top-3 " />
       {shops.map((shop) => (
         <Marker
           key={shop.id}
@@ -60,7 +48,7 @@ const Leaflet = ({
       {farmShop && (
         <Marker position={[farmShop.lat, farmShop.long]} icon={MakePin("red", farmShop.name, farmShop.imageUrl)}>
           <Popup>
-            <ShopCard display="find" shop={farmShop} coordinates={coordinates} />{" "}
+            <ShopCard display="find" shop={farmShop} />{" "}
           </Popup>
           <Tooltip direction="top" offset={[0, -65]} opacity={1}>
             <span>{"Afficher"}</span>

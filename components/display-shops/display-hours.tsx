@@ -1,4 +1,3 @@
-"use client";
 import type { z } from "zod";
 import type { shopHoursSchema } from "../../app/(routes)/admin/shops/[shopId]/_components/shop-schema";
 import { DAYS_OF_WEEK, formatHours } from "@/lib/date-utils";
@@ -28,6 +27,7 @@ function DisplayHours({ shopHours }: { shopHours: z.infer<typeof shopHoursSchema
           <DialogHeader>
             <DialogTitle>Horraires</DialogTitle>
           </DialogHeader>
+          <DisplayHoursContent shopHours={shopHours} />
         </DialogContent>
       </Dialog>
     </>
@@ -42,14 +42,12 @@ export function DisplayHoursContent({ shopHours }: { shopHours: z.infer<typeof s
         {shopHours.map((hours) => (
           <li
             key={hours.day}
-            className={`flex justify-between items-center p-3 rounded-lg transition-colors ${
+            className={`flex flex-col  sm:flex-row  justify-between gap-4 items-center p-3 rounded-lg transition-colors ${
               hours.day === currentDay ? "bg-primary/10" : "bg-secondary"
             }`}
           >
             <span className="font-medium">{DAYS_OF_WEEK[hours.day]}</span>
-            <span className={hours.isClosed ? "text-destructive" : "text-primary"}>
-              <DisplayHour hours={hours} />
-            </span>
+            <DisplayHour hours={hours} />
           </li>
         ))}
       </ul>
@@ -62,7 +60,7 @@ function DisplayHour({ hours }: { hours: z.infer<typeof shopHoursSchema> }) {
     return <span className="text-red-500">Fermé</span>;
   }
   return (
-    <>
+    <div className="whitespace-nowrap">
       <span>{formatHours(hours.openHour1)}</span>
       {" - "}
       <span>{formatHours(hours.closeHour1)}</span>
@@ -75,7 +73,7 @@ function DisplayHour({ hours }: { hours: z.infer<typeof shopHoursSchema> }) {
           <span>{formatHours(hours.closeHour2)}</span>
         </>
       )}
-    </>
+    </div>
   );
 }
 
