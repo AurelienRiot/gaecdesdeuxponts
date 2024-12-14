@@ -1,4 +1,5 @@
 "use client";
+import DisplayHours from "@/components/display-shops/display-hours";
 import { getMapLinks } from "@/components/google-events";
 import { StatusCell } from "@/components/table-custom-fuction/cell-orders";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
@@ -6,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import NoResults from "@/components/ui/no-results";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { DisplayLink } from "@/components/user";
 import type { CalendarOrderType } from "@/components/zod-schema/calendar-orders";
 import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";
 import { dateFormatter } from "@/lib/date-utils";
@@ -14,9 +16,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { createContext, useContext, useState } from "react";
 import DisplayItem from "./display-item";
-import { linkNames } from "@/components/react-icons/links";
-import DisplayHours from "@/components/display-shops/display-hours";
-import { DisplayLink } from "@/components/user";
 
 type UserModalProps = UserForOrderType & { orders: CalendarOrderType[]; date: Date };
 

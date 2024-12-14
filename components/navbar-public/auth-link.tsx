@@ -1,33 +1,30 @@
-"use client";
-import { Button } from "@/components/ui/button";
+import { getSessionUser } from "@/actions/get-user";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { type AnchorHTMLAttributes, forwardRef } from "react";
+import type { AnchorHTMLAttributes } from "react";
 
-const AuthLink = forwardRef<HTMLAnchorElement, AnchorHTMLAttributes<HTMLAnchorElement> & { callbackUrl?: string }>(
-  ({ className, callbackUrl, ...props }, ref) => {
-    const session = useSession();
-    return (
-      <Button variant={"outline"} className={cn("text-base", className)}>
-        <Link
-          {...props}
-          href={
-            !session.data
-              ? `/login${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`
-              : session.data.user.role === "admin"
-                ? "/admin/calendar"
-                : "/profile"
-          }
-          ref={ref}
-        >
-          {session.status === "authenticated" ? "Mon compte" : "Se connecter"}
-        </Link>
-      </Button>
-    );
-  },
-);
-
-AuthLink.displayName = "AuthLink";
+const AuthLink = async ({
+  className,
+  callbackUrl,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement> & { callbackUrl?: string }) => {
+  const user = await getSessionUser();
+  return (
+    <Link
+      {...props}
+      className={cn(buttonVariants({ variant: "outline" }), "text-base", className)}
+      href={
+        !user
+          ? `/login${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`
+          : user.role === "admin"
+            ? "/admin/calendar"
+            : "/profile"
+      }
+    >
+      {user ? "Mon compte" : "Se connecter"}
+    </Link>
+  );
+};
 
 export default AuthLink;

@@ -1,22 +1,20 @@
-"use client";
+// "use client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense, useState } from "react";
-import AutoCloseSheet from "../auto-close-sheet";
 import { logoFondBlanc } from "../images";
 
 const MobileNav = ({ children }: { children: React.ReactNode }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <Suspense fallback={null}>
+      {/* <Suspense fallback={null}>
         {" "}
         <AutoCloseSheet onChange={() => setIsOpen(false)} />
-      </Suspense>
-      <Sheet onOpenChange={setIsOpen} open={isOpen}>
+      </Suspense> */}
+      <Sheet>
         <SheetTrigger>
           <HamburgerMenuIcon className="h-6 w-6 lg:hidden" />
           <span className="sr-only">Ouvrir le menu de navigation</span>

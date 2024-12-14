@@ -12,7 +12,6 @@ import { QuestionMarkIcon } from "@radix-ui/react-icons";
 import { Milk } from "lucide-react";
 import Image from "next/image";
 import { GiCow } from "../react-icons";
-import AuthLink from "./auth-link";
 import NosProduits from "./nos-produits";
 
 export function MainNav({
@@ -55,11 +54,6 @@ export function MainNav({
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink href={"/contact"}>Contact</NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild>
-            <AuthLink />
-          </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

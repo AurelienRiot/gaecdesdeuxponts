@@ -156,24 +156,6 @@ const ShopForm = ({ initialData }: { initialData: Nullable<FullShop> | null }) =
                 </FormItem>
               )}
             />
-            {/* <FormField
-              control={form.control}
-              name="website"
-              render={({ field }) => (
-                <FormItem className="w-48">
-                  <FormLabel>Website</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      disabled={form.formState.isSubmitting}
-                      placeholder="Site internet du magasin"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
             <ShopLinks />
             <ShopHoursModal />
             <FormField

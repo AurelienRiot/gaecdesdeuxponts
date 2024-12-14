@@ -1,5 +1,4 @@
 "use client";
-import { Calendar, Inbox, Search, Settings, User } from "lucide-react";
 
 import {
   Sidebar,
@@ -13,8 +12,8 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { SecondaryAdminRoutes } from "./mobile-nav";
 import { usePathname } from "next/navigation";
+import { SecondaryAdminRoutes } from "./mobile-nav";
 
 export default function AppSidebar() {
   const pathName = usePathname();

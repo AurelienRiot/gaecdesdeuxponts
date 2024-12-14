@@ -48,10 +48,6 @@ export const schema = z.object({
   ),
   email: z.string().email({ message: "L'email est invalide" }).optional(),
   shopHours: z.array(shopHoursSchema),
-  // .refine((data) => data.openHour2 !== undefined && data.closeHour2 !== undefined, {
-  //   message: "Completer les dates d'ouverture et de fermeture",
-  // })
-
   website: optionalStringSchema,
   description: z.string(),
   isArchived: z.boolean().default(false),

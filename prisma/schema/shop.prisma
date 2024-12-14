@@ -10,7 +10,6 @@ model Shop {
   email         String?
   description   String
   imageUrl      String?
-  website       String?
   links         Link[]
   order         Order[]
   amapOrders    AMAPOrder[]
