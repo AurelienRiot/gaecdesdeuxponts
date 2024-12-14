@@ -43,8 +43,8 @@ export function createId(type: (typeof IdType)[number], date?: Date | null) {
 }
 
 export const sanitizeId = (id: string) =>
-  id
-    .normalize("NFD")
-    .toLowerCase()
+  sanitizeString(id)
     .replace(/ /g, "-")
     .replace(/[^\w-]+/g, "");
+
+export const sanitizeString = (str: string) => str.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();

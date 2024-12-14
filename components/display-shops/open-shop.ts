@@ -36,7 +36,7 @@ export function getShopStatus(weekHours: ShopHours[], currentDayIndex: number): 
       // Currently open
       return {
         isOpen: true,
-        label: `Ouvert jusqu'a ${formatHours(closeT)}`,
+        label: `Ouvert jusqu'à ${formatHours(closeT)}`,
       };
     }
   }

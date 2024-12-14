@@ -26,7 +26,7 @@ export function TagFilter({
   return (
     <div className={className}>
       <Select value={selectedTag} onValueChange={setSelectedTag}>
-        <SelectTrigger id="tag-select" className="w-[180px]">
+        <SelectTrigger id="tag-select" className="w-full">
           <SelectValue placeholder="Filter par mots-clés" />
         </SelectTrigger>
         <SelectContent side="bottom" avoidCollisions={false}>

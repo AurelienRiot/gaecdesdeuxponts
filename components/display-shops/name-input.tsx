@@ -1,5 +1,6 @@
 "use client";
 import { Input } from "@/components/ui/input";
+import { sanitizeString } from "@/lib/id";
 import type { FullShop } from "@/types";
 import { type ChangeEvent, type Dispatch, type SetStateAction, useState } from "react";
 
@@ -13,11 +14,15 @@ const NameInput = ({ setSortedShops, shops, ...props }: NameInputProps) => {
 
   const onChange = (value: ChangeEvent<HTMLInputElement>) => {
     setSearch(value.target.value);
+    const newSearch = sanitizeString(value.target.value);
+    console.log({
+      newSearch,
+    });
     const sortedShops = [...shops]
-      .filter((shop) => shop.name.normalize("NFD").toLowerCase().includes(search.normalize("NFD").toLowerCase()))
+      .filter((shop) => sanitizeString(shop.name).includes(newSearch))
       .sort((a, b) => {
-        const distanceA = a.name.normalize("NFD").toLowerCase().indexOf(search.normalize("NFD").toLowerCase());
-        const distanceB = b.name.normalize("NFD").toLowerCase().indexOf(search.normalize("NFD").toLowerCase());
+        const distanceA = sanitizeString(a.name).indexOf(newSearch);
+        const distanceB = sanitizeString(b.name).indexOf(newSearch);
         return distanceA - distanceB;
       });
 

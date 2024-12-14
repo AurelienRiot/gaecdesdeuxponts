@@ -3,8 +3,8 @@ import { cn } from "@/lib/utils";
 import type { Shop } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
-import { typeTextRecord } from ".";
 import { buttonVariants } from "../ui/button";
+import DisplayTags from "./display-tags";
 
 export function SimpleShopCard({
   shop,
@@ -15,12 +15,10 @@ export function SimpleShopCard({
   coordinates?: { long: number | undefined; lat: number | undefined };
   className?: string;
 }) {
-  const typeText = typeTextRecord[shop.type];
-
   return (
-    <Card className={cn("relative flex flex-col justify-between w-full max-w-xs p-4", className)}>
+    <Card className={cn("relative flex flex-col justify-between w-full max-w-xs p-4 gap-6", className)}>
       <CardHeader className="p-0 mb-2">
-        <CardTitle className="flex items-center gap-4">
+        <CardTitle className="flex items-center justify-center gap-4 h-16">
           {shop.imageUrl ? (
             <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-sm">
               <Image
@@ -35,8 +33,17 @@ export function SimpleShopCard({
           <span className="text-center text-base sm:text-md lg:text-lg break-words">{shop.name}</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-0 mb-4">
-        <p className="text-sm sm:text-base">{typeText}</p>
+      <CardContent className="p-0 space-y-4">
+        {/* <p className="text-sm sm:text-base">{typeText}</p> */}
+        <DisplayTags shopTags={shop.tags} />
+        <Link
+          href={`https://maps.google.com/?q=${shop.address} ${shop.name} `}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={cn(buttonVariants({ variant: "link" }), "justify-start px-0 text-blue-700 font-semibold text-md")}
+        >
+          {shop.address}
+        </Link>
       </CardContent>
       <CardFooter className="p-0">
         <Link

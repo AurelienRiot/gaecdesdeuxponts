@@ -24,18 +24,20 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const OuNousTrouver = async () => {
   return (
-    <Container className="my-8 space-y-8 p-2">
-      <div className="text-center xl:text-left">
-        <h1 className="text-4xl font-bold">Points de vente et magasins partenaires</h1>
-        <p className="text-lg">
-          Trouvez les points de vente et magasins partenaire qui vendent et utilisent notre lait les plus proches de
-          chez vous
-        </p>
-      </div>
+    <div className="pb-4">
+      <Container className="my-8 space-y-8 p-2">
+        <div className="text-center xl:text-left">
+          <h1 className="text-4xl font-bold">Points de vente et magasins partenaires</h1>
+          <p className="text-lg">
+            Trouvez les points de vente et magasins partenaire qui vendent et utilisent notre lait les plus proches de
+            chez vous
+          </p>
+        </div>
+      </Container>
       <Suspense fallback={<Loading />}>
         <ServerPlace />
       </Suspense>
-    </Container>
+    </div>
   );
 };
 
@@ -46,7 +48,9 @@ const ServerPlace = async () => {
 
   return (
     <>
-      <PlacePicker shops={shops} farmShop={farmShop} />
+      <Container className="my-8 space-y-8 p-2">
+        <PlacePicker shops={shops} farmShop={farmShop} />
+      </Container>
       <ShowShops shops={shops} />
     </>
   );
