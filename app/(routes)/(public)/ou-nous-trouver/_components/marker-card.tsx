@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import  type { Shop } from "@prisma/client";
+import type { Shop } from "@prisma/client";
 import Image from "next/image";
 
 const MarkerCard = ({ shop }: { shop: Shop }) => {
@@ -36,26 +36,13 @@ const MarkerCard = ({ shop }: { shop: Shop }) => {
           </Button>
         )}
         {!!shop.phone && (
-          <a
-            href={`tel:${shop.phone}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href={`tel:${shop.phone}`} target="_blank" rel="noopener noreferrer">
             {shop.phone}
           </a>
         )}
         {!!shop.email && (
-          <a
-            href={`mailto:${shop.email.toLocaleLowerCase()}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href={`mailto:${shop.email.toLocaleLowerCase()}`} target="_blank" rel="noopener noreferrer">
             {shop.email.toLocaleLowerCase()}
-          </a>
-        )}
-        {!!shop.website && (
-          <a href={shop.website} target="_blank" rel="noopener noreferrer">
-            {shop.website}
           </a>
         )}
       </CardContent>

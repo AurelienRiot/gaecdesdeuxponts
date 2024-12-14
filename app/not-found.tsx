@@ -6,7 +6,6 @@ const NotFound = () => {
   return (
     <>
       <PublicHeader />
-
       <main className="pt-16">
         <NotFoundPage />
       </main>

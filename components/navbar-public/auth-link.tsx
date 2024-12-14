@@ -1,6 +1,7 @@
-import { getSessionUser } from "@/actions/get-user";
+"use client";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import type { AnchorHTMLAttributes } from "react";
 
@@ -9,20 +10,20 @@ const AuthLink = async ({
   callbackUrl,
   ...props
 }: AnchorHTMLAttributes<HTMLAnchorElement> & { callbackUrl?: string }) => {
-  const user = await getSessionUser();
+  const session = useSession();
   return (
     <Link
       {...props}
       className={cn(buttonVariants({ variant: "outline" }), "text-base", className)}
       href={
-        !user
+        !session.data?.user
           ? `/login${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`
-          : user.role === "admin"
+          : session.data.user.role === "admin"
             ? "/admin/calendar"
             : "/profile"
       }
     >
-      {user ? "Mon compte" : "Se connecter"}
+      {session.data?.user ? "Mon compte" : "Se connecter"}
     </Link>
   );
 };

@@ -59,7 +59,6 @@ const ShopForm = ({ initialData }: { initialData: Nullable<FullShop> | null }) =
       links: initialData?.links || [],
       shopHours: initialData?.shopHours || [],
       phone: initialData?.phone || "",
-      website: initialData?.website || "",
       email: initialData?.email || undefined,
       isArchived: initialData?.isArchived ?? true,
     },

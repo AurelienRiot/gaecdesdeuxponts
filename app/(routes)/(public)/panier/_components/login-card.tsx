@@ -1,4 +1,3 @@
-import { EmailButton, GoogleButton } from "@/components/auth/auth-button";
 import AuthLink from "@/components/navbar-public/auth-link";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";

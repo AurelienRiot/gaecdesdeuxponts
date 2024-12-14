@@ -5,6 +5,7 @@ import { ChevronDown } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const NavigationMenu = React.forwardRef<
   React.ElementRef<typeof NavigationMenuPrimitive.Root>,
@@ -81,14 +82,13 @@ const NavigationMenuContent = React.forwardRef<
 ));
 NavigationMenuContent.displayName = NavigationMenuPrimitive.Content.displayName;
 
-const NavigationMenuLink = React.forwardRef<
-  React.ElementRef<typeof NavigationMenuPrimitive.Link>,
-  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Link>
->(({ className, children, ...props }, ref) => (
-  <NavigationMenuPrimitive.Link ref={ref} className={cn(navigationMenuTriggerStyle(), className)} {...props}>
-    {children}
-  </NavigationMenuPrimitive.Link>
-));
+const NavigationMenuLink = React.forwardRef<HTMLAnchorElement, React.AnchorHTMLAttributes<HTMLAnchorElement>>(
+  ({ className, children, href, ...props }, ref) => (
+    <Link ref={ref} href={href || "#"} className={cn(navigationMenuTriggerStyle(), className)} {...props}>
+      {children}
+    </Link>
+  ),
+);
 NavigationMenuLink.displayName = NavigationMenuPrimitive.Link.displayName;
 
 const NavigationMenuViewport = React.forwardRef<
@@ -134,15 +134,16 @@ const NavigationMenuIndicator = React.forwardRef<
 NavigationMenuIndicator.displayName = NavigationMenuPrimitive.Indicator.displayName;
 
 const NavigationMenuListItem = React.forwardRef<
-  React.ElementRef<typeof NavigationMenuPrimitive.Link>,
-  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Link> & {
+  HTMLAnchorElement,
+  React.AnchorHTMLAttributes<HTMLAnchorElement> & {
     Icone?: React.ReactNode;
   }
->(({ className, title, children, Icone, ...props }, ref) => {
+>(({ className, title, children, Icone, href, ...props }, ref) => {
   return (
     <li>
-      <NavigationMenuPrimitive.Link
+      <Link
         ref={ref}
+        href={href || "#"}
         className={cn(
           "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
           className,
@@ -154,7 +155,7 @@ const NavigationMenuListItem = React.forwardRef<
           {Icone} {title}
         </div>
         <p className="line-clamp-3 text-left text-sm leading-snug text-muted-foreground">{children}</p>
-      </NavigationMenuPrimitive.Link>
+      </Link>
     </li>
   );
 });
