@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import type { AnchorHTMLAttributes } from "react";
 
-const AuthLink = async ({
+const AuthLink = ({
   className,
   callbackUrl,
   ...props
