@@ -9,7 +9,11 @@ export const MIN_DAYS_FOR_PICK_UP = 3;
 
 export function formatHours(date?: Date | null) {
   if (!date) return "";
-  return format(getLocalDate(date), "HH:mm", { locale: fr });
+  return new Date(date).toLocaleTimeString("fr-FR", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone,
+  });
 }
 
 export const getLocalDate = (date: Date) => addMinutes(new Date(date), getDateOffset(date));

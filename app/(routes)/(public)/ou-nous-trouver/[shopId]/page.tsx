@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: ShopPageProps): Promise<Metad
   const tags = shop && tagOptions.filter((option) => shop.tags.includes(option.value));
   const keywords = tags?.map((tag) => tag.label);
   const title = shop?.name || "";
-  const description = shop?.description || "";
+  const description = shop?.description?.substring(0, 150).split(" ").slice(0, -1).join(" ") || "";
   const images = shop?.imageUrl || "";
   const url = `${baseUrl}/ou-nous-trouver/${params.shopId}`;
 
@@ -63,7 +63,7 @@ const ShopPage = async ({ params }: ShopPageProps) => {
             <Image
               fill
               src={shop.imageUrl || "/skeleton-image.webp"}
-              alt={shop.name}
+              alt={`Image de ${shop.name}`}
               sizes="(max-width: 768px) 100vw,  768px"
               className={shop.imageUrl ? "object-contain" : "object-cover"}
             />
