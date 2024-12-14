@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { buttonVariants } from "../ui/button";
 import DisplayTags from "./display-tags";
+import { ArrowRightCircle, Icon, Plus, PlusCircle } from "lucide-react";
 
 export function SimpleShopCard({
   shop,
@@ -48,9 +49,10 @@ export function SimpleShopCard({
       <CardFooter className="p-0">
         <Link
           href={`/ou-nous-trouver/${shop.id}`}
-          className={cn(buttonVariants({ variant: "default" }), "w-full hover:underline")}
+          className={cn(buttonVariants({ variant: "default" }), "w-full items-center flex hover:underline group")}
         >
-          En savoir plus
+          <span>En savoir plus</span>
+          <ArrowRightCircle className="w-4 h-4 ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
         </Link>
       </CardFooter>
     </Card>

@@ -14,9 +14,11 @@ function ShowShops({ shops }: { shops: FullShop[] }) {
         <TagFilter setSortedShops={setSortedShops} shops={shops} className="w-full max-w-60" />
       </div>
 
-      <div className="flex flex-wrap items-center justify-center gap-4">
+      <div className="flex flex-wrap items-stretch justify-center gap-4">
         {sortedShops.map((shop) => (
-          <SimpleShopCard shop={shop} key={shop.name} />
+          <div key={shop.id} className="flex-grow min-w-xs max-w-xs">
+            <SimpleShopCard shop={shop} className="h-full w-full max-w-xl" />
+          </div>
         ))}
       </div>
     </div>

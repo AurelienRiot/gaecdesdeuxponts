@@ -5,6 +5,7 @@ import {
   FaConciergeBell,
   GiBread,
   GiCupcake,
+  GiHorseHead,
   GiPig,
   GiVendingMachine,
   IoRestaurantSharp,
@@ -37,4 +38,5 @@ export const tagOptions: Option[] = [
   { label: "Boucherie Charcuterie", value: "butcher", Icon: GiPig },
   { label: "Marché", value: "market", Icon: FaCarrot },
   { label: "Distributeur", value: "distributeur", Icon: GiVendingMachine },
+  { label: "PMU", value: "pmu", Icon: GiHorseHead },
 ];

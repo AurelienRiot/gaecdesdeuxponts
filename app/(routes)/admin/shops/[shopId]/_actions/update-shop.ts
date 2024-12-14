@@ -48,7 +48,7 @@ async function updateShop(data: ShopFormValues) {
       ]);
 
       revalidateTag("shops");
-      revalidatePath(`/ou-nous-trouver/${data.id}`);
+      revalidatePath(`/ou-nous-trouver`);
       return {
         success: true,
         message: "Magasin mis à jour",

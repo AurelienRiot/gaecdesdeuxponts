@@ -29,7 +29,7 @@ export function TagFilter({
         <SelectTrigger id="tag-select" className="w-full">
           <SelectValue placeholder="Filter par mots-clés" />
         </SelectTrigger>
-        <SelectContent side="bottom" avoidCollisions={false}>
+        <SelectContent className="z-[1300]">
           <SelectItem value={"all tags"}>Tous</SelectItem>
           {tagOptions.map((tag) => (
             <SelectItem key={tag.value} value={tag.value}>
