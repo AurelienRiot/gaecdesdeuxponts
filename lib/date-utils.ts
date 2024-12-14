@@ -9,16 +9,17 @@ export const MIN_DAYS_FOR_PICK_UP = 3;
 
 export function formatHours(date?: Date | null) {
   if (!date) return "";
-  return new Date(date).toLocaleTimeString("fr-FR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return format(getLocalDate(date), "HH:mm", { locale: fr });
 }
+
+export const getLocalDate = (date: Date) => addMinutes(new Date(date), getDateOffset(date));
+
+export const getLocalDay = (date: Date) => getLocalDate(date).getDay();
 
 export const DAYS_OF_WEEK = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
 
 export const dateFormatter = (date: Date, options?: { hours?: boolean; days?: boolean; customFormat?: string }) => {
-  const localDate = addMinutes(new Date(date), getDateOffset(date));
+  const localDate = getLocalDate(date);
   if (options?.customFormat) return format(localDate, options.customFormat, { locale: fr });
 
   if (options?.hours) return format(localDate, "d MMMM yyyy, HH:mm", { locale: fr });
@@ -46,9 +47,9 @@ export function getLocalIsoString(date: Date) {
   return format(addMinutes(new Date(date), getDateOffset(date)), "yyyy-MM-dd");
 }
 
-export function getLocalDay(date: Date) {
-  return new Date(getLocalIsoString(date)).getUTCDay();
-}
+// export function getLocalDay(date: Date) {
+//   return new Date(getLocalIsoString(date)).getUTCDay();
+// }
 
 export const dateMonthYear = (dates: (Date | null)[]) => {
   const orderDates = (dates.filter((date) => date !== null) as Date[]).sort(

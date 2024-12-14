@@ -30,7 +30,7 @@ export const tagOptions: Option[] = [
   { label: "Tabac", value: "tabac", Icon: LuCigarette },
   { label: "Café", value: "cafe", Icon: LuCoffee },
   { label: "Boulangerie", value: "boulangerie", Icon: GiBread },
-  { label: "Patisserie", value: "patisserie", Icon: GiCupcake },
+  { label: "Pâtisserie", value: "patisserie", Icon: GiCupcake },
   { label: "AMAP", value: "amap", Icon: PiBasket },
   { label: "Restaurant", value: "restaurant", Icon: IoRestaurantSharp },
   { label: "Traiteur", value: "caterer", Icon: FaConciergeBell },

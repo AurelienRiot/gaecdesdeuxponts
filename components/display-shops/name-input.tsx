@@ -13,26 +13,17 @@ const NameInput = ({ setSortedShops, shops, ...props }: NameInputProps) => {
 
   const onChange = (value: ChangeEvent<HTMLInputElement>) => {
     setSearch(value.target.value);
-    const sortedShops = [...shops].sort((a, b) => {
-      const normalizedSearchTerm = search.toLowerCase();
-      const nameA = a.name.toLowerCase();
-      const nameB = b.name.toLowerCase();
-
-      const matchA = nameA.includes(normalizedSearchTerm) ? 1 : 0;
-      const matchB = nameB.includes(normalizedSearchTerm) ? 1 : 0;
-
-      // If one name contains the search term and the other does not, the one with the search term goes first
-      if (matchA !== matchB) {
-        return matchB - matchA;
-      }
-
-      // If both contain the search term or neither does, sort alphabetically
-      return nameA.localeCompare(nameB);
-    });
+    const sortedShops = [...shops]
+      .filter((shop) => shop.name.normalize("NFD").toLowerCase().includes(search.normalize("NFD").toLowerCase()))
+      .sort((a, b) => {
+        const distanceA = a.name.normalize("NFD").toLowerCase().indexOf(search.normalize("NFD").toLowerCase());
+        const distanceB = b.name.normalize("NFD").toLowerCase().indexOf(search.normalize("NFD").toLowerCase());
+        return distanceA - distanceB;
+      });
 
     setSortedShops(sortedShops);
   };
-  return <Input value={search} onChange={onChange} placeholder="Rechercher par nom" {...props} />;
+  return <Input value={search} onChange={onChange} placeholder="Filtrer par nom" {...props} />;
 };
 
 export default NameInput;
