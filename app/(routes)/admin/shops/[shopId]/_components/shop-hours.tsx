@@ -7,15 +7,7 @@ import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { baseInputClassName } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Modal } from "@/components/ui/modal";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { WheelPicker, type WheelPickerItem } from "@/components/ui/wheel-picker";
 import { DAYS_OF_WEEK, formatHours } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
@@ -25,6 +17,7 @@ import { useFormContext } from "react-hook-form";
 import type { z } from "zod";
 import { defaultHours } from "./shop-form";
 import type { shopHoursSchema } from "./shop-schema";
+import { Toggle } from "@/components/ui/toggle";
 
 type ShopHoursFormProps = { shopHours: z.infer<typeof shopHoursSchema>[] };
 
@@ -38,6 +31,7 @@ function ShopHoursModal() {
     const defaulShopHours = Array.from({ length: 7 }, (_, day) => ({
       day,
       isClosed: false,
+      isAllDay: false,
       openHour1: defaultHours.openHour1,
       closeHour1: defaultHours.closeHour1,
     }));
@@ -97,16 +91,7 @@ function ShopHour({
 }: {
   dayIndex: number;
   savedHours: z.infer<typeof shopHoursSchema> | null;
-  setSavedHours: Dispatch<
-    SetStateAction<{
-      day: number;
-      isClosed: boolean;
-      openHour1: Date;
-      closeHour1: Date;
-      openHour2?: Date | null | undefined;
-      closeHour2?: Date | null | undefined;
-    } | null>
-  >;
+  setSavedHours: Dispatch<SetStateAction<z.infer<typeof shopHoursSchema> | null>>;
 }) {
   const form = useFormContext<ShopHoursFormProps>();
   const hours = form.watch(`shopHours.${dayIndex}`);
@@ -133,7 +118,9 @@ function ShopHour({
         <IconButton Icon={Clipboard} onClick={pasteHours} iconClassName="size-3" />
       </div>
 
-      <div className={cn("flex flex-row w-full gap-2 justify-center ", !hours.isClosed && "flex-col")}>
+      <div
+        className={cn("flex flex-col w-full gap-2 justify-center ", (hours.isClosed || hours.isAllDay) && "flex-row")}
+      >
         <FormField
           control={form.control}
           name={`shopHours.${dayIndex}.day`}
@@ -147,27 +134,62 @@ function ShopHour({
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name={`shopHours.${dayIndex}.isClosed`}
-          render={({ field }) => (
-            <FormItem className="flex items-center justify-center">
-              <FormControl>
-                <CheckboxForm
-                  title="Fermé"
-                  description=""
-                  className="h-10 w-24 px-2 "
-                  labelClassName="p-1 flex justify-center items-center "
-                  ref={field.ref}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+        <div className="flex flex-col sm:flex-row gap-2 justify-center">
+          <FormField
+            control={form.control}
+            name={`shopHours.${dayIndex}.isClosed`}
+            render={({ field }) => (
+              <FormItem className="flex items-center justify-center">
+                <FormControl>
+                  <Toggle
+                    ref={field.ref}
+                    pressed={field.value}
+                    onPressedChange={(toggle) => {
+                      if (toggle) {
+                        form.setValue(`shopHours.${dayIndex}.isClosed`, true);
+                        form.setValue(`shopHours.${dayIndex}.isAllDay`, false);
+                      } else {
+                        form.setValue(`shopHours.${dayIndex}.isClosed`, false);
+                      }
+                    }}
+                    variant={"outline"}
+                    className="border-dashed data-[state=on]:bg-destructive data-[state=on]:text-destructive-foreground"
+                  >
+                    Fermé
+                  </Toggle>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name={`shopHours.${dayIndex}.isAllDay`}
+            render={({ field }) => (
+              <FormItem className="flex items-center justify-center">
+                <FormControl>
+                  <Toggle
+                    ref={field.ref}
+                    pressed={field.value}
+                    onPressedChange={(toggle) => {
+                      if (toggle) {
+                        form.setValue(`shopHours.${dayIndex}.isAllDay`, true);
+                        form.setValue(`shopHours.${dayIndex}.isClosed`, false);
+                      } else {
+                        form.setValue(`shopHours.${dayIndex}.isAllDay`, false);
+                      }
+                    }}
+                    variant={"outline"}
+                    className="border-dashed data-[state=on]:bg-green-500 data-[state=on]:text-white"
+                  >
+                    24h/24
+                  </Toggle>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
       </div>
-      {!hours.isClosed && (
+      {!hours.isClosed && !hours.isAllDay && (
         <div className="space-y-2">
           <div className="flex items-center justify-between space-x-1">
             <FormField

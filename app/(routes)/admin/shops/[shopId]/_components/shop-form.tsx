@@ -30,6 +30,7 @@ import { schema, TYPE, type ShopFormValues } from "./shop-schema";
 
 export const defaultHours = {
   isClosed: false,
+  isAllDay: false,
   openHour1: new Date(new Date().setHours(8, 0, 0, 0)),
   closeHour1: new Date(new Date().setHours(19, 0, 0, 0)),
   openHour2: new Date(new Date().setHours(15, 30, 0, 0)),

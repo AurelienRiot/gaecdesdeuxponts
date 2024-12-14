@@ -13,6 +13,7 @@ export const TYPE: { value: ShopType; label: string }[] = [
 export const shopHoursSchema = z.object({
   day: z.number(),
   isClosed: z.boolean(),
+  isAllDay: z.boolean(),
   openHour1: z.coerce.date(),
   closeHour1: z.coerce.date(),
   openHour2: z.coerce.date().optional().nullable(),

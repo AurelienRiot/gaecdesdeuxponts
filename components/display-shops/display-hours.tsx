@@ -17,10 +17,7 @@ function DisplayHours({ shopHours }: { shopHours: ShopHours[] }) {
   }
   return (
     <>
-      <div className="mt-2">
-        <span className="font-medium">{DAYS_OF_WEEK[currentDay]}: </span>
-        <DisplayHour hours={currentHours} />
-      </div>
+      <DisplayShopStatus shopHours={shopHours} currentDay={currentDay} />
       <Dialog>
         <DialogTrigger asChild>
           <Button type="button" variant="outline">
@@ -39,12 +36,17 @@ function DisplayHours({ shopHours }: { shopHours: ShopHours[] }) {
   );
 }
 
-export function DisplayHoursContent({ shopHours, currentDay }: { shopHours: ShopHours[]; currentDay: number }) {
+export function DisplayShopStatus({ shopHours, currentDay }: { shopHours: ShopHours[]; currentDay: number }) {
   const shopStatus = getShopStatus(shopHours, currentDay);
+  return (
+    <p className={cn("font-semibold ", shopStatus.isOpen ? "text-green-500" : "text-red-500")}>{shopStatus.label}</p>
+  );
+}
 
+export function DisplayHoursContent({ shopHours, currentDay }: { shopHours: ShopHours[]; currentDay: number }) {
   return (
     <div className="space-y-4">
-      <p className={cn("font-semibold ", shopStatus.isOpen ? "text-green-500" : "text-red-500")}>{shopStatus.label}</p>
+      <DisplayShopStatus shopHours={shopHours} currentDay={currentDay} />
       <ul className="space-y-2">
         {shopHours
           .sort((a, b) => (a.day === currentDay ? -1 : b.day === currentDay ? 1 : 0))
@@ -67,6 +69,10 @@ export function DisplayHoursContent({ shopHours, currentDay }: { shopHours: Shop
 function DisplayHour({ hours }: { hours: ShopHours }) {
   if (hours.isClosed) {
     return <span className="text-red-500">Fermé</span>;
+  }
+
+  if (hours.isAllDay) {
+    return <span className="text-green-500">24h/24</span>;
   }
   return (
     <div className="whitespace-nowrap">

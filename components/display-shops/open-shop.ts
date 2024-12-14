@@ -6,6 +6,14 @@ export function getShopStatus(weekHours: ShopHours[], currentDayIndex: number): 
   const currentDayData = weekHours.find((dayData) => dayData.day === currentDayIndex);
   if (!currentDayData) return { label: "" };
 
+  // Check if the shop is open all day
+  if (currentDayData.isAllDay) {
+    return {
+      isOpen: true,
+      label: `Ouvert toute la journée`,
+    };
+  }
+
   // Helper to strip date and compare just times
   const toTime = (d: Date) => new Date(d).getHours() * 60 + new Date(d).getMinutes();
   const nowTime = toTime(now);
@@ -52,6 +60,12 @@ export function getShopStatus(weekHours: ShopHours[], currentDayIndex: number): 
     for (let i = 1; i < 7; i++) {
       const idx = (currentDayIndex + i) % 7;
       const dayData = weekHours[idx];
+      if (dayData.isAllDay) {
+        return {
+          isOpen: false,
+          label: `Fermé. Ouverture ${DAYS_OF_WEEK[dayData.day].toLowerCase()} toute la journée`,
+        };
+      }
       if (!dayData.isClosed) {
         const upcomingIntervals = [
           [dayData.openHour1, dayData.closeHour1],

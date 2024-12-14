@@ -28,6 +28,7 @@ model ShopHours {
   shopId     String
   day        Int
   isClosed   Boolean   @default(false)
+  isAllDay   Boolean   @default(false)
   openHour1  DateTime
   closeHour1 DateTime
   openHour2  DateTime?
