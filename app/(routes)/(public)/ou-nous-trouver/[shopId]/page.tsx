@@ -1,26 +1,49 @@
 import NotFound from "@/components/not-found";
 import Container from "@/components/ui/container";
-import { Clock, LinkIcon, Mail, MapPin, Phone, Tag } from "lucide-react";
+import { Clock, LinkIcon, Mail, MapPin, Phone } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
-
 import { tagOptions, typeTextRecord } from "@/components/display-shops";
 import { DisplayHoursContent } from "@/components/display-shops/display-hours";
-import { Badge } from "@/components/ui/badge";
+import DisplayTags from "@/components/display-shops/display-tags";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DisplayLink } from "@/components/user";
 import { formatFrenchPhoneNumber } from "@/lib/utils";
 import { getShop, type ShopPageProps } from "./_functions/static-params";
-import DisplayTags from "@/components/display-shops/display-tags";
+
+const baseUrl = process.env.NEXT_PUBLIC_URL;
 
 export async function generateMetadata({ params }: ShopPageProps): Promise<Metadata> {
   const shop = await getShop(params.shopId);
+  const tags = shop && tagOptions.filter((option) => shop.tags.includes(option.value));
+  const keywords = tags?.map((tag) => tag.label);
+  const title = shop?.name || "";
+  const description = shop?.description || "";
+  const images = shop?.imageUrl || "";
+  const url = `${baseUrl}/ou-nous-trouver/${params.shopId}`;
 
   return {
-    title: shop?.name,
-    description: shop?.description,
+    title,
+    description,
+    keywords,
     openGraph: {
-      images: shop?.imageUrl || "",
+      title,
+      description,
+      url,
+      images,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images,
+    },
+    alternates: {
+      canonical: url,
+    },
+    robots: {
+      index: true,
+      follow: true,
     },
   };
 }
