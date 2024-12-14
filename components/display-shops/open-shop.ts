@@ -1,4 +1,4 @@
-import { DAYS_OF_WEEK } from "@/lib/date-utils";
+import { DAYS_OF_WEEK, formatHours } from "@/lib/date-utils";
 import type { ShopHours } from "./display-hours";
 
 export function getShopStatus(weekHours: ShopHours[], currentDayIndex: number): { isOpen?: boolean; label: string } {
@@ -28,7 +28,7 @@ export function getShopStatus(weekHours: ShopHours[], currentDayIndex: number): 
       // Currently open
       return {
         isOpen: true,
-        label: `Ouvert jusqu'a ${closeT.getHours()}:${closeT.getMinutes().toString().padStart(2, "0")}`,
+        label: `Ouvert jusqu'a ${formatHours(closeT)}`,
       };
     }
   }
@@ -43,7 +43,7 @@ export function getShopStatus(weekHours: ShopHours[], currentDayIndex: number): 
         // Next open time is later today
         return {
           isOpen: false,
-          label: `Fermé. Ouverture aujourd'hui à ${openT.getHours()}:${openT.getMinutes().toString().padStart(2, "0")}`,
+          label: `Fermé. Ouverture aujourd'hui à ${formatHours(openT)}`,
         };
       }
     }
@@ -63,7 +63,7 @@ export function getShopStatus(weekHours: ShopHours[], currentDayIndex: number): 
           const [nextOpenTime] = upcomingIntervals[0];
           return {
             isOpen: false,
-            label: `Fermé. Ouverture ${DAYS_OF_WEEK[dayData.day].toLowerCase()} à ${nextOpenTime.getHours()}:${nextOpenTime.getMinutes().toString().padStart(2, "0")}`,
+            label: `Fermé. Ouverture ${DAYS_OF_WEEK[dayData.day].toLowerCase()} à ${formatHours(nextOpenTime)}`,
           };
         }
       }
