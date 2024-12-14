@@ -59,15 +59,28 @@ export const dateMonthYear = (dates: (Date | null)[]) => {
   const orderDates = (dates.filter((date) => date !== null) as Date[]).sort(
     (a, b) => new Date(a).getTime() - new Date(b).getTime(),
   );
-  const months = new Set(
-    orderDates.map((date) =>
-      date.toLocaleString("fr-FR", {
-        month: "long",
-      }),
-    ),
+  const monthsAndYears = orderDates.map((date) => ({
+    month: date.toLocaleString("fr-FR", {
+      month: "long",
+    }),
+    year: date.getFullYear(),
+  }));
+  const uniqueMonthsAndYears = [
+    ...new Map(monthsAndYears.map((item) => [item["month"] + item["year"], item])).values(),
+  ];
+  const formattedDates = uniqueMonthsAndYears.map(({ month, year }) => `${month} ${year}`);
+  const groupedDates = formattedDates.reduce(
+    (acc, date) => {
+      const [month, year] = date.split(" ");
+      if (!acc[year]) acc[year] = [];
+      acc[year].push(month);
+      return acc;
+    },
+    {} as Record<string, string[]>,
   );
-  const year = new Date(orderDates[0]).getFullYear();
-  return `${Array.from(months).join(" - ")} ${year}`;
+  return Object.entries(groupedDates)
+    .map(([year, months]) => `${months.join(" - ")} ${year}`)
+    .join(", ");
 };
 
 export const getDaysBetweenDates = ({

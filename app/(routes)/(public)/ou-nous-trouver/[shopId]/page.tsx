@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DisplayLink } from "@/components/user";
 import { formatFrenchPhoneNumber } from "@/lib/utils";
 import { getShop, type ShopPageProps } from "./_functions/static-params";
+import { getLocalDay } from "@/lib/date-utils";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
@@ -18,7 +19,8 @@ export async function generateMetadata({ params }: ShopPageProps): Promise<Metad
   const tags = shop && tagOptions.filter((option) => shop.tags.includes(option.value));
   const keywords = tags?.map((tag) => tag.label);
   const title = shop?.name || "";
-  const description = shop?.description?.substring(0, 150).split(" ").slice(0, -1).join(" ") || "";
+  const description =
+    shop?.description?.substring(0, 150).split(" ").slice(0, -1).join(" ") + "... " + shop?.address || "";
   const images = shop?.imageUrl || "";
   const url = `${baseUrl}/ou-nous-trouver/${params.shopId}`;
 
@@ -112,7 +114,7 @@ const ShopPage = async ({ params }: ShopPageProps) => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <DisplayHoursContent shopHours={shop.shopHours} />
+                <DisplayHoursContent shopHours={shop.shopHours} currentDay={getLocalDay(new Date())} />
               </CardContent>
             </Card>
           )}

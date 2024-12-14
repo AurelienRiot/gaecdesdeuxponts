@@ -77,7 +77,12 @@ function ShopHoursModal() {
       >
         <div className="space-y-2 relative">
           {shopHours.map((_, dayIndex) => (
-            <ShopHour dayIndex={dayIndex} key={dayIndex} savedHours={savedHours} setSavedHours={setSavedHours} />
+            <ShopHour
+              dayIndex={(dayIndex + 1) % 7}
+              key={dayIndex}
+              savedHours={savedHours}
+              setSavedHours={setSavedHours}
+            />
           ))}
         </div>
       </Modal>
