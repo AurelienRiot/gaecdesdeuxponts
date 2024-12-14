@@ -1,6 +1,5 @@
 import { DAYS_OF_WEEK } from "@/lib/date-utils";
 import type { ShopHours } from "./display-hours";
-import { is } from "date-fns/locale";
 
 export function getShopStatus(weekHours: ShopHours[], currentDayIndex: number): { isOpen?: boolean; label: string } {
   const now = new Date();
@@ -8,16 +7,16 @@ export function getShopStatus(weekHours: ShopHours[], currentDayIndex: number): 
   if (!currentDayData) return { label: "" };
 
   // Helper to strip date and compare just times
-  const toTime = (d: Date) => d.getHours() * 60 + d.getMinutes();
+  const toTime = (d: Date) => new Date(d).getHours() * 60 + new Date(d).getMinutes();
   const nowTime = toTime(now);
 
   // Given open/close pairs, returns intervals [ [open1, close1], [open2, close2]? ]
   const intervals = currentDayData.isClosed
     ? []
     : ([
-        [currentDayData.openHour1, currentDayData.closeHour1],
+        [new Date(currentDayData.openHour1), new Date(currentDayData.closeHour1)],
         currentDayData.openHour2 && currentDayData.closeHour2
-          ? [currentDayData.openHour2, currentDayData.closeHour2]
+          ? [new Date(currentDayData.openHour2), new Date(currentDayData.closeHour2)]
           : null,
       ].filter(Boolean) as [Date, Date][]);
 
