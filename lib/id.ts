@@ -47,4 +47,4 @@ export const sanitizeId = (id: string) =>
     .replace(/ /g, "-")
     .replace(/[^\w-]+/g, "");
 
-export const sanitizeString = (str: string) => str.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+export const sanitizeString = (str: string) => str.trim().normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();

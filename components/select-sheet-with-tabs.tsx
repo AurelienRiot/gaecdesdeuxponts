@@ -1,4 +1,6 @@
 "use client";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { sanitizeString } from "@/lib/id";
 import { cn, roundToDecimals } from "@/lib/utils";
 import type { ProductWithMain } from "@/types";
 import type { Role } from "@prisma/client";
@@ -8,15 +10,21 @@ import { DisplayProductIcon } from "./product";
 import { getUserName } from "./table-custom-fuction";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import NoResults from "./ui/no-results";
 import { ScrollArea } from "./ui/scroll-area";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { NameWithImage } from "./user";
 
-type ValueType<V extends { key: string }> = { label: React.ReactNode; value: V; highlight?: boolean };
-type TabsType<T> = { label: string; value: T }[];
+type ValueType<V extends { key: string }> = { label: React.ReactNode; search: string; value: V; highlight?: boolean };
+type TabsType = { label: string; value: string }[];
 
-function SelectSheetWithTabs<V extends { key: string }, T extends string>({
+function filterValues<V extends { key: string }>(values: ValueType<V>[], filter: string) {
+  return values.filter((v) => v.search.includes(sanitizeString(filter)));
+}
+
+function SelectSheetWithTabs<V extends { key: string }>({
   tabsValues,
   tabs,
   onSelected,
@@ -31,8 +39,8 @@ function SelectSheetWithTabs<V extends { key: string }, T extends string>({
 }: {
   trigger?: React.ReactNode | string;
   onSelected: (selected: V) => void;
-  tabsValues: { values: ValueType<V>[]; tab: T }[];
-  tabs: TabsType<T>;
+  tabsValues: { values: ValueType<V>[]; tab: string }[];
+  tabs: TabsType;
   selectedValue?: string | null;
   title: string;
   description?: string;
@@ -42,31 +50,53 @@ function SelectSheetWithTabs<V extends { key: string }, T extends string>({
   onOpenChange?: (open: boolean) => void;
 }) {
   const [contentHeight, setContentHeight] = React.useState("auto");
+  const [filter, setFilter] = React.useState("");
+  const idMobile = useIsMobile();
+  const filteredTabsValues = tabsValues.map((tabValue) => ({
+    values: filterValues(tabValue.values, filter),
+    tab: tabValue.tab,
+  }));
   const contentRef = React.useRef<HTMLDivElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const [currentTab, setCurrentTab] = React.useState<string | undefined>(
     tabsValues.find((value) => value.values.find((v) => v.value.key === selectedValue))?.tab,
   );
-
+  const visibleTabs = tabs.filter((tab) =>
+    filteredTabsValues.find((value) => value.tab === tab.value && value.values.length > 0),
+  );
+  const firstTab = visibleTabs.length > 0 ? visibleTabs[0].value : undefined;
+  const firstTabSize =
+    filteredTabsValues.length > 0 ? filteredTabsValues.find((v) => v.tab === firstTab)?.values.length : undefined;
   const [_open, _setOpen] = React.useState(false);
   const open = openProp ?? _open;
 
   const handleOpenChange = (newOpen: boolean) => {
+    inputRef?.current?.blur();
     if (onOpenChangeProp) {
       onOpenChangeProp(newOpen); // Call the external handler if provided
     } else {
       _setOpen(newOpen); // Otherwise, update the internal state
     }
+    if (!newOpen) {
+      setFilter("");
+    }
   };
 
   React.useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (contentRef.current && currentTab) {
+      if (contentRef.current && currentTab && firstTabSize) {
         setContentHeight(`${contentRef.current.scrollHeight + 49}px`);
       }
     }, 0);
 
     return () => clearTimeout(timeoutId);
-  }, [currentTab]);
+  }, [currentTab, firstTabSize]);
+
+  React.useEffect(() => {
+    if (firstTab) {
+      setCurrentTab(firstTab);
+    }
+  }, [firstTab]);
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
@@ -80,38 +110,51 @@ function SelectSheetWithTabs<V extends { key: string }, T extends string>({
         )}
       </SheetTrigger>
       <SheetContent
-        side={"bottom"}
-        className="pb-6  transition-all overflow-hidden will-change-auto"
+        side={idMobile ? "top" : "bottom"}
+        className="pb-6  transition-all overflow-hidden will-change-auto "
         style={{ height: contentHeight }}
       >
-        <div ref={contentRef} className={cn("mx-auto w-full max-w-md space-y-4 ", className)}>
-          <SheetHeader>
-            <SheetTitle>{title}</SheetTitle>
-            {!!description && <SheetDescription>{description}</SheetDescription>}
-          </SheetHeader>
-          <Tabs value={currentTab} onValueChange={setCurrentTab} className="h-full w-full space-y-4">
-            <TabsList className="flex w-full gap-2 overflow-x-auto">
-              {tabs.map((tab) => {
-                const selectedValues = tabsValues.find((value) => value.tab === tab.value)?.values;
-                if (!selectedValues || selectedValues.length === 0) return null;
-                return (
+        <>
+          <div ref={contentRef} className={cn("mx-auto w-full max-w-md space-y-4 relative", className)}>
+            <SheetHeader>
+              <SheetTitle className="relative ">
+                <span>{title}</span>
+              </SheetTitle>
+              {!!description && <SheetDescription>{description}</SheetDescription>}
+            </SheetHeader>
+            <Tabs
+              value={currentTab}
+              onValueChange={setCurrentTab}
+              className="h-full w-full flex flex-col gap-4 relative"
+            >
+              <TabsList className="flex w-full gap-2 overflow-x-auto">
+                {visibleTabs.map((tab) => (
                   <TabsTrigger key={tab.value} value={tab.value}>
                     {tab.label}
                   </TabsTrigger>
-                );
-              })}
-            </TabsList>
-
-            <SelectContent
-              setIsOpen={handleOpenChange}
-              // values={value.values}
-              tabsValues={tabsValues}
-              onSelected={onSelected}
-              currentTab={currentTab}
-              selectedValue={selectedValue}
-            />
-          </Tabs>
-        </div>
+                ))}
+              </TabsList>
+              {visibleTabs.length === 0 && <NoResults className="pt-10" />}
+              <SelectContent
+                setIsOpen={handleOpenChange}
+                tabsValues={filteredTabsValues}
+                onSelected={onSelected}
+                currentTab={currentTab}
+                selectedValue={selectedValue}
+              />
+              <div className="absolute right-0 top-11 w-full mx-auto flex justify-center px-8">
+                <Input
+                  id="filter"
+                  className="w-full max-w-md border transition-opacity rounded p-2 shadow-md"
+                  value={filter}
+                  ref={inputRef}
+                  onChange={(e) => setFilter(e.target.value)}
+                  placeholder="Filter..."
+                />
+              </div>
+            </Tabs>
+          </div>
+        </>
       </SheetContent>
     </Sheet>
   );
@@ -131,7 +174,6 @@ function SelectContent<V extends { key: string }, T extends string>({
   currentTab?: string | undefined;
 }) {
   const scrollRef = React.useRef<HTMLDivElement>(null);
-  // const itemRefs = React.useRef<(HTMLButtonElement | null)[]>([]);
 
   React.useEffect(() => {
     const tabValues = tabsValues.find((value) => value.values.some((v) => v.value.key === selectedValue));
@@ -153,39 +195,43 @@ function SelectContent<V extends { key: string }, T extends string>({
   }, [selectedValue, tabsValues, currentTab]);
 
   return (
-    <div className="relative">
-      <ScrollArea ref={scrollRef} className="max-h-[50dvh]  overflow-y-auto pt-4  py-8">
-        <>
-          {tabsValues.map(
-            (tabValues) =>
-              tabValues.values.length > 0 && (
-                <TabsContent
-                  key={tabValues.tab}
-                  value={tabValues.tab}
-                  className=" w-full flex flex-col gap-2 relative "
-                >
-                  {tabValues.values.map((value, index) => (
-                    <Button
-                      style={{ touchAction: "pan-y" }}
-                      id={value.value.key}
-                      className="h-fit"
-                      variant={value.value.key === selectedValue ? "green" : value.highlight ? "secondary" : "outline"}
-                      key={value.value.key + index}
-                      onClick={() => {
-                        setIsOpen(false);
-                        onSelected(value.value);
-                      }}
-                    >
-                      {value.label}
-                    </Button>
-                  ))}
-                </TabsContent>
-              ),
-          )}
-        </>
-      </ScrollArea>
-      <div className="inset-0 absolute from-background to-background bg-[linear-gradient(to_bottom,_var(--tw-gradient-from)_0%,_transparent_10%,_transparent_90%,_var(--tw-gradient-to)_100%)] pointer-events-none select-none" />
-    </div>
+    <>
+      <div className="relative">
+        <ScrollArea ref={scrollRef} className="max-h-[50dvh]  overflow-y-auto pt-4  py-10">
+          <>
+            {tabsValues.map(
+              (tabValues) =>
+                tabValues.values.length > 0 && (
+                  <TabsContent
+                    key={tabValues.tab}
+                    value={tabValues.tab}
+                    className=" w-full flex flex-col gap-2 relative "
+                  >
+                    {tabValues.values.map((value, index) => (
+                      <Button
+                        style={{ touchAction: "pan-y" }}
+                        id={value.value.key}
+                        className="h-fit"
+                        variant={
+                          value.value.key === selectedValue ? "green" : value.highlight ? "secondary" : "outline"
+                        }
+                        key={value.value.key + index}
+                        onClick={() => {
+                          setIsOpen(false);
+                          onSelected(value.value);
+                        }}
+                      >
+                        {value.label}
+                      </Button>
+                    ))}
+                  </TabsContent>
+                ),
+            )}
+          </>
+        </ScrollArea>
+        <div className="inset-0 absolute from-background to-background bg-[linear-gradient(to_bottom,_var(--tw-gradient-from)_0%,_transparent_10%,_transparent_90%,_var(--tw-gradient-to)_100%)] pointer-events-none select-none" />
+      </div>
+    </>
   );
 }
 
@@ -214,11 +260,13 @@ export function getUserTab(
       group.values.push({
         value: { key: user.id, name },
         label: <NameWithImage name={name} image={user.image} />,
+        search: sanitizeString(user.company + " " + user.name),
       });
 
       return acc;
     },
-    [] as { values: { value: { key: string; name: string }; label: React.ReactNode }[]; tab: Role }[], // Initialize as an empty array
+
+    [] as { values: ValueType<{ key: string; name: string }>[]; tab: Role }[], // Initialize as an empty array
   );
   for (const group of groupedRoles) {
     group.values.sort((a, b) => {
@@ -267,6 +315,7 @@ export function getProductTabs(products: ProductWithMain[], favoriteProducts: st
           </div>
         ),
         value: { key: product.id },
+        search: sanitizeString(product.name),
       });
 
       return acc;
