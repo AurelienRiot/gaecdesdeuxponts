@@ -1,12 +1,12 @@
 import ButtonBackward from "@/components/ui/button-backward";
 import { Separator } from "@/components/ui/separator";
 import { DAYS_OF_WEEK } from "@/lib/date-utils";
+import { getAllShops } from "../../../direction/_functions/get-shops";
 import getProductsForOrders from "../../../orders/[orderId]/_functions/get-products-for-orders";
 import ChangeUser from "./_components/change-user";
-import DisplayDefaultOrderForTheDay from "./_components/display-default-order-for-the-day";
-import getDefaultOrders from "./_functions/get-default-orders";
-import { getAllShops } from "../../../direction/_functions/get-shops";
+import { DefaultOrderModalProvider, ModalTrigger } from "./_components/default-order-modal";
 import FavoriteProducts from "./_components/favorite-products";
+import getDefaultOrders from "./_functions/get-default-orders";
 
 export const dynamic = "force-dynamic";
 
@@ -33,38 +33,40 @@ async function DefaultProductsPage({
       user.role === "trackOnlyUser" || (user.role === "pro" ? product.product.isPro : !product.product.isPro),
   );
   return (
-    <div className=" space-y-2 h-full">
+    <div className=" space-y-4 h-full">
       <div className="max-w-[90vw] md:max-w-[500px] mx-auto flex pt-2 gap-4 items-center justify-between ">
         <ButtonBackward />
         <FavoriteProducts userId={userId} products={filteredProducts} favoriteProducts={favoriteProducts} />
         <ChangeUser userId={userId} />
       </div>
-      {/* <Heading
-        title={`${user.company || user.name}`}
-        description=""
-        className=" w-fit  text-center mx-auto"
-        titleClassName="text-base xs:text-lg sm:text-2xl md:text-3xl"
-      /> */}
+
       <Separator />
-
-      <div className="flex flex-row w-full gap-4  overflow-y-hidden mx-auto px-4  overflow-x-scroll relative h-full">
-        {DAYS_OF_WEEK.map((day, index) => {
-          const defaultOrderForDay = user.defaultOrders.find((dayOrder) => dayOrder.day === index);
-
-          return (
-            <DisplayDefaultOrderForTheDay
-              userId={userId}
-              products={filteredProducts}
-              shops={shops}
-              defaultOrderForDay={defaultOrderForDay}
-              index={index}
-              day={day}
-              key={day}
-              favoriteProducts={favoriteProducts}
-            />
-          );
-        })}
-      </div>
+      <DefaultOrderModalProvider favoriteProducts={favoriteProducts} products={filteredProducts} shops={shops}>
+        <div className="flex flex-wrap items-center justify-center gap-4  px-4  relative h-full">
+          {DAYS_OF_WEEK.map((_, index) => {
+            const day = (index + 1) % 7;
+            const defaultOrder = user.defaultOrders.find((dayOrder) => dayOrder.day === day) || {
+              confirmed: true,
+              day,
+              defaultOrderProducts: [],
+              shopId: null,
+              userId: userId,
+            };
+            const defaultOrderProducts = defaultOrder.defaultOrderProducts.map((product) => {
+              const correspondingProduct = filteredProducts.find((p) => p.id === product.productId);
+              return {
+                name: correspondingProduct?.name || "",
+                icon: correspondingProduct?.icon || "",
+                quantity: product.quantity,
+                price: product.price,
+                id: product.productId,
+                unit: correspondingProduct?.unit,
+              };
+            });
+            return <ModalTrigger key={day} day={day} defaultOrder={defaultOrder} products={defaultOrderProducts} />;
+          })}
+        </div>
+      </DefaultOrderModalProvider>
     </div>
   );
 }

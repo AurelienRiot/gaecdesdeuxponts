@@ -26,7 +26,7 @@ function FavoriteProducts({
   );
   return (
     <>
-      <Button onClick={() => setIsOpen(true)}>Modifier les produits favoris</Button>
+      <Button onClick={() => setIsOpen(true)}>Produits favoris</Button>
       <Modal
         isOpen={isOpen}
         onClose={() => {

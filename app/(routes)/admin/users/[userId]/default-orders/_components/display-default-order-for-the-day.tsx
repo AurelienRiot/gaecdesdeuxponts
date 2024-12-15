@@ -7,167 +7,120 @@ import CheckboxForm from "@/components/chekbox-form";
 import { GrPowerReset, LuPackageMinus } from "@/components/react-icons";
 import SelectSheetWithTabs, { getProductTabs } from "@/components/select-sheet-with-tabs";
 import { Badge } from "@/components/ui/badge";
-import { Button, IconButton, LoadingButton } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Button, IconButton } from "@/components/ui/button";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { NumberInput } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useUsersQueryClient } from "@/hooks/use-query/users-query";
-import useServerAction from "@/hooks/use-server-action";
+import { DAYS_OF_WEEK } from "@/lib/date-utils";
 import scrollToLastChild from "@/lib/scroll-to-last-child";
 import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { useMemo } from "react";
-import { useForm, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import updateDefaultOrdersAction from "../_actions/update-default-orders";
-import type { GetDefaultOrdersType } from "../_functions/get-default-orders";
-import { defaultOrderSchema, type DefaultOrderFormValues } from "./schema";
+import type { DefaultOrderFormValues } from "./schema";
 import SelectShop from "./select-shop";
 
 function DisplayDefaultOrderForTheDay({
-  defaultOrderForDay,
   products,
   shops,
   day,
-  index,
-  userId,
   favoriteProducts,
 }: {
-  defaultOrderForDay: NonNullable<GetDefaultOrdersType>["defaultOrders"][number] | undefined;
   products: ProductsForOrdersType;
   shops: AllShopsType;
-  day: string;
-  userId: string;
+  day: number;
   favoriteProducts: string[];
-  index: number;
 }) {
-  const { serverAction } = useServerAction(updateDefaultOrdersAction);
-  const { mutateUsers } = useUsersQueryClient();
-  const form = useForm<DefaultOrderFormValues>({
-    resolver: zodResolver(defaultOrderSchema),
-    defaultValues: {
-      day: index,
-      confirmed: defaultOrderForDay?.confirmed ?? true,
-      userId,
-      shopId: defaultOrderForDay?.shopId,
-      defaultOrderProducts:
-        defaultOrderForDay?.defaultOrderProducts.map(({ price, productId, quantity }) => ({
-          productId,
-          price,
-          quantity,
-        })) || [],
-    },
-  });
+  const form = useFormContext<DefaultOrderFormValues>();
 
   const items = form.watch("defaultOrderProducts");
-
-  async function onSubmit(data: DefaultOrderFormValues) {
-    if (data.defaultOrderProducts.length > 0 && !data.defaultOrderProducts.every((item) => item.productId)) {
-      toast.error("Completer tous les produits deja existant");
-      return;
-    }
-    function onSuccess(result?: number[]) {
-      if (result) {
-        mutateUsers((users) =>
-          users.map((user) => (user.id === userId ? { ...user, defaultDaysOrders: result } : user)),
-        );
-      }
-      favoriteProducts;
-    }
-    await serverAction({ data, onSuccess });
-  }
 
   const deleteProduct = (prodIndex: number) => {
     const newItems = items.filter((_, index) => index !== prodIndex);
     form.setValue("defaultOrderProducts", newItems);
   };
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-[320px] h-full  space-y-4 relative flex-shrink-0">
-        <div className="flex justify-between">
-          <h2 className="text-xl font-semibold capitalize text-center flex justify-between items-center p-2 mx-auto">
-            {day}
-          </h2>
-          {/* <button type="button" className=" p-2 h-fit border bg-green-500 rounded-full cursor-pointer flex gap-2">
+    <>
+      <div className="flex justify-between">
+        <h2 className="text-xl font-semibold capitalize text-center flex justify-between items-center p-2 mx-auto">
+          {DAYS_OF_WEEK[day]}
+        </h2>
+        {/* <button type="button" className=" p-2 h-fit border bg-green-500 rounded-full cursor-pointer flex gap-2">
             <Plus className="size-4 text-green-100 stroke-[3]" />
             <Package className="size-4 text-green-100 stroke-[3]" />
-          </button> */}
-        </div>
-        <LoadingButton disabled={form.formState.isSubmitting} variant={"green"} className="w-full" type="submit">
-          Mettre a jour
-        </LoadingButton>
+            </button> */}
+      </div>
 
-        <ScrollArea className="overflow-auto " style={{ height: `calc(100dvh - 280px)` }}>
-          <div id={`scroll-area-${index}`} className="space-y-4 h-full">
-            {items.length > 0 && (
-              <>
-                <SelectShop shops={shops} />
-                <FormField
-                  control={form.control}
-                  name="confirmed"
-                  render={({ field }) => (
-                    <CheckboxForm
-                      ref={field.ref}
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      disabled={form.formState.isSubmitting}
-                      title="Commande confirmer"
-                      description="Indique si la commande doit être confirmer"
-                    />
-                  )}
-                />
-              </>
-            )}
-            <FormField
-              control={form.control}
-              name="defaultOrderProducts"
-              render={({ field }) => (
-                <FormItem className="">
-                  <FormControl>
-                    <div className="space-y-4">
-                      {items.map((item, productIndex) => (
-                        <div
-                          key={item.productId + index}
-                          className="w-full rounded-md p-4 space-y-4   bg-chart1/50 even:bg-chart2/50"
-                        >
-                          <SelectProductName
-                            products={products}
-                            productIndex={productIndex}
-                            selectedProduct={item}
-                            favoriteProducts={favoriteProducts}
+      <ScrollArea className="overflow-auto " style={{ height: `calc(100dvh - 180px)` }}>
+        <div id={`scroll-area-${day}`} className="space-y-4 h-full">
+          {items.length > 0 && (
+            <>
+              <SelectShop shops={shops} />
+              <FormField
+                control={form.control}
+                name="confirmed"
+                render={({ field }) => (
+                  <CheckboxForm
+                    ref={field.ref}
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    disabled={form.formState.isSubmitting}
+                    title="Commande confirmer"
+                    description="Indique si la commande doit être confirmer"
+                  />
+                )}
+              />
+            </>
+          )}
+          <FormField
+            control={form.control}
+            name="defaultOrderProducts"
+            render={({ field }) => (
+              <FormItem className="">
+                <FormControl>
+                  <div className="space-y-4">
+                    {items.map((item, productIndex) => (
+                      <div
+                        key={item.productId + day}
+                        className="w-full rounded-md p-4 space-y-4   bg-chart1/50 even:bg-chart2/50"
+                      >
+                        <SelectProductName
+                          products={products}
+                          productIndex={productIndex}
+                          selectedProduct={item}
+                          favoriteProducts={favoriteProducts}
+                        />
+                        <div className="flex gap-4">
+                          <PriceInput productIndex={productIndex} products={products} selectedProduct={item} />
+                          <QuantityInput productIndex={productIndex} selectedProduct={item} />
+
+                          <TrashButton
+                            type="button"
+                            disabled={form.formState.isSubmitting}
+                            variant="destructive"
+                            size="sm"
+                            className="mt-auto"
+                            onClick={() => deleteProduct(productIndex)}
+                            iconClassName="size-6"
                           />
-                          <div className="flex gap-4">
-                            <PriceInput productIndex={productIndex} products={products} selectedProduct={item} />
-                            <QuantityInput productIndex={productIndex} selectedProduct={item} />
-
-                            <TrashButton
-                              type="button"
-                              disabled={form.formState.isSubmitting}
-                              variant="destructive"
-                              size="sm"
-                              className="mt-auto"
-                              onClick={() => deleteProduct(productIndex)}
-                              iconClassName="size-6"
-                            />
-                          </div>
                         </div>
-                      ))}
-                    </div>
-                  </FormControl>
-                  {form.formState.errors.defaultOrderProducts && (
-                    <p className={"text-sm font-medium text-destructive"}>
-                      {form.formState.errors.defaultOrderProducts?.message || "Veuillez completer tous les champs"}
-                    </p>
-                  )}
-                  <AddProductButton index={index} />
-                </FormItem>
-              )}
-            />
-          </div>
-        </ScrollArea>
-      </form>
-    </Form>
+                      </div>
+                    ))}
+                  </div>
+                </FormControl>
+                {form.formState.errors.defaultOrderProducts && (
+                  <p className={"text-sm font-medium text-destructive"}>
+                    {form.formState.errors.defaultOrderProducts?.message || "Veuillez completer tous les champs"}
+                  </p>
+                )}
+                <AddProductButton index={day} />
+              </FormItem>
+            )}
+          />
+        </div>
+      </ScrollArea>
+    </>
   );
 }
 
