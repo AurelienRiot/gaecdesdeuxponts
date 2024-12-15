@@ -43,8 +43,10 @@ function FavoriteProducts({
             trigger={"Ajouter un produit"}
             tabsValues={tabsValues}
             tabs={tabs}
-            onSelected={(value) => {
-              setProductIds((prev) => prev.concat(value.key));
+            onSelected={(selected) => {
+              if (selected) {
+                setProductIds((prev) => prev.concat(selected.key));
+              }
             }}
           />
           {productIds.length > 0 &&

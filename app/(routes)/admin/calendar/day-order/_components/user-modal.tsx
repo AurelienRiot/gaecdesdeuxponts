@@ -18,8 +18,10 @@ function UserModal({ onValueChange, users }: { onValueChange: (value: string) =>
       selectedValue={null}
       tabs={tabs}
       tabsValues={tabsValue}
-      onSelected={(value) => {
-        onValueChange(value.key);
+      onSelected={(selected) => {
+        if (selected) {
+          onValueChange(selected.key);
+        }
       }}
     />
   );

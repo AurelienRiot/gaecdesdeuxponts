@@ -1,5 +1,6 @@
 "use client";
 
+import { useUsersQuery } from "@/hooks/use-query/users-query";
 import { cn } from "@/lib/utils";
 import {
   Box,
@@ -17,9 +18,18 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useSidebar } from "../ui/sidebar";
+import { usePathname, useRouter } from "next/navigation";
+import { useMemo } from "react";
 import { GiPathDistance, PiInvoice } from "../react-icons";
+import SelectSheetWithTabs, { getUserTab } from "../select-sheet-with-tabs";
+import { useSidebar } from "../ui/sidebar";
+
+// {
+//   href: `/admin/users`,
+//   label: "Clients",
+//   active: pathname.startsWith(`/admin/users`),
+//   Icone: Users,
+// },
 
 function MobileNav({ className }: { className?: string }) {
   const pathname = usePathname();
@@ -43,10 +53,44 @@ function MobileNav({ className }: { className?: string }) {
             <span className="text-sm">{route.label}</span>
           </Link>
         ))}
+        <UserSelect />
         <SidebarTrigger />
         {/* <SidebarTrigger /> */}
       </div>
     </nav>
+  );
+}
+
+function UserSelect() {
+  const { data: users } = useUsersQuery();
+  const { tabs, tabsValue } = useMemo(() => (users ? getUserTab(users) : { tabs: [], tabsValue: [] }), [users]);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const isActive = pathname.startsWith(`/admin/users`);
+  return (
+    <SelectSheetWithTabs
+      title="Selectionner le client"
+      trigger={
+        <button
+          type="button"
+          className={cn("flex flex-col items-center px-2 py-1 rounded-md", isActive && "bg-green-600 font-bold")}
+        >
+          <Users className="w-6 h-6" />
+          <span className="text-sm">Clients</span>
+        </button>
+      }
+      tabs={tabs}
+      defaultValue={"Tous"}
+      tabsValues={tabsValue}
+      onSelected={(selected) => {
+        if (!selected) {
+          router.push(`/admin/users`);
+        } else {
+          router.push(`/admin/users/${selected.key}`);
+        }
+      }}
+    />
   );
 }
 
@@ -133,12 +177,6 @@ export const MainAdminRoutes = (pathname: string) => [
     active: pathname.startsWith(`/admin/calendar`),
     Icone: Calendar,
   },
-  {
-    href: `/admin/users`,
-    label: "Clients",
-    active: pathname.startsWith(`/admin/users`),
-    Icone: Users,
-  },
 ];
 
 export const SecondaryAdminRoutes = (pathname: string) => [
@@ -167,6 +205,12 @@ export const SecondaryAdminRoutes = (pathname: string) => [
     label: "Magasins",
     active: pathname.startsWith(`/admin/shops`),
     Icone: Store,
+  },
+  {
+    href: `/admin/users`,
+    label: "Clients",
+    active: pathname.startsWith(`/admin/users`),
+    Icone: Users,
   },
   {
     href: `/admin/categories`,

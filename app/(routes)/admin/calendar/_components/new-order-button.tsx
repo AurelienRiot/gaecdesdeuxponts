@@ -79,8 +79,10 @@ function SelectUser({
       title="Selectionner le client"
       tabs={tabs}
       tabsValues={tabsValue}
-      onSelected={({ key }) => {
-        onUserSelected(key);
+      onSelected={(selected) => {
+        if (selected) {
+          onUserSelected(selected.key);
+        }
       }}
     />
   );

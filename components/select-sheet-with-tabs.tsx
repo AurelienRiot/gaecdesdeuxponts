@@ -34,16 +34,18 @@ function SelectSheetWithTabs<V extends { key: string }>({
   description,
   className,
   triggerClassName,
+  defaultValue,
   open: openProp,
   onOpenChange: onOpenChangeProp,
 }: {
   trigger?: React.ReactNode | string;
-  onSelected: (selected: V) => void;
+  onSelected: (selected?: V) => void;
   tabsValues: { values: ValueType<V>[]; tab: string }[];
   tabs: TabsType;
   selectedValue?: string | null;
   title: string;
   description?: string;
+  defaultValue?: string | null;
   className?: string;
   triggerClassName?: string;
   open?: boolean;
@@ -65,6 +67,7 @@ function SelectSheetWithTabs<V extends { key: string }>({
     filteredTabsValues.find((value) => value.tab === tab.value && value.values.length > 0),
   );
   const firstTab = visibleTabs.length > 0 ? visibleTabs[0].value : undefined;
+  const isCurrentTabEmpty = filteredTabsValues.find((value) => value.tab === currentTab)?.values.length === 0;
   const firstTabSize =
     filteredTabsValues.length > 0 ? filteredTabsValues.find((v) => v.tab === firstTab)?.values.length : undefined;
   const [_open, _setOpen] = React.useState(false);
@@ -93,10 +96,10 @@ function SelectSheetWithTabs<V extends { key: string }>({
   }, [currentTab, firstTabSize]);
 
   React.useEffect(() => {
-    if (firstTab) {
+    if (firstTab && (!currentTab || isCurrentTabEmpty)) {
       setCurrentTab(firstTab);
     }
-  }, [firstTab]);
+  }, [firstTab, isCurrentTabEmpty, currentTab]);
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
@@ -117,8 +120,22 @@ function SelectSheetWithTabs<V extends { key: string }>({
         <>
           <div ref={contentRef} className={cn("mx-auto w-full max-w-md space-y-4 relative", className)}>
             <SheetHeader>
-              <SheetTitle className="relative ">
+              <SheetTitle className="flex items-center justify-between  ">
                 <span>{title}</span>
+                {!!defaultValue && (
+                  <Button
+                    variant={"outline"}
+                    onClick={() => {
+                      handleOpenChange(false);
+                      onSelected(undefined);
+                    }}
+                    type="button"
+                    size={"xs"}
+                    className="border-dashed text-xs whitespace-nowrap font-normal font-serif"
+                  >
+                    {defaultValue}
+                  </Button>
+                )}
               </SheetTitle>
               {!!description && <SheetDescription>{description}</SheetDescription>}
             </SheetHeader>

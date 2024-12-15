@@ -264,8 +264,10 @@ const SelectProductName = ({
               selectedValue={selectedProduct?.productId}
               tabsValues={tabsValues}
               tabs={tabs}
-              onSelected={(value) => {
-                onSelectedProduct(value.key);
+              onSelected={(selected) => {
+                if (selected) {
+                  onSelectedProduct(selected.key);
+                }
               }}
             />
           </FormControl>

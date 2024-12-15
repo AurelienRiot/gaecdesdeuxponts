@@ -41,8 +41,10 @@ const SelectUser = ({ users }: { users: UserForOrderType[] }) => {
             selectedValue={userId}
             tabs={tabs}
             tabsValues={tabsValue}
-            onSelected={({ key }) => {
-              field.onChange(key);
+            onSelected={(selected) => {
+              if (selected) {
+                field.onChange(selected.key);
+              }
             }}
           />
 

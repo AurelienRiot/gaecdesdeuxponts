@@ -32,8 +32,10 @@ function ChangeUser({ userId }: { userId: string }) {
       tabs={tabs}
       selectedValue={userId}
       tabsValues={tabsValue}
-      onSelected={({ key }) => {
-        router.push(`/admin/users/${key}/default-orders`);
+      onSelected={(selected) => {
+        if (selected) {
+          router.push(`/admin/users/${selected.key}/default-orders`);
+        }
       }}
     />
   );

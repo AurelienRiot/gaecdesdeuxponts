@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button, IconButton } from "@/components/ui/button";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { NumberInput } from "@/components/ui/input";
+import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";
 import { createId } from "@/lib/id";
 import { cn } from "@/lib/utils";
 import type { ProductWithMain } from "@/types";
@@ -14,7 +15,6 @@ import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-schema";
-import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";
 
 export const negativeQuantityStyle =
   "bg-destructive hover:bg-destructive/90 hover:text-destructive-foreground text-destructive-foreground";
@@ -292,8 +292,10 @@ const SelectProductName = ({
               selectedValue={product?.id}
               tabsValues={tabsValues}
               tabs={tabs}
-              onSelected={(value) => {
-                onSelectedProduct(value.key);
+              onSelected={(selected) => {
+                if (selected) {
+                  onSelectedProduct(selected.key);
+                }
               }}
             />
           </FormControl>
