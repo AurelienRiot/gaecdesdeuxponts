@@ -15,6 +15,17 @@ async function updateDayOrder(data: z.infer<typeof schema>) {
     roles: SHIPPING,
     schema,
     serverAction: async ({ userIds, day }) => {
+      if (userIds.length === 0) {
+        await prismadb.dayOrderUser.deleteMany({
+          where: {
+            dayOrderId: day,
+          },
+        });
+        return {
+          success: true,
+          message: "",
+        };
+      }
       const dayOrder = await prismadb.dayOrder.findUnique({
         where: { day },
         include: { dayOrderUsers: true },
@@ -52,7 +63,7 @@ async function updateDayOrder(data: z.infer<typeof schema>) {
 
       return {
         success: true,
-        message: "Ordre mis à jour",
+        message: "",
       };
     },
   });

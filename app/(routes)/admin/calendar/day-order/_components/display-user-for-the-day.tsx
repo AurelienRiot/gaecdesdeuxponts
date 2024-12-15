@@ -1,52 +1,38 @@
 "use client";
+import DeleteButton from "@/components/animations/icons/delete";
 import { getUserName } from "@/components/table-custom-fuction";
-import { NameWithImage } from "@/components/user";
-import { LoadingButton } from "@/components/ui/button";
 import NoResults from "@/components/ui/no-results";
+import { NameWithImage } from "@/components/user";
 import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";
-import useServerAction from "@/hooks/use-server-action";
+import { DAYS_OF_WEEK } from "@/lib/date-utils";
 import scrollToLastChild from "@/lib/scroll-to-last-child";
 import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import { Grip } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
+import { useRef } from "react";
 import { useRaisedShadow } from "../../_components/use-raised-shadow";
-import updateDayOrder from "../_actions/update-day-order";
-import type { GetDayOrdersType } from "../_functions/get-day-orders";
 import UserModal from "./user-modal";
 
 function DisplayUserForTheDay({
-  dayOrdersForDay,
   users,
+  localDayOrdersForDay,
+  setLocalDayOrdersForDay,
   day,
-  index,
 }: {
-  dayOrdersForDay: GetDayOrdersType[number]["dayOrderUsers"] | undefined;
+  localDayOrdersForDay: string[] | undefined;
+  setLocalDayOrdersForDay: React.Dispatch<React.SetStateAction<string[] | undefined>>;
   users: UserForOrderType[];
-  day: string;
-  index: number;
+  day: number;
 }) {
   const containerRef = useRef<HTMLUListElement>(null);
-  const { serverAction, loading } = useServerAction(updateDayOrder);
-  const [localDayOrdersForDay, setLocalDayOrdersForDay] = useState(dayOrdersForDay?.map(({ userId }) => userId));
-  useEffect(() => {
-    setLocalDayOrdersForDay(dayOrdersForDay?.map(({ userId }) => userId));
-  }, [dayOrdersForDay]);
 
-  function onUpdateDayOrder() {
-    if (!localDayOrdersForDay || localDayOrdersForDay.length === 0) {
-      toast.error("Veuillez sélectionner au moins un client");
-      return;
-    }
-    serverAction({ data: { userIds: localDayOrdersForDay, day: index } });
-  }
   return (
-    <div className="w-[320px] h-full  space-y-2 relative flex-shrink-0 ">
-      <div className="flex justify-between">
-        <h2 className="text-xl font-semibold capitalize text-center flex justify-between items-center p-2 mx-auto">
-          {day}
+    <div className="w-full h-full  space-y-2 relative flex-shrink-0 ">
+      <div className="flex justify-end items-center">
+        <h2 className="text-xl -z-10 font-semibold absolute inset-x-0 capitalize text-center p-2">
+          {DAYS_OF_WEEK[day]}
         </h2>
         <UserModal
+          className="mr-auto"
           users={users.filter(({ id }) => !localDayOrdersForDay?.includes(id))}
           onValueChange={(userId) => {
             setLocalDayOrdersForDay((prev) => (prev && prev?.length > 0 ? [...prev, userId] : [userId]));
@@ -55,37 +41,35 @@ function DisplayUserForTheDay({
         />
       </div>
       {localDayOrdersForDay && localDayOrdersForDay.length > 0 ? (
-        <LoadingButton disabled={loading} variant={"green"} className="w-full" onClick={onUpdateDayOrder}>
-          Mettre a jour
-        </LoadingButton>
-      ) : null}
-      {localDayOrdersForDay ? (
         <Reorder.Group
           as="ul"
           ref={containerRef}
           values={localDayOrdersForDay}
           onReorder={setLocalDayOrdersForDay}
           className="flex flex-col gap-2   p-2 relative"
-          style={{ height: `calc(100dvh - 280px)`, overflowY: "scroll" }}
+          style={{ height: `calc(100dvh - 180px)`, overflowY: "scroll" }}
           axis="y"
           layoutScroll
         >
           {localDayOrdersForDay.map((userId, index) => {
             const user = users.find((user) => user.id === userId);
             if (!user) {
-              return <NoResults key={userId} />;
+              return <NoResults style={{ height: `calc(100dvh - 180px)` }} key={userId} />;
             }
-            return <OrderItem key={userId} user={user} />;
+            return <OrderItem key={userId} user={user} setLocalDayOrdersForDay={setLocalDayOrdersForDay} />;
           })}
         </Reorder.Group>
       ) : (
-        "Aucun client pour ce jour"
+        <NoResults style={{ height: `calc(100dvh - 180px)` }} text="Aucun client pour ce jour" />
       )}
     </div>
   );
 }
 
-function OrderItem({ user }: { user: UserForOrderType }) {
+function OrderItem({
+  user,
+  setLocalDayOrdersForDay,
+}: { user: UserForOrderType; setLocalDayOrdersForDay: React.Dispatch<React.SetStateAction<string[] | undefined>> }) {
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
   const controls = useDragControls();
@@ -117,6 +101,12 @@ function OrderItem({ user }: { user: UserForOrderType }) {
         image={user.image}
         imageSize={12}
         className="p-2 select-none pointer-events-none"
+      />
+      <DeleteButton
+        onClick={() => setLocalDayOrdersForDay((prev) => prev?.filter((id) => id !== user.id))}
+        type="button"
+        className="justify-self-end"
+        svgClassName="size-4 text-destructive"
       />
     </Reorder.Item>
   );

@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
-import { forwardRef, type HTMLAttributes } from "react";
+import { type ButtonHTMLAttributes, forwardRef } from "react";
 
-const DeleteButton = forwardRef<HTMLButtonElement, HTMLAttributes<HTMLButtonElement> & { svgClassName?: string }>(
+const DeleteButton = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLButtonElement> & { svgClassName?: string }>(
   ({ svgClassName, className, children, ...props }, ref) => {
     return (
       <button

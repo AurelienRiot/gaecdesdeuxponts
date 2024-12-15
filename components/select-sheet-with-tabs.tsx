@@ -53,7 +53,7 @@ function SelectSheetWithTabs<V extends { key: string }>({
 }) {
   const [contentHeight, setContentHeight] = React.useState("auto");
   const [filter, setFilter] = React.useState("");
-  const idMobile = useIsMobile();
+  const isMobile = useIsMobile();
   const filteredTabsValues = tabsValues.map((tabValue) => ({
     values: filterValues(tabValue.values, filter),
     tab: tabValue.tab,
@@ -113,7 +113,7 @@ function SelectSheetWithTabs<V extends { key: string }>({
         )}
       </SheetTrigger>
       <SheetContent
-        side={idMobile ? "top" : "bottom"}
+        side={isMobile ? "top" : "bottom"}
         className="pb-6  transition-all overflow-hidden will-change-auto "
         style={{ height: contentHeight }}
       >

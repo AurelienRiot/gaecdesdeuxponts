@@ -31,6 +31,9 @@ import { useSidebar } from "../ui/sidebar";
 //   Icone: Users,
 // },
 
+const linkClassName = (isActive: boolean) =>
+  cn("flex flex-col items-center px-2 py-1 rounded-md", isActive && "bg-green-600 font-bold");
+
 function MobileNav({ className }: { className?: string }) {
   const pathname = usePathname();
   const mainRoutes = MainAdminRoutes(pathname);
@@ -47,7 +50,7 @@ function MobileNav({ className }: { className?: string }) {
             key={route.href}
             href={route.href}
             onClick={(e) => e.stopPropagation()}
-            className={cn("flex flex-col items-center px-2 py-1 rounded-md", route.active && "bg-green-600 font-bold")}
+            className={linkClassName(route.active)}
           >
             <route.Icone className="w-6 h-6" />
             <span className="text-sm">{route.label}</span>
@@ -72,10 +75,7 @@ function UserSelect() {
     <SelectSheetWithTabs
       title="Selectionner le client"
       trigger={
-        <button
-          type="button"
-          className={cn("flex flex-col items-center px-2 py-1 rounded-md", isActive && "bg-green-600 font-bold")}
-        >
+        <button type="button" className={linkClassName(isActive)}>
           <Users className="w-6 h-6" />
           <span className="text-sm">Clients</span>
         </button>
