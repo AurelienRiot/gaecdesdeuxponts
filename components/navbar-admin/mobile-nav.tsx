@@ -23,6 +23,9 @@ import { useMemo } from "react";
 import { GiPathDistance, PiInvoice } from "../react-icons";
 import SelectSheetWithTabs, { getUserTab } from "../select-sheet-with-tabs";
 import { useSidebar } from "../ui/sidebar";
+import { useUserModal } from "@/app/(routes)/admin/_components/user-modal";
+import { toast } from "sonner";
+import { useOrdersQuery } from "@/hooks/use-query/orders-query";
 
 // {
 //   href: `/admin/users`,
@@ -66,11 +69,21 @@ function MobileNav({ className }: { className?: string }) {
 
 function UserSelect() {
   const { data: users } = useUsersQuery();
+  const { setUserId, setIsUserModalOpen } = useUserModal();
   const { tabs, tabsValue } = useMemo(() => (users ? getUserTab(users) : { tabs: [], tabsValue: [] }), [users]);
   const router = useRouter();
   const pathname = usePathname();
 
   const isActive = pathname.startsWith(`/admin/users`);
+
+  function onSelected(id?: string) {
+    if (!id) {
+      router.push(`/admin/users`);
+    } else {
+      setUserId(id);
+      setIsUserModalOpen(true);
+    }
+  }
   return (
     <SelectSheetWithTabs
       title="Selectionner le client"
@@ -84,11 +97,7 @@ function UserSelect() {
       defaultValue={"Tous"}
       tabsValues={tabsValue}
       onSelected={(selected) => {
-        if (!selected) {
-          router.push(`/admin/users`);
-        } else {
-          router.push(`/admin/users/${selected.key}`);
-        }
+        onSelected(selected?.key);
       }}
       isSearchable
     />

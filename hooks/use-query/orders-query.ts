@@ -1,13 +1,12 @@
 "use client";
 
+import { from, to } from "@/app/(routes)/admin/calendar/_functions/make-date-array-for-orders";
 import { calendarOrderSchema, type CalendarOrderType } from "@/components/zod-schema/calendar-orders";
 import customKy from "@/lib/custom-ky";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 
-async function fetchOrders(dateArray: string[]) {
-  const from = new Date(dateArray[0]);
-  const to = new Date(dateArray[dateArray.length - 1]);
+async function fetchOrders() {
   const searchParams = new URLSearchParams({
     from: from.toISOString(),
     to: to.toISOString(),
@@ -15,9 +14,9 @@ async function fetchOrders(dateArray: string[]) {
   return await customKy("/api/orders", z.array(calendarOrderSchema), { method: "GET", searchParams });
 }
 
-export function useOrdersQuery(dateArray: string[]) {
+export function useOrdersQuery() {
   return useQuery({
-    queryFn: async () => await fetchOrders(dateArray),
+    queryFn: async () => await fetchOrders(),
     queryKey: ["fetchOrders"],
     staleTime: 60 * 60 * 1000,
   });

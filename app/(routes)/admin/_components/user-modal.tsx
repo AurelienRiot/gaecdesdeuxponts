@@ -10,18 +10,18 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { DisplayLink } from "@/components/user";
 import type { CalendarOrderType } from "@/components/zod-schema/calendar-orders";
 import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";
+import { useOrdersQuery } from "@/hooks/use-query/orders-query";
+import { useUsersQuery } from "@/hooks/use-query/users-query";
 import { dateFormatter } from "@/lib/date-utils";
 import { formatFrenchPhoneNumber } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { createContext, useContext, useState } from "react";
-import DisplayItem from "./display-item";
-
-type UserModalProps = UserForOrderType & { orders: CalendarOrderType[]; date: Date };
+import DisplayItem from "../calendar/_components/display-item";
 
 type UserModalContextType = {
-  user: UserModalProps | null;
-  setUser: React.Dispatch<React.SetStateAction<UserModalProps | null>>;
+  userId: string | null;
+  setUserId: React.Dispatch<React.SetStateAction<string | null>>;
   isUserModalOpen: boolean;
   setIsUserModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -31,11 +31,11 @@ export const UserModalContext = createContext<UserModalContextType | undefined>(
 export const UserModalProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const [user, setUser] = useState<UserModalProps | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
 
   return (
-    <UserModalContext.Provider value={{ user, setUser, isUserModalOpen, setIsUserModalOpen }}>
+    <UserModalContext.Provider value={{ userId, setUserId, isUserModalOpen, setIsUserModalOpen }}>
       {children}
       <UserModal />
     </UserModalContext.Provider>
@@ -53,7 +53,36 @@ export function useUserModal() {
 }
 
 function UserModal() {
-  const { user, isUserModalOpen, setIsUserModalOpen } = useUserModal();
+  const { data: users } = useUsersQuery();
+  const { data: orders } = useOrdersQuery();
+  const { userId, isUserModalOpen, setIsUserModalOpen } = useUserModal();
+
+  if (!userId) {
+    <>
+      <p>Aucun client selectionné</p>
+      <Button variant={"outline"} className="w-full" onClick={() => setIsUserModalOpen(false)}>
+        Fermer
+      </Button>
+    </>;
+  }
+  const user = users?.find((user) => user.id === userId);
+  if (!user) {
+    return (
+      <>
+        <p>Client introuvable</p>
+        <Button variant={"outline"} className="w-full" onClick={() => setIsUserModalOpen(false)}>
+          Fermer
+        </Button>
+      </>
+    );
+  }
+  const userOrders = orders
+    ? orders
+        .filter((otherOrder) => {
+          return otherOrder.userId === user.id;
+        })
+        .sort((a, b) => b.shippingDate.getTime() - a.shippingDate.getTime())
+    : [];
   return (
     <Modal
       title="Information du client"
@@ -61,35 +90,24 @@ function UserModal() {
       isOpen={isUserModalOpen}
       onClose={() => setIsUserModalOpen(false)}
     >
-      {user ? (
-        <>
-          <UserInfo />
-          <div className="flex justify-between gap-4">
-            <Button variant={"outline"} className="w-full" onClick={() => setIsUserModalOpen(false)}>
-              Fermer
-            </Button>
-            <Button variant={"green"} asChild className="w-full">
-              <Link onClick={() => setIsUserModalOpen(false)} href={`/admin/users/${user.id}`}>
-                Consulter
-              </Link>
-            </Button>
-          </div>
-        </>
-      ) : (
-        <>
-          <p>Aucun client sélectionné</p>
+      <>
+        <UserInfo user={user} userOrders={userOrders} />
+        <div className="flex justify-between gap-4">
           <Button variant={"outline"} className="w-full" onClick={() => setIsUserModalOpen(false)}>
             Fermer
           </Button>
-        </>
-      )}
+          <Button variant={"green"} asChild className="w-full">
+            <Link onClick={() => setIsUserModalOpen(false)} href={`/admin/users/${user.id}`}>
+              Consulter
+            </Link>
+          </Button>
+        </div>
+      </>
     </Modal>
   );
 }
 
-const UserInfo = () => {
-  const { user } = useUserModal();
-  if (!user) return <NoResults />;
+const UserInfo = ({ user, userOrders }: { user: UserForOrderType; userOrders: CalendarOrderType[] }) => {
   return (
     <div className="px-2 py-3 ">
       <div className="flex items-center mb-4 gap-4">
@@ -165,43 +183,46 @@ const UserInfo = () => {
             <AutosizeTextarea className="border-0 focus-visible:ring-0 select-text" readOnly value={user.notes} />
           </div>
         ) : null}
-        <DisplayUserOrders />
+        <DisplayUserOrders userOrders={userOrders} />
       </ScrollArea>
     </div>
   );
 };
 
-function DisplayUserOrders() {
-  const { user, setIsUserModalOpen } = useUserModal();
-  if (!user) return null;
+function DisplayUserOrders({ userOrders }: { userOrders: CalendarOrderType[] }) {
+  const { setIsUserModalOpen } = useUserModal();
 
   return (
     <div className="mb-4 space-y-2">
       <h3 className="text-sm font-medium text-gray-500">Commandes</h3>
 
-      {user.orders.map((order) => (
-        <div key={order.id} className="space-y-2 p-3 rounded-md bg-secondary">
-          <h4 className="text-xs font-semibold capitalize text-center flex justify-between items-center text-primary">
-            <span>
-              {new Date(order.shippingDate).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)
-                ? "Aujourd'hui"
-                : dateFormatter(new Date(order.shippingDate), { days: true })}
-            </span>
-          </h4>
-          <div>
-            <h4 className="text-xs font-semibold">Produits :</h4>
-            <DisplayItem items={order.productsList} />
+      {userOrders.length > 0 ? (
+        userOrders.map((order) => (
+          <div key={order.id} className="space-y-2 p-3 rounded-md bg-secondary">
+            <h4 className="text-xs font-semibold capitalize text-center flex justify-between items-center text-primary">
+              <span>
+                {new Date(order.shippingDate).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)
+                  ? "Aujourd'hui"
+                  : dateFormatter(new Date(order.shippingDate), { days: true })}
+              </span>
+            </h4>
+            <div>
+              <h4 className="text-xs font-semibold">Produits :</h4>
+              <DisplayItem items={order.productsList} />
+            </div>
+            <div className="flex justify-between items-center">
+              <StatusCell status={order.status} />
+              <Button asChild variant="secondary" className="text-sm border-dashed border">
+                <Link onClick={() => setIsUserModalOpen(false)} href={`/admin/orders/${order.id}`}>
+                  Éditer
+                </Link>
+              </Button>
+            </div>
           </div>
-          <div className="flex justify-between items-center">
-            <StatusCell status={order.status} />
-            <Button asChild variant="secondary" className="text-sm border-dashed border">
-              <Link onClick={() => setIsUserModalOpen(false)} href={`/admin/orders/${order.id}`}>
-                Éditer
-              </Link>
-            </Button>
-          </div>
-        </div>
-      ))}
+        ))
+      ) : (
+        <NoResults text="Aucune commande" />
+      )}
     </div>
   );
 }

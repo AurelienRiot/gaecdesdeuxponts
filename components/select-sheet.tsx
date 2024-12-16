@@ -105,7 +105,7 @@ function SelectSheet<T extends { key: string }>({
               <Input
                 autoFocus
                 id="filter"
-                className="w-full max-w-md border transition-opacity rounded p-2 shadow-md"
+                className="w-full max-w-md border transition-opacity rounded-md p-2 shadow-md"
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
                 placeholder="Filter..."

@@ -146,11 +146,7 @@ function SelectSheetWithTabs<V extends { key: string }>({
               </SheetTitle>
               {!!description && <SheetDescription>{description}</SheetDescription>}
             </SheetHeader>
-            <Tabs
-              value={currentTab}
-              onValueChange={setCurrentTab}
-              className="h-full w-full flex flex-col gap-4 relative"
-            >
+            <Tabs value={currentTab} onValueChange={setCurrentTab} className="h-full w-full  relative">
               <TabsList className="flex w-full gap-2 overflow-x-auto">
                 {visibleTabs.map((tab) => (
                   <TabsTrigger key={tab.value} value={tab.value}>
@@ -171,7 +167,7 @@ function SelectSheetWithTabs<V extends { key: string }>({
                   <Input
                     // ref={inputRef}
                     id="filter"
-                    className="w-full max-w-md border transition-opacity rounded p-2 shadow-md"
+                    className="w-full max-w-md border transition-opacity rounded-md p-2 shadow-md"
                     value={filter}
                     autoFocus
                     onChange={(e) => setFilter(e.target.value)}
@@ -224,7 +220,7 @@ function SelectContent<V extends { key: string }, T extends string>({
   return (
     <>
       <div className="relative">
-        <ScrollArea ref={scrollRef} className="max-h-[50dvh]  overflow-y-auto pt-4  py-10">
+        <ScrollArea ref={scrollRef} className="max-h-[50dvh]  overflow-y-auto  pb-8 pt-14">
           <>
             {tabsValues.map(
               (tabValues) =>

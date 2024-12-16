@@ -12,18 +12,17 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type MouseEvent, useState } from "react";
 import { toast } from "sonner";
-import { useUsersQuery } from "../../../../../hooks/use-query/users-query";
+import { useUsersQuery } from "@/hooks/use-query/users-query";
 import DisplayItem from "./display-item";
-import { useUserModal } from "./user-modal";
+import { useUserModal } from "../../_components/user-modal";
 
 interface DisplayOrderProps {
   order: CalendarOrderType;
   className?: string;
   newOrder?: boolean;
-  otherOrders: CalendarOrderType[];
 }
 
-const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, newOrder, otherOrders }) => {
+const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, newOrder }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const router = useRouter();
 
@@ -32,7 +31,7 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, newOrder,
       <Card className={cn("w-full max-w-sm ", className)}>
         <CardHeader className="flex relative items-center justify-start py-2 px-4  ">
           <div className="grid grid-cols-11  items-center w-full">
-            <SetUserModal order={order} otherOrders={otherOrders} newOrder={newOrder} />
+            <SetUserModal order={order} newOrder={newOrder} />
 
             <StatusCell status={order.status} className="col-span-5 justify-center" />
             <button
@@ -83,14 +82,10 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, newOrder,
   );
 };
 
-function SetUserModal({
-  order,
-  otherOrders,
-  newOrder,
-}: { order: CalendarOrderType; otherOrders: CalendarOrderType[]; newOrder?: boolean }) {
+function SetUserModal({ order, newOrder }: { order: CalendarOrderType; newOrder?: boolean }) {
   const { data: users } = useUsersQuery();
   const user = users?.find((u) => u.id === order.userId);
-  const { setUser, setIsUserModalOpen } = useUserModal();
+  const { setUserId, setIsUserModalOpen } = useUserModal();
   const router = useRouter();
 
   function setUserForModal(e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) {
@@ -99,11 +94,7 @@ function SetUserModal({
       toast.error("Utilisateur introuvable");
       return;
     }
-    setUser({
-      ...user,
-      orders: otherOrders.sort((a, b) => b.shippingDate.getTime() - a.shippingDate.getTime()),
-      date: order.shippingDate,
-    });
+    setUserId(user.id);
     setIsUserModalOpen(true);
     router.prefetch(`/admin/users/${order.userId}`);
   }
