@@ -1,6 +1,6 @@
 "use client";
 
-import SelectSheet from "@/components/select-sheet";
+import SelectSheet, { createDateValues } from "@/components/select-sheet";
 import { dateFormatter } from "@/lib/date-utils";
 import { constructQueryString } from "@/lib/search-params";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -12,16 +12,13 @@ function SelectShippingDay({
 }: { shippingDays: Date[]; selectedShippingDay: Date; nextDay: Date }) {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const values = createDateValues(shippingDays, nextDay);
   return (
     <>
       <SelectSheet
         title="Selectionner la date"
         trigger={dateFormatter(selectedShippingDay, { days: true })}
-        values={shippingDays.map((day) => ({
-          label: dateFormatter(day, { days: true }),
-          value: { key: day.toISOString() },
-          highlight: day.toISOString() === nextDay.toISOString(),
-        }))}
+        values={values}
         selectedValue={selectedShippingDay.toISOString()}
         onSelected={(value) => {
           if (!value) {

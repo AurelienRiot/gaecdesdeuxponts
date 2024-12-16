@@ -16,6 +16,7 @@ import { useFormContext } from "react-hook-form";
 import "../../../(public)/ou-nous-trouver/_components/marker.css";
 import type { UserAndShop } from "./direction-form";
 import type { DirectionFormValues, Point } from "./direction-schema";
+import { sanitizeString } from "@/lib/id";
 const MapModal = dynamicImport(() => import("./map-modal"), {
   ssr: false,
 });
@@ -117,6 +118,7 @@ function AddressSelect({
       values={usersAndShops.map((item) => ({
         label: <NameWithImage name={item.name} image={item.image} />,
         value: { key: item.address, longitude: item.longitude, latitude: item.latitude },
+        search: sanitizeString(item.name),
       }))}
       onSelected={(value) => {
         if (!value) return;

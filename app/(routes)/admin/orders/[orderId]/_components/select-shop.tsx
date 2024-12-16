@@ -1,4 +1,4 @@
-import SelectSheet from "@/components/select-sheet";
+import SelectSheet, { createShopValues } from "@/components/select-sheet";
 import { NameWithImage } from "@/components/user";
 import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -6,6 +6,7 @@ import type { Shop } from "@prisma/client";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-schema";
+import { useMemo } from "react";
 
 const SelectShop = ({ shops }: { shops: Shop[] }) => {
   const form = useFormContext<OrderFormValues>();
@@ -24,7 +25,7 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
     }
     form.setValue("shopId", value);
   }
-
+  const values = useMemo(() => createShopValues(shops), [shops]);
   return (
     <FormField
       control={form.control}
@@ -48,13 +49,11 @@ const SelectShop = ({ shops }: { shops: Shop[] }) => {
             }
             selectedValue={shopId}
             defaultValue={"À domicile"}
-            values={shops.map((shop) => ({
-              label: <NameWithImage name={shop.name} image={shop.imageUrl} />,
-              value: { key: shop.id },
-            }))}
+            values={values}
             onSelected={(value) => {
               onValueChange(value?.key);
             }}
+            isSearchable
           />
 
           <FormMessage />

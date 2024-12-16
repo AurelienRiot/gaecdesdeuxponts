@@ -90,6 +90,7 @@ function UserSelect() {
           router.push(`/admin/users/${selected.key}`);
         }
       }}
+      isSearchable
     />
   );
 }

@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import type { AMAPFormValues } from "./amap-schema";
 import SelectSheetWithTabs from "@/components/select-sheet-with-tabs";
 import { DisplayProductIcon } from "@/components/product";
+import { sanitizeString } from "@/lib/id";
 
 const negativeQuantityStyle = "bg-destructive text-destructive-foreground";
 
@@ -245,6 +246,7 @@ const SelectProductName = ({
                   </div>
                 ),
                 value: { key: product.id },
+                search: sanitizeString(product.name),
               }))}
               onSelected={(value) => {
                 if (!value) return;

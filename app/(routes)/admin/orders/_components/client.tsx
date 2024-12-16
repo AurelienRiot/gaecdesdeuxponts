@@ -87,10 +87,10 @@ export const OrderClient: React.FC<OrderClientProps> = ({ initialData, initialDa
 };
 
 const selectDate = [
-  { value: { key: "today" }, label: "Aujourd'hui" },
-  { value: { key: "tomorrow" }, label: "Demain" },
-  { value: { key: "tuesday" }, label: "Mardi prochain" },
-  { value: { key: "friday" }, label: "Vendredi prochain" },
+  { value: { key: "today" }, label: "Aujourd'hui", search: "aujourd'hui" },
+  { value: { key: "tomorrow" }, label: "Demain", search: "demain" },
+  { value: { key: "tuesday" }, label: "Mardi prochain", search: "mardi prochain" },
+  { value: { key: "friday" }, label: "Vendredi prochain", search: "vendredi prochain" },
 ];
 
 function SelectDate() {

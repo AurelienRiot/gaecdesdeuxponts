@@ -1,11 +1,26 @@
 "use client";
+import { sanitizeString } from "@/lib/id";
 import { cn } from "@/lib/utils";
 import * as React from "react";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { dateFormatter } from "@/lib/date-utils";
+import { NameWithImage } from "./user";
+import { getUserName } from "./table-custom-fuction";
 
-export type ValueType<T extends { key: string }> = { label: React.ReactNode; value: T; highlight?: boolean };
+export type ValueType<T extends { key: string }> = {
+  label: React.ReactNode;
+  value: T;
+  search: string;
+  highlight?: boolean;
+};
+
+function filterValues<T extends { key: string }>(values: ValueType<T>[], filter: string) {
+  return values.filter((v) => v.search.includes(sanitizeString(filter)));
+}
 
 function SelectSheet<T extends { key: string }>({
   values,
@@ -17,6 +32,7 @@ function SelectSheet<T extends { key: string }>({
   description,
   className,
   triggerClassName,
+  isSearchable,
 }: {
   trigger: React.ReactNode | string;
   onSelected: (selected?: T) => void;
@@ -27,11 +43,24 @@ function SelectSheet<T extends { key: string }>({
   description?: string;
   className?: string;
   triggerClassName?: string;
+  isSearchable?: boolean;
 }) {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [filter, setFilter] = React.useState("");
+  // const inputRef = React.useRef<HTMLInputElement>(null);
+  const isMobile = useIsMobile();
+
+  const filteredValues = isSearchable ? filterValues(values, filter) : values;
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setIsOpen(newOpen);
+    if (!newOpen) {
+      setFilter("");
+    }
+  };
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+    <Sheet open={isOpen} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>
         {typeof trigger === "string" ? (
           <Button className={triggerClassName} variant="outline">
@@ -41,8 +70,8 @@ function SelectSheet<T extends { key: string }>({
           trigger
         )}
       </SheetTrigger>
-      <SheetContent side={"bottom"} className="pb-6">
-        <div className={cn("mx-auto w-full max-w-sm ", className)}>
+      <SheetContent side={isMobile && isSearchable ? "top" : "bottom"} className="pb-6">
+        <div className={cn("mx-auto w-full max-w-sm relative", className)}>
           <SheetHeader>
             <SheetTitle className="flex items-center justify-between  ">
               <span>{title}</span>
@@ -51,7 +80,7 @@ function SelectSheet<T extends { key: string }>({
                   variant={"outline"}
                   onClick={() => {
                     onSelected(undefined);
-                    setIsOpen(false);
+                    handleOpenChange(false);
                   }}
                   type="button"
                   size={"xs"}
@@ -64,13 +93,25 @@ function SelectSheet<T extends { key: string }>({
             {!!description && <SheetDescription>{description}</SheetDescription>}
           </SheetHeader>
           <SelectSheetContent
-            values={values}
+            values={filteredValues}
             onSelected={(selected) => {
               onSelected(selected);
-              setIsOpen(false);
+              handleOpenChange(false);
             }}
             selectedValue={selectedValue}
           />
+          {isSearchable && (
+            <div className="absolute right-0 top-10 w-full mx-auto flex justify-center px-8">
+              <Input
+                autoFocus
+                id="filter"
+                className="w-full max-w-md border transition-opacity rounded p-2 shadow-md"
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                placeholder="Filter..."
+              />
+            </div>
+          )}
         </div>
       </SheetContent>
     </Sheet>
@@ -103,7 +144,7 @@ function SelectSheetContent<T extends { key: string }>({
 
   return (
     <div className="relative">
-      <ScrollArea ref={scrollRef} className="max-h-[50dvh] overflow-y-auto relative py-8">
+      <ScrollArea ref={scrollRef} className="max-h-[50dvh] overflow-y-auto relative pb-8 pt-14">
         <div className=" flex flex-col gap-2 items-center justify-center">
           {values.map((value, index) => (
             <Button
@@ -130,3 +171,30 @@ function SelectSheetContent<T extends { key: string }>({
 }
 
 export default SelectSheet;
+
+export function createDateValues(dates: Date[], highlightDate?: Date) {
+  return dates.map((day) => ({
+    label: dateFormatter(day, { days: true }),
+    value: { key: day.toISOString() },
+    highlight: day.toISOString() === highlightDate?.toISOString(),
+    search: sanitizeString(dateFormatter(day, { days: true })),
+  }));
+}
+
+export function createUserValues(
+  users: { name?: string | null; company?: string | null; email?: string | null; id: string }[],
+) {
+  return users.map((user) => ({
+    label: <NameWithImage name={getUserName(user)} displayImage={false} />,
+    value: { key: user.id },
+    search: sanitizeString(user.company + " " + user.name),
+  }));
+}
+
+export function createShopValues(shops: { name: string; id: string; imageUrl?: string | null }[]) {
+  return shops.map((shop) => ({
+    label: <NameWithImage name={shop.name} image={shop.imageUrl} />,
+    value: { key: shop.id },
+    search: sanitizeString(shop.name),
+  }));
+}

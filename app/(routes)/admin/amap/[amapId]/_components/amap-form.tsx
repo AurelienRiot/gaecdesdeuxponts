@@ -28,9 +28,7 @@ import SelectShop from "./select-shop";
 import SelectUser from "./select-user";
 import TotalPaid from "./total-paid";
 import TotalPrice from "./total-price";
-
-const START = new Date(1725314400000);
-const END = new Date(1734390000000);
+import { AMAPEndDate, AMAPStartDate } from "@/components/pdf/pdf-data";
 
 function initialDay(shippingDays?: Date[]) {
   if (!shippingDays) return 2;
@@ -75,10 +73,10 @@ export const AMAPForm: React.FC<AMAPFormProps> = ({ initialData, users, shops, p
       id: initialData?.id || createId("amap"),
       dateOfEdition: new Date(),
       daysOfAbsence: initialData?.daysOfAbsence || [],
-      shippingDays: initialData?.shippingDays || getDaysBetweenDates({ from: START, to: END, day: 2 }),
+      shippingDays: initialData?.shippingDays || getDaysBetweenDates({ from: AMAPStartDate, to: AMAPEndDate, day: 2 }),
       day: initialDay(initialData?.shippingDays),
-      startDate: initialData?.startDate || START,
-      endDate: initialData?.endDate || END,
+      startDate: initialData?.startDate || AMAPStartDate,
+      endDate: initialData?.endDate || AMAPEndDate,
       totalPrice: initialData?.totalPrice || 0,
       totalPaid: initialData?.totalPaid || 0,
       amapItems: initialData?.amapItems || initialProduct(products),

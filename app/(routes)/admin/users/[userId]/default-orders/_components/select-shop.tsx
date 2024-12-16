@@ -1,11 +1,12 @@
 import type { AllShopsType } from "@/app/(routes)/admin/direction/_functions/get-shops";
-import SelectSheet from "@/components/select-sheet";
+import SelectSheet, { createShopValues } from "@/components/select-sheet";
 import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { NameWithImage } from "@/components/user";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { DefaultOrderFormValues } from "./schema";
+import { useMemo } from "react";
 
 const SelectShop = ({ shops }: { shops: AllShopsType }) => {
   const form = useFormContext<DefaultOrderFormValues>();
@@ -24,7 +25,7 @@ const SelectShop = ({ shops }: { shops: AllShopsType }) => {
     }
     form.setValue("shopId", value);
   }
-
+  const values = useMemo(() => createShopValues(shops), [shops]);
   return (
     <FormField
       control={form.control}
@@ -45,13 +46,11 @@ const SelectShop = ({ shops }: { shops: AllShopsType }) => {
             }
             selectedValue={shopId}
             defaultValue={"À domicile"}
-            values={shops.map((shop) => ({
-              label: <NameWithImage name={shop.name} image={shop.image} />,
-              value: { key: shop.id },
-            }))}
+            values={values}
             onSelected={(value) => {
               onValueChange(value?.key);
             }}
+            isSearchable
           />
 
           <FormMessage />

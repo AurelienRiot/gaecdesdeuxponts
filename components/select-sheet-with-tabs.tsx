@@ -16,6 +16,7 @@ import { ScrollArea } from "./ui/scroll-area";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { NameWithImage } from "./user";
+import { toast } from "sonner";
 
 type ValueType<V extends { key: string }> = { label: React.ReactNode; search: string; value: V; highlight?: boolean };
 type TabsType = { label: string; value: string }[];
@@ -37,6 +38,7 @@ function SelectSheetWithTabs<V extends { key: string }>({
   defaultValue,
   open: openProp,
   onOpenChange: onOpenChangeProp,
+  isSearchable,
 }: {
   trigger?: React.ReactNode | string;
   onSelected: (selected?: V) => void;
@@ -50,16 +52,19 @@ function SelectSheetWithTabs<V extends { key: string }>({
   triggerClassName?: string;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  isSearchable?: boolean;
 }) {
   const [contentHeight, setContentHeight] = React.useState("auto");
   const [filter, setFilter] = React.useState("");
   const isMobile = useIsMobile();
-  const filteredTabsValues = tabsValues.map((tabValue) => ({
-    values: filterValues(tabValue.values, filter),
-    tab: tabValue.tab,
-  }));
+  const filteredTabsValues = isSearchable
+    ? tabsValues.map((tabValue) => ({
+        values: filterValues(tabValue.values, filter),
+        tab: tabValue.tab,
+      }))
+    : tabsValues;
+  // const inputRef = React.useRef<HTMLInputElement>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
-  const inputRef = React.useRef<HTMLInputElement>(null);
   const [currentTab, setCurrentTab] = React.useState<string | undefined>(
     tabsValues.find((value) => value.values.find((v) => v.value.key === selectedValue))?.tab,
   );
@@ -74,16 +79,18 @@ function SelectSheetWithTabs<V extends { key: string }>({
   const open = openProp ?? _open;
 
   const handleOpenChange = (newOpen: boolean) => {
-    inputRef?.current?.blur();
     if (onOpenChangeProp) {
       onOpenChangeProp(newOpen); // Call the external handler if provided
     } else {
       _setOpen(newOpen); // Otherwise, update the internal state
     }
-    if (!newOpen) {
+  };
+
+  React.useEffect(() => {
+    if (!open) {
       setFilter("");
     }
-  };
+  }, [open]);
 
   React.useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -113,7 +120,7 @@ function SelectSheetWithTabs<V extends { key: string }>({
         )}
       </SheetTrigger>
       <SheetContent
-        side={isMobile ? "top" : "bottom"}
+        side={isMobile && isSearchable ? "top" : "bottom"}
         className="pb-6  transition-all overflow-hidden will-change-auto "
         style={{ height: contentHeight }}
       >
@@ -159,16 +166,19 @@ function SelectSheetWithTabs<V extends { key: string }>({
                 currentTab={currentTab}
                 selectedValue={selectedValue}
               />
-              <div className="absolute right-0 top-11 w-full mx-auto flex justify-center px-8">
-                <Input
-                  id="filter"
-                  className="w-full max-w-md border transition-opacity rounded p-2 shadow-md"
-                  value={filter}
-                  ref={inputRef}
-                  onChange={(e) => setFilter(e.target.value)}
-                  placeholder="Filter..."
-                />
-              </div>
+              {isSearchable && (
+                <div className="absolute right-0 top-11 w-full mx-auto flex justify-center px-8">
+                  <Input
+                    // ref={inputRef}
+                    id="filter"
+                    className="w-full max-w-md border transition-opacity rounded p-2 shadow-md"
+                    value={filter}
+                    autoFocus
+                    onChange={(e) => setFilter(e.target.value)}
+                    placeholder="Filter..."
+                  />
+                </div>
+              )}
             </Tabs>
           </div>
         </>

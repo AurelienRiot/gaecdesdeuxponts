@@ -84,6 +84,7 @@ function SelectUser({
           onUserSelected(selected.key);
         }
       }}
+      isSearchable
     />
   );
 }

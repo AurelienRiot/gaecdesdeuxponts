@@ -1,13 +1,15 @@
-import SelectSheet from "@/components/select-sheet";
+import SelectSheet, { createUserValues } from "@/components/select-sheet";
 import { getUserName } from "@/components/table-custom-fuction";
-import { NameWithImage } from "@/components/user";
 import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { NameWithImage } from "@/components/user";
+import { sanitizeString } from "@/lib/id";
 import type { User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { AMAPFormValues } from "./amap-schema";
+import { useMemo } from "react";
 
 const SelectUser = ({ users }: { users: User[] }) => {
   const form = useFormContext<AMAPFormValues>();
@@ -33,6 +35,8 @@ const SelectUser = ({ users }: { users: User[] }) => {
     form.setValue("userId", value);
   }
 
+  const values = useMemo(() => createUserValues(users), [users]);
+
   return (
     <FormField
       control={form.control}
@@ -53,10 +57,7 @@ const SelectUser = ({ users }: { users: User[] }) => {
               )
             }
             selectedValue={userId}
-            values={users.map((user) => ({
-              label: <NameWithImage name={getUserName(user)} displayImage={false} />,
-              value: { key: user.id },
-            }))}
+            values={values}
             onSelected={(value) => {
               if (!value) return;
               onValueChange(value.key);

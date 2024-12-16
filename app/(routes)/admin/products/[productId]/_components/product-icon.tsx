@@ -6,10 +6,12 @@ import { useFormContext } from "react-hook-form";
 import SelectSheet from "@/components/select-sheet";
 import { Button } from "@/components/ui/button";
 import { productIcons } from "@/components/product";
+import { sanitizeString } from "@/lib/id";
 
 const values = productIcons.map(({ Icon, label, color }) => ({
   value: { key: label },
   label: <Icon className={`size-5 ${color}`} />,
+  search: sanitizeString(label),
 }));
 
 function ProductIcon() {

@@ -28,6 +28,7 @@ function UserModal({
           onValueChange(selected.key);
         }
       }}
+      isSearchable
     />
   );
 }

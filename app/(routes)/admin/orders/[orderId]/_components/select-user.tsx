@@ -46,6 +46,7 @@ const SelectUser = ({ users }: { users: UserForOrderType[] }) => {
                 field.onChange(selected.key);
               }
             }}
+            isSearchable
           />
 
           <FormMessage />

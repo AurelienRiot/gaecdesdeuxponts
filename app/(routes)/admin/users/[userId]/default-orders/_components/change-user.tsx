@@ -37,6 +37,7 @@ function ChangeUser({ userId }: { userId: string }) {
           router.push(`/admin/users/${selected.key}/default-orders`);
         }
       }}
+      isSearchable
     />
   );
 }

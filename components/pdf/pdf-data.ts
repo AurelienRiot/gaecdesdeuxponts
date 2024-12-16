@@ -162,7 +162,6 @@ export const createMonthlyInvoicePDFData = (invoice: FullInvoice): MonthlyPDFDat
     orders: invoice.orders.map(createInvoiceDataOrder),
   };
 };
-
 export const pdfData: PDFData = {
   customer: {
     name: "Pub Demystify",
@@ -378,6 +377,8 @@ export type AMAPType = {
   };
 };
 
+export const AMAPStartDate = new Date("2025-01-01");
+export const AMAPEndDate = new Date("2025-06-30");
 export const AMAPData: AMAPType = {
   customer: {
     name: "Nom :",
@@ -393,9 +394,9 @@ export const AMAPData: AMAPType = {
     dateOfEdition: new Date(),
     totalPrice: 60,
     dayOfAbsence: [],
-    shippingDay: getDaysBetweenDates({ from: new Date(1725314400000), to: new Date(1735599600000), day: 2 }) as Date[],
-    startDate: new Date(1725314400000),
-    endDate: new Date(1735599600000),
+    shippingDay: getDaysBetweenDates({ from: AMAPStartDate, to: AMAPEndDate, day: 2 }) as Date[],
+    startDate: AMAPStartDate,
+    endDate: AMAPEndDate,
     items: [
       {
         id: "PR_7HDJDXU",
