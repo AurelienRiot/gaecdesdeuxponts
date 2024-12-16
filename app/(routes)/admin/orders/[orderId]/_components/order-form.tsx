@@ -86,32 +86,35 @@ export const OrderForm: React.FC<OrderFormProps> = ({ initialData, products, use
         : initialData?.dateOfShipping
           ? new Date(initialData.dateOfShipping)
           : new Date(new Date().setHours(10, 0, 0, 0)),
-      orderItems: initialData?.orderItems.map((product) => ({
-        id: product.id,
-        itemId: product.itemId,
-        unit: product.unit,
-        stocks: product.stocks,
-        price: product.price,
-        tax: product.tax,
-        quantity: product.quantity,
-        name: product.name,
-        icon: product.icon,
-        categoryName: product.categoryName,
-        description: product.description,
-      })) || [
-        {
-          id: createId("orderItem"),
-          itemId: "",
-          unit: "",
-          price: undefined,
-          icon: null,
-          tax: 1.055,
-          quantity: 1,
-          name: "",
-          categoryName: "",
-          description: "",
-        },
-      ],
+      orderItems:
+        initialData?.orderItems && initialData.orderItems.length > 0
+          ? initialData.orderItems.map((product) => ({
+              id: product.id,
+              itemId: product.itemId,
+              unit: product.unit,
+              stocks: product.stocks,
+              price: product.price,
+              tax: product.tax,
+              quantity: product.quantity,
+              name: product.name,
+              icon: product.icon,
+              categoryName: product.categoryName,
+              description: product.description,
+            }))
+          : [
+              {
+                id: createId("orderItem"),
+                itemId: "",
+                unit: "",
+                price: undefined,
+                icon: null,
+                tax: 1.055,
+                quantity: 1,
+                name: "",
+                categoryName: "",
+                description: "",
+              },
+            ],
     },
   });
 

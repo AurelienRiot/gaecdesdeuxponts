@@ -44,8 +44,13 @@ export const DisplayShopStatus = ({ shopHours, currentDay }: { shopHours: ShopHo
 };
 
 export function DisplayHoursContent({ shopHours, currentDay }: { shopHours: ShopHours[]; currentDay: number }) {
-  const sortedHours = [...shopHours].sort((a, b) => (a.day === currentDay ? -1 : b.day === currentDay ? 1 : 0));
-
+  let sortedHours = [...shopHours];
+  const firstItem = sortedHours.shift();
+  if (firstItem) {
+    sortedHours = sortedHours
+      .concat(firstItem)
+      .sort((a, b) => (a.day === currentDay ? -1 : b.day === currentDay ? 1 : 0));
+  }
   return (
     <div className="space-y-4">
       <DisplayShopStatus shopHours={shopHours} currentDay={currentDay} />

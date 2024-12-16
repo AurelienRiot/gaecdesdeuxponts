@@ -1,6 +1,5 @@
 "use client";
 
-import CheckboxForm from "@/components/chekbox-form";
 import { Icons } from "@/components/icons";
 import { Button, IconButton } from "@/components/ui/button";
 import { FormControl, FormField, FormItem } from "@/components/ui/form";
@@ -8,6 +7,7 @@ import { baseInputClassName } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Modal } from "@/components/ui/modal";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Toggle } from "@/components/ui/toggle";
 import { WheelPicker, type WheelPickerItem } from "@/components/ui/wheel-picker";
 import { DAYS_OF_WEEK, formatHours } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
@@ -17,7 +17,6 @@ import { useFormContext } from "react-hook-form";
 import type { z } from "zod";
 import { defaultHours } from "./shop-form";
 import type { shopHoursSchema } from "./shop-schema";
-import { Toggle } from "@/components/ui/toggle";
 
 type ShopHoursFormProps = { shopHours: z.infer<typeof shopHoursSchema>[] };
 
