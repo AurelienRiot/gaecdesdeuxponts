@@ -46,11 +46,12 @@ function NewOrderButton() {
     <>
       <DateModal
         onValueChange={onDayClick}
-        triggerClassName="p-2 h-fit border bg-green-500 transition-colors hover:bg-green-400 rounded-full cursor-pointer flex gap-2 w-fit"
+        triggerClassName="p-2 h-fit border bg-green-500 transition-colors hover:bg-green-400 rounded-md cursor-pointer flex gap-2 w-fit text-green-100"
         trigger={
           <>
-            <Plus className="size-4 text-green-100 stroke-[3]" />
-            <Package className="size-4 text-green-100 stroke-[3]" />
+            <Plus className="size-4  stroke-[3]" />
+            <Package className="size-4  stroke-[3]" />
+            <span className="font-semibold text-lg">Créer une commande</span>
           </>
         }
       />

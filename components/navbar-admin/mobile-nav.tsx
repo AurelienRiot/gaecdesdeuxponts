@@ -78,7 +78,7 @@ function UserSelect() {
 
   function onSelected(id?: string) {
     if (!id) {
-      router.push(`/admin/users`);
+      router.push(`/admin/users/new`);
     } else {
       setUserId(id);
       setIsUserModalOpen(true);
@@ -94,7 +94,7 @@ function UserSelect() {
         </button>
       }
       tabs={tabs}
-      defaultValue={"Tous"}
+      defaultValue={"Créer un client"}
       tabsValues={tabsValue}
       onSelected={(selected) => {
         onSelected(selected?.key);

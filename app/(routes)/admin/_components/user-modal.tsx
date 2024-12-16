@@ -37,7 +37,14 @@ export const UserModalProvider: React.FC<{
   return (
     <UserModalContext.Provider value={{ userId, setUserId, isUserModalOpen, setIsUserModalOpen }}>
       {children}
-      <UserModal />
+      <Modal
+        title="Information du client"
+        className="p-4"
+        isOpen={isUserModalOpen}
+        onClose={() => setIsUserModalOpen(false)}
+      >
+        <UserModal />
+      </Modal>
     </UserModalContext.Provider>
   );
 };
@@ -55,7 +62,7 @@ export function useUserModal() {
 function UserModal() {
   const { data: users } = useUsersQuery();
   const { data: orders } = useOrdersQuery();
-  const { userId, isUserModalOpen, setIsUserModalOpen } = useUserModal();
+  const { userId, setIsUserModalOpen } = useUserModal();
 
   if (!userId) {
     <>
@@ -84,26 +91,19 @@ function UserModal() {
         .sort((a, b) => b.shippingDate.getTime() - a.shippingDate.getTime())
     : [];
   return (
-    <Modal
-      title="Information du client"
-      className="p-4"
-      isOpen={isUserModalOpen}
-      onClose={() => setIsUserModalOpen(false)}
-    >
-      <>
-        <UserInfo user={user} userOrders={userOrders} />
-        <div className="flex justify-between gap-4">
-          <Button variant={"outline"} className="w-full" onClick={() => setIsUserModalOpen(false)}>
-            Fermer
-          </Button>
-          <Button variant={"green"} asChild className="w-full">
-            <Link onClick={() => setIsUserModalOpen(false)} href={`/admin/users/${user.id}`}>
-              Consulter
-            </Link>
-          </Button>
-        </div>
-      </>
-    </Modal>
+    <>
+      <UserInfo user={user} userOrders={userOrders} />
+      <div className="flex justify-between gap-4">
+        <Button variant={"outline"} className="w-full" onClick={() => setIsUserModalOpen(false)}>
+          Fermer
+        </Button>
+        <Button variant={"green"} asChild className="w-full">
+          <Link onClick={() => setIsUserModalOpen(false)} href={`/admin/users/${user.id}`}>
+            Consulter
+          </Link>
+        </Button>
+      </div>
+    </>
   );
 }
 
