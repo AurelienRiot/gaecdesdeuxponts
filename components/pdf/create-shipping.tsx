@@ -27,7 +27,7 @@ const ShippingOrder = ({ pdfData }: { pdfData: PDFData }) => {
 export default ShippingOrder;
 
 const ShippingItemsTable = ({ pdfData }: { pdfData: PDFData }) => {
-  const items = pdfData.order.items.sort((a, b) => a.desc.localeCompare(b.desc));
+  const items = pdfData.order.items;
 
   return (
     <View style={ShippingTableStyles.tableContainer}>

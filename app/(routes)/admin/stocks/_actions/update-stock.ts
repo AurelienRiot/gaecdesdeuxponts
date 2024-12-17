@@ -24,7 +24,7 @@ export default async function updateStock(formdata: FormData) {
         },
       });
       // console.log(stock);
-      revalidateTag("stocks");
+      revalidateTag("stocks-count");
       return { success: true, message: "Stock mis à jour" };
     },
   });

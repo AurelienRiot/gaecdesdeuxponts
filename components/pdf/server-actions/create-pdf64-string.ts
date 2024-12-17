@@ -12,7 +12,8 @@ export async function createInvoicePDF64String(invoiceId: string) {
       customer: true,
       user: { include: { notifications: true } },
       orders: {
-        include: { invoiceOrderItems: true },
+        include: { invoiceOrderItems: { orderBy: [{ name: "asc" }, { quantity: "desc" }] } },
+        orderBy: { dateOfShipping: "asc" },
       },
     },
   });
@@ -46,7 +47,7 @@ export async function createShippingPDF64String(orderId: string) {
       deletedAt: null,
     },
     include: {
-      orderItems: true,
+      orderItems: { orderBy: [{ name: "asc" }, { quantity: "desc" }] },
       shop: true,
       // user: { include: { address: true, billingAddress: true } },
       customer: true,

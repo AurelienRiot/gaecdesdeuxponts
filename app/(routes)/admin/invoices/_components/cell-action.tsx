@@ -1,6 +1,5 @@
 "use client";
 
-import DeleteButton from "@/components/animations/icons/delete";
 import Spinner from "@/components/animations/spinner";
 import { onSaveSuccess, onViewSuccess } from "@/components/pdf/button/display-invoice";
 import { sendInvoiceAction } from "@/components/pdf/server-actions/create-send-invoice-action";
@@ -46,22 +45,22 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
   const confirm = useConfirm();
 
-  const onDelete = async () => {
-    const result = await confirm({
-      title: "Confirmation de la suppression de la facture",
-      description: "Etes-vous sur de vouloir supprimer cette facture ?",
-    });
-    if (!result) {
-      return;
-    }
+  // const onDelete = async () => {
+  //   const result = await confirm({
+  //     title: "Confirmation de la suppression de la facture",
+  //     description: "Etes-vous sur de vouloir supprimer cette facture ?",
+  //   });
+  //   if (!result) {
+  //     return;
+  //   }
 
-    await serverAction({
-      data: { id: data.id },
-      onSuccess: () => {
-        router.refresh();
-      },
-    });
-  };
+  //   await serverAction({
+  //     data: { id: data.id },
+  //     onSuccess: () => {
+  //       router.refresh();
+  //     },
+  //   });
+  // };
 
   async function onSendReminder() {
     const result = await confirm({
@@ -151,20 +150,20 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             </>
           ) : (
             <>
-              <DropdownMenuItem disabled={loading || validateLoading} onClick={onSaveFile}>
-                <Download className="mr-2 h-4 w-4" />
-                Télécharger la facture
-              </DropdownMenuItem>
-              <DropdownMenuItem disabled={loading || validateLoading} onClick={onViewFile}>
-                <FileSearch className="mr-2 h-4 w-4" />
-                Afficher la facture
-              </DropdownMenuItem>
               <DropdownMenuItem disabled={loading || validateLoading} onClick={changePaymentMethod}>
                 <Repeat className="mr-2 h-4 w-4" />
                 Changer la méthode de paiement
               </DropdownMenuItem>
             </>
           )}
+          <DropdownMenuItem disabled={loading || validateLoading} onClick={onSaveFile}>
+            <Download className="mr-2 h-4 w-4" />
+            Télécharger la facture
+          </DropdownMenuItem>
+          <DropdownMenuItem disabled={loading || validateLoading} onClick={onViewFile}>
+            <FileSearch className="mr-2 h-4 w-4" />
+            Afficher la facture
+          </DropdownMenuItem>
           <DropdownMenuItem disabled={loading || validateLoading} onClick={onPaid}>
             <BadgeEuro className="mr-2 h-4 w-4" />
             {data.status === "Payé" ? "Annuler le paiement" : "Valider le paiement"}

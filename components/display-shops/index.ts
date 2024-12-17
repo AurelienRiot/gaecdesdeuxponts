@@ -15,6 +15,8 @@ import {
   MdOutlineStorefront,
   PiBasket,
   PiFarm,
+  LuCandyCane,
+  Pancake,
 } from "../react-icons";
 
 export const typeTextRecord: Record<ShopType, string> = {
@@ -32,8 +34,10 @@ export const tagOptions: Option[] = [
   { label: "Café", value: "cafe", Icon: LuCoffee },
   { label: "Boulangerie", value: "boulangerie", Icon: GiBread },
   { label: "Pâtisserie", value: "patisserie", Icon: GiCupcake },
+  { label: "Confiserie", value: "confectionery", Icon: LuCandyCane },
   { label: "AMAP", value: "amap", Icon: PiBasket },
   { label: "Restaurant", value: "restaurant", Icon: IoRestaurantSharp },
+  { label: "Crêperie", value: "creperie", Icon: Pancake },
   { label: "Traiteur", value: "caterer", Icon: FaConciergeBell },
   { label: "Boucherie Charcuterie", value: "butcher", Icon: GiPig },
   { label: "Marché", value: "market", Icon: FaCarrot },

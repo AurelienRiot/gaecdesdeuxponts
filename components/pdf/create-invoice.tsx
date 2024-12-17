@@ -15,7 +15,6 @@ const Invoice = ({
   isPaid: boolean;
   dataInvoice: InvoicePDFDate;
 }) => {
-  const items = dataInvoice.order.items.sort((a, b) => a.desc.localeCompare(b.desc));
   return (
     <MainDocument
       customer={dataInvoice.customer}
@@ -24,7 +23,7 @@ const Invoice = ({
       invoice
     >
       <Fragment>
-        <InvoiceItemsTable items={items} />
+        <InvoiceItemsTable items={dataInvoice.order.items} />
         {isPaid && <PaidWatermark />}
       </Fragment>
     </MainDocument>

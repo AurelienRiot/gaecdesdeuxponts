@@ -22,5 +22,5 @@ export async function updateStocks(orderItems: { quantity: number; stocks: strin
   }
 
   await Promise.all(updatePromises);
-  revalidateTag("stocks");
+  revalidateTag("stocks-count");
 }

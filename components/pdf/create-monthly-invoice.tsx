@@ -16,10 +16,6 @@ const MonthlyInvoice = ({
   isPaid: boolean;
   data: MonthlyPDFDataType;
 }) => {
-  data.orders.sort((a, b) => a.dateOfShipping.getTime() - b.dateOfShipping.getTime());
-  for (const order of data.orders) {
-    order.items.sort((a, b) => a.desc.localeCompare(b.desc));
-  }
   return (
     <MainDocument
       customer={data.customer}
