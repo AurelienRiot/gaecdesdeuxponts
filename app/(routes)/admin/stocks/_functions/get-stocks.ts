@@ -8,5 +8,5 @@ export const getStocks = unstable_cache(
     return await prismadb.stock.findMany({ orderBy: [{ index: "asc" }, { name: "asc" }] });
   },
   ["getStocks"],
-  { revalidate: 60 * 60 * 24, tags: ["stocks", "stocks-count"] },
+  { revalidate: 60 * 60 * 24, tags: ["stocks", "stocks-name"] },
 );
