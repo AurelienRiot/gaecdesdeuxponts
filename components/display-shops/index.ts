@@ -17,6 +17,7 @@ import {
   PiFarm,
   LuCandyCane,
   Pancake,
+  FaHotel,
 } from "../react-icons";
 
 export const typeTextRecord: Record<ShopType, string> = {
@@ -42,5 +43,6 @@ export const tagOptions: Option[] = [
   { label: "Boucherie Charcuterie", value: "butcher", Icon: GiPig },
   { label: "Marché", value: "market", Icon: FaCarrot },
   { label: "Distributeur", value: "distributeur", Icon: GiVendingMachine },
+  { label: "Hôtel", value: "hotel", Icon: FaHotel },
   { label: "PMU", value: "pmu", Icon: GiHorseHead },
 ];

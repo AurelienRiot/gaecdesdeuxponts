@@ -96,7 +96,7 @@ function SetUserModal({ order, newOrder }: { order: CalendarOrderType; newOrder?
     }
     setUserId(user.id);
     setIsUserModalOpen(true);
-    router.prefetch(`/admin/users/${order.userId}`);
+    router.prefetch(`/admin/users/${user.id}`);
   }
   if (!user) {
     return <Skeleton className="col-span-5 " size={"xs"} />;

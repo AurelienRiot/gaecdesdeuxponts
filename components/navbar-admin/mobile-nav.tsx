@@ -1,5 +1,6 @@
 "use client";
 
+import { useUserModal } from "@/app/(routes)/admin/_components/user-modal";
 import { useUsersQuery } from "@/hooks/use-query/users-query";
 import { cn } from "@/lib/utils";
 import {
@@ -23,9 +24,6 @@ import { useMemo } from "react";
 import { GiPathDistance, PiInvoice } from "../react-icons";
 import SelectSheetWithTabs, { getUserTab } from "../select-sheet-with-tabs";
 import { useSidebar } from "../ui/sidebar";
-import { useUserModal } from "@/app/(routes)/admin/_components/user-modal";
-import { toast } from "sonner";
-import { useOrdersQuery } from "@/hooks/use-query/orders-query";
 
 // {
 //   href: `/admin/users`,
@@ -82,6 +80,7 @@ function UserSelect() {
     } else {
       setUserId(id);
       setIsUserModalOpen(true);
+      router.prefetch(`/admin/users/${id}`);
     }
   }
   return (

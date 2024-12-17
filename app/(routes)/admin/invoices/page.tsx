@@ -1,12 +1,13 @@
+import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import { Suspense } from "react";
-import InvoiceTable from "./_components/table";
-import getInvoices from "./_functions/get-invoices";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { InvoiceModalProvider } from "./_components/payment-method-modal";
+import { Suspense } from "react";
 import { InvoiceCard } from "./_components/invoice-card";
+import { InvoiceModalProvider } from "./_components/payment-method-modal";
+import getInvoices from "./_functions/get-invoices";
+import CardUser from "../users/_components/card-user";
+import CardFilter from "./_components/card-filter";
 
 export const dynamic = "force-dynamic";
 
@@ -34,14 +35,5 @@ export default InvoicesPage;
 async function InvoiceTableServer() {
   const invoices = await getInvoices();
 
-  return (
-    <div>
-      {/* <InvoiceTable data={invoices} /> */}
-      <div className="flex flex-wrap gap-4 justify-center">
-        {invoices.map((invoice) => (
-          <InvoiceCard key={invoice.id} data={invoice} />
-        ))}
-      </div>
-    </div>
-  );
+  return <CardFilter invoices={invoices} />;
 }
