@@ -1,14 +1,9 @@
 "use client";
 
-import {
-  DateCell,
-  NameCell,
-  PhoneCell,
-  TextCell,
-} from "@/components/table-custom-fuction/common-cell";
+import { DateCell, NameCell, PhoneCell, TextCell } from "@/components/table-custom-fuction/common-cell";
 import { CreatedAtHeader } from "@/components/table-custom-fuction/common-header";
-import  type { DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
-import  type { ColumnDef } from "@tanstack/react-table";
+import type { DataTableSearchableColumn, DataTableViewOptionsColumn } from "@/types";
+import type { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
 
 export type ContactColumn = {
@@ -29,11 +24,8 @@ export const columns: ColumnDef<ContactColumn>[] = [
     cell: ({ row }) => (
       <NameCell
         name={row.original.name}
-        url={
-          row.original.userId
-            ? `/admin/users/${row.original.userId}`
-            : undefined
-        }
+        displayImage={false}
+        url={row.original.userId ? `/admin/users/${row.original.userId}` : undefined}
       />
     ),
   },
@@ -50,13 +42,7 @@ export const columns: ColumnDef<ContactColumn>[] = [
     accessorKey: "subject",
     header: "Sujet",
     cell: ({ row }) => (
-      <p
-        className={
-          row.original.subject === "RAPPORT DE BUG"
-            ? "font-bold text-destructive"
-            : ""
-        }
-      >
+      <p className={row.original.subject === "RAPPORT DE BUG" ? "font-bold text-destructive" : ""}>
         {row.original.subject}
       </p>
     ),

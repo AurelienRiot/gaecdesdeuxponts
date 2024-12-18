@@ -1,6 +1,6 @@
 "use client";
 import useServerAction from "@/hooks/use-server-action";
-import { TrashButton } from "./animations/lottie-animation/trash-button";
+import TrashButton from "./animations/icons/trash-button";
 import { AlertModal } from "./ui/alert-modal-form";
 import { useState } from "react";
 import type { ReturnTypeServerAction } from "@/lib/server-action";
@@ -52,10 +52,8 @@ function DeleteButton<D, R, E = undefined>({
 
       <TrashButton
         disabled={isSubmitting || loading}
-        variant="destructive"
-        size="sm"
         onClick={() => setOpen(true)}
-        iconClassName={cn("size-6", iconClassName)}
+        svgClassName={iconClassName}
         className={className}
       >
         {children}

@@ -1,5 +1,4 @@
 "use client";
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import { GrPowerReset, LuPackageMinus } from "@/components/react-icons";
 import SelectSheetWithTabs, { getProductTabs } from "@/components/select-sheet-with-tabs";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +14,7 @@ import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { OrderFormValues } from "./order-schema";
+import TrashButton from "@/components/animations/icons/trash-button";
 
 export const negativeQuantityStyle =
   "bg-destructive hover:bg-destructive/90 hover:text-destructive-foreground text-destructive-foreground";
@@ -196,15 +196,7 @@ function ProductName({
         />
 
         {productIndex > 0 || items.length > 1 ? (
-          <TrashButton
-            type="button"
-            disabled={form.formState.isSubmitting}
-            variant="destructive"
-            size="sm"
-            className="mt-auto"
-            onClick={deleteProduct}
-            iconClassName="size-6"
-          />
+          <TrashButton type="button" disabled={form.formState.isSubmitting} onClick={deleteProduct} />
         ) : null}
       </div>
     </>

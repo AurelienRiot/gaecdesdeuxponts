@@ -1,12 +1,12 @@
 "use client";
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import TrashButton from "@/components/animations/icons/trash-button";
 import { SkeletonAdressForm } from "@/components/skeleton-ui/address-skeleton";
 import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { useUserQuery } from "@/hooks/use-query/user-query";
 import { UserForm } from "./_components/user-form";
-import { useUserQuery } from "../../../../../hooks/use-query/user-query";
 
 const PageSettings = () => {
   const { data: user } = useUserQuery();
@@ -62,9 +62,7 @@ const LoadingUserForm = () => (
           {" "}
           <Skeleton className="h-4 w-32" />{" "}
         </h2>
-        <TrashButton disabled={true} variant="destructive" size="sm" className="ml-3" iconClassName="ml-2 size-6">
-          Supprimer le compte
-        </TrashButton>
+        <TrashButton disabled={true}>Supprimer le compte</TrashButton>
       </div>
       <Separator className="mt-4" />
       <p className="py-6 text-base font-bold sm:text-lg">

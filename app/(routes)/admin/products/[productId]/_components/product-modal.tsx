@@ -1,4 +1,5 @@
 "use client";
+import TrashButton from "@/components/animations/icons/trash-button";
 import CheckboxForm from "@/components/chekbox-form";
 import InputImageModal from "@/components/images-upload/image-modal";
 import type { OptionsArray } from "@/components/product";
@@ -12,19 +13,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import useServerAction from "@/hooks/use-server-action";
 import { getPercentage } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type Stock, Unit } from "@prisma/client";
+import { Unit, type Stock } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useForm, useFormContext } from "react-hook-form";
+import { toast } from "sonner";
+import { createProduct } from "../_actions/create-product";
+import { deleteProduct } from "../_actions/delete-product";
+import { updateProduct } from "../_actions/update-product";
 import OptionValueForm from "./options-values-form";
 import ProductIcon from "./product-icon";
 import { productSchema, type ProductFormValues } from "./product-schema";
-import { updateProduct } from "../_actions/update-product";
-import { createProduct } from "../_actions/create-product";
-import { toast } from "sonner";
-import { deleteProduct } from "../_actions/delete-product";
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
-import { scrollToId } from "@/lib/scroll-to-id";
 
 type ProductModalContextType = {
   product: ProductFormValues | null;
@@ -312,17 +311,7 @@ function ProductForm({
           />
         )}
       </div>
-      {index > 0 ? (
-        <TrashButton
-          disabled={form.formState.isSubmitting}
-          variant="destructive"
-          size="sm"
-          type="button"
-          onClick={onDelete}
-          className="my-auto"
-          iconClassName="size-6"
-        />
-      ) : null}
+      {index > 0 ? <TrashButton disabled={form.formState.isSubmitting} type="button" onClick={onDelete} /> : null}
     </>
   );
 }

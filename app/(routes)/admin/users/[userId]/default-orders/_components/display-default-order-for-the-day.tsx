@@ -2,7 +2,6 @@
 import type { AllShopsType } from "@/app/(routes)/admin/direction/_functions/get-shops";
 import { negativeQuantityStyle } from "@/app/(routes)/admin/orders/[orderId]/_components/products";
 import type { ProductsForOrdersType } from "@/app/(routes)/admin/orders/[orderId]/_functions/get-products-for-orders";
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
 import CheckboxForm from "@/components/chekbox-form";
 import { GrPowerReset, LuPackageMinus } from "@/components/react-icons";
 import SelectSheetWithTabs, { getProductTabs } from "@/components/select-sheet-with-tabs";
@@ -20,6 +19,7 @@ import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { DefaultOrderFormValues } from "./schema";
 import SelectShop from "./select-shop";
+import TrashButton from "@/components/animations/icons/trash-button";
 
 function DisplayDefaultOrderForTheDay({
   products,
@@ -98,11 +98,7 @@ function DisplayDefaultOrderForTheDay({
                           <TrashButton
                             type="button"
                             disabled={form.formState.isSubmitting}
-                            variant="destructive"
-                            size="sm"
-                            className="mt-auto"
                             onClick={() => deleteProduct(productIndex)}
-                            iconClassName="size-6"
                           />
                         </div>
                       </div>

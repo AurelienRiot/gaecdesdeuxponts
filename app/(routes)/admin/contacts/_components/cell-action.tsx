@@ -1,6 +1,5 @@
 "use client";
-
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import TrashButton from "@/components/animations/icons/trash-button";
 import { AlertModal } from "@/components/ui/alert-modal-form";
 import useServerAction from "@/hooks/use-server-action";
 import { useRouter } from "next/navigation";
@@ -33,13 +32,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     <>
       <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
 
-      <TrashButton
-        disabled={loading}
-        variant="destructive"
-        size="sm"
-        onClick={() => setOpen(true)}
-        iconClassName="size-6"
-      />
+      <TrashButton disabled={loading} onClick={() => setOpen(true)} />
     </>
   );
 };

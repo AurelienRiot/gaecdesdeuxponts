@@ -1,19 +1,18 @@
 "use client";
-import { TrashButton } from "@/components/animations/lottie-animation/trash-button";
+import { DisplayProductIcon } from "@/components/product";
 import { GrPowerReset } from "@/components/react-icons";
 import SelectSheet from "@/components/select-sheet";
 import { Button, IconButton } from "@/components/ui/button";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { NumberInput } from "@/components/ui/input";
+import { sanitizeString } from "@/lib/id";
 import { cn } from "@/lib/utils";
 import type { Product } from "@prisma/client";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import type { AMAPFormValues } from "./amap-schema";
-import SelectSheetWithTabs from "@/components/select-sheet-with-tabs";
-import { DisplayProductIcon } from "@/components/product";
-import { sanitizeString } from "@/lib/id";
+import TrashButton from "@/components/animations/icons/trash-button";
 
 const negativeQuantityStyle = "bg-destructive text-destructive-foreground";
 
@@ -172,11 +171,11 @@ function ProductName({
           <TrashButton
             type="button"
             disabled={form.formState.isSubmitting}
-            variant="destructive"
-            size="sm"
-            className="mt-auto"
+            // variant="destructive"
+            // size="sm"
+            // className="mt-auto"
             onClick={deleteProduct}
-            iconClassName="size-6"
+            // iconClassName="size-6"
           />
         ) : null}
       </div>

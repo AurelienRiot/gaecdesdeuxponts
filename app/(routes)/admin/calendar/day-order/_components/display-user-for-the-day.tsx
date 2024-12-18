@@ -1,5 +1,5 @@
 "use client";
-import DeleteButton from "@/components/animations/icons/delete";
+import TrashButton from "@/components/animations/icons/trash-button";
 import { getUserName } from "@/components/table-custom-fuction";
 import NoResults from "@/components/ui/no-results";
 import { NameWithImage } from "@/components/user";
@@ -102,7 +102,7 @@ function OrderItem({
         imageSize={12}
         className="p-2 select-none pointer-events-none"
       />
-      <DeleteButton
+      <TrashButton
         onClick={() => setLocalDayOrdersForDay((prev) => prev?.filter((id) => id !== user.id))}
         type="button"
         className="justify-self-end"
