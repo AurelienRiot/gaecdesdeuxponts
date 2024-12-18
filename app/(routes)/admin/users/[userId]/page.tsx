@@ -2,14 +2,11 @@ import ButtonBackward from "@/components/ui/button-backward";
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import ShopButton from "./_components/shop-button";
 import { CreateUserForm } from "./_components/create-user-form";
-import { OrderTable } from "./_components/order-table";
+import ShopButton from "./_components/shop-button";
 import { UserForm } from "./_components/user-form";
 import getUnlinkShop from "./_functions/get-unllink-shop";
 import getUserPageData from "./_functions/get-user-page-data";
-
-export const dynamic = "force-dynamic";
 
 const UserPage = async ({
   params,
@@ -48,9 +45,9 @@ const UserPage = async ({
         <Link href={`/admin/users/${user.formatedUser.id}/default-orders`}>Commandes par default par jour</Link>
       </Button>
       <ShopButton user={user.formatedUser} shops={shops} />
-      <div>
-        <OrderTable data={user.formattedOrders} />
-      </div>
+      <Button asChild>
+        <Link href={`/admin/users/${user.formatedUser.id}/all-orders`}>Voir les Commandes</Link>
+      </Button>
     </div>
   );
 };

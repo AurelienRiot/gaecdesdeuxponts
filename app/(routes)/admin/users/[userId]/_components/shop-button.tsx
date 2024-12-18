@@ -6,7 +6,7 @@ import LinkShop from "./link-shop";
 
 function ShopButton({ user, shops }: { user: GetUserPageDataProps["formatedUser"]; shops: Shop[] }) {
   return user.shop ? (
-    <Button asChild className="block w-fit">
+    <Button asChild className="block w-fit ">
       <Link href={`/admin/shops/${user.shop.id}`}>Modifier le magasin</Link>
     </Button>
   ) : (

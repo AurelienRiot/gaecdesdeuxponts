@@ -3,7 +3,7 @@ import DisplayHours from "@/components/display-shops/display-hours";
 import { getMapLinks } from "@/components/google-events";
 import { StatusCell } from "@/components/table-custom-fuction/cell-orders";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import NoResults from "@/components/ui/no-results";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -13,7 +13,7 @@ import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-s
 import { useOrdersQuery } from "@/hooks/use-query/orders-query";
 import { useUsersQuery } from "@/hooks/use-query/users-query";
 import { dateFormatter } from "@/lib/date-utils";
-import { formatFrenchPhoneNumber } from "@/lib/utils";
+import { cn, formatFrenchPhoneNumber } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { createContext, useContext, useState } from "react";
@@ -161,7 +161,7 @@ const UserInfo = ({ user, userOrders }: { user: UserForOrderType; userOrders: Ca
           </div>
         ) : null}
         {user.shopHours.length > 0 ? (
-          <div className="mb-4">
+          <div className="mb-4 space-y-2">
             <h3 className="text-sm font-medium text-gray-500">Horraires</h3>
             <DisplayHours shopHours={user.shopHours} />
           </div>
@@ -183,18 +183,27 @@ const UserInfo = ({ user, userOrders }: { user: UserForOrderType; userOrders: Ca
             <AutosizeTextarea className="border-0 focus-visible:ring-0 select-text" readOnly value={user.notes} />
           </div>
         ) : null}
-        <DisplayUserOrders userOrders={userOrders} />
+        <DisplayUserOrders userId={user.id} userOrders={userOrders} />
       </ScrollArea>
     </div>
   );
 };
 
-function DisplayUserOrders({ userOrders }: { userOrders: CalendarOrderType[] }) {
+function DisplayUserOrders({ userOrders, userId }: { userOrders: CalendarOrderType[]; userId: string }) {
   const { setIsUserModalOpen } = useUserModal();
 
   return (
     <div className="mb-4 space-y-2">
-      <h3 className="text-sm font-medium text-gray-500">Commandes</h3>
+      <h3 className="text-sm font-medium text-gray-500 flex items-center justify-start">
+        Commandes
+        <Link
+          onClick={() => setIsUserModalOpen(false)}
+          className={cn(buttonVariants({ variant: "link" }), "text-xs text-gray-500")}
+          href={`/admin/users/${userId}/all-orders`}
+        >
+          (Voir les toutes les commandes)
+        </Link>
+      </h3>
 
       {userOrders.length > 0 ? (
         userOrders.map((order) => (

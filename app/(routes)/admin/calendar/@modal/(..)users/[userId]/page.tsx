@@ -59,13 +59,16 @@ async function DisplayUserForm({ userId }: { userId: string | "new" | undefined 
   return (
     <>
       <UserForm initialData={user.formatedUser} incomplete={true} />
-      <SheetFooter className="flex-col sm:flex-col justify-center gap-2 px-4 sm:space-x-0">
+      <SheetFooter className="flex-col sm:flex-col justify-center gap-4 px-4 ">
         <Button asChild>
           <Link replace href={`/admin/users/${user.formatedUser.id}/default-orders`}>
             Commandes par default par jour
           </Link>
         </Button>
         <ShopButton user={user.formatedUser} shops={shops} />
+        <Button asChild>
+          <Link href={`/admin/users/${user.formatedUser.id}/all-orders`}>Voir les Commandes</Link>
+        </Button>
       </SheetFooter>
     </>
   );
