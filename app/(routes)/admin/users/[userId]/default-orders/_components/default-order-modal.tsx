@@ -1,13 +1,16 @@
 "use client";
 import type { AllShopsType } from "@/app/(routes)/admin/direction/_functions/get-shops";
 import type { ProductsForOrdersType } from "@/app/(routes)/admin/orders/[orderId]/_functions/get-products-for-orders";
+import { DisplayProductIcon } from "@/components/product";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 import { Modal } from "@/components/ui/modal";
-import type { UserForOrderType } from "@/components/zod-schema/user-for-orders-schema";
+import NoResults from "@/components/ui/no-results";
 import { useUsersQueryClient } from "@/hooks/use-query/users-query";
 import useServerAction from "@/hooks/use-server-action";
 import { DAYS_OF_WEEK } from "@/lib/date-utils";
+import { cn, currencyFormatter } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -16,13 +19,9 @@ import updateDefaultOrdersAction from "../_actions/update-default-orders";
 import type { GetDefaultOrdersType } from "../_functions/get-default-orders";
 import DisplayDefaultOrderForTheDay from "./display-default-order-for-the-day";
 import { type DefaultOrderFormValues, defaultOrderSchema } from "./schema";
-import NoResults from "@/components/ui/no-results";
-import { DisplayProductIcon } from "@/components/product";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { cn, currencyFormatter } from "@/lib/utils";
-import { displayQuantity } from "@/components/google-events";
+import { Check, CheckCircle, Hourglass } from "lucide-react";
 
-type DefaultOrderProps = Omit<NonNullable<GetDefaultOrdersType>["defaultOrders"][number], "id">;
+export type DefaultOrderProps = Omit<NonNullable<GetDefaultOrdersType>["defaultOrders"][number], "id">;
 
 type DefaultOrderContextType = {
   defaultOrder: DefaultOrderProps | null;
@@ -154,25 +153,34 @@ export function ModalTrigger({
   day,
   defaultOrder,
   products,
+  className,
 }: {
   day: number;
   defaultOrder: DefaultOrderProps;
   products: { name: string; icon: string; quantity: number; price: number; id: string; unit?: string | null }[];
+  className?: string;
 }) {
   const { setOpen, setDefaultOrder } = useDefaultOrderModal();
 
+  const dayName = day === -1 ? "Commande par defaut" : DAYS_OF_WEEK[day];
+
   return (
-    <Card className="max-w-md w-full">
+    <Card className={cn("max-w-md w-full", className)}>
       <CardHeader>
         <Button
-          className="w-40 mx-auto "
+          className="w-46 mx-auto "
           variant={"outline"}
           onClick={() => {
             setDefaultOrder(defaultOrder);
             setOpen(true);
           }}
         >
-          {DAYS_OF_WEEK[day]}
+          {dayName}
+          {defaultOrder.confirmed ? (
+            <CheckCircle className="size-5 ml-2 bg-teal-500 text-white rounded-full p-1" />
+          ) : (
+            <Hourglass className="size-5 ml-2 bg-orange-500 text-white rounded-full p-1" />
+          )}
         </Button>
       </CardHeader>
       <CardContent>

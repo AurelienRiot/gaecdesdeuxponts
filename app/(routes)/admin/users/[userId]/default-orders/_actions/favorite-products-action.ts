@@ -31,7 +31,7 @@ async function favoriteProductsAction(data: z.infer<typeof schema>) {
       revalidateTag("favoriteProducts");
       return {
         success: true,
-        message: "Produits favoris mis à jour",
+        message: "",
       };
     },
   });

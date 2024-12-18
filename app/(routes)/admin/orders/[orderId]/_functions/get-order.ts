@@ -75,12 +75,10 @@ const getShippingOrder = async ({
 
 const getUserDefaulOrder = unstable_cache(
   async (userId: string, day: number) => {
-    return await prismadb.defaultOrder.findUnique({
+    return await prismadb.defaultOrder.findFirst({
       where: {
-        userId_day: {
-          userId,
-          day,
-        },
+        userId,
+        OR: [{ day }, { day: -1 }],
       },
       include: {
         defaultOrderProducts: { include: { product: { include: { product: true, stocks: true } } } },
