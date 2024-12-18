@@ -1,5 +1,6 @@
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
+import { dateFormatter } from "@/lib/date-utils";
 import type { SearchParams } from "@/types";
 import { Suspense } from "react";
 import NewStockModal from "./_components/new-stock-modal";
@@ -13,6 +14,8 @@ interface StockSearchParams extends SearchParams {
 }
 
 function StocksPage({ searchParams }: { searchParams: StockSearchParams }) {
+  const today = new Date();
+  console.log(today, dateFormatter(today, { hours: true }));
   return (
     <div className="m-4 space-y-4">
       <div className="flex flex-col items-center justify-between sm:flex-row gap-y-2">
