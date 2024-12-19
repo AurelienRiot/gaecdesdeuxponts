@@ -1,15 +1,16 @@
 import ShopForm from "./_components/shop-form";
 import getShop from "./_functions/get-shop";
 
-const ShopsPage = async ({
-  params,
-  searchParams,
-}: {
-  params: { shopId: string };
-  searchParams: {
-    userId: string | undefined;
-  };
-}) => {
+const ShopsPage = async (
+  props: {
+    params: Promise<{ shopId: string }>;
+    searchParams: Promise<{
+      userId: string | undefined;
+    }>;
+  }
+) => {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const shop = await getShop({ params, searchParams });
 
   return (

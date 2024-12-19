@@ -6,17 +6,18 @@ import getShopsForOrders from "./_functions/get-shops-for-orders";
 import getUsersForOrders from "./_functions/get-users-for-orders";
 
 export const dynamic = "force-dynamic";
-const OrderFormPage = async ({
-  params,
-  searchParams,
-}: {
-  params: { orderId: string };
-  searchParams: {
-    newOrderId: string | undefined;
-    userId: string | undefined;
-    dateOfShipping: string | undefined;
-  };
-}) => {
+const OrderFormPage = async (
+  props: {
+    params: Promise<{ orderId: string }>;
+    searchParams: Promise<{
+      newOrderId: string | undefined;
+      userId: string | undefined;
+      dateOfShipping: string | undefined;
+    }>;
+  }
+) => {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const dateOfShipping = searchParams.dateOfShipping ? new Date(searchParams.dateOfShipping) : undefined;
 
   const [products, shops, users, initialData] = await Promise.all([

@@ -33,11 +33,12 @@ const formateProducts = (products: ProductsForOrdersType, defaultOrderProducts: 
       unit: correspondingProduct?.unit,
     };
   });
-async function DefaultProductsPage({
-  params,
-}: {
-  params: { userId: string | "new" | undefined };
-}) {
+async function DefaultProductsPage(
+  props: {
+    params: Promise<{ userId: string | "new" | undefined }>;
+  }
+) {
+  const params = await props.params;
   const userId = params.userId;
   const [user, shops, products] = await Promise.all([getDefaultOrders(userId), getAllShops(), getProductsForOrders()]);
 

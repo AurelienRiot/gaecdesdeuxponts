@@ -3,8 +3,8 @@ import ShopPage from "../../../ou-nous-trouver/[shopId]/page";
 
 export const dynamic = "force-dynamic";
 
-async function IntercepteShopPage({ params }: ShopPageProps) {
-  return <ShopPage params={params} />;
+async function IntercepteShopPage(props: ShopPageProps) {
+  return <ShopPage params={props.params} />;
 }
 
 export default IntercepteShopPage;

@@ -5,11 +5,12 @@ import Container from "@/components/ui/container";
 
 export const dynamic = "force-dynamic";
 
-async function AllOrdersPage({
-  params,
-}: {
-  params: { userId: string | "new" | undefined };
-}) {
+async function AllOrdersPage(
+  props: {
+    params: Promise<{ userId: string | "new" | undefined }>;
+  }
+) {
+  const params = await props.params;
   if (!params.userId || params.userId === "new") {
     return <NoResults text="Utilisateur introuvable" />;
   }

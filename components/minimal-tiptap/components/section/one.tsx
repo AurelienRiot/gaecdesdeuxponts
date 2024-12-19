@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ToolbarButton } from "../toolbar-button";
 import { ShortcutKey } from "../shortcut-key";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, type JSX } from "react";
 import type { FormatAction } from "../../types";
 import type { VariantProps } from "class-variance-authority";
 import type { toggleVariants } from "@/components/ui/toggle";

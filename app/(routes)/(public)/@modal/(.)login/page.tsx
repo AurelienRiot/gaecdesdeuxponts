@@ -2,12 +2,10 @@ import LoginPage from "@/app/(routes)/(public)/(auth)/login/page";
 
 export const dynamic = "force-dynamic";
 
-async function IntercepteLoginPage({
-  searchParams,
-}: {
-  searchParams: { callbackUrl: string | undefined; error: string | undefined; emaillogin: string | undefined };
+async function IntercepteLoginPage(props: {
+  searchParams: Promise<{ callbackUrl: string | undefined; error: string | undefined; emaillogin: string | undefined }>;
 }) {
-  return <LoginPage searchParams={searchParams} />;
+  return <LoginPage searchParams={props.searchParams} />;
 }
 
 export default IntercepteLoginPage;

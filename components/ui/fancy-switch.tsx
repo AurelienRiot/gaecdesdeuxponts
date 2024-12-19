@@ -221,11 +221,12 @@ export const FancySwitch = React.forwardRef<HTMLDivElement, FancySwitchProps>(
           aria-hidden="true"
           data-highlighter
         />
-
         {memoizedOptions.map((option, index) => (
           <div
             key={index}
-            ref={(el) => refCallback(el, index)}
+            ref={(el) => {
+              refCallback(el, index);
+            }}
             //
             role="radio"
             aria-checked={index === activeIndex}
@@ -238,7 +239,6 @@ export const FancySwitch = React.forwardRef<HTMLDivElement, FancySwitchProps>(
             {option.label}
           </div>
         ))}
-
         <div
           aria-live="polite"
           style={{

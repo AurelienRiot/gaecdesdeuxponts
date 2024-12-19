@@ -8,13 +8,14 @@ import { UserForm } from "./_components/user-form";
 import getUnlinkShop from "./_functions/get-unllink-shop";
 import getUserPageData from "./_functions/get-user-page-data";
 
-const UserPage = async ({
-  params,
-  searchParams,
-}: {
-  params: { userId: string | "new" | undefined };
-  searchParams: { incomplete: string | undefined };
-}) => {
+const UserPage = async (
+  props: {
+    params: Promise<{ userId: string | "new" | undefined }>;
+    searchParams: Promise<{ incomplete: string | undefined }>;
+  }
+) => {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   if (params.userId === "new") {
     return <CreateUserForm />;
   }

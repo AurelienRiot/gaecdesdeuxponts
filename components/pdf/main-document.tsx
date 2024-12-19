@@ -2,6 +2,8 @@ import { Document, Font, Image, Link, Page, StyleSheet, Text, View } from "@reac
 import { certificationBio, fontInter, fontInterBold, logoFondBlanc } from "../images";
 import type { PDFData } from "./pdf-data";
 
+import type { JSX } from "react";
+
 export const tableRowsCount = 10;
 export const mainColor = "#D3D3D3";
 export const foregroundColor = "#000000";

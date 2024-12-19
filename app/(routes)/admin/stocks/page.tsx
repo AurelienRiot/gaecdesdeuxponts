@@ -13,7 +13,7 @@ interface StockSearchParams extends SearchParams {
   modal?: string;
 }
 
-function StocksPage({ searchParams }: { searchParams: StockSearchParams }) {
+function StocksPage(props: { searchParams: Promise<StockSearchParams> }) {
   const today = new Date();
   console.log(today, dateFormatter(today, { hours: true }));
   return (

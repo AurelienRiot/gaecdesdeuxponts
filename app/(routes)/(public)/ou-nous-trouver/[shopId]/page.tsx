@@ -14,7 +14,8 @@ import { getLocalDay } from "@/lib/date-utils";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
-export async function generateMetadata({ params }: ShopPageProps): Promise<Metadata> {
+export async function generateMetadata(props: ShopPageProps): Promise<Metadata> {
+  const params = await props.params;
   const shop = await getShop(params.shopId);
   const tags = shop && tagOptions.filter((option) => shop.tags.includes(option.value));
   const keywords = tags?.map((tag) => tag.label);
@@ -50,7 +51,8 @@ export async function generateMetadata({ params }: ShopPageProps): Promise<Metad
   };
 }
 
-const ShopPage = async ({ params }: ShopPageProps) => {
+const ShopPage = async (props: ShopPageProps) => {
+  const params = await props.params;
   const shop = await getShop(params.shopId);
   if (!shop) {
     return <NotFound />;

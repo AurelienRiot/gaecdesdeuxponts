@@ -4,15 +4,16 @@ import { SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet
 
 export const dynamic = "force-dynamic";
 
-async function IntercepteShopPage({
-  params,
-  searchParams,
-}: {
-  params: { shopId: string };
-  searchParams: {
-    userId: string | undefined;
-  };
-}) {
+async function IntercepteShopPage(
+  props: {
+    params: Promise<{ shopId: string }>;
+    searchParams: Promise<{
+      userId: string | undefined;
+    }>;
+  }
+) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const shop = await getShop({ params, searchParams });
   return (
     <div className="space-y-6 w-full">

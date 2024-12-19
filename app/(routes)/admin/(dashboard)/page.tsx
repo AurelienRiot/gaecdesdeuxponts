@@ -1,4 +1,6 @@
+import { getPriceMinusConsigne, getTotalMilk } from "@/components/product";
 import { Skeleton } from "@/components/skeleton-ui/skeleton";
+import { getUserName } from "@/components/table-custom-fuction";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
@@ -9,19 +11,20 @@ import { Suspense } from "react";
 import ClientProducts from "./_components/client-products/fetch-user";
 import ProductsType from "./_components/product-type/product-fetch";
 import SelectDate from "./_components/select-date";
-import { UserChart } from "./_components/user-chart";
-import { getUserName } from "@/components/table-custom-fuction";
-import { getPriceMinusConsigne, getTotalMilk } from "@/components/product";
-import { getTotalOrders } from "./_functions/get-total-orders";
 import { ProductsPie } from "./_components/total-by-products";
+import { UserChart } from "./_components/user-chart";
+import { getTotalOrders } from "./_functions/get-total-orders";
 
 const MAX_ClIENTS = 9;
 
 export const dynamic = "force-dynamic";
 
-const DashboardPage = (context: { searchParams: { month: string | undefined; year: string | undefined } }) => {
-  const month = Number(context.searchParams.month || new Date().getMonth() - 1);
-  const year = Number(context.searchParams.year || new Date().getFullYear());
+const DashboardPage = async (context: {
+  searchParams: Promise<{ month: string | undefined; year: string | undefined }>;
+}) => {
+  const searchParams = await context.searchParams;
+  const month = Number(searchParams.month || new Date().getMonth() - 1);
+  const year = Number(searchParams.year || new Date().getFullYear());
   const startCurrentMonth = new Date(year, month, 1);
   const endDateCurrentMonth = new Date(year, month + 1, 0);
 

@@ -4,6 +4,7 @@ import NotFound from "@/components/not-found";
 import Info from "@/components/product/info";
 import MainProductCart from "@/components/product/main-product-cart";
 import { findProduct, getAllOptions } from "@/components/product/product-function";
+import type { SearchParams } from "@/types";
 import type { MainProduct } from "@prisma/client";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
@@ -11,14 +12,16 @@ import { unstable_cache } from "next/cache";
 export const dynamic = "force-dynamic";
 
 interface ProductPageProps {
-  params: {
+  params: Promise<{
     productName: string;
     categoryName: string;
-  };
-  searchParams: { [key: string]: string | undefined };
+  }>;
+  searchParams: Promise<SearchParams>;
 }
 
-export async function generateMetadata({ params, searchParams }: ProductPageProps): Promise<Metadata> {
+export async function generateMetadata(props: ProductPageProps): Promise<Metadata> {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const productName = decodeURIComponent(params.productName);
   const categoryName = decodeURIComponent(params.categoryName);
 
@@ -34,7 +37,9 @@ export async function generateMetadata({ params, searchParams }: ProductPageProp
   };
 }
 
-const ProductPage: React.FC<ProductPageProps> = async ({ params, searchParams }) => {
+const ProductPage: React.FC<ProductPageProps> = async (props) => {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const productName = decodeURIComponent(params.productName);
   const categoryName = decodeURIComponent(params.categoryName);
 

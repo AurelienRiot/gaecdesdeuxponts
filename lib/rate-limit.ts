@@ -8,7 +8,8 @@ const rateLimiter = {
 };
 
 export const rateLimit = async (role?: string | null) => {
-  const ip = headers().get("x-forwarded-for") ?? headers().get("remote-addr") ?? "unknown";
+  const cookies = await headers();
+  const ip = cookies.get("x-forwarded-for") ?? cookies.get("remote-addr") ?? "unknown";
   if (role === "admin" || role === "readOnlyAdmin") {
     return false;
   }

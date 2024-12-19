@@ -5,17 +5,17 @@ import NotFound from "@/components/not-found";
 import MainProductCart from "@/components/product/main-product-cart";
 import Container from "@/components/ui/container";
 import NoResults from "@/components/ui/no-results";
-import { addDelay } from "@/lib/utils";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 interface CategoryPageProps {
-  params: {
+  params: Promise<{
     categoryName: string;
-  };
+  }>;
 }
 
-export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
+export async function generateMetadata(props: CategoryPageProps): Promise<Metadata> {
+  const params = await props.params;
   const categoryName = decodeURIComponent(params.categoryName);
   const category = await getProCategoryByName(categoryName);
 
@@ -28,7 +28,8 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   };
 }
 
-const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
+const CategoryPage: React.FC<CategoryPageProps> = async (props) => {
+  const params = await props.params;
   const categoryName = decodeURIComponent(params.categoryName);
 
   const category = await getProCategoryByName(categoryName);

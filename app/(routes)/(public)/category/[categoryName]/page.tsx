@@ -17,12 +17,13 @@ export async function generateStaticParams() {
 }
 
 interface CategoryPageProps {
-  params: {
+  params: Promise<{
     categoryName: string;
-  };
+  }>;
 }
 
-export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
+export async function generateMetadata(props: CategoryPageProps): Promise<Metadata> {
+  const params = await props.params;
   const categoryName = decodeURIComponent(params.categoryName);
   const category = await getCategoryByName(categoryName);
 
@@ -35,7 +36,8 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   };
 }
 
-const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
+const CategoryPage: React.FC<CategoryPageProps> = async props => {
+  const params = await props.params;
   const categoryName = decodeURIComponent(params.categoryName);
 
   const category = await getCategoryByName(categoryName);

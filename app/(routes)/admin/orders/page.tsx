@@ -9,14 +9,15 @@ import { OrderClient } from "./_components/client";
 export const dynamic = "force-dynamic";
 
 const OrdersPage = async (context: {
-  searchParams: { from: string | undefined; to: string | undefined; id: string | undefined };
+  searchParams: Promise<{ from: string | undefined; to: string | undefined; id: string | undefined }>;
 }) => {
-  const id = context.searchParams.id;
+  const searchParams = await context.searchParams;
+  const id = searchParams.id;
   let from: Date;
   let to: Date;
-  if (context.searchParams.from && context.searchParams.to) {
-    from = new Date(context.searchParams.from);
-    to = new Date(context.searchParams.to);
+  if (searchParams.from && searchParams.to) {
+    from = new Date(searchParams.from);
+    to = new Date(searchParams.to);
   } else {
     from = new Date(new Date().getTime() - 14 * 24 * 60 * 60 * 1000);
     to = addYears(new Date(), 1);

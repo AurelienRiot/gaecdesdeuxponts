@@ -21,9 +21,9 @@ export async function getStaticParams() {
 }
 
 export interface ShopPageProps {
-  params: {
+  params: Promise<{
     shopId: string;
-  };
+  }>;
 }
 
 export const getShop = unstable_cache(

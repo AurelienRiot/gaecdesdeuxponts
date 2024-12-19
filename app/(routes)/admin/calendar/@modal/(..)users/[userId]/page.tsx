@@ -9,11 +9,12 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-async function IntercepteUserPage({
-  params,
-}: {
-  params: { userId: string | "new" | undefined };
-}) {
+async function IntercepteUserPage(
+  props: {
+    params: Promise<{ userId: string | "new" | undefined }>;
+  }
+) {
+  const params = await props.params;
   return (
     <div className="space-y-6 w-full">
       <SheetHeader className="sr-only">

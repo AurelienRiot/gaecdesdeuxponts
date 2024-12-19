@@ -16,9 +16,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const LoginPage = async (context: {
-  searchParams: { callbackUrl: string | undefined; error: string | undefined; emaillogin: string | undefined };
+  searchParams: Promise<{ callbackUrl: string | undefined; error: string | undefined; emaillogin: string | undefined }>;
 }) => {
-  const callbackUrl = decodeURI(context.searchParams.callbackUrl ?? `${baseUrl}/profile`);
+  const searchParams = await context.searchParams;
+  const callbackUrl = decodeURI(searchParams.callbackUrl ?? `${baseUrl}/profile`);
   const user = await getSessionUser();
   if (user) {
     if (user.role === "deleted" || user.role === "trackOnlyUser") {
@@ -34,20 +35,18 @@ const LoginPage = async (context: {
     return redirect(callbackUrl);
   }
 
-  const error = context.searchParams.error;
-
   return (
     <div className="flex w-full items-center justify-center bg-slate-100 dark:bg-slate-900">
       <div className="space-y-12 rounded-xl px-2 pb-8 pt-12 sm:bg-white sm:px-8 sm:shadow-xl sm:dark:bg-black">
         <h1 className="text-3xl font-bold tracking-tight"> Page de Connection</h1>
-        <ErrorDisplay error={error} />
+        <ErrorDisplay error={searchParams.error} />
         <GoogleButton callbackUrl={callbackUrl} />
         <div
           className={`my-4 flex h-4 flex-row items-center gap-4 self-stretch whitespace-nowrap before:h-0.5 before:w-full before:flex-grow before:bg-primary/30 after:h-0.5 after:w-full after:flex-grow after:bg-primary/30`}
         >
           ou
         </div>
-        <EmailButton callbackUrl={callbackUrl} emaillogin={context.searchParams.emaillogin} />
+        <EmailButton callbackUrl={callbackUrl} emaillogin={searchParams.emaillogin} />
       </div>
     </div>
   );

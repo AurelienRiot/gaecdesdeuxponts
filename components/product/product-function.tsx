@@ -1,4 +1,4 @@
-import type { ProductWithOptionsAndMain } from "@/types";
+import type { ProductWithOptionsAndMain, SearchParams } from "@/types";
 import type { Option, Unit } from "@prisma/client";
 import type { OptionsArray } from ".";
 
@@ -65,7 +65,7 @@ export function findProduct({
 }: {
   products: ProductWithOptionsAndMain[];
   optionsArray: OptionsArray;
-  searchParams: { [key: string]: string | undefined };
+  searchParams: SearchParams;
 }): ProductWithOptionsAndMain | undefined {
   const optionsValue = optionsArray.map((option) => {
     return { name: option.name, value: searchParams[option.name] };

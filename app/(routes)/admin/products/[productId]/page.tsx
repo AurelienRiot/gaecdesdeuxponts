@@ -12,7 +12,8 @@ import { getStocksForProducts } from "./_functions/get-stocks";
 
 export const dynamic = "force-dynamic";
 
-const ProductPage = async ({ params }: { params: { productId: string | undefined } }) => {
+const ProductPage = async (props: { params: Promise<{ productId: string | undefined }> }) => {
+  const params = await props.params;
   const [mainProduct, categories, stocks, optionsArray] = await Promise.all([
     getMainProduct(params.productId),
     getCategoriesForProducts(),

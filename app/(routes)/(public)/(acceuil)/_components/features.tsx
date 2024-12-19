@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowRightIcon, Handshake, Heart, Leaf, Palette, Recycle, Truck } from "lucide-react";
 import Link from "next/link";
 
+import type { JSX } from "react";
+
 interface Feature {
   id: number;
   name: string;

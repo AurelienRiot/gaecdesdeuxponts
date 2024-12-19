@@ -7,7 +7,8 @@ import getAmapShops from "./_functions/get-amap-shops";
 
 export const dynamic = "force-dynamic";
 
-const AMAPFormPage = async ({ params }: { params: { amapId: string } }) => {
+const AMAPFormPage = async (props: { params: Promise<{ amapId: string }> }) => {
+  const params = await props.params;
   const [amapOrder, users, shops, products] = await Promise.all([
     prismadb.aMAPOrder.findUnique({
       where: {

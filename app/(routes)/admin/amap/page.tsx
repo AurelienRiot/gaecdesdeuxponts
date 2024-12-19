@@ -8,7 +8,6 @@ import { dateFormatter } from "@/lib/date-utils";
 import prismadb from "@/lib/prismadb";
 import { addDays, setHours } from "date-fns";
 import { Plus } from "lucide-react";
-import * as Dynamic from "next/dynamic";
 import Link from "next/link";
 import AmapCards from "./_components/amap-cards";
 import { AMAPClient } from "./_components/client";
@@ -18,15 +17,16 @@ import SelectShippingDay from "./_components/select-shipping-day";
 export const dynamic = "force-dynamic";
 
 async function AMAPPage(context: {
-  searchParams: {
+  searchParams: Promise<{
     date: string | undefined;
     id: string | undefined;
     shippingDay: string | undefined;
-  };
+  }>;
 }) {
-  const id = context.searchParams.id;
+  const searchParams = await context.searchParams;
+  const id = searchParams.id;
 
-  const date = context.searchParams.date;
+  const date = searchParams.date;
   const endDate = addDays(date ? new Date(date) : new Date(), -1);
 
   const amapOrders = await prismadb.aMAPOrder.findMany({

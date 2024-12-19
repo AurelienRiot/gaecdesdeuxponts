@@ -2,6 +2,8 @@ import { cn } from "@/lib/utils";
 import { cva } from "class-variance-authority";
 import { Image, Search, Star, Text, X, type LucideProps } from "lucide-react";
 
+import type { JSX } from "react";
+
 export type Icon = (props: LucideProps) => JSX.Element;
 
 const borderAll = (props: LucideProps) => (

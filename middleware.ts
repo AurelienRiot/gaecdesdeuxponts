@@ -21,7 +21,7 @@ export async function middleware(req: NextRequest) {
       const apiResponse = await fetch(`${baseUrl}/api/auth`, {
         method: "GET",
         headers: {
-          Cookie: cookies()
+          Cookie: (await cookies())
             .getAll()
             .map((cookie) => `${cookie.name}=${cookie.value}`)
             .join("; "),

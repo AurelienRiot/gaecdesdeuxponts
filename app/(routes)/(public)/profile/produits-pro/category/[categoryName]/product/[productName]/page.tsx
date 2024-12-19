@@ -9,14 +9,16 @@ import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 
 interface ProductPageProps {
-  params: {
+  params: Promise<{
     productName: string;
     categoryName: string;
-  };
-  searchParams: { [key: string]: string | undefined };
+  }>;
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }
 
-export async function generateMetadata({ params, searchParams }: ProductPageProps): Promise<Metadata> {
+export async function generateMetadata(props: ProductPageProps): Promise<Metadata> {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const productName = decodeURIComponent(params.productName);
   const categoryName = decodeURIComponent(params.categoryName);
 
@@ -32,7 +34,9 @@ export async function generateMetadata({ params, searchParams }: ProductPageProp
   };
 }
 
-const ProductPage: React.FC<ProductPageProps> = async ({ params, searchParams }) => {
+const ProductPage: React.FC<ProductPageProps> = async props => {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const productName = decodeURIComponent(params.productName);
   const categoryName = decodeURIComponent(params.categoryName);
 
