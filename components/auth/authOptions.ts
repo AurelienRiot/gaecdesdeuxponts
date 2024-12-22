@@ -115,7 +115,7 @@ async function sendVerificationRequest({ identifier, url, token }: SendVerificat
     });
   }, 500);
 
-  await sendOTP(otp, identifier);
+  await sendOTP(otp, identifier, url);
 }
 
 export async function createHashToken(message: string) {
