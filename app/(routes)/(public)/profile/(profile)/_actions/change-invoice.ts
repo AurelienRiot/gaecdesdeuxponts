@@ -1,5 +1,6 @@
 "use server";
 import prismadb from "@/lib/prismadb";
+import { revalidateUsers } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
 import z from "zod";
 
@@ -26,7 +27,7 @@ async function changeInvoice(data: z.infer<typeof schema>) {
         },
       });
 
-      // revalidateTag("users");
+      revalidateUsers(user.id);
 
       return {
         success: true,

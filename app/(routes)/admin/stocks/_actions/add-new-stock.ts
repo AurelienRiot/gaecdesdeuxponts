@@ -1,10 +1,10 @@
 "use server";
-import safeServerAction from "@/lib/server-action";
-import { schema } from "../_components/schema";
-import type z from "zod";
-import prismadb from "@/lib/prismadb";
-import { revalidateTag } from "next/cache";
 import { ADMIN } from "@/components/auth";
+import prismadb from "@/lib/prismadb";
+import { revalidateStocks } from "@/lib/revalidate-path";
+import safeServerAction from "@/lib/server-action";
+import type z from "zod";
+import { schema } from "../_components/schema";
 
 export default async function addNewStock(data: z.infer<typeof schema>) {
   return await safeServerAction({
@@ -18,8 +18,7 @@ export default async function addNewStock(data: z.infer<typeof schema>) {
           totalQuantity,
         },
       });
-      revalidateTag("stocks");
-      revalidateTag("stocks-name");
+      revalidateStocks("stocksName");
       return { success: true, message: "Stock ajouté" };
     },
   });

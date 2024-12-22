@@ -2,10 +2,10 @@
 import { SHIPPING_ONLY } from "@/components/auth";
 import { defaultAddress } from "@/components/zod-schema/address-schema";
 import prismadb from "@/lib/prismadb";
+import { revalidateUsers } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
-import { schema, type UserFormValues } from "../_components/user-schema";
 import { formatUser } from "../../../orders/[orderId]/_functions/get-users-for-orders";
+import { schema, type UserFormValues } from "../_components/user-schema";
 
 async function updateUser(data: UserFormValues) {
   return await safeServerAction({
@@ -78,7 +78,7 @@ async function updateUser(data: UserFormValues) {
           favoriteProducts: { select: { productId: true } },
         },
       });
-      revalidateTag("users");
+      revalidateUsers(updateUser.id);
 
       const data = formatUser(updateUser);
 

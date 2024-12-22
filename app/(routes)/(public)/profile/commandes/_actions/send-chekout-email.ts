@@ -6,6 +6,7 @@ import { createPDFData } from "@/components/pdf/pdf-data";
 import { dateFormatter } from "@/lib/date-utils";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
+import { revalidateOrders } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
 import { currencyFormatter } from "@/lib/utils";
 import type { FullOrderWithInvoicePayment } from "@/types";
@@ -13,7 +14,6 @@ import { render } from "@react-email/render";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const ExcludeEmail = ["yoyololo1235@gmail.com", "pub.demystify390@passmail.net"];
@@ -128,7 +128,7 @@ async function sendCheckoutEmail(data: z.infer<typeof schema>) {
         },
       });
 
-      revalidateTag("orders");
+      revalidateOrders();
 
       return {
         success: true,

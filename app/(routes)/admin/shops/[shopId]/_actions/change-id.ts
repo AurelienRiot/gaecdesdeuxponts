@@ -2,8 +2,8 @@
 
 import { ADMIN } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateShops } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
 import * as z from "zod";
 
 const schema = z.object({
@@ -62,7 +62,7 @@ async function changeShopId(data: z.infer<typeof schema>) {
           message: "Une erreur est survenue",
         };
       }
-      revalidateTag("shops");
+      revalidateShops(id);
 
       return {
         success: true,

@@ -2,8 +2,8 @@
 
 import { ADMIN } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateUsers } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const schema = z.object({
@@ -15,15 +15,14 @@ async function deleteUser(data: z.infer<typeof schema>) {
     data,
     schema,
     roles: ADMIN,
-    serverAction: async (data) => {
-      const { email } = data;
+    serverAction: async ({ email }) => {
       if (!email) {
         return {
           success: false,
           message: "Une erreur est survenue",
         };
       }
-      await prismadb.user.update({
+      const user = await prismadb.user.update({
         where: {
           email,
         },
@@ -37,9 +36,12 @@ async function deleteUser(data: z.infer<typeof schema>) {
             deleteMany: {},
           },
         },
+        select: {
+          id: true,
+        },
       });
 
-      revalidateTag("users");
+      revalidateUsers(user.id);
 
       return {
         success: true,

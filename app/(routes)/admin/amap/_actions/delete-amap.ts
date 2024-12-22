@@ -1,8 +1,8 @@
 "use server";
 import { ADMIN } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateAmap } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const deleteSchema = z.object({
@@ -34,7 +34,7 @@ async function deleteAMAP(data: z.infer<typeof deleteSchema>) {
       //     console.log(event.message);
       //   }
       // }
-      revalidateTag("amap-orders");
+      revalidateAmap();
 
       return {
         success: true,

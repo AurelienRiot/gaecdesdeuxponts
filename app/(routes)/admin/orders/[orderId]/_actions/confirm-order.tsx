@@ -3,8 +3,8 @@
 import { updateStocks } from "@/actions/update-stocks";
 import { SHIPPING_ONLY } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateOrders } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const confirmOrderSchema = z.object({
@@ -29,7 +29,7 @@ async function confirmOrder(data: z.infer<typeof confirmOrderSchema>) {
       });
       await updateStocks(order.orderItems, !confirm);
 
-      revalidateTag("orders");
+      revalidateOrders();
 
       return {
         success: true,

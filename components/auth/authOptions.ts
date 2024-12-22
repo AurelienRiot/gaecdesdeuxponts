@@ -1,12 +1,12 @@
 import { createId } from "@/lib/id";
 import prismadb from "@/lib/prismadb";
+import { revalidateUsers } from "@/lib/revalidate-path";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import type { User } from "@prisma/client";
 import { customAlphabet } from "nanoid";
 import type { NextAuthOptions } from "next-auth";
 import EmailProvider, { type SendVerificationRequestParams } from "next-auth/providers/email";
 import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
-import { revalidateTag } from "next/cache";
 import { sendOTP } from "../email";
 
 const expirationTime = 10 * 60 * 1000;
@@ -67,7 +67,7 @@ export const authOptions: NextAuthOptions = {
               id: createId("user"),
             },
           });
-          revalidateTag("users");
+          revalidateUsers();
         }
         const dbUser = await prismadb.user.findUnique({
           where: { email: u.email as string },

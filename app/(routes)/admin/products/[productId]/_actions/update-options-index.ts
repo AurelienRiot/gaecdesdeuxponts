@@ -2,8 +2,8 @@
 
 import { ADMIN } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateProducts } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const schema = z.array(
@@ -30,9 +30,7 @@ async function updateOptionsIndex(data: z.infer<typeof schema>) {
         }),
       );
 
-      revalidateTag("categories");
-      revalidateTag("products");
-      revalidatePath("/category", "layout");
+      revalidateProducts();
       return {
         success: true,
         message: "",

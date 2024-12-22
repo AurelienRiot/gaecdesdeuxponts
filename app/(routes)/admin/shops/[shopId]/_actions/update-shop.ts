@@ -2,8 +2,8 @@
 
 import { SHIPPING_ONLY } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateShops } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { type ShopFormValues, schema } from "../_components/shop-schema";
 
 async function updateShop(data: ShopFormValues) {
@@ -47,8 +47,7 @@ async function updateShop(data: ShopFormValues) {
         }),
       ]);
 
-      revalidateTag("shops");
-      revalidatePath(`/ou-nous-trouver`);
+      revalidateShops(data.id);
       return {
         success: true,
         message: "Magasin mis à jour",

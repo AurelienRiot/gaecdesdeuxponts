@@ -1,7 +1,7 @@
 "use server";
 import prismadb from "@/lib/prismadb";
+import { revalidateUsers } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
 import z from "zod";
 
 const schema = z.object({
@@ -27,7 +27,7 @@ async function changeShipping(data: z.infer<typeof schema>) {
         },
       });
 
-      // revalidateTag("users");
+      revalidateUsers(user.id);
 
       return {
         success: true,

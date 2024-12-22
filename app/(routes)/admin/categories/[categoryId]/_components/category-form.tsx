@@ -58,7 +58,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
         {initialData && (
           <DeleteButton
             action={deleteCategorie}
-            data={{ name: initialData.name }}
+            data={{ id: initialData.id }}
             isSubmitting={form.formState.isSubmitting}
             onSuccess={() => {
               router.push(`/admin/categories`);

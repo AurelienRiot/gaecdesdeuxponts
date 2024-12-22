@@ -13,8 +13,8 @@ export default async function PublicLayout({
     <>
       <PublicHeader />
       <main id="main-content" className="pt-20 ">
-        {modal}
         {children}
+        <div className="absolute inset-0 -z-10"> {modal}</div>
       </main>
       <CookiesBanner />
       <Footer />

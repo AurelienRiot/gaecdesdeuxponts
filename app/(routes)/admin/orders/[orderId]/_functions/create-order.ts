@@ -3,7 +3,7 @@
 import { createCustomer } from "@/components/pdf/pdf-data";
 import { createId } from "@/lib/id";
 import prismadb from "@/lib/prismadb";
-import { revalidateTag } from "next/cache";
+import { revalidateOrders } from "@/lib/revalidate-path";
 import { formatOrder } from "../../../calendar/_functions/get-orders";
 import type { OrderFormValues } from "../_components/order-schema";
 import getOrdersIndex from "./get-orders-index";
@@ -68,8 +68,7 @@ async function createOrderAction({
     },
   });
 
-  // await createOrdersEvent(dateOfShipping || datePickUp);
-  revalidateTag("orders");
+  revalidateOrders();
   return {
     success: true,
     message: "Commande crée",

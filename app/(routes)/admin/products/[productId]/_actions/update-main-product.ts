@@ -2,8 +2,8 @@
 
 import { ADMIN } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateProducts } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { type MainProductFormValues, mainProductSchema } from "../_components/product-schema";
 
 export async function updateMainProduct(data: MainProductFormValues) {
@@ -31,9 +31,7 @@ export async function updateMainProduct(data: MainProductFormValues) {
         },
         data,
       });
-      revalidateTag("products");
-      revalidateTag("categories");
-      revalidatePath("/category", "layout");
+      revalidateProducts(id);
 
       return {
         success: true,

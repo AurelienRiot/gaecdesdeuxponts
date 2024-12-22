@@ -4,27 +4,17 @@ import { UserForm } from "@/app/(routes)/admin/users/[userId]/_components/user-f
 import getUnlinkShop from "@/app/(routes)/admin/users/[userId]/_functions/get-unllink-shop";
 import getUserPageData from "@/app/(routes)/admin/users/[userId]/_functions/get-user-page-data";
 import { Button } from "@/components/ui/button";
-import { SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { SheetFooter } from "@/components/ui/sheet";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-async function IntercepteUserPage(
-  props: {
-    params: Promise<{ userId: string | "new" | undefined }>;
-  }
-) {
+async function IntercepteUserPage(props: {
+  params: Promise<{ userId: string | "new" | undefined }>;
+}) {
   const params = await props.params;
   return (
     <div className="space-y-6 w-full">
-      <SheetHeader className="sr-only">
-        <SheetTitle>
-          <span>Page utilisateur</span>
-        </SheetTitle>
-        <SheetDescription className="">
-          {params.userId === "new" ? "Créer un nouvel utilisateur" : "Modifier l'utilisateur"}
-        </SheetDescription>
-      </SheetHeader>
       <DisplayUserForm userId={params.userId} />
     </div>
   );
@@ -38,16 +28,6 @@ async function DisplayUserForm({ userId }: { userId: string | "new" | undefined 
   }
 
   const [user, shops] = await Promise.all([getUserPageData(userId), getUnlinkShop()]);
-  // const user = await prismadb.user.findUnique({
-  //   where: {
-  //     id: userId,
-  //   },
-  //   include: {
-  //     address: true,
-  //     billingAddress: true,
-  //     shop: { include: { links: true } },
-  //   },
-  // });
 
   if (!user) {
     return (

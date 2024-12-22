@@ -86,7 +86,7 @@ const getUserDefaulOrder = unstable_cache(
     });
   },
   ["getUserDefaulOrder"],
-  { revalidate: 60 * 60 * 24 * 7, tags: ["defaultOrders", "products", "stocks-name"] },
+  { revalidate: 60 * 60 * 24 * 7, tags: ["defaultOrders", "products", "stocksName"] },
 );
 const getDefaulOrder = async (
   userId?: string,

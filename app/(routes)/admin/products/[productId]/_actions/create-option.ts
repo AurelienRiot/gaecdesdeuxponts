@@ -3,8 +3,8 @@
 import { ADMIN } from "@/components/auth";
 import { createId } from "@/lib/id";
 import prismadb from "@/lib/prismadb";
+import { revalidateProducts } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const schema = z.object({
@@ -24,9 +24,7 @@ export async function createOption(data: z.infer<typeof schema>) {
         data: newOptions,
       });
 
-      revalidateTag("categories");
-      revalidateTag("products");
-      revalidatePath("/category", "layout");
+      revalidateProducts();
       return {
         success: true,
         message: "Produit creé",

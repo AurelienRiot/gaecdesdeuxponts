@@ -1,11 +1,11 @@
 "use server";
 
 import { SHIPPING_ONLY } from "@/components/auth";
-import prismadb from "@/lib/prismadb";
-import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
-import { type ShopFormValues, schema } from "../_components/shop-schema";
 import { sanitizeId } from "@/lib/id";
+import prismadb from "@/lib/prismadb";
+import { revalidateShops } from "@/lib/revalidate-path";
+import safeServerAction from "@/lib/server-action";
+import { type ShopFormValues, schema } from "../_components/shop-schema";
 
 async function createShop(data: ShopFormValues) {
   return await safeServerAction({
@@ -50,7 +50,7 @@ async function createShop(data: ShopFormValues) {
         },
       });
 
-      revalidateTag("shops");
+      revalidateShops();
       return {
         success: true,
         message: "Magasin creé",

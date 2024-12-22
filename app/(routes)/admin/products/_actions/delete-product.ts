@@ -1,8 +1,8 @@
 "use server";
 import { ADMIN } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateProducts } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const schema = z.object({
@@ -26,9 +26,7 @@ async function deleteMainProduct(data: z.infer<typeof schema>) {
           message: "Une erreur est survenue",
         };
       }
-      revalidateTag("products");
-      revalidateTag("categories");
-      revalidatePath("/category", "layout");
+      revalidateProducts(id);
       return {
         success: true,
         message: "Produit supprimé",

@@ -1,8 +1,8 @@
 "use server";
 import { ADMIN } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateShops } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const schema = z.object({
@@ -43,7 +43,7 @@ async function deleteShop(data: z.infer<typeof schema>) {
         };
       }
 
-      revalidateTag("shops");
+      revalidateShops(id);
       return {
         success: true,
         message: "Magasin supprimé",

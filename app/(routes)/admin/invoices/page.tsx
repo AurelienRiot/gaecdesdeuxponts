@@ -3,11 +3,10 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { Suspense } from "react";
-import { InvoiceCard } from "./_components/invoice-card";
+import CardFilter from "./_components/card-filter";
 import { InvoiceModalProvider } from "./_components/payment-method-modal";
 import getInvoices from "./_functions/get-invoices";
-import CardUser from "../users/_components/card-user";
-import CardFilter from "./_components/card-filter";
+import { addDelay } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 

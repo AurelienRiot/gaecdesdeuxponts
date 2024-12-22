@@ -1,21 +1,7 @@
-"use client";
-
-import { Modal } from "@/components/ui/modal";
-import { useRouter } from "next/navigation";
+import ModalLayoutProvider from "@/providers/modal-layout-provider";
 
 function ShopModalLayout({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
-  return (
-    <Modal
-      isOpen={true}
-      onClose={() => router.back()}
-      modal
-      className="overflow-y-scroll w-[90%] max-h-[90%] sm:max-w-[90%] md:max-w-[90%] px-0 "
-      title=""
-    >
-      {children}
-    </Modal>
-  );
+  return <ModalLayoutProvider title="Modal magasin">{children}</ModalLayoutProvider>;
 }
 
 export default ShopModalLayout;

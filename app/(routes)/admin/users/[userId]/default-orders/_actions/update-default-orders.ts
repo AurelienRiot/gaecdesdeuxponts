@@ -2,8 +2,8 @@
 
 import { SHIPPING } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateDefaultOrders } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
 import { defaultOrderSchema, type DefaultOrderFormValues } from "../_components/schema";
 
 async function updateDefaultOrdersAction(data: DefaultOrderFormValues) {
@@ -12,7 +12,7 @@ async function updateDefaultOrdersAction(data: DefaultOrderFormValues) {
     roles: SHIPPING,
     schema: defaultOrderSchema,
     serverAction: async ({ day, defaultOrderProducts, shopId, userId, confirmed }) => {
-      revalidateTag("defaultOrders");
+      revalidateDefaultOrders();
 
       const defaultOrder = await prismadb.defaultOrder.findUnique({
         where: {

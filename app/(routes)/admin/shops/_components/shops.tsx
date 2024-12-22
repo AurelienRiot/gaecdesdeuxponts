@@ -7,23 +7,24 @@ import { Toggle } from "@/components/ui/toggle";
 import type { FullShop } from "@/types";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const DisplayShop = ({ data }: { data: FullShop[] }) => {
-  const [coordinates, setCoordinates] = useState<{
-    long: number | undefined;
-    lat: number | undefined;
-  }>({ lat: undefined, long: undefined });
   const [sortedShops, setSortedShops] = useState<FullShop[]>(data.filter((shop) => shop.isArchived === false));
   const router = useRouter();
 
   const onPressedChange = (value: boolean) => {
-    if (value) {
-      setSortedShops(data.filter((shop) => shop.isArchived === true));
-    } else {
-      setSortedShops(data.filter((shop) => shop.isArchived === false));
-    }
+    setSortedShops(data.filter((shop) => shop.isArchived === value));
   };
+
+  useEffect(() => {
+    setSortedShops((prev) => {
+      if (prev.length > 0 && prev[0].isArchived) {
+        return data.filter((shop) => shop.isArchived === true);
+      }
+      return data.filter((shop) => shop.isArchived === false);
+    });
+  }, [data]);
 
   return (
     <>
@@ -36,11 +37,6 @@ const DisplayShop = ({ data }: { data: FullShop[] }) => {
       </div>
 
       <div className="flex flex-wrap items-center justify-start gap-2">
-        {/* <AddressInput
-          setSortedShops={setSortedShops}
-          setCoordinates={setCoordinates}
-          shops={data}
-        /> */}
         <NameInput setSortedShops={setSortedShops} shops={data} className="w-fit" />
         <Toggle aria-label="Toggle archivé" variant={"outline"} onPressedChange={onPressedChange}>
           Archivé
@@ -49,7 +45,7 @@ const DisplayShop = ({ data }: { data: FullShop[] }) => {
 
       <div className=" grid grid-cols-1 items-center justify-items-center  gap-3 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {sortedShops.map((shop) => (
-          <ShopCard shop={shop} key={shop.name} coordinates={coordinates} display="admin" />
+          <ShopCard shop={shop} key={shop.name} coordinates={{ lat: undefined, long: undefined }} display="admin" />
         ))}
       </div>
     </>

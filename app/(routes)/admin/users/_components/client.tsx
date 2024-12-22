@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Toggle } from "@/components/ui/toggle";
 import type { User } from "@prisma/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CardUser, { type UserStatus } from "./card-user";
 
 interface UserClientProps {

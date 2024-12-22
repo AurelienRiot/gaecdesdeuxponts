@@ -2,8 +2,8 @@
 import { ADMIN } from "@/components/auth";
 import { createInvoice } from "@/components/pdf/server-actions/create-and-send-invoice";
 import prismadb from "@/lib/prismadb";
+import { revalidateInvoices, revalidateOrders, revalidateUsers } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const groupedMonthlyInvoiceSchema = z.array(z.array(z.string()));
@@ -45,9 +45,9 @@ export default async function createGroupedMonthlyInvoice(data: z.infer<typeof g
 
       // const allData = monthlyInvoices.map((invoice) => invoice.data);
 
-      revalidateTag("invoices");
-      revalidateTag("orders");
-      revalidateTag("users");
+      revalidateInvoices();
+      revalidateOrders();
+      revalidateUsers();
       return {
         success: true,
         message: allSuccess

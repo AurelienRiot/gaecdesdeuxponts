@@ -77,6 +77,7 @@ const ShopForm = ({ initialData }: { initialData: Nullable<FullShop> | null }) =
       );
 
       router.back();
+      // setTimeout(() => router.refresh(), 5000);
     }
     initialData?.id ? await updateShopAction({ data, onSuccess }) : await createShopAction({ data, onSuccess });
   };

@@ -5,14 +5,14 @@ import SendBLEmail from "@/components/email/send-bl";
 import { dateFormatter, getLocalIsoString } from "@/lib/date-utils";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
+import { revalidateOrders } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
+import { addDelay } from "@/lib/utils";
 import { render } from "@react-email/render";
 import { renderToBuffer } from "@react-pdf/renderer";
-import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import ShippingOrder from "../create-shipping";
 import { createPDFData } from "../pdf-data";
-import { addDelay } from "@/lib/utils";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
@@ -139,7 +139,7 @@ export async function SendBL(data: z.infer<typeof BLSchema>) {
       });
 
       // createOrdersEvent({ date: order.dateOfShipping });
-      revalidateTag("orders");
+      revalidateOrders();
 
       return {
         success: true,

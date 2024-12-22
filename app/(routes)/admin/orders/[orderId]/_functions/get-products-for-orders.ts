@@ -25,6 +25,6 @@ const getProductsForOrders = unstable_cache(
     return sortedProducts;
   },
   ["get-products-for-orders"],
-  { revalidate: 60 * 60 * 24 * 7, tags: ["products", "categories", "stocks-name"] },
+  { revalidate: 60 * 60 * 24 * 7, tags: ["products", "categories", "stocksName"] },
 );
 export default getProductsForOrders;

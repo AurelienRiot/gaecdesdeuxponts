@@ -33,7 +33,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
   const onDelete = async () => {
     await serverAction({
-      data: { name: data.name },
+      data: { id: data.id },
       onSuccess: () => router.refresh(),
       onFinally: () => setOpen(false),
     });

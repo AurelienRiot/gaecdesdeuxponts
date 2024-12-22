@@ -2,8 +2,8 @@
 
 import { SHIPPING_ONLY } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateCategories } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { type CategoryFormValues, schema } from "../_components/category-schema";
 
 async function updateCategory(data: CategoryFormValues) {
@@ -11,8 +11,7 @@ async function updateCategory(data: CategoryFormValues) {
     data,
     schema,
     roles: SHIPPING_ONLY,
-    serverAction: async (data) => {
-      const { imageUrl, name, description, id } = data;
+    serverAction: async ({ imageUrl, name, description, id }) => {
       const sameCategory = await prismadb.category.findUnique({
         where: {
           name,
@@ -37,8 +36,7 @@ async function updateCategory(data: CategoryFormValues) {
         },
       });
 
-      revalidateTag("categories");
-      revalidatePath("/category", "layout");
+      revalidateCategories(id);
 
       return {
         success: true,

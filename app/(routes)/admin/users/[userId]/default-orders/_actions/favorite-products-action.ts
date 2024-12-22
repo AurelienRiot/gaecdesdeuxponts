@@ -2,8 +2,8 @@
 
 import { ADMIN } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateFavoriteProducts } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const schema = z.object({
@@ -28,7 +28,8 @@ async function favoriteProductsAction(data: z.infer<typeof schema>) {
           productId,
         })),
       });
-      revalidateTag("favoriteProducts");
+      revalidateFavoriteProducts();
+
       return {
         success: true,
         message: "",

@@ -5,9 +5,9 @@ import { getUnitLabel } from "@/components/product/product-function";
 import { isDateDisabled } from "@/lib/date-utils";
 import { createId } from "@/lib/id";
 import prismadb from "@/lib/prismadb";
+import { revalidateOrders } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
 import type { ProductWithMain, UserWithAddress } from "@/types";
-import { revalidateTag } from "next/cache";
 import * as z from "zod";
 
 export const getUserWithAdress = async (id: string) => {
@@ -169,7 +169,7 @@ async function createOrder({ totalPrice, productsWithQuantity, shopId, user, dat
       ...customer,
     },
   });
-  revalidateTag("orders");
+  revalidateOrders();
 
   return order;
 }

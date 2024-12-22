@@ -10,6 +10,7 @@ import { Clock, LinkIcon, Mail, MapPin, Phone } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getShop } from "./_functions/get-shop";
+import getShops from "@/actions/get-shops";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
@@ -17,6 +18,11 @@ export interface ShopPageProps {
   params: Promise<{
     shopId: string;
   }>;
+}
+
+export async function generateStaticParams() {
+  const { shops } = await getShops();
+  return shops.map((shop) => ({ shopId: shop.id }));
 }
 
 export async function generateMetadata(props: ShopPageProps): Promise<Metadata> {

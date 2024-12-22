@@ -1,8 +1,8 @@
 "use server";
 import { SHIPPING_ONLY } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateOrders } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const deleteSchema = z.object({
@@ -34,7 +34,7 @@ async function deleteOrder(data: z.infer<typeof deleteSchema>) {
       // if (data.dateOfShipping) {
       //   await createOrdersEvent(data.dateOfShipping);
       // }
-      revalidateTag("orders");
+      revalidateOrders();
 
       return {
         success: true,

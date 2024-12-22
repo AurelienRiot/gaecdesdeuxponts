@@ -1,8 +1,8 @@
 "use server";
 import { ADMIN } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateShops, revalidateUsers } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { formatUser } from "../../../orders/[orderId]/_functions/get-users-for-orders";
 
@@ -41,8 +41,8 @@ async function linkShop(data: z.infer<typeof linkShopSchema>) {
 
       const data = user ? formatUser(user) : undefined;
 
-      revalidateTag("shops");
-      revalidateTag("users");
+      revalidateShops(shopId);
+      revalidateUsers(userId);
       return {
         success: true,
         message: "Magasin lié au client",

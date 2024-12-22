@@ -3,8 +3,8 @@
 import { SHIPPING_ONLY } from "@/components/auth";
 import { emailSchema } from "@/components/zod-schema";
 import prismadb from "@/lib/prismadb";
+import { revalidateUsers } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
 import * as z from "zod";
 
 const schema = z.object({
@@ -72,7 +72,7 @@ async function changeEmail(data: z.infer<typeof schema>) {
           message: "Une erreur est survenue",
         };
       }
-      revalidateTag("users");
+      revalidateUsers(user.id);
 
       return {
         success: true,

@@ -2,8 +2,8 @@
 
 import { ADMIN } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateUsers } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const schema = z.object({
@@ -16,8 +16,7 @@ async function updateProStatus(data: z.infer<typeof schema>) {
     data,
     schema,
     roles: ADMIN,
-    serverAction: async (data) => {
-      const { id, check } = data;
+    serverAction: async ({ id, check }) => {
       if (check === "indeterminate") {
         return {
           success: false,
@@ -33,7 +32,7 @@ async function updateProStatus(data: z.infer<typeof schema>) {
           role: check ? "pro" : "user",
         },
       });
-      revalidateTag("users");
+      revalidateUsers(id);
 
       return {
         success: true,

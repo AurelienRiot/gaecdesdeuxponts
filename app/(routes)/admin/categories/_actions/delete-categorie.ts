@@ -2,12 +2,12 @@
 
 import { ADMIN } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateCategories } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const deleteSchema = z.object({
-  name: z.string(),
+  id: z.string(),
 });
 
 async function deleteCategorie(data: z.infer<typeof deleteSchema>) {
@@ -15,11 +15,10 @@ async function deleteCategorie(data: z.infer<typeof deleteSchema>) {
     data,
     roles: ADMIN,
     schema: deleteSchema,
-    serverAction: async (data) => {
-      const { name } = data;
+    serverAction: async ({ id }) => {
       const products = await prismadb.mainProduct.findMany({
         where: {
-          categoryName: name,
+          id,
         },
       });
 
@@ -31,7 +30,7 @@ async function deleteCategorie(data: z.infer<typeof deleteSchema>) {
       }
       const category = await prismadb.category.deleteMany({
         where: {
-          name,
+          id,
         },
       });
 
@@ -42,8 +41,7 @@ async function deleteCategorie(data: z.infer<typeof deleteSchema>) {
         };
       }
 
-      revalidateTag("categories");
-      revalidatePath("/category", "layout");
+      revalidateCategories();
       return {
         success: true,
         message: "Categorie supprimé",

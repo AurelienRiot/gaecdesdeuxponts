@@ -53,7 +53,7 @@ export const getAMAPOrders = unstable_cache(
     return Object.entries(groupOrdersByShopName).map(([shopName, orders]) => ({ shopName, orders }));
   },
   ["getAMAPOrders"],
-  { revalidate: 60 * 60 * 24, tags: ["amap-orders"] },
+  { revalidate: 60 * 60 * 24, tags: ["amapOrders"] },
 );
 
 export type GetGroupedAMAPOrdersType = Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
@@ -139,5 +139,5 @@ export const getGroupedAMAPOrders = unstable_cache(
     return result;
   },
   ["getGroupedAMAPOrders"],
-  { revalidate: 60 * 60 * 24, tags: ["amap-orders"] },
+  { revalidate: 60 * 60 * 24, tags: ["amapOrders"] },
 );

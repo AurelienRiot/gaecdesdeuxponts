@@ -37,7 +37,7 @@ const getUserPageData = unstable_cache(
     return { formatedUser };
   },
   ["getUserPageData"],
-  { revalidate: 60 * 60 * 10, tags: ["users", "orders", "amap-orders", "invoices", "notifications", "shops"] },
+  { revalidate: 60 * 60 * 10, tags: ["users", "orders", "amapOrders", "invoices", "notifications", "shops"] },
 );
 
 export default getUserPageData;

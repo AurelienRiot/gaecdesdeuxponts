@@ -3,8 +3,8 @@
 import { SHIPPING_ONLY } from "@/components/auth";
 import { createCustomer } from "@/components/pdf/pdf-data";
 import prismadb from "@/lib/prismadb";
+import { revalidateOrders } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { formatOrder } from "../../../calendar/_functions/get-orders";
 import { orderSchema, type OrderFormValues } from "../_components/order-schema";
@@ -110,7 +110,7 @@ async function updateOrder(data: OrderFormValues & { prevDateOfShipping?: Date |
       //     }
       //   })(),
       // ]);
-      revalidateTag("orders");
+      revalidateOrders();
 
       return {
         success: true,

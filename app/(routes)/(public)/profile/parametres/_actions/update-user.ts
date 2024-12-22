@@ -2,8 +2,8 @@
 
 import { defaultAddress } from "@/components/zod-schema/address-schema";
 import prismadb from "@/lib/prismadb";
+import { revalidateUsers } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
 import { type UserFormValues, formSchema } from "../_components/form-schema";
 
 async function getUser(id: string) {
@@ -52,7 +52,7 @@ async function updateUser(data: UserFormValues) {
               : undefined,
         },
       });
-      revalidateTag("users");
+      revalidateUsers(user.id);
 
       return {
         success: true,

@@ -1,8 +1,8 @@
 "use server";
 import { SHIPPING_ONLY } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateStocks } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
 import z from "zod";
 
 const schema = z.object({
@@ -23,8 +23,7 @@ export default async function updateStock(formdata: FormData) {
           },
         },
       });
-      // console.log(stock);
-      revalidateTag("stocks");
+      revalidateStocks("stocks");
       return { success: true, message: "Stock mis à jour" };
     },
   });

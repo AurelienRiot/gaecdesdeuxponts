@@ -2,8 +2,8 @@
 
 import { SHIPPING } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateInvoices, revalidateOrders, revalidateUsers } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidateTag } from "next/cache";
 import { PaymentMethod } from "@prisma/client";
 import { z } from "zod";
 
@@ -30,6 +30,7 @@ async function validateInvoice(data: z.infer<typeof schema>) {
         },
         select: {
           id: true,
+          userId: true,
         },
       });
 
@@ -39,9 +40,9 @@ async function validateInvoice(data: z.infer<typeof schema>) {
           message: "Une erreur est survenue",
         };
       }
-      revalidateTag("invoices");
-      revalidateTag("orders");
-      revalidateTag("users");
+      revalidateInvoices();
+      revalidateOrders();
+      revalidateUsers(invoice.userId);
 
       return {
         success: true,

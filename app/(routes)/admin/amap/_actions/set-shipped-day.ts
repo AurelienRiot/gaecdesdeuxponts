@@ -1,19 +1,20 @@
 "use server";
 import { ADMIN, SHIPPING_ONLY } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateAmap } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
 import { z } from "zod";
 
-const deleteSchema = z.object({
+const shippedDaySchema = z.object({
   id: z.string(),
   shippedDay: z.date(),
   checked: z.boolean(),
 });
 
-async function setShippedDay(data: z.infer<typeof deleteSchema>) {
+async function setShippedDay(data: z.infer<typeof shippedDaySchema>) {
   return await safeServerAction({
     data,
-    schema: deleteSchema,
+    schema: shippedDaySchema,
     roles: SHIPPING_ONLY,
     serverAction: async ({ id, shippedDay, checked }) => {
       if (!checked) {
@@ -54,7 +55,7 @@ async function setShippedDay(data: z.infer<typeof deleteSchema>) {
           });
       }
 
-      // revalidateTag("amap-orders");
+      // revalidateAmap();
 
       return {
         success: true,

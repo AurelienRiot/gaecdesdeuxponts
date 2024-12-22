@@ -7,8 +7,10 @@ import { OrdersModalProvider } from "./calendar/_components/orders-modal";
 
 export default async function AdminLayout({
   children,
+  modal,
 }: {
   children: React.ReactNode;
+  modal: React.ReactNode;
 }) {
   return (
     <UserModalProvider>
@@ -19,6 +21,7 @@ export default async function AdminLayout({
             {/* <AdminColorSchema /> */}
             <Navbar />
             {children}
+            <div className="absolute inset-0 -z-10">{modal}</div>
           </div>
         </SidebarProvider>
       </OrdersModalProvider>

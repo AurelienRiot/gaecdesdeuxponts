@@ -5,11 +5,11 @@ import { getUserName } from "@/components/table-custom-fuction";
 import { dateFormatter, dateMonthYear } from "@/lib/date-utils";
 import { transporter } from "@/lib/nodemailer";
 import prismadb from "@/lib/prismadb";
+import { revalidateInvoices, revalidateOrders } from "@/lib/revalidate-path";
 import type { ReturnTypeServerAction } from "@/lib/server-action";
 import { addDelay, addressFormatter, currencyFormatter, formatFrenchPhoneNumber } from "@/lib/utils";
 import { render } from "@react-email/render";
 import { renderToBuffer } from "@react-pdf/renderer";
-import { revalidateTag } from "next/cache";
 import Invoice from "../create-invoice";
 import MonthlyInvoice from "../create-monthly-invoice";
 import { createInvoicePDFData, createMonthlyInvoicePDFData } from "../pdf-data";
@@ -181,8 +181,8 @@ export async function sendInvoice(invoiceId: string, reminder?: boolean): Promis
     };
   }
 
-  revalidateTag("orders");
-  revalidateTag("invoices");
+  revalidateOrders();
+  revalidateInvoices();
   return {
     success: true,
     message: `Facture envoyée pour ${name}`,
@@ -286,8 +286,8 @@ export async function createInvoice(
     select: { id: true },
   });
 
-  revalidateTag("orders");
-  revalidateTag("invoices");
+  revalidateOrders();
+  revalidateInvoices();
   return {
     success: true,
     message: `Facture crée pour ${name}`,

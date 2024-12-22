@@ -2,8 +2,8 @@
 
 import { ADMIN } from "@/components/auth";
 import prismadb from "@/lib/prismadb";
+import { revalidateProducts } from "@/lib/revalidate-path";
 import safeServerAction from "@/lib/server-action";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const schema = z.object({
@@ -24,7 +24,7 @@ const changeArchived = async (data: z.infer<typeof schema>) => {
           message: "Une erreur est survenue, veuillez reessayer",
         };
       }
-      const product = await prismadb.mainProduct.update({
+      await prismadb.mainProduct.update({
         where: {
           id,
         },
@@ -32,9 +32,7 @@ const changeArchived = async (data: z.infer<typeof schema>) => {
           isArchived: checkState,
         },
       });
-      revalidateTag("products");
-      revalidateTag("categories");
-      revalidatePath("/category", "layout");
+      revalidateProducts(id);
 
       return {
         success: true,

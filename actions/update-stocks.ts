@@ -1,7 +1,7 @@
 "server only";
 
 import prismadb from "@/lib/prismadb";
-import { revalidateTag } from "next/cache";
+import { revalidateStocks } from "@/lib/revalidate-path";
 
 export async function updateStocks(orderItems: { quantity: number; stocks: string[] }[], reverse = false) {
   const stockQuantityMap = new Map<string, number>();
@@ -25,5 +25,5 @@ export async function updateStocks(orderItems: { quantity: number; stocks: strin
   );
 
   await Promise.all(updatePromises);
-  revalidateTag("stocks");
+  revalidateStocks("stocks");
 }

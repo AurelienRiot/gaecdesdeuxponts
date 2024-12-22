@@ -58,7 +58,7 @@ const CardUser: React.FC<CardUserProps> = ({ user, className, status, display, o
         </CardContent>
         <CardFooter className="flex flex-row items-end justify-between  gap-1">
           <Button asChild className="text-xs sm:text-sm w-full">
-            <Link href={`/admin/users/${user.id}`}>Consulter</Link>
+            <Link href={`/admin/users/${user.id}`}>Modifier</Link>
           </Button>
         </CardFooter>
       </Card>
