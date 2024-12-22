@@ -11,6 +11,8 @@ export const productIcons = [
   { label: "pie vache blue", Icon: Icons.CowMilk, color: "fill-blue-500" },
   { label: "bouteille grise", Icon: LuMilk, color: "text-gray-500" },
   { label: "bidon verre", Icon: TbMilk, color: "text-green-700" },
+  { label: "bidon rouge", Icon: TbMilk, color: "text-red-500" },
+  { label: "bidon blue", Icon: TbMilk, color: "text-blue-500" },
   { label: "casier rouge", Icon: BsBasketFill, color: "text-red-500" },
   { label: "package", Icon: PiPackageDuotone, color: "text-gray-500" },
 ];

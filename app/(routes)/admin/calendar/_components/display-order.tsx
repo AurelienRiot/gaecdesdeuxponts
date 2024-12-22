@@ -15,6 +15,8 @@ import { toast } from "sonner";
 import { useUsersQuery } from "@/hooks/use-query/users-query";
 import DisplayItem from "./display-item";
 import { useUserModal } from "../../_components/user-modal";
+import { Item } from "@radix-ui/react-dropdown-menu";
+import { DisplayProductIcon } from "@/components/product";
 
 interface DisplayOrderProps {
   order: CalendarOrderType;
@@ -26,14 +28,24 @@ const DisplayOrder: React.FC<DisplayOrderProps> = ({ order, className, newOrder 
   const [isExpanded, setIsExpanded] = useState(false);
   const router = useRouter();
 
+  const filteredProducts = order.productsList.filter((item) => item.quantity > 0 && item.price >= 0);
+
   return (
     <>
       <Card className={cn("w-full max-w-sm ", className)}>
-        <CardHeader className="flex relative items-center justify-start py-2 px-4  ">
+        <CardHeader className="space-y-2 py-2 px-4  relative">
           <div className="grid grid-cols-11  items-center w-full">
             <SetUserModal order={order} newOrder={newOrder} />
-
-            <StatusCell status={order.status} className="col-span-5 justify-center" />
+            <div className="flex gap-1 col-span-4 ml-2">
+              {filteredProducts.slice(0, 2).map((item, index) => (
+                <div key={item.itemId + index} className="flex gap-1 items-center justify-start text-sm font-medium">
+                  <span>{item.quantity}</span>
+                  <DisplayProductIcon icon={item.icon} />
+                </div>
+              ))}
+              {filteredProducts.length > 2 && <span>...</span>}
+            </div>
+            <StatusCell status={order.status} displayName={false} className="col-span-1 justify-center" />
             <button
               type="button"
               onClick={() => {
@@ -113,7 +125,14 @@ function SetUserModal({ order, newOrder }: { order: CalendarOrderType; newOrder?
           <span className="sr-only">{"Nouvelle commande crée"}</span>
         </span>
       )}
-      <NameWithImage name={order.userName} image={order.userImage} imageSize={12} completed={user.completed} />
+      <NameWithImage
+        name={order.userName}
+        image={order.userImage}
+        // displayImage={!!order.userImage}
+        // displayName={!order.userImage}
+        imageSize={12}
+        completed={user.completed}
+      />
     </button>
   );
 }

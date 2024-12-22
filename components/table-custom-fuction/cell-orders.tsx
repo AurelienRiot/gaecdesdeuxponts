@@ -179,6 +179,7 @@ const statusArray = createStatusArray([...status]);
 type StatusCellProps = {
   status: Status;
   className?: string;
+  displayName?: boolean;
 };
 
 const statusConfig: Record<
@@ -216,7 +217,7 @@ const statusConfig: Record<
   },
 };
 
-function StatusCell({ status, className }: StatusCellProps) {
+function StatusCell({ status, className, displayName = true }: StatusCellProps) {
   const { Icon, color, hoverColor } = statusConfig[status];
   return (
     <div className={cn("flex gap-2 sm:gap-4", className)}>
@@ -225,7 +226,7 @@ function StatusCell({ status, className }: StatusCellProps) {
         className={cn(color, hoverColor, "text-white text-xs px-2 py-0.5 flex items-center space-x-1")}
       >
         <Icon className="size-3" />
-        <span className="text-[10px]">{status}</span>
+        {displayName && <span className="text-[10px]">{status}</span>}
       </Badge>
     </div>
   );

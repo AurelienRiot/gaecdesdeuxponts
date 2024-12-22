@@ -14,7 +14,7 @@ async function IntercepteUserPage(props: {
 }) {
   const params = await props.params;
   return (
-    <div className="space-y-6 w-full">
+    <div className="space-y-6 w-full pt-6">
       <DisplayUserForm userId={params.userId} />
     </div>
   );
