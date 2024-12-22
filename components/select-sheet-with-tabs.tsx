@@ -16,7 +16,6 @@ import { ScrollArea } from "./ui/scroll-area";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { NameWithImage } from "./user";
-import { toast } from "sonner";
 
 type ValueType<V extends { key: string }> = { label: React.ReactNode; search: string; value: V; highlight?: boolean };
 type TabsType = { label: string; value: string }[];
@@ -125,8 +124,8 @@ function SelectSheetWithTabs<V extends { key: string }>({
         style={{ height: contentHeight }}
       >
         <>
-          <div ref={contentRef} className={cn("mx-auto w-full max-w-md space-y-4 relative", className)}>
-            <SheetHeader>
+          <div ref={contentRef} className={cn("mx-auto w-full max-w-sm space-y-4 relative", className)}>
+            <SheetHeader className="max-w-[80vw]">
               <SheetTitle className="flex items-center justify-between  ">
                 <span>{title}</span>
                 {!!defaultValue && (

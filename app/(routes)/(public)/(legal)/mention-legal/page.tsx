@@ -2,12 +2,10 @@ import type { Metadata } from "next";
 
 export const dynamic = "force-static";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "Mention légales",
-    description: "Mention légales de Laiterie du Pont Robert",
-  };
-}
+export const metadata: Metadata = {
+  title: "Mention légales",
+  description: "Mention légales de Laiterie du Pont Robert",
+};
 
 const MentionLegalPage = () => {
   return (

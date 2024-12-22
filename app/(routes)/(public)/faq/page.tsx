@@ -1,21 +1,14 @@
 import Container from "@/components/ui/container";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "./accordion";
-import  type { Metadata } from "next";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./accordion";
+import type { Metadata } from "next";
 
 export const dynamic = "force-static";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "FAQ sur le Lait Cru",
-    description:
-      "Trouvez les réponses aux questions fréquemment posées sur notre lait cru, ses bienfaits, et comment nous assurons sa qualité et sécurité pour vous.",
-  };
-}
+export const metadata: Metadata = {
+  title: "FAQ sur le Lait Cru",
+  description:
+    "Trouvez les réponses aux questions fréquemment posées sur notre lait cru, ses bienfaits, et comment nous assurons sa qualité et sécurité pour vous.",
+};
 
 const faqData = [
   {
@@ -57,24 +50,21 @@ const faqData = [
     ],
   },
   {
-    question:
-      "Quelle est la différence entre le lait cru et le lait pasteurisé ?",
+    question: "Quelle est la différence entre le lait cru et le lait pasteurisé ?",
     answer: [
       "Le lait cru est le lait tel qu'il est collecté à la ferme, sans traitement thermique.",
       "Le lait pasteurisé a été chauffé à une certaine température pour tuer les bactéries, ce qui affecte également certains nutriments et enzymes.",
     ],
   },
   {
-    question:
-      "Peut-on utiliser le lait cru pour faire des produits laitiers maison ?",
+    question: "Peut-on utiliser le lait cru pour faire des produits laitiers maison ?",
     answer: [
       "Oui, le lait cru est souvent utilisé pour faire du fromage, du yaourt, et d'autres produits laitiers maison.",
       "Ses enzymes naturels et sa flore bactérienne peuvent contribuer à un goût plus riche et à une meilleure fermentation.",
     ],
   },
   {
-    question:
-      "Y a-t-il des risques sanitaires associés à la consommation de lait cru ?",
+    question: "Y a-t-il des risques sanitaires associés à la consommation de lait cru ?",
     answer: [
       "Le lait cru peut contenir des bactéries nocives responsables de maladies d'origine alimentaire.",
       "Il est crucial de s'approvisionner auprès de fermes qui suivent des pratiques strictes de manipulation et de production pour minimiser ces risques.",
@@ -102,13 +92,10 @@ const FAQPage = () => {
     <Container className="px-4 py-12">
       <div className="mx-auto max-w-4xl">
         <div className="mb-20 text-center">
-          <h1 className="mb-4 text-3xl font-bold text-primary lg:text-5xl">
-            FAQ sur le Lait Cru
-          </h1>
+          <h1 className="mb-4 text-3xl font-bold text-primary lg:text-5xl">FAQ sur le Lait Cru</h1>
           <p className="text-secondary-foreground">
-            Trouvez les réponses aux questions fréquemment posées sur notre lait
-            cru, ses bienfaits, et comment nous assurons sa qualité et sécurité
-            pour vous.
+            Trouvez les réponses aux questions fréquemment posées sur notre lait cru, ses bienfaits, et comment nous
+            assurons sa qualité et sécurité pour vous.
           </p>
         </div>
       </div>

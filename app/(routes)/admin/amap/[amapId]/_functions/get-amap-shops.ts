@@ -5,9 +5,7 @@ import { unstable_cache } from "next/cache";
 
 const getAmapShops = unstable_cache(
   async () => {
-    return (await prismadb.shop.findMany({ where: { type: "amap" } })).sort((a, b) =>
-      (a.name || "").localeCompare(b.name || ""),
-    );
+    return await prismadb.shop.findMany({ where: { type: "amap" }, orderBy: { name: "asc" } });
   },
   ["getAmapShops"],
   {

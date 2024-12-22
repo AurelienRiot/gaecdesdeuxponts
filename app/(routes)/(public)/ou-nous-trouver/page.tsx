@@ -14,13 +14,11 @@ import ShowShops from "./_components/show-shops";
 // export const dynamic = "force-static";
 export const revalidate = 604800;
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "Points de vente et magasins partenaires",
-    description:
-      "Trouvez les points de vente et magasins partenaire qui vendent et utilisent notre lait les plus proches de chez vous",
-  };
-}
+export const metadata: Metadata = {
+  title: "Points de vente et magasins partenaires",
+  description:
+    "Trouvez les points de vente et magasins partenaire qui vendent et utilisent notre lait les plus proches de chez vous",
+};
 
 const OuNousTrouver = async () => {
   return (

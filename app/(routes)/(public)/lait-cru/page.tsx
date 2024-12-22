@@ -6,13 +6,11 @@ import Image from "next/image";
 
 export const dynamic = "force-static";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "Lait Cru",
-    description:
-      "Nous nous engageons à produire du lait cru bio de la plus haute qualité, en adoptant une approche respectueuse de l’environnement et de nos animaux. Le lait cru est un produit non pasteurisé qui conserve tous ses nutriments et saveurs naturels. Pour assurer une qualité irréprochable, nous suivons des pratiques rigoureuses de gestion de l’élevage et de la traite. Nos vaches pâturent librement dans des prairies naturelles, ce qui leur permet de se nourrir d’herbes fraîches et variées, contribuant à un lait riche et savoureux. Nous surveillons attentivement leur santé et leur bien-être, garantissant ainsi un produit final sain et nutritif.",
-  };
-}
+export const metadata: Metadata = {
+  title: "Lait Cru",
+  description:
+    "Nous nous engageons à produire du lait cru bio de la plus haute qualité, en adoptant une approche respectueuse de l’environnement et de nos animaux. Le lait cru est un produit non pasteurisé qui conserve tous ses nutriments et saveurs naturels. Pour assurer une qualité irréprochable, nous suivons des pratiques rigoureuses de gestion de l’élevage et de la traite. Nos vaches pâturent librement dans des prairies naturelles, ce qui leur permet de se nourrir d’herbes fraîches et variées, contribuant à un lait riche et savoureux. Nous surveillons attentivement leur santé et leur bien-être, garantissant ainsi un produit final sain et nutritif.",
+};
 
 const LaitCruPage = () => {
   return (

@@ -1,18 +1,23 @@
-import NotFound from "@/components/not-found";
-import Container from "@/components/ui/container";
-import { Clock, LinkIcon, Mail, MapPin, Phone } from "lucide-react";
-import type { Metadata } from "next";
-import Image from "next/image";
 import { tagOptions, typeTextRecord } from "@/components/display-shops";
 import { DisplayHoursContent } from "@/components/display-shops/display-hours";
 import DisplayTags from "@/components/display-shops/display-tags";
+import NotFound from "@/components/not-found";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Container from "@/components/ui/container";
 import { DisplayLink } from "@/components/user";
 import { formatFrenchPhoneNumber } from "@/lib/utils";
-import { getShop, type ShopPageProps } from "./_functions/static-params";
-import { getLocalDay } from "@/lib/date-utils";
+import { Clock, LinkIcon, Mail, MapPin, Phone } from "lucide-react";
+import type { Metadata } from "next";
+import Image from "next/image";
+import { getShop } from "./_functions/get-shop";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
+
+export interface ShopPageProps {
+  params: Promise<{
+    shopId: string;
+  }>;
+}
 
 export async function generateMetadata(props: ShopPageProps): Promise<Metadata> {
   const params = await props.params;
@@ -116,7 +121,7 @@ const ShopPage = async (props: ShopPageProps) => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <DisplayHoursContent shopHours={shop.shopHours} currentDay={getLocalDay(new Date())} />
+                <DisplayHoursContent shopHours={shop.shopHours} />
               </CardContent>
             </Card>
           )}

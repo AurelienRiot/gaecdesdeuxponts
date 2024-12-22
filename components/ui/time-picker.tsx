@@ -46,7 +46,7 @@ const TimePicker = ({ className, popoverClassName, value, onChange, timeOptions 
               <button
                 type="button"
                 key={dateValue}
-                className="relative flex cursor-pointer  items-center rounded-sm px-2 py-1.5 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground "
+                className="relative flex cursor-pointer  items-center rounded-sm px-2 py-1.5 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground w-full"
                 onClick={() => {
                   onChange(time);
                   setOpen(false);

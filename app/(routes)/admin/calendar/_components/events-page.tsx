@@ -12,7 +12,6 @@ import { ListOrdered } from "lucide-react";
 import { useCallback, useRef } from "react";
 import { Virtuoso, type VirtuosoHandle } from "react-virtuoso";
 import type { getGroupedAMAPOrders } from "../_functions/get-amap-orders";
-import { dateArray } from "../_functions/make-date-array-for-orders";
 import TodayFocus from "./date-focus";
 import DisplayAmap from "./display-amap";
 import DisplayOrder from "./display-order";
@@ -22,27 +21,31 @@ import UpdatePage from "./update-page";
 
 type EventsPageProps = {
   amapOrders: Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
+  dateArray: string[];
 };
 
-export default function EventPage({ amapOrders }: EventsPageProps) {
+export default function EventPage({ amapOrders, dateArray }: EventsPageProps) {
   const { data: orders, error: ordersError, fetchStatus: ordersFetchStatus } = useOrdersQuery();
   const { error: usersError, fetchStatus: usersFetchStatus } = useUsersQuery();
   const virtuosoRef = useRef<VirtuosoHandle>(null);
 
-  const scrollToElement = useCallback((id: string, behavior: "smooth" | "auto" = "smooth") => {
-    const index = dateArray.findIndex((date) => date === id);
+  const scrollToElement = useCallback(
+    (id: string, behavior: "smooth" | "auto" = "smooth") => {
+      const index = dateArray.findIndex((date) => date === id);
 
-    const element = virtuosoRef.current;
-    if (element) {
-      element.scrollIntoView({
-        index,
-        behavior,
-        align: "center",
-      });
-    } else {
-      console.warn(`Element with id '${id}' not found inside the container.`);
-    }
-  }, []);
+      const element = virtuosoRef.current;
+      if (element) {
+        element.scrollIntoView({
+          index,
+          behavior,
+          align: "center",
+        });
+      } else {
+        console.warn(`Element with id '${id}' not found inside the container.`);
+      }
+    },
+    [dateArray],
+  );
   return (
     <>
       {(ordersFetchStatus === "fetching" || usersFetchStatus === "fetching") && (

@@ -8,12 +8,10 @@ const baseUrl = process.env.NEXT_PUBLIC_URL;
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "Page de connection",
-    description: "Connectez-vous à Laiterie du Pont Robert",
-  };
-}
+export const metadata: Metadata = {
+  title: "Page de connection",
+  description: "Connectez-vous à Laiterie du Pont Robert",
+};
 
 const LoginPage = async (context: {
   searchParams: Promise<{ callbackUrl: string | undefined; error: string | undefined; emaillogin: string | undefined }>;

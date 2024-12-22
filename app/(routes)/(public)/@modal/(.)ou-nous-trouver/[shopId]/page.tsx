@@ -1,5 +1,4 @@
-import type { ShopPageProps } from "../../../ou-nous-trouver/[shopId]/_functions/static-params";
-import ShopPage from "../../../ou-nous-trouver/[shopId]/page";
+import ShopPage, { type ShopPageProps } from "../../../ou-nous-trouver/[shopId]/page";
 
 export const dynamic = "force-dynamic";
 

@@ -6,13 +6,11 @@ import type { Metadata } from "next";
 
 export const dynamic = "force-static";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "À propos de nous",
-    description:
-      "Nous sommes Julie et Jean-Marc, les heureux propriétaires d’une jeune exploitation agricole située dans la vallée du Don, en plein cœur du territoire des Marais de Vilaine. Notre ferme s’étend sur 130 hectares, dont 40% sont des prairies naturelles humides. Ces prairies, souvent inondées en hiver par les crues de la rivière, sont une véritable richesse pour notre exploitation. Nous y portons une attention particulière pour les valoriser au maximum, tant pour l’alimentation de notre troupeau de 80 vaches laitières élevées en agriculture biologique que pour assurer l’autonomie alimentaire de notre ferme.",
-  };
-}
+export const metadata: Metadata = {
+  title: "À propos de nous",
+  description:
+    "Nous sommes Julie et Jean-Marc, les heureux propriétaires d’une jeune exploitation agricole située dans la vallée du Don, en plein cœur du territoire des Marais de Vilaine. Notre ferme s’étend sur 130 hectares, dont 40% sont des prairies naturelles humides. Ces prairies, souvent inondées en hiver par les crues de la rivière, sont une véritable richesse pour notre exploitation. Nous y portons une attention particulière pour les valoriser au maximum, tant pour l’alimentation de notre troupeau de 80 vaches laitières élevées en agriculture biologique que pour assurer l’autonomie alimentaire de notre ferme.",
+};
 
 const PageLaFerme = () => {
   return (

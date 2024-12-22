@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { DAYS_OF_WEEK, formatHours } from "@/lib/date-utils";
@@ -17,7 +18,7 @@ function DisplayHours({ shopHours }: { shopHours: ShopHours[] }) {
   }
   return (
     <>
-      <DisplayShopStatus shopHours={shopHours} currentDay={currentDay} />
+      <DisplayShopStatus shopHours={shopHours} />
       <Dialog>
         <DialogTrigger asChild>
           <Button type="button" variant="outline">
@@ -29,21 +30,23 @@ function DisplayHours({ shopHours }: { shopHours: ShopHours[] }) {
             <DialogTitle>Horraires</DialogTitle>
           </DialogHeader>
 
-          <DisplayHoursContent shopHours={shopHours} currentDay={currentDay} />
+          <DisplayHoursContent shopHours={shopHours} />
         </DialogContent>
       </Dialog>
     </>
   );
 }
 
-export const DisplayShopStatus = ({ shopHours, currentDay }: { shopHours: ShopHours[]; currentDay: number }) => {
+export const DisplayShopStatus = ({ shopHours }: { shopHours: ShopHours[] }) => {
+  const currentDay = new Date().getDay();
   const shopStatus = getShopStatus(shopHours, currentDay);
   return (
     <p className={cn("font-semibold ", shopStatus.isOpen ? "text-green-500" : "text-red-500")}>{shopStatus.label}</p>
   );
 };
 
-export function DisplayHoursContent({ shopHours, currentDay }: { shopHours: ShopHours[]; currentDay: number }) {
+export function DisplayHoursContent({ shopHours }: { shopHours: ShopHours[] }) {
+  const currentDay = new Date().getDay();
   let sortedHours = [...shopHours];
   const firstItem = sortedHours.shift();
   if (firstItem) {
@@ -53,7 +56,7 @@ export function DisplayHoursContent({ shopHours, currentDay }: { shopHours: Shop
   }
   return (
     <div className="space-y-4">
-      <DisplayShopStatus shopHours={shopHours} currentDay={currentDay} />
+      <DisplayShopStatus shopHours={shopHours} />
       <ul className="space-y-2">
         {sortedHours.map((hours) => (
           <li

@@ -58,11 +58,11 @@ export const getAMAPOrders = unstable_cache(
 
 export type GetGroupedAMAPOrdersType = Awaited<ReturnType<typeof getGroupedAMAPOrders>>;
 export const getGroupedAMAPOrders = unstable_cache(
-  async () => {
+  async (date: Date) => {
     const amapOrders = await prismadb.aMAPOrder.findMany({
       where: {
         endDate: {
-          gte: addDays(new Date(), -1),
+          gte: addDays(new Date(date), -1),
         },
       },
       select: {

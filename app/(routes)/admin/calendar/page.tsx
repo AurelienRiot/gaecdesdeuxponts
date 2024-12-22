@@ -1,15 +1,14 @@
-import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import { Plus, User } from "lucide-react";
-import Link from "next/link";
 import EventPage from "./_components/events-page";
 import NewOrderButton from "./_components/new-order-button";
+import { makeDateArrayForOrders } from "./_functions/date-array";
 import { getGroupedAMAPOrders } from "./_functions/get-amap-orders";
 
 export const revalidate = 86400;
 
 async function CalendarPage() {
-  const amapOrders = await getGroupedAMAPOrders();
+  const { dateArray, from } = makeDateArrayForOrders(new Date());
+  const amapOrders = await getGroupedAMAPOrders(from);
 
   return (
     <div className=" flex flex-col gap-2 relative justify-between " style={{ height: `calc(100dvh - 80px)` }}>
@@ -32,7 +31,7 @@ async function CalendarPage() {
       </div>
       <Separator />
 
-      <EventPage amapOrders={amapOrders} />
+      <EventPage amapOrders={amapOrders} dateArray={dateArray} />
     </div>
   );
 }

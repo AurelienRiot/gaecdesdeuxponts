@@ -115,7 +115,7 @@ const getUser = unstable_cache(async (userId: string) => {
     id: user.id,
     name: user.name || "",
     email: user.email || "",
-    phone: user.phone ? formatFrenchPhoneNumber(user.phone) : "",
+    phone: user.phone,
     company: user.company,
     raisonSocial: user.raisonSocial,
     image: user.image,

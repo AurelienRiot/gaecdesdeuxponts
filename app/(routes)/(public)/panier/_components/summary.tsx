@@ -157,7 +157,7 @@ const Summary: React.FC<SummaryProps> = ({ shops }) => {
             <p>{tooltipText}</p>
           </TooltipContent>
         </Tooltip>
-        {!role && <LoginCard date={date} shopId={shopId} className="absolute left-1/2 top-full -translate-x-1/2" />}
+        {!role && <LoginCard className="absolute left-1/2 top-full -translate-x-1/2" />}
       </div>
     </>
   );

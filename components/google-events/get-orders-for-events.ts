@@ -7,7 +7,7 @@ export const getAllOrders = async ({ startDate, endDate }: { startDate: Date; en
   const [orders, amapOrders] = await Promise.all([
     getOrdersByDate({ from: startDate, to: endDate }),
 
-    getGroupedAMAPOrders(),
+    getGroupedAMAPOrders(startDate),
   ]);
 
   const todayAmapOrders = getAmapOrdersForTheDay(amapOrders, startDate);
