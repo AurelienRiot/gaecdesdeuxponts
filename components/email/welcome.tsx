@@ -7,12 +7,12 @@ export interface WelcomeEmailProps {
   connectionLink: string;
 }
 
-export const WelcomeEmail = ({ otp, baseUrl }: WelcomeEmailProps) => (
+export const WelcomeEmail = ({ otp, baseUrl, connectionLink }: WelcomeEmailProps) => (
   <MainBody
     baseUrl={baseUrl}
     previewText={`Bienvenue ! Entrez votre code unique ${otp} pour vous connecter et passer commande`}
   >
-    <WelcomeBody otp={otp} connectionLink={baseUrl} />
+    <WelcomeBody otp={otp} connectionLink={connectionLink} />
   </MainBody>
 );
 
@@ -21,7 +21,8 @@ export default WelcomeEmail;
 WelcomeEmail.PreviewProps = {
   otp: "123456",
   baseUrl: "https://www.laiteriedupontrobert.fr",
-  connectionLink: "https://www.laiteriedupontrobert.fr",
+  connectionLink:
+    "https://www.laiteriedupontrobert.fr/api/auth/callback/email?callbackUrl=https%3A%2F%2Fwww.laiteriedupontrobert.fr%2Fprofile&token=b0b2b01a2878e339d4753261e61a28a523da0e59f0704546fd8f2a1e647d78ed&email=yoyololo1235%40gmail.com",
 } as WelcomeEmailProps;
 
 const WelcomeBody = ({ otp, connectionLink }: { otp: string; connectionLink: string }) => (
@@ -50,8 +51,8 @@ function OTPEmail({ otp, connectionLink }: { otp: string; connectionLink: string
         <Text className="text-center text-sm text-gray-800 mb-2">
           Vous pouvez aussi vous connecter en cliquant sur le lien ci-dessous :
         </Text>
-        <a href={connectionLink} className="text-center text-sm text-blue-500 hover:text-blue-700">
-          {connectionLink}
+        <a href={connectionLink} className="text-center text-sm text-blue-500 hover:text-blue-700 truncate">
+          https://www.laiteriedupontrobert.fr/api/auth/callback/email?...
         </a>
       </Section>
     </Section>

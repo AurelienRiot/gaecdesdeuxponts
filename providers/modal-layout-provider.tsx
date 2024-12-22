@@ -16,7 +16,7 @@ function ModalLayoutProvider({
       isOpen={true}
       onClose={() => router.back()}
       modal
-      className={cn("overflow-y-scroll w-[90%] max-h-[90%] sm:max-w-sm md:max-w-md ", className)}
+      className={cn("overflow-y-scroll w-[90%] max-h-[90%] sm:max-w-md md:max-w-lg ", className)}
       headerClassName="sr-only"
       title={title}
       description={description}
