@@ -18,7 +18,7 @@ const getShops = unstable_cache(
           shopHours: { orderBy: { day: "asc" } },
         },
         orderBy: {
-          updatedAt: "desc",
+          id: "asc",
         },
       }),
       prismadb.shop.findUnique({
