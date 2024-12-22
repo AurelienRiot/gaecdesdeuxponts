@@ -45,15 +45,19 @@ export const DisplayShopStatus = ({ shopHours }: { shopHours: ShopHours[] }) => 
   );
 };
 
+function reorderShopHours(shopHours: ShopHours[], currentDay: number): ShopHours[] {
+  const dayOrder = [
+    ...Array.from({ length: 7 }, (_, i) => i).slice(currentDay),
+    ...Array.from({ length: 7 }, (_, i) => i).slice(0, currentDay),
+  ];
+
+  return [...shopHours].sort((a, b) => dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day));
+}
+
 export function DisplayHoursContent({ shopHours }: { shopHours: ShopHours[] }) {
   const currentDay = new Date().getDay();
-  let sortedHours = [...shopHours];
-  const firstItem = sortedHours.shift();
-  if (firstItem) {
-    sortedHours = sortedHours
-      .concat(firstItem)
-      .sort((a, b) => (a.day === currentDay ? -1 : b.day === currentDay ? 1 : 0));
-  }
+  const sortedHours = reorderShopHours(shopHours, currentDay);
+
   return (
     <div className="space-y-4">
       <DisplayShopStatus shopHours={shopHours} />
