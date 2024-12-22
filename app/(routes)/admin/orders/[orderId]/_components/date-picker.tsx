@@ -1,15 +1,15 @@
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Calendar, type CalendarProps } from "@/components/ui/calendar";
-import { Checkbox, type CheckedState } from "@/components/ui/checkbox";
-import { FormItem, FormLabel } from "@/components/ui/form";
+import { Checkbox } from "@/components/ui/checkbox";
+import { FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { dateFormatter } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
 import { fr } from "date-fns/locale";
 import { forwardRef, useState } from "react";
-import type { OrderFormValues } from "./order-schema";
 import { useFormContext } from "react-hook-form";
+import type { OrderFormValues } from "./order-schema";
 
 type FormDatePickerProps = Omit<CalendarProps, "disabled"> & {
   title: string;
@@ -126,6 +126,7 @@ const FormDatePicker = forwardRef<HTMLButtonElement, FormDatePickerProps>(
             />
           </PopoverContent>
         </Popover>
+        <FormMessage />
       </FormItem>
     );
   },
