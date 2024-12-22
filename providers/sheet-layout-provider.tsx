@@ -17,7 +17,10 @@ function SheetLayoutProvider({
       }}
       modal
     >
-      <SheetContent className="overflow-y-scroll w-[90%] sm:max-w-sm md:max-w-md p-4">
+      <SheetContent
+        onOpenAutoFocus={(e) => e.preventDefault()}
+        className="overflow-y-scroll w-[90%] sm:max-w-sm md:max-w-md p-4"
+      >
         <SheetHeader className="sr-only">
           <SheetTitle>{title}</SheetTitle>
           <SheetDescription>{description}</SheetDescription>

@@ -14,7 +14,7 @@ export default async function PublicLayout({
       <PublicHeader />
       <main id="main-content" className="pt-20 ">
         {children}
-        <div className="absolute inset-0 -z-10"> {modal}</div>
+        {modal}
       </main>
       <CookiesBanner />
       <Footer />

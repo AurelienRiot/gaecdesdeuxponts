@@ -21,7 +21,7 @@ export default async function AdminLayout({
             {/* <AdminColorSchema /> */}
             <Navbar />
             {children}
-            <div className="absolute inset-0 -z-10">{modal}</div>
+            {modal}
           </div>
         </SidebarProvider>
       </OrdersModalProvider>

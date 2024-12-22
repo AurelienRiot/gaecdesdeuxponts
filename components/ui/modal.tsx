@@ -5,6 +5,7 @@ interface ModalProps {
   description?: string;
   isOpen: boolean;
   onClose: () => void;
+  onOpenAutoFocus?: (e: Event) => void;
   children?: React.ReactNode;
   className?: string;
   headerClassName?: string;
@@ -16,6 +17,7 @@ export const Modal: React.FC<ModalProps> = ({
   description,
   isOpen,
   onClose,
+  onOpenAutoFocus,
   children,
   className,
   headerClassName,
@@ -28,7 +30,7 @@ export const Modal: React.FC<ModalProps> = ({
   };
   return (
     <Dialog open={isOpen} onOpenChange={onChange} modal={modal}>
-      <DialogContent className={className}>
+      <DialogContent onOpenAutoFocus={(e) => onOpenAutoFocus?.(e)} className={className}>
         <DialogHeader className={headerClassName}>
           <DialogTitle> {title} </DialogTitle>
           <DialogDescription>{description}</DialogDescription>

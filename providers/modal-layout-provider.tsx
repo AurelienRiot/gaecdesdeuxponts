@@ -20,6 +20,7 @@ function ModalLayoutProvider({
       headerClassName="sr-only"
       title={title}
       description={description}
+      onOpenAutoFocus={(e) => e.preventDefault()}
     >
       {children}
     </Modal>
