@@ -1,3 +1,3 @@
-import LoadingPage from "@/components/skeleton-ui/loading";
+import LoadingPageShop from "../../../ou-nous-trouver/[shopId]/loading";
 
-export default LoadingPage;
+export default LoadingPageShop;

@@ -3,6 +3,7 @@ import { Logout } from "@/components/auth/auth";
 import { EmailButton, GoogleButton } from "@/components/auth/auth-button";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import LoadingPageLoading from "./loading";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
