@@ -11,6 +11,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { getShop } from "./_functions/get-shop";
 import getShops from "@/actions/get-shops";
+import Loading from "./loading";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL;
 
