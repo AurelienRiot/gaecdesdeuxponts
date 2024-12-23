@@ -4,7 +4,7 @@ import Container from "@/components/ui/container";
 import { Clock, LinkIcon, Mail, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
 
-export default function Loading() {
+export default function LoadingPage() {
   return (
     <Container className="max-w-3xl mb-4">
       <Card className="overflow-hidden">

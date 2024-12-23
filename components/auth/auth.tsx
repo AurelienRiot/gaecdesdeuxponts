@@ -1,6 +1,6 @@
 "use client";
 
-import Loading from "@/app/(routes)/(public)/loading";
+import LoadingPage from "@/app/(routes)/(public)/loading";
 import type { Role } from "@prisma/client";
 import type { DefaultSession } from "next-auth";
 import type { DefaultJWT } from "next-auth/jwt";
@@ -32,5 +32,5 @@ export const Logout = ({ callbackUrl = "/" }: { callbackUrl?: string }) => {
       callbackUrl,
     });
   }
-  return <Loading />;
+  return <LoadingPage />;
 };

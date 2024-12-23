@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Suspense } from "react";
 import PlacePicker from "./_components/place";
-import Loading from "../loading";
+import LoadingPage from "../loading";
 import ShowShops from "./_components/show-shops";
 
 // export const dynamic = "force-static";
@@ -32,7 +32,7 @@ const OuNousTrouver = async () => {
           </p>
         </div>
       </Container>
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<LoadingPage />}>
         <ServerPlace />
       </Suspense>
     </div>

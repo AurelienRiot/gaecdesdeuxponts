@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-const Loading = () => {
+const LoadingPage = () => {
   return (
     <div className="relative ml-24 mt-5 h-full w-full sm:ml-28 sm:mt-10">
       <div
@@ -26,4 +26,4 @@ const Loading = () => {
   );
 };
 
-export default Loading;
+export default LoadingPage;

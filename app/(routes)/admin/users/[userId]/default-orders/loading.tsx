@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { DAYS_OF_WEEK } from "@/lib/date-utils";
 
-function Loading() {
+function LoadingPage() {
   return (
     <div className=" space-y-4 h-full pt-20 pb-10">
       <div className="fixed top-0 right-0 left-0 z-10 bg-background">
@@ -47,4 +47,4 @@ function DayCard({ day }: { day: number }) {
   );
 }
 
-export default Loading;
+export default LoadingPage;

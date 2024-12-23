@@ -5,7 +5,7 @@ import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { ChevronDown, ListOrdered } from "lucide-react";
 
-function Loading() {
+function LoadingPage() {
   return (
     <div className="m-4">
       <Heading title={`Clients `} description="Liste des clients" />
@@ -48,4 +48,4 @@ function Loading() {
   );
 }
 
-export default Loading;
+export default LoadingPage;

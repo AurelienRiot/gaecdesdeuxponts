@@ -1,3 +1,3 @@
-import Loading from "@/app/(routes)/(public)/category/[categoryName]/product/[productName]/loading";
+import LoadingPage from "@/app/(routes)/(public)/category/[categoryName]/product/[productName]/loading";
 
-export default Loading;
+export default LoadingPage;

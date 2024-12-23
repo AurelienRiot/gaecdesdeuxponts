@@ -2,7 +2,7 @@ import Gallery from "@/components/skeleton-ui/gallery-skeleton";
 import Info from "@/components/skeleton-ui/info-skeleton";
 import { ProductListSkeleton } from "@/components/skeleton-ui/products-list-skeleton";
 
-const Loading = () => (
+const LoadingPage = () => (
   <div className="px-4 py-10 sm:px-6 lg:px-8">
     <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
       <Gallery />
@@ -14,4 +14,4 @@ const Loading = () => (
     <ProductListSkeleton title="Produits Similaires" />
   </div>
 );
-export default Loading;
+export default LoadingPage;

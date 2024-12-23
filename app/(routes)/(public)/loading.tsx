@@ -2,20 +2,12 @@ import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import React from "react";
 import { cn } from "@/lib/utils";
 
-const Loading = ({ className }: { className?: string }) => {
+const LoadingPage = ({ className }: { className?: string }) => {
   return (
-    <div
-      className={cn(
-        "mt-20 flex min-h-0 flex-col flex-wrap items-center justify-center",
-        className,
-      )}
-    >
+    <div className={cn("mt-20 flex min-h-0 flex-col flex-wrap items-center justify-center", className)}>
       <div className=" relative h-2  w-[40vw] overflow-hidden rounded border-2 bg-primary-foreground">
         <div className="absolute h-full animate-load-bar rounded bg-primary"></div>
-        <div
-          style={{ animationDelay: `500ms` }}
-          className="absolute h-full animate-load-bar rounded bg-primary"
-        ></div>
+        <div style={{ animationDelay: `500ms` }} className="absolute h-full animate-load-bar rounded bg-primary"></div>
       </div>
       <div className="flex min-h-0 items-center space-x-4 place-self-center self-center justify-self-center p-4">
         <Skeleton className="h-12 w-12 rounded-full" />
@@ -28,4 +20,4 @@ const Loading = ({ className }: { className?: string }) => {
   );
 };
 
-export default Loading;
+export default LoadingPage;

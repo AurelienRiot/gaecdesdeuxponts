@@ -1,3 +1,3 @@
-import Loading from "@/components/skeleton-ui/loading";
+import LoadingPage from "@/components/skeleton-ui/loading";
 
-export default Loading;
+export default LoadingPage;

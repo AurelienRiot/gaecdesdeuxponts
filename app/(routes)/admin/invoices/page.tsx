@@ -1,15 +1,14 @@
+import { Skeleton } from "@/components/skeleton-ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
+import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import CardFilter from "./_components/card-filter";
 import { InvoiceModalProvider } from "./_components/payment-method-modal";
 import getInvoices from "./_functions/get-invoices";
-import { addDelay } from "@/lib/utils";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Skeleton } from "@/components/skeleton-ui/skeleton";
-import { MoreHorizontal } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 

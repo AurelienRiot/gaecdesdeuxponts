@@ -10,7 +10,7 @@ import ChangeUser from "./_components/change-user";
 import { DefaultOrderModalProvider, type DefaultOrderProps, ModalTrigger } from "./_components/default-order-modal";
 import FavoriteProducts from "./_components/favorite-products";
 import getDefaultOrders from "./_functions/get-default-orders";
-import Loading from "./loading";
+import LoadingPage from "./loading";
 import { addDelay } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";

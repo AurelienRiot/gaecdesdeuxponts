@@ -112,7 +112,6 @@ function GroupedInvoice({ userWithOrdersForInvoices }: { userWithOrdersForInvoic
     }
 
     if (!sendEmail) {
-      console.log(response);
       setLoading(false);
       router.push("/admin/invoices");
       return;

@@ -2,7 +2,7 @@ import BillboardSkeleton from "@/components/skeleton-ui/billboard-skeleton";
 import { ProductCart } from "@/components/skeleton-ui/product-cart-skeleton";
 import Container from "@/components/ui/container";
 
-const Loading = () => (
+const LoadingPage = () => (
   <Container>
     <BillboardSkeleton />
     <div className="px-4 pb-24 sm:px-6 lg:px-8">
@@ -20,4 +20,4 @@ const Loading = () => (
     </div>
   </Container>
 );
-export default Loading;
+export default LoadingPage;
