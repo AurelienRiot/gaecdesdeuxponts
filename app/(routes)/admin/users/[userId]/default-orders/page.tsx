@@ -10,6 +10,8 @@ import ChangeUser from "./_components/change-user";
 import { DefaultOrderModalProvider, type DefaultOrderProps, ModalTrigger } from "./_components/default-order-modal";
 import FavoriteProducts from "./_components/favorite-products";
 import getDefaultOrders from "./_functions/get-default-orders";
+import Loading from "./loading";
+import { addDelay } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -33,11 +35,9 @@ const formateProducts = (products: ProductsForOrdersType, defaultOrderProducts: 
       unit: correspondingProduct?.unit,
     };
   });
-async function DefaultProductsPage(
-  props: {
-    params: Promise<{ userId: string | "new" | undefined }>;
-  }
-) {
+async function DefaultProductsPage(props: {
+  params: Promise<{ userId: string | "new" | undefined }>;
+}) {
   const params = await props.params;
   const userId = params.userId;
   const [user, shops, products] = await Promise.all([getDefaultOrders(userId), getAllShops(), getProductsForOrders()]);
