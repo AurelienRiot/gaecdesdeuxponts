@@ -34,7 +34,7 @@ function ChangeUser({ userId }: { userId: string }) {
       tabsValues={tabsValue}
       onSelected={(selected) => {
         if (selected) {
-          router.push(`/admin/users/${selected.key}/default-orders`);
+          router.replace(`/admin/users/${selected.key}/default-orders`);
         }
       }}
       isSearchable
