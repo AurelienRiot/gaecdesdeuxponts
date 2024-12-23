@@ -1,3 +1,4 @@
+import Loading from "@/components/skeleton-ui/loading";
 import { getUserName } from "@/components/table-custom-fuction";
 import { createProduct, createProductList } from "@/components/table-custom-fuction/cell-orders";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ import prismadb from "@/lib/prismadb";
 import { addDays, setHours } from "date-fns";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 import AmapCards from "./_components/amap-cards";
 import { AMAPClient } from "./_components/client";
 import type { AMAPColumn } from "./_components/columns";
@@ -16,17 +18,50 @@ import SelectShippingDay from "./_components/select-shipping-day";
 
 export const dynamic = "force-dynamic";
 
-async function AMAPPage(context: {
+type AMAPPageProps = {
   searchParams: Promise<{
     date: string | undefined;
     id: string | undefined;
     shippingDay: string | undefined;
   }>;
-}) {
+};
+
+function AMAPPage(context: AMAPPageProps) {
+  return (
+    <div className="space-y-4 p-8 pt-6">
+      {/* <NextShipping formattedOrders={formattedOrders} shippingDay={context.searchParams.shippingDay} /> */}
+
+      {/* <Separator /> */}
+      <div className="flex flex-col items-center justify-between sm:flex-row">
+        <Heading title={`Contrat AMAP`} description="Liste des différents contrats AMAP" />
+
+        {/* <Button asChild className="m-2 pb-6 pt-6 sm:ml-2 sm:pb-0 sm:pt-0">
+            <Link href={`/admin/amap/formulaire`}>
+              <Plus className="mr-2  h-4 w-4" />
+              Créer un formulaire
+            </Link>
+          </Button> */}
+        <Button asChild className="m-2 pb-6 pt-6 sm:ml-2 sm:pb-0 sm:pt-0">
+          <Link href={`/admin/amap/new`}>
+            <Plus className="mr-2  h-4 w-4" />
+            Créer un contrat
+          </Link>
+        </Button>
+      </div>
+      <Separator />
+      <Suspense fallback={<Loading />}>
+        <AMAPTable context={context} />
+      </Suspense>
+    </div>
+  );
+}
+
+async function AMAPTable({ context }: { context: AMAPPageProps }) {
   const searchParams = await context.searchParams;
   const id = searchParams.id;
 
   const date = searchParams.date;
+
   const endDate = addDays(date ? new Date(date) : new Date(), -1);
 
   const amapOrders = await prismadb.aMAPOrder.findMany({
@@ -62,31 +97,7 @@ async function AMAPPage(context: {
     products: createProduct(order.amapItems),
   }));
 
-  return (
-    <div className="space-y-4 p-8 pt-6">
-      {/* <NextShipping formattedOrders={formattedOrders} shippingDay={context.searchParams.shippingDay} /> */}
-
-      {/* <Separator /> */}
-      <div className="flex flex-col items-center justify-between sm:flex-row">
-        <Heading title={`Contrat AMAP (${amapOrders.length})`} description="Liste des différents contrats AMAP" />
-
-        {/* <Button asChild className="m-2 pb-6 pt-6 sm:ml-2 sm:pb-0 sm:pt-0">
-            <Link href={`/admin/amap/formulaire`}>
-              <Plus className="mr-2  h-4 w-4" />
-              Créer un formulaire
-            </Link>
-          </Button> */}
-        <Button asChild className="m-2 pb-6 pt-6 sm:ml-2 sm:pb-0 sm:pt-0">
-          <Link href={`/admin/amap/new`}>
-            <Plus className="mr-2  h-4 w-4" />
-            Créer un contrat
-          </Link>
-        </Button>
-      </div>
-      <Separator />
-      <AMAPClient initialData={formattedOrders} endDate={endDate} />
-    </div>
-  );
+  return <AMAPClient initialData={formattedOrders} endDate={endDate} />;
 }
 
 export default AMAPPage;
