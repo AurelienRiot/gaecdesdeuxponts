@@ -11,18 +11,9 @@ const BugReport = ({ className }: { className?: string }) => {
 
   return (
     <>
-      <BugReportModal
-        isOpen={isOpen}
-        setIsOpen={(isOpen) => {
-          setIsOpen(isOpen);
-        }}
-      />
+      <BugReportModal isOpen={isOpen} setIsOpen={setIsOpen} />
 
-      <Button
-        onClick={() => setIsOpen(true)}
-        variant={"link"}
-        className={className}
-      >
+      <Button onClick={() => setIsOpen(true)} variant={"link"} className={className}>
         Rapporter un bug
       </Button>
     </>

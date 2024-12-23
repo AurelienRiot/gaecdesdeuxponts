@@ -62,7 +62,7 @@ const BugReportModal = ({ isOpen, setIsOpen }: BugReportModalProps) => {
               </FormItem>
             )}
           />
-          <FormField
+          {/* <FormField
             control={form.control}
             name="page"
             render={({ field }) => (
@@ -81,7 +81,7 @@ const BugReportModal = ({ isOpen, setIsOpen }: BugReportModalProps) => {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
           <FormField
             control={form.control}
             name="message"

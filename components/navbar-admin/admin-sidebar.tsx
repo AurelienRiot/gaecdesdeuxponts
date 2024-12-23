@@ -3,6 +3,7 @@
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -14,6 +15,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SecondaryAdminRoutes } from "./mobile-nav";
+import BugReport from "../bug-report/bug-report";
 
 export default function AppSidebar() {
   const pathName = usePathname();
@@ -47,6 +49,9 @@ export default function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter className="md:pb-24">
+        <BugReport />
+      </SidebarFooter>
     </Sidebar>
   );
 }
