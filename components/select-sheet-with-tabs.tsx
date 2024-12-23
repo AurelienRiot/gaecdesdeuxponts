@@ -168,7 +168,6 @@ function SelectSheetWithTabs<V extends { key: string }>({
                     id="filter"
                     className="w-full max-w-md border transition-opacity rounded-md p-2 shadow-md"
                     value={filter}
-                    autoFocus
                     onChange={(e) => setFilter(e.target.value)}
                     placeholder="Filter..."
                   />
