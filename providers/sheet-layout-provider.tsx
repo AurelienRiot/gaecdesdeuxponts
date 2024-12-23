@@ -1,13 +1,15 @@
 "use client";
 
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
 function SheetLayoutProvider({
   children,
   title,
   description,
-}: { children: React.ReactNode; title: string; description?: string }) {
+  side = "right",
+}: { children: React.ReactNode; title: string; description?: string; side?: "right" | "bottom" }) {
   const router = useRouter();
   return (
     <Sheet
@@ -18,8 +20,13 @@ function SheetLayoutProvider({
       modal
     >
       <SheetContent
+        side={side}
         onOpenAutoFocus={(e) => e.preventDefault()}
-        className="overflow-y-scroll w-[90%] sm:max-w-sm md:max-w-md p-4"
+        className={cn(
+          side === "right"
+            ? "overflow-y-scroll w-[90%] sm:max-w-sm md:max-w-md p-4"
+            : "overflow-y-scroll w-full h-[90%]",
+        )}
       >
         <SheetHeader className="sr-only">
           <SheetTitle>{title}</SheetTitle>

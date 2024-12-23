@@ -50,7 +50,6 @@ async function DisplayUserForm({ userId }: { userId: string | "new" | undefined 
         <Button asChild>
           <Link href={`/admin/users/${user.formatedUser.id}/all-orders`}>Voir les Commandes</Link>
         </Button>
-        <Link href={`/admin/invoices`}>Factures</Link>
       </SheetFooter>
     </>
   );

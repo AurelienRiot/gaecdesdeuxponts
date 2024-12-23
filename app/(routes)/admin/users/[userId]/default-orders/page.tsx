@@ -10,7 +10,6 @@ import ChangeUser from "./_components/change-user";
 import { DefaultOrderModalProvider, type DefaultOrderProps, ModalTrigger } from "./_components/default-order-modal";
 import FavoriteProducts from "./_components/favorite-products";
 import getDefaultOrders from "./_functions/get-default-orders";
-import LoadingPage from "./loading";
 import { addDelay } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -35,9 +34,10 @@ const formateProducts = (products: ProductsForOrdersType, defaultOrderProducts: 
       unit: correspondingProduct?.unit,
     };
   });
-async function DefaultProductsPage(props: {
+async function DefaultOrdersPage(props: {
   params: Promise<{ userId: string | "new" | undefined }>;
 }) {
+  await addDelay(2000);
   const params = await props.params;
   const userId = params.userId;
   const [user, shops, products] = await Promise.all([getDefaultOrders(userId), getAllShops(), getProductsForOrders()]);
@@ -59,8 +59,8 @@ async function DefaultProductsPage(props: {
       user.role === "trackOnlyUser" || (user.role === "pro" ? product.product.isPro : !product.product.isPro),
   );
   return (
-    <div className=" space-y-4 h-full pt-20 pb-10">
-      <div className="fixed top-0 right-0 left-0 z-10 bg-background">
+    <div className=" space-y-4 h-full pb-10">
+      <div className=" bg-background">
         <div className="max-w-[90vw] md:max-w-[500px] mx-auto flex py-2 gap-4 items-center justify-between">
           <ButtonBackward />
           <FavoriteProducts userId={userId} products={filteredProducts} favoriteProducts={favoriteProducts} />
@@ -90,4 +90,4 @@ async function DefaultProductsPage(props: {
   );
 }
 
-export default DefaultProductsPage;
+export default DefaultOrdersPage;

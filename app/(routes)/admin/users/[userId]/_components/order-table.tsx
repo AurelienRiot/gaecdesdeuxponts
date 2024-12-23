@@ -88,7 +88,7 @@ function SearchOrders({
           <SelectTrigger className="w-24 capitalize">
             <SelectValue placeholder="Mois" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="z-[1300]">
             {Array.from({ length: 12 }).map((_, index) => (
               <SelectItem key={index} value={index.toString()} className="capitalize">
                 {getMonthNumber(index)}
@@ -105,7 +105,7 @@ function SearchOrders({
           <SelectTrigger className="w-16">
             <SelectValue placeholder="Année" />
           </SelectTrigger>
-          <SelectContent side="top">
+          <SelectContent side="top" className="z-[1300]">
             {yearArray.map((year) => (
               <SelectItem key={year} value={year.toString()}>
                 {year}
