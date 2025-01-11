@@ -3,10 +3,10 @@
 import Spinner from "@/components/animations/spinner";
 import type { SendInvoiceReturnType } from "@/components/pdf/server-actions/create-and-send-invoice";
 import { getUserName } from "@/components/table-custom-fuction";
-import { NameWithImage } from "@/components/user";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { IconButton, LoadingButton } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { NameWithImage } from "@/components/user";
 import useServerAction from "@/hooks/use-server-action";
 import { streamKy } from "@/lib/custom-ky";
 import { dateFormatter } from "@/lib/date-utils";
